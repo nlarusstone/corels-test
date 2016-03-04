@@ -28,7 +28,7 @@ from branch_bound import CacheEntry, initialize, compute_default
 
 
 din = os.path.join('..', 'data')
-dout = os.path.join('..', 'caches')
+dout = os.path.join('..', 'cache')
 label_file = 'tdata_R.label'
 out_file = 'tdata_R.out'
 warm_start = True
@@ -65,7 +65,7 @@ for i in range(1, max_prefix_length + 1):
                   '%1.3f %1.3f %1.3f' % (cached_prefix.accuracy,
                                         cached_prefix.upper_bound, max_accuracy)
             continue
-        
+
         # num_already_captured is the number of data captured by the cached
         # prefix
         num_already_captured = cached_prefix.num_captured
@@ -86,7 +86,7 @@ for i in range(1, max_prefix_length + 1):
         while(queue):
             # prefix is the first prefix tuple in the queue
             prefix = queue.pop(0)
-            
+
             # new_rule is the (row) index in the rules matrix of the last rule
             # in prefix, which starts with prefix_start
             new_rule = prefix[-1]
@@ -180,7 +180,7 @@ for i in range(1, max_prefix_length + 1):
                 # the data captured by prefix are either captured by the cached
                 # prefix or captured by the new rule
                 new_num_captured = num_already_captured + num_captured
-        
+
                 # num_correct is the number of data captured by prefix and
                 # correctly predicted
                 num_correct = num_already_correct + num_captured_correct
@@ -190,7 +190,7 @@ for i in range(1, max_prefix_length + 1):
                                            default_rule=default_rule,
                                            accuracy=accuracy,
                                            upper_bound=upper_bound,
-                                           num_captured=new_num_captured, 
+                                           num_captured=new_num_captured,
                                            num_captured_correct=num_correct,
                                            not_captured=not_captured)
 

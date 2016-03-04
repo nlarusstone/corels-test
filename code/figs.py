@@ -32,7 +32,7 @@ def make_figure(froot, din, dout, max_accuracy, max_length, delimiter='\t'):
     fout = os.path.join(dout, '%s.pdf' % froot)
     pylab.savefig(fout)
 
-din = os.path.join('..', 'caches')
+din = os.path.join('..', 'cache')
 dout = os.path.join('..', 'figs')
 if not os.path.exists(dout):
     os.mkdir(dout)
@@ -40,8 +40,8 @@ if not os.path.exists(dout):
 make_figure(froot='serial-max_accuracy=0.91-max_length=2', din=din, dout=dout,
             max_accuracy=0.91, max_length=2)
 
-make_figure(froot='serial_lazy-max_accuracy=0.99-max_length=4', din=din, 
+make_figure(froot='serial_lazy-max_accuracy=0.99-max_length=4', din=din,
             dout=dout, max_accuracy=0.99, max_length=4)
 
-make_figure(froot='serial_lazy-max_accuracy=0.999-max_length=5', din=din, 
+make_figure(froot='serial_lazy-max_accuracy=0.999-max_length=5', din=din,
             dout=dout, max_accuracy=0.999, max_length=5)

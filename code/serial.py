@@ -28,7 +28,7 @@ from branch_bound import CacheEntry, initialize, compute_default
 
 
 din = os.path.join('..', 'data')
-dout = os.path.join('..', 'caches')
+dout = os.path.join('..', 'cache')
 label_file = 'tdata_R.label'
 out_file = 'tdata_R.out'
 warm_start = True
@@ -156,16 +156,16 @@ while(queue):
         # the data captured by prefix are either captured by the cached prefix
         # or captured by the additional rule
         new_num_captured = num_already_captured + num_captured
-        
+
         # num_correct is the number of data captured by prefix and that are
         # correct
         num_correct = num_already_correct + num_captured_correct
 
         # make a cache entry for prefix
         cache[prefix] = CacheEntry(prefix=prefix, prediction=prediction,
-                                   default_rule=default_rule, accuracy=accuracy, 
+                                   default_rule=default_rule, accuracy=accuracy,
                                    upper_bound=upper_bound,
-                                   num_captured=new_num_captured, 
+                                   num_captured=new_num_captured,
                                    num_captured_correct=num_correct,
                                    not_captured=not_captured)
 

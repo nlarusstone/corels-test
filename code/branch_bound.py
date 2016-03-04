@@ -20,7 +20,7 @@ class PrefixCache(dict):
 class CacheEntry:
     def __init__(self, prefix=None, prediction=None, default_rule=None,
                  accuracy=None, upper_bound=None, num_captured=None,
-                 num_captured_correct=None, not_captured=None):        
+                 num_captured_correct=None, not_captured=None):
         self.prefix = prefix
         self.prediction = prediction
         self.default_rule = default_rule
@@ -43,15 +43,15 @@ class CacheEntry:
     def get_not_captured(self):
         """
         Maps string representation of attribute `not_captured` to integer array.
-        
+
         Returns a `numpy.array` of `dtype` 'int8'.
-        
+
         """
         return np.cast['i1'](np.fromstring(self.not_captured, dtype=bool))
 
     def num_not_captured(self):
         return self.get_not_captured().sum()
-    
+
     def print_not_captured(self):
         s = ''.join(['1' if (i == '\x01') else '0' for i in self.not_captured])
         return s
@@ -152,17 +152,17 @@ def greedy_rule_list(ones, rules, max_length):
         ind = (rules[id] == 0).nonzero()[0]
         ones = ones[ind]
         rules = rules[:, ind]
-        rules[id] = 0        
+        rules[id] = 0
         if (len(ones) == 0):
             break
 
-    (default_rule, num_default_correct) = compute_default(ones)    
+    (default_rule, num_default_correct) = compute_default(ones)
     num_captured_correct = sum(total_correct)
     accuracy = float(num_captured_correct + num_default_correct) / ndata
     upper_bound = float(num_captured_correct + len(ones)) / ndata
     return (prefix, predicted_labels, default_rule, accuracy, upper_bound)
 
-def initialize(din, dout, label_file, out_file, warm_start, max_accuracy, 
+def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
                best_prefix):
 
     if not os.path.exists(dout):
@@ -181,7 +181,7 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
 
     # rules is an (nrules x ndata) binary integer matrix indicating
     # rules[i, j] = 1 iff data[j] obeys the ith rule
-    rules = np.cast[int](np.array(rule_dict.values()))    
+    rules = np.cast[int](np.array(rule_dict.values()))
     (nrules, ndata) = rules.shape
 
     # rule_set is a set of all rule indices
@@ -189,7 +189,7 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
 
     # rule_names is an array of string descriptions of rules
     rule_names = np.array(rule_dict.keys())
-    
+
     # for the empty prefix, compute the default rule and number of data it
     # correctly predicts
     (empty_default, empty_num_correct) = compute_default(ones)
@@ -229,7 +229,7 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
                                         num_captured_correct=None,
                                         not_captured=None)
         """
-        pass        
+        pass
 
     return (nrules, ndata, ones, rules, rule_set, rule_names, max_accuracy,
             best_prefix, cache)
