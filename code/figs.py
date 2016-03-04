@@ -7,7 +7,6 @@ import pylab
 def make_figure(froot, din, dout, max_accuracy, max_length, delimiter='\t'):
     fin = os.path.join(din, '%s.txt' % froot)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
-    x.sort(order=['length', 'first'])
     pylab.ion()
     pylab.figure(1, figsize=(10, 8))
     pylab.clf()

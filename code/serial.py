@@ -23,6 +23,7 @@ Input files:
 import os
 
 import numpy as np
+import tabular as tb
 
 from branch_bound import CacheEntry, initialize, compute_default
 
@@ -178,3 +179,6 @@ while(queue):
 fname = os.path.join(dout, 'serial-max_accuracy=%1.3f-max_length=%d.txt' %
                            (max_accuracy, max_prefix_length))
 cache.to_file(fname=fname, delimiter=delimiter)
+x = tb.tabarray(SVfile=fname, delimiter=delimiter)
+x.sort(order=['length', 'first'])
+x.saveSV(fname, delimiter=delimiter)
