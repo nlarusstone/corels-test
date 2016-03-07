@@ -129,20 +129,20 @@ while(queue):
         # rule, given the cached prefix, with label 0
         num_captured_correct = num_captured - num_captured_ones
 
-	# compute the default rule on the not captured data
-	(default_rule, num_default_correct) = compute_default(ones[not_captured_nz])
+    # compute the default rule on the not captured data
+    (default_rule, num_default_correct) = compute_default(ones[not_captured_nz])
 
-	# the data correctly predicted by prefix are either correctly predicted
-	# by cached_prefix, captured and correctly predicted by new_rule, or are not
-	# captured by prefix and correctly predicted by the default rule
-	accuracy = float(num_already_correct + num_captured_correct +
-					 num_default_correct) / ndata
+    # the data correctly predicted by prefix are either correctly predicted
+    # by cached_prefix, captured and correctly predicted by new_rule, or are not
+    # captured by prefix and correctly predicted by the default rule
+    accuracy = float(num_already_correct + num_captured_correct +
+                     num_default_correct) / ndata
 
-	# the upper bound on the accuracy of a rule list starting with prefix
-	# is like the accuracy computation, except we assume that all data not
-	# captured by prefix are correctly predicted
-	upper_bound = float(num_already_correct + num_captured_correct +
-						num_not_captured) / ndata
+    # the upper bound on the accuracy of a rule list starting with prefix
+    # is like the accuracy computation, except we assume that all data not
+    # captured by prefix are correctly predicted
+    upper_bound = float(num_already_correct + num_captured_correct +
+                        num_not_captured) / ndata
 
     # if prefix is the new best known prefix, update max_accuracy and
     # best_prefix
