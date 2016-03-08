@@ -198,7 +198,7 @@ for i in range(1, max_prefix_length + 1):
                 print i, prefix, len(cache), 'ub>max', \
                      '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
 
-    cache_size[i] = len(cache) - cache_size[i - 1]
+    cache_size[i] = len(cache) - cache_size[:i].sum()
 
 fname = os.path.join(dout, 'serial_lazy-max_accuracy=%1.3f-max_length=%d.txt' %
                            (max_accuracy, max_prefix_length))
