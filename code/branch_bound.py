@@ -88,6 +88,13 @@ class CacheEntry:
                str(self.num_captured_correct), str(self.num_not_captured()))
         return '\t'.join(rec)
 
+def print_rule_list(prefix, prediction, default_rule, rule_names):
+    e = ''
+    for (i, label) in zip(prefix, prediction):
+        print '%sif %s then predict %d' % (e, rule_names[i], label)
+        e = 'else '
+    print 'else predict %d' % default_rule
+
 def file_to_dict(fname):
     """
     Utility that constructs a dictionary from a file.
