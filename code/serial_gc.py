@@ -36,7 +36,7 @@ out_file = 'tdata_R.out'
 warm_start = True
 max_accuracy = 0.999
 best_prefix = None
-max_prefix_length = 3
+max_prefix_length = 6
 delimiter = '\t'
 quiet = True
 garbage_collection = True
@@ -54,7 +54,7 @@ m = max_prefix_length + 1
 cache_size = np.zeros(m, int)
 cache_size[0] = 1
 
-equivalent_count = np.zeros(m, int)
+gc_size = np.zeros(m, int)
 equivalent = 0
 
 seconds = np.zeros(m)
@@ -69,6 +69,9 @@ for i in range(1, max_prefix_length + 1):
     # prefix_list is a list of prefixes in the cache after the last round
     prefix_list = [p for p in cache.keys() if (len(p) == (i - 1))]
 
+    # pdict is a dictionary used for garbage collection that groups together prefixes that
+    # are equivalent up to a permutation; its keys are tuples of sorted prefix indices;
+    # each key maps to a list of prefix tuples in the cache that are equivalent
     pdict = {}
 
     for prefix_start in prefix_list:
@@ -213,8 +216,13 @@ for i in range(1, max_prefix_length + 1):
                                            num_captured_correct=num_correct,
                                            not_captured=not_captured)
 
+                # to do garbage collection, we keep track of groups of prefixes that are
+                # equivalent up to permutation
                 if garbage_collection:
+
+                    # sorted_prefix is a tuple of prefix's indices in sorted order
                     sorted_prefix = tuple(np.sort(prefix))
+
                     if sorted_prefix in pdict.keys():
                         pdict[sorted_prefix] += [prefix]
                     else:
@@ -224,21 +232,34 @@ for i in range(1, max_prefix_length + 1):
                     print i, prefix, len(cache), 'ub>max', \
                          '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
 
-    for tuple_list in pdict.values():
-        num_equivalent = len(tuple_list)
-        if (num_equivalent > 1):
-            best_index = np.argmax([cache[t].accuracy for t in tuple_list])      
-            tuple_list.pop(best_index)
-            equivalent_count[i] += (num_equivalent - 1)
-            for t in tuple_list:
-                cache.pop(t)
+    # garbage collect redundant prefixes in the queue
+    if garbage_collection:
+
+        # for each group of equivalent prefixes
+        for tuple_list in pdict.values():
+
+            # num_equivalent is the number of equivalent prefixes in tuple_list
+            num_equivalent = len(tuple_list)
+
+            # if there are multiple equivalent prefixes, we only keep the best one
+            if (num_equivalent > 1):
+
+                # best_index is the index in tuple_list of the highest accuracy prefix
+                best_index = np.argmax([cache[t].accuracy for t in tuple_list])
+
+                # remove all other prefixes in prefix_list from the cache
+                tuple_list.pop(best_index)
+                for t in tuple_list:
+                    cache.pop(t)
+
+                gc_size[i] += (num_equivalent - 1)
 
     cache_size[i] = len(cache) - cache_size[:i].sum()
     seconds[i] = time.time() - tic
 
 
 print 'cache size:', cache_size.tolist()
-print 'equivalent count:', equivalent_count.tolist()
+print 'gc size:', gc_size.tolist()
 print 'seconds:', [float('%1.2f' % s) for s in seconds.tolist()]
 
 fname = os.path.join(dout, 'serial_gc-max_accuracy=%1.3f-max_length=%d.txt' %
