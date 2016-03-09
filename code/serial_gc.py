@@ -272,3 +272,5 @@ x.saveSV(fname, delimiter=delimiter)
 bp = x['prefix'][x['accuracy'] == x['accuracy'].max()][0]
 c = cache[tuple([int(j) for j in bp.split(',')])]
 print_rule_list(c.prefix, c.prediction, c.default_rule, rule_names)
+
+print c
