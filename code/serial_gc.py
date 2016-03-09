@@ -64,7 +64,7 @@ gc_time = np.zeros(m)
 # lazily add prefixes to the queue
 for i in range(1, max_prefix_length + 1):
     print 'prefix length:', i
-    t0 = time.time()
+    tic = time.time()
 
     # prefix_list is a list of prefixes in the cache after the last round
     prefix_list = [p for p in cache.keys() if (len(p) == (i - 1))]
@@ -224,8 +224,6 @@ for i in range(1, max_prefix_length + 1):
                     print i, prefix, len(cache), 'ub>max', \
                          '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
 
-    t1 = time.time()
-
     for tuple_list in pdict.values():
         num_equivalent = len(tuple_list)
         if (num_equivalent > 1):
@@ -235,18 +233,13 @@ for i in range(1, max_prefix_length + 1):
             for t in tuple_list:
                 cache.pop(t)
 
-    t2 = time.time()
-
     cache_size[i] = len(cache) - cache_size[:i].sum()
-    seconds[i] = t2 - t0
-    round_time[i] = t1 - t0
-    gc_time[i] = t2 - t1
+    seconds[i] = time.time() - tic
+
 
 print 'cache size:', cache_size.tolist()
 print 'equivalent count:', equivalent_count.tolist()
 print 'seconds:', [float('%1.2f' % s) for s in seconds.tolist()]
-print 'round time:', [float('%1.2f' % s) for s in round_time.tolist()]
-print 'gc time:',  [float('%1.2f' % s) for s in gc_time.tolist()]
 
 fname = os.path.join(dout, 'serial_gc-max_accuracy=%1.3f-max_length=%d.txt' %
                            (max_accuracy, max_prefix_length))
