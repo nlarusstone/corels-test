@@ -36,10 +36,10 @@ out_file = 'tdata_R.out'
 warm_start = True
 max_accuracy = 0.999
 best_prefix = None
-max_prefix_length = 6
+max_prefix_length = 5
 delimiter = '\t'
 quiet = True
-garbage_collection = True
+garbage_collect = True
 
 (nrules, ndata, ones, rules, rule_set, rule_names,
  max_accuracy, best_prefix, cache) = initialize(din, dout, label_file, out_file,
@@ -207,6 +207,24 @@ for i in range(1, max_prefix_length + 1):
                 # correctly predicted
                 num_correct = num_already_correct + num_captured_correct
 
+                # to do garbage collection, we keep look for prefixes that are
+                # equivalent up to permutation
+                if garbage_collect:
+
+                    # sorted_prefix lists the prefix's indices in sorted order
+                    sorted_prefix = tuple(np.sort(prefix))
+
+                    if sorted_prefix in pdict.keys():
+                        (equiv_prefix, equiv_accuracy) = pdict[sorted_prefix]
+                        if (accuracy > equiv_accuracy):
+                            cache.pop(equiv_prefix)
+                            pdict[sorted_prefix] = (prefix, accuracy)
+                            gc_size[i] += 1
+                        else:
+                            continue
+                    else:
+                        pdict[sorted_prefix] = (prefix, accuracy)
+
                 # make a cache entry for prefix
                 cache[prefix] = CacheEntry(prefix=prefix, prediction=prediction,
                                            default_rule=default_rule,
@@ -216,24 +234,13 @@ for i in range(1, max_prefix_length + 1):
                                            num_captured_correct=num_correct,
                                            not_captured=not_captured)
 
-                # to do garbage collection, we keep track of groups of prefixes that are
-                # equivalent up to permutation
-                if garbage_collection:
-
-                    # sorted_prefix is a tuple of prefix's indices in sorted order
-                    sorted_prefix = tuple(np.sort(prefix))
-
-                    if sorted_prefix in pdict.keys():
-                        pdict[sorted_prefix] += [prefix]
-                    else:
-                        pdict[sorted_prefix] = [prefix]
-
                 if not quiet:
                     print i, prefix, len(cache), 'ub>max', \
                          '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
 
+    """
     # garbage collect redundant prefixes in the queue
-    if garbage_collection:
+    if garbage_collect:
 
         # for each group of equivalent prefixes
         for tuple_list in pdict.values():
@@ -241,10 +248,11 @@ for i in range(1, max_prefix_length + 1):
             # num_equivalent is the number of equivalent prefixes in tuple_list
             num_equivalent = len(tuple_list)
 
-            # if there are multiple equivalent prefixes, we only keep the best one
+            # if there are multiple equivalent prefixes, we only keep the best
             if (num_equivalent > 1):
 
-                # best_index is the index in tuple_list of the highest accuracy prefix
+                # best_index is the index of the prefix in tuple_list with the
+                # highest accuracy prefix
                 best_index = np.argmax([cache[t].accuracy for t in tuple_list])
 
                 # remove all other prefixes in prefix_list from the cache
@@ -253,6 +261,7 @@ for i in range(1, max_prefix_length + 1):
                     cache.pop(t)
 
                 gc_size[i] += (num_equivalent - 1)
+    """
 
     cache_size[i] = len(cache) - cache_size[:i].sum()
     seconds[i] = time.time() - tic
