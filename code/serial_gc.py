@@ -216,10 +216,10 @@ for i in range(1, max_prefix_length + 1):
 
                     if sorted_prefix in pdict.keys():
                         (equiv_prefix, equiv_accuracy) = pdict[sorted_prefix]
+                        gc_size[i] += 1
                         if (accuracy > equiv_accuracy):
                             cache.pop(equiv_prefix)
                             pdict[sorted_prefix] = (prefix, accuracy)
-                            gc_size[i] += 1
                         else:
                             continue
                     else:
