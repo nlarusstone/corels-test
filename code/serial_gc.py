@@ -238,31 +238,6 @@ for i in range(1, max_prefix_length + 1):
                     print i, prefix, len(cache), 'ub>max', \
                          '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
 
-    """
-    # garbage collect redundant prefixes in the queue
-    if garbage_collect:
-
-        # for each group of equivalent prefixes
-        for tuple_list in pdict.values():
-
-            # num_equivalent is the number of equivalent prefixes in tuple_list
-            num_equivalent = len(tuple_list)
-
-            # if there are multiple equivalent prefixes, we only keep the best
-            if (num_equivalent > 1):
-
-                # best_index is the index of the prefix in tuple_list with the
-                # highest accuracy prefix
-                best_index = np.argmax([cache[t].accuracy for t in tuple_list])
-
-                # remove all other prefixes in prefix_list from the cache
-                tuple_list.pop(best_index)
-                for t in tuple_list:
-                    cache.pop(t)
-
-                gc_size[i] += (num_equivalent - 1)
-    """
-
     cache_size[i] = len(cache) - cache_size[:i].sum()
     seconds[i] = time.time() - tic
 
