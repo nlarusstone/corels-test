@@ -42,12 +42,10 @@ garbage_collect = True
 seed = None
 sample = None
 
-"""
 froot = 'adult_R'
 max_accuracy = 0.9
 seed = 0
 sample = 0.1
-"""
 
 label_file = '%s.label' % froot
 out_file = '%s.out' % froot
@@ -77,8 +75,6 @@ seconds = np.zeros(m)
 round_time = np.zeros(m)
 gc_time = np.zeros(m)
 
-perfect = []
-
 # lazily add prefixes to the queue
 for i in range(1, max_prefix_length + 1):
     print 'prefix length:', i
@@ -89,6 +85,7 @@ for i in range(1, max_prefix_length + 1):
         prefix_list = [p for p in cache.keys() if (len(p) == (i - 1))]
     else:
         prefix_list = perfect
+        print len(prefix_list)
 
     # pdict is a dictionary used for garbage collection that groups together prefixes that
     # are equivalent up to a permutation; its keys are tuples of sorted prefix indices;
@@ -248,10 +245,9 @@ for i in range(1, max_prefix_length + 1):
                     else:
                         pdict[sorted_prefix] = (prefix, accuracy)
 
-
+                # this should be optional
                 if ((num_already_captured == num_already_correct) and
                     (num_captured == num_captured_correct)):
-                    print prefix
                     perfect += [prefix]
 
                 # make a cache entry for prefix
