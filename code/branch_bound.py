@@ -137,6 +137,7 @@ def greedy_rule_list(ones, rules, max_length):
     predicted_labels = ()
     total_captured = []
     total_correct = []
+    accuracy = 0.
 
     for i in range(max_length):
         captured = [r.nonzero()[0] for r in rules]
@@ -152,11 +153,18 @@ def greedy_rule_list(ones, rules, max_length):
         x.sort(order=['magnitude', 'num_captured'])
         y = x[x['magnitude'] == x['magnitude'].max()][0]
         id = y['id']
+        ind = (rules[id] == 0).nonzero()[0]
+        (default_rule, num_default_correct) = compute_default(ones[ind])
+        num_captured_correct = sum(total_captured) + y['num_captured']
+        new_accuracy = float(num_captured_correct + num_default_correct) / ndata
+        if (new_accuracy <= accuracy):
+            print 'greedy algorithm stopping', new_accuracy, accuracy
+            break
+        accuracy = new_accuracy
         total_captured += [y['num_captured']]
         total_correct += [(ones[captured[id]] == y['prediction']).sum()]
         prefix += (id,)
         predicted_labels += (y['prediction'],)
-        ind = (rules[id] == 0).nonzero()[0]
         ones = ones[ind]
         rules = rules[:, ind]
         rules[id] = 0
@@ -170,7 +178,7 @@ def greedy_rule_list(ones, rules, max_length):
     return (prefix, predicted_labels, default_rule, accuracy, upper_bound)
 
 def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
-               best_prefix):
+               best_prefix, seed=None, sample=None, max_greedy_length=8):
 
     if not os.path.exists(dout):
         os.mkdir(dout)
@@ -191,6 +199,15 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     rules = np.cast[int](np.array(rule_dict.values()))
     (nrules, ndata) = rules.shape
 
+    if (seed is not None):
+        np.random.seed(seed)
+    if (sample is not None):
+        old_ndata = ndata
+        ndata = int(sample * ndata)
+        ind = np.random.permutation(old_ndata)[:ndata]
+        ones = ones[ind]
+        rules = rules[:, ind]
+
     # rule_set is a set of all rule indices
     rule_set = set(range(len(rules)))
 
@@ -209,7 +226,9 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
         if warm_start:
             # compute warm start rule list using a greedy algorithm
             (best_prefix, greedy_prediction, greedy_default, max_accuracy,
-             greedy_upper_bound) = greedy_rule_list(ones, rules, max_length=8)
+             greedy_upper_bound) = greedy_rule_list(ones, rules, max_length=max_greedy_length)
+            print 'greedy solution:'
+            print_rule_list(best_prefix, greedy_prediction, greedy_default, rule_names)
         else:
             best_prefix = ()
             max_accuracy = empty_accuracy

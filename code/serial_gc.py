@@ -31,8 +31,7 @@ from branch_bound import CacheEntry, initialize, compute_default, print_rule_lis
 
 din = os.path.join('..', 'data')
 dout = os.path.join('..', 'cache')
-label_file = 'tdata_R.label'
-out_file = 'tdata_R.out'
+froot = 'tdata_R'
 warm_start = True
 max_accuracy = 0.999
 best_prefix = None
@@ -40,10 +39,27 @@ max_prefix_length = 5
 delimiter = '\t'
 quiet = True
 garbage_collect = True
+seed = None
+sample = None
+
+"""
+froot = 'adult_R'
+max_accuracy = 0.9
+seed = 0
+sample = 0.1
+"""
+
+label_file = '%s.label' % froot
+out_file = '%s.out' % froot
 
 (nrules, ndata, ones, rules, rule_set, rule_names,
  max_accuracy, best_prefix, cache) = initialize(din, dout, label_file, out_file,
-                                          warm_start, max_accuracy, best_prefix)
+                                        warm_start, max_accuracy, best_prefix,
+                                        seed, sample)
+
+print froot
+print 'nrules:', nrules
+print 'ndata:', ndata
 
 # queue is a list of tuples encoding prefixes in the queue, where the ith entry
 # in such a tuple is the (row) index of a rule in the rules matrix
@@ -61,18 +77,25 @@ seconds = np.zeros(m)
 round_time = np.zeros(m)
 gc_time = np.zeros(m)
 
+perfect = []
+
 # lazily add prefixes to the queue
 for i in range(1, max_prefix_length + 1):
     print 'prefix length:', i
     tic = time.time()
 
-    # prefix_list is a list of prefixes in the cache after the last round
-    prefix_list = [p for p in cache.keys() if (len(p) == (i - 1))]
+    if (len(perfect) == 0):
+        # prefix_list is a list of prefixes in the cache after the last round
+        prefix_list = [p for p in cache.keys() if (len(p) == (i - 1))]
+    else:
+        prefix_list = perfect
 
     # pdict is a dictionary used for garbage collection that groups together prefixes that
     # are equivalent up to a permutation; its keys are tuples of sorted prefix indices;
     # each key maps to a list of prefix tuples in the cache that are equivalent
     pdict = {}
+
+    perfect = []
 
     for prefix_start in prefix_list:
         # cached_prefix is the cached data about a previously evaluated prefix
@@ -225,6 +248,12 @@ for i in range(1, max_prefix_length + 1):
                     else:
                         pdict[sorted_prefix] = (prefix, accuracy)
 
+
+                if ((num_already_captured == num_already_correct) and
+                    (num_captured == num_captured_correct)):
+                    print prefix
+                    perfect += [prefix]
+
                 # make a cache entry for prefix
                 cache[prefix] = CacheEntry(prefix=prefix, prediction=prediction,
                                            default_rule=default_rule,
@@ -242,12 +271,13 @@ for i in range(1, max_prefix_length + 1):
     seconds[i] = time.time() - tic
 
 
-print 'cache size:', cache_size.tolist()
-print 'gc size:', gc_size.tolist()
-print 'seconds:', [float('%1.2f' % s) for s in seconds.tolist()]
+    print 'max accuracy:', max_accuracy
+    print 'cache size:', cache_size.tolist()
+    print 'gc size:', gc_size.tolist()
+    print 'seconds:', [float('%1.2f' % s) for s in seconds.tolist()]
 
-fname = os.path.join(dout, 'serial_gc-max_accuracy=%1.3f-max_length=%d.txt' %
-                           (max_accuracy, max_prefix_length))
+fname = os.path.join(dout, '%s-serial_gc-max_accuracy=%1.3f-max_length=%d.txt' %
+                           (froot, max_accuracy, max_prefix_length))
 cache.to_file(fname=fname, delimiter=delimiter)
 x = tb.tabarray(SVfile=fname, delimiter=delimiter)
 x.sort(order=['length', 'first'])
