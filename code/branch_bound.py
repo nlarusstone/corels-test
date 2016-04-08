@@ -1,7 +1,10 @@
 import os
 
-import numpy as np
+#import numpy as np
+import gmpy2
+from gmpy2 import mpz
 import tabular as tb
+import rule
 
 
 class PrefixCache(dict):
@@ -28,7 +31,7 @@ class CacheEntry:
         self.upper_bound = upper_bound
         self.num_captured = num_captured
         self.num_captured_correct = num_captured_correct
-        self.not_captured = np.cast[bool](not_captured).tostring()
+        self.not_captured = not_captured
 
     def __repr__(self):
         s = '\n'.join(('prefix: %s' % self.prefix.__repr__(),
@@ -37,20 +40,20 @@ class CacheEntry:
                        'upper_bound: %1.3f' % self.upper_bound,
                        'num_captured: %d' % self.num_captured,
                        'num_captured_correct: %d' % self.num_captured_correct,
-                       'sum(not_captured): %d' % self.num_not_captured()))
+                       'sum(not_captured): %d' % rule.count_ones(self.not_captured)))
         return s
 
     def get_not_captured(self):
         """
-        Maps string representation of attribute `not_captured` to integer array.
+        Maps string representation of attribute `not_captured` to mpz object.
 
-        Returns a `numpy.array` of `dtype` 'int8'.
+        Returns a mpz object.
 
         """
-        return np.cast['i1'](np.fromstring(self.not_captured, dtype=bool))
+        return self.not_captured
 
     def num_not_captured(self):
-        return self.get_not_captured().sum()
+        return rule.count_ones(self.get_not_captured())
 
     def print_not_captured(self):
         s = ''.join(['1' if (i == '\x01') else '0' for i in self.not_captured])
@@ -110,13 +113,23 @@ def file_to_dict(fname):
                 open(fname, 'rU').read().strip().split('\n')]
     d = {}
     for line in line_vec:
-        d[line[0]] = np.cast[int](np.array(line[1:]))
+        truthtable = "".join(line[1:])
+        # to prevent clearing of leading zeroes
+        truthtable = '1' + truthtable
+        bitstring = mpz(truthtable, 2)
+        d[line[0]] = bitstring
     return d
 
-def compute_default(ones):
-    num_not_captured = len(ones)
-    n1 = ones.sum()
-    n0 = num_not_captured - n1
+def compute_default(ones, uncaptured):
+    """
+    Computes default rule given an mpz representation of uncaptured samples
+
+    Given an mpz representation of the uncaptured sampels and the number of 
+    samples, returns a default rule.
+
+    """
+    n1 = rule.count_ones(ones)
+    n0 = uncaptured - n1
     if (n1 > n0):
         default_rule = 1
         num_default_correct = n1
@@ -163,7 +176,7 @@ def greedy_rule_list(ones, rules, max_length):
         if (len(ones) == 0):
             break
 
-    (default_rule, num_default_correct) = compute_default(ones)
+    (default_rule, num_default_correct) = compute_default(ones, 639 - sum(total_captured))
     num_captured_correct = sum(total_correct)
     accuracy = float(num_captured_correct + num_default_correct) / ndata
     upper_bound = float(num_captured_correct + len(ones)) / ndata
@@ -177,7 +190,8 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
 
     # label_dict maps each label to a binary integer vector of length ndata
     label_dict = file_to_dict(os.path.join(din, label_file))
-    assert(label_dict['{label=1}'] == (1 - label_dict['{label=0}'])).all()
+    digits = label_dict['{label=1}'].num_digits(2) - 1
+    assert(rule.count_ones(label_dict['{label=1}']) == (digits - rule.count_ones(label_dict['{label=0}'])))
 
     # rule_dict maps each rule to a binary integer vector of length ndata
     rule_dict = file_to_dict(os.path.join(din, out_file))
@@ -188,18 +202,20 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
 
     # rules is an (nrules x ndata) binary integer matrix indicating
     # rules[i, j] = 1 iff data[j] obeys the ith rule
-    rules = np.cast[int](np.array(rule_dict.values()))
-    (nrules, ndata) = rules.shape
+    #rules = np.cast[int](np.array(rule_dict.values()))
+    nrules = len(rule_dict)
+    ndata = digits
+    rule.lead_one = mpz(pow(2, ndata))
 
     # rule_set is a set of all rule indices
-    rule_set = set(range(len(rules)))
+    rule_set = set(range(nrules))
 
-    # rule_names is an array of string descriptions of rules
-    rule_names = np.array(rule_dict.keys())
+    # rule_names is an list of string descriptions of rules
+    rule_names = list(rule_dict.keys())
 
     # for the empty prefix, compute the default rule and number of data it
     # correctly predicts
-    (empty_default, empty_num_correct) = compute_default(ones)
+    (empty_default, empty_num_correct) = compute_default(ones, 639)
     empty_accuracy = float(empty_num_correct) / ndata
 
     # max_accuracy is the accuracy of the best_prefix observed so far
@@ -223,7 +239,7 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     cache[()] = CacheEntry(prefix=(), prediction=(), default_rule=empty_default,
                            accuracy=empty_accuracy, upper_bound=1.,
                            num_captured=0, num_captured_correct=0,
-                           not_captured=np.ones(ndata, int))
+                           not_captured=rule.make_all_ones(ndata + 1))
 
     if warm_start:
         """
@@ -238,5 +254,5 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
         """
         pass
 
-    return (nrules, ndata, ones, rules, rule_set, rule_names, max_accuracy,
+    return (nrules, ndata, ones, list(rule_dict.values()), rule_set, rule_names, max_accuracy,
             best_prefix, cache)

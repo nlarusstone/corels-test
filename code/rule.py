@@ -27,16 +27,17 @@ class rule(object):
 		self.captured = gmpy2.popcount(truthtable) - 1
 		# if more than half the samples are captured 
 		if labels and self.captured > 0:
-			corr = gmpy2.popcount(self.tt & labels[1].tt) - 1
-			if corr >= (self.captured / 2):
+			self.corr = gmpy2.popcount(self.tt & labels[1].tt) - 1
+			if self.corr >= (self.captured / 2):
 				self.predict = 1
-				self.correct = corr / float(self.captured)
+				self.correct = self.corr / float(self.captured)
 			else:
 				self.predict = 0	
-				self.correct = (self.captured - corr) / float(self.captured)
+				self.correct = (self.captured - self.corr) / float(self.captured)
 		else:
 			self.predict = 1
 			self.correct = 0
+			self.corr = 0
 
 """
 	Python implementation of a ruleset
@@ -207,6 +208,13 @@ def ruleset_delete(rs, rule):
 def ruleset_print(rs):
 	for r in rs.rules:
 		rule_print(r)
+
+"""
+	Count the number of ones in an mpz object
+	ensuring we strip off the leading one
+"""
+def count_ones(tt):
+	return gmpy2.popcount(tt) - 1
 
 """
 	Common code for accuracy and check_prefix
