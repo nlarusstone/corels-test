@@ -39,7 +39,7 @@ out_file = 'tdata_R.out'
 warm_start = True
 max_accuracy = 0.999
 best_prefix = None
-max_prefix_length = 6
+max_prefix_length = 5
 delimiter = '\t'
 quiet = True
 garbage_collect = True
@@ -140,6 +140,7 @@ for i in range(1, max_prefix_length + 1):
             not_cappd = rule.rule_vandnot(not_yet_captured, rules[new_rule])
             not_captured = not_cappd[0]
 #            print "Not captured ", not_captured.digits(2)
+            assert not_yet_captured == (not_captured | captured_nz) 
 
             # not_captured_nz is an array of data indices not captured by prefix
             #not_captured_nz = not_cappd[1]
@@ -149,7 +150,7 @@ for i in range(1, max_prefix_length + 1):
 
             # the data not captured by the cached prefix are either captured or
             # not captured by the new rule
-#            print "Not yet captured : %d, Num captured: %d, Num not captured: %d" % (not_yet_captured.num_digits(2), num_captured, num_not_captured)
+#            print "Not yet captured : %d, Num captured: %d, Num not captured: %d" % (rule.count_ones(not_yet_captured), num_captured, num_not_captured)
             assert rule.count_ones(not_yet_captured) == (num_captured + num_not_captured)
 
             # num_captured_ones is the number of data captured by the new rule,
@@ -186,14 +187,17 @@ for i in range(1, max_prefix_length + 1):
 #            print "NUM CAPPED ONES", num_captured_ones
             # compute the default rule on the not captured data
             (default_rule, num_default_correct) = \
-                                          compute_default(rule.rule_vand(ones, not_captured)[0], 639 - num_captured_ones)
+                                          compute_default(rule.rule_vand(ones, not_captured)[0], num_not_captured)
 
             # the data correctly predicted by prefix are either correctly
             # predicted by cached_prefix, captured and correctly predicted by
             # new_rule, or are not captured by prefix and correctly predicted by
             # the default rule
+#            print "Already: %d, capped_corr: %d, def_corr: %d" % (num_already_correct, num_captured_correct, num_default_correct)
+#            print ""
             accuracy = float(num_already_correct + num_captured_correct +
                              num_default_correct) / ndata
+            assert accuracy <= 1
 
             # the upper bound on the accuracy of a rule list starting with
             # prefix is like the accuracy computation, except we assume that all
