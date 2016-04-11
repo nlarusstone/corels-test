@@ -24,7 +24,10 @@ import os
 import time
 
 import numpy as np
+import gmpy2
+from gmpy2 import mpz
 import tabular as tb
+import rule
 
 from branch_bound import CacheEntry, initialize, compute_default, print_rule_list
 
@@ -127,13 +130,14 @@ for i in range(1, max_prefix_length + 1):
             # in prefix, which starts with prefix_start
             new_rule = prefix[-1]
 
-            # captured_nz is an array of indices of data captured by the new
+            # captured_nz is an bitmap of data captured by the new
             # rule, given the cached prefix
-            captured_nz = (not_yet_captured & rules[new_rule]).nonzero()[0]
+            cappd = rule.rule_vand(not_yet_captured, rules[new_rule])
+            captured_nz = cappd[0]
 
             # num_captured is the number of data captured by the new rule, given
             # the cached prefix
-            num_captured = len(captured_nz)
+            num_captured = cappd[1]
 
             # the additional rule is useless if it doesn't capture any data
             if (num_captured == 0):
@@ -146,21 +150,23 @@ for i in range(1, max_prefix_length + 1):
             # data that are not captured by the current prefix, i.e., not
             # captured by the rule list given by the cached prefix appended with
             # the new rule
-            not_captured = not_yet_captured & (1 - rules[new_rule])
+            not_cappd = rule.rule_vandnot(not_yet_captured, rules[new_rule])
+            not_captured = not_cappd[0]
+            assert not_yet_captured == (not_captured | captured_nz) 
 
             # not_captured_nz is an array of data indices not captured by prefix
-            not_captured_nz = (not_captured).nonzero()[0]
+            #not_captured_nz = not_cappd[1]
 
             # num_not_captured is the number of data not captured by prefix
-            num_not_captured = len(not_captured_nz)
+            num_not_captured = not_cappd[1]
 
             # the data not captured by the cached prefix are either captured or
             # not captured by the new rule
-            assert not_yet_captured.sum() == (num_captured + num_not_captured)
+            assert rule.count_ones(not_yet_captured) == (num_captured + num_not_captured)
 
             # num_captured_ones is the number of data captured by the new rule,
             # given the cached prefix, with label 1
-            num_captured_ones = ones[captured_nz].sum()
+            num_captured_ones = rule.rule_vand(captured_nz, ones)[1]
 
             # fraction_captured_ones is the fraction of data captured by the new
             # rule, given the cached prefix, with label 1
@@ -187,7 +193,7 @@ for i in range(1, max_prefix_length + 1):
 
             # compute the default rule on the not captured data
             (default_rule, num_default_correct) = \
-                                          compute_default(ones[not_captured_nz])
+                                          compute_default(rule.rule_vand(ones, not_captured)[0], num_not_captured)
 
             # the data correctly predicted by prefix are either correctly
             # predicted by cached_prefix, captured and correctly predicted by
@@ -195,6 +201,7 @@ for i in range(1, max_prefix_length + 1):
             # the default rule
             accuracy = float(num_already_correct + num_captured_correct +
                              num_default_correct) / ndata
+            assert accuracy <= 1
 
             # the upper bound on the accuracy of a rule list starting with
             # prefix is like the accuracy computation, except we assume that all
