@@ -114,13 +114,10 @@ for i in range(1, max_prefix_length + 1):
             # in prefix, which starts with prefix_start
             new_rule = prefix[-1]
 
-#            print "Not_yet_captured ", not_yet_captured.digits(2)
-
             # captured_nz is an bitmap of data captured by the new
             # rule, given the cached prefix
             cappd = rule.rule_vand(not_yet_captured, rules[new_rule])
             captured_nz = cappd[0]
-#            print "Captured_nz, ", captured_nz.digits(2)
 
             # num_captured is the number of data captured by the new rule, given
             # the cached prefix
@@ -139,7 +136,6 @@ for i in range(1, max_prefix_length + 1):
             # the new rule
             not_cappd = rule.rule_vandnot(not_yet_captured, rules[new_rule])
             not_captured = not_cappd[0]
-#            print "Not captured ", not_captured.digits(2)
             assert not_yet_captured == (not_captured | captured_nz) 
 
             # not_captured_nz is an array of data indices not captured by prefix
@@ -150,13 +146,11 @@ for i in range(1, max_prefix_length + 1):
 
             # the data not captured by the cached prefix are either captured or
             # not captured by the new rule
-#            print "Not yet captured : %d, Num captured: %d, Num not captured: %d" % (rule.count_ones(not_yet_captured), num_captured, num_not_captured)
             assert rule.count_ones(not_yet_captured) == (num_captured + num_not_captured)
 
             # num_captured_ones is the number of data captured by the new rule,
             # given the cached prefix, with label 1
             num_captured_ones = rule.rule_vand(captured_nz, ones)[1]
-#            print num_captured_ones, num_captured
 
             # fraction_captured_ones is the fraction of data captured by the new
             # rule, given the cached prefix, with label 1
@@ -181,10 +175,6 @@ for i in range(1, max_prefix_length + 1):
                 # rule, given the cached prefix, with label 0
                 num_captured_correct = num_captured - num_captured_ones
 
-#            print "Ones ", ones.digits(2)
-#            uncappedones = rule.rule_vand(ones, not_captured)[0]
-#            print "Uncapped oens", uncappedones.digits(2)
-#            print "NUM CAPPED ONES", num_captured_ones
             # compute the default rule on the not captured data
             (default_rule, num_default_correct) = \
                                           compute_default(rule.rule_vand(ones, not_captured)[0], num_not_captured)
@@ -193,8 +183,6 @@ for i in range(1, max_prefix_length + 1):
             # predicted by cached_prefix, captured and correctly predicted by
             # new_rule, or are not captured by prefix and correctly predicted by
             # the default rule
-#            print "Already: %d, capped_corr: %d, def_corr: %d" % (num_already_correct, num_captured_correct, num_default_correct)
-#            print ""
             accuracy = float(num_already_correct + num_captured_correct +
                              num_default_correct) / ndata
             assert accuracy <= 1

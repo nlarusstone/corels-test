@@ -122,9 +122,9 @@ def file_to_dict(fname):
 
 def compute_default(ones, uncaptured):
     """
-    Computes default rule given an mpz representation of uncaptured samples
+    Computes default rule given an mpz representation of uncaptured samples.
 
-    Given an mpz representation of the uncaptured sampels and the number of 
+    Given an mpz representation of the uncaptured samples and the number of
     samples, returns a default rule.
 
     """
