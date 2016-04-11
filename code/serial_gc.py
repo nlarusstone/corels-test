@@ -42,10 +42,12 @@ garbage_collect = True
 seed = None
 sample = None
 
+"""
 froot = 'adult_R'
 max_accuracy = 0.9
 seed = 0
 sample = 0.1
+"""
 
 label_file = '%s.label' % froot
 out_file = '%s.out' % froot
@@ -80,19 +82,13 @@ for i in range(1, max_prefix_length + 1):
     print 'prefix length:', i
     tic = time.time()
 
-    if (len(perfect) == 0):
-        # prefix_list is a list of prefixes in the cache after the last round
-        prefix_list = [p for p in cache.keys() if (len(p) == (i - 1))]
-    else:
-        prefix_list = perfect
-        print len(prefix_list)
+    # prefix_list is a list of prefixes in the cache after the last round
+    prefix_list = [p for p in cache.keys() if (len(p) == (i - 1))]
 
     # pdict is a dictionary used for garbage collection that groups together prefixes that
     # are equivalent up to a permutation; its keys are tuples of sorted prefix indices;
     # each key maps to a list of prefix tuples in the cache that are equivalent
     pdict = {}
-
-    perfect = []
 
     for prefix_start in prefix_list:
         # cached_prefix is the cached data about a previously evaluated prefix
@@ -244,11 +240,6 @@ for i in range(1, max_prefix_length + 1):
                             continue
                     else:
                         pdict[sorted_prefix] = (prefix, accuracy)
-
-                # this should be optional
-                if ((num_already_captured == num_already_correct) and
-                    (num_captured == num_captured_correct)):
-                    perfect += [prefix]
 
                 # make a cache entry for prefix
                 cache[prefix] = CacheEntry(prefix=prefix, prediction=prediction,
