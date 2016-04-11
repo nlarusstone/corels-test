@@ -45,6 +45,7 @@ garbage_collect = True
 seed = None
 sample = None
 
+# subsampling functionality is currently broken
 """
 froot = 'adult_R'
 max_accuracy = 0.9
