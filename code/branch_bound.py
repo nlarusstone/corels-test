@@ -198,8 +198,8 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
 
     # label_dict maps each label to a binary integer vector of length ndata
     label_dict = file_to_dict(os.path.join(din, label_file))
-    digits = label_dict['{label=1}'].num_digits(2) - 1
-    assert(rule.count_ones(label_dict['{label=1}']) == (digits - rule.count_ones(label_dict['{label=0}'])))
+    ndata = label_dict['{label=1}'].num_digits(2) - 1
+    assert(rule.count_ones(label_dict['{label=1}']) == (ndata - rule.count_ones(label_dict['{label=0}'])))
 
     # rule_dict maps each rule to a binary integer vector of length ndata
     rule_dict = file_to_dict(os.path.join(din, out_file))
@@ -212,7 +212,6 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     # rules[i, j] = 1 iff data[j] obeys the ith rule
     #rules = np.cast[int](np.array(rule_dict.values()))
     nrules = len(rule_dict)
-    ndata = digits
     rule.lead_one = mpz(pow(2, ndata))
 
     if (seed is not None):
@@ -232,7 +231,7 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
 
     # for the empty prefix, compute the default rule and number of data it
     # correctly predicts
-    (empty_default, empty_num_correct) = compute_default(ones, 639)
+    (empty_default, empty_num_correct) = compute_default(ones, ndata)
     empty_accuracy = float(empty_num_correct) / ndata
 
     # max_accuracy is the accuracy of the best_prefix observed so far
