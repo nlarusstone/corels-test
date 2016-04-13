@@ -35,7 +35,7 @@ from branch_bound import CacheEntry, initialize, compute_default, print_rule_lis
 din = os.path.join('..', 'data')
 dout = os.path.join('..', 'cache')
 froot = 'tdata_R'
-warm_start = True
+warm_start = True ## greedy algorithm is currently broken
 max_accuracy = 0.999
 best_prefix = None
 max_prefix_length = 5
@@ -45,7 +45,7 @@ garbage_collect = True
 seed = None
 sample = None
 
-# subsampling functionality is currently broken
+## subsampling functionality is currently broken
 """
 froot = 'adult_R'
 max_accuracy = 0.9

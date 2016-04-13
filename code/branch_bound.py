@@ -138,6 +138,7 @@ def compute_default(ones, uncaptured):
         num_default_correct = n0
     return (default_rule, num_default_correct)
 
+## the greedy algorithm should be modified to work with mpz
 def greedy_rule_list(ones, rules, max_length):
     """
     Grow the rule list greedily.
@@ -240,6 +241,7 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     if (max_accuracy is None):
         if warm_start:
             # compute warm start rule list using a greedy algorithm
+            ## this is currently broken (hasn't been modified to work for mpz)
             (best_prefix, greedy_prediction, greedy_default, max_accuracy,
              greedy_upper_bound) = greedy_rule_list(ones, rules, max_length=max_greedy_length)
             print 'greedy solution:'
