@@ -1,9 +1,10 @@
 import os
 
-#import numpy as np
+import numpy as np
 import gmpy2
 from gmpy2 import mpz
 import tabular as tb
+
 import rule
 
 
@@ -98,7 +99,7 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
         e = 'else '
     print 'else predict %d' % default_rule
 
-def file_to_dict(fname):
+def file_to_dict(fname, sample=None):
     """
     Utility that constructs a dictionary from a file.
 
@@ -111,9 +112,19 @@ def file_to_dict(fname):
     """
     line_vec = [line.split() for line in
                 open(fname, 'rU').read().strip().split('\n')]
+
+    if sample is not None:
+        # subsample the data
+        ndata = len(line_vec[0][1:])
+        nsample = int(sample * ndata)
+        ind = np.random.permutation(ndata)[:nsample] + 1
+
     d = {}
     for line in line_vec:
-        truthtable = "".join(line[1:])
+        if sample is not None:
+            truthtable = "".join([line[i] for i in ind])
+        else:
+            truthtable = "".join(line[1:])
         # to prevent clearing of leading zeroes
         truthtable = '1' + truthtable
         bitstring = mpz(truthtable, 2)
@@ -197,13 +208,16 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     if not os.path.exists(dout):
         os.mkdir(dout)
 
+    if (seed is not None):
+        np.random.seed(seed)
+
     # label_dict maps each label to a binary integer vector of length ndata
-    label_dict = file_to_dict(os.path.join(din, label_file))
+    label_dict = file_to_dict(os.path.join(din, label_file), sample=sample)
     ndata = label_dict['{label=1}'].num_digits(2) - 1
     assert(rule.count_ones(label_dict['{label=1}']) == (ndata - rule.count_ones(label_dict['{label=0}'])))
 
     # rule_dict maps each rule to a binary integer vector of length ndata
-    rule_dict = file_to_dict(os.path.join(din, out_file))
+    rule_dict = file_to_dict(os.path.join(din, out_file), sample=sample)
 
     # ones a binary integer vector of length ndata
     # ones[j] = 1 iff label(data[j]) = 1
@@ -214,15 +228,6 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     #rules = np.cast[int](np.array(rule_dict.values()))
     nrules = len(rule_dict)
     rule.lead_one = mpz(pow(2, ndata))
-
-    if (seed is not None):
-        np.random.seed(seed)
-    if (sample is not None):
-        old_ndata = ndata
-        ndata = int(sample * ndata)
-        ind = np.random.permutation(old_ndata)[:ndata]
-        ones = ones[ind]
-        rules = rules[:, ind]
 
     # rule_set is a set of all rule indices
     rule_set = set(range(nrules))

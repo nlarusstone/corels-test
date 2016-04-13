@@ -27,10 +27,9 @@ import numpy as np
 import gmpy2
 from gmpy2 import mpz
 import tabular as tb
-import rule
 
 from branch_bound import CacheEntry, initialize, compute_default, print_rule_list
-
+import rule
 
 din = os.path.join('..', 'data')
 dout = os.path.join('..', 'cache')
@@ -45,7 +44,6 @@ garbage_collect = True
 seed = None
 sample = None
 
-## subsampling functionality is currently broken
 """
 froot = 'adult_R'
 max_accuracy = 0.9
