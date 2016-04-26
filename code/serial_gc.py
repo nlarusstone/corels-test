@@ -85,7 +85,7 @@ for i in range(1, max_prefix_length + 1):
     tic = time.time()
 
     # prefix_list is a list of prefixes in the cache after the last round
-    prefix_list = [p for p in cache.keys() if (len(p) == (i - 1))]
+    prefix_list = [p for p in cache if (len(p) == (i - 1))]
 
     # pdict is a dictionary used for garbage collection that groups together prefixes that
     # are equivalent up to a permutation; its keys are tuples of sorted prefix indices;
@@ -236,7 +236,7 @@ for i in range(1, max_prefix_length + 1):
                     # sorted_prefix lists the prefix's indices in sorted order
                     sorted_prefix = tuple(np.sort(prefix))
 
-                    if sorted_prefix in pdict.keys():
+                    if sorted_prefix in pdict:
                         (equiv_prefix, equiv_accuracy) = pdict[sorted_prefix]
                         gc_size[i] += 1
                         if (accuracy > equiv_accuracy):
