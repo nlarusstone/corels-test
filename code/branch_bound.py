@@ -24,7 +24,7 @@ class PrefixCache(dict):
 class CacheEntry:
     def __init__(self, prefix=None, prediction=None, default_rule=None,
                  accuracy=None, upper_bound=None, num_captured=None,
-                 num_captured_correct=None, not_captured=None):
+                 num_captured_correct=None, not_captured=None, curiosity=None):
         self.prefix = prefix
         self.prediction = prediction
         self.default_rule = default_rule
@@ -33,6 +33,7 @@ class CacheEntry:
         self.num_captured = num_captured
         self.num_captured_correct = num_captured_correct
         self.not_captured = not_captured
+        self.curiosity = curiosity
 
     def __repr__(self):
         s = '\n'.join(('prefix: %s' % self.prefix.__repr__(),
@@ -41,7 +42,8 @@ class CacheEntry:
                        'upper_bound: %1.3f' % self.upper_bound,
                        'num_captured: %d' % self.num_captured,
                        'num_captured_correct: %d' % self.num_captured_correct,
-                       'sum(not_captured): %d' % rule.count_ones(self.not_captured)))
+                       'sum(not_captured): %d' % rule.count_ones(self.not_captured),
+                       'curiosity: %1.3f' % self.curiosity))
         return s
 
     def get_not_captured(self):
@@ -74,7 +76,8 @@ class CacheEntry:
                ('upper_bound', self.upper_bound),
                ('num_captured', self.num_captured),
                ('num_captured_correct', self.num_captured_correct),
-               ('num_not_captured', self.num_not_captured()))
+               ('num_not_captured', self.num_not_captured()),
+               ('curiosity', self.curiosity))
         return kvp
 
     def to_record(self):
@@ -82,14 +85,15 @@ class CacheEntry:
                 self.first_rule(), self.prediction.__repr__().strip('()'),
                 self.default_rule, self.accuracy, self.upper_bound,
                 self.num_captured, self.num_captured_correct,
-                self.num_not_captured())
+                self.num_not_captured(), self.curiosity)
 
     def to_string(self):
         rec = (self.prefix.__repr__().strip('()'), str(len(self.prefix)),
                str(self.first_rule()), self.prediction.__repr__().strip('()'),
                str(self.default_rule), str(self.accuracy),
                str(self.upper_bound), str(self.num_captured),
-               str(self.num_captured_correct), str(self.num_not_captured()))
+               str(self.num_captured_correct), str(self.num_not_captured()),
+               str(self.curiosity))
         return '\t'.join(rec)
 
 def print_rule_list(prefix, prediction, default_rule, rule_names):
@@ -261,7 +265,8 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     cache[()] = CacheEntry(prefix=(), prediction=(), default_rule=empty_default,
                            accuracy=empty_accuracy, upper_bound=1.,
                            num_captured=0, num_captured_correct=0,
-                           not_captured=rule.make_all_ones(ndata + 1))
+                           not_captured=rule.make_all_ones(ndata + 1),
+                           curiosity=0.)
 
     if warm_start:
         """
@@ -276,5 +281,5 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
         """
         pass
 
-    return (nrules, ndata, ones, list(rule_dict.values()), rule_set, rule_names, max_accuracy,
-            best_prefix, cache)
+    return (nrules, ndata, ones, list(rule_dict.values()), rule_set, rule_names,
+            max_accuracy, best_prefix, cache)
