@@ -214,6 +214,13 @@ for i in range(1, max_prefix_length + 1):
                 # correctly predicted
                 num_correct = num_already_correct + num_captured_correct
 
+                # num_incorrect is the number of data captured by prefix and
+                # incorrectly predicted
+                num_incorrect = new_num_captured - num_correct
+
+                # curiosity = prefix misclassification
+                curiosity = float(num_incorrect) / new_num_captured
+
                 # to do garbage collection, we keep look for prefixes that are
                 # equivalent up to permutation
                 if garbage_collect:
@@ -239,7 +246,8 @@ for i in range(1, max_prefix_length + 1):
                                            upper_bound=upper_bound,
                                            num_captured=new_num_captured,
                                            num_captured_correct=num_correct,
-                                           not_captured=not_captured)
+                                           not_captured=not_captured,
+                                           curiosity=curiosity)
 
                 if not quiet:
                     print i, prefix, len(cache), 'ub>max', \
