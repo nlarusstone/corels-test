@@ -8,6 +8,10 @@ import tabular as tb
 import rule
 
 
+class TrieCache():
+    def __init__():
+        pass
+
 class PrefixCache(dict):
     def to_file(self, fname, delimiter='\t'):
         header = ['prefix', 'length', 'first', 'prediction', 'default',
@@ -21,7 +25,7 @@ class PrefixCache(dict):
         f.write('\n'.join(lines))
         f.close()
 
-class CacheEntry:
+class CacheEntry(dict):
     def __init__(self, prefix=None, prediction=None, default_rule=None,
                  accuracy=None, upper_bound=None, num_captured=None,
                  num_captured_correct=None, not_captured=None, curiosity=None):
@@ -35,6 +39,7 @@ class CacheEntry:
         self.not_captured = not_captured
         self.curiosity = curiosity
 
+    """
     def __repr__(self):
         s = '\n'.join(('prefix: %s' % self.prefix.__repr__(),
                        'prediction: %s' % self.prediction.__repr__(),
@@ -45,6 +50,10 @@ class CacheEntry:
                        'sum(not_captured): %d' % rule.count_ones(self.not_captured),
                        'curiosity: %1.3f' % self.curiosity))
         return s
+    """
+
+    def add_children(prefix, rule_set):
+        pass
 
     def get_not_captured(self):
         """

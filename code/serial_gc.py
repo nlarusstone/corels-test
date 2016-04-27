@@ -45,13 +45,13 @@ garbage_collect = True
 seed = None
 sample = None
 
-#"""
+"""
 froot = 'adult_R'
 max_accuracy = 0.835438
 max_prefix_length = 3
 seed = 0
 sample = 0.1
-#"""
+"""
 
 label_file = '%s.label' % froot
 out_file = '%s.out' % froot
@@ -128,7 +128,7 @@ for i in range(1, max_prefix_length + 1):
         # construct a queue of all prefixes starting with prefix_start and
         # appended with one additional rule
         assert len(queue) == 0
-        queue = [prefix_start + (t,) for t in list(rule_set.difference(set(p)))]
+        queue = [prefix_start + (t,) for t in list(rule_set.difference(set(prefix_start)))]
 
         while(queue):
             # prefix is the first prefix tuple in the queue
