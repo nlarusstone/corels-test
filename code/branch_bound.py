@@ -12,7 +12,7 @@ class PrefixCache(dict):
     def to_file(self, fname, delimiter='\t'):
         header = ['prefix', 'length', 'first', 'prediction', 'default',
                   'accuracy', 'upper_bound', 'num_captured',
-                  'num_captured_correct', 'num_not_captured']
+                  'num_captured_correct', 'num_not_captured', 'curiosity']
         lines = []
         for c in self.values():
             lines.append('%s' % c.to_string())
