@@ -49,7 +49,7 @@ def make_figure(froot, din, dout, max_accuracy, max_length, delimiter='\t'):
         pylab.xlabel('upper_bound')
         pylab.ylabel('curiosity')        
 
-        fout = os.path.join(dout, '%s-length=%d.pdf' % (froot, i))
+        fout = os.path.join(dout, '%s-length=%d.png' % (froot, i))
         pylab.savefig(fout)
 
 din = os.path.join('..', 'cache')
@@ -66,10 +66,13 @@ make_figure(froot='serial_lazy-max_accuracy=0.99-max_length=4', din=din,
 
 make_figure(froot='serial_lazy-max_accuracy=0.999-max_length=5', din=din,
             dout=dout, max_accuracy=0.999, max_length=5)
-"""
 
 make_figure(froot='tdata_R-serial_gc-max_accuracy=0.999-max_length=6',
             din=din, dout=dout, max_accuracy=0.999, max_length=6)
+"""
 
-#make_figure(froot='adult_R-serial_gc-max_accuracy=0.820-max_length=2',
-#            din=din, dout=dout, max_accuracy=0.820, max_length=2)
+make_figure(froot='tdata_R-serial_gc-max_accuracy=1.000-max_length=8',
+            din=din, dout=dout, max_accuracy=1.000, max_length=8)
+
+make_figure(froot='adult_R-serial_gc-max_accuracy=0.829-max_length=3',
+            din=din, dout=dout, max_accuracy=0.829, max_length=3)
