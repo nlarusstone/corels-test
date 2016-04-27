@@ -45,13 +45,13 @@ garbage_collect = True
 seed = None
 sample = None
 
-"""
+#"""
 froot = 'adult_R'
-max_accuracy = 0.834
-max_prefix_length = 2
+max_accuracy = 0.835438
+max_prefix_length = 3
 seed = 0
 sample = 0.1
-"""
+#"""
 
 label_file = '%s.label' % froot
 out_file = '%s.out' % froot
