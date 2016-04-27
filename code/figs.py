@@ -4,8 +4,8 @@ import tabular as tb
 import pylab
 
 
-def make_figure(froot, din, dout, max_accuracy, max_length, delimiter='\t'):
-    fin = os.path.join(din, '%s.txt' % froot)
+def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t'):
+    fin = os.path.join(din, '%s.txt' % metadata)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     pylab.ion()
     for i in range(1, max_length + 1):
@@ -49,7 +49,7 @@ def make_figure(froot, din, dout, max_accuracy, max_length, delimiter='\t'):
         pylab.xlabel('upper_bound')
         pylab.ylabel('curiosity')        
 
-        fout = os.path.join(dout, '%s-length=%d.png' % (froot, i))
+        fout = os.path.join(dout, '%s-length=%d.png' % (metadata, i))
         pylab.savefig(fout)
 
 din = os.path.join('..', 'cache')
@@ -58,21 +58,22 @@ if not os.path.exists(dout):
     os.mkdir(dout)
 
 """
-make_figure(froot='serial-max_accuracy=0.91-max_length=2', din=din, dout=dout,
+make_figure(metadata='serial-max_accuracy=0.91-max_length=2', din=din, dout=dout,
             max_accuracy=0.91, max_length=2)
 
-make_figure(froot='serial_lazy-max_accuracy=0.99-max_length=4', din=din,
+make_figure(metadata='serial_lazy-max_accuracy=0.99-max_length=4', din=din,
             dout=dout, max_accuracy=0.99, max_length=4)
 
-make_figure(froot='serial_lazy-max_accuracy=0.999-max_length=5', din=din,
+make_figure(metadata='serial_lazy-max_accuracy=0.999-max_length=5', din=din,
             dout=dout, max_accuracy=0.999, max_length=5)
 
-make_figure(froot='tdata_R-serial_gc-max_accuracy=0.999-max_length=6',
+make_figure(metadata='tdata_R-serial_gc-max_accuracy=0.999-max_length=6',
             din=din, dout=dout, max_accuracy=0.999, max_length=6)
-"""
 
-make_figure(froot='tdata_R-serial_gc-max_accuracy=1.000-max_length=8',
+make_figure(metadata='tdata_R-serial_gc-max_accuracy=1.000-max_length=8',
             din=din, dout=dout, max_accuracy=1.000, max_length=8)
 
-make_figure(froot='adult_R-serial_gc-max_accuracy=0.829-max_length=3',
+make_figure(metadata='adult_R-serial_gc-max_accuracy=0.829-max_length=3',
             din=din, dout=dout, max_accuracy=0.829, max_length=3)
+
+"""
