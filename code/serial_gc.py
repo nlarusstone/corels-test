@@ -29,6 +29,7 @@ from gmpy2 import mpz
 import tabular as tb
 
 from branch_bound import CacheEntry, initialize, compute_default, print_rule_list
+import figs
 import rule
 
 din = os.path.join('..', 'data')
@@ -44,11 +45,13 @@ garbage_collect = True
 seed = None
 sample = None
 
+"""
 froot = 'adult_R'
 max_accuracy = 0.834
-max_prefix_length = 4
+max_prefix_length = 2
 seed = 0
 sample = 0.1
+"""
 
 label_file = '%s.label' % froot
 out_file = '%s.out' % froot
@@ -71,12 +74,13 @@ m = max_prefix_length + 1
 cache_size = np.zeros(m, int)
 cache_size[0] = 1
 
-gc_size = np.zeros(m, int)
-equivalent = 0
+dead_prefix_start = np.zeros(m, int)
+captured_zero = np.zeros(m, int)
+stunted_prefix = np.zeros(m, int)
+dead_prefix = np.zeros(m, int)
+inferior = np.zeros(m, int)
 
 seconds = np.zeros(m)
-round_time = np.zeros(m)
-gc_time = np.zeros(m)
 
 # lazily add prefixes to the queue
 for i in range(1, max_prefix_length + 1):
@@ -95,13 +99,19 @@ for i in range(1, max_prefix_length + 1):
         # cached_prefix is the cached data about a previously evaluated prefix
         cached_prefix = cache[prefix_start]
 
-        # we don't need to evaluate any prefixes that start with prefix_start if
-        # its upper_bound is less than max_accuracy
         if (cached_prefix.upper_bound < max_accuracy):
+            # we don't need to evaluate any prefixes that start with
+            # prefix_start if its upper_bound is less than max_accuracy
+            dead_prefix_start[i] += 1
             print i, prefix_start, len(cache), 'ub(cached)<max', \
                   '%1.3f %1.3f %1.3f' % (cached_prefix.accuracy,
                                         cached_prefix.upper_bound, max_accuracy)
             continue
+        elif (cached_prefix.accuracy == cached_prefix.upper_bound):
+            # in this case, no rule list starting with and longer than
+            # prefix_start can achieve a higher accuracy
+            stunted_prefix[i] += 1
+            continue        
 
         # num_already_captured is the number of data captured by the cached
         # prefix
@@ -139,6 +149,7 @@ for i in range(1, max_prefix_length + 1):
 
             # the additional rule is useless if it doesn't capture any data
             if (num_captured == 0):
+                captured_zero[i] += 1
                 if not quiet:
                     print i, prefix, len(cache), 'num_captured=0', \
                           '%d %d %d' % (-1, -1, -1)
@@ -210,6 +221,7 @@ for i in range(1, max_prefix_length + 1):
             # if the upper bound of prefix exceeds max_accuracy, then create a
             # cache entry for prefix
             if (upper_bound <= max_accuracy):
+                dead_prefix[i] += 1
                 if not quiet:
                     print i, prefix, len(cache), 'ub<=max', \
                           '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
@@ -244,11 +256,13 @@ for i in range(1, max_prefix_length + 1):
 
                     if sorted_prefix in pdict:
                         (equiv_prefix, equiv_accuracy) = pdict[sorted_prefix]
-                        gc_size[i] += 1
+                        inferior[i] += 1
                         if (accuracy > equiv_accuracy):
+                            # equiv_prefix is inferior to prefix
                             cache.pop(equiv_prefix)
                             pdict[sorted_prefix] = (prefix, accuracy)
                         else:
+                            # prefix is inferior to the stored equiv_prefix
                             continue
                     else:
                         pdict[sorted_prefix] = (prefix, accuracy)
@@ -270,14 +284,21 @@ for i in range(1, max_prefix_length + 1):
     cache_size[i] = len(cache) - cache_size[:i].sum()
     seconds[i] = time.time() - tic
 
+    assert ((cache_size[i] + captured_zero[i] + dead_prefix[i] + inferior[i])
+            == ((nrules - i + 1) * (cache_size[i-1] - dead_prefix_start[i] - stunted_prefix[i])))
 
     print 'max accuracy:', max_accuracy
     print 'cache size:', cache_size.tolist()
-    print 'gc size:', gc_size.tolist()
+    print 'dead prefix start:', dead_prefix_start.tolist()
+    print 'caputed zero:', captured_zero.tolist()
+    print 'stunted prefix:', stunted_prefix.tolist()
+    print 'dead prefix:', dead_prefix.tolist()
+    print 'inferior:', inferior.tolist()
     print 'seconds:', [float('%1.2f' % s) for s in seconds.tolist()]
 
-fname = os.path.join(dout, '%s-serial_gc-max_accuracy=%1.3f-max_length=%d.txt' %
-                           (froot, max_accuracy, max_prefix_length))
+metadata = ('%s-serial_gc-max_accuracy=%1.3f-max_length=%d' %
+            (froot, max_accuracy, max_prefix_length))
+fname = os.path.join(dout, '%s.txt' % metadata)
 cache.to_file(fname=fname, delimiter=delimiter)
 x = tb.tabarray(SVfile=fname, delimiter=delimiter)
 x.sort(order=['length', 'first'])
@@ -288,3 +309,10 @@ c = cache[tuple([int(j) for j in bp.split(',')])]
 print_rule_list(c.prefix, c.prediction, c.default_rule, rule_names)
 
 print c
+
+dfigs = os.path.join('..', 'figs')
+if not os.path.exists(dfigs):
+    os.mkdir(dfigs)
+
+figs.make_figure(metadata=metadata, din=dout, dout=dfigs,
+                 max_accuracy=max_accuracy, max_length=max_prefix_length)
