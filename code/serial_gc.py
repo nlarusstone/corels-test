@@ -45,8 +45,8 @@ seed = None
 sample = None
 
 froot = 'adult_R'
-max_accuracy = 0.825
-max_prefix_length = 2
+max_accuracy = 0.834
+max_prefix_length = 4
 seed = 0
 sample = 0.1
 
