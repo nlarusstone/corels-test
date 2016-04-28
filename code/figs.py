@@ -4,7 +4,8 @@ import tabular as tb
 import pylab
 
 
-def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t'):
+def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
+                alpha=0.05):
     fin = os.path.join(din, '%s.txt' % metadata)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     pylab.ion()
@@ -37,15 +38,15 @@ def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t'):
         a[1] = 1.
         pylab.axis(a)
         pylab.subplot(2, 3, 4)
-        pylab.plot(y['accuracy'], y['upper_bound'], '.', alpha=0.2)
+        pylab.plot(y['accuracy'], y['upper_bound'], '.', alpha=alpha)
         pylab.xlabel('accuracy')
         pylab.ylabel('upper_bound')
         pylab.subplot(2, 3, 5)
-        pylab.plot(y['accuracy'], y['curiosity'], '.', alpha=0.2)
+        pylab.plot(y['accuracy'], y['curiosity'], '.', alpha=alpha)
         pylab.xlabel('accuracy')
         pylab.ylabel('curiosity')
         pylab.subplot(2, 3, 6)
-        pylab.plot(y['upper_bound'], y['curiosity'], '.', alpha=0.2)
+        pylab.plot(y['upper_bound'], y['curiosity'], '.', alpha=alpha)
         pylab.xlabel('upper_bound')
         pylab.ylabel('curiosity')        
 
