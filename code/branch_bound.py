@@ -38,8 +38,8 @@ class CacheEntry:
     def __repr__(self):
         s = '\n'.join(('prefix: %s' % self.prefix.__repr__(),
                        'prediction: %s' % self.prediction.__repr__(),
-                       'accuracy: %1.3f' % self.accuracy,
-                       'upper_bound: %1.3f' % self.upper_bound,
+                       'accuracy: %1.10f' % self.accuracy,
+                       'upper_bound: %1.10f' % self.upper_bound,
                        'num_captured: %d' % self.num_captured,
                        'num_captured_correct: %d' % self.num_captured_correct,
                        'sum(not_captured): %d' % rule.count_ones(self.not_captured),
@@ -102,6 +102,198 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
         print '%sif %s then predict %d' % (e, rule_names[i], label)
         e = 'else '
     print 'else predict %d' % default_rule
+
+def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
+                num_already_correct, not_yet_captured, cached_prediction,
+                max_accuracy=0, garbage_collect=False, pdict=None, quiet=True):
+    """
+    Add prefix to cache via incremental computation.
+
+    """
+
+    captured_zero = False
+    dead_prefix = False
+    inferior = True
+
+    # new_rule is the (row) index in the rules matrix of the last rule
+    # in prefix, which starts with prefix_start
+    new_rule = prefix[-1]
+
+    # captured_nz is an bitmap of data captured by the new
+    # rule, given the cached prefix
+    cappd = rule.rule_vand(not_yet_captured, rules[new_rule])
+    captured_nz = cappd[0]
+
+    # num_captured is the number of data captured by the new rule, given
+    # the cached prefix
+    num_captured = cappd[1]
+
+    # the additional rule is useless if it doesn't capture any data
+    if (num_captured == 0):
+        captured_zero = True
+        if not quiet:
+            print i, prefix, len(cache), 'num_captured=0', \
+                  '%d %d %d' % (-1, -1, -1)
+        return (captured_zero, dead_prefix, inferior)
+
+    # not_captured is a binary vector of length ndata indicating those
+    # data that are not captured by the current prefix, i.e., not
+    # captured by the rule list given by the cached prefix appended with
+    # the new rule
+    not_cappd = rule.rule_vandnot(not_yet_captured, rules[new_rule])
+    not_captured = not_cappd[0]
+    assert not_yet_captured == (not_captured | captured_nz)
+
+    # not_captured_nz is an array of data indices not captured by prefix
+    #not_captured_nz = not_cappd[1]
+
+    # num_not_captured is the number of data not captured by prefix
+    num_not_captured = not_cappd[1]
+
+    # the data not captured by the cached prefix are either captured or
+    # not captured by the new rule
+    assert rule.count_ones(not_yet_captured) == (num_captured + num_not_captured)
+
+    # num_captured_ones is the number of data captured by the new rule,
+    # given the cached prefix, with label 1
+    num_captured_ones = rule.rule_vand(captured_nz, ones)[1]
+
+    # fraction_captured_ones is the fraction of data captured by the new
+    # rule, given the cached prefix, with label 1
+    fraction_captured_ones = float(num_captured_ones) / num_captured
+
+    if (fraction_captured_ones >= 0.5):
+        # the predictions of prefix are those of the cached prefix
+        # appended by the prediction that the data captured by the new
+        # rule have label 1
+        prediction = cached_prediction + (1,)
+
+        # num_captured_correct is the number of data captured by the new
+        # rule, given the cached prefix, with label 1
+        num_captured_correct = num_captured_ones
+    else:
+        # the predictions of prefix are those of the cached prefix
+        # appended by the prediction that the data captured by the new
+        # rule have label 0
+        prediction = cached_prediction + (0,)
+
+        # num_captured_correct is the number of data captured by the new
+        # rule, given the cached prefix, with label 0
+        num_captured_correct = num_captured - num_captured_ones
+
+    # compute the default rule on the not captured data
+    (default_rule, num_default_correct) = \
+        compute_default(rule.rule_vand(ones, not_captured)[0], num_not_captured)
+
+    # the data correctly predicted by prefix are either correctly
+    # predicted by cached_prefix, captured and correctly predicted by
+    # new_rule, or are not captured by prefix and correctly predicted by
+    # the default rule
+    accuracy = float(num_already_correct + num_captured_correct +
+                     num_default_correct) / ndata
+    assert accuracy <= 1
+
+    # the upper bound on the accuracy of a rule list starting with
+    # prefix is like the accuracy computation, except we assume that all
+    # data not captured by prefix are correctly predicted
+    upper_bound = float(num_already_correct + num_captured_correct +
+                        num_not_captured) / ndata
+
+    # if the upper bound of prefix exceeds max_accuracy, then create a
+    # cache entry for prefix
+    if (upper_bound <= max_accuracy):
+        dead_prefix = True
+        if not quiet:
+            print i, prefix, len(cache), 'ub<=max', \
+                  '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
+        return (captured_zero, dead_prefix, inferior)
+    else:
+        # if prefix is the new best known prefix, update max_accuracy
+        # and best_prefix
+        if (accuracy > max_accuracy):
+            max_accuracy = accuracy
+            best_prefix = prefix
+
+        # the data captured by prefix are either captured by the cached
+        # prefix or captured by the new rule
+        new_num_captured = num_already_captured + num_captured
+
+        # num_correct is the number of data captured by prefix and
+        # correctly predicted
+        num_correct = num_already_correct + num_captured_correct
+
+        # num_incorrect is the number of data captured by prefix and
+        # incorrectly predicted
+        num_incorrect = new_num_captured - num_correct
+
+        # curiosity = prefix misclassification
+        curiosity = float(num_incorrect) / new_num_captured
+
+        # to do garbage collection, we keep look for prefixes that are
+        # equivalent up to permutation
+        if garbage_collect:
+
+            # sorted_prefix lists the prefix's indices in sorted order
+            sorted_prefix = tuple(np.sort(prefix))
+
+            if sorted_prefix in pdict:
+                (equiv_prefix, equiv_accuracy) = pdict[sorted_prefix]
+                inferior = True
+                if (accuracy > equiv_accuracy):
+                    # equiv_prefix is inferior to prefix
+                    cache.pop(equiv_prefix)
+                    pdict[sorted_prefix] = (prefix, accuracy)
+                else:
+                    # prefix is inferior to the stored equiv_prefix
+                    return
+            else:
+                pdict[sorted_prefix] = (prefix, accuracy)
+
+        # make a cache entry for prefix
+        cache[prefix] = CacheEntry(prefix=prefix, prediction=prediction,
+                                   default_rule=default_rule,
+                                   accuracy=accuracy,
+                                   upper_bound=upper_bound,
+                                   num_captured=new_num_captured,
+                                   num_captured_correct=num_correct,
+                                   not_captured=not_captured,
+                                   curiosity=curiosity)
+
+        if not quiet:
+            print i, prefix, len(cache), 'ub>max', \
+                 '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
+    return (captured_zero, dead_prefix, inferior)
+
+def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0):
+    """
+    Compute accuracy of a given prefix via incremental computation.
+
+    """
+    for i in range(len(full_prefix)):
+        prefix_start = full_prefix[:i]
+
+        # cached_prefix is the cached data about a previously evaluated prefix
+        cached_prefix = cache[prefix_start]
+
+        # num_already_captured is the number of data captured by the cached
+        # prefix
+        num_already_captured = cached_prefix.num_captured
+
+        # num_already_correct is the number of data that are both captured by
+        # the cached prefix and correctly predicted
+        num_already_correct = cached_prefix.num_captured_correct
+
+        # not_yet_captured is a binary vector of length ndata indicating which
+        # data are not captured by the cached prefix
+        not_yet_captured = cached_prefix.get_not_captured()
+
+        cached_prediction = cached_prefix.prediction
+
+        prefix = prefix_start + (full_prefix[i],)
+
+        incremental(cache, prefix, rules, ones, ndata, num_already_captured,
+                    num_already_correct, not_yet_captured, cached_prediction,
+                    max_accuracy=max_accuracy)
 
 def file_to_dict(fname, seed=None, sample=None):
     """
@@ -168,6 +360,7 @@ def read_data(fname, seed=None, sample=None):
         rule_names.append(line[0])
         rules.append(bitstring)
     return (rule_names, rules)
+
 def compute_default(ones, uncaptured):
     """
     Computes default rule given an mpz representation of uncaptured samples.
