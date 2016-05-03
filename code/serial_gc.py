@@ -128,6 +128,8 @@ for i in range(1, max_prefix_length + 1):
         # data are not captured by the cached prefix
         not_yet_captured = cached_prefix.get_not_captured()
 
+        cached_prediction = cached_prefix.prediction
+
         # construct a queue of all prefixes starting with prefix_start and
         # appended with one additional rule
         assert len(queue) == 0
@@ -188,7 +190,7 @@ for i in range(1, max_prefix_length + 1):
                 # the predictions of prefix are those of the cached prefix
                 # appended by the prediction that the data captured by the new
                 # rule have label 1
-                prediction = cached_prefix.prediction + (1,)
+                prediction = cached_prediction + (1,)
 
                 # num_captured_correct is the number of data captured by the new
                 # rule, given the cached prefix, with label 1
@@ -197,7 +199,7 @@ for i in range(1, max_prefix_length + 1):
                 # the predictions of prefix are those of the cached prefix
                 # appended by the prediction that the data captured by the new
                 # rule have label 0
-                prediction = cached_prefix.prediction + (0,)
+                prediction = cached_prediction + (0,)
 
                 # num_captured_correct is the number of data captured by the new
                 # rule, given the cached prefix, with label 0
