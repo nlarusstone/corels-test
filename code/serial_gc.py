@@ -45,13 +45,13 @@ garbage_collect = True
 seed = None
 sample = None
 
-"""
+#"""
 froot = 'adult_R'
 max_accuracy = 0.835438
-max_prefix_length = 3
+max_prefix_length = 1
 seed = 0
 sample = 0.1
-"""
+#"""
 
 label_file = '%s.label' % froot
 out_file = '%s.out' % froot
@@ -111,7 +111,10 @@ for i in range(1, max_prefix_length + 1):
             # in this case, no rule list starting with and longer than
             # prefix_start can achieve a higher accuracy
             stunted_prefix[i] += 1
-            continue        
+            continue
+
+        #if (cached_prefix.curiosity > 0.02):
+        #    continue
 
         # num_already_captured is the number of data captured by the cached
         # prefix
@@ -305,7 +308,7 @@ x.sort(order=['length', 'first'])
 x.saveSV(fname, delimiter=delimiter)
 
 bp = x['prefix'][x['accuracy'] == x['accuracy'].max()][0]
-c = cache[tuple([int(j) for j in bp.split(',')])]
+c = cache[tuple([int(j) for j in [k for k in bp.split(',') if k]])]
 print_rule_list(c.prefix, c.prediction, c.default_rule, rule_names)
 
 print c
