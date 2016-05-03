@@ -135,6 +135,39 @@ def file_to_dict(fname, seed=None, sample=None):
         d[line[0]] = bitstring
     return d
 
+def read_data(fname, seed=None, sample=None):
+    """
+    Utility to read a `.out` data file.
+
+    Map each line in the file to a (key, value) pair where the key is a string
+    equal to the first word in the file and the value is an integer numpy.array
+    constructed from the remaining words, which are each assumed to be 0 or 1.
+    The keys and values are stored in two separate arrays whose indices
+    correspond.
+
+    """
+    line_vec = [line.split() for line in
+                open(fname, 'rU').read().strip().split('\n')]
+
+    if (sample is not None):
+        ndata = len(line_vec[0][1:])
+        nsample = int(sample * ndata)
+        np.random.seed(seed)
+        ind = np.random.permutation(ndata)[:nsample] + 1
+
+    rule_names = []
+    rules = []
+    for line in line_vec:
+        if sample is not None:
+            truthtable = "".join([line[i] for i in ind])
+        else:
+            truthtable = "".join(line[1:])
+        # to prevent clearing of leading zeroes
+        truthtable = '1' + truthtable
+        bitstring = mpz(truthtable, 2)
+        rule_names.append(line[0])
+        rules.append(bitstring)
+    return (rule_names, rules)
 def compute_default(ones, uncaptured):
     """
     Computes default rule given an mpz representation of uncaptured samples.
@@ -217,8 +250,8 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     ndata = label_dict['{label=1}'].num_digits(2) - 1
     assert(rule.count_ones(label_dict['{label=1}']) == (ndata - rule.count_ones(label_dict['{label=0}'])))
 
-    # rule_dict maps each rule to a binary integer vector of length ndata
-    rule_dict = file_to_dict(os.path.join(din, out_file), seed=seed, sample=sample)
+    # rules[i] is a bitstring of length ndata with label given by rule_names[i]
+    (rule_names, rules) = read_data(os.path.join(din, out_file), seed=seed, sample=sample)
 
     # ones a binary integer vector of length ndata
     # ones[j] = 1 iff label(data[j]) = 1
@@ -226,15 +259,12 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
 
     # rules is an (nrules x ndata) binary integer matrix indicating
     # rules[i, j] = 1 iff data[j] obeys the ith rule
-    #rules = np.cast[int](np.array(rule_dict.values()))
-    nrules = len(rule_dict)
+    # rules = np.cast[int](np.array(rule_dict.values()))
+    nrules = len(rule_names)
     rule.lead_one = mpz(pow(2, ndata))
 
     # rule_set is a set of all rule indices
     rule_set = set(range(nrules))
-
-    # rule_names is an list of string descriptions of rules
-    rule_names = list(rule_dict.keys())
 
     # for the empty prefix, compute the default rule and number of data it
     # correctly predicts
@@ -281,5 +311,5 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
         """
         pass
 
-    return (nrules, ndata, ones, list(rule_dict.values()), rule_set, rule_names,
-            max_accuracy, best_prefix, cache)
+    return (nrules, ndata, ones, rules, rule_set, rule_names, max_accuracy,
+            best_prefix, cache)
