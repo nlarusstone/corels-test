@@ -8,43 +8,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from branch_bound import initialize, given_prefix, print_rule_list
-
-def summarize(prefix, cache):
-    n = len(prefix) + 1
-    accuracy = np.zeros(n)
-    upper_bound = np.zeros(n)
-    curiosity = np.zeros(n)
-    num_captured = np.zeros(n, int)
-    num_captured_correct = np.zeros(n, int)
-    for i in range(n):
-        c = cache[prefix[:i]]
-        accuracy[i] = c.accuracy
-        upper_bound[i] = c.upper_bound
-        curiosity[i] = c.curiosity
-        num_captured[i] = c.num_captured
-        num_captured_correct[i] = c.num_captured_correct
-
-    print 'Accuracy:', c.accuracy
-
-    plt.figure(1, figsize=(10, 4))
-    plt.clf()
-    plt.subplot(1, 2, 1)
-    plt.plot(range(n), upper_bound, ':', marker='.')
-    plt.plot(range(n), accuracy, '-', marker='.')
-    plt.plot(range(n), curiosity, '--', marker='.')
-    plt.axis('tight')
-    plt.legend(('upper bound', 'accuracy', 'curiosity'), loc='best')
-    plt.subplot(1, 2, 2)
-    plt.plot(range(n), num_captured, ':', marker='.')
-    plt.plot(range(n), num_captured_correct, '-', marker='.')
-    a = list(plt.axis('tight'))
-    plt.legend(('num captured', 'num captured correct'), loc='best')
-    a[3] = ndata
-    plt.axis(a)
-
-    c = cache[prefix]
-    print_rule_list(prefix, c.prediction, c.default_rule, rule_names)
-    return
+import viz
 
 
 din = os.path.join('..', 'data')
@@ -106,7 +70,7 @@ Elaine seems to have a slightly different rule list, without a rule for
 """
 prefix = (45, 35, 77, 33, 134, 69, 68, 121, 86, 82, 97, 122, 59, 113, 210, 181, 166, 257)
 given_prefix(prefix, cache, rules, ones, ndata, max_accuracy=max_accuracy)
-summarize(prefix, cache)
+viz.prefix_trace(prefix, cache, rule_names, ndata)
 
 """
 There is another example rule list in our earlier paper http://arxiv.org/pdf/1602.08610v1.pdf on page 3:
@@ -134,4 +98,4 @@ There is another example rule list in our earlier paper http://arxiv.org/pdf/160
 """
 prefix = (45, 77, 35, 33, 69, 121, 86, 97, 221, 122, 59, 54, 169, 180)
 given_prefix(prefix, cache, rules, ones, ndata, max_accuracy=max_accuracy)
-summarize(prefix, cache)
+viz.prefix_trace(prefix, cache, rule_names, ndata)
