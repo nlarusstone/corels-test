@@ -107,13 +107,15 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
                 num_already_correct, not_yet_captured, cached_prediction,
                 max_accuracy=0, garbage_collect=False, pdict=None, quiet=True):
     """
-    Add prefix to cache via incremental computation.
+    Compute cache entry for prefix via incremental computation.
+
+    Add to cache if relevant.
 
     """
 
-    captured_zero = False
-    dead_prefix = False
-    inferior = True
+    captured_zero = 0
+    dead_prefix = 0
+    inferior = 0
 
     # new_rule is the (row) index in the rules matrix of the last rule
     # in prefix, which starts with prefix_start
@@ -130,7 +132,7 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
 
     # the additional rule is useless if it doesn't capture any data
     if (num_captured == 0):
-        captured_zero = True
+        captured_zero = 1
         if not quiet:
             print i, prefix, len(cache), 'num_captured=0', \
                   '%d %d %d' % (-1, -1, -1)
@@ -202,7 +204,7 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
     # if the upper bound of prefix exceeds max_accuracy, then create a
     # cache entry for prefix
     if (upper_bound <= max_accuracy):
-        dead_prefix = True
+        dead_prefix = 1
         if not quiet:
             print i, prefix, len(cache), 'ub<=max', \
                   '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
@@ -245,7 +247,8 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
                     pdict[sorted_prefix] = (prefix, accuracy)
                 else:
                     # prefix is inferior to the stored equiv_prefix
-                    return
+                    inferior = 1
+                    return (captured_zero, dead_prefix, inferior)
             else:
                 pdict[sorted_prefix] = (prefix, accuracy)
 
