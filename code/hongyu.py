@@ -24,6 +24,8 @@ def summarize(prefix, cache):
         num_captured[i] = c.num_captured
         num_captured_correct[i] = c.num_captured_correct
 
+    print 'Accuracy:', c.accuracy
+
     plt.figure(1, figsize=(10, 4))
     plt.clf()
     plt.subplot(1, 2, 1)
