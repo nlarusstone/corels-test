@@ -299,6 +299,7 @@ def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0, best_pr
             incremental(cache, prefix, rules, ones, ndata, num_already_captured,
                         num_already_correct, not_yet_captured, cached_prediction,
                         max_accuracy=max_accuracy, best_prefix=best_prefix)
+        return
 
 def file_to_dict(fname, seed=None, sample=None):
     """
