@@ -70,7 +70,7 @@ Elaine seems to have a slightly different rule list, without a rule for
 """
 prefix = (45, 35, 77, 33, 134, 69, 68, 121, 86, 82, 97, 122, 59, 113, 210, 181, 166, 257)
 given_prefix(prefix, cache, rules, ones, ndata, max_accuracy=max_accuracy)
-viz.prefix_trace(prefix, cache, rule_names, ndata)
+viz.prefix_trace(prefix, cache, rule_names, ndata, rules, ones)
 
 """
 There is another example rule list in our earlier paper http://arxiv.org/pdf/1602.08610v1.pdf on page 3:
@@ -98,4 +98,4 @@ There is another example rule list in our earlier paper http://arxiv.org/pdf/160
 """
 prefix = (45, 77, 35, 33, 69, 121, 86, 97, 221, 122, 59, 54, 169, 180)
 given_prefix(prefix, cache, rules, ones, ndata, max_accuracy=max_accuracy)
-viz.prefix_trace(prefix, cache, rule_names, ndata)
+viz.prefix_trace(prefix, cache, rule_names, ndata, rules, ones)
