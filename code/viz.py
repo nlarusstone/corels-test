@@ -14,7 +14,7 @@ def mpz_to_array(x):
 def array_to_string(x):
     return ''.join(np.cast[str](x))
 
-def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None, ones=None, m=100):
+def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None, ones=None, m=98):
     n = len(prefix) + 1
     accuracy = np.zeros(n)
     upper_bound = np.zeros(n)
