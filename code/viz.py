@@ -14,6 +14,27 @@ def mpz_to_array(x):
 def array_to_string(x):
     return ''.join(np.cast[str](x))
 
+def data_points(prefix, rule_names=None, ndata=None, rules=None, ones=None,
+                m=150, quiet=True, fs=14):
+    n = len(prefix)
+    labels = mpz_to_array(ones)[:m].reshape((1, m))
+    data = np.array([mpz_to_array(rules[p]) for p in prefix])[:,:m]
+    plt.figure(2, figsize=(14, 0.5))
+    plt.pcolor(labels, cmap='coolwarm', vmin=0, vmax=3)
+    plt.axis('tight')
+    plt.xlabel('data index', fontsize=fs)
+    plt.ylabel('label', fontsize=fs)
+    plt.xticks(fontsize=fs)
+    plt.yticks([])
+    plt.figure(3, figsize=(14, 6))
+    plt.pcolor(data[::-1], cmap='coolwarm', vmin=0, vmax=3)
+    plt.axis('tight')
+    plt.xlabel('data index', fontsize=fs)
+    plt.ylabel('prefix index', fontsize=fs)
+    plt.xticks(fontsize=fs)
+    plt.yticks(np.arange(n) + 0.5, range(n)[::-1], fontsize=fs)
+    return
+
 def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None,
                  ones=None, m=150, quiet=True, fs=14):
     n = len(prefix) + 1
@@ -82,24 +103,24 @@ def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None,
             complete_viz[i,:] = with_default[:m].copy()
             if not quiet:
                 print array_to_string(with_default[:m])
-        plt.figure(2, figsize=(14, 6))
+        plt.figure(4, figsize=(14, 6))
         plt.clf()
         plt.pcolor(captured_viz[::-1], cmap='coolwarm', vmin=0, vmax=3)
         plt.title('(dark blue) uncaptured, (light blue) captured', fontsize=fs)
         plt.xlabel('data index', fontsize=fs)
-        plt.figure(3, figsize=(14, 6))
+        plt.figure(5, figsize=(14, 6))
         plt.clf()
         plt.pcolor(correct_viz[::-1], cmap='coolwarm', vmin=0, vmax=3)
         plt.title('(dark blue) uncaptured, (red) captured & correct\n' +
                   '(light blue) captured & incorrect', fontsize=fs)
-        plt.figure(4, figsize=(14, 6))
+        plt.figure(6, figsize=(14, 6))
         plt.clf()
         plt.pcolor(complete_viz[::-1], cmap='coolwarm', vmin=0, vmax=3)
         plt.title('(pink) uncaptured & correct by default, ' +
                   '(red) captured & correct\n' +
                   '(dark blue) uncaptured & incorrect by default, ' +
                   '(light blue) captured & incorrect', fontsize=fs)
-        for fig in [2, 3, 4]:
+        for fig in [4, 5, 6]:
             plt.figure(fig)
             plt.xlabel('data index', fontsize=fs)
             plt.ylabel('prefix length', fontsize=fs)
