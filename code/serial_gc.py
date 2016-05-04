@@ -45,13 +45,13 @@ garbage_collect = True
 seed = None
 sample = None
 
-"""
+#"""
 froot = 'adult_R'
-max_accuracy = 0.835438
-max_prefix_length = 1
+max_accuracy = 0.835 # 0.835438
+max_prefix_length = 4
 seed = 0
 sample = 0.1
-"""
+#"""
 
 label_file = '%s.label' % froot
 out_file = '%s.out' % froot
@@ -141,9 +141,10 @@ for i in range(1, max_prefix_length + 1):
 
             # compute cache entry for prefix via incremental computation, and
             # add to cache if relevant
-            (cz, dp, ir) = incremental(cache, prefix, rules, ones, ndata,
+            (max_accuracy, best_prefix, cz, dp, ir) = \
+                incremental(cache, prefix, rules, ones, ndata,
                 num_already_captured, num_already_correct, not_yet_captured,
-                cached_prediction, max_accuracy=max_accuracy,
+                cached_prediction, max_accuracy=max_accuracy, best_prefix=best_prefix,
                 garbage_collect=garbage_collect, pdict=pdict, quiet=quiet)
 
             captured_zero[i] += cz
