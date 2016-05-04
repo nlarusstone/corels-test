@@ -105,14 +105,14 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
 
 def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
                 num_already_correct, not_yet_captured, cached_prediction,
-                max_accuracy=0, garbage_collect=False, pdict=None, quiet=True):
+                max_accuracy=0, best_prefix=None, garbage_collect=False,
+                pdict=None, quiet=True):
     """
     Compute cache entry for prefix via incremental computation.
 
     Add to cache if relevant.
 
     """
-
     captured_zero = 0
     dead_prefix = 0
     inferior = 0
@@ -136,7 +136,7 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
         if not quiet:
             print i, prefix, len(cache), 'num_captured=0', \
                   '%d %d %d' % (-1, -1, -1)
-        return (captured_zero, dead_prefix, inferior)
+        return (max_accuracy, best_prefix, captured_zero, dead_prefix, inferior)
 
     # not_captured is a binary vector of length ndata indicating those
     # data that are not captured by the current prefix, i.e., not
@@ -208,11 +208,12 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
         if not quiet:
             print i, prefix, len(cache), 'ub<=max', \
                   '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
-        return (captured_zero, dead_prefix, inferior)
+        return (max_accuracy, best_prefix, captured_zero, dead_prefix, inferior)
     else:
         # if prefix is the new best known prefix, update max_accuracy
         # and best_prefix
         if (accuracy > max_accuracy):
+            print 'max:', max_accuracy, '->', accuracy
             max_accuracy = accuracy
             best_prefix = prefix
 
@@ -248,7 +249,7 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
                 else:
                     # prefix is inferior to the stored equiv_prefix
                     inferior = 1
-                    return (captured_zero, dead_prefix, inferior)
+                    return (max_accuracy, best_prefix, captured_zero, dead_prefix, inferior)
             else:
                 pdict[sorted_prefix] = (prefix, accuracy)
 
@@ -265,9 +266,9 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
         if not quiet:
             print i, prefix, len(cache), 'ub>max', \
                  '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
-    return (captured_zero, dead_prefix, inferior)
+    return (max_accuracy, best_prefix, captured_zero, dead_prefix, inferior)
 
-def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0):
+def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0, best_prefix=None):
     """
     Compute accuracy of a given prefix via incremental computation.
 
@@ -294,9 +295,10 @@ def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0):
 
         prefix = prefix_start + (full_prefix[i],)
 
-        incremental(cache, prefix, rules, ones, ndata, num_already_captured,
-                    num_already_correct, not_yet_captured, cached_prediction,
-                    max_accuracy=max_accuracy)
+        (max_accuracy, best_prefix, cz, dp, ir) = \
+            incremental(cache, prefix, rules, ones, ndata, num_already_captured,
+                        num_already_correct, not_yet_captured, cached_prediction,
+                        max_accuracy=max_accuracy, best_prefix=best_prefix)
 
 def file_to_dict(fname, seed=None, sample=None):
     """
