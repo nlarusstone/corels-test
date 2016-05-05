@@ -2,22 +2,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from branch_bound import print_rule_list
+import utils
 
-
-def mpz_to_string(x):
-    # skip leading 1
-    return "{0}".format(x.digits(2))[1:]
-
-def mpz_to_array(x):
-    return np.cast['uint8']([i for i in mpz_to_string(x)])
-
-def array_to_string(x):
-    return ''.join(np.cast[str](x))
 
 def data_points(prefix, rule_names=None, ndata=None, rules=None, ones=None,
                 m=150, quiet=True, fs=14):
     n = len(prefix)
-    labels = mpz_to_array(ones)[:m].reshape((1, m))
+    labels = utils.mpz_to_array(ones)[:m].reshape((1, m))
     data = np.array([mpz_to_array(rules[p]) for p in prefix])[:,:m]
     plt.figure(2, figsize=(14, 7.5))
     plt.subplot2grid((11, 1), (0, 0))
@@ -57,10 +48,10 @@ def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None,
         print '1 = captured'
         for i in range(1, n):
             c = cache[prefix[:i]]
-            captured = 1 - mpz_to_array(c.not_captured)
-            print array_to_string(captured[:m])
+            captured = 1 - utils.mpz_to_array(c.not_captured)
+            print utils.array_to_string(captured[:m])
     if (rules is not None):
-        labels = mpz_to_array(ones)
+        labels = utils.mpz_to_array(ones)
         if not quiet:
             print
             print '0 = not captured'
@@ -70,14 +61,14 @@ def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None,
             for i in range(n):
                 pfx = prefix[:i]
                 c = cache[pfx]
-                captured = 1 - mpz_to_array(c.not_captured)
+                captured = 1 - utils.mpz_to_array(c.not_captured)
                 if i:
-                    rule = mpz_to_array(rules[pfx[-1]])
+                    rule = utils.mpz_to_array(rules[pfx[-1]])
                     correct = (labels == c.prediction[-1])
                     new_captured = (state == 0) & (captured == 1)
                     state[new_captured & np.invert(correct)] = 1
                     state[new_captured & correct] = 3
-                print array_to_string(state[:m])
+                print utils.array_to_string(state[:m])
             print
             print '0 = not captured and incorrect by default'
             print '1 = captured and not correct'
@@ -90,10 +81,10 @@ def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None,
         for i in range(n):
             pfx = prefix[:i]
             c = cache[pfx]
-            captured = 1 - mpz_to_array(c.not_captured)
+            captured = 1 - utils.mpz_to_array(c.not_captured)
             captured_viz[i,:] = captured[:m].copy()
             if i:
-                rule = mpz_to_array(rules[pfx[-1]])
+                rule = utils.mpz_to_array(rules[pfx[-1]])
                 correct = (labels == c.prediction[-1])
                 new_captured = (state == 0) & (captured == 1)
                 state[new_captured & np.invert(correct)] = 1
@@ -103,7 +94,7 @@ def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None,
             with_default[(state == 0) & (labels == c.default_rule)] = 2
             complete_viz[i,:] = with_default[:m].copy()
             if not quiet:
-                print array_to_string(with_default[:m])
+                print utils.array_to_string(with_default[:m])
         plt.figure(4, figsize=(14, 6))
         plt.clf()
         plt.pcolor(captured_viz[::-1], cmap='coolwarm', vmin=0, vmax=3)
