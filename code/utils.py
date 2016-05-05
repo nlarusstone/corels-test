@@ -10,3 +10,6 @@ def mpz_to_array(x):
 
 def array_to_string(x):
     return ''.join(np.cast[str](x))
+
+def rules_to_array(x):
+    return np.array([mpz_to_array(r) for r in x])
