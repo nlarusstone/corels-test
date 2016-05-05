@@ -19,20 +19,21 @@ def data_points(prefix, rule_names=None, ndata=None, rules=None, ones=None,
     n = len(prefix)
     labels = mpz_to_array(ones)[:m].reshape((1, m))
     data = np.array([mpz_to_array(rules[p]) for p in prefix])[:,:m]
-    plt.figure(2, figsize=(14, 0.5))
+    plt.figure(2, figsize=(14, 7.5))
+    plt.subplot2grid((11, 1), (0, 0))
     plt.pcolor(labels, cmap='coolwarm', vmin=0, vmax=3)
     plt.axis('tight')
     plt.xlabel('data index', fontsize=fs)
     plt.ylabel('label', fontsize=fs)
     plt.xticks(fontsize=fs)
     plt.yticks([])
-    plt.figure(3, figsize=(14, 6))
+    plt.subplot2grid((11, 1), (2, 0), rowspan=9)
     plt.pcolor(data[::-1], cmap='coolwarm', vmin=0, vmax=3)
     plt.axis('tight')
     plt.xlabel('data index', fontsize=fs)
     plt.ylabel('prefix index', fontsize=fs)
     plt.xticks(fontsize=fs)
-    plt.yticks(np.arange(n) + 0.5, range(n)[::-1], fontsize=fs)
+    plt.yticks(np.arange(n) + 0.5, np.arange(1, n+1)[::-1], fontsize=fs)
     return
 
 def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None,
