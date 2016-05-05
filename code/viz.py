@@ -9,24 +9,39 @@ def data_redundancy(prefix, cache, ndata=None, rules=None, ones=None, fs=14, lw=
     n = len(prefix) + 1
     ones = utils.mpz_to_array(ones)
     rules = utils.rules_to_array(rules)
-    x = np.vstack((ones, rules))
+    x = np.vstack((rules, ones))
     num_uncaptured = np.zeros(n, int)
     num_unique = np.zeros(n, int)
+    num_unique_rules = np.zeros(n, int)
+    mask = np.ones(x.shape[0], int)
     for i in range(n):
         pfx = prefix[:i]
         c = cache[pfx]
+        if i:
+            mask[pfx[-1]] = 0
+        ind = mask.nonzero()[0]
         not_captured_ind = np.nonzero(utils.mpz_to_array(c.not_captured))[0]
         num_uncaptured[i] = len(not_captured_ind)
-        num_unique[i] = len(set([tuple(col) for col in (x.T)[not_captured_ind]]))
+        num_unique[i] = len(set([tuple(col) for col in (x[ind].T)[not_captured_ind]]))
+        num_unique_rules[i] = len(set([tuple(row) for row in x[ind[:-1]][:, not_captured_ind]]))
         # print i, num_uncaptured[i], num_unique[i]
-    plt.figure(1, figsize=(6, 4.5))
+    plt.ion()
+    plt.figure(1, figsize=(12, 4))
     plt.clf()
+    plt.subplot(1, 2, 1)
     plt.plot(range(n), num_uncaptured / float(ndata), ':', marker='o', linewidth=lw)
     plt.plot(range(n), num_unique / float(ndata), '-', marker='o', linewidth=lw)
     plt.axis([0, n - 1, 0, 1])
     plt.legend(('uncaptured', 'uncaptured unique'))
     plt.xlabel('prefix length', fontsize=fs)
     plt.ylabel('fraction', fontsize=fs)
+    plt.xticks(fontsize=fs)
+    plt.yticks(fontsize=fs)
+    plt.subplot(1, 2, 2)
+    plt.plot(range(n), num_unique_rules, '-', marker='o', linewidth=lw)
+    plt.axis((0, n - 1, 0, rules.shape[0]))
+    plt.xlabel('prefix length', fontsize=fs)
+    plt.ylabel('unique rules', fontsize=fs)
     plt.xticks(fontsize=fs)
     plt.yticks(fontsize=fs)
     return
@@ -171,7 +186,7 @@ def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None,
         plt.yticks(fontsize=fs)
     return
 
-def prefix_summary(prefix, cache, rule_names, ndata, rules, ones)
+def prefix_summary(prefix, cache, rule_names, ndata, rules, ones):
     data_redundancy(prefix, cache, ndata, rules, ones)
     data_points(prefix, rule_names, ndata, rules, ones)
     prefix_trace(prefix, cache, rule_names, ndata, rules, ones)
