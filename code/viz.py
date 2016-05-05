@@ -5,12 +5,38 @@ from branch_bound import print_rule_list
 import utils
 
 
+def data_redundancy(prefix, cache, ndata=None, rules=None, ones=None, fs=14, lw=3):
+    n = len(prefix) + 1
+    ones = utils.mpz_to_array(ones)
+    rules = utils.rules_to_array(rules)
+    x = np.vstack((ones, rules))
+    num_uncaptured = np.zeros(n, int)
+    num_unique = np.zeros(n, int)
+    for i in range(n):
+        pfx = prefix[:i]
+        c = cache[pfx]
+        not_captured_ind = np.nonzero(utils.mpz_to_array(c.not_captured))[0]
+        num_uncaptured[i] = len(not_captured_ind)
+        num_unique[i] = len(set([tuple(col) for col in (x.T)[not_captured_ind]]))
+        # print i, num_uncaptured[i], num_unique[i]
+    plt.figure(1, figsize=(6, 4.5))
+    plt.clf()
+    plt.plot(range(n), num_uncaptured / float(ndata), ':', marker='o', linewidth=lw)
+    plt.plot(range(n), num_unique / float(ndata), '-', marker='o', linewidth=lw)
+    plt.axis([0, n - 1, 0, 1])
+    plt.legend(('uncaptured', 'uncaptured unique'))
+    plt.xlabel('prefix length', fontsize=fs)
+    plt.ylabel('fraction', fontsize=fs)
+    plt.xticks(fontsize=fs)
+    plt.yticks(fontsize=fs)
+    return
+
 def data_points(prefix, rule_names=None, ndata=None, rules=None, ones=None,
                 m=150, quiet=True, fs=14):
     n = len(prefix)
     labels = utils.mpz_to_array(ones)[:m].reshape((1, m))
-    data = np.array([mpz_to_array(rules[p]) for p in prefix])[:,:m]
-    plt.figure(2, figsize=(14, 7.5))
+    data = np.array([utils.mpz_to_array(rules[p]) for p in prefix])[:,:m]
+    plt.figure(3, figsize=(14, 7.5))
     plt.subplot2grid((11, 1), (0, 0))
     plt.pcolor(labels, cmap='coolwarm', vmin=0, vmax=3)
     plt.axis('tight')
@@ -28,7 +54,7 @@ def data_points(prefix, rule_names=None, ndata=None, rules=None, ones=None,
     return
 
 def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None,
-                 ones=None, m=150, quiet=True, fs=14):
+                 ones=None, m=150, quiet=True, fs=14, lw=3):
     n = len(prefix) + 1
     accuracy = np.zeros(n)
     upper_bound = np.zeros(n)
@@ -125,16 +151,16 @@ def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None,
     print c
     if (rule_names is not None):
         print_rule_list(prefix, c.prediction, c.default_rule, rule_names)    
-    plt.figure(1, figsize=(12, 4))
+    plt.figure(2, figsize=(12, 4))
     plt.clf()
     plt.subplot(1, 2, 1)
-    plt.plot(range(n), upper_bound, ':', marker='.')
-    plt.plot(range(n), accuracy, '-', marker='.')
-    plt.plot(range(n), curiosity, '--', marker='.')
+    plt.plot(range(n), upper_bound, ':', marker='o', linewidth=lw)
+    plt.plot(range(n), accuracy, '-', marker='o', linewidth=lw)
+    plt.plot(range(n), curiosity, '--', marker='o', linewidth=lw)
     plt.legend(('upper bound', 'accuracy', 'curiosity'), loc='best')
     plt.subplot(1, 2, 2)
-    plt.plot(range(n), num_captured / float(ndata), ':', marker='.')
-    plt.plot(range(n), num_captured_correct / float(ndata), '-', marker='.')
+    plt.plot(range(n), num_captured / float(ndata), ':', marker='o', linewidth=lw)
+    plt.plot(range(n), num_captured_correct / float(ndata), '-', marker='o', linewidth=lw)
     a = list(plt.axis('tight'))
     plt.legend(('fraction captured', 'fraction captured & correct'), loc='best')
     for j in [1, 2]:
