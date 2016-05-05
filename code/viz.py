@@ -170,3 +170,8 @@ def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None,
         plt.xticks(fontsize=fs)
         plt.yticks(fontsize=fs)
     return
+
+def prefix_summary(prefix, cache, rule_names, ndata, rules, ones)
+    data_redundancy(prefix, cache, ndata, rules, ones)
+    data_points(prefix, rule_names, ndata, rules, ones)
+    prefix_trace(prefix, cache, rule_names, ndata, rules, ones)
