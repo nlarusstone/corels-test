@@ -14,12 +14,33 @@ def array_to_string(x):
 def rules_to_array(x):
     return np.array([mpz_to_array(r) for r in x])
 
-def relationships(x):
+def find_commuting_pairs(x):
     n = x.shape[0]
     num_pairs = (n * (n - 1)) / 2
     d = np.dot(x, x.T)
     num_commuting_pairs = (d == 0).sum() / 2
-    print num_pairs, num_commuting_pairs
+    print 'total pairs:', num_pairs, 'commuting pairs:', num_commuting_pairs
     mask = np.triu(np.ones(d.shape, int))
     mask = mask - np.identity(d.shape[0], int)
-    return zip(((d == 0) & mask).nonzero())
+    commuting_pairs = np.array(((d == 0) & mask).nonzero()).T
+    return commuting_pairs
+
+def commuting_dict(commuting_pairs, n):
+    d = dict(zip(range(n), [()] * n))
+    for (a, b) in commuting_pairs:
+        d[a] += (b,)
+    return d
+
+def make_graph(nodes, edges):
+    import networkx as nx
+    G = nx.Graph()
+    for node in nodes:
+        G.add_node(node)
+    for edge in edges:
+        (a, b) = edge
+        G.add_edge(a, b)
+    return G
+
+def sublists(s, min_length=2):
+    return set(itertools.chain.from_iterable(itertools.combinations(s, r) for r in
+                                             range(min_length, len(s) + 1)))
