@@ -31,6 +31,7 @@ import tabular as tb
 from branch_bound import initialize, incremental, print_rule_list
 import figs
 import rule
+import utils
 
 din = os.path.join('..', 'data')
 dout = os.path.join('..', 'cache')
@@ -47,8 +48,8 @@ sample = None
 
 #"""
 froot = 'adult_R'
-max_accuracy = 0.835 # 0.835438
-max_prefix_length = 4
+max_accuracy = 0.83 # 0.835438
+max_prefix_length = 3
 seed = 0
 sample = 0.1
 #"""
@@ -60,6 +61,10 @@ out_file = '%s.out' % froot
  max_accuracy, best_prefix, cache) = initialize(din, dout, label_file, out_file,
                                         warm_start, max_accuracy, best_prefix,
                                         seed, sample)
+
+x = utils.rules_to_array(rules)
+commuting_pairs = utils.find_commuting_pairs(x)
+cdict = utils.commuting_dict(commuting_pairs, nrules)
 
 print froot
 print 'nrules:', nrules
@@ -77,6 +82,7 @@ cache_size[0] = 1
 dead_prefix_start = np.zeros(m, int)
 captured_zero = np.zeros(m, int)
 stunted_prefix = np.zeros(m, int)
+commutes = np.zeros(m, int)
 dead_prefix = np.zeros(m, int)
 inferior = np.zeros(m, int)
 
@@ -133,7 +139,13 @@ for i in range(1, max_prefix_length + 1):
         # construct a queue of all prefixes starting with prefix_start and
         # appended with one additional rule
         assert len(queue) == 0
-        queue = [prefix_start + (t,) for t in list(rule_set.difference(set(prefix_start)))]
+        rules_to_consider = rule_set.difference(set(prefix_start))
+        if len(prefix_start):
+            last_rule = prefix_start[-1]
+            rtc = rules_to_consider.difference(set(cdict[last_rule]))
+            commutes[i] += len(rules_to_consider) - len(rtc)
+            rules_to_consider = rtc
+        queue = [prefix_start + (t,) for t in list(rules_to_consider)]
 
         while(queue):
             # prefix is the first prefix tuple in the queue
@@ -154,7 +166,7 @@ for i in range(1, max_prefix_length + 1):
     cache_size[i] = len(cache) - cache_size[:i].sum()
     seconds[i] = time.time() - tic
 
-    assert ((cache_size[i] + captured_zero[i] + dead_prefix[i] + inferior[i])
+    assert ((cache_size[i] + commutes[i] + captured_zero[i] + dead_prefix[i] + inferior[i])
             == ((nrules - i + 1) * (cache_size[i-1] - dead_prefix_start[i] - stunted_prefix[i])))
 
     print 'max accuracy:', max_accuracy
@@ -162,9 +174,11 @@ for i in range(1, max_prefix_length + 1):
     print 'dead prefix start:', dead_prefix_start.tolist()
     print 'caputed zero:', captured_zero.tolist()
     print 'stunted prefix:', stunted_prefix.tolist()
+    print 'commutes:', commutes.tolist()
     print 'dead prefix:', dead_prefix.tolist()
     print 'inferior:', inferior.tolist()
     print 'seconds:', [float('%1.2f' % s) for s in seconds.tolist()]
+    print 'growth:', list(np.cast[int](np.round(cache_size[1:] / cache_size[:-1])))
 
 metadata = ('%s-serial_gc-max_accuracy=%1.3f-max_length=%d' %
             (froot, max_accuracy, max_prefix_length))
