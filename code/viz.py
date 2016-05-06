@@ -5,6 +5,39 @@ from branch_bound import print_rule_list
 import utils
 
 
+def draw_graph(edges, fig=None, fdir=None, froot=None, fontsize=18,
+               pos=None, names=None, node_size=4000, node_color='blue',
+               node_alpha=0.3, width=2, descr='', directed=True):
+    import networkx as nx
+    plt.figure(fig)
+    plt.clf()
+    if names is None:
+        names = np.arange(np.array(edges).max() + 1)
+    names_dict = dict(enumerate(names))
+    if pos is not None:
+        pos = dict(zip(names, pos))
+    G = nx.DiGraph()
+    for node in names:
+        G.add_node(node)
+    for edge in edges:
+        (a, b) = edge
+        (c, d) = (names_dict[a], names_dict[b])
+        G.add_edge(c, d)
+        if not directed:
+            G.add_edge(d, c)
+    pos = nx.spring_layout(G)
+    nx.draw_networkx_nodes(G,pos,node_size=20)
+    nx.draw_networkx_edges(G,pos,alpha=0.4)
+    #nx.draw(G, pos=pos, node_size=node_size, alpha=node_alpha,
+    #        node_color=node_color, font_size=fontsize, width=width)
+    plt.axis('equal')
+    if (froot is not None) and (descr is not None):
+        plt.suptitle('%s\n%s\n' % (descr, froot), fontsize=fontsize)
+    if (fdir is not None):
+        fout = os.path.join(fdir, '%s-%s-graph.png' % (froot, descr.replace(' ', '_')))
+        plt.savefig(fout)
+        return fout
+
 def data_redundancy(prefix, cache, ndata=None, rules=None, ones=None, fs=14, lw=3):
     n = len(prefix) + 1
     ones = utils.mpz_to_array(ones)
