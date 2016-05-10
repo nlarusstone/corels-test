@@ -28,7 +28,7 @@ import gmpy2
 from gmpy2 import mpz
 import tabular as tb
 
-from branch_bound import initialize, incremental, print_rule_list
+from branch_bound import given_prefix, initialize, incremental, print_rule_list
 import figs
 import rule
 import utils
@@ -36,10 +36,12 @@ import utils
 din = os.path.join('..', 'data')
 dout = os.path.join('..', 'cache')
 froot = 'tdata_R'
-warm_start = True ## greedy algorithm is currently broken
+warm_start = False ## greedy algorithm is currently broken
 max_accuracy = 0.999
 best_prefix = None
-max_prefix_length = 4
+min_objective = 1.
+c = 0.
+max_prefix_length = 8
 delimiter = '\t'
 quiet = True
 garbage_collect = True
@@ -48,8 +50,10 @@ sample = None
 
 #"""
 froot = 'adult_R'
-max_accuracy = 0.83 # 0.835438
-max_prefix_length = 3
+max_accuracy = None #0.83 # 0.835438
+min_objective = None # 673. #512.
+c = 10.
+max_prefix_length = 4
 seed = 0
 sample = 0.1
 #"""
@@ -58,9 +62,23 @@ label_file = '%s.label' % froot
 out_file = '%s.out' % froot
 
 (nrules, ndata, ones, rules, rule_set, rule_names,
- max_accuracy, best_prefix, cache) = initialize(din, dout, label_file, out_file,
-                                        warm_start, max_accuracy, best_prefix,
-                                        seed, sample)
+ max_accuracy, min_objective, best_prefix, cache) = \
+            initialize(din, dout, label_file, out_file, warm_start,
+                       max_accuracy, min_objective, best_prefix, seed, sample)
+
+print 'c:', c
+print 'min_objective:', min_objective
+
+if (froot == 'adult_R'):
+    pfx = (43, 69, 122, 121)
+    (max_accuracy, min_objective, best_prefix) = \
+    given_prefix(pfx, cache, rules, ones, ndata, max_accuracy=max_accuracy,
+                 min_objective=min_objective, c=c, best_prefix=best_prefix)
+    for k in cache.keys():
+        if (k != ()):
+            cache.pop(k)
+    print cache
+    print best_prefix, max_accuracy, min_objective
 
 x = utils.rules_to_array(rules)
 commuting_pairs = utils.find_commuting_pairs(x)
@@ -105,15 +123,20 @@ for i in range(1, max_prefix_length + 1):
         # cached_prefix is the cached data about a previously evaluated prefix
         cached_prefix = cache[prefix_start]
 
-        if (cached_prefix.upper_bound < max_accuracy):
+        #if (cached_prefix.upper_bound < max_accuracy):
+        if (cached_prefix.lower_bound > min_objective):
             # we don't need to evaluate any prefixes that start with
             # prefix_start if its upper_bound is less than max_accuracy
             dead_prefix_start[i] += 1
-            print i, prefix_start, len(cache), 'ub(cached)<max', \
-                  '%1.3f %1.3f %1.3f' % (cached_prefix.accuracy,
-                                        cached_prefix.upper_bound, max_accuracy)
+            #print i, prefix_start, len(cache), 'ub(cached)<max', \
+            #      '%1.3f %1.3f %1.3f' % (cached_prefix.accuracy,
+            #                            cached_prefix.upper_bound, max_accuracy)
+            print i, prefix_start, len(cache), 'lb(cached)>min', \
+                  '%1.3f %1.3f %1.3f' % (cached_prefix.objective,
+                                       cached_prefix.lower_bound, min_objective)
             continue
-        elif (cached_prefix.accuracy == cached_prefix.upper_bound):
+        elif (cached_prefix.objective == cached_prefix.lower_bound):
+        #elif (cached_prefix.accuracy == cached_prefix.upper_bound):
             # in this case, no rule list starting with and longer than
             # prefix_start can achieve a higher accuracy
             stunted_prefix[i] += 1
@@ -153,10 +176,11 @@ for i in range(1, max_prefix_length + 1):
 
             # compute cache entry for prefix via incremental computation, and
             # add to cache if relevant
-            (max_accuracy, best_prefix, cz, dp, ir) = \
+            (max_accuracy, min_objective, best_prefix, cz, dp, ir) = \
                 incremental(cache, prefix, rules, ones, ndata,
                 num_already_captured, num_already_correct, not_yet_captured,
-                cached_prediction, max_accuracy=max_accuracy, best_prefix=best_prefix,
+                cached_prediction, max_accuracy=max_accuracy,
+                min_objective=min_objective, c=c, best_prefix=best_prefix,
                 garbage_collect=garbage_collect, pdict=pdict, quiet=quiet)
 
             captured_zero[i] += cz
@@ -167,7 +191,7 @@ for i in range(1, max_prefix_length + 1):
     seconds[i] = time.time() - tic
 
     assert ((cache_size[i] + commutes[i] + captured_zero[i] + dead_prefix[i] + inferior[i])
-            == ((nrules - i + 1) * (cache_size[i-1] - dead_prefix_start[i] - stunted_prefix[i])))
+           == ((nrules - i + 1) * (cache_size[i-1] - dead_prefix_start[i] - stunted_prefix[i])))
 
     print 'max accuracy:', max_accuracy
     print 'cache size:', cache_size.tolist()
@@ -178,7 +202,14 @@ for i in range(1, max_prefix_length + 1):
     print 'dead prefix:', dead_prefix.tolist()
     print 'inferior:', inferior.tolist()
     print 'seconds:', [float('%1.2f' % s) for s in seconds.tolist()]
-    print 'growth:', list(np.cast[int](np.round(cache_size[1:] / cache_size[:-1])))
+    print 'growth:', [float('%1.2f' % s) for s in np.cast[float](cache_size[1:]) / cache_size[:-1]]
+
+try:
+    cc = cache[best_prefix]
+    print_rule_list(cc.prefix, cc.prediction, cc.default_rule, rule_names)
+    print cc
+except:
+    pass
 
 metadata = ('%s-serial_gc-max_accuracy=%1.3f-max_length=%d' %
             (froot, max_accuracy, max_prefix_length))
@@ -188,11 +219,7 @@ x = tb.tabarray(SVfile=fname, delimiter=delimiter)
 x.sort(order=['length', 'first'])
 x.saveSV(fname, delimiter=delimiter)
 
-bp = x['prefix'][x['accuracy'] == x['accuracy'].max()][0]
-c = cache[tuple([int(j) for j in [k for k in bp.split(',') if k]])]
-print_rule_list(c.prefix, c.prediction, c.default_rule, rule_names)
-
-print c
+# bp = x['prefix'][x['accuracy'] == x['accuracy'].max()][0]
 
 dfigs = os.path.join('..', 'figs')
 if not os.path.exists(dfigs):

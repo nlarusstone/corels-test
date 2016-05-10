@@ -23,13 +23,16 @@ class PrefixCache(dict):
 
 class CacheEntry:
     def __init__(self, prefix=None, prediction=None, default_rule=None,
-                 accuracy=None, upper_bound=None, num_captured=None,
-                 num_captured_correct=None, not_captured=None, curiosity=None):
+                 accuracy=None, upper_bound=None, objective=None,
+                 lower_bound=None, num_captured=None, num_captured_correct=None,
+                 not_captured=None, curiosity=None):
         self.prefix = prefix
         self.prediction = prediction
         self.default_rule = default_rule
         self.accuracy = accuracy
         self.upper_bound = upper_bound
+        self.objective = objective
+        self.lower_bound = lower_bound
         self.num_captured = num_captured
         self.num_captured_correct = num_captured_correct
         self.not_captured = not_captured
@@ -40,6 +43,8 @@ class CacheEntry:
                        'prediction: %s' % self.prediction.__repr__(),
                        'accuracy: %1.10f' % self.accuracy,
                        'upper_bound: %1.10f' % self.upper_bound,
+                       'objective: %1.10f' % self.objective,
+                       'lower_bound: %1.10f' % self.lower_bound,
                        'num_captured: %d' % self.num_captured,
                        'num_captured_correct: %d' % self.num_captured_correct,
                        'sum(not_captured): %d' % rule.count_ones(self.not_captured),
@@ -105,8 +110,8 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
 
 def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
                 num_already_correct, not_yet_captured, cached_prediction,
-                max_accuracy=0, best_prefix=None, garbage_collect=False,
-                pdict=None, quiet=True):
+                max_accuracy=0., min_objective=0., c=0., best_prefix=None,
+                garbage_collect=False, pdict=None, quiet=True):
     """
     Compute cache entry for prefix via incremental computation.
 
@@ -131,12 +136,13 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
     num_captured = cappd[1]
 
     # the additional rule is useless if it doesn't capture any data
-    if (num_captured == 0):
+    if (num_captured < 1):
         captured_zero = 1
         if not quiet:
             print i, prefix, len(cache), 'num_captured=0', \
                   '%d %d %d' % (-1, -1, -1)
-        return (max_accuracy, best_prefix, captured_zero, dead_prefix, inferior)
+        return (max_accuracy, min_objective, best_prefix, captured_zero,
+                dead_prefix, inferior)
 
     # not_captured is a binary vector of length ndata indicating those
     # data that are not captured by the current prefix, i.e., not
@@ -187,50 +193,66 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
     (default_rule, num_default_correct) = \
         compute_default(rule.rule_vand(ones, not_captured)[0], num_not_captured)
 
+    # num_correct is the number of data captured by prefix and
+    # correctly predicted
+    num_correct = num_already_correct + num_captured_correct
+
     # the data correctly predicted by prefix are either correctly
     # predicted by cached_prefix, captured and correctly predicted by
     # new_rule, or are not captured by prefix and correctly predicted by
     # the default rule
-    accuracy = float(num_already_correct + num_captured_correct +
-                     num_default_correct) / ndata
-    assert accuracy <= 1
+    accuracy = float(num_correct + num_default_correct) / ndata
+    assert accuracy <= 1.
 
     # the upper bound on the accuracy of a rule list starting with
     # prefix is like the accuracy computation, except we assume that all
     # data not captured by prefix are correctly predicted
-    upper_bound = float(num_already_correct + num_captured_correct +
-                        num_not_captured) / ndata
+    upper_bound = float(num_correct + num_not_captured) / ndata
+
+    # the data captured by prefix are either captured by the cached
+    # prefix or captured by the new rule
+    new_num_captured = num_already_captured + num_captured
+
+    # the number of incorrect corrections made by the rule list (with default)
+    num_mistakes = ndata - num_correct - num_default_correct
+
+    # the number of data captured by prefix and incorrectly predicted
+    num_incorrect = new_num_captured - num_correct
+
+    # the objective is the sum of the number of mistakes
+    objective = float(num_mistakes) + c * len(prefix)
+
+    # the lower bound on the objective is the sum of the lower bound on the
+    # number of mistakes and a constant times the prefix size
+    lower_bound = float(num_incorrect) + c * len(prefix)
 
     # if the upper bound of prefix exceeds max_accuracy, then create a
     # cache entry for prefix
-    if (upper_bound <= max_accuracy):
+    # if (upper_bound <= max_accuracy):
+    if (lower_bound >= min_objective):
         dead_prefix = 1
         if not quiet:
-            print i, prefix, len(cache), 'ub<=max', \
-                  '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
-        return (max_accuracy, best_prefix, captured_zero, dead_prefix, inferior)
+            #print i, prefix, len(cache), 'ub<=max', \
+            #      '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
+            print i, prefix, len(cache), 'lb>=min', \
+                  '%1.3f %1.3f %1.3f %1.3f' % (accuracy, objective, lower_bound,
+                                               min_objective)
+        return (max_accuracy, min_objective, best_prefix, captured_zero,
+                dead_prefix, inferior)
     else:
         # if prefix is the new best known prefix, update max_accuracy
         # and best_prefix
-        if (accuracy > max_accuracy):
-            print 'max:', max_accuracy, '->', accuracy
+        # if (accuracy > max_accuracy):
+        if (objective < min_objective):
+            # print 'max:', max_accuracy, '->', accuracy
             max_accuracy = accuracy
+            print 'min:', min_objective, '->', objective
+            min_objective = objective
             best_prefix = prefix
 
-        # the data captured by prefix are either captured by the cached
-        # prefix or captured by the new rule
-        new_num_captured = num_already_captured + num_captured
-
-        # num_correct is the number of data captured by prefix and
-        # correctly predicted
-        num_correct = num_already_correct + num_captured_correct
-
-        # num_incorrect is the number of data captured by prefix and
-        # incorrectly predicted
-        num_incorrect = new_num_captured - num_correct
-
         # curiosity = prefix misclassification
-        curiosity = float(num_incorrect) / new_num_captured
+        curiosity = (float(num_incorrect) / new_num_captured +
+                     c * len(prefix) * ndata / new_num_captured)
 
         # to do garbage collection, we keep look for prefixes that are
         # equivalent up to permutation
@@ -249,15 +271,16 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
                 else:
                     # prefix is inferior to the stored equiv_prefix
                     inferior = 1
-                    return (max_accuracy, best_prefix, captured_zero, dead_prefix, inferior)
+                    return (max_accuracy, min_objective, best_prefix,
+                            captured_zero, dead_prefix, inferior)
             else:
                 pdict[sorted_prefix] = (prefix, accuracy)
 
         # make a cache entry for prefix
         cache[prefix] = CacheEntry(prefix=prefix, prediction=prediction,
                                    default_rule=default_rule,
-                                   accuracy=accuracy,
-                                   upper_bound=upper_bound,
+                                   accuracy=accuracy, upper_bound=upper_bound,
+                                   objective=objective, lower_bound=lower_bound,
                                    num_captured=new_num_captured,
                                    num_captured_correct=num_correct,
                                    not_captured=not_captured,
@@ -266,9 +289,11 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
         if not quiet:
             print i, prefix, len(cache), 'ub>max', \
                  '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
-    return (max_accuracy, best_prefix, captured_zero, dead_prefix, inferior)
+    return (max_accuracy, min_objective, best_prefix, captured_zero,
+            dead_prefix, inferior)
 
-def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0, best_prefix=None):
+def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0.,
+                 min_objective=0., c=0., best_prefix=None):
     """
     Compute accuracy of a given prefix via incremental computation.
 
@@ -295,11 +320,12 @@ def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0, best_pr
 
         prefix = prefix_start + (full_prefix[i],)
 
-        (max_accuracy, best_prefix, cz, dp, ir) = \
+        (max_accuracy, min_objective, best_prefix, cz, dp, ir) = \
             incremental(cache, prefix, rules, ones, ndata, num_already_captured,
                         num_already_correct, not_yet_captured, cached_prediction,
-                        max_accuracy=max_accuracy, best_prefix=best_prefix)
-    return
+                        max_accuracy=max_accuracy, min_objective=min_objective,
+                        c=c, best_prefix=best_prefix)
+    return (max_accuracy, min_objective, best_prefix)
 
 def file_to_dict(fname, seed=None, sample=None):
     """
@@ -439,7 +465,8 @@ def greedy_rule_list(ones, rules, max_length):
     return (prefix, predicted_labels, default_rule, accuracy, upper_bound)
 
 def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
-               best_prefix, seed=None, sample=None, max_greedy_length=8):
+               min_objective, best_prefix, seed=None, sample=None,
+               max_greedy_length=8):
 
     if not os.path.exists(dout):
         os.mkdir(dout)
@@ -469,6 +496,8 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     # correctly predicts
     (empty_default, empty_num_correct) = compute_default(ones, ndata)
     empty_accuracy = float(empty_num_correct) / ndata
+    empty_objective = float(ndata - empty_num_correct)
+    empty_lower_bound = 0.
 
     # max_accuracy is the accuracy of the best_prefix observed so far
     # if not already defined, either use a greedy algorithm to compute a warm
@@ -484,6 +513,7 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
         else:
             best_prefix = ()
             max_accuracy = empty_accuracy
+            min_objective = empty_objective
 
     # cache is a PrefixCache object, which is a dictionary that stores
     # prefix-related computations, where each key-value pair maps a prefix
@@ -493,6 +523,8 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     # initialize the cache with a single entry for the empty rule list
     cache[()] = CacheEntry(prefix=(), prediction=(), default_rule=empty_default,
                            accuracy=empty_accuracy, upper_bound=1.,
+                           objective=empty_objective,
+                           lower_bound=empty_lower_bound,
                            num_captured=0, num_captured_correct=0,
                            not_captured=rule.make_all_ones(ndata + 1),
                            curiosity=0.)
@@ -511,4 +543,4 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
         pass
 
     return (nrules, ndata, ones, rules, rule_set, rule_names, max_accuracy,
-            best_prefix, cache)
+            min_objective, best_prefix, cache)
