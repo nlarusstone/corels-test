@@ -250,7 +250,7 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
             min_objective = objective
             best_prefix = prefix
 
-        # curiosity = prefix misclassification
+        # curiosity = prefix misclassification + regularization
         curiosity = (float(num_incorrect) / new_num_captured +
                      c * len(prefix) * ndata / new_num_captured)
 
