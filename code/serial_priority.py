@@ -95,7 +95,7 @@ queue = []
 
 # priority_queue is a heap of prefixes ordered by values such as curiosities
 priority_queue = []
-(curiosity, prefix_start) = heapq.heappushpop(priority_queue, (cache[()].curiosity, ()))
+heapq.heappush(priority_queue, (cache[()].curiosity, ()))
 
 m = max_prefix_length + 1
 
@@ -125,11 +125,12 @@ counter = 0
 
 #for prefix_start in prefix_list:
 while (priority_queue):
+    (curiosity, prefix_start) = heapq.heappop(priority_queue)
+
     try:
         # cached_prefix is the cached data about a previously evaluated prefix
         cached_prefix = cache[prefix_start]
     except:
-        (curiosity, prefix_start) = heapq.heappop(priority_queue)
         continue
 
     if (cached_prefix.lower_bound > min_objective):
@@ -139,11 +140,9 @@ while (priority_queue):
         print i, prefix_start, len(cache), 'lb(cached)>min', \
               '%1.3f %1.3f %1.3f' % (cached_prefix.objective,
                                    cached_prefix.lower_bound, min_objective)
-        (curiosity, prefix_start) = heapq.heappop(priority_queue)
         continue
     elif (cached_prefix.objective == cached_prefix.lower_bound):
         # stunted_prefix[i] += 1
-        (curiosity, prefix_start) = heapq.heappop(priority_queue)
         continue
 
     # num_already_captured is the number of data captured by the cached
@@ -189,10 +188,7 @@ while (priority_queue):
         #inferior[i] += ir
 
         if ((cz == 0) and (dp == 0) and (ir == 0)):
-            (curiosity, prefix_start) = heapq.heappushpop(priority_queue,
-                                              (cache[prefix].curiosity, prefix))
-        else:
-            (curiosity, prefix_start) = heapq.heappop(priority_queue)
+            heapq.heappush(priority_queue, (cache[prefix].curiosity, prefix))
 
     counter += 1
     if ((counter % 1000) == 0):
