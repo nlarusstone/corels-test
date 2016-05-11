@@ -123,22 +123,15 @@ for i in range(1, max_prefix_length + 1):
         # cached_prefix is the cached data about a previously evaluated prefix
         cached_prefix = cache[prefix_start]
 
-        #if (cached_prefix.upper_bound < max_accuracy):
         if (cached_prefix.lower_bound > min_objective):
             # we don't need to evaluate any prefixes that start with
             # prefix_start if its upper_bound is less than max_accuracy
             dead_prefix_start[i] += 1
-            #print i, prefix_start, len(cache), 'ub(cached)<max', \
-            #      '%1.3f %1.3f %1.3f' % (cached_prefix.accuracy,
-            #                            cached_prefix.upper_bound, max_accuracy)
             print i, prefix_start, len(cache), 'lb(cached)>min', \
                   '%1.3f %1.3f %1.3f' % (cached_prefix.objective,
                                        cached_prefix.lower_bound, min_objective)
             continue
         elif (cached_prefix.objective == cached_prefix.lower_bound):
-        #elif (cached_prefix.accuracy == cached_prefix.upper_bound):
-            # in this case, no rule list starting with and longer than
-            # prefix_start can achieve a higher accuracy
             stunted_prefix[i] += 1
             continue
 
@@ -215,8 +208,6 @@ cache.to_file(fname=fname, delimiter=delimiter)
 x = tb.tabarray(SVfile=fname, delimiter=delimiter)
 x.sort(order=['length', 'first'])
 x.saveSV(fname, delimiter=delimiter)
-
-# bp = x['prefix'][x['accuracy'] == x['accuracy'].max()][0]
 
 dfigs = os.path.join('..', 'figs')
 if not os.path.exists(dfigs):

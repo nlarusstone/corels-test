@@ -152,9 +152,6 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
     not_captured = not_cappd[0]
     assert not_yet_captured == (not_captured | captured_nz)
 
-    # not_captured_nz is an array of data indices not captured by prefix
-    #not_captured_nz = not_cappd[1]
-
     # num_not_captured is the number of data not captured by prefix
     num_not_captured = not_cappd[1]
 
@@ -228,12 +225,9 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
 
     # if the upper bound of prefix exceeds max_accuracy, then create a
     # cache entry for prefix
-    # if (upper_bound <= max_accuracy):
     if (lower_bound >= min_objective):
         dead_prefix = 1
         if not quiet:
-            #print i, prefix, len(cache), 'ub<=max', \
-            #      '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
             print i, prefix, len(cache), 'lb>=min', \
                   '%1.3f %1.3f %1.3f %1.3f' % (accuracy, objective, lower_bound,
                                                min_objective)
