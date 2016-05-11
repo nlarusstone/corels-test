@@ -142,9 +142,6 @@ for i in range(1, max_prefix_length + 1):
             stunted_prefix[i] += 1
             continue
 
-        #if (cached_prefix.curiosity > 0.02):
-        #    continue
-
         # num_already_captured is the number of data captured by the cached
         # prefix
         num_already_captured = cached_prefix.num_captured
