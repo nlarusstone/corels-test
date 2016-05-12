@@ -36,6 +36,7 @@ import utils
 
 din = os.path.join('..', 'data')
 dout = os.path.join('..', 'cache')
+dlog = os.path.join('..', 'logs')
 froot = 'tdata_R'
 warm_start = False ## greedy algorithm is currently broken
 max_accuracy = 0.999
@@ -48,16 +49,31 @@ quiet = True
 garbage_collect = True
 seed = None
 sample = None
+method = 'breadth-first' # 'curiosity' # 'lower_bound' #
+max_cache_size = 5000000
 
 #"""
 froot = 'adult_R'
 max_accuracy = None #0.83 # 0.835438
 min_objective = None # 673. #512.
 c = 10.
-max_prefix_length = 4
+max_prefix_length = 6
 seed = 0
 sample = 0.1
 #"""
+
+if (method == 'breadth-first'):
+    heap_metric = lambda key: len(key)  # equivalent to breadth-first search
+elif (method == 'curiosity'):
+    heap_metric = lambda key: cache[key].curiosity
+else:
+    assert (method == 'lower_bound')
+    heap_metric = lambda key: cache[key].lower_bound
+
+if not os.path.exists(dout):
+    os.path.mkdir(dout)
+if not os.path.exists(dlog):
+    os.path.mkdir(dlog)
 
 label_file = '%s.label' % froot
 out_file = '%s.out' % froot
@@ -75,11 +91,16 @@ if (froot == 'adult_R'):
     (max_accuracy, min_objective, best_prefix) = \
     given_prefix(pfx, cache, rules, ones, ndata, max_accuracy=max_accuracy,
                  min_objective=min_objective, c=c, best_prefix=best_prefix)
+    print cache[pfx]
     for k in cache.keys():
         if (k != ()):
             cache.pop(k)
     print cache
-    print best_prefix, max_accuracy, min_objective
+
+metadata = ('%s-serial_priority-max_accuracy=%1.3f-max_length=%d-c=%d-method=%s-max_cache_size=%d' %
+            (froot, max_accuracy, max_prefix_length, c, method, max_cache_size))
+flog = os.path.join(dlog, '%s.txt' % metadata)
+fh = open(flog, 'w')
 
 x = utils.rules_to_array(rules)
 commuting_pairs = utils.find_commuting_pairs(x)
@@ -93,9 +114,10 @@ print 'ndata:', ndata
 # in such a tuple is the (row) index of a rule in the rules matrix
 queue = []
 
-# priority_queue is a heap of prefixes ordered by values such as curiosities
+# priority_queue is a min heap of prefixes ordered by values such as curiosity
+# or the lower bound on the objective
 priority_queue = []
-heapq.heappush(priority_queue, (cache[()].curiosity, ()))
+heapq.heappush(priority_queue, (heap_metric(()), ()))
 
 m = max_prefix_length + 1
 
@@ -125,7 +147,7 @@ counter = 0
 
 #for prefix_start in prefix_list:
 while (priority_queue):
-    (curiosity, prefix_start) = heapq.heappop(priority_queue)
+    (hm, prefix_start) = heapq.heappop(priority_queue)
 
     try:
         # cached_prefix is the cached data about a previously evaluated prefix
@@ -139,7 +161,7 @@ while (priority_queue):
         # dead_prefix_start[i] += 1
         print i, prefix_start, len(cache), 'lb(cached)>min', \
               '%1.3f %1.3f %1.3f' % (cached_prefix.objective,
-                                   cached_prefix.lower_bound, min_objective)
+                                     cached_prefix.lower_bound, min_objective)
         continue
     elif (cached_prefix.objective == cached_prefix.lower_bound):
         # stunted_prefix[i] += 1
@@ -174,6 +196,8 @@ while (priority_queue):
         # prefix is the first prefix tuple in the queue
         prefix = queue.pop(0)
 
+        prefix_length = len(prefix)
+
         # compute cache entry for prefix via incremental computation, and
         # add to cache if relevant
         (max_accuracy, min_objective, best_prefix, cz, dp, ir) = \
@@ -188,18 +212,28 @@ while (priority_queue):
         #inferior[i] += ir
 
         if ((cz == 0) and (dp == 0) and (ir == 0)):
-            heapq.heappush(priority_queue, (cache[prefix].curiosity, prefix))
+            heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
+            cache_size[prefix_length] += 1
 
     counter += 1
     if ((counter % 1000) == 0):
+        fh.write(([counter, len(priority_queue)] + list(cache_size)).__repr__().strip('[]').replace(' ', '') + '\n')
+        fh.flush()
         print counter, prefix, len(cache), len(priority_queue), max_accuracy, \
-              min_objective, best_prefix
+              min_objective, best_prefix, hm
+        print cache_size
+
+    if (len(cache) >= max_cache_size):
+        break
 
 #cache_size[i] = len(cache) - cache_size[:i].sum()
 #seconds[i] = time.time() - tic
 
 #assert ((cache_size[i] + commutes[i] + captured_zero[i] + dead_prefix[i] + inferior[i])
 #       == ((nrules - i + 1) * (cache_size[i-1] - dead_prefix_start[i] - stunted_prefix[i])))
+
+fh.write(([counter, len(priority_queue)] + list(cache_size)).__repr__().strip('[]').replace(' ', ''))
+fh.close()
 
 print 'max accuracy:', max_accuracy
 print 'cache size:', cache_size.tolist()
@@ -219,8 +253,6 @@ try:
 except:
     pass
 
-metadata = ('%s-serial_gc-max_accuracy=%1.3f-max_length=%d' %
-            (froot, max_accuracy, max_prefix_length))
 fname = os.path.join(dout, '%s.txt' % metadata)
 cache.to_file(fname=fname, delimiter=delimiter)
 x = tb.tabarray(SVfile=fname, delimiter=delimiter)
