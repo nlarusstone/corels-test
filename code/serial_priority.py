@@ -49,7 +49,7 @@ quiet = True
 garbage_collect = True
 seed = None
 sample = None
-method = 'objective' # 'lower_bound' # 'curiosity' # 'breadth-first' #
+method = 'lower_bound' # 'curiosity' # 'objective' # 'breadth-first' #
 max_cache_size = 5000000
 
 #"""
@@ -161,7 +161,7 @@ while (priority_queue):
         # we don't need to evaluate any prefixes that start with
         # prefix_start if its upper_bound is less than max_accuracy
         # dead_prefix_start[i] += 1
-        print i, prefix_start, len(cache), 'lb(cached)>min', \
+        print prefix_start, len(cache), 'lb(cached)>min', \
               '%1.3f %1.3f %1.3f' % (cached_prefix.objective,
                                      cached_prefix.lower_bound, min_objective)
         continue
