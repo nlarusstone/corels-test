@@ -49,7 +49,7 @@ quiet = True
 garbage_collect = True
 seed = None
 sample = None
-method = 'breadth-first' # 'curiosity' # 'lower_bound' #
+method = 'objective' # 'lower_bound' # 'curiosity' # 'breadth-first' #
 max_cache_size = 5000000
 
 #"""
@@ -57,7 +57,7 @@ froot = 'adult_R'
 max_accuracy = None #0.83 # 0.835438
 min_objective = None # 673. #512.
 c = 10.
-max_prefix_length = 6
+max_prefix_length = 10
 seed = 0
 sample = 0.1
 #"""
@@ -66,9 +66,11 @@ if (method == 'breadth-first'):
     heap_metric = lambda key: len(key)  # equivalent to breadth-first search
 elif (method == 'curiosity'):
     heap_metric = lambda key: cache[key].curiosity
-else:
-    assert (method == 'lower_bound')
+elif (method == 'lower_bound'):
     heap_metric = lambda key: cache[key].lower_bound
+else:
+    assert (method == 'objective')
+    heap_metric = lambda key: cache[key].objective
 
 if not os.path.exists(dout):
     os.path.mkdir(dout)
