@@ -108,8 +108,7 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
         e = 'else '
     print 'else predict %d' % default_rule
 
-def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
-                num_already_correct, not_yet_captured, cached_prediction,
+def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
                 max_accuracy=0., min_objective=0., c=0., best_prefix=None,
                 garbage_collect=False, pdict=None, quiet=True):
     """
@@ -121,6 +120,21 @@ def incremental(cache, prefix, rules, ones, ndata, num_already_captured,
     captured_zero = 0
     dead_prefix = 0
     inferior = 0
+
+    # num_already_captured is the number of data captured by the cached prefix
+    num_already_captured = cached_prefix.num_captured
+
+    # num_already_correct is the number of data that are both captured by the
+    # cached prefix and correctly predicted
+    num_already_correct = cached_prefix.num_captured_correct
+
+    # not_yet_captured is a binary vector of length ndata indicating which data
+    # are not captured by the cached prefix
+    not_yet_captured = cached_prefix.get_not_captured()
+
+    # cached_prediction is the tuple of binary predictions associated with the
+    # cached prefix
+    cached_prediction = cached_prefix.prediction
 
     # new_rule is the (row) index in the rules matrix of the last rule
     # in prefix, which starts with prefix_start
@@ -298,25 +312,10 @@ def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0.,
         # cached_prefix is the cached data about a previously evaluated prefix
         cached_prefix = cache[prefix_start]
 
-        # num_already_captured is the number of data captured by the cached
-        # prefix
-        num_already_captured = cached_prefix.num_captured
-
-        # num_already_correct is the number of data that are both captured by
-        # the cached prefix and correctly predicted
-        num_already_correct = cached_prefix.num_captured_correct
-
-        # not_yet_captured is a binary vector of length ndata indicating which
-        # data are not captured by the cached prefix
-        not_yet_captured = cached_prefix.get_not_captured()
-
-        cached_prediction = cached_prefix.prediction
-
         prefix = prefix_start + (full_prefix[i],)
 
         (max_accuracy, min_objective, best_prefix, cz, dp, ir) = \
-            incremental(cache, prefix, rules, ones, ndata, num_already_captured,
-                        num_already_correct, not_yet_captured, cached_prediction,
+            incremental(cache, prefix, rules, ones, ndata, cached_prefix,
                         max_accuracy=max_accuracy, min_objective=min_objective,
                         c=c, best_prefix=best_prefix)
     return (max_accuracy, min_objective, best_prefix)
