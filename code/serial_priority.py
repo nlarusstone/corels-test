@@ -50,7 +50,7 @@ garbage_collect = True
 seed = None
 sample = None
 method = 'lower_bound' # 'curiosity' # 'objective' # 'breadth-first' #
-max_cache_size = 5000000
+max_cache_size = 50000#00
 
 #"""
 froot = 'adult_R'
@@ -102,6 +102,7 @@ if (froot == 'adult_R'):
 metadata = ('%s-serial_priority-max_accuracy=%1.3f-max_length=%d-c=%d-method=%s-max_cache_size=%d' %
             (froot, max_accuracy, max_prefix_length, c, method, max_cache_size))
 flog = os.path.join(dlog, '%s.txt' % metadata)
+print 'Writing log to', flog
 fh = open(flog, 'w')
 
 x = utils.rules_to_array(rules)
@@ -121,56 +122,49 @@ queue = []
 priority_queue = []
 heapq.heappush(priority_queue, (heap_metric(()), ()))
 
-m = max_prefix_length + 1
-
-cache_size = np.zeros(m, int)
-cache_size[0] = 1
-
-dead_prefix_start = np.zeros(m, int)
-captured_zero = np.zeros(m, int)
-stunted_prefix = np.zeros(m, int)
-commutes = np.zeros(m, int)
-dead_prefix = np.zeros(m, int)
-inferior = np.zeros(m, int)
-
-seconds = np.zeros(m)
-
-# lazily add prefixes to the queue
-# for i in range(1, max_prefix_length + 1):
-#    print 'prefix length:', i
-#    tic = time.time()
-
-# pdict is a dictionary used for garbage collection that groups together prefixes that
-# are equivalent up to a permutation; its keys are tuples of sorted prefix indices;
-# each key maps to a list of prefix tuples in the cache that are equivalent
+# pdict is a dictionary used for garbage collection that groups together
+# prefixes that are equivalent up to a permutation; its keys are tuples of
+# sorted prefix indices; each key maps to a list of prefix tuples in the cache
+# that are equivalent
 pdict = {}
 
-counter = 0
+m = max_prefix_length
+metrics = utils.Metrics(m)
+metrics.cache_size[0] = 1
+metrics.priority_queue_length = 1
 
-#for prefix_start in prefix_list:
+counter = 0
+tic = time.time()
+
+fh.write('counter,' + metrics.names_to_string() + '\n')
+fh.write(('%d,' % counter) + metrics.to_string() + '\n')
+fh.flush()
+
 while (priority_queue):
     (hm, prefix_start) = heapq.heappop(priority_queue)
+    i = len(prefix_start)
 
     try:
         # cached_prefix is the cached data about a previously evaluated prefix
         cached_prefix = cache[prefix_start]
     except:
+        # prefix_start was in the priority_queue but has since been removed from
+        # the cache
         continue
 
     if (cached_prefix.lower_bound > min_objective):
         # we don't need to evaluate any prefixes that start with
         # prefix_start if its upper_bound is less than max_accuracy
-        # dead_prefix_start[i] += 1
+        metrics.dead_prefix_start[i] += 1
         print prefix_start, len(cache), 'lb(cached)>min', \
               '%1.3f %1.3f %1.3f' % (cached_prefix.objective,
                                      cached_prefix.lower_bound, min_objective)
         continue
     elif (cached_prefix.objective == cached_prefix.lower_bound):
-        # stunted_prefix[i] += 1
+        metrics.stunted_prefix[i] += 1
         continue
 
-    # num_already_captured is the number of data captured by the cached
-    # prefix
+    # num_already_captured is the number of data captured by the cached prefix
     num_already_captured = cached_prefix.num_captured
 
     # num_already_correct is the number of data that are both captured by
@@ -190,15 +184,13 @@ while (priority_queue):
     if len(prefix_start):
         last_rule = prefix_start[-1]
         rtc = rules_to_consider.difference(set(cdict[last_rule]))
-        # commutes[i] += len(rules_to_consider) - len(rtc)
+        metrics.commutes[i] += len(rules_to_consider) - len(rtc)
         rules_to_consider = rtc
     queue = [prefix_start + (t,) for t in list(rules_to_consider)]
 
     while(queue):
         # prefix is the first prefix tuple in the queue
         prefix = queue.pop(0)
-
-        prefix_length = len(prefix)
 
         # compute cache entry for prefix via incremental computation, and
         # add to cache if relevant
@@ -209,17 +201,19 @@ while (priority_queue):
             min_objective=min_objective, c=c, best_prefix=best_prefix,
             garbage_collect=garbage_collect, pdict=pdict, quiet=quiet)
 
-        #captured_zero[i] += cz
-        #dead_prefix[i] += dp
-        #inferior[i] += ir
+        metrics.captured_zero[i + 1] += cz
+        metrics.dead_prefix[i + 1] += dp
+        metrics.inferior[i + 1] += ir
 
         if ((cz == 0) and (dp == 0) and (ir == 0)):
             heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
-            cache_size[prefix_length] += 1
+            metrics.cache_size[i + 1] += 1
 
     counter += 1
     if ((counter % 1000) == 0):
-        fh.write(([counter, len(priority_queue)] + list(cache_size)).__repr__().strip('[]').replace(' ', '') + '\n')
+        metrics.priority_queue_length = len(priority_queue)
+        metrics.seconds = time.time() - tic
+        fh.write(('%d,' % counter) + metrics.to_string() + '\n')
         fh.flush()
         print counter, prefix, len(cache), len(priority_queue), max_accuracy, \
               min_objective, best_prefix, hm
@@ -234,19 +228,23 @@ while (priority_queue):
 #assert ((cache_size[i] + commutes[i] + captured_zero[i] + dead_prefix[i] + inferior[i])
 #       == ((nrules - i + 1) * (cache_size[i-1] - dead_prefix_start[i] - stunted_prefix[i])))
 
-fh.write(([counter, len(priority_queue)] + list(cache_size)).__repr__().strip('[]').replace(' ', ''))
+metrics.priority_queue_length = len(priority_queue)
+metrics.seconds = time.time() - tic
+fh.write(('%d,' % counter) + metrics.to_string())
 fh.close()
 
 print 'max accuracy:', max_accuracy
-print 'cache size:', cache_size.tolist()
-print 'dead prefix start:', dead_prefix_start.tolist()
-print 'caputed zero:', captured_zero.tolist()
-print 'stunted prefix:', stunted_prefix.tolist()
-print 'commutes:', commutes.tolist()
-print 'dead prefix:', dead_prefix.tolist()
-print 'inferior:', inferior.tolist()
-print 'seconds:', [float('%1.2f' % s) for s in seconds.tolist()]
-print 'growth:', [float('%1.2f' % s) for s in np.cast[float](cache_size[1:]) / cache_size[:-1]]
+print 'cache size:', metrics.cache_size
+print 'dead prefix start:', metrics.dead_prefix_start
+print 'caputed zero:', metrics.captured_zero
+print 'stunted prefix:', metrics.stunted_prefix
+print 'commutes:', metrics.commutes
+print 'dead prefix:', metrics.dead_prefix
+print 'inferior:', metrics.inferior
+print 'seconds:', '%1.2f' % metrics.seconds
+print 'growth:', [float('%1.2f' % s) for s in
+                  np.cast[float](metrics.cache_size[1:]) /
+                  np.cast[float](metrics.cache_size[:-1])]
 
 try:
     cc = cache[best_prefix]
