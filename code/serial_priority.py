@@ -49,7 +49,7 @@ quiet = True
 garbage_collect = True
 seed = None
 sample = None
-method = 'lower_bound' # 'curiosity' # 'objective' # 'breadth-first' #
+method =  'breadth-first' # 'lower_bound' # 'curiosity' # 'objective' #
 max_cache_size = 50000#00
 
 #"""
@@ -140,6 +140,8 @@ fh.write('counter,' + metrics.names_to_string() + '\n')
 fh.write(('%d,' % counter) + metrics.to_string() + '\n')
 fh.flush()
 
+finished_max_prefix_length = 0
+
 while (priority_queue):
     (hm, prefix_start) = heapq.heappop(priority_queue)
     i = len(prefix_start)
@@ -153,8 +155,8 @@ while (priority_queue):
         continue
 
     if (cached_prefix.lower_bound > min_objective):
-        # we don't need to evaluate any prefixes that start with
-        # prefix_start if its upper_bound is less than max_accuracy
+        # we don't need to evaluate any prefixes that start with prefix_start if
+        # its upper_bound is less than max_accuracy
         metrics.dead_prefix_start[i] += 1
         print prefix_start, len(cache), 'lb(cached)>min', \
               '%1.3f %1.3f %1.3f' % (cached_prefix.objective,
@@ -167,12 +169,12 @@ while (priority_queue):
     # num_already_captured is the number of data captured by the cached prefix
     num_already_captured = cached_prefix.num_captured
 
-    # num_already_correct is the number of data that are both captured by
-    # the cached prefix and correctly predicted
+    # num_already_correct is the number of data that are both captured by the
+    # cached prefix and correctly predicted
     num_already_correct = cached_prefix.num_captured_correct
 
-    # not_yet_captured is a binary vector of length ndata indicating which
-    # data are not captured by the cached prefix
+    # not_yet_captured is a binary vector of length ndata indicating which data
+    # are not captured by the cached prefix
     not_yet_captured = cached_prefix.get_not_captured()
 
     cached_prediction = cached_prefix.prediction
@@ -184,7 +186,7 @@ while (priority_queue):
     if len(prefix_start):
         last_rule = prefix_start[-1]
         rtc = rules_to_consider.difference(set(cdict[last_rule]))
-        metrics.commutes[i] += len(rules_to_consider) - len(rtc)
+        metrics.commutes[i + 1] += len(rules_to_consider) - len(rtc)
         rules_to_consider = rtc
     queue = [prefix_start + (t,) for t in list(rules_to_consider)]
 
@@ -192,8 +194,8 @@ while (priority_queue):
         # prefix is the first prefix tuple in the queue
         prefix = queue.pop(0)
 
-        # compute cache entry for prefix via incremental computation, and
-        # add to cache if relevant
+        # compute cache entry for prefix via incremental computation, and add to
+        # cache if relevant
         (max_accuracy, min_objective, best_prefix, cz, dp, ir) = \
             incremental(cache, prefix, rules, ones, ndata,
             num_already_captured, num_already_correct, not_yet_captured,
@@ -219,14 +221,13 @@ while (priority_queue):
               min_objective, best_prefix, hm
         print cache_size
 
+    if (method == 'breadth-first'):
+        if (i + 1) > (finished_max_prefix_length + 1):
+           finished_max_prefix_length = i
+           assert metrics.check(i, nrules)
+
     if (len(cache) >= max_cache_size):
         break
-
-#cache_size[i] = len(cache) - cache_size[:i].sum()
-#seconds[i] = time.time() - tic
-
-#assert ((cache_size[i] + commutes[i] + captured_zero[i] + dead_prefix[i] + inferior[i])
-#       == ((nrules - i + 1) * (cache_size[i-1] - dead_prefix_start[i] - stunted_prefix[i])))
 
 metrics.priority_queue_length = len(priority_queue)
 metrics.seconds = time.time() - tic
