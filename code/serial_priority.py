@@ -217,9 +217,9 @@ while (priority_queue):
         metrics.seconds = time.time() - tic
         fh.write(('%d,' % counter) + metrics.to_string() + '\n')
         fh.flush()
-        print counter, prefix, len(cache), len(priority_queue), max_accuracy, \
-              min_objective, best_prefix, hm
-        print cache_size
+        print 'max accuracy:', max_accuracy
+        print 'min objective:', min_objective
+        print metrics
 
     if (method == 'breadth-first'):
         if (i + 1) > (finished_max_prefix_length + 1):
@@ -235,24 +235,15 @@ fh.write(('%d,' % counter) + metrics.to_string())
 fh.close()
 
 print 'max accuracy:', max_accuracy
-print 'cache size:', metrics.cache_size
-print 'dead prefix start:', metrics.dead_prefix_start
-print 'caputed zero:', metrics.captured_zero
-print 'stunted prefix:', metrics.stunted_prefix
-print 'commutes:', metrics.commutes
-print 'dead prefix:', metrics.dead_prefix
-print 'inferior:', metrics.inferior
-print 'seconds:', '%1.2f' % metrics.seconds
-print 'growth:', [float('%1.2f' % s) for s in
-                  np.cast[float](metrics.cache_size[1:]) /
-                  np.cast[float](metrics.cache_size[:-1])]
+print 'min objective:', min_objective
+print metrics
 
 try:
     cc = cache[best_prefix]
     print_rule_list(cc.prefix, cc.prediction, cc.default_rule, rule_names)
     print cc
 except:
-    pass
+    print 'best prefix not in cache'
 
 fname = os.path.join(dout, '%s.txt' % metadata)
 cache.to_file(fname=fname, delimiter=delimiter)
