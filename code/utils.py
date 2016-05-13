@@ -1,5 +1,47 @@
+import itertools
+
 import numpy as np
 
+def list_to_csv_record(x):
+    return x.__repr__().strip('[]').replace(' ', '')
+
+def expand_names(name, m):
+    return ['%s_%d' % (name, i) for i in range(m)]
+
+class Metrics:
+    def __init__(self, m):
+        self.cache_size = [0] * m
+        self.dead_prefix_start = [0] * m
+        self.captured_zero = [0] * m
+        self.stunted_prefix = [0] * m
+        self.commutes = [0] * m
+        self.dead_prefix = [0] * m
+        self.inferior = [0] * m
+        self.seconds = 0.
+        self.priority_queue_length = 0
+
+    def aggregate(self):
+        return [sum(self.cache_size), sum(self.dead_prefix_start),
+                sum(self.captured_zero), sum(self.stunted_prefix),
+                sum(self.commutes), sum(self.dead_prefix), sum(self.inferior)]
+
+
+    def to_string(self):
+        s1 = '%2.3f,%d' % (self.seconds, self.priority_queue_length)
+        s2 = list_to_csv_record(self.aggregate())
+        s3 = ','.join([list_to_csv_record(x) for x in
+                       [self.cache_size, self.dead_prefix_start,
+                        self.captured_zero, self.stunted_prefix, self.commutes,
+                        self.dead_prefix, self.inferior]])
+        return ','.join([s1, s2, s3])
+
+    def names_to_string(self):
+        names = ['cache_size', 'dead_prefix_start', 'captured_zero',
+                 'stunted_prefix', 'commutes', 'dead_prefix', 'inferior']
+        m = len(self.cache_size)
+        e_names = [expand_names(x, m) for x in names]
+        return ','.join(['seconds', 'priority_queue_length'] + names +
+                        list(itertools.chain(*e_names)))
 
 def mpz_to_string(x):
     # skip leading 1
@@ -42,5 +84,5 @@ def make_graph(nodes, edges):
     return G
 
 def sublists(s, min_length=2):
-    return set(itertools.chain.from_iterable(itertools.combinations(s, r) for r in
-                                             range(min_length, len(s) + 1)))
+    return set(itertools.chain.from_iterable(itertools.combinations(s, r) for r
+                                             in range(min_length, len(s) + 1)))
