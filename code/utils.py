@@ -8,6 +8,9 @@ def list_to_csv_record(x):
 def expand_names(name, m):
     return ['%s_%d' % (name, i) for i in range(m)]
 
+def format_float_list(x):
+    return [float('%2.3f' % y) for y in x].__repr__()
+
 class Metrics:
     def __init__(self, m):
         self.cache_size = [0] * m
@@ -19,6 +22,23 @@ class Metrics:
         self.inferior = [0] * m
         self.seconds = 0.
         self.priority_queue_length = 0
+
+    def __repr__(self):
+        return '\n'.join(('cache size: %s' % self.cache_size.__repr__(),
+                    'dead prefix start: %s' % self.dead_prefix_start.__repr__(),
+                    'caputed zero: %s' % self.captured_zero.__repr__(),
+                    'stunted prefix: %s' % self.stunted_prefix.__repr__(),
+                    'commutes: %s' % self.commutes.__repr__(),
+                    'dead prefix: %s' % self.dead_prefix.__repr__(),
+                    'inferior: %s' % self.inferior.__repr__(),
+                    'seconds: %2.3f' % self.seconds,
+                    'growth: %s' % format_float_list(self.growth())))
+
+    def growth(self):
+        c = np.cast[float](self.cache_size)
+        g = (c[1:] / c[:-1])
+        g[np.isnan(g)] = 0.
+        return g
 
     def check(self, i, nrules):
         """
