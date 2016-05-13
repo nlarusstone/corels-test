@@ -50,7 +50,7 @@ garbage_collect = True
 seed = None
 sample = None
 method =  'breadth-first' # 'lower_bound' # 'curiosity' # 'objective' #
-max_cache_size = 50000#00
+max_cache_size = 5000000
 
 #"""
 froot = 'adult_R'
@@ -208,9 +208,11 @@ while (priority_queue):
         print metrics
 
     if (method == 'breadth-first'):
-        if (i + 1) > (finished_max_prefix_length + 1):
-           finished_max_prefix_length = i
-           assert metrics.check(i, nrules)
+        if (i > finished_max_prefix_length):
+           finished_max_prefix_length += 1
+           assert metrics.check(finished_max_prefix_length, nrules)
+           print ('checked cache size for prefixes of lengths %d and %d' %
+                 (finished_max_prefix_length, finished_max_prefix_length - 1))
 
     if (len(cache) >= max_cache_size):
         break
