@@ -99,8 +99,8 @@ if (froot == 'adult_R'):
             cache.pop(k)
     print cache
 
-metadata = ('%s-serial_priority-max_accuracy=%1.3f-max_length=%d-c=%d-method=%s-max_cache_size=%d' %
-            (froot, max_accuracy, max_prefix_length, c, method, max_cache_size))
+metadata = ('%s-serial_priority-c=%d-min_objective=%1.3f-method=%s-max_cache_size=%d' %
+            (froot, c, min_objective, method, max_cache_size))
 flog = os.path.join(dlog, '%s.txt' % metadata)
 print 'Writing log to', flog
 fh = open(flog, 'w')
