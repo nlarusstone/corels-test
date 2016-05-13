@@ -15,7 +15,7 @@ class PrefixCache(dict):
                   'num_captured_correct', 'num_not_captured', 'curiosity']
         lines = []
         for c in self.values():
-            lines.append('%s' % c.to_string())
+            lines.append('%s' % c.to_string(delimiter=delimiter))
         f = open(fname, 'w')
         f.write('%s\n' % delimiter.join(header))
         f.write('\n'.join(lines))
@@ -92,14 +92,14 @@ class CacheEntry:
                 self.num_captured, self.num_captured_correct,
                 self.num_not_captured(), self.curiosity)
 
-    def to_string(self):
+    def to_string(self, delimiter='\t'):
         rec = (self.prefix.__repr__().strip('()'), str(len(self.prefix)),
                str(self.first_rule()), self.prediction.__repr__().strip('()'),
                str(self.default_rule), str(self.accuracy),
                str(self.upper_bound), str(self.num_captured),
                str(self.num_captured_correct), str(self.num_not_captured()),
                str(self.curiosity))
-        return '\t'.join(rec)
+        return delimiter.join(rec)
 
 def print_rule_list(prefix, prediction, default_rule, rule_names):
     e = ''
