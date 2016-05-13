@@ -20,11 +20,20 @@ class Metrics:
         self.seconds = 0.
         self.priority_queue_length = 0
 
+    def check(self, i, nrules):
+        """
+        Should return True for breadth-first search after level i is complete.
+
+        """
+        return ((self.cache_size[i] + self.commutes[i] + self.captured_zero[i] +
+                 self.dead_prefix[i] + self.inferior[i])
+             == ((nrules - (i - 1)) * (self.cache_size[i - 1] -
+                 self.dead_prefix_start[i - 1] - self.stunted_prefix[i - 1])))
+
     def aggregate(self):
         return [sum(self.cache_size), sum(self.dead_prefix_start),
                 sum(self.captured_zero), sum(self.stunted_prefix),
                 sum(self.commutes), sum(self.dead_prefix), sum(self.inferior)]
-
 
     def to_string(self):
         s1 = '%2.3f,%d' % (self.seconds, self.priority_queue_length)
