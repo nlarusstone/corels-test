@@ -47,7 +47,7 @@ class Metrics:
         """
         return ((self.cache_size[i] + self.commutes[i] + self.captured_zero[i] +
                  self.dead_prefix[i] + self.inferior[i])
-             == ((nrules - (i - 1)) * (self.cache_size[i - 1] -
+             == ((nrules - i + 1) * (self.cache_size[i - 1] -
                  self.dead_prefix_start[i - 1] - self.stunted_prefix[i - 1])))
 
     def aggregate(self):

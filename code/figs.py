@@ -4,6 +4,9 @@ import tabular as tb
 import pylab
 
 
+def viz_log(metadata, din, dout, delimiter=','):
+    pass
+
 def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
                 alpha=0.05):
     fin = os.path.join(din, '%s.txt' % metadata)

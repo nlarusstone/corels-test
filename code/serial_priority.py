@@ -56,7 +56,7 @@ max_cache_size = 5000000
 froot = 'adult_R'
 max_accuracy = None #0.83 # 0.835438
 min_objective = None # 673. #512.
-c = 10.
+c = 0. # 10
 max_prefix_length = 10
 seed = 0
 sample = 0.1
@@ -144,7 +144,7 @@ finished_max_prefix_length = 0
 
 while (priority_queue):
     (hm, prefix_start) = heapq.heappop(priority_queue)
-    i = len(prefix_start)
+    i = len(prefix_start) + 1
 
     try:
         # cached_prefix is the cached data about a previously evaluated prefix
@@ -173,7 +173,7 @@ while (priority_queue):
     if len(prefix_start):
         last_rule = prefix_start[-1]
         rtc = rules_to_consider.difference(set(cdict[last_rule]))
-        metrics.commutes[i + 1] += len(rules_to_consider) - len(rtc)
+        metrics.commutes[i] += len(rules_to_consider) - len(rtc)
         rules_to_consider = rtc
     queue = [prefix_start + (t,) for t in list(rules_to_consider)]
 
@@ -189,13 +189,13 @@ while (priority_queue):
             best_prefix=best_prefix, garbage_collect=garbage_collect,
             pdict=pdict, quiet=quiet)
 
-        metrics.captured_zero[i + 1] += cz
-        metrics.dead_prefix[i + 1] += dp
-        metrics.inferior[i + 1] += ir
+        metrics.captured_zero[i] += cz
+        metrics.dead_prefix[i] += dp
+        metrics.inferior[i] += ir
 
         if ((cz == 0) and (dp == 0) and (ir == 0)):
             heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
-            metrics.cache_size[i + 1] += 1
+            metrics.cache_size[i] += 1
 
     counter += 1
     if ((counter % 1000) == 0):
@@ -207,8 +207,8 @@ while (priority_queue):
         print 'min objective:', min_objective
         print metrics
 
-    if (method == 'breadth-first'):
-        if (i > finished_max_prefix_length):
+    if False: # (method == 'breadth-first'):
+        if (i > (finished_max_prefix_length + 1)):
            finished_max_prefix_length += 1
            assert metrics.check(finished_max_prefix_length, nrules)
            print ('checked cache size for prefixes of lengths %d and %d' %
