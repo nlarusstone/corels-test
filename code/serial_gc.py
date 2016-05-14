@@ -135,20 +135,6 @@ for i in range(1, max_prefix_length + 1):
             stunted_prefix[i] += 1
             continue
 
-        # num_already_captured is the number of data captured by the cached
-        # prefix
-        num_already_captured = cached_prefix.num_captured
-
-        # num_already_correct is the number of data that are both captured by
-        # the cached prefix and correctly predicted
-        num_already_correct = cached_prefix.num_captured_correct
-
-        # not_yet_captured is a binary vector of length ndata indicating which
-        # data are not captured by the cached prefix
-        not_yet_captured = cached_prefix.get_not_captured()
-
-        cached_prediction = cached_prefix.prediction
-
         # construct a queue of all prefixes starting with prefix_start and
         # appended with one additional rule
         assert len(queue) == 0
@@ -168,8 +154,7 @@ for i in range(1, max_prefix_length + 1):
             # add to cache if relevant
             (max_accuracy, min_objective, best_prefix, cz, dp, ir) = \
                 incremental(cache, prefix, rules, ones, ndata,
-                num_already_captured, num_already_correct, not_yet_captured,
-                cached_prediction, max_accuracy=max_accuracy,
+                cached_prefix, max_accuracy=max_accuracy,
                 min_objective=min_objective, c=c, best_prefix=best_prefix,
                 garbage_collect=garbage_collect, pdict=pdict, quiet=quiet)
 
