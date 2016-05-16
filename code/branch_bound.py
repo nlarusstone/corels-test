@@ -11,8 +11,9 @@ import rule
 class PrefixCache(dict):
     def to_file(self, fname, delimiter='\t'):
         header = ['prefix', 'length', 'first', 'prediction', 'default',
-                  'accuracy', 'upper_bound', 'num_captured',
-                  'num_captured_correct', 'num_not_captured', 'curiosity']
+                  'objective', 'lower_bound', 'accuracy', 'upper_bound',
+                  'num_captured', 'num_captured_correct', 'num_not_captured',
+                  'curiosity']
         lines = []
         for c in self.values():
             lines.append('%s' % c.to_string(delimiter=delimiter))
@@ -95,10 +96,10 @@ class CacheEntry:
     def to_string(self, delimiter='\t'):
         rec = (self.prefix.__repr__().strip('()'), str(len(self.prefix)),
                str(self.first_rule()), self.prediction.__repr__().strip('()'),
-               str(self.default_rule), str(self.accuracy),
-               str(self.upper_bound), str(self.num_captured),
-               str(self.num_captured_correct), str(self.num_not_captured()),
-               str(self.curiosity))
+               str(self.default_rule), str(self.objective),
+               str(self.lower_bound), str(self.accuracy), str(self.upper_bound),
+               str(self.num_captured), str(self.num_captured_correct),
+               str(self.num_not_captured()), str(self.curiosity))
         return delimiter.join(rec)
 
 def print_rule_list(prefix, prediction, default_rule, rule_names):
@@ -271,7 +272,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
 
             if sorted_prefix in pdict:
                 (equiv_prefix, equiv_accuracy) = pdict[sorted_prefix]
-                inferior = True
+                inferior = 1
                 if (accuracy > equiv_accuracy):
                     # equiv_prefix is inferior to prefix
                     cache.pop(equiv_prefix)
