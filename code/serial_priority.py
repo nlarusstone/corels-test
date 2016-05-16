@@ -49,20 +49,20 @@ quiet = True
 garbage_collect = True
 seed = None
 sample = None
-method =  'breadth-first' # 'lower_bound' # 'curiosity' # 'objective' #
+method = 'breadth_first' # 'lower_bound' # 'curiosity' # 'objective' #
 max_cache_size = 5000000
 
 #"""
 froot = 'adult_R'
 max_accuracy = None #0.83 # 0.835438
 min_objective = None # 673. #512.
-c = 0. # 10
+c = 0. # 10.
 max_prefix_length = 10
 seed = 0
-sample = 0.1
+sample = 0.03
 #"""
 
-if (method == 'breadth-first'):
+if (method == 'breadth_first'):
     heap_metric = lambda key: len(key)  # equivalent to breadth-first search
 elif (method == 'curiosity'):
     heap_metric = lambda key: cache[key].curiosity
@@ -73,9 +73,9 @@ else:
     heap_metric = lambda key: cache[key].objective
 
 if not os.path.exists(dout):
-    os.path.mkdir(dout)
+    os.mkdir(dout)
 if not os.path.exists(dlog):
-    os.path.mkdir(dlog)
+    os.mkdir(dlog)
 
 label_file = '%s.label' % froot
 out_file = '%s.out' % froot
@@ -194,8 +194,9 @@ while (priority_queue):
         metrics.inferior[i] += ir
 
         if ((cz == 0) and (dp == 0) and (ir == 0)):
-            heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
             metrics.cache_size[i] += 1
+        if (prefix in cache):
+            heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
 
     counter += 1
     if ((counter % 1000) == 0):
@@ -207,7 +208,7 @@ while (priority_queue):
         print 'min objective:', min_objective
         print metrics
 
-    if False: # (method == 'breadth-first'):
+    if (method == 'breadth_first'):
         if (i > (finished_max_prefix_length + 1)):
            finished_max_prefix_length += 1
            assert metrics.check(finished_max_prefix_length, nrules)
@@ -244,4 +245,4 @@ if not os.path.exists(dfigs):
     os.mkdir(dfigs)
 
 figs.make_figure(metadata=metadata, din=dout, dout=dfigs,
-                 max_accuracy=max_accuracy, max_length=max_prefix_length)
+                 max_accuracy=max_accuracy, max_length=x[-1]['length'])
