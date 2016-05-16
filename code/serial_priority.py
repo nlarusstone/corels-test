@@ -49,17 +49,17 @@ quiet = True
 garbage_collect = True
 seed = None
 sample = None
-method = 'breadth_first' # 'lower_bound' # 'curiosity' # 'objective' #
-max_cache_size = 5000000
+method =  'objective' # 'breadth_first' # 'lower_bound' # 'curiosity' # 'objective' #
+max_cache_size = 50000
 
 #"""
 froot = 'adult_R'
 max_accuracy = None #0.83 # 0.835438
 min_objective = None # 673. #512.
 c = 0. # 10.
-max_prefix_length = 10
+max_prefix_length = 100
 seed = 0
-sample = 0.03
+sample = 1.
 #"""
 
 if (method == 'breadth_first'):
@@ -99,8 +99,8 @@ if (froot == 'adult_R'):
             cache.pop(k)
     print cache
 
-metadata = ('%s-serial_priority-c=%d-min_objective=%1.3f-method=%s-max_cache_size=%d' %
-            (froot, c, min_objective, method, max_cache_size))
+metadata = ('%s-serial_priority-c=%d-min_objective=%1.3f-method=%s-max_cache_size=%d-sample=%2.2f' %
+            (froot, c, min_objective, method, max_cache_size, sample))
 flog = os.path.join(dlog, '%s.txt' % metadata)
 print 'Writing log to', flog
 fh = open(flog, 'w')

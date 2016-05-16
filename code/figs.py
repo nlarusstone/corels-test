@@ -77,9 +77,9 @@ def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
         if (i < max_length):
             pylab.xticks([], [])
 
-        fout = os.path.join(dout, '%s-length=%d.png' % (metadata, i))
-        pylab.suptitle(metadata.replace('-', ', '), fontsize=fs)
-        pylab.savefig(fout)
+    fout = os.path.join(dout, '%s-max_length=%d.pdf' % (metadata, max_length))
+    pylab.suptitle(metadata.replace('-', ', '), fontsize=fs)
+    pylab.savefig(fout)
 
 din = os.path.join('..', 'cache')
 dout = os.path.join('..', 'figs')
