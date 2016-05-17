@@ -4,8 +4,40 @@ import tabular as tb
 import pylab
 
 
-def viz_log(metadata, din, dout, delimiter=','):
-    pass
+def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
+    metadata = 'adult_R-serial_priority-c=0-min_objective=495.000-method=breadth_first-max_cache_size=3000000-sample=0.10'
+    din = '../logs'
+    dout = '../figs'
+    fin = os.path.join(din, '%s.txt' % metadata)
+    x = tb.tabarray(SVfile=fin)
+    t = x['seconds']
+    names = ['priority_queue_length', 'cache_size', 'inferior', 'dead_prefix', 'commutes', 'captured_zero']
+    pylab.ion()
+    pylab.figure(1, figsize=(13, 8))
+    pylab.clf()
+    for (i, n) in enumerate(names):
+        if (x[n] == 0).all():
+            continue
+        #pylab.subplot(len(names), 1, i + 1)
+        pylab.plot(t, x[n], '-o', linewidth=lw)
+    pylab.xlabel('time (sec)', fontsize=fs)
+    pylab.ylabel('count', fontsize=fs)
+    pylab.xticks(fontsize=fs)
+    pylab.yticks(fontsize=fs)
+    display_names = [n.replace('_', ' ') for n in names]
+    pylab.legend(display_names, loc='upper left')
+    pylab.title(metadata.replace('_', ' ').replace('-', ', ') + '\n', fontsize=fs)
+    fout = os.path.join(dout, '%s-log.pdf' % metadata)
+    pylab.savefig(fout)
+
+    pylab.figure(2, figsize=(16, 10))
+    pylab.clf()
+    k = int(x.dtype.names[-1].split('_')[-1]) + 1
+    y = x[-1]
+    for (i, n) in enumerate(names[1:]):
+        data = [y['%s_%d' % (n, j)] for j in range(k)]
+        pylab.plot(data, '-o', linewidth=lw)
+    return
 
 def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
                 alpha=0.05, lw=3, fs=14):
