@@ -40,28 +40,30 @@ dlog = os.path.join('..', 'logs')
 dfigs = os.path.join('..', 'figs')
 froot = 'tdata_R'
 warm_start = False ## greedy algorithm is currently broken
-max_accuracy = 0.999
-best_prefix = None
+max_accuracy = 0.
+best_prefix = () # None
 min_objective = 1.
-c = 0.003
-max_prefix_length = 8
+c = 0.008 # 0. #0.003
+max_prefix_length = 30
 delimiter = '\t'
 quiet = True
 garbage_collect = True
-seed = None
-sample = None
-method = 'lower_bound' # 'breadth_first' # 'objective' # 'lower_bound' # 'curiosity' #
-max_cache_size = 300000#0
+seed = 0
+sample = 1. #None
+method = 'lower_bound' # 'random' # 'breadth_first' # 'objective' # 'lower_bound' # 'curiosity' #
+max_cache_size = 3000000
 
-#"""
+"""
 froot = 'adult_R'
 max_accuracy = None #0.83 # 0.835438
 min_objective = None # 673. #512.
-c = 0.01 # 0.003 # 0.
+c = 0.01 #0.003 # 0. # 0.01
 max_prefix_length = 20
 seed = 0
 sample = 0.1
-#"""
+"""
+
+min_captured_correct = c
 
 if (method == 'breadth_first'):
     heap_metric = lambda key: len(key)  # equivalent to breadth-first search
@@ -69,9 +71,11 @@ elif (method == 'curiosity'):
     heap_metric = lambda key: cache[key].curiosity
 elif (method == 'lower_bound'):
     heap_metric = lambda key: cache[key].lower_bound
-else:
-    assert (method == 'objective')
+elif (method == 'objective'):
     heap_metric = lambda key: cache[key].objective
+else:
+    assert (method == 'random')
+    heap_metric = lambda key: np.random.random()
 
 if not os.path.exists(dout):
     os.mkdir(dout)
@@ -189,23 +193,31 @@ while (priority_queue):
 
         # compute cache entry for prefix via incremental computation, and add to
         # cache if relevant
-        (max_accuracy, min_objective, best_prefix, cz, dp, ir) = \
+        (max_accuracy, new_min_objective, best_prefix, cz, it, dp, ir) = \
             incremental(cache, prefix, rules, ones, ndata, cached_prefix,
             max_accuracy=max_accuracy, min_objective=min_objective, c=c,
-            best_prefix=best_prefix, garbage_collect=garbage_collect,
-            pdict=pdict, quiet=quiet)
+            min_captured_correct=min_captured_correct, best_prefix=best_prefix,
+            garbage_collect=garbage_collect, pdict=pdict, quiet=quiet)
 
         metrics.best_prefix = best_prefix
         metrics.min_objective = min_objective
         metrics.accuracy = max_accuracy
         metrics.captured_zero[i] += cz
+        metrics.insufficient[i] += it
         metrics.dead_prefix[i] += dp
         metrics.inferior[i] += ir
 
-        if ((cz == 0) and (dp == 0) and (ir == 0)):
+        if ((cz == 0) and (it == 0) and (dp == 0) and (ir == 0)):
             metrics.cache_size[i] += 1
         if (prefix in cache):
             heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
+
+        if (new_min_objective < min_objective):
+            min_objective = new_min_objective
+            metrics.priority_queue_length = len(priority_queue)
+            metrics.seconds = time.time() - tic
+            fh.write(metrics.to_string() + '\n')
+            fh.flush()
 
     counter += 1
     if ((counter % 1000) == 0):
@@ -223,6 +235,9 @@ while (priority_queue):
                  (finished_max_prefix_length, finished_max_prefix_length - 1))
 
     if (len(cache) >= max_cache_size):
+        break
+
+    if (min_objective == 0.):
         break
 
 metrics.priority_queue_length = len(priority_queue)
