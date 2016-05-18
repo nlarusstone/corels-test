@@ -23,7 +23,7 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     pylab.plot(t, x['accuracy'], '-', linewidth=lw)
     pylab.ylabel('accuracy', fontsize=fs)
     pylab.subplot2grid((6, 1), (2, 0))
-    pylab.plot(t, [len(p.split('.')) for p in x['best_prefix']], '-', linewidth=lw)
+    pylab.plot(t, [len(str(p).split('.')) for p in x['best_prefix']], '-', linewidth=lw)
     pylab.ylabel('len(prefix)', fontsize=fs)
     pylab.subplot2grid((6, 1), (3, 0), rowspan=3)
     for (i, n) in enumerate(names):
