@@ -110,7 +110,8 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
     print 'else predict %d' % default_rule
 
 def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
-                max_accuracy=0., min_objective=0., c=0., best_prefix=None,
+                max_accuracy=0., min_objective=0., c=0.,
+                min_captured_correct=0., best_prefix=None,
                 garbage_collect=False, pdict=None, quiet=True):
     """
     Compute cache entry for prefix via incremental computation.
@@ -119,6 +120,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
 
     """
     captured_zero = 0
+    insufficient = 0
     dead_prefix = 0
     inferior = 0
 
@@ -157,7 +159,13 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
             print i, prefix, len(cache), 'num_captured=0', \
                   '%d %d %d' % (-1, -1, -1)
         return (max_accuracy, min_objective, best_prefix, captured_zero,
-                dead_prefix, inferior)
+                insufficient, dead_prefix, inferior)
+
+    # the additional rule is insufficient if it doesn't capture enough data
+    if (num_captured < (min_captured_correct * ndata)):
+        insufficient = 1
+        return (max_accuracy, min_objective, best_prefix, captured_zero,
+                insufficient, dead_prefix, inferior)
 
     # not_captured is a binary vector of length ndata indicating those
     # data that are not captured by the current prefix, i.e., not
@@ -200,6 +208,13 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
         # num_captured_correct is the number of data captured by the new
         # rule, given the cached prefix, with label 0
         num_captured_correct = num_captured - num_captured_ones
+
+    # the additional rule is insufficient if it doesn't correctly capture enough
+    # data
+    if (num_captured_correct < (min_captured_correct * ndata)):
+        insufficient = 1
+        return (max_accuracy, min_objective, best_prefix, captured_zero,
+                insufficient, dead_prefix, inferior)
 
     # compute the default rule on the not captured data
     (default_rule, num_default_correct) = \
@@ -247,7 +262,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
                   '%1.3f %1.3f %1.3f %1.3f' % (accuracy, objective, lower_bound,
                                                min_objective)
         return (max_accuracy, min_objective, best_prefix, captured_zero,
-                dead_prefix, inferior)
+                insufficient, dead_prefix, inferior)
     else:
         # if prefix is the new best known prefix, update max_accuracy
         # and best_prefix
@@ -281,7 +296,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
                     # prefix is inferior to the stored equiv_prefix
                     inferior = 1
                     return (max_accuracy, min_objective, best_prefix,
-                            captured_zero, dead_prefix, inferior)
+                            insufficient, captured_zero, dead_prefix, inferior)
             else:
                 pdict[sorted_prefix] = (prefix, accuracy)
 
@@ -299,7 +314,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
             print i, prefix, len(cache), 'ub>max', \
                  '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
     return (max_accuracy, min_objective, best_prefix, captured_zero,
-            dead_prefix, inferior)
+            insufficient, dead_prefix, inferior)
 
 def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0.,
                  min_objective=0., c=0., best_prefix=None):
@@ -315,7 +330,7 @@ def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0.,
 
         prefix = prefix_start + (full_prefix[i],)
 
-        (max_accuracy, min_objective, best_prefix, cz, dp, ir) = \
+        (max_accuracy, min_objective, best_prefix, cz, it, dp, ir) = \
             incremental(cache, prefix, rules, ones, ndata, cached_prefix,
                         max_accuracy=max_accuracy, min_objective=min_objective,
                         c=c, best_prefix=best_prefix)
