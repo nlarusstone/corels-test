@@ -22,16 +22,22 @@ class Metrics:
         self.inferior = [0] * m
         self.seconds = 0.
         self.priority_queue_length = 0
+        self.min_objective = 0.
+        self.accuracy = 0.
+        self.best_prefix = ()
 
     def __repr__(self):
-        return '\n'.join(('cache size: %s' % self.cache_size.__repr__(),
+        return '\n'.join(('best prefix: %s' % self.best_prefix.__repr__(),
+                    'min objective: %2.5f' % self.min_objective,
+                    'accuracy: %2.5f' % self.accuracy,
+                    'cache size: %s' % self.cache_size.__repr__(),
                     'dead prefix start: %s' % self.dead_prefix_start.__repr__(),
                     'caputed zero: %s' % self.captured_zero.__repr__(),
                     'stunted prefix: %s' % self.stunted_prefix.__repr__(),
                     'commutes: %s' % self.commutes.__repr__(),
                     'dead prefix: %s' % self.dead_prefix.__repr__(),
                     'inferior: %s' % self.inferior.__repr__(),
-                    'seconds: %2.3f' % self.seconds,
+                    'seconds: %2.5f' % self.seconds,
                     'growth: %s' % format_float_list(self.growth())))
 
     def growth(self):
@@ -55,22 +61,36 @@ class Metrics:
                 sum(self.captured_zero), sum(self.stunted_prefix),
                 sum(self.commutes), sum(self.dead_prefix), sum(self.inferior)]
 
-    def to_string(self):
-        s1 = '%2.3f,%d' % (self.seconds, self.priority_queue_length)
+    def best_prefix_repr(self):
+        bp = self.best_prefix
+        return bp.__repr__().strip('()').replace(' ', '').replace(',', '.')
+
+    def to_string(self, granular=True):
+        s1 = '%2.5f,%2.5f,%2.5f,%s,%d' % (self.seconds, self.min_objective,
+                                          self.accuracy, self.best_prefix_repr(),
+                                          self.priority_queue_length)
         s2 = list_to_csv_record(self.aggregate())
-        s3 = ','.join([list_to_csv_record(x) for x in
+        if granular:
+            s3 = ','.join([list_to_csv_record(x) for x in
                        [self.cache_size, self.dead_prefix_start,
                         self.captured_zero, self.stunted_prefix, self.commutes,
                         self.dead_prefix, self.inferior]])
-        return ','.join([s1, s2, s3])
+            return ','.join([s1, s2, s3])
+        else:
+            return ','.join([s1, s2])
 
-    def names_to_string(self):
+    def names_to_string(self, granular=True):
         names = ['cache_size', 'dead_prefix_start', 'captured_zero',
                  'stunted_prefix', 'commutes', 'dead_prefix', 'inferior']
         m = len(self.cache_size)
         e_names = [expand_names(x, m) for x in names]
-        return ','.join(['seconds', 'priority_queue_length'] + names +
-                        list(itertools.chain(*e_names)))
+        if granular:
+            return ','.join(['seconds', 'min_objective', 'accuracy',
+                             'best_prefix', 'priority_queue_length'] + names +
+                            list(itertools.chain(*e_names)))
+        else:
+            return ','.join(['seconds', 'min_objective', 'accuracy',
+                             'best_prefix', 'priority_queue_length'] + names)
 
 def mpz_to_string(x):
     # skip leading 1
