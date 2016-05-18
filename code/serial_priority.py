@@ -37,27 +37,28 @@ import utils
 din = os.path.join('..', 'data')
 dout = os.path.join('..', 'cache')
 dlog = os.path.join('..', 'logs')
+dfigs = os.path.join('..', 'figs')
 froot = 'tdata_R'
 warm_start = False ## greedy algorithm is currently broken
 max_accuracy = 0.999
 best_prefix = None
 min_objective = 1.
-c = 0.
+c = 10.
 max_prefix_length = 8
 delimiter = '\t'
 quiet = True
 garbage_collect = True
 seed = None
 sample = None
-method = 'objective' # 'breadth_first' # 'objective' # 'lower_bound' # 'curiosity' #
+method = 'lower_bound' # 'breadth_first' # 'objective' # 'lower_bound' # 'curiosity' #
 max_cache_size = 3000000
 
 #"""
 froot = 'adult_R'
 max_accuracy = None #0.83 # 0.835438
 min_objective = None # 673. #512.
-c = 0. # 10.
-max_prefix_length = 70
+c = 30. # 10. # 0.
+max_prefix_length = 20
 seed = 0
 sample = 0.1
 #"""
@@ -76,6 +77,8 @@ if not os.path.exists(dout):
     os.mkdir(dout)
 if not os.path.exists(dlog):
     os.mkdir(dlog)
+if not os.path.exists(dfigs):
+    os.mkdir(dfigs)
 
 label_file = '%s.label' % froot
 out_file = '%s.out' % froot
@@ -132,12 +135,15 @@ m = max_prefix_length
 metrics = utils.Metrics(m)
 metrics.cache_size[0] = 1
 metrics.priority_queue_length = 1
+metrics.best_prefix = best_prefix
+metrics.min_objective = min_objective
+metrics.accuracy = max_accuracy
 
 counter = 0
 tic = time.time()
 
-fh.write('counter,' + metrics.names_to_string() + '\n')
-fh.write(('%d,' % counter) + metrics.to_string() + '\n')
+fh.write(metrics.names_to_string() + '\n')
+fh.write(metrics.to_string() + '\n')
 fh.flush()
 
 finished_max_prefix_length = 0
@@ -189,6 +195,9 @@ while (priority_queue):
             best_prefix=best_prefix, garbage_collect=garbage_collect,
             pdict=pdict, quiet=quiet)
 
+        metrics.best_prefix = best_prefix
+        metrics.min_objective = min_objective
+        metrics.accuracy = max_accuracy
         metrics.captured_zero[i] += cz
         metrics.dead_prefix[i] += dp
         metrics.inferior[i] += ir
@@ -202,10 +211,8 @@ while (priority_queue):
     if ((counter % 1000) == 0):
         metrics.priority_queue_length = len(priority_queue)
         metrics.seconds = time.time() - tic
-        fh.write(('%d,' % counter) + metrics.to_string() + '\n')
+        fh.write(metrics.to_string() + '\n')
         fh.flush()
-        print 'max accuracy:', max_accuracy
-        print 'min objective:', min_objective
         print metrics
 
     if (method == 'breadth_first'):
@@ -220,7 +227,7 @@ while (priority_queue):
 
 metrics.priority_queue_length = len(priority_queue)
 metrics.seconds = time.time() - tic
-fh.write(('%d,' % counter) + metrics.to_string())
+fh.write(metrics.to_string())
 fh.close()
 
 print 'max accuracy:', max_accuracy
@@ -234,15 +241,13 @@ try:
 except:
     print 'best prefix not in cache'
 
+figs.viz_log(metadata=metadata, din=dlog, dout=dfigs, delimiter=',', lw=3, fs=14)
+
 fname = os.path.join(dout, '%s.txt' % metadata)
 cache.to_file(fname=fname, delimiter=delimiter)
 x = tb.tabarray(SVfile=fname, delimiter=delimiter)
 x.sort(order=['length', 'first'])
 x.saveSV(fname, delimiter=delimiter)
-
-dfigs = os.path.join('..', 'figs')
-if not os.path.exists(dfigs):
-    os.mkdir(dfigs)
 
 figs.make_figure(metadata=metadata, din=dout, dout=dfigs,
                  max_accuracy=max_accuracy, max_length=x[-1]['length'])
