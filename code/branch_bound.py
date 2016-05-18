@@ -231,12 +231,12 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
     # the number of data captured by prefix and incorrectly predicted
     num_incorrect = new_num_captured - num_correct
 
-    # the objective is the sum of the number of mistakes
-    objective = float(num_mistakes) + c * len(prefix)
+    # the objective is the sum of the fraction of mistakes and regularization
+    objective = float(num_mistakes) / ndata + c * len(prefix)
 
     # the lower bound on the objective is the sum of the lower bound on the
     # number of mistakes and a constant times the prefix size
-    lower_bound = float(num_incorrect) + c * len(prefix)
+    lower_bound = float(num_incorrect) / ndata + c * len(prefix)
 
     # if the upper bound of prefix exceeds max_accuracy, then create a
     # cache entry for prefix

@@ -43,7 +43,7 @@ warm_start = False ## greedy algorithm is currently broken
 max_accuracy = 0.999
 best_prefix = None
 min_objective = 1.
-c = 10.
+c = 0.003
 max_prefix_length = 8
 delimiter = '\t'
 quiet = True
@@ -51,13 +51,13 @@ garbage_collect = True
 seed = None
 sample = None
 method = 'lower_bound' # 'breadth_first' # 'objective' # 'lower_bound' # 'curiosity' #
-max_cache_size = 3000000
+max_cache_size = 300000#0
 
 #"""
 froot = 'adult_R'
 max_accuracy = None #0.83 # 0.835438
 min_objective = None # 673. #512.
-c = 30. # 10. # 0.
+c = 0.01 # 0.003 # 0.
 max_prefix_length = 20
 seed = 0
 sample = 0.1
@@ -102,7 +102,7 @@ if (froot == 'adult_R'):
             cache.pop(k)
     print cache
 
-metadata = ('%s-serial_priority-c=%d-min_objective=%1.3f-method=%s-max_cache_size=%d-sample=%2.2f' %
+metadata = ('%s-serial_priority-c=%2.3f-min_objective=%1.3f-method=%s-max_cache_size=%d-sample=%2.2f' %
             (froot, c, min_objective, method, max_cache_size, sample))
 flog = os.path.join(dlog, '%s.txt' % metadata)
 print 'Writing log to', flog
