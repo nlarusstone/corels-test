@@ -42,10 +42,10 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     pylab.figure(2, figsize=(8, 6))
     pylab.clf()
     k = int(x.dtype.names[-1].split('_')[-1]) + 1
-    y = x[-1]    
+    y = x[-1]
     c = np.array([y[name] for name in x.dtype.names if name.startswith('cache_size')])
     ind = (c > 0).nonzero()[0]
-    for (i, n) in enumerate(names[1:]):        
+    for (i, n) in enumerate(names[1:]):
         data = np.array([y['%s_%d' % (n, j)] for j in range(k)])[ind]
         pylab.bar(np.arange(len(data)) * len(names) + i, data, color=color_vec[i+1])
     pylab.legend(display_names[1:], loc='upper left')
