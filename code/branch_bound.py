@@ -253,7 +253,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
     # number of mistakes and a constant times the prefix size
     lower_bound = float(num_incorrect) / ndata + c * len(prefix)
 
-    # if the upper bound of prefix exceeds max_accuracy, then create a
+    # if the lower bound of prefix is less than min_objective, then create a
     # cache entry for prefix
     if (lower_bound >= min_objective):
         dead_prefix = 1
