@@ -1,42 +1,71 @@
 import os
 
+import numpy as np
+import pylab
 import tabular as tb
 import pylab
 
 
 def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
-    metadata = 'adult_R-serial_priority-c=0-min_objective=495.000-method=breadth_first-max_cache_size=3000000-sample=0.10'
-    din = '../logs'
-    dout = '../figs'
     fin = os.path.join(din, '%s.txt' % metadata)
-    x = tb.tabarray(SVfile=fin)
+    x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
     names = ['priority_queue_length', 'cache_size', 'inferior', 'dead_prefix', 'commutes', 'captured_zero']
+    color_vec = ['blue', 'green', 'gray', 'cyan', 'magenta', 'yellow']
     pylab.ion()
-    pylab.figure(1, figsize=(13, 8))
+    pylab.figure(1, figsize=(12, 8))
     pylab.clf()
+    pylab.subplot2grid((6, 1), (0, 0))
+    pylab.title(metadata.replace('_', ' ').replace('-', ', ') + '\n', fontsize=fs)
+    pylab.plot(t, x['min_objective'], '-', linewidth=lw)
+    pylab.ylabel('objective', fontsize=fs)
+    pylab.subplot2grid((6, 1), (1, 0))
+    pylab.plot(t, x['accuracy'], '-', linewidth=lw)
+    pylab.ylabel('accuracy', fontsize=fs)
+    pylab.subplot2grid((6, 1), (2, 0))
+    pylab.plot(t, [len(p.split('.')) for p in x['best_prefix']], '-', linewidth=lw)
+    pylab.ylabel('len(prefix)', fontsize=fs)
+    pylab.subplot2grid((6, 1), (3, 0), rowspan=3)
     for (i, n) in enumerate(names):
         if (x[n] == 0).all():
             continue
-        #pylab.subplot(len(names), 1, i + 1)
-        pylab.plot(t, x[n], '-o', linewidth=lw)
+        pylab.plot(t, x[n], '-', linewidth=lw, color=color_vec[i])
     pylab.xlabel('time (sec)', fontsize=fs)
     pylab.ylabel('count', fontsize=fs)
     pylab.xticks(fontsize=fs)
     pylab.yticks(fontsize=fs)
     display_names = [n.replace('_', ' ') for n in names]
     pylab.legend(display_names, loc='upper left')
-    pylab.title(metadata.replace('_', ' ').replace('-', ', ') + '\n', fontsize=fs)
     fout = os.path.join(dout, '%s-log.pdf' % metadata)
     pylab.savefig(fout)
 
-    pylab.figure(2, figsize=(16, 10))
+    pylab.figure(2, figsize=(8, 6))
     pylab.clf()
     k = int(x.dtype.names[-1].split('_')[-1]) + 1
-    y = x[-1]
-    for (i, n) in enumerate(names[1:]):
-        data = [y['%s_%d' % (n, j)] for j in range(k)]
-        pylab.plot(data, '-o', linewidth=lw)
+    y = x[-1]    
+    c = np.array([y[name] for name in x.dtype.names if name.startswith('cache_size')])
+    ind = (c > 0).nonzero()[0]
+    for (i, n) in enumerate(names[1:]):        
+        data = np.array([y['%s_%d' % (n, j)] for j in range(k)])[ind]
+        pylab.bar(np.arange(len(data)) * len(names) + i, data, color=color_vec[i+1])
+    pylab.legend(display_names[1:], loc='upper left')
+    pylab.xticks(np.arange(len(data)) * len(names), np.arange(len(data)))
+    pylab.xlabel('prefix length', fontsize=fs)
+    pylab.ylabel('count', fontsize=fs)
+    fout = os.path.join(dout, '%s-hist.pdf' % metadata)
+    pylab.savefig(fout)
+
+    pylab.figure(3, figsize=(8, 6))
+    pylab.clf()
+    z = np.array([x['%s_%d' % ('cache_size', j)] for j in range(k)])[ind]
+    pylab.plot(x['seconds'], z.T, linewidth=lw)
+    for i in range(len(z)):
+        pylab.text(x['seconds'][-1], x['cache_size_%d' % i][-1], '%d' % i, fontsize=fs)
+    pylab.xlabel('time (sec)', fontsize=fs)
+    pylab.ylabel('count', fontsize=fs)
+    pylab.title('cache entries by prefix length', fontsize=fs)
+    fout = os.path.join(dout, '%s-cache.pdf' % metadata)
+    pylab.savefig(fout)
     return
 
 def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
@@ -44,7 +73,7 @@ def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
     fin = os.path.join(din, '%s.txt' % metadata)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     pylab.ion()
-    pylab.figure(1, figsize=(16, 10))
+    pylab.figure(4, figsize=(16, 10))
     pylab.clf()
     for i in range(1, max_length + 1):
         print i
