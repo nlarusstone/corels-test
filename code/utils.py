@@ -15,9 +15,10 @@ class Metrics:
     def __init__(self, m):
         self.cache_size = [0] * m
         self.dead_prefix_start = [0] * m
-        self.captured_zero = [0] * m
         self.stunted_prefix = [0] * m
         self.commutes = [0] * m
+        self.captured_zero = [0] * m
+        self.insufficient = [0] * m
         self.dead_prefix = [0] * m
         self.inferior = [0] * m
         self.seconds = 0.
@@ -32,9 +33,10 @@ class Metrics:
                     'accuracy: %2.5f' % self.accuracy,
                     'cache size: %s' % self.cache_size.__repr__(),
                     'dead prefix start: %s' % self.dead_prefix_start.__repr__(),
-                    'caputed zero: %s' % self.captured_zero.__repr__(),
                     'stunted prefix: %s' % self.stunted_prefix.__repr__(),
                     'commutes: %s' % self.commutes.__repr__(),
+                    'caputed zero: %s' % self.captured_zero.__repr__(),
+                    'insufficient: %s' % self.insufficient.__repr__(),
                     'dead prefix: %s' % self.dead_prefix.__repr__(),
                     'inferior: %s' % self.inferior.__repr__(),
                     'seconds: %2.5f' % self.seconds,
@@ -52,14 +54,15 @@ class Metrics:
 
         """
         return ((self.cache_size[i] + self.commutes[i] + self.captured_zero[i] +
-                 self.dead_prefix[i] + self.inferior[i])
+                 self.insufficient[i] + self.dead_prefix[i] + self.inferior[i])
              == ((nrules - i + 1) * (self.cache_size[i - 1] -
                  self.dead_prefix_start[i - 1] - self.stunted_prefix[i - 1])))
 
     def aggregate(self):
         return [sum(self.cache_size), sum(self.dead_prefix_start),
-                sum(self.captured_zero), sum(self.stunted_prefix),
-                sum(self.commutes), sum(self.dead_prefix), sum(self.inferior)]
+                sum(self.stunted_prefix), sum(self.commutes),
+                sum(self.captured_zero), sum(self.insufficient),
+                sum(self.dead_prefix), sum(self.inferior)]
 
     def best_prefix_repr(self):
         bp = self.best_prefix
@@ -73,15 +76,15 @@ class Metrics:
         if granular:
             s3 = ','.join([list_to_csv_record(x) for x in
                        [self.cache_size, self.dead_prefix_start,
-                        self.captured_zero, self.stunted_prefix, self.commutes,
-                        self.dead_prefix, self.inferior]])
+                        self.stunted_prefix, self.commutes, self.captured_zero,
+                        self.insufficient, self.dead_prefix, self.inferior]])
             return ','.join([s1, s2, s3])
         else:
             return ','.join([s1, s2])
 
     def names_to_string(self, granular=True):
-        names = ['cache_size', 'dead_prefix_start', 'captured_zero',
-                 'stunted_prefix', 'commutes', 'dead_prefix', 'inferior']
+        names = ['cache_size', 'dead_prefix_start', 'stunted_prefix', 'commutes',
+                 'captured_zero', 'insufficient', 'dead_prefix', 'inferior']
         m = len(self.cache_size)
         e_names = [expand_names(x, m) for x in names]
         if granular:

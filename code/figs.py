@@ -10,8 +10,8 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     fin = os.path.join(din, '%s.txt' % metadata)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
-    names = ['priority_queue_length', 'cache_size', 'inferior', 'dead_prefix', 'commutes', 'captured_zero']
-    color_vec = ['blue', 'green', 'gray', 'cyan', 'magenta', 'yellow']
+    names = ['priority_queue_length', 'cache_size', 'inferior', 'dead_prefix', 'commutes', 'captured_zero', 'insufficient']
+    color_vec = ['blue', 'green', 'gray', 'cyan', 'magenta', 'yellow', 'orange']
     pylab.ion()
     pylab.figure(1, figsize=(12, 8))
     pylab.clf()
