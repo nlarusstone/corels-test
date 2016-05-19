@@ -31,6 +31,7 @@ class Metrics:
         return '\n'.join(('best prefix: %s' % self.best_prefix.__repr__(),
                     'min objective: %2.5f' % self.min_objective,
                     'accuracy: %2.5f' % self.accuracy,
+                    'priority queue length: %d' % self.priority_queue_length,
                     'cache size: %s' % self.cache_size.__repr__(),
                     'dead prefix start: %s' % self.dead_prefix_start.__repr__(),
                     'stunted prefix: %s' % self.stunted_prefix.__repr__(),
