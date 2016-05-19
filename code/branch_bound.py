@@ -505,7 +505,7 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     # correctly predicts
     (empty_default, empty_num_correct) = compute_default(ones, ndata)
     empty_accuracy = float(empty_num_correct) / ndata
-    empty_objective = float(ndata - empty_num_correct)
+    empty_objective = float(ndata - empty_num_correct) / ndata
     empty_lower_bound = 0.
 
     # max_accuracy is the accuracy of the best_prefix observed so far
