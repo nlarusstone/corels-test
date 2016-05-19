@@ -88,7 +88,6 @@ def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
         pylab.plot([min_objective] * 2, [0, a[3]], 'b:', linewidth=lw)
         max_lower_bound = y['lower_bound'].max()
         pylab.plot([max_lower_bound] * 2, [0, a[3]], 'g:', linewidth=lw)
-        pylab.ylabel('%d' % len(y))
         pylab.yticks([pylab.yticks()[0][-2]])
         if (i == 1):
             pylab.title('lower bound & objective', fontsize=fs)
@@ -98,6 +97,7 @@ def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
             a[0] = a1[0]
             a[1] = a1[1]
             pylab.axis(a)
+        pylab.text(0.05 * a[1], 0.6 * a[3], '%d' % len(y))
         if (i < max_length):
             pylab.xticks([], [])
 
