@@ -10,7 +10,7 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
     names = ['priority_queue_length', 'cache_size', 'inferior', 'dead_prefix', 'commutes', 'captured_zero', 'insufficient']
-    color_vec = ['blue', 'green', 'gray', 'cyan', 'magenta', 'yellow', 'orange']
+    color_vec = ['magenta', 'green', 'gray', 'cyan', 'black', 'blue', 'orange']
     plt.ion()
     plt.figure(1, figsize=(12, 8))
     plt.clf()
@@ -22,13 +22,16 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     plt.plot(t, x['accuracy'], '-', linewidth=lw)
     plt.ylabel('accuracy', fontsize=fs)
     plt.subplot2grid((6, 1), (2, 0))
-    plt.plot(t, [len(str(p).split('.')) for p in x['best_prefix']], '-', linewidth=lw)
+    plt.plot(t, [len([q for q in str(p).replace('nan', '').split('.') if q]) for p in x['best_prefix']], '-', linewidth=lw)
     plt.ylabel('len(prefix)', fontsize=fs)
     plt.subplot2grid((6, 1), (3, 0), rowspan=3)
     for (i, n) in enumerate(names):
         if (x[n] == 0).all():
             continue
-        plt.plot(t, x[n], '-', linewidth=lw, color=color_vec[i])
+        if (i == 0):
+            plt.plot(t, x[n], '-', linewidth=lw * 4, color=color_vec[i])
+        else:
+            plt.plot(t, x[n], '-', linewidth=lw, color=color_vec[i])
     plt.xlabel('time (sec)', fontsize=fs)
     plt.ylabel('count', fontsize=fs)
     plt.xticks(fontsize=fs)
@@ -40,9 +43,9 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
 
     plt.figure(2, figsize=(8, 6))
     plt.clf()
-    k = int(x.dtype.names[-1].split('_')[-1])
+    k = int(x.dtype.names[-1].split('_')[-1]) + 1
     y = x[-1]
-    c = np.array([y[name] for name in x.dtype.names if name.startswith('cache_size')])
+    c = np.array([y[name] for name in x.dtype.names if name.startswith('cache_size')][1:])
     ind = (c > 0).nonzero()[0]
     for (i, n) in enumerate(names[1:]):
         data = np.array([y['%s_%d' % (n, j)] for j in range(k)])[ind]
