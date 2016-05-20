@@ -227,7 +227,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             if not quiet:
                 print metrics
 
-        if False:#(method == 'breadth_first'):
+        if (method == 'breadth_first'):
             if (i > (finished_max_prefix_length + 1)):
                finished_max_prefix_length += 1
                assert metrics.check(finished_max_prefix_length, nrules)
