@@ -156,7 +156,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
     if (num_captured < 1):
         captured_zero = 1
         if not quiet:
-            print i, prefix, len(cache), 'num_captured=0', \
+            print prefix, len(cache), 'num_captured=0', \
                   '%d %d %d' % (-1, -1, -1)
         return (max_accuracy, min_objective, best_prefix, captured_zero,
                 insufficient, dead_prefix, inferior)
@@ -258,7 +258,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
     if (lower_bound >= min_objective):
         dead_prefix = 1
         if not quiet:
-            print i, prefix, len(cache), 'lb>=min', \
+            print prefix, len(cache), 'lb>=min', \
                   '%1.3f %1.3f %1.3f %1.3f' % (accuracy, objective, lower_bound,
                                                min_objective)
         return (max_accuracy, min_objective, best_prefix, captured_zero,
@@ -311,7 +311,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
                                    curiosity=curiosity)
 
         if not quiet:
-            print i, prefix, len(cache), 'ub>max', \
+            print prefix, len(cache), 'ub>max', \
                  '%1.3f %1.3f %1.3f' % (accuracy, upper_bound, max_accuracy)
     return (max_accuracy, min_objective, best_prefix, captured_zero,
             insufficient, dead_prefix, inferior)
