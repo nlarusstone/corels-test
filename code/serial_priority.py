@@ -247,6 +247,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
     print 'prefix length:', len(best_prefix)
     print metrics
+    print metrics.print_summary()
 
     try:
         cc = cache[best_prefix]
