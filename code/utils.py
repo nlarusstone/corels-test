@@ -65,6 +65,19 @@ class Metrics:
                 sum(self.captured_zero), sum(self.insufficient),
                 sum(self.dead_prefix), sum(self.inferior)]
 
+    def print_summary(self):
+        a = self.aggregate()
+        print 'priority queue length:', self.priority_queue_length
+        print 'cache size:', a[0]
+        print 'dead prefix start:', a[1]
+        print 'stunted prefix:', a[2]
+        print 'commutes:', a[3]
+        print 'captured zero:', a[4]
+        print 'insufficient:', a[5]
+        print 'dead prefix:', a[6]
+        print 'inferior:', a[7]
+        return
+
     def best_prefix_repr(self):
         bp = self.best_prefix
         return bp.__repr__().strip('()').replace(' ', '').replace(',', '.')
