@@ -9,35 +9,38 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     fin = os.path.join(din, '%s.txt' % metadata)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
-    names = ['priority_queue_length', 'cache_size', 'inferior', 'dead_prefix', 'commutes', 'captured_zero', 'insufficient']
-    color_vec = ['magenta', 'green', 'gray', 'cyan', 'black', 'blue', 'orange']
+    names = ['priority_queue_length', 'dead_prefix', 'cache_size', 'inferior', 'commutes', 'captured_zero', 'insufficient']
+    color_vec = ['blue', 'green', 'magenta', 'cyan', 'gray', 'blue', 'orange']
     plt.ion()
     plt.figure(1, figsize=(12, 8))
     plt.clf()
-    plt.subplot2grid((6, 1), (0, 0))
+    plt.subplot2grid((7, 1), (0, 0))
     plt.title(metadata.replace('_', ' ').replace('-', ', ') + '\n', fontsize=fs)
     plt.plot(t, x['min_objective'], '-', linewidth=lw)
     plt.ylabel('objective', fontsize=fs)
-    plt.subplot2grid((6, 1), (1, 0))
+    plt.subplot2grid((7, 1), (1, 0))
     plt.plot(t, x['accuracy'], '-', linewidth=lw)
     plt.ylabel('accuracy', fontsize=fs)
-    plt.subplot2grid((6, 1), (2, 0))
+    plt.subplot2grid((7, 1), (2, 0))
     plt.plot(t, [len([q for q in str(p).replace('nan', '').split('.') if q]) for p in x['best_prefix']], '-', linewidth=lw)
-    plt.ylabel('len(prefix)', fontsize=fs)
-    plt.subplot2grid((6, 1), (3, 0), rowspan=3)
-    for (i, n) in enumerate(names):
+    plt.ylabel('length', fontsize=fs)
+    plt.subplot2grid((7, 1), (3, 0))
+    plt.plot(t, x[names[0]], '-', linewidth=lw, color=color_vec[0])
+    plt.ylabel('queue', fontsize=fs)
+    plt.subplot2grid((7, 1), (4, 0))
+    plt.plot(t, x[names[1]], '-', linewidth=lw, color=color_vec[1])
+    plt.ylabel('dead', fontsize=fs)
+    plt.subplot2grid((7, 1), (5, 0), rowspan=2)
+    for (n, c) in zip(names[2:], color_vec[2:]):
         if (x[n] == 0).all():
             continue
-        if (i == 0):
-            plt.plot(t, x[n], '-', linewidth=lw * 4, color=color_vec[i])
-        else:
-            plt.plot(t, x[n], '-', linewidth=lw, color=color_vec[i])
+        plt.plot(t, x[n], '-', linewidth=lw, color=c)
     plt.xlabel('time (sec)', fontsize=fs)
     plt.ylabel('count', fontsize=fs)
     plt.xticks(fontsize=fs)
     plt.yticks(fontsize=fs)
     display_names = [n.replace('_', ' ') for n in names]
-    plt.legend(display_names, loc='upper left')
+    plt.legend(display_names[2:], loc='upper left')
     fout = os.path.join(dout, '%s-log.pdf' % metadata)
     plt.savefig(fout)
 
