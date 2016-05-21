@@ -38,6 +38,7 @@ class CacheEntry:
         self.num_captured_correct = num_captured_correct
         self.not_captured = not_captured
         self.curiosity = curiosity
+        self.num_children = 0
 
     def __repr__(self):
         s = '\n'.join(('prefix: %s' % self.prefix.__repr__(),
@@ -108,6 +109,19 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
         print '%sif %s then predict %d' % (e, rule_names[i], label)
         e = 'else '
     print 'else predict %d' % default_rule
+
+def prune_up(prefix, cache, metrics=None):
+    for j in range(len(prefix), -1, -1):
+        px = prefix[:j]
+        if (cache[px].num_children == 0):
+            print 'dead end:', px
+            cache.pop(px)
+            cache[px[:-1]].num_children -= 1
+            if (metrics is not None):
+                metrics.cache_size[len(px)] -= 1
+        else:
+            break
+    return metrics
 
 def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
                 max_accuracy=0., min_objective=0., c=0.,
@@ -290,11 +304,13 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix,
                 inferior = 1
                 if (accuracy > equiv_accuracy):
                     # equiv_prefix is inferior to prefix
-                    cache.pop(equiv_prefix)
+                    try:
+                        cache.pop(equiv_prefix)
+                    except:
+                        pass
                     pdict[sorted_prefix] = (prefix, accuracy)
                 else:
                     # prefix is inferior to the stored equiv_prefix
-                    inferior = 1
                     return (max_accuracy, min_objective, best_prefix,
                             insufficient, captured_zero, dead_prefix, inferior)
             else:
