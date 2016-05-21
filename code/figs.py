@@ -12,10 +12,11 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     names = ['priority_queue_length', 'dead_prefix', 'cache_size', 'inferior', 'commutes', 'captured_zero', 'insufficient']
     color_vec = ['blue', 'green', 'magenta', 'cyan', 'gray', 'blue', 'orange']
     plt.ion()
-    plt.figure(1, figsize=(12, 8))
+    plt.figure(1, figsize=(10, 12))
     plt.clf()
     plt.subplot2grid((7, 1), (0, 0))
-    plt.title(metadata.replace('_', ' ').replace('-', ', ') + '\n', fontsize=fs)
+    title = metadata.replace('-', ', ').split(' ')
+    plt.title(' '.join(title[:4]) + '\n' + ' '.join(title[4:]), fontsize=fs)
     plt.plot(t, x['min_objective'], '-', linewidth=lw)
     plt.ylabel('objective', fontsize=fs)
     plt.subplot2grid((7, 1), (1, 0))
