@@ -35,6 +35,7 @@ import figs
 import rule
 import utils
 
+
 def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
@@ -100,6 +101,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     x = utils.rules_to_array(rules)
     commuting_pairs = utils.find_commuting_pairs(x)
     cdict = utils.commuting_dict(commuting_pairs, nrules)
+    rdict = utils.relations_dict(x)
 
     print froot
     print 'nrules:', nrules
@@ -171,7 +173,10 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         rules_to_consider = rule_set.difference(set(prefix_start))
         if len(prefix_start):
             last_rule = prefix_start[-1]
-            rtc = rules_to_consider.difference(set(cdict[last_rule]))
+            commutes_set = set(cdict[last_rule])
+            smaller_set = utils.all_relations(rdict, prefix_start)
+            #dominates_set = utils.prefix_dominates(x, cached_prefix.not_captured, prefix_start)
+            rtc = rules_to_consider.difference(commutes_set).difference(smaller_set)
             metrics.commutes[i] += len(rules_to_consider) - len(rtc)
             rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
@@ -225,7 +230,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 fh.write(metrics.to_string() + '\n')
                 fh.flush()
                 print metrics
-                if False: #not certify:
+                if certify:
                     prune_count = 0
                     for key in cache.keys():
                         if (cache[key].lower_bound > min_objective):
@@ -250,7 +255,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             metrics.seconds = time.time() - tic
             fh.write(metrics.to_string() + '\n')
             fh.flush()
-            if not quiet:
+            if quiet:
                 print metrics
 
         if False: #(method == 'breadth_first'):
@@ -352,3 +357,24 @@ def example_adult():
            method='curiosity', seed=0, sample=0.1, quiet=True,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue)
+
+def load_data(froot):
+    label_file = '%s.label' % froot
+    out_file = '%s.out' % froot
+    (nrules, ndata, ones, rules, rule_set, rule_names,
+     max_accuracy, min_objective, best_prefix, cache) = \
+            initialize(din=os.path.join('..', 'data'),
+                       dout=os.path.join('..', 'cache'),
+                       label_file=label_file, out_file=out_file,
+                       warm_start=False, max_accuracy=0., min_objective=1.,
+                       best_prefix=(), seed=0, sample=1.)
+    rules = utils.rules_to_array(rules)
+    commuting_pairs = utils.find_commuting_pairs(rules)
+    cdict = utils.commuting_dict(commuting_pairs, nrules)
+    return (nrules, ndata, ones, rules, rule_set, rule_names)
+
+def tdata():
+    return load_data(froot='tdata_R')
+
+def adult():
+    return load_data(froot='adult_R')
