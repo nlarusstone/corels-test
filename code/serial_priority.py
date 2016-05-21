@@ -30,6 +30,7 @@ from gmpy2 import mpz
 import tabular as tb
 
 from branch_bound import given_prefix, initialize, incremental, print_rule_list
+from branch_bound import prune_up
 import figs
 import rule
 import utils
@@ -66,6 +67,11 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     else:
         assert (method == 'random')
         heap_metric = lambda key: np.random.random()
+
+    if (method == 'breadth_first'):
+        certify = True
+    else:
+        certify = False
 
     if not os.path.exists(dout):
         os.mkdir(dout)
@@ -131,7 +137,8 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     finished_max_prefix_length = 0
     max_prefix_len_check = 100
 
-    while (priority_queue):
+    done = False
+    while (priority_queue and (not done)):
         (hm, prefix_start) = heapq.heappop(priority_queue)
         i = len(prefix_start) + 1
         if (i > max_prefix_len_check):
@@ -154,7 +161,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                       '%1.3f %1.3f %1.3f' % (cached_prefix.objective,
                       cached_prefix.lower_bound, min_objective)
             continue
-        elif (cached_prefix.objective == cached_prefix.lower_bound):
+        elif (cached_prefix.objective == cached_prefix.lower_bound):    # don't put in cache
             metrics.stunted_prefix[i] += 1
             continue
 
@@ -168,6 +175,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             metrics.commutes[i] += len(rules_to_consider) - len(rtc)
             rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
+        num_children = 0
 
         while(queue):
             # prefix is the first prefix tuple in the queue
@@ -192,11 +200,21 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             if ((cz == 0) and (it == 0) and (dp == 0) and (ir == 0)):
                 metrics.cache_size[i] += 1
             if (prefix in cache):
-                if (cache[prefix].lower_bound == cache[prefix].objective):
+                num_children += 1
+                if (cache[prefix].objective == (c * len(prefix))):
+                    if certify or (method == 'breadth_first'):
+                        # this is the best we can possibly do
+                        done = True
+                        break
                     if (len(prefix) < max_prefix_len_check):
-                        print ('objective = lower bound, max prefix length to check:', 
-                               max_prefix_len_check, '->', len(prefix))
+                        print 'objective = best possible, max prefix length to check:', \
+                               max_prefix_len_check, '->', len(prefix)
                         max_prefix_len_check = len(prefix)
+                        certify = True
+                        heap_metric = lambda key: len(key)
+                        priority_queue = [(heap_metric(key), key) for (val, key) in priority_queue]
+                        heapq.heapify(priority_queue)
+                        print 're-prioritized for breadth-first search policy'
                 else:
                     heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
 
@@ -206,17 +224,25 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 metrics.seconds = time.time() - tic
                 fh.write(metrics.to_string() + '\n')
                 fh.flush()
-                """
-                # very basic pruning
-                # prune any prefixes starting with rule r such that the lower bound
-                # of (r,) exceeds the minimum observed objective
-                for r in range(nrules):
-                    if (r,) in cache:
-                        if (cache[(r,)].lower_bound >= min_objective):
-                            priority_queue = [(val, key) for (val, key) in
-                                              priority_queue if (key[:1] != (r,))]
-                print 'len(priority_queue)', len(priority_queue)
-                """
+                print metrics
+                if False: #not certify:
+                    prune_count = 0
+                    for key in cache.keys():
+                        if (cache[key].lower_bound > min_objective):
+                            cache.pop(key)
+                            try:
+                                cache[key[:-1].num_children] -= 1
+                            except:
+                                pass
+                            prune_count += 1
+                            metrics.cache_size[len(key)] -= 1
+                    print 'pruned:', prune_count
+
+        if not certify:
+            # basic pruning:  remove dead ends from the cache
+            cache[prefix_start].num_children = num_children
+            if (num_children == 0):
+                metrics = prune_up(prefix_start, cache, metrics)
 
         counter += 1
         if ((counter % 1000) == 0):
@@ -227,7 +253,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             if not quiet:
                 print metrics
 
-        if (method == 'breadth_first'):
+        if False: #(method == 'breadth_first'):
             if (i > (finished_max_prefix_length + 1)):
                finished_max_prefix_length += 1
                assert metrics.check(finished_max_prefix_length, nrules)
