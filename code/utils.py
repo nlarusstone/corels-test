@@ -114,7 +114,7 @@ def mpz_to_string(x):
     return "{0}".format(x.digits(2))[1:]
 
 def mpz_to_array(x):
-    return np.cast['uint8']([i for i in mpz_to_string(x)])
+    return np.cast['int']([i for i in mpz_to_string(x)])
 
 def array_to_string(x):
     return ''.join(np.cast[str](x))
@@ -138,6 +138,26 @@ def commuting_dict(commuting_pairs, n):
     for (a, b) in commuting_pairs:
         d[a] += (b,)
     return d
+
+def dominates(x, not_captured, i):
+    x = x[:, mpz_to_array(not_captured).nonzero()[0]]
+    return ((x[i] - x) >= 0).all(axis=1).nonzero()[0]
+
+def prefix_dominates(x, not_captured, prefix):
+    return set(itertools.chain.from_iterable([set(dominates(x, not_captured, p)) for p in prefix]))
+
+def relations_dict(x):
+    n = len(x)
+    r = dict(zip(range(n), [()] * n))
+    for i in range(n):
+        for j in range(n):
+            if (i != j):
+                if ((x[i] - x[j]) >= 0).all():
+                    r[i] += (j,)
+    return r
+
+def all_relations(rdict, prefix):
+    return set(itertools.chain.from_iterable([set(rdict[p]) for p in prefix]))
 
 def make_graph(nodes, edges):
     import networkx as nx
