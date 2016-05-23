@@ -94,15 +94,18 @@ def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
         max_lower_bound = y['lower_bound'].max()
         plt.plot([max_lower_bound] * 2, [0, a[3]], 'g:', linewidth=lw)
         plt.yticks([plt.yticks()[0][-2]])
+        plt.ylabel('\nlen=%d' % i, rotation='horizontal')
         if (i == 1):
             plt.title('lower bound & objective', fontsize=fs)
-            a1 = plt.axis()
+            a1 = list(plt.axis())
+            a1[0] = max(0, a1[0])
+            plt.axis(a1)
         else:
             a = list(plt.axis())
             a[0] = a1[0]
             a[1] = a1[1]
             plt.axis(a)
-        plt.text(0.05 * a[1], 0.6 * a[3], '%d' % len(y))
+        plt.text(0.05 * (a[1] - a[0]) + a[0], 0.6 * a[3], 'n=%d' % len(y))
         if (i < max_length):
             plt.xticks([], [])
 
