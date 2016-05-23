@@ -114,7 +114,7 @@ def prune_up(prefix, cache, metrics=None):
     for j in range(len(prefix), -1, -1):
         px = prefix[:j]
         if (cache[px].num_children == 0):
-            print 'dead end:', px
+            #print 'dead end:', px
             cache.pop(px)
             cache[px[:-1]].num_children -= 1
             if (metrics is not None):
