@@ -137,7 +137,10 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     fh.flush()
 
     finished_max_prefix_length = 0
-    max_prefix_len_check = 100
+    if (c == 0.):
+        max_prefix_len_check = 100
+    else:
+        max_prefix_len_check = int(np.floor(min_objective / c))
 
     done = False
     while (priority_queue and (not done)):
@@ -154,9 +157,18 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             # the cache
             continue
 
+        if (len(prefix_start) > 1):
+            try:
+                cached_prefix.reject_list = cache[prefix_start[:-1]].reject_list
+            except:
+                # the parent of prefix_start has been removed from the cache (why?)
+                cache.pop(prefix_start)
+                metrics.cache_size[len(prefix_start)] -= 1
+                continue
+
         if (cached_prefix.lower_bound > min_objective):
-            # we don't need to evaluate any prefixes that start with prefix_start if
-            # its upper_bound is less than max_accuracy
+            # we don't need to evaluate any prefixes that start with
+            # prefix_start if lower_bound is less than min_objective
             metrics.dead_prefix_start[i] += 1
             if not quiet:
                 print prefix_start, len(cache), 'lb(cached)>min', \
@@ -176,7 +188,8 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             commutes_set = set(cdict[last_rule])
             smaller_set = utils.all_relations(rdict, prefix_start)
             #dominates_set = utils.prefix_dominates(x, cached_prefix.not_captured, prefix_start)
-            rtc = rules_to_consider.difference(commutes_set).difference(smaller_set)
+            reject_set = set(cached_prefix.reject_list)
+            rtc = rules_to_consider.difference(commutes_set).difference(smaller_set).difference(reject_set)
             metrics.commutes[i] += len(rules_to_consider) - len(rtc)
             rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
@@ -188,43 +201,47 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
             # compute cache entry for prefix via incremental computation, and add to
             # cache if relevant
-            (max_accuracy, new_min_objective, best_prefix, cz, it, dp, ir) = \
+            (metrics, cache_entry) = \
                 incremental(cache, prefix, rules, ones, ndata, cached_prefix,
-                max_accuracy=max_accuracy, min_objective=min_objective, c=c,
-                min_captured_correct=min_captured_correct, best_prefix=best_prefix,
-                garbage_collect=garbage_collect, pdict=pdict, quiet=quiet)
+                            c=c, min_captured_correct=min_captured_correct,
+                            garbage_collect=garbage_collect, pdict=pdict,
+                            quiet=quiet, metrics=metrics)
 
-            metrics.best_prefix = best_prefix
-            metrics.min_objective = min_objective
-            metrics.accuracy = max_accuracy
-            metrics.captured_zero[i] += cz
-            metrics.insufficient[i] += it
-            metrics.dead_prefix[i] += dp
-            metrics.inferior[i] += ir
+            if cache_entry is None:
+                assert len(cache) == sum(metrics.cache_size), prefix
+                continue
 
-            if ((cz == 0) and (it == 0) and (dp == 0) and (ir == 0)):
-                metrics.cache_size[i] += 1
-            if (prefix in cache):
-                num_children += 1
-                if (cache[prefix].objective == (c * len(prefix))):
-                    if certify or (method == 'breadth_first'):
-                        # this is the best we can possibly do
-                        done = True
-                        break
-                    if (len(prefix) < max_prefix_len_check):
-                        print 'objective = best possible, max prefix length to check:', \
-                               max_prefix_len_check, '->', len(prefix)
-                        max_prefix_len_check = len(prefix)
-                        certify = True
-                        heap_metric = lambda key: len(key)
-                        priority_queue = [(heap_metric(key), key) for (val, key) in priority_queue]
-                        heapq.heapify(priority_queue)
-                        print 're-prioritized for breadth-first search policy'
-                else:
+            num_children += 1
+            if (cache_entry.objective == (c * len(prefix))):
+                if certify or (method == 'breadth_first'):
+                    # this is the best we can possibly do
+                    done = True
+                    break
+                if (len(prefix) < max_prefix_len_check):
+                    print 'objective = best possible, max prefix length to check:', \
+                           max_prefix_len_check, '->', len(prefix)
+                    max_prefix_len_check = len(prefix)
+                    certify = True
+                    heap_metric = lambda key: len(key)
+                    priority_queue = [(heap_metric(key), key) for (val, key) in priority_queue]
+                    heapq.heapify(priority_queue)
+                    print 're-prioritized for breadth-first search policy'
+            else:
+                if (len(prefix) < max_prefix_len_check):
                     heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
+                    cache[prefix] = cache_entry
+                else:
+                     # don't add to priority queue if descendents are too long
+                    if (prefix != metrics.best_prefix):
+                        # remove from cache (should also never insert into pdict)
+                        metrics.cache_size[len(prefix)] -= 1
+                    else:
+                        cache[prefix] = cache_entry
 
-            if (new_min_objective < min_objective):
-                min_objective = new_min_objective
+            assert len(cache) == sum(metrics.cache_size), prefix
+
+            if (metrics.min_objective < min_objective):
+                min_objective = metrics.min_objective
                 metrics.priority_queue_length = len(priority_queue)
                 metrics.seconds = time.time() - tic
                 fh.write(metrics.to_string() + '\n')
@@ -236,7 +253,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                         if (cache[key].lower_bound > min_objective):
                             cache.pop(key)
                             try:
-                                cache[key[:-1].num_children] -= 1
+                                cache[key[:-1].num_children] -= 1   # why try?
                             except:
                                 pass
                             prune_count += 1
@@ -248,6 +265,10 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             cache[prefix_start].num_children = num_children
             if (num_children == 0):
                 metrics = prune_up(prefix_start, cache, metrics)
+
+        if (() not in cache):
+            done = True
+            break
 
         counter += 1
         if ((counter % 1000) == 0):
@@ -274,27 +295,28 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     fh.write(metrics.to_string())
     fh.close()
 
-    print 'prefix length:', len(best_prefix)
+    print 'prefix length:', len(metrics.best_prefix)
     print metrics
     print metrics.print_summary()
 
     try:
-        cc = cache[best_prefix]
+        cc = cache[metrics.best_prefix]
         print_rule_list(cc.prefix, cc.prediction, cc.default_rule, rule_names)
         print cc
     except:
         print 'best prefix not in cache'
 
-    figs.viz_log(metadata=metadata, din=dlog, dout=dfigs, delimiter=',', lw=3, fs=14)
-
-    fname = os.path.join(dout, '%s.txt' % metadata)
-    cache.to_file(fname=fname, delimiter=delimiter)
-    x = tb.tabarray(SVfile=fname, delimiter=delimiter)
-    x.sort(order=['length', 'first'])
-    x.saveSV(fname, delimiter=delimiter)
-
-    figs.make_figure(metadata=metadata, din=dout, dout=dfigs,
-                     max_accuracy=max_accuracy, max_length=x[-1]['length'])
+    try:
+        figs.viz_log(metadata=metadata, din=dlog, dout=dfigs, delimiter=',', lw=3, fs=14)
+        fname = os.path.join(dout, '%s.txt' % metadata)
+        cache.to_file(fname=fname, delimiter=delimiter)
+        x = tb.tabarray(SVfile=fname, delimiter=delimiter)
+        x.sort(order=['length', 'first'])
+        x.saveSV(fname, delimiter=delimiter)
+        figs.make_figure(metadata=metadata, din=dout, dout=dfigs,
+                         max_accuracy=metrics.accuracy, max_length=x[-1]['length'])
+    except:
+        pass
 
     return (metadata, metrics, cache, priority_queue)
 
