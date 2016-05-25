@@ -21,6 +21,15 @@ class PrefixCache(dict):
             metrics.cache_size[n] += 1
         return metrics
 
+    def prune_up(self, prefix, metrics=None):
+        for j in range(len(prefix), -1, -1):
+            px = prefix[:j]
+            if (self[px].num_children == 0):
+                metrics = self.delete(px, metrics)
+            else:
+                break
+        return metrics
+
     def prune_down(self, prefix, metrics=None):
         if (metrics is not None):
             metrics.cache_size[len(prefix)] -= 1
@@ -151,21 +160,6 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
         print '%sif %s then predict %d' % (e, rule_names[i], label)
         e = 'else '
     print 'else predict %d' % default_rule
-
-def prune_up(prefix, cache, metrics=None):
-    for j in range(len(prefix), -1, -1):
-        px = prefix[:j]
-        if (cache[px].num_children == 0):
-            cache.pop(px)
-            if (metrics is not None):
-                metrics.cache_size[len(px)] -= 1
-            if (len(px) == 0):
-                break
-            cache[px[:-1]].children.remove(px[-1])
-            cache[px[:-1]].num_children -= 1
-        else:
-            break
-    return metrics
 
 def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                 min_captured_correct=0., garbage_collect=False, pdict=None,
