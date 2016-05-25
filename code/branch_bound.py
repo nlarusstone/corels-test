@@ -9,6 +9,43 @@ import rule
 
 
 class PrefixCache(dict):
+    def insert(self, prefix, cache_entry, metrics=None):
+        self[prefix] = cache_entry
+        n = len(prefix)
+        if (n > 0):
+            parent = self[prefix[:-1]]
+            parent.children.add(prefix[-1])
+            parent.num_children += 1
+            assert (len(parent.children) == parent.num_children), prefix
+        if metrics is not None:
+            metrics.cache_size[n] += 1
+        return metrics
+
+    def prune_down(self, prefix, metrics=None):
+        if (metrics is not None):
+            metrics.cache_size[len(prefix)] -= 1
+        for c in self.pop(prefix).children:
+            child = prefix + (c,)
+            metrics = self.prune_down(child, metrics)
+        return metrics
+
+    def delete(self, prefix, metrics=None):
+        if (len(prefix) > 0):
+            parent = self[prefix[:-1]]
+            parent.children.remove(prefix[-1])
+            parent.num_children -= 1
+        return self.prune_down(prefix, metrics)
+
+    def garbage_collect(self, min_objective, prefix_list=[()], metrics=None):
+        for prefix in prefix_list:
+            c = self[prefix]
+            if (c.lower_bound >= min_objective):
+                metrics = self.delete(prefix, metrics)
+            else:
+                plist = [prefix + (child,) for child in c.children]
+                metrics = self.garbage_collect(min_objective, plist, metrics)
+        return metrics
+
     def to_file(self, fname, delimiter='\t'):
         header = ['prefix', 'length', 'first', 'prediction', 'default',
                   'objective', 'lower_bound', 'accuracy', 'upper_bound',
@@ -21,6 +58,7 @@ class PrefixCache(dict):
         f.write('%s\n' % delimiter.join(header))
         f.write('\n'.join(lines))
         f.close()
+        return
 
 class CacheEntry:
     def __init__(self, prefix=None, prediction=None, default_rule=None,
@@ -38,6 +76,7 @@ class CacheEntry:
         self.num_captured_correct = num_captured_correct
         self.not_captured = not_captured
         self.curiosity = curiosity
+        self.children = set([])
         self.num_children = 0
         self.reject_list = ()
 
@@ -122,6 +161,7 @@ def prune_up(prefix, cache, metrics=None):
                 metrics.cache_size[len(px)] -= 1
             if (len(px) == 0):
                 break
+            cache[px[:-1]].children.remove(px[-1])
             cache[px[:-1]].num_children -= 1
         else:
             break
@@ -301,7 +341,8 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                 if (accuracy > equiv_accuracy):
                     # equiv_prefix is inferior to prefix
                     try:
-                        cache.pop(equiv_prefix)
+                        metrics = cache.delete(equiv_prefix, metrics)
+                        assert (cache[equiv_prefix[:-1]].num_children == len(cache[equiv_prefix[:-1]].children))
                         inferior = 1
                         metrics.inferior[len(prefix)] += 1
                     except:
@@ -323,7 +364,6 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                                  num_captured_correct=num_correct,
                                  not_captured=not_captured, curiosity=curiosity)
 
-        metrics.cache_size[len(prefix)] += (1 - inferior)
         if not quiet:
             print prefix, len(cache), 'ub>max', \
                  '%1.3f %1.3f %1.3f' % (accuracy, upper_bound)
