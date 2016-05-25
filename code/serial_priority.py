@@ -208,13 +208,13 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                     # we don't need to check longer prefixes, so now we should
                     # switch to certification mode, i.e., breadth-first policy
                     print 'objective = best possible, max prefix length to check:', \
-                           max_prefix_len_check, '->', len(prefix)
-                    max_prefix_len_check = len(prefix)
-                    certify = True
-                    heap_metric = lambda key: len(key)
-                    priority_queue = [(heap_metric(key), key) for (val, key) in priority_queue]
-                    heapq.heapify(priority_queue)
-                    print 're-prioritized for breadth-first search policy'
+                           max_prefix_len_check, '->', len(prefix) - 1
+                    max_prefix_len_check = len(prefix) - 1
+                    #certify = True
+                    #heap_metric = lambda key: len(key)
+                    #priority_queue = [(heap_metric(key), key) for (val, key) in priority_queue]
+                    #heapq.heapify(priority_queue)
+                    #print 're-prioritized for breadth-first search policy'
             else:
                 if (len(prefix) < max_prefix_len_check):
                     # add prefix to cache priority_queue if its children are at
@@ -250,7 +250,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
         # write a log entry for every 1000 outer loop iterations that reach here
         counter += 1
-        if ((counter % 1000) == 0):
+        if ((counter % 10000) == 0):
             metrics.priority_queue_length = len(priority_queue)
             metrics.seconds = time.time() - tic
             fh.write(metrics.to_string() + '\n')
@@ -327,7 +327,7 @@ def tdata_3():
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=1., c=0.001, min_captured_correct=0.,
-           max_prefix_length=20, max_cache_size=15000, delimiter='\t',
+           max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue)
