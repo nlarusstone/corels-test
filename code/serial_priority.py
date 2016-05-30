@@ -268,7 +268,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
         # write a log entry for every 1000 outer loop iterations that reach here
         counter += 1
-        if ((counter % 1000) == 0):
+        if ((counter % 10000) == 0):
             metrics.priority_queue_length = len(priority_queue)
             metrics.seconds = time.time() - tic
             fh.write(metrics.to_string() + '\n')
