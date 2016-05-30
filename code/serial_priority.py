@@ -147,7 +147,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         if (i > max_prefix_len_check):
             continue
         try:
-            # cached_prefix correspond to a previously evaluated prefix
+            # cached_prefix corresponds to a previously evaluated prefix
             cached_prefix = cache[prefix_start]
         except:
             # prefix_start was in the priority_queue but has since been removed
@@ -172,6 +172,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             metrics.commutes[i] += len(rules_to_consider) - len(rtc)
             rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
+        lower_bound = None
 
         while(queue):
             # remove a prefix from the queue
@@ -185,9 +186,14 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                             garbage_collect=garbage_collect, pdict=pdict,
                             quiet=quiet, metrics=metrics)
 
-            # incremental(.) did not return a cache entry for prefix
             if cache_entry is None:
+                # incremental(.) did not return a cache entry for prefix
                 continue
+            else:
+                if (lower_bound is None):
+                    lower_bound = cache_entry.lower_bound
+                else:
+                    lower_bound = max(lower_bound, cache_entry.lower_bound)
 
             # if the minimum observed objective improved, update min_objective,
             # best_prefix, and "max_accuracy"
@@ -219,8 +225,9 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 if (len(prefix) < max_prefix_len_check):
                     # add prefix to cache priority_queue if its children are at
                     # most as long as max_prefix_len_check
-                    metrics = cache.insert(prefix, cache_entry, metrics)
-                    heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
+                    if ((cache_entry.lower_bound + c) < min_objective):
+                        metrics = cache.insert(prefix, cache_entry, metrics)
+                        heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
                 else:
                     # if prefix is longer, only add to cache if it is also
                     # best_prefix, but do not add to priority_queue
@@ -234,15 +241,26 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 metrics.seconds = time.time() - tic
                 fh.write(metrics.to_string() + '\n')
                 fh.flush()
-                print 'cache size before gc:', sum(metrics.cache_size)
+                size_before_gc = sum(metrics.cache_size)
                 metrics = cache.garbage_collect(min_objective, metrics=metrics)
-                print 'cache size after gc:', sum(metrics.cache_size)
+                metrics.garbage_collect += size_before_gc - sum(metrics.cache_size)
                 print metrics
 
+        cached_prefix.not_captured = None
+
         if not certify:
+            """
+            # update lower bounds
+            if (cached_prefix.lower_bound > lower_bound):
+                size_before_lb = sum(metrics.cache_size)
+                metrics = cache.update_lower_bound(prefix_start, lower_bound, min_objective, metrics)
+                print 'after lb:', size_before_lb - sum(metrics.cache_size)
+            """
             # prune up: remove dead ends from the cache
             if (cached_prefix.num_children == 0):
+                size_before_pu = sum(metrics.cache_size)
                 metrics = cache.prune_up(prefix_start, metrics)
+                metrics.prune_up += size_before_pu - sum(metrics.cache_size)
 
         if (() not in cache):
             done = True
@@ -250,7 +268,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
         # write a log entry for every 1000 outer loop iterations that reach here
         counter += 1
-        if ((counter % 10000) == 0):
+        if ((counter % 1000) == 0):
             metrics.priority_queue_length = len(priority_queue)
             metrics.seconds = time.time() - tic
             fh.write(metrics.to_string() + '\n')
@@ -285,8 +303,10 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     except:
         print 'best prefix not in cache'
 
+    """
+    figs.viz_log(metadata=metadata, din=dlog, dout=dfigs, delimiter=',', lw=3, fs=14)
+    """
     try:
-        figs.viz_log(metadata=metadata, din=dlog, dout=dfigs, delimiter=',', lw=3, fs=14)
         fname = os.path.join(dout, '%s.txt' % metadata)
         cache.to_file(fname=fname, delimiter=delimiter)
         x = tb.tabarray(SVfile=fname, delimiter=delimiter)
