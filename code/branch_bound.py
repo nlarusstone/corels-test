@@ -76,8 +76,8 @@ class PrefixCache(dict):
                   'num_captured', 'num_captured_correct', 'num_not_captured',
                   'curiosity']
         lines = []
-        for c in self.values():
-            lines.append('%s' % c.to_string(delimiter=delimiter))
+        for prefix in self:
+            lines.append('%s' % self[prefix].to_string(delimiter=delimiter))
         f = open(fname, 'w')
         f.write('%s\n' % delimiter.join(header))
         f.write('\n'.join(lines))
@@ -363,6 +363,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                     return (metrics, cache_entry)
             else:
                 pdict[sorted_prefix] = (prefix, accuracy)
+                metrics.pdict_length += 1
 
         # make a cache entry for prefix
         cache_entry = CacheEntry(prefix=prefix, prediction=prediction,
