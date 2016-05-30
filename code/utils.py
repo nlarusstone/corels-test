@@ -23,6 +23,7 @@ class Metrics:
         self.inferior = [0] * m
         self.seconds = 0.
         self.priority_queue_length = 0
+        self.pdict_length = 0
         self.garbage_collect = 0
         self.prune_up = 0
         self.min_objective = 0.
@@ -34,6 +35,7 @@ class Metrics:
                     'min objective: %2.5f' % self.min_objective,
                     'accuracy: %2.5f' % self.accuracy,
                     'priority queue length: %d' % self.priority_queue_length,
+                    'pdict length: %d' % self.pdict_length,
                     'garbage collect: %d' % self.garbage_collect,
                     'prune up: %d' % self.prune_up,
                     'cache size: %s' % self.cache_size.__repr__(),
