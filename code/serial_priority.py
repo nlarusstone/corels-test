@@ -114,12 +114,6 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     priority_queue = []
     heapq.heappush(priority_queue, (heap_metric(()), ()))
 
-    # pdict is a dictionary used for garbage collection that groups together
-    # prefixes that are equivalent up to a permutation; its keys are tuples of
-    # sorted prefix indices; each key maps to a list of prefix tuples in the cache
-    # that are equivalent
-    pdict = {}
-
     metrics = utils.Metrics(max_prefix_length + 1)
     metrics.cache_size[0] = 1
     metrics.priority_queue_length = 1
@@ -183,7 +177,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             (metrics, cache_entry) = \
                 incremental(cache, prefix, rules, ones, ndata, cached_prefix,
                             c=c, min_captured_correct=min_captured_correct,
-                            garbage_collect=garbage_collect, pdict=pdict,
+                            garbage_collect=garbage_collect,
                             quiet=quiet, metrics=metrics)
 
             if cache_entry is None:

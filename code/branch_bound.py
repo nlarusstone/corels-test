@@ -9,6 +9,13 @@ import rule
 
 
 class PrefixCache(dict):
+    def __init__(self):
+        # pdict is a dictionary used for garbage collection that groups together
+        # prefixes that are equivalent up to a permutation; its keys are tuples of
+        # sorted prefix indices; each key maps to a list of prefix tuples in the cache
+        # that are equivalent
+        self.pdict = {}
+
     def insert(self, prefix, cache_entry, metrics=None):
         self[prefix] = cache_entry
         n = len(prefix)
@@ -177,7 +184,7 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
     print 'else predict %d' % default_rule
 
 def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
-                min_captured_correct=0., garbage_collect=False, pdict=None,
+                min_captured_correct=0., garbage_collect=False,
                 quiet=True, metrics=None):
     """
     Compute cache entry for prefix via incremental computation.
@@ -345,8 +352,8 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
             # sorted_prefix lists the prefix's indices in sorted order
             sorted_prefix = tuple(np.sort(prefix))
 
-            if sorted_prefix in pdict:
-                (equiv_prefix, equiv_accuracy) = pdict[sorted_prefix]
+            if sorted_prefix in cache.pdict:
+                (equiv_prefix, equiv_accuracy) = cache.pdict[sorted_prefix]
                 if (accuracy > equiv_accuracy):
                     # equiv_prefix is inferior to prefix
                     try:
@@ -356,13 +363,13 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                         metrics.inferior[len(prefix)] += 1
                     except:
                         pass
-                    pdict[sorted_prefix] = (prefix, accuracy)
+                    cache.pdict[sorted_prefix] = (prefix, accuracy)
                 else:
                     # prefix is inferior to the stored equiv_prefix
                     metrics.inferior[len(prefix)] += 1
                     return (metrics, cache_entry)
             else:
-                pdict[sorted_prefix] = (prefix, accuracy)
+                cache.pdict[sorted_prefix] = (prefix, accuracy)
                 metrics.pdict_length += 1
 
         # make a cache entry for prefix
