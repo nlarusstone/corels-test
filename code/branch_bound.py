@@ -21,6 +21,21 @@ class PrefixCache(dict):
             metrics.cache_size[n] += 1
         return metrics
 
+    def update_lower_bound(self, prefix, lower_bound, min_objective, metrics=None):
+        for j in range(len(prefix), -1, -1):
+            px = prefix[:j]
+            c = self[px]
+            if (j != len(prefix)):
+                lower_bound = max([self[px + (child,)].lower_bound for child in
+                                   c.children])
+            if (lower_bound < c.lower_bound):
+                c.lower_bound = lower_bound
+                if (self[px].lower_bound > min_objective):
+                    metrics = self.delete(px, metrics)
+            else:
+                break
+        return metrics
+
     def prune_up(self, prefix, metrics=None):
         for j in range(len(prefix), -1, -1):
             px = prefix[:j]
@@ -48,7 +63,7 @@ class PrefixCache(dict):
     def garbage_collect(self, min_objective, prefix_list=[()], metrics=None):
         for prefix in prefix_list:
             c = self[prefix]
-            if (c.lower_bound >= min_objective):
+            if (c.lower_bound > min_objective):
                 metrics = self.delete(prefix, metrics)
             else:
                 plist = [prefix + (child,) for child in c.children]
