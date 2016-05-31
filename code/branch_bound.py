@@ -9,14 +9,39 @@ import rule
 
 
 class PrefixCache(dict):
-    def __init__(self):
+    def __init__(self, do_garbage_collection=False):
         # pdict is a dictionary used for garbage collection that groups together
-        # prefixes that are equivalent up to a permutation; its keys are tuples of
-        # sorted prefix indices; each key maps to a list of prefix tuples in the cache
-        # that are equivalent
+        # prefixes that are equivalent up to a permutation; its keys are tuples
+        # of sorted prefix indices; each key maps to a list of prefix tuples in
+        # the cache that are equivalent
         self.pdict = {}
+        self.do_garbage_collection = do_garbage_collection
 
     def insert(self, prefix, cache_entry, metrics=None):
+        # to do garbage collection, we keep look for prefixes that are
+        # equivalent up to permutation
+        if self.do_garbage_collection:
+
+            # sorted_prefix lists the prefix's indices in sorted order
+            sorted_prefix = tuple(np.sort(prefix))
+
+            if sorted_prefix in self.pdict:
+                (equiv_prefix, equiv_accuracy) = self.pdict[sorted_prefix]
+                if (cache_entry.accuracy > equiv_accuracy):
+                    # equiv_prefix is inferior to prefix
+                    metrics = self.delete(equiv_prefix, metrics)
+                    assert (self[equiv_prefix[:-1]].num_children == len(self[equiv_prefix[:-1]].children))
+                    metrics.inferior[len(prefix)] += 1
+                    self.pdict[sorted_prefix] = (prefix, cache_entry.accuracy)
+                    metrics.pdict_length += 1
+                else:
+                    # prefix is inferior to the stored equiv_prefix
+                    metrics.inferior[len(prefix)] += 1
+                    return metrics
+            else:
+                self.pdict[sorted_prefix] = (prefix, cache_entry.accuracy)
+                metrics.pdict_length += 1
+
         self[prefix] = cache_entry
         n = len(prefix)
         if (n > 0):
@@ -53,6 +78,13 @@ class PrefixCache(dict):
         return metrics
 
     def prune_down(self, prefix, metrics=None):
+        """
+        Called by `delete`.
+
+        """
+        sorted_prefix = tuple(np.sort(prefix))
+        self.pdict.pop(sorted_prefix)
+        metrics.pdict_length -= 1
         if (metrics is not None):
             metrics.cache_size[len(prefix)] -= 1
         for c in self.pop(prefix).children:
@@ -112,7 +144,8 @@ class CacheEntry:
         self.reject_list = ()
 
     def __repr__(self):
-        s = '\n'.join(('prefix: %s' % self.prefix.__repr__(),
+        if hasattr(self, 'num_captured'):
+            s = '\n'.join(('prefix: %s' % self.prefix.__repr__(),
                        'prediction: %s' % self.prediction.__repr__(),
                        'accuracy: %1.10f' % self.accuracy,
                        'upper_bound: %1.10f' % self.upper_bound,
@@ -124,7 +157,24 @@ class CacheEntry:
                        'curiosity: %1.3f' % self.curiosity,
                        'num_children: %d' % self.num_children,
                        'reject_list: %s' % self.reject_list.__repr__()))
+        else:
+            s = '\n'.join(('lower_bound: %1.10f' % self.lower_bound,
+                           'num_children: %d' % self.num_children,
+                           'reject_list: %s' % self.reject_list.__repr__()))
         return s
+
+    def clear(self):
+        del self.prefix
+        del self.prediction
+        del self.default_rule
+        del self.accuracy
+        del self.upper_bound
+        del self.objective
+        del self.num_captured
+        del self.num_captured_correct
+        del self.not_captured
+        del self.curiosity
+        return
 
     def get_not_captured(self):
         """
@@ -184,8 +234,7 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
     print 'else predict %d' % default_rule
 
 def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
-                min_captured_correct=0., garbage_collect=False,
-                quiet=True, metrics=None):
+                min_captured_correct=0., quiet=True, metrics=None):
     """
     Compute cache entry for prefix via incremental computation.
 
@@ -344,7 +393,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         curiosity = (float(num_incorrect) / new_num_captured +
                      c * len(prefix) * ndata / new_num_captured)
 
-        inferior = 0
+        """
         # to do garbage collection, we keep look for prefixes that are
         # equivalent up to permutation
         if garbage_collect:
@@ -359,7 +408,6 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                     try:
                         metrics = cache.delete(equiv_prefix, metrics)
                         assert (cache[equiv_prefix[:-1]].num_children == len(cache[equiv_prefix[:-1]].children))
-                        inferior = 1
                         metrics.inferior[len(prefix)] += 1
                     except:
                         pass
@@ -371,6 +419,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
             else:
                 cache.pdict[sorted_prefix] = (prefix, accuracy)
                 metrics.pdict_length += 1
+        """
 
         # make a cache entry for prefix
         cache_entry = CacheEntry(prefix=prefix, prediction=prediction,
@@ -551,7 +600,7 @@ def greedy_rule_list(ones, rules, max_length):
 
 def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
                min_objective, best_prefix, seed=None, sample=None,
-               max_greedy_length=8):
+               do_garbage_collection=False, max_greedy_length=8):
 
     if not os.path.exists(dout):
         os.mkdir(dout)
@@ -603,7 +652,7 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     # cache is a PrefixCache object, which is a dictionary that stores
     # prefix-related computations, where each key-value pair maps a prefix
     # tuples to a CacheEntry object
-    cache = PrefixCache()
+    cache = PrefixCache(do_garbage_collection=do_garbage_collection)
 
     # initialize the cache with a single entry for the empty rule list
     cache[()] = CacheEntry(prefix=(), prediction=(), default_rule=empty_default,

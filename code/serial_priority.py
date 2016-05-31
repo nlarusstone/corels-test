@@ -39,7 +39,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=np.inf, c=0.00001, min_captured_correct=0.003,
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
-           method='curiosity', seed=0, sample=1., quiet=True,
+           method='curiosity', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True):
     """
     Serial branch-and-bound algorithm for constructing rule lists.
@@ -85,7 +85,8 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     (nrules, ndata, ones, rules, rule_set, rule_names,
      max_accuracy, min_objective, best_prefix, cache) = \
                 initialize(din, dout, label_file, out_file, warm_start,
-                           max_accuracy, min_objective, best_prefix, seed, sample)
+                           max_accuracy, min_objective, best_prefix, seed=seed,
+                           sample=sample, do_garbage_collection=garbage_collect)
 
     print 'c:', c
     print 'min_objective:', min_objective
@@ -177,7 +178,6 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             (metrics, cache_entry) = \
                 incremental(cache, prefix, rules, ones, ndata, cached_prefix,
                             c=c, min_captured_correct=min_captured_correct,
-                            garbage_collect=garbage_collect,
                             quiet=quiet, metrics=metrics)
 
             if cache_entry is None:
@@ -221,7 +221,9 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                     # most as long as max_prefix_len_check
                     if ((cache_entry.lower_bound + c) < min_objective):
                         metrics = cache.insert(prefix, cache_entry, metrics)
-                        heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
+                        assert (metrics.pdict_length == len(cache.pdict)), (metrics.pdict_length, len(cache.pdict), prefix)
+                        if (prefix in cache):
+                            heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
                 else:
                     # if prefix is longer, only add to cache if it is also
                     # best_prefix, but do not add to priority_queue
@@ -240,7 +242,8 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 metrics.garbage_collect += size_before_gc - sum(metrics.cache_size)
                 print metrics
 
-        cached_prefix.not_captured = None
+        if clear and (prefix_start != best_prefix):
+            cached_prefix.clear()
 
         if not certify:
             """
@@ -320,7 +323,7 @@ def tdata_1():
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=1., c=0., min_captured_correct=0.,
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
-           method='breadth_first', seed=0, sample=1., quiet=True,
+           method='breadth_first', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue)
 
@@ -331,7 +334,7 @@ def tdata_2():
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=1., c=0., min_captured_correct=0.,
            max_prefix_length=90, max_cache_size=3000000, delimiter='\t',
-           method='curiosity', seed=0, sample=1., quiet=True,
+           method='curiosity', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue)
 
@@ -342,7 +345,7 @@ def tdata_3():
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=1., c=0.001, min_captured_correct=0.,
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
-           method='curiosity', seed=0, sample=1., quiet=True,
+           method='curiosity', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue)
 
@@ -367,7 +370,7 @@ def example_adult():
            froot='adult_R', warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=np.inf, c=0.00001, min_captured_correct=0.003,
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
-           method='curiosity', seed=0, sample=0.1, quiet=True,
+           method='curiosity', seed=0, sample=0.1, quiet=True, clear=True,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue)
 
