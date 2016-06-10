@@ -6,18 +6,20 @@ from gmpy2 import mpz
 import tabular as tb
 
 import rule
+import utils
 
 
 class PrefixCache(dict):
-    def __init__(self, do_garbage_collection=False):
+    def __init__(self, do_garbage_collection=False, metrics=None):
         # pdict is a dictionary used for garbage collection that groups together
         # prefixes that are equivalent up to a permutation; its keys are tuples
         # of sorted prefix indices; each key maps to a list of prefix tuples in
         # the cache that are equivalent
         self.pdict = {}
         self.do_garbage_collection = do_garbage_collection
+        self.metrics = metrics
 
-    def insert(self, prefix, cache_entry, metrics=None):
+    def insert(self, prefix, cache_entry):
         # to do garbage collection, we keep look for prefixes that are
         # equivalent up to permutation
         if self.do_garbage_collection:
@@ -29,18 +31,18 @@ class PrefixCache(dict):
                 (equiv_prefix, equiv_accuracy) = self.pdict[sorted_prefix]
                 if (cache_entry.accuracy > equiv_accuracy):
                     # equiv_prefix is inferior to prefix
-                    metrics = self.delete(equiv_prefix, metrics)
+                    self.delete(equiv_prefix)
                     assert (self[equiv_prefix[:-1]].num_children == len(self[equiv_prefix[:-1]].children))
-                    metrics.inferior[len(prefix)] += 1
+                    self.metrics.inferior[len(prefix)] += 1
                     self.pdict[sorted_prefix] = (prefix, cache_entry.accuracy)
-                    metrics.pdict_length += 1
+                    self.metrics.pdict_length += 1
                 else:
                     # prefix is inferior to the stored equiv_prefix
-                    metrics.inferior[len(prefix)] += 1
-                    return metrics
+                    self.metrics.inferior[len(prefix)] += 1
+                    return
             else:
                 self.pdict[sorted_prefix] = (prefix, cache_entry.accuracy)
-                metrics.pdict_length += 1
+                self.metrics.pdict_length += 1
 
         self[prefix] = cache_entry
         n = len(prefix)
@@ -49,11 +51,10 @@ class PrefixCache(dict):
             parent.children.add(prefix[-1])
             parent.num_children += 1
             assert (len(parent.children) == parent.num_children), prefix
-        if metrics is not None:
-            metrics.cache_size[n] += 1
-        return metrics
+        self.metrics.cache_size[n] += 1
+        return
 
-    def update_lower_bound(self, prefix, lower_bound, min_objective, metrics=None):
+    def update_lower_bound(self, prefix, lower_bound, min_objective):
         for j in range(len(prefix), -1, -1):
             px = prefix[:j]
             c = self[px]
@@ -63,51 +64,50 @@ class PrefixCache(dict):
             if (lower_bound < c.lower_bound):
                 c.lower_bound = lower_bound
                 if (self[px].lower_bound > min_objective):
-                    metrics = self.delete(px, metrics)
+                    self.delete(px)
             else:
                 break
-        return metrics
+        return
 
-    def prune_up(self, prefix, metrics=None):
+    def prune_up(self, prefix):
         for j in range(len(prefix), -1, -1):
             px = prefix[:j]
             if (self[px].num_children == 0):
-                metrics = self.delete(px, metrics)
+                self.delete(px)
             else:
                 break
-        return metrics
+        return
 
-    def prune_down(self, prefix, metrics=None):
+    def prune_down(self, prefix):
         """
         Called by `delete`.
 
         """
         sorted_prefix = tuple(np.sort(prefix))
         self.pdict.pop(sorted_prefix)
-        metrics.pdict_length -= 1
-        if (metrics is not None):
-            metrics.cache_size[len(prefix)] -= 1
+        self.metrics.pdict_length -= 1
+        self.metrics.cache_size[len(prefix)] -= 1
         for c in self.pop(prefix).children:
             child = prefix + (c,)
-            metrics = self.prune_down(child, metrics)
-        return metrics
+            self.prune_down(child)
+        return
 
-    def delete(self, prefix, metrics=None):
+    def delete(self, prefix):
         if (len(prefix) > 0):
             parent = self[prefix[:-1]]
             parent.children.remove(prefix[-1])
             parent.num_children -= 1
-        return self.prune_down(prefix, metrics)
+        return self.prune_down(prefix)
 
-    def garbage_collect(self, min_objective, prefix_list=[()], metrics=None):
+    def garbage_collect(self, min_objective, prefix_list=[()]):
         for prefix in prefix_list:
             c = self[prefix]
             if (c.lower_bound > min_objective):
-                metrics = self.delete(prefix, metrics)
+                self.delete(prefix)
             else:
                 plist = [prefix + (child,) for child in c.children]
-                metrics = self.garbage_collect(min_objective, plist, metrics)
-        return metrics
+                self.garbage_collect(min_objective, plist)
+        return
 
     def to_file(self, fname, delimiter='\t'):
         header = ['prefix', 'length', 'first', 'prediction', 'default',
@@ -234,7 +234,7 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
     print 'else predict %d' % default_rule
 
 def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
-                min_captured_correct=0., quiet=True, metrics=None):
+                min_captured_correct=0., quiet=True):
     """
     Compute cache entry for prefix via incremental computation.
 
@@ -276,15 +276,15 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         if not quiet:
             print prefix, len(cache), 'num_captured=0', \
                   '%d %d %d' % (-1, -1, -1)
-        metrics.captured_zero[len(prefix)] += 1
+        cache.metrics.captured_zero[len(prefix)] += 1
         cache[prefix[:-1]].reject_list += (new_rule,)
-        return (metrics, cache_entry)
+        return cache_entry
 
     # the additional rule is rejected if it doesn't capture enough data
     if (num_captured < (min_captured_correct * ndata)):
-        metrics.captured_zero[len(prefix)] += 1
+        cache.metrics.captured_zero[len(prefix)] += 1
         cache[prefix[:-1]].reject_list += (new_rule,)
-        return (metrics, cache_entry)
+        return cache_entry
 
     # not_captured is a binary vector of length ndata indicating those
     # data that are not captured by the current prefix, i.e., not
@@ -331,8 +331,8 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # the additional rule is insufficient if it doesn't correctly capture enough
     # data
     if (num_captured_correct < (min_captured_correct * ndata)):
-        metrics.insufficient[len(prefix)] += 1
-        return (metrics, cache_entry)
+        cache.metrics.insufficient[len(prefix)] += 1
+        return cache_entry
 
     # compute the default rule on the not captured data
     (default_rule, num_default_correct) = \
@@ -373,21 +373,21 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # if the lower bound of prefix is less than min_objective, then create a
     # cache entry for prefix
-    if (lower_bound >= metrics.min_objective):
+    if (lower_bound >= cache.metrics.min_objective):
         if not quiet:
-            metrics.dead_prefix[len(prefix)] += 1
+            cache.metrics.dead_prefix[len(prefix)] += 1
             print prefix, len(cache), 'lb>=min', \
                   '%1.3f %1.3f %1.3f %1.3f' % (accuracy, objective, lower_bound,
-                                               metrics.min_objective)
-        return (metrics, cache_entry)
+                                               cache.metrics.min_objective)
+        return cache_entry
     else:
         # if prefix is the new best known prefix, update min_objective,
         # best_prefix, and accuracy
-        if (objective < metrics.min_objective):
-            metrics.accuracy = accuracy
-            print 'min:', metrics.min_objective, '->', objective
-            metrics.min_objective = objective
-            metrics.best_prefix = prefix
+        if (objective < cache.metrics.min_objective):
+            cache.metrics.accuracy = accuracy
+            print 'min:', cache.metrics.min_objective, '->', objective
+            cache.metrics.min_objective = objective
+            cache.metrics.best_prefix = prefix
 
         # curiosity = prefix misclassification + regularization
         curiosity = (float(num_incorrect) / new_num_captured +
@@ -406,19 +406,19 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                 if (accuracy > equiv_accuracy):
                     # equiv_prefix is inferior to prefix
                     try:
-                        metrics = cache.delete(equiv_prefix, metrics)
+                        cache.delete(equiv_prefix)
                         assert (cache[equiv_prefix[:-1]].num_children == len(cache[equiv_prefix[:-1]].children))
-                        metrics.inferior[len(prefix)] += 1
+                        cache.metrics.inferior[len(prefix)] += 1
                     except:
                         pass
                     cache.pdict[sorted_prefix] = (prefix, accuracy)
                 else:
                     # prefix is inferior to the stored equiv_prefix
-                    metrics.inferior[len(prefix)] += 1
-                    return (metrics, cache_entry)
+                    cache.metrics.inferior[len(prefix)] += 1
+                    return cache_entry
             else:
                 cache.pdict[sorted_prefix] = (prefix, accuracy)
-                metrics.pdict_length += 1
+                cache.metrics.pdict_length += 1
         """
 
         # make a cache entry for prefix
@@ -433,7 +433,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         if not quiet:
             print prefix, len(cache), 'ub>max', \
                  '%1.3f %1.3f %1.3f' % (accuracy, upper_bound)
-    return (metrics, cache_entry)
+    return cache_entry
 
 def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0.,
                  min_objective=0., c=0., best_prefix=None):
@@ -445,6 +445,7 @@ def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0.,
     metrics.best_prefix = None
     metrics.min_objective = min_objective
     metrics.accuracy = max_accuracy
+    cache.metrics = metrics
     for i in range(len(full_prefix)):
         prefix_start = full_prefix[:i]
 
@@ -453,13 +454,13 @@ def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0.,
 
         prefix = prefix_start + (full_prefix[i],)
 
-        (metrics, cache_entry) = \
+        cache_entry = \
             incremental(cache, prefix, rules, ones, ndata, cached_prefix,
-                        min_objective=min_objective, c=c, metrics=metrics)
+                        min_objective=min_objective, c=c)
         if (cache_entry is not None):
             cache[prefix] = cache_entry
 
-    return (metrics.accuracy, metrics.min_objective, metrics.best_prefix)
+    return (cache.metrics.accuracy, cache.metrics.min_objective, cache.metrics.best_prefix)
 
 def file_to_dict(fname, seed=None, sample=None):
     """
@@ -600,7 +601,7 @@ def greedy_rule_list(ones, rules, max_length):
 
 def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
                min_objective, best_prefix, seed=None, sample=None,
-               do_garbage_collection=False, max_greedy_length=8):
+               do_garbage_collection=False, max_greedy_length=8, max_prefix_length=20):
 
     if not os.path.exists(dout):
         os.mkdir(dout)
@@ -649,19 +650,27 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
             max_accuracy = empty_accuracy
             min_objective = empty_objective
 
+    metrics = utils.Metrics(max_prefix_length + 1)
+    metrics.cache_size[0] = 0
+    metrics.priority_queue_length = 0
+    metrics.best_prefix = best_prefix
+    metrics.min_objective = min_objective
+    metrics.accuracy = max_accuracy
+
     # cache is a PrefixCache object, which is a dictionary that stores
     # prefix-related computations, where each key-value pair maps a prefix
     # tuples to a CacheEntry object
-    cache = PrefixCache(do_garbage_collection=do_garbage_collection)
+    cache = PrefixCache(do_garbage_collection=do_garbage_collection, metrics=metrics)
 
     # initialize the cache with a single entry for the empty rule list
-    cache[()] = CacheEntry(prefix=(), prediction=(), default_rule=empty_default,
+    cache_entry = CacheEntry(prefix=(), prediction=(), default_rule=empty_default,
                            accuracy=empty_accuracy, upper_bound=1.,
                            objective=empty_objective,
                            lower_bound=empty_lower_bound,
                            num_captured=0, num_captured_correct=0,
                            not_captured=rule.make_all_ones(ndata + 1),
                            curiosity=0.)
+    cache.insert((), cache_entry)
 
     if warm_start:
         """

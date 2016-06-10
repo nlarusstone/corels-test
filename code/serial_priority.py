@@ -86,7 +86,8 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
      max_accuracy, min_objective, best_prefix, cache) = \
                 initialize(din, dout, label_file, out_file, warm_start,
                            max_accuracy, min_objective, best_prefix, seed=seed,
-                           sample=sample, do_garbage_collection=garbage_collect)
+                           sample=sample, do_garbage_collection=garbage_collect,
+                           max_prefix_length=max_prefix_length)
 
     print 'c:', c
     print 'min_objective:', min_objective
@@ -115,18 +116,11 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     priority_queue = []
     heapq.heappush(priority_queue, (heap_metric(()), ()))
 
-    metrics = utils.Metrics(max_prefix_length + 1)
-    metrics.cache_size[0] = 1
-    metrics.priority_queue_length = 1
-    metrics.best_prefix = best_prefix
-    metrics.min_objective = min_objective
-    metrics.accuracy = max_accuracy
-
     counter = 0
     tic = time.time()
 
-    fh.write(metrics.names_to_string() + '\n')
-    fh.write(metrics.to_string() + '\n')
+    fh.write(cache.metrics.names_to_string() + '\n')
+    fh.write(cache.metrics.to_string() + '\n')
     fh.flush()
 
     finished_max_prefix_length = 0
@@ -164,7 +158,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             # prune rules in the reject_list (that will not capture sufficient
             # data, given prefix_start and min_captured_correct)
             rtc = rtc.difference(set(cached_prefix.reject_list))
-            metrics.commutes[i] += len(rules_to_consider) - len(rtc)
+            cache.metrics.commutes[i] += len(rules_to_consider) - len(rtc)
             rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
         lower_bound = None
@@ -175,10 +169,9 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
             old_min_objective = min_objective
             # compute cache entry for prefix via incremental computation
-            (metrics, cache_entry) = \
-                incremental(cache, prefix, rules, ones, ndata, cached_prefix,
-                            c=c, min_captured_correct=min_captured_correct,
-                            quiet=quiet, metrics=metrics)
+            cache_entry = incremental(cache, prefix, rules, ones, ndata,
+                                      cached_prefix, c=c, quiet=quiet,
+                                      min_captured_correct=min_captured_correct)
 
             if cache_entry is None:
                 # incremental(.) did not return a cache entry for prefix
@@ -191,15 +184,15 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
             # if the minimum observed objective improved, update min_objective,
             # best_prefix, and "max_accuracy"
-            if (metrics.min_objective < min_objective):
-                min_objective = metrics.min_objective
-                best_prefix = metrics.best_prefix
-                max_accuracy = metrics.accuracy
+            if (cache.metrics.min_objective < min_objective):
+                min_objective = cache.metrics.min_objective
+                best_prefix = cache.metrics.best_prefix
+                max_accuracy = cache.metrics.accuracy
 
             # if min_objective is the minimum possible, given prefix's length
             if (min_objective == (c * len(prefix))):
                 # insert prefix into the cache
-                metrics = cache.insert(prefix, cache_entry, metrics)
+                cache.insert(prefix, cache_entry)
                 if certify or (method == 'breadth_first') or (min_objective == 0):
                     # we have identified a global optimum
                     done = True
@@ -220,27 +213,28 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                     # add prefix to cache priority_queue if its children are at
                     # most as long as max_prefix_len_check
                     if ((cache_entry.lower_bound + c) < min_objective):
-                        metrics = cache.insert(prefix, cache_entry, metrics)
-                        assert (metrics.pdict_length == len(cache.pdict)), (metrics.pdict_length, len(cache.pdict), prefix)
+                        cache.insert(prefix, cache_entry)
+                        assert (cache.metrics.pdict_length == len(cache.pdict)), \
+                               (cache.metrics.pdict_length, len(cache.pdict), prefix)
                         if (prefix in cache):
                             heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
                 else:
                     # if prefix is longer, only add to cache if it is also
                     # best_prefix, but do not add to priority_queue
                     if (prefix == best_prefix):
-                        metrics = cache.insert(prefix, cache_entry, metrics)
+                        cache.insert(prefix, cache_entry)
 
             # if the best min_objective so far is due to prefix, then update
             # some metrics, write a log entry, and garbage collect the cache
-            if (metrics.min_objective < old_min_objective):
-                metrics.priority_queue_length = len(priority_queue)
-                metrics.seconds = time.time() - tic
-                fh.write(metrics.to_string() + '\n')
+            if (cache.metrics.min_objective < old_min_objective):
+                cache.metrics.priority_queue_length = len(priority_queue)
+                cache.metrics.seconds = time.time() - tic
+                fh.write(cache.metrics.to_string() + '\n')
                 fh.flush()
-                size_before_gc = sum(metrics.cache_size)
-                metrics = cache.garbage_collect(min_objective, metrics=metrics)
-                metrics.garbage_collect += size_before_gc - sum(metrics.cache_size)
-                print metrics
+                size_before_gc = sum(cache.metrics.cache_size)
+                cache.garbage_collect(min_objective)
+                cache.metrics.garbage_collect += size_before_gc - sum(cache.metrics.cache_size)
+                print cache.metrics
 
         if clear and (prefix_start != best_prefix):
             cached_prefix.clear()
@@ -249,15 +243,15 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             """
             # update lower bounds
             if (cached_prefix.lower_bound > lower_bound):
-                size_before_lb = sum(metrics.cache_size)
-                metrics = cache.update_lower_bound(prefix_start, lower_bound, min_objective, metrics)
-                print 'after lb:', size_before_lb - sum(metrics.cache_size)
+                size_before_lb = sum(cache.metrics.cache_size)
+                cache.update_lower_bound(prefix_start, lower_bound, min_objective)
+                print 'after lb:', size_before_lb - sum(cache.metrics.cache_size)
             """
             # prune up: remove dead ends from the cache
             if (cached_prefix.num_children == 0):
-                size_before_pu = sum(metrics.cache_size)
-                metrics = cache.prune_up(prefix_start, metrics)
-                metrics.prune_up += size_before_pu - sum(metrics.cache_size)
+                size_before_pu = sum(cache.metrics.cache_size)
+                cache.prune_up(prefix_start)
+                cache.metrics.prune_up += size_before_pu - sum(cache.metrics.cache_size)
 
         if (() not in cache):
             done = True
@@ -266,16 +260,16 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         # write a log entry for every 1000 outer loop iterations that reach here
         counter += 1
         if ((counter % 10000) == 0):
-            metrics.priority_queue_length = len(priority_queue)
-            metrics.seconds = time.time() - tic
-            fh.write(metrics.to_string() + '\n')
+            cache.metrics.priority_queue_length = len(priority_queue)
+            cache.metrics.seconds = time.time() - tic
+            fh.write(cache.metrics.to_string() + '\n')
             fh.flush()
-            print metrics
+            print cache.metrics
 
         if False: #(method == 'breadth_first'):
             if (i > (finished_max_prefix_length + 1)):
                finished_max_prefix_length += 1
-               assert metrics.check(finished_max_prefix_length, nrules)
+               assert cache.metrics.check(finished_max_prefix_length, nrules)
                print ('checked cache size for prefixes of lengths %d and %d' %
                      (finished_max_prefix_length, finished_max_prefix_length - 1))
 
@@ -283,18 +277,18 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             break
 
     # write final log entry
-    metrics.priority_queue_length = len(priority_queue)
-    metrics.seconds = time.time() - tic
-    fh.write(metrics.to_string())
+    cache.metrics.priority_queue_length = len(priority_queue)
+    cache.metrics.seconds = time.time() - tic
+    fh.write(cache.metrics.to_string())
     fh.close()
 
-    print 'prefix length:', len(metrics.best_prefix)
-    print metrics
-    print metrics.print_summary()
+    print 'prefix length:', len(cache.metrics.best_prefix)
+    print cache.metrics
+    print cache.metrics.print_summary()
 
     """
     try:
-        cc = cache[metrics.best_prefix]
+        cc = cache[cache.metrics.best_prefix]
         print_rule_list(cc.prefix, cc.prediction, cc.default_rule, rule_names)
         print cc
     except:
@@ -310,11 +304,11 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         x.sort(order=['length', 'first'])
         x.saveSV(fname, delimiter=delimiter)
         figs.make_figure(metadata=metadata, din=dout, dout=dfigs,
-                         max_accuracy=metrics.accuracy, max_length=x[-1]['length'])
+                         max_accuracy=cache.metrics.accuracy, max_length=x[-1]['length'])
     except:
         pass
     """
-    return (metadata, metrics, cache, priority_queue)
+    return (metadata, cache.metrics, cache, priority_queue)
 
 def tdata_1():
     (metadata, metrics, cache, priority_queue) = \
@@ -368,7 +362,7 @@ def example_adult():
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='adult_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=np.inf, c=0.00001, min_captured_correct=0.003,
+           min_objective=1., c=0.00001, min_captured_correct=0.003,
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=0.1, quiet=True, clear=True,
            garbage_collect=True)
