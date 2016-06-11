@@ -247,11 +247,6 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 cache.update_lower_bound(prefix_start, lower_bound, min_objective)
                 print 'after lb:', size_before_lb - sum(cache.metrics.cache_size)
             """
-            # prune up: remove dead ends from the cache
-            if (cached_prefix.num_children == 0):
-                size_before_pu = sum(cache.metrics.cache_size)
-                cache.prune_up(prefix_start)
-                cache.metrics.prune_up += size_before_pu - sum(cache.metrics.cache_size)
 
         if (() not in cache):
             done = True

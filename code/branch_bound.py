@@ -70,12 +70,14 @@ class PrefixCache(dict):
         return
 
     def prune_up(self, prefix):
+        size_before_pu = sum(self.metrics.cache_size)
         for j in range(len(prefix), -1, -1):
             px = prefix[:j]
             if (self[px].num_children == 0):
                 self.delete(px)
             else:
                 break
+        self.metrics.prune_up += size_before_pu - sum(self.metrics.cache_size)
         return
 
     def prune_down(self, prefix):
@@ -93,11 +95,14 @@ class PrefixCache(dict):
         return
 
     def delete(self, prefix):
+        self.prune_down(prefix)
         if (len(prefix) > 0):
             parent = self[prefix[:-1]]
             parent.children.remove(prefix[-1])
             parent.num_children -= 1
-        return self.prune_down(prefix)
+            if (parent.num_children == 0):
+                self.prune_up(prefix[:-1])
+        return
 
     def garbage_collect(self, min_objective, prefix_list=[()]):
         for prefix in prefix_list:
