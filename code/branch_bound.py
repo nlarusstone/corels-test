@@ -32,7 +32,6 @@ class PrefixCache(dict):
                 if (cache_entry.accuracy > equiv_accuracy):
                     # equiv_prefix is inferior to prefix
                     self.delete(equiv_prefix)
-                    assert (self[equiv_prefix[:-1]].num_children == len(self[equiv_prefix[:-1]].children))
                     self.metrics.inferior[len(prefix)] += 1
                     self.pdict[sorted_prefix] = (prefix, cache_entry.accuracy)
                     self.metrics.pdict_length += 1
