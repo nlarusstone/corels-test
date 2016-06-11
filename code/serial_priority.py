@@ -378,6 +378,7 @@ def load_data(froot):
                        label_file=label_file, out_file=out_file,
                        warm_start=False, max_accuracy=0., min_objective=1.,
                        best_prefix=(), seed=0, sample=1.)
+    ones = utils.mpz_to_array(ones)
     rules = utils.rules_to_array(rules)
     commuting_pairs = utils.find_commuting_pairs(rules)
     cdict = utils.commuting_dict(commuting_pairs, nrules)
