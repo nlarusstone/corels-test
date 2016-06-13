@@ -210,8 +210,8 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                     #print 're-prioritized for breadth-first search policy'
             else:
                 if (len(prefix) < max_prefix_len_check):
-                    # add prefix to cache priority_queue if its children are at
-                    # most as long as max_prefix_len_check
+                    # add prefix to cache and priority_queue if its children are
+                    # at most as long as max_prefix_len_check
                     if ((cache_entry.lower_bound + c) < min_objective):
                         cache.insert(prefix, cache_entry)
                         assert (cache.metrics.pdict_length == len(cache.pdict)), \
@@ -247,6 +247,9 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 cache.update_lower_bound(prefix_start, lower_bound, min_objective)
                 print 'after lb:', size_before_lb - sum(cache.metrics.cache_size)
             """
+            # prune up: remove dead ends from the cache
+            if (cached_prefix.num_children == 0):
+                cache.prune_up(prefix_start)
 
         if (() not in cache):
             done = True
