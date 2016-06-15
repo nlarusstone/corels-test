@@ -23,6 +23,7 @@ Input files:
 import heapq
 import os
 import time
+import argparse
 
 import numpy as np
 import gmpy2
@@ -33,6 +34,10 @@ from branch_bound import given_prefix, initialize, incremental, print_rule_list
 import figs
 import rule
 import utils
+
+parser = argparse.ArgumentParser(description='Find rulelists using pure optimization')
+parser.add_argument('-n', type=int)
+parser.add_argument('--length', type=int)
 
 def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
@@ -125,6 +130,8 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
     finished_max_prefix_length = 0
     if (c == 0.):
+        max_prefix_len_check = 100
+    elif (min_objective == np.inf):
         max_prefix_len_check = 100
     else:
         max_prefix_len_check = int(np.floor(min_objective / c))
@@ -387,3 +394,13 @@ def tdata():
 
 def adult():
     return load_data(froot='adult_R')
+
+if __name__ == "__main__":
+    args = parser.parse_args()
+    if args.length:
+        max_prefix_length = args.length
+    if args.length == None:
+        bbound()
+    else:
+        bbound(max_prefix_length=args.length)
+
