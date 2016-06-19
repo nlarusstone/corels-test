@@ -42,9 +42,9 @@ parser.add_argument('--length', type=int)
 def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=np.inf, c=0.00001, min_captured_correct=0.003,
+           min_objective=np.inf, c=0.001, min_captured_correct=0.003,
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
-           method='curiosity', seed=0, sample=1., quiet=True, clear=False,
+           method='objective', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True):
     """
     Serial branch-and-bound algorithm for constructing rule lists.
@@ -291,7 +291,6 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     print cache.metrics
     print cache.metrics.print_summary()
 
-    """
     try:
         cc = cache[cache.metrics.best_prefix]
         print_rule_list(cc.prefix, cc.prediction, cc.default_rule, rule_names)
@@ -299,9 +298,8 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     except:
         print 'best prefix not in cache'
 
-    """
     figs.viz_log(metadata=metadata, din=dlog, dout=dfigs, delimiter=',', lw=3, fs=14)
-    """
+
     try:
         fname = os.path.join(dout, '%s.txt' % metadata)
         cache.to_file(fname=fname, delimiter=delimiter)
@@ -312,7 +310,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                          max_accuracy=cache.metrics.accuracy, max_length=x[-1]['length'])
     except:
         pass
-    """
+
     return (metadata, cache.metrics, cache, priority_queue)
 
 def tdata_1():
