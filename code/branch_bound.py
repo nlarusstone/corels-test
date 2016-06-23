@@ -374,8 +374,8 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # number of mistakes and a constant times the prefix size
     lower_bound = float(num_incorrect) / ndata + c * len(prefix)
 
-    # if the lower bound of prefix is less than min_objective, then create a
-    # cache entry for prefix
+    # if the lower bound of prefix is not less than min_objective, then we don't
+    # create a cache entry for prefix
     if (lower_bound >= cache.metrics.min_objective):
         if not quiet:
             cache.metrics.dead_prefix[len(prefix)] += 1
@@ -383,59 +383,31 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                   '%1.3f %1.3f %1.3f %1.3f' % (accuracy, objective, lower_bound,
                                                cache.metrics.min_objective)
         return cache_entry
-    else:
-        # if prefix is the new best known prefix, update min_objective,
-        # best_prefix, and accuracy
-        if (objective < cache.metrics.min_objective):
-            cache.metrics.accuracy = accuracy
-            print 'min:', cache.metrics.min_objective, '->', objective
-            cache.metrics.min_objective = objective
-            cache.metrics.best_prefix = prefix
 
-        # curiosity = prefix misclassification + regularization
-        curiosity = (float(num_incorrect) / new_num_captured +
-                     c * len(prefix) * ndata / new_num_captured)
+    # if prefix is the new best known prefix, update min_objective,
+    # best_prefix, and accuracy
+    if (objective < cache.metrics.min_objective):
+        cache.metrics.accuracy = accuracy
+        print 'min:', cache.metrics.min_objective, '->', objective
+        cache.metrics.min_objective = objective
+        cache.metrics.best_prefix = prefix
 
-        """
-        # to do garbage collection, we keep look for prefixes that are
-        # equivalent up to permutation
-        if garbage_collect:
+    # curiosity = prefix misclassification + regularization
+    curiosity = (float(num_incorrect) / new_num_captured +
+                 c * len(prefix) * ndata / new_num_captured)
 
-            # sorted_prefix lists the prefix's indices in sorted order
-            sorted_prefix = tuple(np.sort(prefix))
+    # make a cache entry for prefix
+    cache_entry = CacheEntry(prefix=prefix, prediction=prediction,
+                             default_rule=default_rule,
+                             accuracy=accuracy, upper_bound=upper_bound,
+                             objective=objective, lower_bound=lower_bound,
+                             num_captured=new_num_captured,
+                             num_captured_correct=num_correct,
+                             not_captured=not_captured, curiosity=curiosity)
 
-            if sorted_prefix in cache.pdict:
-                (equiv_prefix, equiv_accuracy) = cache.pdict[sorted_prefix]
-                if (accuracy > equiv_accuracy):
-                    # equiv_prefix is inferior to prefix
-                    try:
-                        cache.delete(equiv_prefix)
-                        assert (cache[equiv_prefix[:-1]].num_children == len(cache[equiv_prefix[:-1]].children))
-                        cache.metrics.inferior[len(prefix)] += 1
-                    except:
-                        pass
-                    cache.pdict[sorted_prefix] = (prefix, accuracy)
-                else:
-                    # prefix is inferior to the stored equiv_prefix
-                    cache.metrics.inferior[len(prefix)] += 1
-                    return cache_entry
-            else:
-                cache.pdict[sorted_prefix] = (prefix, accuracy)
-                cache.metrics.pdict_length += 1
-        """
-
-        # make a cache entry for prefix
-        cache_entry = CacheEntry(prefix=prefix, prediction=prediction,
-                                 default_rule=default_rule,
-                                 accuracy=accuracy, upper_bound=upper_bound,
-                                 objective=objective, lower_bound=lower_bound,
-                                 num_captured=new_num_captured,
-                                 num_captured_correct=num_correct,
-                                 not_captured=not_captured, curiosity=curiosity)
-
-        if not quiet:
-            print prefix, len(cache), 'ub>max', \
-                 '%1.3f %1.3f %1.3f' % (accuracy, upper_bound)
+    if not quiet:
+        print prefix, len(cache), 'ub>max', \
+             '%1.3f %1.3f %1.3f' % (accuracy, upper_bound)
     return cache_entry
 
 def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0.,
