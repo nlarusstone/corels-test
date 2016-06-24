@@ -18,6 +18,7 @@ class PrefixCache(dict):
         self.pdict = {}
         self.do_garbage_collection = do_garbage_collection
         self.metrics = metrics
+        self.best = None
 
     def insert(self, prefix, cache_entry):
         # to do garbage collection, we keep look for prefixes that are
@@ -105,7 +106,7 @@ class PrefixCache(dict):
     def garbage_collect(self, min_objective, prefix_list=[()]):
         for prefix in prefix_list:
             c = self[prefix]
-            if (c.lower_bound > min_objective):
+            if ((c.lower_bound > min_objective) or (c.per_rule_bound > min_objective)):
                 self.delete(prefix)
             else:
                 plist = [prefix + (child,) for child in c.children]
@@ -130,7 +131,7 @@ class CacheEntry:
     def __init__(self, prefix=None, prediction=None, default_rule=None,
                  accuracy=None, upper_bound=None, objective=None,
                  lower_bound=None, num_captured=None, num_captured_correct=None,
-                 not_captured=None, curiosity=None):
+                 not_captured=None, curiosity=None, per_rule_bound=None):
         self.prefix = prefix
         self.prediction = prediction
         self.default_rule = default_rule
@@ -142,6 +143,7 @@ class CacheEntry:
         self.num_captured_correct = num_captured_correct
         self.not_captured = not_captured
         self.curiosity = curiosity
+        self.per_rule_bound = per_rule_bound
         self.children = set([])
         self.num_children = 0
         self.reject_list = ()
@@ -157,11 +159,13 @@ class CacheEntry:
                        'num_captured: %d' % self.num_captured,
                        'num_captured_correct: %d' % self.num_captured_correct,
                        'sum(not_captured): %d' % rule.count_ones(self.not_captured),
-                       'curiosity: %1.3f' % self.curiosity,
+                       'curiosity: %1.10f' % self.curiosity,
+                       'per_rule_bound: %1.10f' % self.per_rule_bound,
                        'num_children: %d' % self.num_children,
                        'reject_list: %s' % self.reject_list.__repr__()))
         else:
             s = '\n'.join(('lower_bound: %1.10f' % self.lower_bound,
+                           'per_rule_bound: %1.10f' % self.per_rule_bound,
                            'num_children: %d' % self.num_children,
                            'reject_list: %s' % self.reject_list.__repr__()))
         return s
@@ -384,13 +388,22 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                                                cache.metrics.min_objective)
         return cache_entry
 
-    # if prefix is the new best known prefix, update min_objective,
-    # best_prefix, and accuracy
-    if (objective < cache.metrics.min_objective):
-        cache.metrics.accuracy = accuracy
-        print 'min:', cache.metrics.min_objective, '->', objective
-        cache.metrics.min_objective = objective
-        cache.metrics.best_prefix = prefix
+    # here rule_error is the error of new_rule in the context of prefix
+    rule_error = float(num_captured - num_captured_correct) / ndata
+
+    # cached_rule_error is the worst individual rule error of all rules in
+    # cached_prefix
+    cached_rule_error = cached_prefix.per_rule_bound - c * (len(prefix) - 1.)
+
+    # now rule_error is the worst individual rule error of all rules in prefix
+    if (cached_rule_error > rule_error):
+        rule_error = cached_rule_error
+
+    # per_rule_bound is a quantity that can't exceed min_objective
+    per_rule_bound = rule_error + c * len(prefix)
+    if (per_rule_bound > cache.metrics.min_objective):
+        print 'dead rule'
+        return cache_entry
 
     # curiosity = prefix misclassification + regularization
     curiosity = (float(num_incorrect) / new_num_captured +
@@ -403,24 +416,29 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                              objective=objective, lower_bound=lower_bound,
                              num_captured=new_num_captured,
                              num_captured_correct=num_correct,
-                             not_captured=not_captured, curiosity=curiosity)
+                             not_captured=not_captured, curiosity=curiosity,
+                             per_rule_bound=per_rule_bound)
+
+    # if prefix is the new best known prefix, update min_objective,
+    # best_prefix, and accuracy
+    if (objective < cache.metrics.min_objective):
+        cache.metrics.accuracy = accuracy
+        print 'min:', cache.metrics.min_objective, '->', objective
+        cache.metrics.min_objective = objective
+        cache.metrics.best_prefix = prefix
+        cache.best = cache_entry
 
     if not quiet:
         print prefix, len(cache), 'ub>max', \
              '%1.3f %1.3f %1.3f' % (accuracy, upper_bound)
     return cache_entry
 
-def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0.,
-                 min_objective=0., c=0., best_prefix=None):
+def given_prefix(full_prefix, cache, rules, ones, ndata, c=0.,
+                 min_captured_correct=None):
     """
     Compute accuracy of a given prefix via incremental computation.
 
     """
-    metrics = utils.Metrics(len(full_prefix) + 1)
-    metrics.best_prefix = None
-    metrics.min_objective = min_objective
-    metrics.accuracy = max_accuracy
-    cache.metrics = metrics
     for i in range(len(full_prefix)):
         prefix_start = full_prefix[:i]
 
@@ -430,8 +448,8 @@ def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0.,
         prefix = prefix_start + (full_prefix[i],)
 
         cache_entry = \
-            incremental(cache, prefix, rules, ones, ndata, cached_prefix,
-                        min_objective=min_objective, c=c)
+            incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=c,
+                        min_captured_correct=min_captured_correct)
         if (cache_entry is not None):
             cache[prefix] = cache_entry
 
@@ -576,7 +594,8 @@ def greedy_rule_list(ones, rules, max_length):
 
 def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
                min_objective, best_prefix, seed=None, sample=None,
-               do_garbage_collection=False, max_greedy_length=8, max_prefix_length=20):
+               do_garbage_collection=False, max_greedy_length=8,
+               max_prefix_length=20):
 
     if not os.path.exists(dout):
         os.mkdir(dout)
@@ -635,16 +654,18 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     # cache is a PrefixCache object, which is a dictionary that stores
     # prefix-related computations, where each key-value pair maps a prefix
     # tuples to a CacheEntry object
-    cache = PrefixCache(do_garbage_collection=do_garbage_collection, metrics=metrics)
+    cache = PrefixCache(do_garbage_collection=do_garbage_collection,
+                        metrics=metrics)
 
     # initialize the cache with a single entry for the empty rule list
-    cache_entry = CacheEntry(prefix=(), prediction=(), default_rule=empty_default,
-                           accuracy=empty_accuracy, upper_bound=1.,
-                           objective=empty_objective,
-                           lower_bound=empty_lower_bound,
-                           num_captured=0, num_captured_correct=0,
-                           not_captured=rule.make_all_ones(ndata + 1),
-                           curiosity=0.)
+    cache_entry = CacheEntry(prefix=(), prediction=(),
+                             default_rule=empty_default,
+                             accuracy=empty_accuracy, upper_bound=1.,
+                             objective=empty_objective,
+                             lower_bound=empty_lower_bound,
+                             num_captured=0, num_captured_correct=0,
+                             not_captured=rule.make_all_ones(ndata + 1),
+                             curiosity=0., per_rule_bound=0.)
     cache.insert((), cache_entry)
 
     if warm_start:

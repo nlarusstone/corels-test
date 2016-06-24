@@ -89,6 +89,17 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                            sample=sample, do_garbage_collection=garbage_collect,
                            max_prefix_length=max_prefix_length)
 
+    if False: #(froot == 'adult_R'):
+        pfx = (43, 69, 122, 121)
+        (max_accuracy, min_objective, best_prefix) = \
+        given_prefix(pfx, cache, rules, ones, ndata, c=c,
+                     min_captured_correct=min_captured_correct)
+        print cache[pfx]
+        for k in cache.keys():
+            if (k != ()):
+                cache.pop(k)
+        print cache
+
     print 'c:', c
     print 'min_objective:', min_objective
 
@@ -211,11 +222,15 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             else:
                 if (len(prefix) < max_prefix_len_check):
                     # add prefix to cache and priority_queue if its children are
-                    # at most as long as max_prefix_len_check
-                    if ((cache_entry.lower_bound + c) < min_objective):
+                    # at most as long as max_prefix_len_check and its children's
+                    # bounds can be less than min_objective
+                    if (((cache_entry.lower_bound + c) < min_objective) and
+                        ((cache_entry.per_rule_bound + c) < min_objective)):
                         cache.insert(prefix, cache_entry)
                         assert (cache.metrics.pdict_length == len(cache.pdict)), \
                                (cache.metrics.pdict_length, len(cache.pdict), prefix)
+                        # prefix is not necessarily inserted into the cache due
+                        # to symmetry-aware garbage collection
                         if (prefix in cache):
                             heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
                 else:
@@ -284,15 +299,11 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     print cache.metrics
     print cache.metrics.print_summary()
 
-    """
-    try:
-        cc = cache[cache.metrics.best_prefix]
+    cc = cache.best
+    if (cc is not None):
         print_rule_list(cc.prefix, cc.prediction, cc.default_rule, rule_names)
         print cc
-    except:
-        print 'best prefix not in cache'
 
-    """
     figs.viz_log(metadata=metadata, din=dlog, dout=dfigs, delimiter=',', lw=3, fs=14)
     """
     try:
@@ -335,36 +346,54 @@ def tdata_3():
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=1., c=0.001, min_captured_correct=0.,
+           min_objective=1., c=0.01, min_captured_correct=0.01,
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue)
 
-# accuracy = 0.83 # 0.835438
-# min_objective = 0.06
-"""
-if False: #(froot == 'adult_R'):
-    pfx = (43, 69, 122, 121)
-    (max_accuracy, min_objective, best_prefix) = \
-    given_prefix(pfx, cache, rules, ones, ndata, max_accuracy=max_accuracy,
-                 min_objective=min_objective, c=c, best_prefix=best_prefix)
-    print cache[pfx]
-    for k in cache.keys():
-        if (k != ()):
-            cache.pop(k)
-    print cache
-"""
 def example_adult():
     (metadata, metrics, cache, priority_queue) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='adult_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=1., c=0.00001, min_captured_correct=0.003,
+           min_objective=0.04, c=0.01, min_captured_correct=0.01,
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=0.1, quiet=True, clear=True,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue)
+
+def small(froot):
+    (metadata, metrics, cache, priority_queue) = \
+    bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
+           dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
+           froot=froot, warm_start=False, max_accuracy=0., best_prefix=(),
+           min_objective=1., c=0.003, min_captured_correct=0.,
+           max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
+           method='curiosity', seed=0, sample=1., quiet=True, clear=True,
+           garbage_collect=True)
+    return (metadata, metrics, cache, priority_queue)
+
+def bcancer():
+    return small('bcancer_R')
+
+def cars():
+    return small('cars_R')
+
+def haberman():
+    return small('haberman_R')
+
+def monks1():
+    return small('monks1_R')
+
+def monks2():
+    return small('monks2_R')
+
+def monks3():
+    return small('monks3_R')
+
+def votes():
+    return small('votes_R')
 
 def load_data(froot):
     label_file = '%s.label' % froot
