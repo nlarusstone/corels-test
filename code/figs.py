@@ -10,38 +10,33 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
     names = ['priority_queue_length', 'dead_prefix', 'cache_size', 'inferior', 'commutes', 'captured_zero', 'insufficient']
+    display_names = [n.replace('_', ' ') for n in names]
     color_vec = ['blue', 'green', 'magenta', 'cyan', 'gray', 'blue', 'orange']
     plt.ion()
     plt.figure(1, figsize=(10, 12))
     plt.clf()
-    plt.subplot2grid((7, 1), (0, 0))
     title = metadata.replace('-', ', ').split(' ')
     plt.title(' '.join(title[:4]) + '\n' + ' '.join(title[4:]), fontsize=fs)
+
+    plt.subplot(5, 2, 1)
     plt.plot(t, x['min_objective'], '-', linewidth=lw)
     plt.ylabel('objective', fontsize=fs)
-    plt.subplot2grid((7, 1), (1, 0))
+
+    plt.subplot(5, 2, 2)
     plt.plot(t, x['accuracy'], '-', linewidth=lw)
     plt.ylabel('accuracy', fontsize=fs)
-    plt.subplot2grid((7, 1), (2, 0))
+
+    plt.subplot(5, 2, 3)
     plt.plot(t, [len([q for q in str(p).replace('nan', '').split('.') if q]) for p in x['best_prefix']], '-', linewidth=lw)
     plt.ylabel('length', fontsize=fs)
-    plt.subplot2grid((7, 1), (3, 0))
-    plt.plot(t, x[names[0]], '-', linewidth=lw, color=color_vec[0])
-    plt.ylabel('queue', fontsize=fs)
-    plt.subplot2grid((7, 1), (4, 0))
-    plt.plot(t, x[names[1]], '-', linewidth=lw, color=color_vec[1])
-    plt.ylabel('dead', fontsize=fs)
-    plt.subplot2grid((7, 1), (5, 0), rowspan=2)
-    for (n, c) in zip(names[2:], color_vec[2:]):
-        if (x[n] == 0).all():
-            continue
+
+    plot_num = 3
+    for (n, c, dn) in zip(names, color_vec, display_names):
+        plot_num += 1
+        plt.subplot(5, 2, plot_num)
         plt.plot(t, x[n], '-', linewidth=lw, color=c)
-    plt.xlabel('time (sec)', fontsize=fs)
-    plt.ylabel('count', fontsize=fs)
-    plt.xticks(fontsize=fs)
-    plt.yticks(fontsize=fs)
-    display_names = [n.replace('_', ' ') for n in names]
-    plt.legend(display_names[2:], loc='upper left')
+        plt.ylabel(dn, fontsize=fs)
+        plt.xlabel('time (sec)', fontsize=fs)
     fout = os.path.join(dout, '%s-log.pdf' % metadata)
     plt.savefig(fout)
 
@@ -49,7 +44,7 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     plt.clf()
     k = int(x.dtype.names[-1].split('_')[-1]) + 1
     y = x[-1]
-    c = np.array([y[name] for name in x.dtype.names if name.startswith('cache_size')][1:])
+    c = np.array([y[name] for name in x.dtype.names if name.startswith('commutes')][1:])
     ind = (c > 0).nonzero()[0]
     for (i, n) in enumerate(names[1:]):
         data = np.array([y['%s_%d' % (n, j)] for j in range(k)])[ind]
