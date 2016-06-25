@@ -300,8 +300,9 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     print cache.metrics.print_summary()
 
     cc = cache.best
+    descr = ''
     if (cc is not None):
-        print_rule_list(cc.prefix, cc.prediction, cc.default_rule, rule_names)
+        descr = print_rule_list(cc.prefix, cc.prediction, cc.default_rule, rule_names)
         print cc
 
     figs.viz_log(metadata=metadata, din=dlog, dout=dfigs, delimiter=',', lw=3, fs=14)
@@ -317,10 +318,10 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     except:
         pass
     """
-    return (metadata, cache.metrics, cache, priority_queue)
+    return (metadata, cache.metrics, cache, priority_queue, cc, descr)
 
 def tdata_1():
-    (metadata, metrics, cache, priority_queue) = \
+    (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
@@ -328,10 +329,10 @@ def tdata_1():
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
            method='breadth_first', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
-    return (metadata, metrics, cache, priority_queue)
+    return (metadata, metrics, cache, priority_queue, best, rule_list)
 
 def tdata_2():
-    (metadata, metrics, cache, priority_queue) = \
+    (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
@@ -339,10 +340,10 @@ def tdata_2():
            max_prefix_length=90, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
-    return (metadata, metrics, cache, priority_queue)
+    return (metadata, metrics, cache, priority_queue, best, rule_list)
 
 def tdata_3():
-    (metadata, metrics, cache, priority_queue) = \
+    (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
@@ -350,10 +351,10 @@ def tdata_3():
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
-    return (metadata, metrics, cache, priority_queue)
+    return (metadata, metrics, cache, priority_queue, best, rule_list)
 
 def example_adult():
-    (metadata, metrics, cache, priority_queue) = \
+    (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='adult_R', warm_start=False, max_accuracy=0., best_prefix=(),
@@ -361,18 +362,18 @@ def example_adult():
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=0.1, quiet=True, clear=True,
            garbage_collect=True)
-    return (metadata, metrics, cache, priority_queue)
+    return (metadata, metrics, cache, priority_queue, best, rule_list)
 
-def small(froot):
-    (metadata, metrics, cache, priority_queue) = \
+def small(froot, c=0., min_captured_correct=0.):
+    (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot=froot, warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=1., c=0.003, min_captured_correct=0.,
+           min_objective=1., c=c, min_captured_correct=min_captured_correct,
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=True,
            garbage_collect=True)
-    return (metadata, metrics, cache, priority_queue)
+    return (metadata, metrics, cache, priority_queue, best, rule_list)
 
 def bcancer():
     return small('bcancer_R')
@@ -416,3 +417,30 @@ def tdata():
 
 def adult():
     return load_data(froot='adult_R')
+
+def small_datasets(dout='../results/', fout='small.md'):
+    if not os.path.exists(dout):
+        os.mkdir(dout)
+    fh = open(os.path.join(dout, fout), 'w')
+    descr = []
+    fh.write('##small datasets (with varying amounts of regularization)\n\n')
+    fh.write('| dataset | c | d | time (s) | objective | lower bound | accuracy | upper bound |\n')
+    fh.write('| --- | --- | --- | --- | --- | --- | --- | --- |\n')
+    template = '| %s | %1.3f | %1.3f | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f |\n'
+    flist = ['bcancer', 'cars', 'haberman', 'monks1', 'monks2', 'monks3', 'votes']
+    params = [(0.01, 0.01), (0.003, 0.), (0.001, 0.), (0., 0.)]
+    for f in flist[-2:]:
+        froot = '%s_R' % f
+        for (c, d) in params:
+            print froot, c, d
+            (metadata, metrics, cache, priority_queue, best, rule_list) = \
+                                                              small(froot, c, d)
+            rec = (f, c, d, metrics.seconds, best.objective, best.lower_bound,
+                   best.accuracy, best.upper_bound)
+            fh.write(template % rec)
+            descr += [(f, c, d, rule_list)]
+    for (f, c, d, rule_list) in descr:
+        fh.write('\n###%s, c=%1.3f, d=%1.3f\n\n' % (f, c, d))
+        fh.write('%s\n' % rule_list)
+    fh.close()
+    return
