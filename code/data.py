@@ -35,3 +35,6 @@ def csv_to_R(din='../data/small'):
         fh.close()
     return
 
+x = tb.tabarray(SVfile='../data/telco/telco.shuffled.txt')
+for col in x.dtype.names:
+    print col, len(set(x[col])), set(x[col])
