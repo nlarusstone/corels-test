@@ -441,6 +441,7 @@ def small_datasets(dout='../results/', fout='small.md'):
             descr += [(f, c, d, rule_list)]
     for (f, c, d, rule_list) in descr:
         fh.write('\n###%s, c=%1.3f, d=%1.3f\n\n' % (f, c, d))
-        fh.write('%s\n' % rule_list)
+        rl = '\n'.join(['\t' + line for line in rule_list.strip().split('\n')])
+        fh.write('%s\n' % rl)
     fh.close()
     return
