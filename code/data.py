@@ -3,7 +3,7 @@ import os
 import numpy as np
 import tabular as tb
 
-def csv_to_R(din='../data/csv'):
+def csv_to_R(din='../data/small'):
     flist = [f for f in os.listdir(din) if f.endswith('.csv')]
     for f in flist:
         fname = os.path.join(din, f)
