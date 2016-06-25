@@ -429,7 +429,7 @@ def small_datasets(dout='../results/', fout='small.md'):
     template = '| %s | %1.3f | %1.3f | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f | %d |\n'
     flist = ['bcancer', 'cars', 'haberman', 'monks1', 'monks2', 'monks3', 'votes']
     params = [(0.01, 0.01), (0.003, 0.), (0.001, 0.), (0., 0.)]
-    for f in flist[-2:]:
+    for f in flist:
         froot = '%s_R' % f
         for (c, d) in params:
             print froot, c, d

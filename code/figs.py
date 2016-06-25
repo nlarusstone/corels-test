@@ -11,7 +11,7 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     t = x['seconds']
     names = ['cache_size', 'priority_queue_length', 'insufficient', 'commutes', 'dead_prefix', 'inferior', 'captured_zero']
     display_names = [n.replace('_', ' ') for n in names]
-    color_vec = ['blue', 'green', 'magenta', 'cyan', 'gray', 'blue', 'orange']
+    color_vec = ['blue', 'green', 'magenta', 'cyan', 'black', 'gray', 'orange']
     plt.ion()
     plt.figure(1, figsize=(16, 6))
     plt.clf()
@@ -38,6 +38,10 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
         plt.title(dn, fontsize=fs)
         if (plot_num > 5):
             plt.xlabel('time (sec)', fontsize=fs)
+    try:
+        plt.tight_layout()
+    except:
+        pass
     fout = os.path.join(dout, '%s-log.pdf' % metadata)
     plt.savefig(fout)
 
