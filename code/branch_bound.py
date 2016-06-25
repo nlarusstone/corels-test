@@ -235,10 +235,16 @@ class CacheEntry:
 
 def print_rule_list(prefix, prediction, default_rule, rule_names):
     e = ''
+    lines = []
     for (i, label) in zip(prefix, prediction):
-        print '%sif %s then predict %d' % (e, rule_names[i], label)
+        s = '%sif %s then predict %d' % (e, rule_names[i], label)
+        print s
+        lines += [s]
         e = 'else '
-    print 'else predict %d' % default_rule
+    s = 'else predict %d' % default_rule
+    print s
+    lines += [s]
+    return '\n'.join(lines)
 
 def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                 min_captured_correct=0., quiet=True):
