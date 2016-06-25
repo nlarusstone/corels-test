@@ -9,34 +9,35 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     fin = os.path.join(din, '%s.txt' % metadata)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
-    names = ['priority_queue_length', 'dead_prefix', 'cache_size', 'inferior', 'commutes', 'captured_zero', 'insufficient']
+    names = ['cache_size', 'priority_queue_length', 'insufficient', 'commutes', 'dead_prefix', 'inferior', 'captured_zero']
     display_names = [n.replace('_', ' ') for n in names]
     color_vec = ['blue', 'green', 'magenta', 'cyan', 'gray', 'blue', 'orange']
     plt.ion()
-    plt.figure(1, figsize=(10, 12))
+    plt.figure(1, figsize=(16, 6))
     plt.clf()
     title = metadata.replace('-', ', ').split(' ')
     plt.title(' '.join(title[:4]) + '\n' + ' '.join(title[4:]), fontsize=fs)
 
-    plt.subplot(5, 2, 1)
+    plt.subplot(2, 5, 1)
     plt.plot(t, x['min_objective'], '-', linewidth=lw)
-    plt.ylabel('objective', fontsize=fs)
+    plt.title('objective', fontsize=fs)
 
-    plt.subplot(5, 2, 2)
+    plt.subplot(2, 5, 2)
     plt.plot(t, x['accuracy'], '-', linewidth=lw)
-    plt.ylabel('accuracy', fontsize=fs)
+    plt.title('accuracy', fontsize=fs)
 
-    plt.subplot(5, 2, 3)
+    plt.subplot(2, 5, 3)
     plt.plot(t, [len([q for q in str(p).replace('nan', '').split('.') if q]) for p in x['best_prefix']], '-', linewidth=lw)
-    plt.ylabel('length', fontsize=fs)
+    plt.title('prefix length', fontsize=fs)
 
     plot_num = 3
     for (n, c, dn) in zip(names, color_vec, display_names):
         plot_num += 1
-        plt.subplot(5, 2, plot_num)
+        plt.subplot(2, 5, plot_num)
         plt.plot(t, x[n], '-', linewidth=lw, color=c)
-        plt.ylabel(dn, fontsize=fs)
-        plt.xlabel('time (sec)', fontsize=fs)
+        plt.title(dn, fontsize=fs)
+        if (plot_num > 5):
+            plt.xlabel('time (sec)', fontsize=fs)
     fout = os.path.join(dout, '%s-log.pdf' % metadata)
     plt.savefig(fout)
 
@@ -46,27 +47,33 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     y = x[-1]
     c = np.array([y[name] for name in x.dtype.names if name.startswith('commutes')][1:])
     ind = (c > 0).nonzero()[0]
-    for (i, n) in enumerate(names[1:]):
-        data = np.array([y['%s_%d' % (n, j)] for j in range(k)])[ind]
-        plt.bar(np.arange(len(data)) * len(names) + i, data, color=color_vec[i+1])
-    plt.legend(display_names[1:], loc='upper left')
-    plt.xticks(np.arange(len(data)) * len(names), np.arange(len(data)))
-    plt.xlabel('prefix length', fontsize=fs)
-    plt.ylabel('count', fontsize=fs)
-    fout = os.path.join(dout, '%s-hist.pdf' % metadata)
-    plt.savefig(fout)
+    try:
+        for (i, n) in enumerate(names[1:]):
+            data = np.array([y['%s_%d' % (n, j)] for j in range(k)])[ind]
+            plt.bar(np.arange(len(data)) * len(names) + i, data, color=color_vec[i+1])
+        plt.legend(display_names[1:], loc='upper left')
+        plt.xticks(np.arange(len(data)) * len(names), np.arange(len(data)))
+        plt.xlabel('prefix length', fontsize=fs)
+        plt.ylabel('count', fontsize=fs)
+        fout = os.path.join(dout, '%s-hist.pdf' % metadata)
+        plt.savefig(fout)
+    except:
+        pass
 
-    plt.figure(3, figsize=(8, 6))
-    plt.clf()
-    z = np.array([x['%s_%d' % ('cache_size', j)] for j in range(k)])[ind]
-    plt.plot(x['seconds'], z.T, linewidth=lw)
-    for i in range(len(z)):
-        plt.text(x['seconds'][-1], x['cache_size_%d' % i][-1], '%d' % i, fontsize=fs)
-    plt.xlabel('time (sec)', fontsize=fs)
-    plt.ylabel('count', fontsize=fs)
-    plt.title('cache entries by prefix length', fontsize=fs)
-    fout = os.path.join(dout, '%s-cache.pdf' % metadata)
-    plt.savefig(fout)
+    try:
+        plt.figure(3, figsize=(8, 6))
+        plt.clf()
+        z = np.array([x['%s_%d' % ('cache_size', j)] for j in range(k)])[ind]
+        plt.plot(x['seconds'], z.T, linewidth=lw)
+        for i in range(len(z)):
+            plt.text(x['seconds'][-1], x['cache_size_%d' % i][-1], '%d' % i, fontsize=fs)
+        plt.xlabel('time (sec)', fontsize=fs)
+        plt.ylabel('count', fontsize=fs)
+        plt.title('cache entries by prefix length', fontsize=fs)
+        fout = os.path.join(dout, '%s-cache.pdf' % metadata)
+        plt.savefig(fout)
+    except:
+        pass
     return
 
 def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
