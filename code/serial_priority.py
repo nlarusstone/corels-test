@@ -424,9 +424,9 @@ def small_datasets(dout='../results/', fout='small.md'):
     fh = open(os.path.join(dout, fout), 'w')
     descr = []
     fh.write('##small datasets (with varying amounts of regularization)\n\n')
-    fh.write('| dataset | c | d | time (s) | objective | lower bound | accuracy | upper bound |\n')
-    fh.write('| --- | --- | --- | --- | --- | --- | --- | --- |\n')
-    template = '| %s | %1.3f | %1.3f | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f |\n'
+    fh.write('| dataset | c | d | time (s) | objective | lower bound | accuracy | upper bound | length |\n')
+    fh.write('| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n')
+    template = '| %s | %1.3f | %1.3f | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f | %d |\n'
     flist = ['bcancer', 'cars', 'haberman', 'monks1', 'monks2', 'monks3', 'votes']
     params = [(0.01, 0.01), (0.003, 0.), (0.001, 0.), (0., 0.)]
     for f in flist[-2:]:
@@ -436,7 +436,7 @@ def small_datasets(dout='../results/', fout='small.md'):
             (metadata, metrics, cache, priority_queue, best, rule_list) = \
                                                               small(froot, c, d)
             rec = (f, c, d, metrics.seconds, best.objective, best.lower_bound,
-                   best.accuracy, best.upper_bound)
+                   best.accuracy, best.upper_bound, len(best.prefix))
             fh.write(template % rec)
             descr += [(f, c, d, rule_list)]
     for (f, c, d, rule_list) in descr:
