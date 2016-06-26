@@ -445,7 +445,7 @@ def small_datasets(dout='../results/', fout='test.md'):
         fh.write('\n###%s, c=%1.3f, d=%1.3f\n\n' % (f, c, d))
         rl = '\n'.join(['\t' + line for line in rule_list.strip().split('\n')])
         fh.write('%s\n' % rl)
-        fh.write('\n![%s-log](../figs/%s-log.pdf)\n' % md)
-        fh.write('![%s-cache](../figs/%s-cache.pdf)\n' % md)
+        fh.write('\n![%s-log](../figs/%s-log.pdf)\n' % (md, md))
+        fh.write('![%s-cache](../figs/%s-cache.pdf)\n' % (md, md))
     fh.close()
     return
