@@ -418,7 +418,7 @@ def tdata():
 def adult():
     return load_data(froot='adult_R')
 
-def small_datasets(dout='../results/', fout='test.md'):
+def small_datasets(dout='../results/', fout='small.md'):
     import pylab
     if not os.path.exists(dout):
         os.mkdir(dout)
@@ -430,7 +430,7 @@ def small_datasets(dout='../results/', fout='test.md'):
     template = '| %s | %1.3f | %1.3f | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f | %d |\n'
     flist = ['bcancer', 'cars', 'haberman', 'monks1', 'monks2', 'monks3', 'votes']
     params = [(0.01, 0.01), (0.003, 0.), (0.001, 0.), (0., 0.)]
-    for f in flist[1:2]:
+    for f in flist:
         froot = '%s_R' % f
         for (c, d) in params:
             print froot, c, d
@@ -445,7 +445,9 @@ def small_datasets(dout='../results/', fout='test.md'):
         fh.write('\n###%s, c=%1.3f, d=%1.3f\n\n' % (f, c, d))
         rl = '\n'.join(['\t' + line for line in rule_list.strip().split('\n')])
         fh.write('%s\n' % rl)
-        fh.write('\n![%s-log](../figs/%s-log.png)\n' % (md, md))
-        fh.write('![%s-cache](../figs/%s-cache.png)\n' % (md, md))
+        if os.path.exists('../figs/%s-log.png' % md):
+            fh.write('\n![%s-log](../figs/%s-log.png)\n' % (md, md))
+        if os.path.exists('../figs/%s-cache.png' % md):
+            fh.write('![%s-cache](../figs/%s-cache.png)\n' % (md, md))
     fh.close()
     return

@@ -64,7 +64,7 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     except:
         pass
 
-    if True:
+    try:
         z = np.array([x['%s_%d' % ('cache_size', j)] for j in range(k)])[ind]
         zmax = z.max()
         tmax = x['seconds'][-1]
@@ -86,8 +86,8 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
             pass
         fout = os.path.join(dout, '%s-cache.png' % metadata)
         plt.savefig(fout)
-    #except:
-    #    pass
+    except:
+        pass
     return
 
 def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
