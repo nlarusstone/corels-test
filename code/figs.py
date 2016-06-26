@@ -65,6 +65,9 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
         pass
 
     try:
+        c = np.array([x[name] for name in x.dtype.names
+                      if name.startswith('cache_size')][1:]).sum(axis=1)
+        ind = (c > 0).nonzero()[0]
         z = np.array([x['%s_%d' % ('cache_size', j)] for j in range(k)])[ind]
         zmax = z.max()
         tmax = x['seconds'][-1]
