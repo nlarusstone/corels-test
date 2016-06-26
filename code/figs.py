@@ -42,7 +42,7 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
         plt.tight_layout()
     except:
         pass
-    fout = os.path.join(dout, '%s-log.pdf' % metadata)
+    fout = os.path.join(dout, '%s-log.png' % metadata)
     plt.savefig(fout)
 
     plt.figure(2, figsize=(8, 6))
@@ -84,7 +84,7 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
             plt.tight_layout()
         except:
             pass
-        fout = os.path.join(dout, '%s-cache.pdf' % metadata)
+        fout = os.path.join(dout, '%s-cache.png' % metadata)
         plt.savefig(fout)
     #except:
     #    pass
