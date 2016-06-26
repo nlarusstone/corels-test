@@ -418,7 +418,8 @@ def tdata():
 def adult():
     return load_data(froot='adult_R')
 
-def small_datasets(dout='../results/', fout='small.md'):
+def small_datasets(dout='../results/', fout='test.md'):
+    import pylab
     if not os.path.exists(dout):
         os.mkdir(dout)
     fh = open(os.path.join(dout, fout), 'w')
@@ -429,19 +430,22 @@ def small_datasets(dout='../results/', fout='small.md'):
     template = '| %s | %1.3f | %1.3f | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f | %d |\n'
     flist = ['bcancer', 'cars', 'haberman', 'monks1', 'monks2', 'monks3', 'votes']
     params = [(0.01, 0.01), (0.003, 0.), (0.001, 0.), (0., 0.)]
-    for f in flist:
+    for f in flist[1:2]:
         froot = '%s_R' % f
         for (c, d) in params:
             print froot, c, d
+            pylab.close('all')
             (metadata, metrics, cache, priority_queue, best, rule_list) = \
                                                               small(froot, c, d)
             rec = (f, c, d, metrics.seconds, best.objective, best.lower_bound,
                    best.accuracy, best.upper_bound, len(best.prefix))
             fh.write(template % rec)
-            descr += [(f, c, d, rule_list)]
-    for (f, c, d, rule_list) in descr:
+            descr += [(f, c, d, rule_list, metadata)]
+    for (f, c, d, rule_list, md) in descr:
         fh.write('\n###%s, c=%1.3f, d=%1.3f\n\n' % (f, c, d))
         rl = '\n'.join(['\t' + line for line in rule_list.strip().split('\n')])
         fh.write('%s\n' % rl)
+        fh.write('\n![%s-log](../figs/%s-log.pdf)\n' % md)
+        fh.write('![%s-cache](../figs/%s-cache.pdf)\n' % md)
     fh.close()
     return

@@ -49,7 +49,7 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     plt.clf()
     k = int(x.dtype.names[-1].split('_')[-1]) + 1
     y = x[-1]
-    c = np.array([y[name] for name in x.dtype.names if name.startswith('commutes')][1:])
+    c = np.array([y[name] for name in x.dtype.names if name.startswith('cache_size')][1:])
     ind = (c > 0).nonzero()[0]
     try:
         for (i, n) in enumerate(names[1:]):
@@ -64,20 +64,30 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     except:
         pass
 
-    try:
+    if True:
+        z = np.array([x['%s_%d' % ('cache_size', j)] for j in range(k)])[ind]
+        zmax = z.max()
+        tmax = x['seconds'][-1]
+        nrows = int(np.ceil(len(z) / 5.))
         plt.figure(3, figsize=(8, 6))
         plt.clf()
-        z = np.array([x['%s_%d' % ('cache_size', j)] for j in range(k)])[ind]
-        plt.plot(x['seconds'], z.T, linewidth=lw)
+        plot_num = 0
+        y = np.zeros(z.shape[1])
         for i in range(len(z)):
-            plt.text(x['seconds'][-1], x['cache_size_%d' % i][-1], '%d' % i, fontsize=fs)
+            plot_num += 1
+            y += z[i, :]
+            plt.plot(x['seconds'], y, linewidth=lw)
         plt.xlabel('time (sec)', fontsize=fs)
-        plt.ylabel('count', fontsize=fs)
+        plt.ylabel('cache entries', fontsize=fs)
         plt.title('cache entries by prefix length', fontsize=fs)
+        try:
+            plt.tight_layout()
+        except:
+            pass
         fout = os.path.join(dout, '%s-cache.pdf' % metadata)
         plt.savefig(fout)
-    except:
-        pass
+    #except:
+    #    pass
     return
 
 def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
