@@ -37,7 +37,7 @@ import utils
 def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=np.inf, c=0.00001, min_captured_correct=0.003,
+           min_objective=np.inf, c=0.01, min_captured_correct=0.01,
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True):
@@ -325,7 +325,7 @@ def tdata_1():
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=1., c=0., min_captured_correct=0.,
+           min_objective=1., c=0.01, min_captured_correct=0.01,
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
            method='breadth_first', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
@@ -336,7 +336,7 @@ def tdata_2():
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=1., c=0., min_captured_correct=0.,
+           min_objective=1., c=0.01, min_captured_correct=0.01,
            max_prefix_length=90, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
@@ -364,7 +364,7 @@ def example_adult():
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
-def small(froot, c=0., min_captured_correct=0.):
+def small(froot, c=0.01, min_captured_correct=0.01):
     (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
@@ -429,7 +429,7 @@ def small_datasets(dout='../results/', fout='small.md'):
     fh.write('| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n')
     template = '| %s | %1.3f | %1.3f | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f | %d |\n'
     flist = ['bcancer', 'cars', 'haberman', 'monks1', 'monks2', 'monks3', 'votes']
-    params = [(0.01, 0.01), (0.003, 0.), (0.001, 0.), (0., 0.)]
+    params = [(0.01, 0.01), (0.003, 0.003), (0.001, 0.001), (0., 0.)]
     for f in flist:
         froot = '%s_R' % f
         for (c, d) in params:
