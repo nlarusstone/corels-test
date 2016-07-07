@@ -87,7 +87,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 initialize(din, dout, label_file, out_file, warm_start,
                            max_accuracy, min_objective, best_prefix, seed=seed,
                            sample=sample, do_garbage_collection=garbage_collect,
-                           max_prefix_length=max_prefix_length)
+                           max_prefix_length=max_prefix_length, c=c)
 
     if False: #(froot == 'adult_R'):
         pfx = (43, 69, 122, 121)

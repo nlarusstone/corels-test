@@ -10,7 +10,7 @@ import utils
 
 
 class PrefixCache(dict):
-    def __init__(self, do_garbage_collection=False, metrics=None):
+    def __init__(self, do_garbage_collection=False, metrics=None, c=0.):
         # pdict is a dictionary used for garbage collection that groups together
         # prefixes that are equivalent up to a permutation; its keys are tuples
         # of sorted prefix indices; each key maps to a list of prefix tuples in
@@ -19,6 +19,7 @@ class PrefixCache(dict):
         self.do_garbage_collection = do_garbage_collection
         self.metrics = metrics
         self.best = None
+        self.c = c
 
     def insert(self, prefix, cache_entry):
         # to do garbage collection, we keep look for prefixes that are
@@ -105,11 +106,11 @@ class PrefixCache(dict):
 
     def garbage_collect(self, min_objective, prefix_list=[()]):
         for prefix in prefix_list:
-            c = self[prefix]
-            if (c.lower_bound > min_objective):
+            cache_entry = self[prefix]
+            if ((cache_entry.lower_bound + self.c) > min_objective):
                 self.delete(prefix)
             else:
-                plist = [prefix + (child,) for child in c.children]
+                plist = [prefix + (child,) for child in cache_entry.children]
                 self.garbage_collect(min_objective, plist)
         return
 
@@ -580,7 +581,7 @@ def greedy_rule_list(ones, rules, max_length):
 def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
                min_objective, best_prefix, seed=None, sample=None,
                do_garbage_collection=False, max_greedy_length=8,
-               max_prefix_length=20):
+               max_prefix_length=20, c=0.):
 
     if not os.path.exists(dout):
         os.mkdir(dout)
@@ -640,7 +641,7 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     # prefix-related computations, where each key-value pair maps a prefix
     # tuples to a CacheEntry object
     cache = PrefixCache(do_garbage_collection=do_garbage_collection,
-                        metrics=metrics)
+                        metrics=metrics, c=c)
 
     # initialize the cache with a single entry for the empty rule list
     cache_entry = CacheEntry(prefix=(), prediction=(),
