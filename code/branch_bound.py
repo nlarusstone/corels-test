@@ -106,7 +106,7 @@ class PrefixCache(dict):
     def garbage_collect(self, min_objective, prefix_list=[()]):
         for prefix in prefix_list:
             c = self[prefix]
-            if ((c.lower_bound > min_objective) or (c.per_rule_bound > min_objective)):
+            if (c.lower_bound > min_objective):
                 self.delete(prefix)
             else:
                 plist = [prefix + (child,) for child in c.children]
@@ -131,7 +131,7 @@ class CacheEntry:
     def __init__(self, prefix=None, prediction=None, default_rule=None,
                  accuracy=None, upper_bound=None, objective=None,
                  lower_bound=None, num_captured=None, num_captured_correct=None,
-                 not_captured=None, curiosity=None, per_rule_bound=None):
+                 not_captured=None, curiosity=None):
         self.prefix = prefix
         self.prediction = prediction
         self.default_rule = default_rule
@@ -143,7 +143,6 @@ class CacheEntry:
         self.num_captured_correct = num_captured_correct
         self.not_captured = not_captured
         self.curiosity = curiosity
-        self.per_rule_bound = per_rule_bound
         self.children = set([])
         self.num_children = 0
         self.reject_list = ()
@@ -160,12 +159,10 @@ class CacheEntry:
                        'num_captured_correct: %d' % self.num_captured_correct,
                        'sum(not_captured): %d' % rule.count_ones(self.not_captured),
                        'curiosity: %1.10f' % self.curiosity,
-                       'per_rule_bound: %1.10f' % self.per_rule_bound,
                        'num_children: %d' % self.num_children,
                        'reject_list: %s' % self.reject_list.__repr__()))
         else:
             s = '\n'.join(('lower_bound: %1.10f' % self.lower_bound,
-                           'per_rule_bound: %1.10f' % self.per_rule_bound,
                            'num_children: %d' % self.num_children,
                            'reject_list: %s' % self.reject_list.__repr__()))
         return s
@@ -394,23 +391,6 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                                                cache.metrics.min_objective)
         return cache_entry
 
-    # here rule_error is the error of new_rule in the context of prefix
-    rule_error = float(num_captured - num_captured_correct) / ndata
-
-    # cached_rule_error is the worst individual rule error of all rules in
-    # cached_prefix
-    cached_rule_error = cached_prefix.per_rule_bound - c * (len(prefix) - 1.)
-
-    # now rule_error is the worst individual rule error of all rules in prefix
-    if (cached_rule_error > rule_error):
-        rule_error = cached_rule_error
-
-    # per_rule_bound is a quantity that can't exceed min_objective
-    per_rule_bound = rule_error + c * len(prefix)
-    if (per_rule_bound > cache.metrics.min_objective):
-        print 'dead rule'
-        return cache_entry
-
     # curiosity = prefix misclassification + regularization
     curiosity = (float(num_incorrect) / new_num_captured +
                  c * len(prefix) * ndata / new_num_captured)
@@ -422,8 +402,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                              objective=objective, lower_bound=lower_bound,
                              num_captured=new_num_captured,
                              num_captured_correct=num_correct,
-                             not_captured=not_captured, curiosity=curiosity,
-                             per_rule_bound=per_rule_bound)
+                             not_captured=not_captured, curiosity=curiosity)
 
     # if prefix is the new best known prefix, update min_objective,
     # best_prefix, and accuracy
@@ -671,7 +650,7 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
                              lower_bound=empty_lower_bound,
                              num_captured=0, num_captured_correct=0,
                              not_captured=rule.make_all_ones(ndata + 1),
-                             curiosity=0., per_rule_bound=0.)
+                             curiosity=0.)
     cache.insert((), cache_entry)
 
     if warm_start:

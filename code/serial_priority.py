@@ -224,8 +224,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                     # add prefix to cache and priority_queue if its children are
                     # at most as long as max_prefix_len_check and its children's
                     # bounds can be less than min_objective
-                    if (((cache_entry.lower_bound + c) < min_objective) and
-                        ((cache_entry.per_rule_bound + c) < min_objective)):
+                    if ((cache_entry.lower_bound + c) < min_objective):
                         cache.insert(prefix, cache_entry)
                         assert (cache.metrics.pdict_length == len(cache.pdict)), \
                                (cache.metrics.pdict_length, len(cache.pdict), prefix)
