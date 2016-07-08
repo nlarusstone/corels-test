@@ -109,7 +109,7 @@ class Metrics:
 
     def names_to_string(self, granular=False):
         names = ['cache_size', 'dead_prefix_start', 'stunted_prefix',
-                 'commutes', 'dominates', 'rejects', 'captured_zero',
+                 'commutes', 'dominates', 'rejects', 'captured_small',
                  'insufficient', 'dead_prefix', 'inferior']
         m = len(self.cache_size)
         e_names = [expand_names(x, m) for x in names]

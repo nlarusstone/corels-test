@@ -347,7 +347,7 @@ def tdata_3():
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=1., c=0.01, min_captured_correct=0.01,
-           max_prefix_length=10, max_cache_size=300000, delimiter='\t',
+           max_prefix_length=10, max_cache_size=40000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
