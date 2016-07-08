@@ -10,7 +10,9 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
     names = ['cache_size', 'priority_queue_length', 'captured_small', 'insufficient', 'commutes', 'dominates', 'rejects', 'dead_prefix', 'inferior', 'garbage_collect', 'prune_up']
-    display_names = [n.replace('_', ' ') for n in names]
+    rename_dict = {'captured_small': 'insufficient captured', 'insufficient': 'insufficent correct'}
+    display_names = [rename_dict[n] if n in rename_dict else n for n in names]
+    display_names = [n.replace('_', ' ') for n in display_names]
     color_vec = ['blue', 'green', 'orange', 'magenta', 'cyan', 'yellow', 'pink', 'black', 'gray', 'brown', 'purple']
     plt.ion()
     plt.figure(1, figsize=(16, 9))
