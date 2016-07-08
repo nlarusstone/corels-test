@@ -89,7 +89,7 @@ class Metrics:
 
     def best_prefix_repr(self):
         bp = self.best_prefix
-        return bp.__repr__().strip('()').replace(' ', '').replace(',', '.')
+        return bp.__repr__().strip('()').replace(' ', '').replace(',', ';')
 
     def to_string(self, granular=True):
         s1 = '%2.5f,%2.5f,%2.5f,%s,%d,%d,%d' % (self.seconds, self.min_objective,
