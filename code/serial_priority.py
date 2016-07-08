@@ -248,11 +248,11 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             if (cache.metrics.min_objective < old_min_objective):
                 cache.metrics.priority_queue_length = len(priority_queue)
                 cache.metrics.seconds = time.time() - tic
-                fh.write(cache.metrics.to_string() + '\n')
-                fh.flush()
                 size_before_gc = sum(cache.metrics.cache_size)
                 cache.garbage_collect(min_objective)
                 cache.metrics.garbage_collect += size_before_gc - sum(cache.metrics.cache_size)
+                fh.write(cache.metrics.to_string() + '\n')
+                fh.flush()
                 print cache.metrics
 
         if clear and (prefix_start != best_prefix):

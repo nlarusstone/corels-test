@@ -92,9 +92,10 @@ class Metrics:
         return bp.__repr__().strip('()').replace(' ', '').replace(',', '.')
 
     def to_string(self, granular=True):
-        s1 = '%2.5f,%2.5f,%2.5f,%s,%d' % (self.seconds, self.min_objective,
+        s1 = '%2.5f,%2.5f,%2.5f,%s,%d,%d' % (self.seconds, self.min_objective,
                                           self.accuracy, self.best_prefix_repr(),
-                                          self.priority_queue_length)
+                                          self.priority_queue_length,
+                                          self.garbage_collect)
         s2 = list_to_csv_record(self.aggregate())
         if granular:
             s3 = ','.join([list_to_csv_record(x) for x in
@@ -114,11 +115,13 @@ class Metrics:
         e_names = [expand_names(x, m) for x in names]
         if granular:
             return ','.join(['seconds', 'min_objective', 'accuracy',
-                             'best_prefix', 'priority_queue_length'] + names +
+                             'best_prefix', 'priority_queue_length',
+                             'garbage_collect'] + names +
                             list(itertools.chain(*e_names)))
         else:
             return ','.join(['seconds', 'min_objective', 'accuracy',
-                             'best_prefix', 'priority_queue_length'] + names)
+                             'best_prefix', 'priority_queue_length',
+                             'garbage_collect'] + names)
 
 def mpz_to_string(x):
     # skip leading 1
