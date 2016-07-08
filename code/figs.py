@@ -9,31 +9,31 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     fin = os.path.join(din, '%s.txt' % metadata)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
-    names = ['cache_size', 'priority_queue_length', 'insufficient', 'commutes', 'dead_prefix', 'inferior', 'captured_zero']
+    names = ['cache_size', 'priority_queue_length', 'insufficient', 'commutes', 'dominates', 'rejects', 'dead_prefix', 'inferior', 'captured_zero']
     display_names = [n.replace('_', ' ') for n in names]
-    color_vec = ['blue', 'green', 'magenta', 'cyan', 'black', 'gray', 'orange']
+    color_vec = ['blue', 'green', 'magenta', 'cyan', 'yellow', 'purple', 'black', 'gray', 'orange']
     plt.ion()
-    plt.figure(1, figsize=(16, 6))
+    plt.figure(1, figsize=(16, 9))
     plt.clf()
     title = metadata.replace('-', ', ').split(' ')
     plt.title(' '.join(title[:4]) + '\n' + ' '.join(title[4:]), fontsize=fs)
 
-    plt.subplot(2, 5, 1)
+    plt.subplot(3, 4, 1)
     plt.plot(t, x['min_objective'], '-', linewidth=lw)
     plt.title('objective', fontsize=fs)
 
-    plt.subplot(2, 5, 2)
+    plt.subplot(3, 4, 2)
     plt.plot(t, x['accuracy'], '-', linewidth=lw)
     plt.title('accuracy', fontsize=fs)
 
-    plt.subplot(2, 5, 3)
+    plt.subplot(3, 4, 3)
     plt.plot(t, [len([q for q in str(p).replace('nan', '').split('.') if q]) for p in x['best_prefix']], '-', linewidth=lw)
     plt.title('prefix length', fontsize=fs)
 
     plot_num = 3
     for (n, c, dn) in zip(names, color_vec, display_names):
         plot_num += 1
-        plt.subplot(2, 5, plot_num)
+        plt.subplot(3, 4, plot_num)
         plt.plot(t, x[n], '-', linewidth=lw, color=c)
         plt.title(dn, fontsize=fs)
         if (plot_num > 5):

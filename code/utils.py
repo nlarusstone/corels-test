@@ -17,6 +17,8 @@ class Metrics:
         self.dead_prefix_start = [0] * m
         self.stunted_prefix = [0] * m
         self.commutes = [0] * m
+        self.dominates = [0] * m
+        self.rejects = [0] * m
         self.captured_zero = [0] * m
         self.insufficient = [0] * m
         self.dead_prefix = [0] * m
@@ -68,6 +70,7 @@ class Metrics:
     def aggregate(self):
         return [sum(self.cache_size), sum(self.dead_prefix_start),
                 sum(self.stunted_prefix), sum(self.commutes),
+                sum(self.dominates), sum(self.rejects),
                 sum(self.captured_zero), sum(self.insufficient),
                 sum(self.dead_prefix), sum(self.inferior)]
 
@@ -96,15 +99,17 @@ class Metrics:
         if granular:
             s3 = ','.join([list_to_csv_record(x) for x in
                        [self.cache_size, self.dead_prefix_start,
-                        self.stunted_prefix, self.commutes, self.captured_zero,
+                        self.stunted_prefix, self.commutes, self.dominates,
+                        self.rejects, self.captured_zero,
                         self.insufficient, self.dead_prefix, self.inferior]])
             return ','.join([s1, s2, s3])
         else:
             return ','.join([s1, s2])
 
     def names_to_string(self, granular=True):
-        names = ['cache_size', 'dead_prefix_start', 'stunted_prefix', 'commutes',
-                 'captured_zero', 'insufficient', 'dead_prefix', 'inferior']
+        names = ['cache_size', 'dead_prefix_start', 'stunted_prefix',
+                 'commutes', 'dominates', 'rejects', 'captured_zero',
+                 'insufficient', 'dead_prefix', 'inferior']
         m = len(self.cache_size)
         e_names = [expand_names(x, m) for x in names]
         if granular:

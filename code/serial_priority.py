@@ -162,14 +162,19 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         if len(prefix_start):
             # prune rules that commute with the last rule in prefix_start and
             # have a smaller index
+            r0 = len(rules_to_consider)
             rtc = rules_to_consider.difference(set(cdict[prefix_start[-1]]))
+            cache.metrics.commutes[i] += r0 - len(rtc)
             # prune rules that are dominated by rules in prefix_start
             # definition: A dominates B if A captures all data that B captures
+            r1 = len(rtc)
             rtc = rtc.difference(utils.all_relations(rdict, prefix_start))
+            cache.metrics.dominates[i] += r1 - len(rtc)
             # prune rules in the reject_list (that will not capture sufficient
             # data, given prefix_start and min_captured_correct)
+            r2 = len(rtc)
             rtc = rtc.difference(set(cached_prefix.reject_list))
-            cache.metrics.commutes[i] += len(rules_to_consider) - len(rtc)
+            cache.metrics.rejects[i] += r2 - len(rtc)
             rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
         lower_bound = None
@@ -335,7 +340,7 @@ def tdata_2():
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=1., c=0.01, min_captured_correct=0.01,
+           min_objective=1., c=0., min_captured_correct=0.,
            max_prefix_length=90, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
@@ -347,7 +352,7 @@ def tdata_3():
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=1., c=0.01, min_captured_correct=0.01,
-           max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
+           max_prefix_length=10, max_cache_size=40000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
