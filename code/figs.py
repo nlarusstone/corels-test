@@ -9,9 +9,9 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     fin = os.path.join(din, '%s.txt' % metadata)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
-    names = ['cache_size', 'priority_queue_length', 'insufficient', 'commutes', 'dominates', 'rejects', 'dead_prefix', 'inferior', 'captured_zero', 'garbage_collect']
+    names = ['cache_size', 'priority_queue_length', 'insufficient', 'commutes', 'dominates', 'rejects', 'dead_prefix', 'inferior', 'captured_zero', 'garbage_collect', 'prune_up']
     display_names = [n.replace('_', ' ') for n in names]
-    color_vec = ['blue', 'green', 'magenta', 'cyan', 'yellow', 'pink', 'black', 'gray', 'orange', 'brown']
+    color_vec = ['blue', 'green', 'magenta', 'cyan', 'yellow', 'pink', 'black', 'gray', 'orange', 'brown', 'purple']
     plt.ion()
     plt.figure(1, figsize=(16, 9))
     plt.clf()
