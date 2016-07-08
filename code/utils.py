@@ -106,7 +106,7 @@ class Metrics:
         else:
             return ','.join([s1, s2])
 
-    def names_to_string(self, granular=True):
+    def names_to_string(self, granular=False):
         names = ['cache_size', 'dead_prefix_start', 'stunted_prefix',
                  'commutes', 'dominates', 'rejects', 'captured_zero',
                  'insufficient', 'dead_prefix', 'inferior']

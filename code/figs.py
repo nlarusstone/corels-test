@@ -45,22 +45,25 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     fout = os.path.join(dout, '%s-log.png' % metadata)
     plt.savefig(fout)
 
-    plt.figure(2, figsize=(8, 6))
-    plt.clf()
-    k = int(x.dtype.names[-1].split('_')[-1]) + 1
-    y = x[-1]
-    c = np.array([y[name] for name in x.dtype.names if name.startswith('cache_size')][1:])
-    ind = (c > 0).nonzero()[0]
     try:
-        for (i, n) in enumerate(names[1:]):
-            data = np.array([y['%s_%d' % (n, j)] for j in range(k)])[ind]
-            plt.bar(np.arange(len(data)) * len(names) + i, data, color=color_vec[i+1])
-        plt.legend(display_names[1:], loc='upper left')
-        plt.xticks(np.arange(len(data)) * len(names), np.arange(len(data)))
-        plt.xlabel('prefix length', fontsize=fs)
-        plt.ylabel('count', fontsize=fs)
-        fout = os.path.join(dout, '%s-hist.pdf' % metadata)
-        plt.savefig(fout)
+        plt.figure(2, figsize=(8, 6))
+        plt.clf()
+        k = int(x.dtype.names[-1].split('_')[-1]) + 1
+        y = x[-1]
+        c = np.array([y[name] for name in x.dtype.names if name.startswith('cache_size')][1:])
+        ind = (c > 0).nonzero()[0]
+        try:
+            for (i, n) in enumerate(names[1:]):
+                data = np.array([y['%s_%d' % (n, j)] for j in range(k)])[ind]
+                plt.bar(np.arange(len(data)) * len(names) + i, data, color=color_vec[i+1])
+            plt.legend(display_names[1:], loc='upper left')
+            plt.xticks(np.arange(len(data)) * len(names), np.arange(len(data)))
+            plt.xlabel('prefix length', fontsize=fs)
+            plt.ylabel('count', fontsize=fs)
+            fout = os.path.join(dout, '%s-hist.pdf' % metadata)
+            plt.savefig(fout)
+        except:
+            pass
     except:
         pass
 
