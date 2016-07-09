@@ -271,7 +271,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
         # write a log entry for every 1000 outer loop iterations that reach here
         counter += 1
-        if ((counter % 10000) == 0):
+        if ((counter % 1000) == 0):
             cache.metrics.priority_queue_length = len(priority_queue)
             cache.metrics.seconds = time.time() - tic
             fh.write(cache.metrics.to_string() + '\n')
@@ -357,9 +357,9 @@ def example_adult():
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='adult_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=0.04, c=0.01, min_captured_correct=0.01,
-           max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
-           method='curiosity', seed=0, sample=0.1, quiet=True, clear=True,
+           min_objective=1., c=0.05, min_captured_correct=0.05,
+           max_prefix_length=20, max_cache_size=1000000, delimiter='\t',
+           method='breadth_first', seed=0, sample=0.1, quiet=True, clear=True,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 

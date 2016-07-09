@@ -29,7 +29,6 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     plt.title('accuracy', fontsize=fs)
 
     plt.subplot(3, 5, 3)
-    print x['best_prefix']
     plt.plot(t, [len([q for q in str(p).strip(';').split(';') if q]) for p in x['best_prefix']], '-', linewidth=lw)
     plt.title('prefix length', fontsize=fs)
 

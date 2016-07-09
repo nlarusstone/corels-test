@@ -107,12 +107,12 @@ class Metrics:
         else:
             return ','.join([s1, s2])
 
-    def names_to_string(self, granular=False):
+    def names_to_string(self, granular=True):
         names = ['cache_size', 'dead_prefix_start', 'stunted_prefix',
                  'commutes', 'dominates', 'rejects', 'captured_small',
                  'insufficient', 'dead_prefix', 'inferior']
         m = len(self.cache_size)
-        e_names = [expand_names(x, m) for x in names]
+        e_names = [expand_names(x, m) for x in ['cache_size']]
         if granular:
             return ','.join(['seconds', 'min_objective', 'accuracy',
                              'best_prefix', 'priority_queue_length',
