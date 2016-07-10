@@ -18,6 +18,8 @@ stop after 2,600,000 cache entries
 
 ![adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=breadth_first-max_cache_size=2600000-sample=0.10-log](../figs/adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=breadth_first-max_cache_size=2600000-sample=0.10-log.png)
 
+![adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=breadth_first-max_cache_size=2600000-sample=0.10-leaves](../figs/adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=breadth_first-max_cache_size=2600000-sample=0.10-leaves.png)
+
 ###curiosity
 
 	if {age=Young,workclass=Private} then predict 1
@@ -26,6 +28,8 @@ stop after 2,600,000 cache entries
 	else predict 1
 
 ![adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=curiosity-max_cache_size=2600000-sample=0.10-log](../figs/adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=curiosity-max_cache_size=2600000-sample=0.10-log.png)
+
+![adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=curiosity-max_cache_size=2600000-sample=0.10-leaves](../figs/adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=curiosity-max_cache_size=2600000-sample=0.10-leaves.png)
 
 ###lower_bound
 
@@ -36,6 +40,8 @@ stop after 2,600,000 cache entries
 
 ![adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=lower_bound-max_cache_size=2600000-sample=0.10-log](../figs/adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=lower_bound-max_cache_size=2600000-sample=0.10-log.png)
 
+![adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=lower_bound-max_cache_size=2600000-sample=0.10-leaves](../figs/adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=lower_bound-max_cache_size=2600000-sample=0.10-leaves.png)
+
 ###objective
 
 	if {capital.gain=7298LessThancapital-gain,capital.loss=capital-lossEQ0} then predict 0
@@ -43,4 +49,4 @@ stop after 2,600,000 cache entries
 	else if {marital.status=Married,occupation=Exec-managerial} then predict 0
 	else predict 1
 
-![adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=objective-max_cache_size=2600000-sample=0.10-log](../figs/adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=objective-max_cache_size=2600000-sample=0.10-log.png)
+![adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=objective-max_cache_size=2600000-sample=0.10-leaves](../figs/adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=objective-max_cache_size=2600000-sample=0.10-leaves.png)
