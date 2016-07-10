@@ -121,7 +121,8 @@ class PrefixCache(dict):
                   'curiosity']
         lines = []
         for prefix in self:
-            lines.append('%s' % self[prefix].to_string(delimiter=delimiter))
+            if hasattr(self[prefix], 'prefix'):
+                lines.append('%s' % self[prefix].to_string(delimiter=delimiter))
         f = open(fname, 'w')
         f.write('%s\n' % delimiter.join(header))
         f.write('\n'.join(lines))
