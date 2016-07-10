@@ -170,7 +170,7 @@ def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
         if (i < max_length):
             plt.xticks([], [])
 
-    fout = os.path.join(dout, '%s-leaves.pdf' % metadata)
+    fout = os.path.join(dout, '%s-leaves.png' % metadata)
     plt.suptitle(metadata.replace('-', ', '), fontsize=fs)
     plt.savefig(fout)
 
