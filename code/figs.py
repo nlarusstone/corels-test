@@ -105,9 +105,9 @@ def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
     plt.ion()
     plt.figure(4, figsize=(16, 10))
     plt.clf()
-    for i in range(1, max_length + 1):
+    min_length = x[0]['length']
+    for i in range(min_length, max_length + 1):
         y = x[x['length'] == i]
-
         plt.subplot(max_length, 3, (i - 1) * 3 + 1)
         plt.hist(y['objective'])
         plt.hist(y['lower_bound'])
@@ -119,7 +119,7 @@ def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
         plt.plot([max_lower_bound] * 2, [0, a[3]], 'g:', linewidth=lw)
         plt.yticks([plt.yticks()[0][-2]])
         plt.ylabel('\nlen=%d' % i, rotation='horizontal')
-        if (i == 1):
+        if (i == min_length):
             plt.title('lower bound & objective', fontsize=fs)
             a1 = list(plt.axis())
             a1[0] = max(0, a1[0])
@@ -145,7 +145,7 @@ def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
         min_upper_bound = y['upper_bound'].min()
         plt.plot([min_upper_bound] * 2, [0, a[3]], 'g:', linewidth=lw)
         plt.yticks([plt.yticks()[0][-2]])
-        if (i == 1):
+        if (i == min_length):
             plt.title('accuracy & upper bound', fontsize=fs)
             a2 = plt.axis()
         else:
@@ -159,7 +159,7 @@ def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
         plt.subplot(max_length, 3, (i - 1) * 3 + 3)
         plt.hist(y['curiosity'])
         plt.yticks([plt.yticks()[0][-2]])
-        if (i == 1):
+        if (i == min_length):
             plt.title('curiosity', fontsize=fs)
             a3 = plt.axis()
         else:
@@ -170,7 +170,7 @@ def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
         if (i < max_length):
             plt.xticks([], [])
 
-    fout = os.path.join(dout, '%s-max_length=%d.pdf' % (metadata, max_length))
+    fout = os.path.join(dout, '%s-leaves.pdf' % metadata)
     plt.suptitle(metadata.replace('-', ', '), fontsize=fs)
     plt.savefig(fout)
 
