@@ -530,3 +530,28 @@ def adult_regularize(dout='../results/', fout='adult-regularize.md'):
             fh.write('![%s-cache](../figs/%s-cache.png)\n' % (md, md))
     fh.close()
     return
+
+def tdata(dout='../results/', fout='tdata.md'):
+    import pylab
+    if not os.path.exists(dout):
+        os.mkdir(dout)
+    fh = open(os.path.join(dout, fout), 'w')
+    descr = []
+    fh.write('##tic-tac-toe dataset (curiosity, c = d = 0.01)\n\n')
+    f = 'tdata'
+    froot = '%s_R' % f
+    print froot
+    pylab.close('all')
+    (metadata, metrics, cache, priority_queue, best, rule_list) = tdata_3()
+    descr += [(rule_list, metadata)]
+    for (rule_list, md) in descr:
+        rl = '\n'.join(['\t' + line for line in rule_list.strip().split('\n')])
+        fh.write('%s\n' % rl)
+        if os.path.exists('../figs/%s-log.png' % md):
+            fh.write('\n![%s-log](../figs/%s-log.png)\n' % (md, md))
+        if os.path.exists('../figs/%s-leaves.png' % md):
+            fh.write('![%s-cache](../figs/%s-leaves.png)\n' % (md, md))
+        if os.path.exists('../figs/%s-cache.png' % md):
+            fh.write('![%s-cache](../figs/%s-cache.png)\n' % (md, md))
+    fh.close()
+    return
