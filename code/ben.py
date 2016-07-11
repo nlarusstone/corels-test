@@ -4,11 +4,15 @@ import os
 from fim import fpgrowth #this is PyFIM, available from http://www.borgelt.net/pyfim.html
 import numpy as np
 
+
 #Read in the .tab file
-def load_data(fname):
+def load_data(fname, header=False):
     #Load data
     with open(fname+'.tab','r') as fin:
         A = fin.readlines()
+    if header:
+        colnames = A[0].split()
+        A = A[1:]
     data = []
     for ln in A:
         data.append(ln.split())
@@ -16,14 +20,20 @@ def load_data(fname):
     Y = np.loadtxt(fname+'.Y')
     if len(Y.shape)==1:
         Y = np.array([Y])
-    return data,Y
+    if header:
+        return data,Y,colnames
+    else:
+        return data,Y
 
 #Frequent itemset mining
-def get_freqitemsets(fname,minsupport,maxlhs):
+def get_freqitemsets(fname,minsupport,maxlhs,header=False):
     #minsupport is an integer percentage (e.g. 10 for 10%)
     #maxlhs is the maximum size of the lhs
     #first load the data
-    data,Y = load_data(fname)
+    if header:
+        data,Y,colnames = load_data(fname, header=True)
+    else:
+        data,Y = load_data(fname, header=False)
     #Now find frequent itemsets
     #Mine separately for each class
     data_pos = [x for i,x in enumerate(data) if Y[i,0]==0]
@@ -51,7 +61,10 @@ def get_freqitemsets(fname,minsupport,maxlhs):
     lhs_len = np.array(lhs_len)
     itemsets_all = ['null']
     itemsets_all.extend(itemsets)
-    return X,Y,nruleslen,lhs_len,itemsets_all
+    if header:
+        return X,Y,nruleslen,lhs_len,itemsets_all,colnames,data
+    else:
+        return X,Y,nruleslen,lhs_len,itemsets_all
 
 def array_to_string(x):
     return list(x).__repr__().replace(',', '').strip('[]')
@@ -76,6 +89,55 @@ def titanic(din='../data/titanic', dout='../data/titanic'):
         row = np.zeros(ndata, int)
         row[ind] = 1
         rule_name = '{%s}' % ','.join(itemsets[i])
+        rule_repr = array_to_string(row)
+        out += [' '.join([rule_name, rule_repr])]
+
+    label = [' '.join(('{label=0}', array_to_string(np.cast[int](Ytrain[:,0]))))]
+    label += [' '.join(('{label=1}', array_to_string(1 - np.cast[int](Ytrain[:,0]))))]
+
+    fout = os.path.join(dout, '%s.out' % froot)
+    f = open(fout, 'w')
+    f.write('\n'.join(out))
+    f.close()
+
+    flabel = os.path.join(dout, '%s.label' % froot)
+    f = open(flabel, 'w')
+    f.write('\n'.join(label))
+    f.close()
+    return
+
+def titanic_cols(din='../data/titanic', dout='../data'):
+    froot = 'titanic_cols'
+
+    #rule mining parameters
+    maxlhs = 2 #maximum cardinality of an itemset
+    minsupport = 10 #minimum support (%) of an itemset
+
+    #Do frequent itemset mining from the training data
+    fname = os.path.join(din, froot+'_train')
+    Xtrain,Ytrain,nruleslen,lhs_len,itemsets,colnames,data = \
+        get_freqitemsets(fname,minsupport,maxlhs,header=True)
+
+    data = np.array(data).T
+    features = [list(set(d)) for d in data]
+    flat_features = []
+    categories_to_features = dict()
+    for (fgroup, category) in zip(features, colnames):
+        for f in fgroup:
+            categories_to_features[f] = category
+        flat_features += fgroup
+    assert (len(set(flat_features)) == len(flat_features))
+
+    nrules = len(Xtrain)
+    ndata = len(Xtrain[0])
+    out = []
+    for i in range(1, nrules):
+        ind = list(Xtrain[i])
+        ind.sort()
+        row = np.zeros(ndata, int)
+        row[ind] = 1
+        rule_name = '{%s}' % ','.join(['%s=%s' % (categories_to_features[j], j)
+                                       for j in itemsets[i]])
         rule_repr = array_to_string(row)
         out += [' '.join([rule_name, rule_repr])]
 
