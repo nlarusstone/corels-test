@@ -154,7 +154,17 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             # from the cache
             continue
         if (i > 1):
-            cached_prefix.reject_list = cache[prefix_start[:-1]].reject_list
+            #cached_prefix.reject_list = cache[prefix_start[:-1]].reject_list
+            #print prefix_start, cache[prefix_start[:-1]].reject_list
+            rl = set([])
+            for ind in range(len(prefix_start)):
+                try:
+                    rl.update(cache[cache.pdict[prefix_start[:ind] + prefix_start[(ind+1):]][0]].reject_list)
+                except:
+                    pass
+            rl = list(rl)
+            rl.sort()
+            cached_prefix.reject_list = rl
 
         # construct a queue of all prefixes starting with prefix_start and
         # appended with one additional rule
@@ -301,22 +311,21 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     cc = cache.best
     descr = ''
     if (cc is not None):
-        descr = print_rule_list(cc.prefix, cc.prediction, cc.default_rule, rule_names)
         print cc
+        descr = print_rule_list(cc.prefix, cc.prediction, cc.default_rule, rule_names)
 
     figs.viz_log(metadata=metadata, din=dlog, dout=dfigs, delimiter=',', lw=3, fs=14)
     #"""
-    #try:
-    if True:
-        fname = os.path.join(dout, '%s.txt' % metadata)
-        cache.to_file(fname=fname, delimiter=delimiter)
-        x = tb.tabarray(SVfile=fname, delimiter=delimiter)
-        x.sort(order=['length', 'first'])
-        x.saveSV(fname, delimiter=delimiter)
-        figs.make_figure(metadata=metadata, din=dout, dout=dfigs,
-                         max_accuracy=cache.metrics.accuracy, max_length=x[-1]['length'])
-    #except:
-    #    pass
+    try:
+        if (len(priority_queue) > 0):
+            fname = os.path.join(dout, '%s.txt' % metadata)
+            cache.to_file(fname=fname, delimiter=delimiter)
+            x = tb.tabarray(SVfile=fname, delimiter=delimiter)
+            x.sort(order=['length', 'first'])
+            x.saveSV(fname, delimiter=delimiter)
+            figs.make_figure(metadata=metadata, din=dout, dout=dfigs)
+    except:
+        pass
     #"""
     return (metadata, cache.metrics, cache, priority_queue, cc, descr)
 
@@ -348,17 +357,17 @@ def tdata_3():
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=1., c=0.01, min_captured_correct=0.01,
-           max_prefix_length=10, max_cache_size=40000, delimiter='\t',
+           max_prefix_length=10, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=False,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
-def example_adult(method='breadth_first', max_cache_size=2600000):
+def example_adult(method='breadth_first', max_cache_size=2600000, c=0.01):
     (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='adult_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=1., c=0.01, min_captured_correct=0.01,
+           min_objective=1., c=c, min_captured_correct=c,
            max_prefix_length=10, max_cache_size=max_cache_size, delimiter='\t',
            method=method, seed=0, sample=0.1, quiet=True, clear=True,
            garbage_collect=True)
@@ -452,7 +461,7 @@ def small_datasets(dout='../results/', fout='small.md'):
     fh.close()
     return
 
-def adult_dataset(dout='../results/', fout='adult.md'):
+def adult_metrics(dout='../results/', fout='adult-metrics.md'):
     import pylab
     if not os.path.exists(dout):
         os.mkdir(dout)
@@ -483,5 +492,41 @@ def adult_dataset(dout='../results/', fout='adult.md'):
             fh.write('\n![%s-log](../figs/%s-log.png)\n' % (md, md))
         if os.path.exists('../figs/%s-leaves.png' % md):
             fh.write('![%s-cache](../figs/%s-leaves.png)\n' % (md, md))
+    fh.close()
+    return
+
+def adult_regularize(dout='../results/', fout='adult-regularize.md'):
+    import pylab
+    if not os.path.exists(dout):
+        os.mkdir(dout)
+    fh = open(os.path.join(dout, fout), 'w')
+    descr = []
+    fh.write('##adult dataset with varying regularization (breadth-first, c = d, max_cache_size=3000000)\n\n')
+    fh.write('stop after 3,000,000 cache entries\n\n')
+    fh.write('| c | time (s) | objective | lower bound | accuracy | upper bound | best prefix |\n')
+    fh.write('| --- | --- | --- | --- | --- | --- | --- |\n')
+    template = '| %1.2f | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f | %s |\n'
+    params = np.arange(0.1, 0., -0.01)
+    f = 'adult'
+    froot = '%s_R' % f
+    for c in params:
+        print froot, c
+        pylab.close('all')
+        (metadata, metrics, cache, priority_queue, best, rule_list) = \
+                        example_adult(method='breadth_first', max_cache_size=3000000, c=c)
+        rec = (c, metrics.seconds, best.objective, best.lower_bound,
+               best.accuracy, best.upper_bound, best.prefix.__repr__())
+        fh.write(template % rec)
+        descr += [(c, rule_list, metadata)]
+    for (c, rule_list, md) in descr:
+        fh.write('\n###c = %1.2f\n\n' % (c))
+        rl = '\n'.join(['\t' + line for line in rule_list.strip().split('\n')])
+        fh.write('%s\n' % rl)
+        if os.path.exists('../figs/%s-log.png' % md):
+            fh.write('\n![%s-log](../figs/%s-log.png)\n' % (md, md))
+        if os.path.exists('../figs/%s-leaves.png' % md):
+            fh.write('![%s-cache](../figs/%s-leaves.png)\n' % (md, md))
+        if os.path.exists('../figs/%s-cache.png' % md):
+            fh.write('![%s-cache](../figs/%s-cache.png)\n' % (md, md))
     fh.close()
     return
