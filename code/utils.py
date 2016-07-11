@@ -98,11 +98,11 @@ class Metrics:
                                           self.garbage_collect, self.prune_up)
         s2 = list_to_csv_record(self.aggregate())
         if granular:
-            s3 = ','.join([list_to_csv_record(x) for x in
-                       [self.cache_size, self.dead_prefix_start,
-                        self.stunted_prefix, self.commutes, self.dominates,
-                        self.rejects, self.captured_zero,
-                        self.insufficient, self.dead_prefix, self.inferior]])
+            s3 = ','.join([list_to_csv_record(x) for x in [self.cache_size]])
+                       #[self.cache_size, self.dead_prefix_start,
+                       # self.stunted_prefix, self.commutes, self.dominates,
+                       # self.rejects, self.captured_zero,
+                       # self.insufficient, self.dead_prefix, self.inferior]])
             return ','.join([s1, s2, s3])
         else:
             return ','.join([s1, s2])

@@ -121,7 +121,8 @@ class PrefixCache(dict):
                   'curiosity']
         lines = []
         for prefix in self:
-            lines.append('%s' % self[prefix].to_string(delimiter=delimiter))
+            if hasattr(self[prefix], 'prefix'):
+                lines.append('%s' % self[prefix].to_string(delimiter=delimiter))
         f = open(fname, 'w')
         f.write('%s\n' % delimiter.join(header))
         f.write('\n'.join(lines))
@@ -343,6 +344,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # data
     if (num_captured_correct < (min_captured_correct * ndata)):
         cache.metrics.insufficient[len(prefix)] += 1
+        cache[prefix[:-1]].reject_list += (new_rule,)
         return cache_entry
 
     # compute the default rule on the not captured data
