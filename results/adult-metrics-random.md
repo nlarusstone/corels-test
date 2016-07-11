@@ -42,7 +42,6 @@ stop after 2,600,000 cache entries
 ![adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=lower_bound-max_cache_size=2600000-sample=0.10-cache](../figs/adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=lower_bound-max_cache_size=2600000-sample=0.10-cache.png)
 ![adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=lower_bound-max_cache_size=2600000-sample=0.10-leaves](../figs/adult_R-serial_priority-c=0.01000-min_cap=0.010-min_objective=1.000-method=lower_bound-max_cache_size=2600000-sample=0.10-leaves.png)
 
-
 ###objective
 
 	if {capital.gain=7298LessThancapital-gain,capital.loss=capital-lossEQ0} then predict 0
