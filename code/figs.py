@@ -10,7 +10,7 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
     names = ['cache_size', 'priority_queue_length', 'captured_small', 'insufficient', 'commutes', 'dominates', 'rejects', 'dead_prefix', 'inferior', 'garbage_collect', 'prune_up']
-    rename_dict = {'captured_small': 'insufficient captured', 'insufficient': 'insufficent correct'}
+    rename_dict = {'captured_small': 'insufficient\ncaptured', 'insufficient': 'insufficent\ncorrect'}
     display_names = [rename_dict[n] if n in rename_dict else n for n in names]
     display_names = [n.replace('_', ' ') for n in display_names]
     color_vec = ['blue', 'green', 'orange', 'magenta', 'cyan', 'yellow', 'pink', 'black', 'gray', 'brown', 'purple']
@@ -98,16 +98,18 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
         pass
     return
 
-def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\t',
-                alpha=0.05, lw=3, fs=14):
+def make_figure(metadata, din, dout, delimiter='\t', alpha=0.05, lw=3, fs=14):
     fin = os.path.join(din, '%s.txt' % metadata)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     plt.ion()
     plt.figure(4, figsize=(16, 10))
     plt.clf()
     min_length = x[0]['length']
+    max_length = x[-1]['length']
     for i in range(min_length, max_length + 1):
         y = x[x['length'] == i]
+        if (len(y) < 2):
+            continue
         plt.subplot(max_length, 3, (i - 1) * 3 + 1)
         plt.hist(y['objective'])
         plt.hist(y['lower_bound'])
