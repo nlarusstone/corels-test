@@ -104,7 +104,7 @@ def make_figure(metadata, din, dout, delimiter='\t', alpha=0.05, lw=3, fs=14):
     plt.ion()
     plt.figure(4, figsize=(16, 10))
     plt.clf()
-    min_length = x[0]['length']
+    min_length = max(x[0]['length'], 1)
     max_length = x[-1]['length']
     for i in range(min_length, max_length + 1):
         y = x[x['length'] == i]
