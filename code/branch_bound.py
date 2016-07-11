@@ -344,6 +344,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # data
     if (num_captured_correct < (min_captured_correct * ndata)):
         cache.metrics.insufficient[len(prefix)] += 1
+        cache[prefix[:-1]].reject_list += (new_rule,)
         return cache_entry
 
     # compute the default rule on the not captured data
