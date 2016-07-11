@@ -356,9 +356,9 @@ def tdata_3():
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=1., c=0.01, min_captured_correct=0.01,
-           max_prefix_length=10, max_cache_size=3000000, delimiter='\t',
-           method='curiosity', seed=0, sample=1., quiet=True, clear=False,
+           min_objective=1., c=0.001, min_captured_correct=0.001,
+           max_prefix_length=10, max_cache_size=30000, delimiter='\t',
+           method='curiosity', seed=0, sample=1., quiet=True, clear=True,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
