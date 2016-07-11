@@ -63,9 +63,11 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         heap_metric = lambda key: cache[key].lower_bound
     elif (method == 'objective'):
         heap_metric = lambda key: cache[key].objective
-    else:
-        assert (method == 'random')
+    elif (method == 'random'):
         heap_metric = lambda key: np.random.random()
+    else:
+        assert (method == 'depth_first')
+        heap_metric = lambda key: 1. / (len(key) + 1.)
 
     if (method == 'breadth_first'):
         certify = True
@@ -492,6 +494,8 @@ def adult_metrics(dout='../results/', fout='adult-metrics.md'):
             fh.write('\n![%s-log](../figs/%s-log.png)\n' % (md, md))
         if os.path.exists('../figs/%s-leaves.png' % md):
             fh.write('![%s-cache](../figs/%s-leaves.png)\n' % (md, md))
+        if os.path.exists('../figs/%s-cache.png' % md):
+            fh.write('![%s-cache](../figs/%s-cache.png)\n' % (md, md))
     fh.close()
     return
 
