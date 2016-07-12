@@ -6,34 +6,38 @@ import numpy as np
 
 
 #Read in the .tab file
-def load_data(fname, header=False):
+def load_data(fname, yname=None, header=False, delimiter=' '):
     #Load data
-    with open(fname+'.tab','r') as fin:
+    with open(fname,'r') as fin:
         A = fin.readlines()
     if header:
-        colnames = A[0].split()
+        colnames = A[0].split(delimiter)
         A = A[1:]
     data = []
     for ln in A:
-        data.append(ln.split())
+        data.append(ln.split(delimiter))
     #Now load Y
-    Y = np.loadtxt(fname+'.Y')
+    if (yname is None):
+        Y = 1 - np.array([int(d[-1]) for d in data])
+        data = [d[:-1] for d in data]
+    else:
+        Y = np.loadtxt(yname)
     if len(Y.shape)==1:
-        Y = np.array([Y])
+        Y = Y.reshape((len(Y), 1))
     if header:
         return data,Y,colnames
     else:
         return data,Y
 
 #Frequent itemset mining
-def get_freqitemsets(fname,minsupport,maxlhs,header=False):
+def get_freqitemsets(fname, minsupport, maxlhs, yname=None, header=False, delimiter=' '):
     #minsupport is an integer percentage (e.g. 10 for 10%)
     #maxlhs is the maximum size of the lhs
     #first load the data
     if header:
-        data,Y,colnames = load_data(fname, header=True)
+        data,Y,colnames = load_data(fname, yname=yname, header=header, delimiter=delimiter)
     else:
-        data,Y = load_data(fname, header=False)
+        data,Y = load_data(fname, yname=yname, header=header, delimiter=delimiter)
     #Now find frequent itemsets
     #Mine separately for each class
     data_pos = [x for i,x in enumerate(data) if Y[i,0]==0]
@@ -77,8 +81,9 @@ def titanic(din='../data/titanic', dout='../data/titanic'):
     minsupport = 10 #minimum support (%) of an itemset
 
     #Do frequent itemset mining from the training data
-    fname = os.path.join(din, froot+'_train')
-    Xtrain,Ytrain,nruleslen,lhs_len,itemsets = get_freqitemsets(fname,minsupport,maxlhs)
+    fname = os.path.join(din, froot+'_train'+'.tab')
+    yname = os.path.join(din, froot+'_train'+'.Y')
+    Xtrain,Ytrain,nruleslen,lhs_len,itemsets = get_freqitemsets(fname,minsupport,maxlhs,yname)
 
     nrules = len(Xtrain)
     ndata = len(Xtrain[0])
@@ -106,17 +111,20 @@ def titanic(din='../data/titanic', dout='../data/titanic'):
     f.close()
     return
 
-def titanic_cols(din='../data/titanic', dout='../data'):
-    froot = 'titanic_cols'
+def driver(din, dout, froot, train_suffix='', y_suffix=None, delimiter=' '):
 
     #rule mining parameters
     maxlhs = 2 #maximum cardinality of an itemset
     minsupport = 10 #minimum support (%) of an itemset
 
     #Do frequent itemset mining from the training data
-    fname = os.path.join(din, froot+'_train')
-    Xtrain,Ytrain,nruleslen,lhs_len,itemsets,colnames,data = \
-        get_freqitemsets(fname,minsupport,maxlhs,header=True)
+    fname = os.path.join(din, froot + train_suffix)
+    if (y_suffix is not None):
+        yname = os.path.join(din, froot + y_suffix)
+    else:
+        yname = None
+    (Xtrain, Ytrain, nruleslen, lhs_len, itemsets, colnames, data) = \
+        get_freqitemsets(fname, minsupport, maxlhs, yname=yname, header=True, delimiter=delimiter)
 
     data = np.array(data).T
     features = [list(set(d)) for d in data]
@@ -154,3 +162,9 @@ def titanic_cols(din='../data/titanic', dout='../data'):
     f.write('\n'.join(label))
     f.close()
     return
+
+def titanic_cols(din='../data/titanic', dout='../data', froot='titanic_cols'):
+    driver(din=din, dout=dout, froot=froot, train_suffix='_train.tab', y_suffix='_train.Y')
+
+def telco(din='../data/telco', dout='../data', froot='telco.shuffled'):
+    driver(din=din, dout=dout, froot=froot, train_suffix='.txt', delimiter=',')
