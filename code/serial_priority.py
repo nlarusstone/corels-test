@@ -561,7 +561,7 @@ def tdata(dout='../results/', fout='tdata.md'):
     fh.close()
     return
 
-def small_expanded(dout='../results/', fout='small_expanded.md'):
+def small_expanded(dout='../results/', fout='small_expanded.md', method='breadth_first'):
     import pylab
     if not os.path.exists(dout):
         os.mkdir(dout)
@@ -579,7 +579,7 @@ def small_expanded(dout='../results/', fout='small_expanded.md'):
             print froot, c, d
             pylab.close('all')
             (metadata, metrics, cache, priority_queue, best, rule_list) = \
-                small(froot, c, d, method='breadth_first', max_cache_size=100000)
+                small(froot, c, d, method=method, max_cache_size=1000000)
             rec = (f, c, d, metrics.seconds, best.objective, best.lower_bound,
                    best.accuracy, best.upper_bound, len(best.prefix))
             fh.write(template % rec)
