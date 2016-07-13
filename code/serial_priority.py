@@ -561,13 +561,15 @@ def tdata(dout='../results/', fout='tdata.md'):
     fh.close()
     return
 
-def small_expanded(dout='../results/', fout='small_expanded.md', method='breadth_first'):
+def small_expanded(dout='../results/', foutroot='small_expanded', method='breadth_first',
+                   max_cache_size=1000000):
     import pylab
     if not os.path.exists(dout):
         os.mkdir(dout)
+    fout = '%s-method=%s-max_cache_size=%d.md' % (foutroot, method, max_cache_size)
     fh = open(os.path.join(dout, fout), 'w')
     descr = []
-    fh.write('##small datasets (with varying amounts of regularization)\n\n')
+    fh.write('##small datasets (%s, max_cache_size=%d)\n\n' % (method, max_cache_size))
     fh.write('| dataset | c | d | time (s) | objective | lower bound | accuracy | upper bound | length |\n')
     fh.write('| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n')
     template = '| %s | %1.3f | %1.3f | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f | %d |\n'
@@ -579,7 +581,7 @@ def small_expanded(dout='../results/', fout='small_expanded.md', method='breadth
             print froot, c, d
             pylab.close('all')
             (metadata, metrics, cache, priority_queue, best, rule_list) = \
-                small(froot, c, d, method=method, max_cache_size=1000000)
+                small(froot, c, d, method=method, max_cache_size=max_cache_size)
             rec = (f, c, d, metrics.seconds, best.objective, best.lower_bound,
                    best.accuracy, best.upper_bound, len(best.prefix))
             fh.write(template % rec)
