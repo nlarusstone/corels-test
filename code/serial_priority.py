@@ -561,37 +561,41 @@ def tdata(dout='../results/', fout='tdata.md'):
     fh.close()
     return
 
-def small_expanded(dout='../results/', foutroot='small_expanded', method='breadth_first',
-                   max_cache_size=1000000):
+def small_expanded(dout='../results/', foutroot='small_expanded', c=0.01,
+                   max_cache_size=2000000):
     import pylab
     if not os.path.exists(dout):
         os.mkdir(dout)
-    fout = '%s-method=%s-max_cache_size=%d.md' % (foutroot, method, max_cache_size)
+    fout = '%s-max_cache_size=%d.md' % (foutroot, max_cache_size)
     fh = open(os.path.join(dout, fout), 'w')
+    d = c
     descr = []
-    fh.write('##small datasets (%s, max_cache_size=%d)\n\n' % (method, max_cache_size))
-    fh.write('| dataset | c | d | time (s) | objective | lower bound | accuracy | upper bound | length |\n')
-    fh.write('| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n')
-    template = '| %s | %1.3f | %1.3f | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f | %d |\n'
+    fh.write('##small datasets (c=%1.3f, max_cache_size=%d)\n\n' % (c, max_cache_size))
+    fh.write('expanded with maximum cardinality = 2 and minimum support = 10%\n\n')
+    fh.write('| dataset | method | time (s) | cache | queue | objective | lower bound | accuracy | upper bound | length |\n')
+    fh.write('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n')
+    template = '| %s | %s | %3.3f | %d | %d | %1.3f | %1.3f | %1.3f | %1.3f | %d |\n'
     flist = ['bcancer', 'cars', 'haberman', 'monks1', 'monks2', 'monks3', 'votes']
-    params = [(0.01, 0.01)]
+    params = [('breadth_first',), ('curiosity',)]
     for f in flist:
         froot = '%s' % f
-        for (c, d) in params:
-            print froot, c, d
+        for (method,) in params:
+            print froot, method
             pylab.close('all')
             (metadata, metrics, cache, priority_queue, best, rule_list) = \
                 small(froot, c, d, method=method, max_cache_size=max_cache_size)
-            rec = (f, c, d, metrics.seconds, best.objective, best.lower_bound,
-                   best.accuracy, best.upper_bound, len(best.prefix))
+            rec = (f, method, metrics.seconds, len(cache), len(priority_queue), best.objective,
+                   best.lower_bound, best.accuracy, best.upper_bound, len(best.prefix))
             fh.write(template % rec)
-            descr += [(f, c, d, rule_list, metadata)]
-    for (f, c, d, rule_list, md) in descr:
-        fh.write('\n###%s, c=%1.3f, d=%1.3f\n\n' % (f, c, d))
+            descr += [(f, method, rule_list, metadata)]
+    for (f, method, rule_list, md) in descr:
+        fh.write('\n###%s, %s\n\n' % (f, method))
         rl = '\n'.join(['\t' + line for line in rule_list.strip().split('\n')])
         fh.write('%s\n' % rl)
         if os.path.exists('../figs/%s-log.png' % md):
             fh.write('\n![%s-log](../figs/%s-log.png)\n' % (md, md))
+        if os.path.exists('../figs/%s-leaves.png' % md):
+            fh.write('![%s-cache](../figs/%s-leaves.png)\n' % (md, md))
         if os.path.exists('../figs/%s-cache.png' % md):
             fh.write('![%s-cache](../figs/%s-cache.png)\n' % (md, md))
     fh.close()

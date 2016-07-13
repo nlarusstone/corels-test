@@ -1,9 +1,10 @@
-##small datasets (breadth_first, max_cache_size=1000000)
+##small datasets (with varying amounts of regularization)
 
 | dataset | c | d | time (s) | objective | lower bound | accuracy | upper bound | length |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| bcancer | 0.010 | 0.010 | 114.384 | 0.055 | 0.049 | 0.965 | 0.971 | 2 |
-| cars | 0.010 | 0.010 | 99.062 | 0.113 | 0.113 | 0.917 | 0.917 | 3 |
+| bcancer | 0.010 | 0.010 | 3.676 | 0.058 | 0.050 | 0.952 | 0.960 | 1 |
+| cars | 0.010 | 0.010 | 6.832 | 0.123 | 0.123 | 0.897 | 0.897 | 2 |
+|
 | haberman | 0.010 | 0.010 | 50.015 | 0.245 | 0.239 | 0.775 | 0.781 | 2 |
 | monks1 | 0.010 | 0.010 | 200.692 | 0.040 | 0.040 | 1.000 | 1.000 | 4 |
 | monks2 | 0.010 | 0.010 | 46.089 | 0.339 | 0.052 | 0.671 | 0.958 | 1 |
