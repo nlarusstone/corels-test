@@ -437,6 +437,7 @@ def small_datasets(dout='../results/', fout='small.md'):
     fh = open(os.path.join(dout, fout), 'w')
     descr = []
     fh.write('##small datasets (with varying amounts of regularization)\n\n')
+    fh.write('without rule mining\n\n')
     fh.write('| dataset | c | d | time (s) | objective | lower bound | accuracy | upper bound | length |\n')
     fh.write('| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n')
     template = '| %s | %1.3f | %1.3f | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f | %d |\n'

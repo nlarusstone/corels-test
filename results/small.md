@@ -1,5 +1,7 @@
 ##small datasets (with varying amounts of regularization)
 
+without rule mining
+
 | dataset | c | d | time (s) | objective | lower bound | accuracy | upper bound | length |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | bcancer | 0.010 | 0.010 | 1.312 | 0.068 | 0.067 | 0.952 | 0.953 | 2 |
