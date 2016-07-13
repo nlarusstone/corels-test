@@ -1,4 +1,4 @@
-##small datasets (with varying amounts of regularization)
+##small datasets (breadth_first, max_cache_size=1000000)
 
 | dataset | c | d | time (s) | objective | lower bound | accuracy | upper bound | length |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
