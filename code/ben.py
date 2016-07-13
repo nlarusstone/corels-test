@@ -156,8 +156,11 @@ def driver(din, dout, froot, train_suffix='', y_suffix=None, delimiter=' ',
         ind.sort()
         row = np.zeros(ndata, int)
         row[ind] = 1
-        rule_name = '{%s}' % ','.join(['%s=%s' % (categories_to_features[j], j)
-                                       for j in itemsets[i]])
+        if is_binary:
+            rule_name = '{%s}' % ','.join(itemsets[i])
+        else:
+            rule_name = '{%s}' % ','.join(['%s=%s' % (categories_to_features[j], j)
+                                           for j in itemsets[i]])
         rule_repr = array_to_string(row)
         out += [' '.join([rule_name, rule_repr])]
         rule_name_list += [rule_name]
