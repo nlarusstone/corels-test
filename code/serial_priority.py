@@ -375,14 +375,15 @@ def example_adult(method='breadth_first', max_cache_size=2600000, c=0.01):
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
-def small(froot, c=0.01, min_captured_correct=0.01):
+def small(froot, c=0.01, min_captured_correct=0.01, method='curiosity',
+          max_cache_size=3000000):
     (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot=froot, warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=1., c=c, min_captured_correct=min_captured_correct,
-           max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
-           method='curiosity', seed=0, sample=1., quiet=True, clear=True,
+           max_prefix_length=20, max_cache_size=max_cache_size, delimiter='\t',
+           method=method, seed=0, sample=1., quiet=True, clear=True,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
@@ -555,6 +556,40 @@ def tdata(dout='../results/', fout='tdata.md'):
             fh.write('\n![%s-log](../figs/%s-log.png)\n' % (md, md))
         if os.path.exists('../figs/%s-leaves.png' % md):
             fh.write('![%s-cache](../figs/%s-leaves.png)\n' % (md, md))
+        if os.path.exists('../figs/%s-cache.png' % md):
+            fh.write('![%s-cache](../figs/%s-cache.png)\n' % (md, md))
+    fh.close()
+    return
+
+def small_expanded(dout='../results/', fout='small_expanded.md'):
+    import pylab
+    if not os.path.exists(dout):
+        os.mkdir(dout)
+    fh = open(os.path.join(dout, fout), 'w')
+    descr = []
+    fh.write('##small datasets (with varying amounts of regularization)\n\n')
+    fh.write('| dataset | c | d | time (s) | objective | lower bound | accuracy | upper bound | length |\n')
+    fh.write('| --- | --- | --- | --- | --- | --- | --- | --- | --- |\n')
+    template = '| %s | %1.3f | %1.3f | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f | %d |\n'
+    flist = ['bcancer', 'cars', 'haberman', 'monks1', 'monks2', 'monks3', 'votes']
+    params = [(0.01, 0.01)]
+    for f in flist:
+        froot = '%s' % f
+        for (c, d) in params:
+            print froot, c, d
+            pylab.close('all')
+            (metadata, metrics, cache, priority_queue, best, rule_list) = \
+                small(froot, c, d, method='breadth_first', max_cache_size=100000)
+            rec = (f, c, d, metrics.seconds, best.objective, best.lower_bound,
+                   best.accuracy, best.upper_bound, len(best.prefix))
+            fh.write(template % rec)
+            descr += [(f, c, d, rule_list, metadata)]
+    for (f, c, d, rule_list, md) in descr:
+        fh.write('\n###%s, c=%1.3f, d=%1.3f\n\n' % (f, c, d))
+        rl = '\n'.join(['\t' + line for line in rule_list.strip().split('\n')])
+        fh.write('%s\n' % rl)
+        if os.path.exists('../figs/%s-log.png' % md):
+            fh.write('\n![%s-log](../figs/%s-log.png)\n' % (md, md))
         if os.path.exists('../figs/%s-cache.png' % md):
             fh.write('![%s-cache](../figs/%s-cache.png)\n' % (md, md))
     fh.close()
