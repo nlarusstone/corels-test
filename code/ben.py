@@ -145,7 +145,9 @@ def driver(din, dout, froot, train_suffix='', y_suffix=None, delimiter=' ',
 
     nrules = len(Xtrain) - 1
     ndata = len(Xtrain[0])
+    n0 = np.cast[int](Ytrain[:,0]).sum()
     print 'ndata:', ndata
+    print 'n0/n1:', n0, ndata - n0, n0 / float(ndata), (ndata - n0) / float(ndata)
     print 'ncols:', len(colnames)
     print 'nrules:', nrules
     #print zip(colnames, features)
