@@ -572,7 +572,7 @@ def small_expanded(dout='../results/', foutroot='small_expanded', c=0.01,
     d = c
     descr = []
     fh.write('##small datasets (c=%1.3f, max_cache_size=%d)\n\n' % (c, max_cache_size))
-    fh.write('expanded with maximum cardinality = 2 and minimum support = 10%\n\n')
+    fh.write('expanded with maximum cardinality = 2 and minimum support = 1%\n\n')
     fh.write('| dataset | method | time (s) | cache | queue | objective | lower bound | accuracy | upper bound | length |\n')
     fh.write('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n')
     template = '| %s | %s | %3.3f | %d | %d | %1.3f | %1.3f | %1.3f | %1.3f | %d |\n'
