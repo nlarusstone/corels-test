@@ -375,6 +375,17 @@ def example_adult(method='breadth_first', max_cache_size=2600000, c=0.01):
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
+def example_telco(method='breadth_first', max_cache_size=3000000, c=0.01):
+    (metadata, metrics, cache, priority_queue, best, rule_list) = \
+    bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
+           dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
+           froot='telco.shuffled', warm_start=False, max_accuracy=0., best_prefix=(),
+           min_objective=1., c=c, min_captured_correct=c,
+           max_prefix_length=10, max_cache_size=max_cache_size, delimiter='\t',
+           method=method, seed=0, sample=1., quiet=True, clear=True,
+           garbage_collect=True)
+    return (metadata, metrics, cache, priority_queue, best, rule_list)
+
 def small(froot, c=0.01, min_captured_correct=0.01, method='curiosity',
           max_cache_size=3000000):
     (metadata, metrics, cache, priority_queue, best, rule_list) = \
@@ -591,6 +602,42 @@ def small_expanded(dout='../results/', foutroot='small_expanded', c=0.01,
             descr += [(f, method, rule_list, metadata)]
     for (f, method, rule_list, md) in descr:
         fh.write('\n###%s, %s\n\n' % (f, method))
+        rl = '\n'.join(['\t' + line for line in rule_list.strip().split('\n')])
+        fh.write('%s\n' % rl)
+        if os.path.exists('../figs/%s-log.png' % md):
+            fh.write('\n![%s-log](../figs/%s-log.png)\n' % (md, md))
+        if os.path.exists('../figs/%s-leaves.png' % md):
+            fh.write('![%s-cache](../figs/%s-leaves.png)\n' % (md, md))
+        if os.path.exists('../figs/%s-cache.png' % md):
+            fh.write('![%s-cache](../figs/%s-cache.png)\n' % (md, md))
+    fh.close()
+    return
+
+def telco_metrics(dout='../results/', fout='telco-metrics.md'):
+    import pylab
+    if not os.path.exists(dout):
+        os.mkdir(dout)
+    fh = open(os.path.join(dout, fout), 'w')
+    descr = []
+    fh.write('## telco dataset with different priority metrics (c = d = 0.01)\n\n')
+    fh.write('stop after 2,000,000 cache entries\n\n')
+    fh.write('| priority metric | time (s) | objective | lower bound | accuracy | upper bound | best prefix |\n')
+    fh.write('| --- | --- | --- | --- | --- | --- | --- |\n')
+    template = '| %s | %2.3f | %1.3f | %1.3f | %1.3f | %1.3f | %s |\n'
+    params = ['breadth_first', 'curiosity'] #, 'lower_bound', 'objective']
+    f = 'telco'
+    froot = '%s.shuffled' % f
+    for method in params:
+        print froot, method
+        pylab.close('all')
+        (metadata, metrics, cache, priority_queue, best, rule_list) = \
+                                    example_telco(method=method, max_cache_size=2000000)
+        rec = (method, metrics.seconds, best.objective, best.lower_bound,
+               best.accuracy, best.upper_bound, best.prefix.__repr__())
+        fh.write(template % rec)
+        descr += [(method, rule_list, metadata)]
+    for (method, rule_list, md) in descr:
+        fh.write('\n###%s\n\n' % (method))
         rl = '\n'.join(['\t' + line for line in rule_list.strip().split('\n')])
         fh.write('%s\n' % rl)
         if os.path.exists('../figs/%s-log.png' % md):
