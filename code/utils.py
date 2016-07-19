@@ -89,12 +89,14 @@ class Metrics:
         print 'stunted prefix:', a[2]
         print 'commutes:', a[3]
         print 'commutes II:', a[4]
-        print 'captured zero:', a[5]
-        print 'captured all:', a[6]
-        print 'captured same:', a[7]
-        print 'insufficient:', a[8]
-        print 'dead prefix:', a[9]
-        print 'inferior:', a[10]
+        print 'dominates:', a[5]
+        print 'rejects:', a[6]
+        print 'captured zero:', a[7]
+        print 'captured all:', a[8]
+        print 'captured same:', a[9]
+        print 'insufficient:', a[10]
+        print 'dead prefix:', a[11]
+        print 'inferior:', a[12]
         return
 
     def best_prefix_repr(self):
