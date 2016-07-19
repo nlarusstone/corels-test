@@ -201,28 +201,14 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
             old_min_objective = min_objective
             # compute cache entry for prefix via incremental computation
-            out = incremental(cache, prefix, rules, ones, ndata, cached_prefix,
-                              c=c, quiet=quiet, 
-                              min_captured_correct=min_captured_correct)
+            cache_entry = incremental(cache, prefix, rules, ones, ndata,
+                            cached_prefix, c=c, quiet=quiet,
+                            captured_dict=captured_dict, rule_names=rule_names,
+                            min_captured_correct=min_captured_correct)
 
-            if out is None:
+            if cache_entry is None:
                 # incremental(.) did not return a cache entry for prefix
                 continue
-
-            (cache_entry, captured) = out
-            new_rule = prefix[-1]
-
-            if captured in captured_dict:
-                nclauses = len(rule_names[new_rule].split(','))
-                nclauses_cached = len(rule_names[captured_dict[captured]].split(','))
-                if (nclauses_cached <= nclauses):
-                    cache.metrics.captured_same[len(prefix)] += 1
-                    cache[prefix_start].reject_list += (new_rule,)
-                    continue
-                else:
-                    captured_dict[captured] = new_rule
-            else:
-                captured_dict[captured] = new_rule
 
             if (lower_bound is None):
                 lower_bound = cache_entry.lower_bound
@@ -377,7 +363,7 @@ def tdata_3():
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=1., c=0.01, min_captured_correct=0.01,
+           min_objective=1., c=0.001, min_captured_correct=0.001,
            max_prefix_length=20, max_cache_size=300000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=True,
            garbage_collect=True)
