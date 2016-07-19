@@ -339,9 +339,9 @@ def tdata_1():
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=1., c=0.01, min_captured_correct=0.01,
-           max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
-           method='breadth_first', seed=0, sample=1., quiet=True, clear=False,
+           min_objective=0.08, c=0.01, min_captured_correct=0.01,
+           max_prefix_length=20, max_cache_size=227000, delimiter='\t',
+           method='breadth_first', seed=0, sample=1., quiet=True, clear=True,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
@@ -352,7 +352,7 @@ def tdata_2():
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=1., c=0., min_captured_correct=0.,
            max_prefix_length=90, max_cache_size=3000000, delimiter='\t',
-           method='curiosity', seed=0, sample=1., quiet=True, clear=False,
+           method='curiosity', seed=0, sample=1., quiet=True, clear=True,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
@@ -551,7 +551,7 @@ def adult_regularize(dout='../results/', fout='adult-regularize.md'):
     fh.close()
     return
 
-def tdata(dout='../results/', fout='tdata.md'):
+def tdata_driver(dout='../results/', fout='tdata.md'):
     import pylab
     if not os.path.exists(dout):
         os.mkdir(dout)
