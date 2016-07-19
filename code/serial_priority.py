@@ -559,7 +559,7 @@ def tdata_driver(dout='../results/', fout='tdata.md'):
         os.mkdir(dout)
     fh = open(os.path.join(dout, fout), 'w')
     descr = []
-    fh.write('##tic-tac-toe dataset (curiosity, c = d = 0.01)\n\n')
+    fh.write('##tic-tac-toe dataset (curiosity, c = d = 0.001)\n\n')
     f = 'tdata'
     froot = '%s_R' % f
     print froot

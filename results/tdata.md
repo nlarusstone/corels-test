@@ -1,4 +1,4 @@
-##tic-tac-toe dataset (curiosity, c = d = 0.01)
+##tic-tac-toe dataset (curiosity, c = d = 0.001)
 
 	if {c3=x,c5=x,c7=x} then predict 1
 	else if {c7=x,c8=x,c9=x} then predict 1
