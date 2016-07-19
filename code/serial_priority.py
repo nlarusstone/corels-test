@@ -191,6 +191,8 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
         lower_bound = None
 
+        captured_dict = {}
+
         while(queue):
             if prefix_start not in cache:
                 break
@@ -200,18 +202,30 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
             old_min_objective = min_objective
             # compute cache entry for prefix via incremental computation
-            cache_entry = incremental(cache, prefix, rules, ones, ndata,
-                                      cached_prefix, c=c, quiet=quiet,
-                                      min_captured_correct=min_captured_correct)
+            out = incremental(cache, prefix, rules, ones, ndata, cached_prefix,
+                              c=c, quiet=quiet, 
+                              min_captured_correct=min_captured_correct)
 
-            if cache_entry is None:
+            if out is None:
                 # incremental(.) did not return a cache entry for prefix
                 continue
-            else:
-                if (lower_bound is None):
-                    lower_bound = cache_entry.lower_bound
+
+            (cache_entry, captured) = out
+            if captured in captured_dict:
+                nclauses = len(rule_names[prefix[-1]].split(','))
+                nclauses_cached = len(rule_names[captured_dict[captured]].split(','))
+                if (nclauses_cached <= nclauses):
+                    cache.metrics.captured_same[len(prefix)] += 1
+                    continue
                 else:
-                    lower_bound = max(lower_bound, cache_entry.lower_bound)
+                    captured_dict[captured] = prefix[-1]
+            else:
+                captured_dict[captured] = prefix[-1]
+
+            if (lower_bound is None):
+                lower_bound = cache_entry.lower_bound
+            else:
+                lower_bound = max(lower_bound, cache_entry.lower_bound)
 
             # if the minimum observed objective improved, update min_objective,
             # best_prefix, and "max_accuracy"

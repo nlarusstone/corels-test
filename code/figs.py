@@ -10,14 +10,14 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
     names = ['cache_size', 'priority_queue_length', 'captured_small',
-             'captured_all', 'insufficient', 'commutes', 'commutes_II',
-             'dominates', 'rejects', 'dead_prefix', 'inferior',
+             'captured_all', 'captured_same', 'insufficient', 'commutes',
+             'commutes_II', 'dominates', 'rejects', 'dead_prefix', 'inferior',
              'garbage_collect', 'prune_up']
     rename_dict = {'captured_small': 'insufficient\ncaptured', 'insufficient': 'insufficent\ncorrect'}
     display_names = [rename_dict[n] if n in rename_dict else n for n in names]
     display_names = [n.replace('_', ' ') for n in display_names]
-    color_vec = ['blue', 'blue', 'green', 'violet', 'orange', 'magenta', 'cyan',
-                 'yellow', 'pink', 'black', 'gray', 'brown', 'purple']
+    color_vec = ['blue', 'blue', 'green', 'grey', 'orange', 'magenta', 'cyan',
+                 'yellow', 'pink', 'black', 'gray', 'brown', 'violet', 'purple']
     plt.ion()
     plt.figure(1, figsize=(15, 9))
     plt.clf()

@@ -253,8 +253,6 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     Add to cache if relevant.
 
     """
-    cache_entry = None
-
     # num_already_captured is the number of data captured by the cached prefix
     num_already_captured = cached_prefix.num_captured
 
@@ -290,20 +288,20 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                   '%d %d %d' % (-1, -1, -1)
         cache.metrics.captured_zero[len(prefix)] += 1
         cache[prefix[:-1]].reject_list += (new_rule,)
-        return cache_entry
+        return
 
     # the additional rule is rejected if it doesn't capture enough data
     if (num_captured < (min_captured_correct * ndata)):
         cache.metrics.captured_zero[len(prefix)] += 1
         cache[prefix[:-1]].reject_list += (new_rule,)
-        return cache_entry
+        return
 
     # the additional rule is rejected if it captures all remaining data
     # (equivalent to the default rule)
     if (num_captured == (ndata - num_already_captured)):
         cache.metrics.captured_all[len(prefix)] += 1
         cache[prefix[:-1]].reject_list += (new_rule,)
-        return cache_entry
+        return
 
     # not_captured is a binary vector of length ndata indicating those
     # data that are not captured by the current prefix, i.e., not
@@ -350,14 +348,14 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # commuting rules type II
     if ((cached_prediction[-1:] == prediction[-1:]) and (new_rule > prefix[-2])):
         cache.metrics.commutes_II[len(prefix)] += 1
-        return cache_entry
+        return
 
     # the additional rule is insufficient if it doesn't correctly capture enough
     # data
     if (num_captured_correct < (min_captured_correct * ndata)):
         cache.metrics.insufficient[len(prefix)] += 1
         cache[prefix[:-1]].reject_list += (new_rule,)
-        return cache_entry
+        return
 
     # compute the default rule on the not captured data
     (default_rule, num_default_correct) = \
@@ -404,7 +402,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
             print prefix, len(cache), 'lb>=min', \
                   '%1.3f %1.3f %1.3f %1.3f' % (accuracy, objective, lower_bound,
                                                cache.metrics.min_objective)
-        return cache_entry
+        return
 
     # curiosity = prefix misclassification + regularization
     curiosity = (float(num_incorrect) / new_num_captured +
@@ -431,7 +429,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     if not quiet:
         print prefix, len(cache), 'ub>max', \
              '%1.3f %1.3f %1.3f' % (accuracy, upper_bound)
-    return cache_entry
+    return (cache_entry, cappd)
 
 def given_prefix(full_prefix, cache, rules, ones, ndata, c=0.,
                  min_captured_correct=None):

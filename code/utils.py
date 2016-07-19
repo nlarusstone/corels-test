@@ -22,6 +22,7 @@ class Metrics:
         self.rejects = [0] * m
         self.captured_zero = [0] * m
         self.captured_all = [0] * m
+        self.captured_same = [0] * m
         self.insufficient = [0] * m
         self.dead_prefix = [0] * m
         self.inferior = [0] * m
@@ -49,6 +50,7 @@ class Metrics:
                     'commutes II: %s' % self.commutes_II.__repr__(),
                     'caputed zero: %s' % self.captured_zero.__repr__(),
                     'captured all: %s' % self.captured_all.__repr__(),
+                    'captured same: %s' % self.captured_same.__repr__(),
                     'insufficient: %s' % self.insufficient.__repr__(),
                     'dead prefix: %s' % self.dead_prefix.__repr__(),
                     'inferior: %s' % self.inferior.__repr__(),
@@ -76,8 +78,8 @@ class Metrics:
                 sum(self.stunted_prefix), sum(self.commutes),
                 sum(self.commutes_II), sum(self.dominates), sum(self.rejects),
                 sum(self.captured_zero), sum(self.captured_all),
-                sum(self.insufficient), sum(self.dead_prefix),
-                sum(self.inferior)]
+                sum(self.captured_same), sum(self.insufficient), 
+                sum(self.dead_prefix), sum(self.inferior)]
 
     def print_summary(self):
         a = self.aggregate()
@@ -89,9 +91,10 @@ class Metrics:
         print 'commutes II:', a[4]
         print 'captured zero:', a[5]
         print 'captured all:', a[6]
-        print 'insufficient:', a[7]
-        print 'dead prefix:', a[8]
-        print 'inferior:', a[9]
+        print 'captured same:', a[7]
+        print 'insufficient:', a[8]
+        print 'dead prefix:', a[9]
+        print 'inferior:', a[10]
         return
 
     def best_prefix_repr(self):
@@ -109,8 +112,8 @@ class Metrics:
                        #[self.cache_size, self.dead_prefix_start,
                        # self.stunted_prefix, self.commutes, self.commutes_II,
                        # self.dominates, self.rejects, self.captured_zero,
-                       # self.captured_all, self.insufficient,
-                       # self.dead_prefix, self.inferior]])
+                       # self.captured_all, self.captured_same,
+                       # self.insufficient, self.dead_prefix, self.inferior]])
             return ','.join([s1, s2, s3])
         else:
             return ','.join([s1, s2])
@@ -118,8 +121,8 @@ class Metrics:
     def names_to_string(self, granular=True):
         names = ['cache_size', 'dead_prefix_start', 'stunted_prefix',
                  'commutes', 'commutes_II', 'dominates', 'rejects',
-                 'captured_small', 'captured_all', 'insufficient',
-                 'dead_prefix', 'inferior']
+                 'captured_small', 'captured_all', 'captured_same',
+                 'insufficient', 'dead_prefix', 'inferior']
         m = len(self.cache_size)
         e_names = [expand_names(x, m) for x in ['cache_size']]
         if granular:
