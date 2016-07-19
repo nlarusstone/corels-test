@@ -9,10 +9,10 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     fin = os.path.join(din, '%s.txt' % metadata)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
-    names = ['cache_size', 'priority_queue_length', 'captured_small',
-             'captured_all', 'captured_same', 'insufficient', 'commutes',
-             'commutes_II', 'dominates', 'rejects', 'dead_prefix', 'inferior',
-             'garbage_collect', 'prune_up']
+    names = ['cache_size', 'priority_queue_length', 'garbage_collect',
+             'captured_small', 'captured_all', 'captured_same', 'insufficient',
+             'dominates', 'commutes', 'commutes_II', 'rejects', 'dead_prefix',
+             'inferior', 'prune_up']
     rename_dict = {'captured_small': 'insufficient\ncaptured', 'insufficient': 'insufficent\ncorrect'}
     display_names = [rename_dict[n] if n in rename_dict else n for n in names]
     display_names = [n.replace('_', ' ') for n in display_names]
