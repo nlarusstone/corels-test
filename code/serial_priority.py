@@ -190,7 +190,6 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
         lower_bound = None
-
         captured_dict = {}
 
         while(queue):
@@ -211,16 +210,19 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 continue
 
             (cache_entry, captured) = out
+            new_rule = prefix[-1]
+
             if captured in captured_dict:
-                nclauses = len(rule_names[prefix[-1]].split(','))
+                nclauses = len(rule_names[new_rule].split(','))
                 nclauses_cached = len(rule_names[captured_dict[captured]].split(','))
                 if (nclauses_cached <= nclauses):
                     cache.metrics.captured_same[len(prefix)] += 1
+                    cache[prefix_start].reject_list += (new_rule,)
                     continue
                 else:
-                    captured_dict[captured] = prefix[-1]
+                    captured_dict[captured] = new_rule
             else:
-                captured_dict[captured] = prefix[-1]
+                captured_dict[captured] = new_rule
 
             if (lower_bound is None):
                 lower_bound = cache_entry.lower_bound
