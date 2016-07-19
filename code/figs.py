@@ -9,33 +9,37 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     fin = os.path.join(din, '%s.txt' % metadata)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
-    names = ['cache_size', 'priority_queue_length', 'captured_small', 'insufficient', 'commutes', 'commutes_II', 'dominates', 'rejects', 'dead_prefix', 'inferior', 'garbage_collect', 'prune_up']
+    names = ['cache_size', 'priority_queue_length', 'captured_small',
+             'captured_all', 'insufficient', 'commutes', 'commutes_II',
+             'dominates', 'rejects', 'dead_prefix', 'inferior',
+             'garbage_collect', 'prune_up']
     rename_dict = {'captured_small': 'insufficient\ncaptured', 'insufficient': 'insufficent\ncorrect'}
     display_names = [rename_dict[n] if n in rename_dict else n for n in names]
     display_names = [n.replace('_', ' ') for n in display_names]
-    color_vec = ['blue', 'blue', 'green', 'orange', 'magenta', 'cyan', 'yellow', 'pink', 'black', 'gray', 'brown', 'purple']
+    color_vec = ['blue', 'blue', 'green', 'violet', 'orange', 'magenta', 'cyan',
+                 'yellow', 'pink', 'black', 'gray', 'brown', 'purple']
     plt.ion()
-    plt.figure(1, figsize=(16, 9))
+    plt.figure(1, figsize=(15, 9))
     plt.clf()
     title = metadata.replace('-', ', ').split(' ')
     plt.title(' '.join(title[:4]) + '\n' + ' '.join(title[4:]), fontsize=fs)
 
-    plt.subplot(3, 5, 1)
+    plt.subplot(4, 5, 1)
     plt.plot(t, x['min_objective'], '-', linewidth=lw)
     plt.title('objective', fontsize=fs)
 
-    plt.subplot(3, 5, 2)
+    plt.subplot(4, 5, 2)
     plt.plot(t, x['accuracy'], '-', linewidth=lw)
     plt.title('accuracy', fontsize=fs)
 
-    plt.subplot(3, 5, 3)
+    plt.subplot(4, 5, 3)
     plt.plot(t, [len([q for q in str(p).strip(';').split(';') if q]) for p in x['best_prefix']], '-', linewidth=lw)
     plt.title('prefix length', fontsize=fs)
 
     plot_num = 3
     for (n, c, dn) in zip(names, color_vec, display_names):
         plot_num += 1
-        plt.subplot(3, 5, plot_num)
+        plt.subplot(4, 5, plot_num)
         plt.plot(t, x[n], '-', linewidth=lw, color=c)
         plt.title(dn, fontsize=fs)
         if (plot_num > 5):

@@ -283,7 +283,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # the cached prefix
     num_captured = cappd[1]
 
-    # the additional rule is useless if it doesn't capture any data
+    # the additional rule is rejected if it doesn't capture any data
     if (num_captured < 1):
         if not quiet:
             print prefix, len(cache), 'num_captured=0', \
@@ -295,6 +295,13 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # the additional rule is rejected if it doesn't capture enough data
     if (num_captured < (min_captured_correct * ndata)):
         cache.metrics.captured_zero[len(prefix)] += 1
+        cache[prefix[:-1]].reject_list += (new_rule,)
+        return cache_entry
+
+    # the additional rule is rejected if it captures all remaining data
+    # (equivalent to the default rule)
+    if (num_captured == (ndata - num_already_captured)):
+        cache.metrics.captured_all[len(prefix)] += 1
         cache[prefix[:-1]].reject_list += (new_rule,)
         return cache_entry
 
