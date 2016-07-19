@@ -17,6 +17,7 @@ class Metrics:
         self.dead_prefix_start = [0] * m
         self.stunted_prefix = [0] * m
         self.commutes = [0] * m
+        self.commutes_II = [0] * m
         self.dominates = [0] * m
         self.rejects = [0] * m
         self.captured_zero = [0] * m
@@ -44,6 +45,7 @@ class Metrics:
                     'dead prefix start: %s' % self.dead_prefix_start.__repr__(),
                     'stunted prefix: %s' % self.stunted_prefix.__repr__(),
                     'commutes: %s' % self.commutes.__repr__(),
+                    'commutes II: %s' % self.commutes_II.__repr__(),
                     'caputed zero: %s' % self.captured_zero.__repr__(),
                     'insufficient: %s' % self.insufficient.__repr__(),
                     'dead prefix: %s' % self.dead_prefix.__repr__(),
@@ -70,7 +72,7 @@ class Metrics:
     def aggregate(self):
         return [sum(self.cache_size), sum(self.dead_prefix_start),
                 sum(self.stunted_prefix), sum(self.commutes),
-                sum(self.dominates), sum(self.rejects),
+                sum(self.commutes_II), sum(self.dominates), sum(self.rejects),
                 sum(self.captured_zero), sum(self.insufficient),
                 sum(self.dead_prefix), sum(self.inferior)]
 
@@ -81,10 +83,11 @@ class Metrics:
         print 'dead prefix start:', a[1]
         print 'stunted prefix:', a[2]
         print 'commutes:', a[3]
-        print 'captured zero:', a[4]
-        print 'insufficient:', a[5]
-        print 'dead prefix:', a[6]
-        print 'inferior:', a[7]
+        print 'commutes II:', a[4]
+        print 'captured zero:', a[5]
+        print 'insufficient:', a[6]
+        print 'dead prefix:', a[7]
+        print 'inferior:', a[8]
         return
 
     def best_prefix_repr(self):
@@ -109,7 +112,7 @@ class Metrics:
 
     def names_to_string(self, granular=True):
         names = ['cache_size', 'dead_prefix_start', 'stunted_prefix',
-                 'commutes', 'dominates', 'rejects', 'captured_small',
+                 'commutes', 'commutes_II', 'dominates', 'rejects', 'captured_small',
                  'insufficient', 'dead_prefix', 'inferior']
         m = len(self.cache_size)
         e_names = [expand_names(x, m) for x in ['cache_size']]
