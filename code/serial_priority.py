@@ -272,12 +272,15 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             cached_prefix.clear()
 
         if not certify:
-            """
             # update lower bounds
-            if (cached_prefix.lower_bound > lower_bound):
+            """
+            if ((prefix_start in cache) and (lower_bound is not None) and
+               (cached_prefix.lower_bound < lower_bound)):
+                # print cached_prefix.lower_bound, lower_bound
                 size_before_lb = sum(cache.metrics.cache_size)
                 cache.update_lower_bound(prefix_start, lower_bound, min_objective)
-                print 'after lb:', size_before_lb - sum(cache.metrics.cache_size)
+                lb_diff = size_before_lb - sum(cache.metrics.cache_size)
+                print 'lb > 0:',  lb_diff
             """
             # prune up: remove dead ends from the cache
             if (cached_prefix.num_children == 0):
