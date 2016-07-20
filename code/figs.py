@@ -16,8 +16,9 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     rename_dict = {'captured_small': 'insufficient\ncaptured', 'insufficient': 'insufficent\ncorrect'}
     display_names = [rename_dict[n] if n in rename_dict else n for n in names]
     display_names = [n.replace('_', ' ') for n in display_names]
-    color_vec = ['blue', 'blue', 'green', 'grey', 'orange', 'magenta', 'cyan',
-                 'yellow', 'pink', 'black', 'gray', 'brown', 'violet', 'purple']
+    color_vec = ['blue', 'blue', 'red', 'orange', 'yellow', 'green', 'blue',
+                 'cyan', 'purple', 'violet', 'magenta', 'pink', 'gray',
+                 'black', 'brown']
     plt.ion()
     plt.figure(1, figsize=(15, 9))
     plt.clf()
@@ -85,10 +86,14 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
         plt.clf()
         plot_num = 0
         y = np.zeros(z.shape[1])
+        color_vec = ['red', 'orange', 'yellow', 'green', 'blue', 'cyan',
+                     'purple', 'violet', 'magenta', 'pink', 'gray', 'black',
+                     'brown']
+        ncolor = len(color_vec)
         for i in range(len(z)):
             plot_num += 1
             y += z[i, :]
-            plt.plot(x['seconds'], y, linewidth=lw)
+            plt.plot(x['seconds'], y, linewidth=lw, color=color_vec[i % ncolor])
         plt.xlabel('time (sec)', fontsize=fs)
         plt.ylabel('cache entries', fontsize=fs)
         plt.title('cache entries by prefix length', fontsize=fs)
