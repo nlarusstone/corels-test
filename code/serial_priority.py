@@ -361,14 +361,14 @@ def tdata_2():
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
-def tdata_3():
+def tdata_3(min_objective=1., method='curiosity', max_cache_size=30000):
     (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
-           min_objective=1., c=0.001, min_captured_correct=0.001,
-           max_prefix_length=20, max_cache_size=30000, delimiter='\t',
-           method='curiosity', seed=0, sample=1., quiet=True, clear=True,
+           min_objective=min_objective, c=0.001, min_captured_correct=0.001,
+           max_prefix_length=20, max_cache_size=max_cache_size, delimiter='\t',
+           method=method, seed=0, sample=1., quiet=True, clear=True,
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
@@ -441,6 +441,7 @@ def load_data(froot):
     rules = utils.rules_to_array(rules)
     commuting_pairs = utils.find_commuting_pairs(rules)
     cdict = utils.commuting_dict(commuting_pairs, nrules)
+    rule_names = np.array(rule_names)
     return (nrules, ndata, ones, rules, rule_set, rule_names)
 
 def tdata():
