@@ -35,6 +35,8 @@ class PrefixCache(dict):
                     # equiv_prefix is inferior to prefix
                     self.delete(equiv_prefix)
                     assert (self[equiv_prefix[:-1]].num_children == len(self[equiv_prefix[:-1]].children))
+                    if (self[equiv_prefix[:-1]].num_children == 0):
+                        self.prune_up(equiv_prefix[:-1])
                     self.metrics.inferior[len(prefix)] += 1
                     self.pdict[sorted_prefix] = (prefix, cache_entry.accuracy)
                     self.metrics.pdict_length += 1
@@ -107,11 +109,14 @@ class PrefixCache(dict):
     def garbage_collect(self, min_objective, prefix_list=[()]):
         for prefix in prefix_list:
             cache_entry = self[prefix]
-            if ((cache_entry.lower_bound + self.c) > min_objective):
+            if ((cache_entry.lower_bound + self.c) >= min_objective):
                 self.delete(prefix)
             else:
                 plist = [prefix + (child,) for child in cache_entry.children]
                 self.garbage_collect(min_objective, plist)
+                if ((not hasattr(cache_entry, 'prefix')) and
+                    (cache_entry.num_children == 0)):
+                    self.delete(prefix)
         return
 
     def to_file(self, fname, delimiter='\t'):
