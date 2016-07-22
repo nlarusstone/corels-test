@@ -35,8 +35,8 @@ class PrefixCache(dict):
                     # equiv_prefix is inferior to prefix
                     self.delete(equiv_prefix)
                     assert (self[equiv_prefix[:-1]].num_children == len(self[equiv_prefix[:-1]].children))
-                    if (self[equiv_prefix[:-1]].num_children == 0):
-                        self.prune_up(equiv_prefix[:-1])
+                    #if (self[equiv_prefix[:-1]].num_children == 0):
+                    #    self.prune_up(equiv_prefix[:-1])
                     self.metrics.inferior[len(prefix)] += 1
                     self.pdict[sorted_prefix] = (prefix, cache_entry.accuracy)
                     self.metrics.pdict_length += 1
@@ -114,9 +114,9 @@ class PrefixCache(dict):
             else:
                 plist = [prefix + (child,) for child in cache_entry.children]
                 self.garbage_collect(min_objective, plist)
-                if ((not hasattr(cache_entry, 'prefix')) and
-                    (cache_entry.num_children == 0)):
-                    self.delete(prefix)
+                #if ((not hasattr(cache_entry, 'prefix')) and
+                #    (cache_entry.num_children == 0)):
+                #    self.delete(prefix)
         return
 
     def to_file(self, fname, delimiter='\t'):
@@ -311,6 +311,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # if, given a prefix, two rules capture the same data, only one
     # should be pursued; the other is added to the reject list
+    """
     if captured_nz in captured_dict:
         cached_rule = captured_dict[captured_nz]
         equivalent_prefix = prefix[:-1] + (cached_rule,)
@@ -345,6 +346,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
             return
     else:
         captured_dict[captured_nz] = new_rule
+    """
 
     # not_captured is a binary vector of length ndata indicating those
     # data that are not captured by the current prefix, i.e., not
