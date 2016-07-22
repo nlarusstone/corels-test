@@ -389,9 +389,9 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         num_captured_correct = num_captured - num_captured_ones
 
     # commuting rules type II
-    if ((cached_prediction[-1:] == prediction[-1:]) and (new_rule > prefix[-2])):
-        cache.metrics.commutes_II[len(prefix)] += 1
-        return
+    #if ((cached_prediction[-1:] == prediction[-1:]) and (new_rule > prefix[-2])):
+    #    cache.metrics.commutes_II[len(prefix)] += 1
+    #    return
 
     # the additional rule is insufficient if it doesn't correctly capture enough
     # data
