@@ -440,8 +440,8 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # if the lower bound of prefix is not less than min_objective, then we don't
     # create a cache entry for prefix
     if (lower_bound >= cache.metrics.min_objective):
+        cache.metrics.dead_prefix[len(prefix)] += 1
         if not quiet:
-            cache.metrics.dead_prefix[len(prefix)] += 1
             print prefix, len(cache), 'lb>=min', \
                   '%1.3f %1.3f %1.3f %1.3f' % (accuracy, objective, lower_bound,
                                                cache.metrics.min_objective)
