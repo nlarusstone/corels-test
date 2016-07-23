@@ -176,7 +176,6 @@ class CacheEntry:
 
     def clear(self):
         del self.prefix
-        del self.prediction
         del self.default_rule
         del self.accuracy
         del self.upper_bound
@@ -390,11 +389,6 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         # rule, given the cached prefix, with label 0
         num_captured_correct = num_captured - num_captured_ones
 
-    # commuting rules type II
-    #if ((cached_prediction[-1:] == prediction[-1:]) and (new_rule > prefix[-2])):
-    #    cache.metrics.commutes_II[len(prefix)] += 1
-    #    return
-
     # the additional rule is insufficient if it doesn't correctly capture enough
     # data
     if (num_captured_correct < (min_captured_correct * ndata)):
@@ -452,6 +446,19 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # curiosity = prefix misclassification + regularization
     curiosity = (float(num_incorrect) / new_num_captured +
                  c * len(prefix) * ndata / new_num_captured)
+
+    """
+    # commuting rules type II
+    if (cached_prediction[-1:] == prediction[-1:]):
+        flipped_prefix = prefix[:-2] + (new_rule, prefix[-2])
+        if flipped_prefix in cache:
+            flipped_prediction = cache[flipped_prefix].prediction
+            if (flipped_prediction[-1] == flipped_prediction[-2]):
+                assert (flipped_prediction[-1] == prediction[-1])
+                cache.metrics.commutes_II[len(prefix)] += 1
+                if (new_rule > prefix[-2]):
+                    return
+    """
 
     # make a cache entry for prefix
     cache_entry = CacheEntry(prefix=prefix, prediction=prediction,
