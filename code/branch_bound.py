@@ -176,6 +176,7 @@ class CacheEntry:
 
     def clear(self):
         del self.prefix
+        del self.prediction
         del self.default_rule
         del self.accuracy
         del self.upper_bound
