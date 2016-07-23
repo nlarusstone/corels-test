@@ -448,19 +448,6 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     curiosity = (float(num_incorrect) / new_num_captured +
                  c * len(prefix) * ndata / new_num_captured)
 
-    """
-    # commuting rules type II
-    if (cached_prediction[-1:] == prediction[-1:]):
-        flipped_prefix = prefix[:-2] + (new_rule, prefix[-2])
-        if flipped_prefix in cache:
-            flipped_prediction = cache[flipped_prefix].prediction
-            if (flipped_prediction[-1] == flipped_prediction[-2]):
-                assert (flipped_prediction[-1] == prediction[-1])
-                cache.metrics.commutes_II[len(prefix)] += 1
-                if (new_rule > prefix[-2]):
-                    return
-    """
-
     # make a cache entry for prefix
     cache_entry = CacheEntry(prefix=prefix, prediction=prediction,
                              default_rule=default_rule,
