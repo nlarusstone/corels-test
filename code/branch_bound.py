@@ -401,38 +401,16 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         cache[prefix[:-1]].reject_list += (new_rule,)
         return
 
-    # compute the default rule on the not captured data
-    (default_rule, num_default_correct) = \
-        compute_default(rule.rule_vand(ones, not_captured)[0], num_not_captured)
+    # the data captured by prefix are either captured by the cached
+    # prefix or captured by the new rule
+    new_num_captured = num_already_captured + num_captured
 
     # num_correct is the number of data captured by prefix and
     # correctly predicted
     num_correct = num_already_correct + num_captured_correct
 
-    # the data correctly predicted by prefix are either correctly
-    # predicted by cached_prefix, captured and correctly predicted by
-    # new_rule, or are not captured by prefix and correctly predicted by
-    # the default rule
-    accuracy = float(num_correct + num_default_correct) / ndata
-    assert accuracy <= 1.
-
-    # the upper bound on the accuracy of a rule list starting with
-    # prefix is like the accuracy computation, except we assume that all
-    # data not captured by prefix are correctly predicted
-    upper_bound = float(num_correct + num_not_captured) / ndata
-
-    # the data captured by prefix are either captured by the cached
-    # prefix or captured by the new rule
-    new_num_captured = num_already_captured + num_captured
-
-    # the number of incorrect corrections made by the rule list (with default)
-    num_mistakes = ndata - num_correct - num_default_correct
-
     # the number of data captured by prefix and incorrectly predicted
     num_incorrect = new_num_captured - num_correct
-
-    # the objective is the sum of the fraction of mistakes and regularization
-    objective = float(num_mistakes) / ndata + c * len(prefix)
 
     # the lower bound on the objective is the sum of the lower bound on the
     # number of mistakes and a constant times the prefix size
@@ -447,6 +425,28 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                   '%1.3f %1.3f %1.3f %1.3f' % (accuracy, objective, lower_bound,
                                                cache.metrics.min_objective)
         return
+
+    # compute the default rule on the not captured data
+    (default_rule, num_default_correct) = \
+        compute_default(rule.rule_vand(ones, not_captured)[0], num_not_captured)
+
+    # the data correctly predicted by prefix are either correctly
+    # predicted by cached_prefix, captured and correctly predicted by
+    # new_rule, or are not captured by prefix and correctly predicted by
+    # the default rule
+    accuracy = float(num_correct + num_default_correct) / ndata
+    assert accuracy <= 1.
+
+    # the upper bound on the accuracy of a rule list starting with
+    # prefix is like the accuracy computation, except we assume that all
+    # data not captured by prefix are correctly predicted
+    upper_bound = float(num_correct + num_not_captured) / ndata
+
+    # the number of incorrect corrections made by the rule list (with default)
+    num_mistakes = ndata - num_correct - num_default_correct
+
+    # the objective is the sum of the fraction of mistakes and regularization
+    objective = float(num_mistakes) / ndata + c * len(prefix)
 
     # curiosity = prefix misclassification + regularization
     curiosity = (float(num_incorrect) / new_num_captured +
