@@ -213,6 +213,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             if (min_objective == (c * len(prefix))):
                 # insert prefix into the cache
                 cache.insert(prefix, cache_entry)
+                cache.metrics.inserts[len(prefix)] += 1
                 if certify or (method == 'breadth_first') or (min_objective == 0):
                     # we have identified a global optimum
                     done = True
@@ -235,21 +236,24 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                     # bounds can be less than min_objective
                     if ((cache_entry.lower_bound + c) < min_objective):
                         cache.insert(prefix, cache_entry)
+                        cache.metrics.inserts[len(prefix)] += 1
                         assert (cache.metrics.pdict_length == len(cache.pdict)), \
                                (cache.metrics.pdict_length, len(cache.pdict), prefix)
                         # prefix is not necessarily inserted into the cache due
                         # to symmetry-aware garbage collection
                         if (prefix in cache):
                             heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
+                    else:
+                        cache.metrics.dead_prefix[len(prefix)] += 1
 
             # if the best min_objective so far is due to prefix, then update
             # some metrics, write a log entry, and garbage collect the cache
             if (cache.metrics.min_objective < old_min_objective):
                 cache.metrics.priority_queue_length = len(priority_queue)
                 cache.metrics.seconds = time.time() - tic
-                size_before_gc = sum(cache.metrics.cache_size)
+                size_before_gc = cache.metrics.cache_size.copy()
                 cache.garbage_collect(min_objective)
-                cache.metrics.garbage_collect += size_before_gc - sum(cache.metrics.cache_size)
+                cache.metrics.garbage_collect += (size_before_gc - cache.metrics.cache_size)
                 fh.write(cache.metrics.to_string() + '\n')
                 fh.flush()
                 print cache.metrics

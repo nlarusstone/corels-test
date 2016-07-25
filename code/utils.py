@@ -3,7 +3,7 @@ import itertools
 import numpy as np
 
 def list_to_csv_record(x):
-    return x.__repr__().strip('[]').replace(' ', '')
+    return x.__repr__().split('array')[-1].strip('([])').replace('\n', '').replace(' ', '')
 
 def expand_names(name, m):
     return ['%s_%d' % (name, i) for i in range(m)]
@@ -13,24 +13,25 @@ def format_float_list(x):
 
 class Metrics:
     def __init__(self, m):
-        self.cache_size = [0] * m
-        self.dead_prefix_start = [0] * m
-        self.stunted_prefix = [0] * m
-        self.commutes = [0] * m
-        self.commutes_II = [0] * m
-        self.dominates = [0] * m
-        self.rejects = [0] * m
-        self.captured_zero = [0] * m
-        self.captured_all = [0] * m
-        self.captured_same = [0] * m
-        self.insufficient = [0] * m
-        self.dead_prefix = [0] * m
-        self.inferior = [0] * m
+        self.cache_size = np.zeros(m, int)
+        self.inserts = np.zeros(m, int)
+        self.dead_prefix_start = np.zeros(m, int)
+        self.stunted_prefix = np.zeros(m, int)
+        self.commutes = np.zeros(m, int)
+        self.commutes_II = np.zeros(m, int)
+        self.dominates = np.zeros(m, int)
+        self.rejects = np.zeros(m, int)
+        self.captured_zero = np.zeros(m, int)
+        self.captured_all = np.zeros(m, int)
+        self.captured_same = np.zeros(m, int)
+        self.insufficient = np.zeros(m, int)
+        self.dead_prefix = np.zeros(m, int)
+        self.inferior = np.zeros(m, int)
+        self.garbage_collect = np.zeros(m, int)
+        self.prune_up = np.zeros(m, int)
         self.seconds = 0.
         self.priority_queue_length = 0
         self.pdict_length = 0
-        self.garbage_collect = 0
-        self.prune_up = 0
         self.min_objective = 0.
         self.accuracy = 0.
         self.best_prefix = ()
@@ -41,19 +42,20 @@ class Metrics:
                     'accuracy: %2.5f' % self.accuracy,
                     'priority queue length: %d' % self.priority_queue_length,
                     'pdict length: %d' % self.pdict_length,
-                    'garbage collect: %d' % self.garbage_collect,
-                    'prune up: %d' % self.prune_up,
-                    'cache size: %s' % self.cache_size.__repr__(),
-                    'dead prefix start: %s' % self.dead_prefix_start.__repr__(),
-                    'stunted prefix: %s' % self.stunted_prefix.__repr__(),
-                    'commutes: %s' % self.commutes.__repr__(),
-                    'commutes II: %s' % self.commutes_II.__repr__(),
-                    'caputed zero: %s' % self.captured_zero.__repr__(),
-                    'captured all: %s' % self.captured_all.__repr__(),
-                    'captured same: %s' % self.captured_same.__repr__(),
-                    'insufficient: %s' % self.insufficient.__repr__(),
-                    'dead prefix: %s' % self.dead_prefix.__repr__(),
-                    'inferior: %s' % self.inferior.__repr__(),
+                    'cache size: %s' % list(self.cache_size).__repr__(),
+                    'inserts: %s' % list(self.inserts).__repr__(),
+                    'dead prefix start: %s' % list(self.dead_prefix_start).__repr__(),
+                    'stunted prefix: %s' % list(self.stunted_prefix).__repr__(),
+                    'commutes: %s' % list(self.commutes).__repr__(),
+                    'commutes II: %s' % list(self.commutes_II).__repr__(),
+                    'caputed zero: %s' % list(self.captured_zero).__repr__(),
+                    'captured all: %s' % list(self.captured_all).__repr__(),
+                    'captured same: %s' % list(self.captured_same).__repr__(),
+                    'insufficient: %s' % list(self.insufficient).__repr__(),
+                    'dead prefix: %s' % list(self.dead_prefix).__repr__(),
+                    'inferior: %s' % list(self.inferior).__repr__(),
+                    'garbage collect: %s' % list(self.garbage_collect).__repr__(),
+                    'prune up: %s' % list(self.prune_up).__repr__(),
                     'seconds: %2.5f' % self.seconds,
                     'growth: %s' % format_float_list(self.growth())))
 
@@ -74,29 +76,33 @@ class Metrics:
                  self.dead_prefix_start[i - 1] - self.stunted_prefix[i - 1])))
 
     def aggregate(self):
-        return [sum(self.cache_size), sum(self.dead_prefix_start),
-                sum(self.stunted_prefix), sum(self.commutes),
-                sum(self.commutes_II), sum(self.dominates), sum(self.rejects),
-                sum(self.captured_zero), sum(self.captured_all),
-                sum(self.captured_same), sum(self.insufficient), 
-                sum(self.dead_prefix), sum(self.inferior)]
+        return [self.cache_size.sum(), self.inserts.sum(), self.dead_prefix_start.sum(),
+                self.stunted_prefix.sum(), self.commutes.sum(),
+                self.commutes_II.sum(), self.dominates.sum(), self.rejects.sum(),
+                self.captured_zero.sum(), self.captured_all.sum(),
+                self.captured_same.sum(), self.insufficient.sum(),
+                self.dead_prefix.sum(), self.inferior.sum(), self.garbage_collect.sum(),
+                self.prune_up.sum()]
 
     def print_summary(self):
         a = self.aggregate()
         print 'priority queue length:', self.priority_queue_length
         print 'cache size:', a[0]
-        print 'dead prefix start:', a[1]
-        print 'stunted prefix:', a[2]
-        print 'commutes:', a[3]
-        print 'commutes II:', a[4]
-        print 'dominates:', a[5]
-        print 'rejects:', a[6]
-        print 'captured zero:', a[7]
-        print 'captured all:', a[8]
-        print 'captured same:', a[9]
-        print 'insufficient:', a[10]
-        print 'dead prefix:', a[11]
-        print 'inferior:', a[12]
+        print 'inserts:', a[1]
+        print 'dead prefix start:', a[2]
+        print 'stunted prefix:', a[3]
+        print 'commutes:', a[4]
+        print 'commutes II:', a[5]
+        print 'dominates:', a[6]
+        print 'rejects:', a[7]
+        print 'captured zero:', a[8]
+        print 'captured all:', a[9]
+        print 'captured same:', a[10]
+        print 'insufficient:', a[11]
+        print 'dead prefix:', a[12]
+        print 'inferior:', a[13]
+        print 'garbage collect:', a[14]
+        print 'prune up:', a[15]
         return
 
     def best_prefix_repr(self):
@@ -104,10 +110,9 @@ class Metrics:
         return bp.__repr__().strip('()').replace(' ', '').replace(',', ';')
 
     def to_string(self, granular=True):
-        s1 = '%2.5f,%2.5f,%2.5f,%s,%d,%d,%d' % (self.seconds, self.min_objective,
+        s1 = '%2.5f,%2.5f,%2.5f,%s,%d' % (self.seconds, self.min_objective,
                                           self.accuracy, self.best_prefix_repr(),
-                                          self.priority_queue_length,
-                                          self.garbage_collect, self.prune_up)
+                                          self.priority_queue_length)
         s2 = list_to_csv_record(self.aggregate())
         if granular:
             s3 = ','.join([list_to_csv_record(x) for x in [self.cache_size]])
@@ -121,21 +126,19 @@ class Metrics:
             return ','.join([s1, s2])
 
     def names_to_string(self, granular=True):
-        names = ['cache_size', 'dead_prefix_start', 'stunted_prefix',
+        names = ['cache_size', 'inserts', 'dead_prefix_start', 'stunted_prefix',
                  'commutes', 'commutes_II', 'dominates', 'rejects',
                  'captured_small', 'captured_all', 'captured_same',
-                 'insufficient', 'dead_prefix', 'inferior']
+                 'insufficient', 'dead_prefix', 'inferior', 'garbage_collect', 'prune_up']
         m = len(self.cache_size)
         e_names = [expand_names(x, m) for x in ['cache_size']]
         if granular:
             return ','.join(['seconds', 'min_objective', 'accuracy',
-                             'best_prefix', 'priority_queue_length',
-                             'garbage_collect', 'prune_up'] + names +
+                             'best_prefix', 'priority_queue_length'] + names +
                             list(itertools.chain(*e_names)))
         else:
             return ','.join(['seconds', 'min_objective', 'accuracy',
-                             'best_prefix', 'priority_queue_length',
-                             'garbage_collect', 'prune_up'] + names)
+                             'best_prefix', 'priority_queue_length'] + names)
 
 def mpz_to_string(x):
     # skip leading 1

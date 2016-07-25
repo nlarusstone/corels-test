@@ -76,14 +76,14 @@ class PrefixCache(dict):
         return
 
     def prune_up(self, prefix):
-        size_before_pu = sum(self.metrics.cache_size)
+        size_before_pu = self.metrics.cache_size.copy()
         for j in range(len(prefix), -1, -1):
             px = prefix[:j]
             if (self[px].num_children == 0):
                 self.delete(px)
             else:
                 break
-        self.metrics.prune_up += size_before_pu - sum(self.metrics.cache_size)
+        self.metrics.prune_up += (size_before_pu - self.metrics.cache_size)
         return
 
     def prune_down(self, prefix):
@@ -709,6 +709,7 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
                              not_captured=rule.make_all_ones(ndata + 1),
                              curiosity=0.)
     cache.insert((), cache_entry)
+    cache.metrics.inserts[0] = 1
 
     if warm_start:
         """
