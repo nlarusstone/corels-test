@@ -486,6 +486,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         print 'min:', cache.metrics.min_objective, '->', objective
         cache.metrics.min_objective = objective
         cache.metrics.best_prefix = prefix
+        cache.best = cache_entry
 
     if insert:
         return cache_entry
