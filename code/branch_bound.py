@@ -20,6 +20,7 @@ class PrefixCache(dict):
         self.metrics = metrics
         self.best = None
         self.c = c
+        self.max_prefix_len_check = None
 
     def insert(self, prefix, cache_entry):
         # to do garbage collection, we keep look for prefixes that are
@@ -263,6 +264,8 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     Add to cache if relevant.
 
     """
+    new_best = False
+
     # num_already_captured is the number of data captured by the cached prefix
     num_already_captured = cached_prefix.num_captured
 
@@ -293,9 +296,6 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # the additional rule is rejected if it doesn't capture any data
     if (num_captured < 1):
-        if not quiet:
-            print prefix, len(cache), 'num_captured=0', \
-                  '%d %d %d' % (-1, -1, -1)
         cache.metrics.captured_zero[len(prefix)] += 1
         cache[prefix[:-1]].reject_list += (new_rule,)
         return
@@ -420,15 +420,42 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # create a cache entry for prefix
     if (lower_bound >= cache.metrics.min_objective):
         cache.metrics.dead_prefix[len(prefix)] += 1
-        if not quiet:
-            print prefix, len(cache), 'lb>=min', \
-                  '%1.3f %1.3f %1.3f %1.3f' % (accuracy, objective, lower_bound,
-                                               cache.metrics.min_objective)
         return
 
     # compute the default rule on the not captured data
     (default_rule, num_default_correct) = \
         compute_default(rule.rule_vand(ones, not_captured)[0], num_not_captured)
+
+    # the number of incorrect corrections made by the rule list (with default)
+    num_mistakes = ndata - num_correct - num_default_correct
+
+    # the objective is the sum of the fraction of mistakes and regularization
+    objective = float(num_mistakes) / ndata + c * len(prefix)
+
+    # new_best is True if prefix has the new best objective
+    if (objective < cache.metrics.min_objective):
+        new_best = True
+
+    # if insert is True, we'll construct a cache entry
+    insert = True
+
+    # if prefix's children are longer than than max_prefix_len_check,
+    # then we don't create a cache entry for prefix
+    if ((len(prefix) + 1) > cache.max_prefix_len_check):
+        cache.metrics.dead_prefix[len(prefix)] += 1
+        if not new_best:
+            return
+        else:
+            insert = False
+
+    # if the lower bound of prefix's children is not less than min_objective,
+    # then we don't create a cache entry for prefix
+    if ((lower_bound + c) >= cache.metrics.min_objective):
+        cache.metrics.dead_prefix[len(prefix)] += 1
+        if not new_best:
+            return
+        else:
+            insert = False
 
     # the data correctly predicted by prefix are either correctly
     # predicted by cached_prefix, captured and correctly predicted by
@@ -441,12 +468,6 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # prefix is like the accuracy computation, except we assume that all
     # data not captured by prefix are correctly predicted
     upper_bound = float(num_correct + num_not_captured) / ndata
-
-    # the number of incorrect corrections made by the rule list (with default)
-    num_mistakes = ndata - num_correct - num_default_correct
-
-    # the objective is the sum of the fraction of mistakes and regularization
-    objective = float(num_mistakes) / ndata + c * len(prefix)
 
     # curiosity = prefix misclassification + regularization
     curiosity = (float(num_incorrect) / new_num_captured +
@@ -463,17 +484,16 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # if prefix is the new best known prefix, update min_objective,
     # best_prefix, and accuracy
-    if (objective < cache.metrics.min_objective):
+    if new_best:
         cache.metrics.accuracy = accuracy
         print 'min:', cache.metrics.min_objective, '->', objective
         cache.metrics.min_objective = objective
         cache.metrics.best_prefix = prefix
-        cache.best = cache_entry
 
-    if not quiet:
-        print prefix, len(cache), 'ub>max', \
-             '%1.3f %1.3f %1.3f' % (accuracy, upper_bound)
-    return cache_entry
+    if insert:
+        return cache_entry
+    else:
+        return
 
 def given_prefix(full_prefix, cache, rules, ones, ndata, c=0.,
                  min_captured_correct=None):

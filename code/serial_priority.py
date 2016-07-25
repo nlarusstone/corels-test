@@ -125,15 +125,15 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
     finished_max_prefix_length = 0
     if (c == 0.):
-        max_prefix_len_check = 100
+        cache.max_prefix_len_check = 100
     else:
-        max_prefix_len_check = int(np.floor(min_objective / c))
+        cache.max_prefix_len_check = int(np.floor(min_objective / c))
 
     done = False
     while (priority_queue and (not done)):
         (hm, prefix_start) = heapq.heappop(priority_queue)
         i = len(prefix_start) + 1
-        if (i > max_prefix_len_check):
+        if (i > cache.max_prefix_len_check):
             continue
         try:
             # cached_prefix corresponds to a previously evaluated prefix
@@ -218,33 +218,28 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                     # we have identified a global optimum
                     done = True
                     break
-                if (len(prefix) <= max_prefix_len_check):
+                if (len(prefix) <= cache.max_prefix_len_check):
                     # we don't need to check longer prefixes, so now we should
-                    # switch to certification mode, i.e., breadth-first policy
+                    # update max_prefix_len_check
                     print 'objective = best possible, max prefix length to check:', \
-                           max_prefix_len_check, '->', len(prefix) - 1
-                    max_prefix_len_check = len(prefix) - 1
+                           cache.max_prefix_len_check, '->', len(prefix) - 1
+                    cache.max_prefix_len_check = len(prefix) - 1
+                    # switch to certification mode, i.e., breadth-first policy
                     #certify = True
                     #heap_metric = lambda key: len(key)
                     #priority_queue = [(heap_metric(key), key) for (val, key) in priority_queue]
                     #heapq.heapify(priority_queue)
                     #print 're-prioritized for breadth-first search policy'
             else:
-                if (len(prefix) < max_prefix_len_check):
-                    # add prefix to cache and priority_queue if its children are
-                    # at most as long as max_prefix_len_check and its children's
-                    # bounds can be less than min_objective
-                    if ((cache_entry.lower_bound + c) < min_objective):
-                        cache.insert(prefix, cache_entry)
-                        cache.metrics.inserts[len(prefix)] += 1
-                        assert (cache.metrics.pdict_length == len(cache.pdict)), \
-                               (cache.metrics.pdict_length, len(cache.pdict), prefix)
-                        # prefix is not necessarily inserted into the cache due
-                        # to symmetry-aware garbage collection
-                        if (prefix in cache):
-                            heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
-                    else:
-                        cache.metrics.dead_prefix[len(prefix)] += 1
+                # add prefix to cache and priority_queue
+                cache.insert(prefix, cache_entry)
+                cache.metrics.inserts[len(prefix)] += 1
+                assert (cache.metrics.pdict_length == len(cache.pdict)), \
+                       (cache.metrics.pdict_length, len(cache.pdict), prefix)
+                # prefix is not necessarily inserted into the cache due
+                # to symmetry-aware garbage collection
+                if (prefix in cache):
+                    heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
 
             # if the best min_objective so far is due to prefix, then update
             # some metrics, write a log entry, and garbage collect the cache
