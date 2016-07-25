@@ -40,7 +40,7 @@ def tdata_2():
            garbage_collect=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
-def tdata_3(min_objective=1., method='curiosity', max_cache_size=30000):
+def tdata_3(min_objective=1., method='curiosity', max_cache_size=70000):
     (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
