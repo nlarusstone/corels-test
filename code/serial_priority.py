@@ -186,7 +186,6 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             # remove a prefix from the queue
             prefix = queue.pop(0)
 
-            old_min_objective = min_objective
             # compute cache entry for prefix via incremental computation
             cache_entry = incremental(cache, prefix, rules, ones, ndata,
                             cached_prefix, c=c, quiet=quiet,
@@ -197,17 +196,16 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 # incremental(.) did not return a cache entry for prefix
                 continue
 
+            old_min_objective = min_objective
+            min_objective = cache.metrics.min_objective
+            best_prefix = cache.metrics.best_prefix
+
+            """
             if (lower_bound is None):
                 lower_bound = cache_entry.lower_bound
             else:
                 lower_bound = max(lower_bound, cache_entry.lower_bound)
-
-            # if the minimum observed objective improved, update min_objective,
-            # best_prefix, and "max_accuracy"
-            if (cache.metrics.min_objective < min_objective):
-                min_objective = cache.metrics.min_objective
-                best_prefix = cache.metrics.best_prefix
-                max_accuracy = cache.metrics.accuracy
+            """
 
             # insert prefix into the cache
             cache.insert(prefix, cache_entry)
@@ -239,7 +237,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
             # if the best min_objective so far is due to prefix, then update
             # some metrics, write a log entry, and garbage collect the cache
-            if (cache.metrics.min_objective < old_min_objective):
+            if (min_objective < old_min_objective):
                 cache.metrics.priority_queue_length = len(priority_queue)
                 cache.metrics.seconds = time.time() - tic
                 size_before_gc = cache.metrics.cache_size.copy()
