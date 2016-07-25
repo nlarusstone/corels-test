@@ -209,12 +209,15 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 best_prefix = cache.metrics.best_prefix
                 max_accuracy = cache.metrics.accuracy
 
+            # insert prefix into the cache
+            cache.insert(prefix, cache_entry)
+            cache.metrics.inserts[len(prefix)] += 1
+            assert (cache.metrics.pdict_length == len(cache.pdict)), \
+                       (cache.metrics.pdict_length, len(cache.pdict), prefix)
+
             # if min_objective is the minimum possible, given prefix's length
             if (min_objective == (c * len(prefix))):
-                # insert prefix into the cache
-                cache.insert(prefix, cache_entry)
-                cache.metrics.inserts[len(prefix)] += 1
-                if certify or (method == 'breadth_first') or (min_objective == 0):
+                if certify or (method == 'breadth_first') or (min_objective == 0.):
                     # we have identified a global optimum
                     done = True
                     break
@@ -231,15 +234,8 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                     #heapq.heapify(priority_queue)
                     #print 're-prioritized for breadth-first search policy'
             else:
-                # add prefix to cache and priority_queue
-                cache.insert(prefix, cache_entry)
-                cache.metrics.inserts[len(prefix)] += 1
-                assert (cache.metrics.pdict_length == len(cache.pdict)), \
-                       (cache.metrics.pdict_length, len(cache.pdict), prefix)
-                # prefix is not necessarily inserted into the cache due
-                # to symmetry-aware garbage collection
-                if (prefix in cache):
-                    heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
+                # add prefix to priority_queue
+                heapq.heappush(priority_queue, (heap_metric(prefix), prefix))
 
             # if the best min_objective so far is due to prefix, then update
             # some metrics, write a log entry, and garbage collect the cache

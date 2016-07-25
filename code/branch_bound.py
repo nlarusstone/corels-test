@@ -23,34 +23,6 @@ class PrefixCache(dict):
         self.max_prefix_len_check = None
 
     def insert(self, prefix, cache_entry):
-        # to do garbage collection, we keep look for prefixes that are
-        # equivalent up to permutation
-        if self.do_garbage_collection:
-
-            # sorted_prefix lists the prefix's indices in sorted order
-            sorted_prefix = tuple(np.sort(prefix))
-
-            if sorted_prefix in self.pdict:
-                (equiv_prefix, equiv_accuracy) = self.pdict[sorted_prefix]
-                if (cache_entry.accuracy > equiv_accuracy):
-                    # equiv_prefix is inferior to prefix
-                    self.delete(equiv_prefix)
-                    assert (self[equiv_prefix[:-1]].num_children == len(self[equiv_prefix[:-1]].children))
-                    # prune_up the from the deleted equiv_prefix
-                    # (seems costly, not sure)
-                    #if (self[equiv_prefix[:-1]].num_children == 0):
-                    #    self.prune_up(equiv_prefix[:-1])
-                    self.metrics.inferior[len(prefix)] += 1
-                    self.pdict[sorted_prefix] = (prefix, cache_entry.accuracy)
-                    self.metrics.pdict_length += 1
-                else:
-                    # prefix is inferior to the stored equiv_prefix
-                    self.metrics.inferior[len(prefix)] += 1
-                    return
-            else:
-                self.pdict[sorted_prefix] = (prefix, cache_entry.accuracy)
-                self.metrics.pdict_length += 1
-
         self[prefix] = cache_entry
         n = len(prefix)
         if (n > 0):
@@ -457,12 +429,37 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         else:
             insert = False
 
+    # to do garbage collection, we keep look for prefixes that are
+    # equivalent up to permutation
+    if cache.do_garbage_collection:
+        # sorted_prefix lists the prefix's indices in sorted order
+        sorted_prefix = tuple(np.sort(prefix))
+        if sorted_prefix in cache.pdict:
+            (equiv_prefix, equiv_objective) = cache.pdict[sorted_prefix]
+            if (objective < equiv_objective):
+                # equiv_prefix is inferior to prefix
+                cache.delete(equiv_prefix)
+                assert (cache[equiv_prefix[:-1]].num_children == len(cache[equiv_prefix[:-1]].children))
+                # prune_up the from the deleted equiv_prefix
+                # (seems costly, not sure)
+                #if (cache[equiv_prefix[:-1]].num_children == 0):
+                #    cache.prune_up(equiv_prefix[:-1])
+                cache.metrics.inferior[len(prefix)] += 1
+                cache.pdict[sorted_prefix] = (prefix, objective)
+                cache.metrics.pdict_length += 1
+            else:
+                # prefix is inferior to the stored equiv_prefix
+                cache.metrics.inferior[len(prefix)] += 1
+                return
+        else:
+            cache.pdict[sorted_prefix] = (prefix, objective)
+            cache.metrics.pdict_length += 1
+
     # the data correctly predicted by prefix are either correctly
     # predicted by cached_prefix, captured and correctly predicted by
     # new_rule, or are not captured by prefix and correctly predicted by
     # the default rule
     accuracy = float(num_correct + num_default_correct) / ndata
-    assert accuracy <= 1.
 
     # the upper bound on the accuracy of a rule list starting with
     # prefix is like the accuracy computation, except we assume that all
