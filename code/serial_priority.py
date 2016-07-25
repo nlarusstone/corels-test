@@ -41,7 +41,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            min_objective=np.inf, c=0.01, min_captured_correct=0.01,
            max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=False,
-           garbage_collect=True):
+           garbage_collect=True, do_pruning=False):
     """
     Serial branch-and-bound algorithm for constructing rule lists.
 
@@ -273,7 +273,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 print 'lb > 0:',  lb_diff
             """
             # prune up: remove dead ends from the cache
-            if (cached_prefix.num_children == 0):
+            if (do_pruning and (cached_prefix.num_children == 0)):
                 cache.prune_up(prefix_start)
 
         if (() not in cache):
@@ -288,13 +288,6 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             fh.write(cache.metrics.to_string() + '\n')
             fh.flush()
             print cache.metrics
-
-        if False: #(method == 'breadth_first'):
-            if (i > (finished_max_prefix_length + 1)):
-               finished_max_prefix_length += 1
-               assert cache.metrics.check(finished_max_prefix_length, nrules)
-               print ('checked cache size for prefixes of lengths %d and %d' %
-                     (finished_max_prefix_length, finished_max_prefix_length - 1))
 
         if (len(cache) >= max_cache_size):
             break

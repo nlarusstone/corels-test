@@ -7,7 +7,7 @@ from serial_priority import bbound
 import utils
 
 
-def tdata_x(min_objective=0.0081, method='breadth_first', max_cache_size=1500000):
+def tdata_x(min_objective=1., method='curiosity', max_cache_size=1500000):
     (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
@@ -15,7 +15,7 @@ def tdata_x(min_objective=0.0081, method='breadth_first', max_cache_size=1500000
            min_objective=min_objective, c=0.001, min_captured_correct=0.001,
            max_prefix_length=10, max_cache_size=max_cache_size, delimiter='\t',
            method=method, seed=0, sample=1., quiet=True, clear=True,
-           garbage_collect=True)
+           garbage_collect=True, do_pruning=False)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
 def tdata_1(min_objective=1., method='curiosity', max_cache_size=360000):
