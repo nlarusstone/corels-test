@@ -70,10 +70,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         assert (method == 'depth_first')
         heap_metric = lambda key: 1. / (len(key) + 1.)
 
-    if (method == 'breadth_first'):
-        certify = True
-    else:
-        certify = False
+    certify = False
 
     if not os.path.exists(dout):
         os.mkdir(dout)
