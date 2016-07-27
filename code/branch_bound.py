@@ -728,6 +728,8 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
                              curiosity=0.)
     cache.insert((), cache_entry)
     cache.metrics.inserts[0] = 1
+    cache.pdict[()] = ((), cache_entry.objective)
+    cache.metrics.pdict_length += 1
 
     if warm_start:
         """
