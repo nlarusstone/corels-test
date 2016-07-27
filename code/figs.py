@@ -26,18 +26,22 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     plt.title(' '.join(title[:4]) + '\n' + ' '.join(title[4:]), fontsize=fs)
 
     plt.subplot(4, 5, 1)
-    plt.plot(t, x['min_objective'], '-', linewidth=lw)
-    plt.title('objective', fontsize=fs)
+    plt.plot(t, x['priority'], '-', linewidth=lw)
+    plt.title('priority', fontsize=fs)
 
     plt.subplot(4, 5, 2)
-    plt.plot(t, x['accuracy'], '-', linewidth=lw)
-    plt.title('accuracy', fontsize=fs)
+    plt.plot(t[1:], x['min_objective'][1:], '-', linewidth=lw)
+    plt.title('objective', fontsize=fs)
 
     plt.subplot(4, 5, 3)
+    plt.plot(t[1:], x['accuracy'][1:], '-', linewidth=lw)
+    plt.title('accuracy', fontsize=fs)
+
+    plt.subplot(4, 5, 4)
     plt.plot(t, [len([q for q in str(p).strip(';').split(';') if q]) for p in x['best_prefix']], '-', linewidth=lw)
     plt.title('prefix length', fontsize=fs)
 
-    plot_num = 3
+    plot_num = 4
     for (n, c, dn) in zip(names, color_vec, display_names):
         plot_num += 1
         plt.subplot(4, 5, plot_num)

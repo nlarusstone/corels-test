@@ -34,12 +34,14 @@ class Metrics:
         self.pdict_length = 0
         self.min_objective = 0.
         self.accuracy = 0.
+        self.priority = 0
         self.best_prefix = ()
 
     def __repr__(self):
         return '\n'.join(('best prefix: %s' % self.best_prefix.__repr__(),
                     'min objective: %2.5f' % self.min_objective,
                     'accuracy: %2.5f' % self.accuracy,
+                    'priority: %2.5f' % self.priority,
                     'priority queue length: %d' % self.priority_queue_length,
                     'pdict length: %d' % self.pdict_length,
                     'cache size: %s' % list(self.cache_size).__repr__(),
@@ -48,6 +50,8 @@ class Metrics:
                     'stunted prefix: %s' % list(self.stunted_prefix).__repr__(),
                     'commutes: %s' % list(self.commutes).__repr__(),
                     'commutes II: %s' % list(self.commutes_II).__repr__(),
+                    'dominates: %s' % list(self.dominates).__repr__(),
+                    'rejects: %s' % list(self.rejects).__repr__(),
                     'caputed zero: %s' % list(self.captured_zero).__repr__(),
                     'captured all: %s' % list(self.captured_all).__repr__(),
                     'captured same: %s' % list(self.captured_same).__repr__(),
@@ -110,8 +114,9 @@ class Metrics:
         return bp.__repr__().strip('()').replace(' ', '').replace(',', ';')
 
     def to_string(self, granular=True):
-        s1 = '%2.5f,%2.5f,%2.5f,%s,%d' % (self.seconds, self.min_objective,
-                                          self.accuracy, self.best_prefix_repr(),
+        s1 = '%2.5f,%2.5f,%2.5f,%2.5f,%s,%d' % (self.seconds, self.min_objective,
+                                          self.accuracy, self.priority,
+                                          self.best_prefix_repr(),
                                           self.priority_queue_length)
         s2 = list_to_csv_record(self.aggregate())
         if granular:
@@ -133,11 +138,11 @@ class Metrics:
         m = len(self.cache_size)
         e_names = [expand_names(x, m) for x in ['cache_size']]
         if granular:
-            return ','.join(['seconds', 'min_objective', 'accuracy',
+            return ','.join(['seconds', 'min_objective', 'accuracy', 'priority',
                              'best_prefix', 'priority_queue_length'] + names +
                             list(itertools.chain(*e_names)))
         else:
-            return ','.join(['seconds', 'min_objective', 'accuracy',
+            return ','.join(['seconds', 'min_objective', 'accuracy', 'priority',
                              'best_prefix', 'priority_queue_length'] + names)
 
 def mpz_to_string(x):

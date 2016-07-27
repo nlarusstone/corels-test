@@ -115,6 +115,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
     counter = 0
     tic = time.time()
+    cache.metrics.priority = heap_metric(())
 
     fh.write(cache.metrics.names_to_string() + '\n')
     fh.write(cache.metrics.to_string() + '\n')
@@ -240,6 +241,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 size_before_gc = cache.metrics.cache_size.copy()
                 cache.garbage_collect(min_objective)
                 cache.metrics.garbage_collect += (size_before_gc - cache.metrics.cache_size)
+                cache.metrics.priority = hm
                 fh.write(cache.metrics.to_string() + '\n')
                 fh.flush()
                 print cache.metrics
@@ -271,6 +273,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         if ((counter % 1000) == 0):
             cache.metrics.priority_queue_length = len(priority_queue)
             cache.metrics.seconds = time.time() - tic
+            cache.metrics.priority = hm
             fh.write(cache.metrics.to_string() + '\n')
             fh.flush()
             print cache.metrics
