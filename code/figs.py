@@ -84,19 +84,21 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
         nrows = int(np.ceil(len(z) / 5.))
         plt.figure(3, figsize=(8, 6))
         plt.clf()
-        plot_num = 0
         y = np.zeros(z.shape[1])
         color_vec = ['red', 'orange', 'yellow', 'green', 'blue', 'cyan',
                      'purple', 'violet', 'magenta', 'pink', 'gray', 'black',
                      'brown']
         ncolor = len(color_vec)
-        for i in range(len(z)):
-            plot_num += 1
-            y += z[i, :]
-            plt.plot(x['seconds'], y, linewidth=lw, color=color_vec[i % ncolor])
+        for i in range(len(z), 0, -1):
+            if (i > 1):
+                y = z[:i, :].sum(axis=0)
+            else:
+                y = z[0, :]
+            plt.plot(x['seconds'], y, linewidth=lw, color=color_vec[(i - 1) % ncolor])
         plt.xlabel('time (sec)', fontsize=fs)
         plt.ylabel('cache entries', fontsize=fs)
         plt.title('cache entries by prefix length', fontsize=fs)
+        plt.legend(['%d' % i for i in range(len(z) - 1, -1, -1)], loc='upper left')
         try:
             plt.tight_layout()
         except:
