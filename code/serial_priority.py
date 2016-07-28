@@ -146,12 +146,10 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             rl = set([])
             for ind in range(len(prefix_start)):
                 try:
-                    rl.update(cache[cache.pdict[prefix_start[:ind] + prefix_start[(ind+1):]][0]].reject_list)
+                    rl.update(cache[cache.pdict[prefix_start[:ind] + prefix_start[(ind+1):]][0]].reject_set)
                 except:
                     pass
-            rl = list(rl)
-            rl.sort()
-            cached_prefix.reject_list = rl
+            cached_prefix.reject_set = rl
 
         # construct a queue of all prefixes starting with prefix_start and
         # appended with one additional rule
@@ -167,10 +165,10 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             r1 = len(rtc)
             rtc = rtc.difference(utils.all_relations(rdict, prefix_start))
             cache.metrics.dominates[i] += r1 - len(rtc)
-            # prune rules in the reject_list (that will not capture sufficient
+            # prune rules in the reject_set (that will not capture sufficient
             # data, given prefix_start and min_captured_correct)
             r2 = len(rtc)
-            rtc = rtc.difference(set(cached_prefix.reject_list))
+            rtc = rtc.difference(set(cached_prefix.reject_set))
             cache.metrics.rejects[i] += r2 - len(rtc)
             rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]

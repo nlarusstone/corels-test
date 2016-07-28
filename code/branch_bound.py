@@ -129,7 +129,7 @@ class CacheEntry:
         self.curiosity = curiosity
         self.children = set([])
         self.num_children = 0
-        self.reject_list = ()
+        self.reject_set = set()
 
     def __repr__(self):
         if hasattr(self, 'num_captured'):
@@ -144,11 +144,11 @@ class CacheEntry:
                        'sum(not_captured): %d' % rule.count_ones(self.not_captured),
                        'curiosity: %1.10f' % self.curiosity,
                        'num_children: %d' % self.num_children,
-                       'reject_list: %s' % self.reject_list.__repr__()))
+                       'reject_set: %s' % list(self.reject_set).__repr__()))
         else:
             s = '\n'.join(('lower_bound: %1.10f' % self.lower_bound,
                            'num_children: %d' % self.num_children,
-                           'reject_list: %s' % self.reject_list.__repr__()))
+                           'reject_set: %s' % list(self.reject_set).__repr__()))
         return s
 
     def clear(self):
@@ -269,20 +269,20 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # the additional rule is rejected if it doesn't capture any data
     if (num_captured < 1):
         cache.metrics.captured_zero[len(prefix)] += 1
-        cache[prefix[:-1]].reject_list += (new_rule,)
+        cache[prefix[:-1]].reject_set.add(new_rule)
         return
 
     # the additional rule is rejected if it doesn't capture enough data
     if (num_captured < (min_captured_correct * ndata)):
         cache.metrics.captured_zero[len(prefix)] += 1
-        cache[prefix[:-1]].reject_list += (new_rule,)
+        cache[prefix[:-1]].reject_set.add(new_rule)
         return
 
     # the additional rule is rejected if it captures all remaining data
     # (equivalent to the default rule)
     if (num_captured == (ndata - num_already_captured)):
         cache.metrics.captured_all[len(prefix)] += 1
-        cache[prefix[:-1]].reject_list += (new_rule,)
+        cache[prefix[:-1]].reject_set.add(new_rule)
         return
 
     # if, given a prefix, two rules capture the same data, only one
@@ -298,7 +298,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                 if (num_clauses_cached <= num_clauses):
                     # if the cached rule is simpler, keep it and reject the new one
                     cache.metrics.captured_same[len(prefix)] += 1
-                    cache[prefix[:-1]].reject_list += (new_rule,)
+                    cache[prefix[:-1]].reject_set.add(new_rule)
                     return
                 else:
                     # otherwise, the new rule is simpler, so reject the cached one
@@ -306,7 +306,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                     # the cache entry for prefix
                     eq = cache[equivalent_prefix]
                     captured_dict[captured_nz] = new_rule
-                    cache[prefix[:-1]].reject_list += (cached_rule,)
+                    cache[prefix[:-1]].reject_set.add(cached_rule)
                     cache.delete(equivalent_prefix)
                     cache_entry = CacheEntry(prefix=prefix,
                             prediction=eq.prediction,
@@ -370,7 +370,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # data
     if (num_captured_correct < (min_captured_correct * ndata)):
         cache.metrics.insufficient[len(prefix)] += 1
-        cache[prefix[:-1]].reject_list += (new_rule,)
+        cache[prefix[:-1]].reject_set.add(new_rule)
         return
 
     # the data captured by prefix are either captured by the cached
