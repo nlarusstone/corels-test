@@ -408,17 +408,12 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     if (objective < cache.metrics.min_objective):
         new_best = True
 
-    # if insert is True, we'll construct a cache entry
-    insert = True
-
     # if prefix's children are longer than than max_prefix_len_check,
     # then we don't create a cache entry for prefix
     if ((len(prefix) + 1) > cache.max_prefix_len_check):
         cache.metrics.dead_prefix[len(prefix)] += 1
         if not new_best:
             return
-        else:
-            insert = False
 
     # if the lower bound of prefix's children is not less than min_objective,
     # then we don't create a cache entry for prefix
@@ -426,8 +421,6 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         cache.metrics.dead_prefix[len(prefix)] += 1
         if not new_best:
             return
-        else:
-            insert = False
 
     # to do garbage collection, we keep look for prefixes that are
     # equivalent up to permutation
@@ -488,10 +481,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         cache.metrics.best_prefix = prefix
         cache.best = cache_entry
 
-    if insert:
-        return cache_entry
-    else:
-        return
+    return cache_entry
 
 def given_prefix(full_prefix, cache, rules, ones, ndata, c=0.,
                  min_captured_correct=None):
