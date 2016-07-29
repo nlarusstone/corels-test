@@ -343,28 +343,26 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # given the cached prefix, with label 1
     num_captured_ones = rule.rule_vand(captured_nz, ones)[1]
 
-    # fraction_captured_ones is the fraction of data captured by the new
-    # rule, given the cached prefix, with label 1
-    fraction_captured_ones = float(num_captured_ones) / num_captured
+    # num_captured_zeros is the number of data captured by the new rule,
+    # given the cached prefix, with label 0
+    num_captured_zeros = num_captured - num_captured_ones
 
-    if (fraction_captured_ones >= 0.5):
-        # the predictions of prefix are those of the cached prefix
-        # appended by the prediction that the data captured by the new
-        # rule have label 1
-        prediction = cached_prediction + (1,)
+    if (num_captured_ones > num_captured_zeros):
+        # new_prediction is the prediction of the new rule, given the
+        # cached prefix
+        new_prediction = 1
 
         # num_captured_correct is the number of data captured by the new
         # rule, given the cached prefix, with label 1
         num_captured_correct = num_captured_ones
     else:
-        # the predictions of prefix are those of the cached prefix
-        # appended by the prediction that the data captured by the new
-        # rule have label 0
-        prediction = cached_prediction + (0,)
+        # new_prediction is the prediction of the new rule, given the
+        # cached prefix
+        new_prediction = 0
 
         # num_captured_correct is the number of data captured by the new
         # rule, given the cached prefix, with label 0
-        num_captured_correct = num_captured - num_captured_ones
+        num_captured_correct = num_captured_zeros
 
     # the additional rule is insufficient if it doesn't correctly capture enough
     # data
@@ -462,6 +460,10 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # curiosity = prefix misclassification + regularization
     curiosity = (float(num_incorrect) / new_num_captured +
                  c * len(prefix) * ndata / new_num_captured)
+
+    # the predictions of prefix are those of the cached prefix appended by
+    # the prediction associated with data captured by the new rule
+    prediction = cached_prediction + (new_prediction,)
 
     # make a cache entry for prefix
     cache_entry = CacheEntry(prefix=prefix, prediction=prediction,
