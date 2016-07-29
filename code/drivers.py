@@ -83,7 +83,7 @@ def small(froot, c=0.01, min_captured_correct=0.01, method='curiosity',
            min_objective=1., c=c, min_captured_correct=min_captured_correct,
            max_prefix_length=max_prefix_length, max_cache_size=max_cache_size,
            delimiter='\t', method=method, seed=0, sample=1., quiet=True,
-           clear=True, garbage_collect=True, do_pruning=False)
+           clear=True, garbage_collect=True, do_pruning=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
 def bcancer():
