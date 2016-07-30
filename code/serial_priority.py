@@ -121,20 +121,6 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     cdict = utils.commuting_dict(commuting_pairs, nrules)
     rdict = utils.relations_dict(x)
 
-    y = utils.mpz_to_array(ones)
-    captured = [y[rule.nonzero()[0]] for rule in x]
-    perfect_rules = [i for i in range(nrules) if (captured[i].sum() in [0, len(captured[i])])]
-    for i in range(nrules):
-        if i not in perfect_rules:
-            ri = list(set(list(rdict[i]) + perfect_rules))
-            ri.sort()
-            rdict[i] = tuple(ri)
-        else:
-            ci = [j for j in perfect_rules if j > i]
-            ci = list(set(list(cdict[i]) + ci))
-            ci.sort()
-            cdict[i] = tuple(ci)
-
     print froot
     print 'nrules:', nrules
     print 'ndata:', ndata
