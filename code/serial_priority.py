@@ -99,7 +99,11 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     cc = np.corrcoef(x)
     mask = np.triu(np.ones(cc.shape, int))
     mask = mask - np.identity(cc.shape[0], int)
-    delete_rules = list(set(np.array(((cc == 1.) & mask).nonzero())[1]))
+    equal_pairs = np.array(((cc == 1.) & mask).nonzero()).T
+    equal_pairs = np.array([(i, j) if (len(rule_names[i].split(',')) <=
+                                       len(rule_names[j].split(',')))
+                            else (j, i) for (i, j) in equal_pairs])
+    delete_rules = list(set(equal_pairs[:,1]))
     delete_rules.sort()
     print 'deleting', len(delete_rules), 'redundant rules'
     rules = [rules[i] for i in range(nrules) if i not in delete_rules]
