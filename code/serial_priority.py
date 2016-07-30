@@ -95,10 +95,45 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     print 'Writing log to', flog
     fh = open(flog, 'w')
 
+    delete_set = set()
+    for i in range(nrules - 1):
+        for j in range(i + 1, nrules):
+            if (rules[i] == rules[j]):
+                ri = len(rule_names[i].split(','))
+                rj = len(rule_names[j].split(','))
+                if (ri < rj):
+                    delete_set.add(j)
+                elif (rj < ri):
+                    delete_set.add(i)
+                elif (rule_names[i] < rule_names[j]):
+                    delete_set.add(j)
+                else:
+                    delete_set.add(i)
+
+    print 'deleting', len(delete_set), 'redundant rules'
+    rules = [rules[i] for i in range(nrules) if i not in delete_set]
+    rule_names = [rule_names[i] for i in range(nrules) if i not in delete_set]
+    nrules = len(rules)
+    rule_set = set(range(nrules))
+
     x = utils.rules_to_array(rules)
     commuting_pairs = utils.find_commuting_pairs(x)
     cdict = utils.commuting_dict(commuting_pairs, nrules)
     rdict = utils.relations_dict(x)
+
+    y = utils.mpz_to_array(ones)
+    captured = [y[rule.nonzero()[0]] for rule in x]
+    perfect_rules = [i for i in range(nrules) if (captured[i].sum() in [0, len(captured[i])])]
+    for i in range(nrules):
+        if i not in perfect_rules:
+            ri = list(set(list(rdict[i]) + perfect_rules))
+            ri.sort()
+            rdict[i] = tuple(ri)
+        else:
+            ci = [j for j in perfect_rules if j > i]
+            ci = list(set(list(cdict[i]) + ci))
+            ci.sort()
+            cdict[i] = tuple(ci)
 
     print froot
     print 'nrules:', nrules
