@@ -1,0 +1,31 @@
+         13712998 function calls in 7.135 seconds
+
+   Ordered by: cumulative time
+
+   ncalls  tottime  percall  cumtime  percall filename:lineno(function)
+  2526531    1.986    0.000    3.880    0.000 /Users/nlarusstone/Documents/Research/bbcache/code/rule.py:26(rule_vand)
+  3368574    1.760    0.000    2.458    0.000 /Users/nlarusstone/Documents/Research/bbcache/code/rule.py:63(count_ones)
+   839774    0.782    0.000    1.343    0.000 /Users/nlarusstone/Documents/Research/bbcache/code/branch_bound.py:123(compute_default)
+  3368574    0.697    0.000    0.697    0.000 {gmpy2.popcount}
+   846983    0.645    0.000    0.645    0.000 {method 'pop' of 'list' objects}
+    27090    0.110    0.000    0.619    0.000 /System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/numpy/core/fromnumeric.py:683(sort)
+  2595958    0.529    0.000    0.529    0.000 {time.time}
+    27090    0.046    0.000    0.303    0.000 /System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/numpy/core/numeric.py:462(asanyarray)
+    27090    0.258    0.000    0.258    0.000 {numpy.core.multiarray.array}
+    27090    0.136    0.000    0.136    0.000 {method 'copy' of 'numpy.ndarray' objects}
+     2269    0.071    0.000    0.071    0.000 {method 'difference' of 'set' objects}
+    27090    0.070    0.000    0.070    0.000 {method 'sort' of 'numpy.ndarray' objects}
+    10699    0.037    0.000    0.037    0.000 /Users/nlarusstone/Documents/Research/bbcache/code/branch_bound.py:23(__init__)
+    10699    0.006    0.000    0.006    0.000 {method 'bit_set' of 'mpz' objects}
+     2269    0.001    0.000    0.001    0.000 /Users/nlarusstone/Documents/Research/bbcache/code/branch_bound.py:46(get_not_captured)
+     5189    0.001    0.000    0.001    0.000 {len}
+        5    0.000    0.000    0.000    0.000 {method 'sum' of 'numpy.ndarray' objects}
+        5    0.000    0.000    0.000    0.000 /System/Library/Frameworks/Python.framework/Versions/2.7/Extras/lib/python/numpy/core/_methods.py:23(_sum)
+        5    0.000    0.000    0.000    0.000 {method 'reduce' of 'numpy.ufunc' objects}
+        5    0.000    0.000    0.000    0.000 {method 'keys' of 'dict' objects}
+        2    0.000    0.000    0.000    0.000 {method 'tolist' of 'numpy.ndarray' objects}
+        1    0.000    0.000    0.000    0.000 {range}
+        5    0.000    0.000    0.000    0.000 {method 'append' of 'list' objects}
+        1    0.000    0.000    0.000    0.000 {method 'disable' of '_lsprof.Profiler' objects}
+
+

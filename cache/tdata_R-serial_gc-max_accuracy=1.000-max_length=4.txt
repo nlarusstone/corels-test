@@ -1,0 +1,5 @@
+prefix	length	first	prediction	default	accuracy	upper_bound	num_captured	num_captured_correct	num_not_captured
+	0	-1		1	0.638497652582	1.0	0	0	639
+19,	1	19	1,	0	0.912363067293	1.0	56	56	56
+29,	1	29	1,	0	0.9186228482	1.0	52	52	52
+51,	1	51	0,	0	1.0	1.0	36	36	36

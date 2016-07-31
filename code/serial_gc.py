@@ -36,19 +36,19 @@ import utils
 din = os.path.join('..', 'data')
 dout = os.path.join('..', 'cache')
 froot = 'tdata_R'
-warm_start = False ## greedy algorithm is currently broken
-max_accuracy = 0.999
+warm_start = True
+max_accuracy = None#0.999
 best_prefix = None
 min_objective = 1.
 c = 0.
-max_prefix_length = 8
+max_prefix_length = 5
 delimiter = '\t'
 quiet = True
 garbage_collect = True
 seed = None
 sample = None
 
-#"""
+"""
 froot = 'adult_R'
 max_accuracy = None #0.83 # 0.835438
 min_objective = None # 673. #512.
@@ -64,7 +64,8 @@ out_file = '%s.out' % froot
 (nrules, ndata, ones, rules, rule_set, rule_names,
  max_accuracy, min_objective, best_prefix, cache) = \
             initialize(din, dout, label_file, out_file, warm_start,
-                       max_accuracy, min_objective, best_prefix, seed, sample)
+                       max_accuracy, min_objective, best_prefix, seed, sample,
+                       max_prefix_length)
 
 print 'c:', c
 print 'min_objective:', min_objective
@@ -179,6 +180,7 @@ for i in range(1, max_prefix_length + 1):
     print 'seconds:', [float('%1.2f' % s) for s in seconds.tolist()]
     print 'growth:', [float('%1.2f' % s) for s in np.cast[float](cache_size[1:]) / cache_size[:-1]]
 
+
 try:
     cc = cache[best_prefix]
     print_rule_list(cc.prefix, cc.prediction, cc.default_rule, rule_names)
@@ -193,6 +195,12 @@ cache.to_file(fname=fname, delimiter=delimiter)
 x = tb.tabarray(SVfile=fname, delimiter=delimiter)
 x.sort(order=['length', 'first'])
 x.saveSV(fname, delimiter=delimiter)
+
+# bp = x['prefix'][x['accuracy'] == x['accuracy'].max()][0]
+bp = x['prefix'][x['objective'] == x['objective'].min()][0]
+c = cache[tuple([int(j) for j in bp.split(',')])]
+print_rule_list(c.prefix, c.prediction, c.default_rule, rule_names)
+#print c
 
 dfigs = os.path.join('..', 'figs')
 if not os.path.exists(dfigs):

@@ -1,0 +1,335 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+CacheEntry	code/branch_bound.py	/^class CacheEntry:$/;"	c
+CacheEntry	code/serial.py	/^from branch_bound import CacheEntry, initialize, compute_default$/;"	i
+CacheEntry	code/serial_lazy.py	/^from branch_bound import CacheEntry, initialize, compute_default$/;"	i
+G	code/explore.py	/^G = utils.make_graph(range(nrules), commuting_pairs)$/;"	v
+Metrics	code/utils.py	/^class Metrics:$/;"	c
+PrefixCache	code/branch_bound.py	/^class PrefixCache(dict):$/;"	c
+__init__	code/branch_bound.py	/^    def __init__(self, prefix=None, prediction=None, default_rule=None,$/;"	m	class:CacheEntry
+__init__	code/rule.py	/^	def __init__(self, name, num, truthtable):$/;"	m	class:rule
+__init__	code/rule.py	/^	def __init__(self, nrules, rules):$/;"	m	class:ruleset
+__init__	code/utils.py	/^    def __init__(self, m):$/;"	m	class:Metrics
+__repr__	code/branch_bound.py	/^    def __repr__(self):$/;"	m	class:CacheEntry	file:
+__repr__	code/utils.py	/^    def __repr__(self):$/;"	m	class:Metrics	file:
+accuracy	code/serial.py	/^    accuracy = float(num_already_correct + num_captured_correct +$/;"	v
+accuracy	code/serial_lazy.py	/^                                           accuracy=accuracy,$/;"	v
+accuracy	code/serial_lazy.py	/^            accuracy = float(num_already_correct + num_captured_correct +$/;"	v
+aggregate	code/utils.py	/^    def aggregate(self):$/;"	m	class:Metrics
+argparse	code/serial_priority.py	/^import argparse$/;"	i
+args	code/serial_priority.py	/^    args = parser.parse_args()$/;"	v
+array_to_string	code/utils.py	/^def array_to_string(x):$/;"	f
+bbound	code/serial_priority.py	/^def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),$/;"	f
+best_prefix	code/explore.py	/^best_prefix = None$/;"	v
+best_prefix	code/hongyu.py	/^best_prefix = None$/;"	v
+best_prefix	code/serial.py	/^        best_prefix = prefix$/;"	v
+best_prefix	code/serial.py	/^best_prefix = None$/;"	v
+best_prefix	code/serial_gc.py	/^best_prefix = None$/;"	v
+best_prefix	code/serial_lazy.py	/^                    best_prefix = prefix$/;"	v
+best_prefix	code/serial_lazy.py	/^best_prefix = None$/;"	v
+best_prefix_repr	code/utils.py	/^    def best_prefix_repr(self):$/;"	m	class:Metrics
+c	code/serial_gc.py	/^c = 0.$/;"	v
+c	code/serial_gc.py	/^c = 10.$/;"	v
+cache_size	code/serial_gc.py	/^cache_size = np.zeros(m, int)$/;"	v
+cache_size	code/serial_lazy.py	/^cache_size = np.zeros(max_prefix_length + 1, int)$/;"	v
+cached_prefix	code/serial.py	/^    cached_prefix = cache[prefix[:-1]]$/;"	v
+cached_prefix	code/serial_gc.py	/^        cached_prefix = cache[prefix_start]$/;"	v
+cached_prefix	code/serial_lazy.py	/^        cached_prefix = cache[prefix_start]$/;"	v
+captured_nz	code/serial.py	/^    captured_nz = (not_yet_captured & rules[new_rule]).nonzero()[0]$/;"	v
+captured_nz	code/serial_lazy.py	/^            captured_nz = (not_yet_captured & rules[new_rule]).nonzero()[0]$/;"	v
+captured_zero	code/serial_gc.py	/^captured_zero = np.zeros(m, int)$/;"	v
+cc	code/serial_gc.py	/^    cc = cache[best_prefix]$/;"	v
+cdict	code/serial_gc.py	/^cdict = utils.commuting_dict(commuting_pairs, nrules)$/;"	v
+check	code/utils.py	/^    def check(self, i, nrules):$/;"	m	class:Metrics
+clique_lengths	code/explore.py	/^clique_lengths = [len(c) for c in cliques]$/;"	v
+cliques	code/explore.py	/^cliques = list(nx.find_cliques(G))$/;"	v
+commutes	code/serial_gc.py	/^commutes = np.zeros(m, int)$/;"	v
+commuting_dict	code/utils.py	/^def commuting_dict(commuting_pairs, n):$/;"	f
+commuting_pairs	code/explore.py	/^commuting_pairs = utils.find_commuting_pairs(x)$/;"	v
+commuting_pairs	code/serial_gc.py	/^commuting_pairs = utils.find_commuting_pairs(x)$/;"	v
+compute_default	code/branch_bound.py	/^def compute_default(ones, uncaptured):$/;"	f
+compute_default	code/serial.py	/^from branch_bound import CacheEntry, initialize, compute_default$/;"	i
+compute_default	code/serial_lazy.py	/^from branch_bound import CacheEntry, initialize, compute_default$/;"	i
+count_corr	code/rule.py	/^def count_corr(rs):$/;"	f
+count_ones	code/rule.py	/^def count_ones(tt):$/;"	f
+data_points	code/viz.py	/^def data_points(prefix, rule_names=None, ndata=None, rules=None, ones=None,$/;"	f
+data_redundancy	code/viz.py	/^def data_redundancy(prefix, cache, ndata=None, rules=None, ones=None, fs=14, lw=3):$/;"	f
+dead_prefix	code/serial_gc.py	/^dead_prefix = np.zeros(m, int)$/;"	v
+dead_prefix_start	code/serial_gc.py	/^dead_prefix_start = np.zeros(m, int)$/;"	v
+default_rule	code/serial_lazy.py	/^                                           default_rule=default_rule,$/;"	v
+delimiter	code/explore.py	/^delimiter = '\\t'$/;"	v
+delimiter	code/hongyu.py	/^delimiter = '\\t'$/;"	v
+delimiter	code/serial.py	/^delimiter = '\\t'$/;"	v
+delimiter	code/serial_gc.py	/^delimiter = '\\t'$/;"	v
+delimiter	code/serial_lazy.py	/^delimiter = '\\t'$/;"	v
+dfigs	code/serial_gc.py	/^dfigs = os.path.join('..', 'figs')$/;"	v
+din	code/explore.py	/^din = os.path.join('..', 'data')$/;"	v
+din	code/figs.py	/^din = os.path.join('..', 'cache')$/;"	v
+din	code/hongyu.py	/^din = os.path.join('..', 'data')$/;"	v
+din	code/serial.py	/^din = os.path.join('..', 'data')$/;"	v
+din	code/serial_gc.py	/^din = os.path.join('..', 'data')$/;"	v
+din	code/serial_lazy.py	/^din = os.path.join('..', 'data')$/;"	v
+dout	code/explore.py	/^dout = os.path.join('..', 'cache')$/;"	v
+dout	code/figs.py	/^dout = os.path.join('..', 'figs')$/;"	v
+dout	code/hongyu.py	/^dout = os.path.join('..', 'cache')$/;"	v
+dout	code/serial.py	/^dout = os.path.join('..', 'cache')$/;"	v
+dout	code/serial_gc.py	/^dout = os.path.join('..', 'cache')$/;"	v
+dout	code/serial_lazy.py	/^dout = os.path.join('..', 'cache')$/;"	v
+draw_graph	code/viz.py	/^def draw_graph(edges, fig=None, fdir=None, froot=None, fontsize=18,$/;"	f
+example_adult	code/serial_priority.py	/^def example_adult():$/;"	f
+expand_names	code/utils.py	/^def expand_names(name, m):$/;"	f
+figs	code/serial_gc.py	/^import figs$/;"	i
+figs	code/serial_priority.py	/^import figs$/;"	i
+file_to_dict	code/branch_bound.py	/^def file_to_dict(fname, seed=None, sample=None):$/;"	f
+find_commuting_pairs	code/utils.py	/^def find_commuting_pairs(x):$/;"	f
+first_rule	code/branch_bound.py	/^    def first_rule(self):$/;"	m	class:CacheEntry
+fname	code/serial.py	/^fname = os.path.join(dout, 'serial-max_accuracy=%1.3f-max_length=%d.txt' %$/;"	v
+fname	code/serial_gc.py	/^fname = os.path.join(dout, '%s.txt' % metadata)$/;"	v
+fname	code/serial_lazy.py	/^fname = os.path.join(dout, 'serial_lazy-max_accuracy=%1.3f-max_length=%d.txt' %$/;"	v
+format_float_list	code/utils.py	/^def format_float_list(x):$/;"	f
+fraction_captured_ones	code/serial.py	/^    fraction_captured_ones = float(num_captured_ones) \/ num_captured$/;"	v
+fraction_captured_ones	code/serial_lazy.py	/^            fraction_captured_ones = float(num_captured_ones) \/ num_captured$/;"	v
+froot	code/explore.py	/^froot = 'adult_R'$/;"	v
+froot	code/hongyu.py	/^froot = 'adult_R'$/;"	v
+froot	code/serial_gc.py	/^froot = 'adult_R'$/;"	v
+froot	code/serial_gc.py	/^froot = 'tdata_R'$/;"	v
+garbage_collect	code/explore.py	/^garbage_collect = False$/;"	v
+garbage_collect	code/hongyu.py	/^garbage_collect = False$/;"	v
+garbage_collect	code/serial_gc.py	/^garbage_collect = True$/;"	v
+get_not_captured	code/branch_bound.py	/^    def get_not_captured(self):$/;"	m	class:CacheEntry
+given_prefix	code/branch_bound.py	/^def given_prefix(full_prefix, cache, rules, ones, ndata, max_accuracy=0.,$/;"	f
+given_prefix	code/hongyu.py	/^from branch_bound import initialize, given_prefix, print_rule_list$/;"	i
+given_prefix	code/serial_gc.py	/^from branch_bound import given_prefix, initialize, incremental, print_rule_list$/;"	i
+given_prefix	code/serial_priority.py	/^from branch_bound import given_prefix, initialize, incremental, print_rule_list$/;"	i
+gmpy2	code/branch_bound.py	/^import gmpy2$/;"	i
+gmpy2	code/rule.py	/^import gmpy2$/;"	i
+gmpy2	code/serial_gc.py	/^import gmpy2$/;"	i
+gmpy2	code/serial_priority.py	/^import gmpy2$/;"	i
+greedy_rule_list	code/branch_bound.py	/^def greedy_rule_list(ones, rules, max_length):$/;"	f
+growth	code/utils.py	/^    def growth(self):$/;"	m	class:Metrics
+heapq	code/serial_priority.py	/^import heapq$/;"	i
+incremental	code/branch_bound.py	/^def incremental(cache, prefix, rules, ones, ndata, cached_prefix,$/;"	f
+incremental	code/serial_gc.py	/^from branch_bound import given_prefix, initialize, incremental, print_rule_list$/;"	i
+incremental	code/serial_priority.py	/^from branch_bound import given_prefix, initialize, incremental, print_rule_list$/;"	i
+inferior	code/serial_gc.py	/^inferior = np.zeros(m, int)$/;"	v
+initialize	code/branch_bound.py	/^def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,$/;"	f
+initialize	code/explore.py	/^from branch_bound import initialize$/;"	i
+initialize	code/hongyu.py	/^from branch_bound import initialize, given_prefix, print_rule_list$/;"	i
+initialize	code/serial.py	/^from branch_bound import CacheEntry, initialize, compute_default$/;"	i
+initialize	code/serial_gc.py	/^from branch_bound import given_prefix, initialize, incremental, print_rule_list$/;"	i
+initialize	code/serial_lazy.py	/^from branch_bound import CacheEntry, initialize, compute_default$/;"	i
+initialize	code/serial_priority.py	/^from branch_bound import given_prefix, initialize, incremental, print_rule_list$/;"	i
+itertools	code/utils.py	/^import itertools$/;"	i
+label_file	code/explore.py	/^label_file = '%s.label' % froot$/;"	v
+label_file	code/hongyu.py	/^label_file = '%s.label' % froot$/;"	v
+label_file	code/serial.py	/^label_file = 'tdata_R.label'$/;"	v
+label_file	code/serial_gc.py	/^label_file = '%s.label' % froot$/;"	v
+label_file	code/serial_lazy.py	/^label_file = 'tdata_R.label'$/;"	v
+labels	code/rule.py	/^labels = None$/;"	v
+last_rule	code/serial_gc.py	/^            last_rule = prefix_start[-1]$/;"	v
+lead_one	code/rule.py	/^lead_one = None$/;"	v
+list_to_csv_record	code/utils.py	/^def list_to_csv_record(x):$/;"	f
+m	code/serial_gc.py	/^m = max_prefix_length + 1$/;"	v
+make_all_ones	code/rule.py	/^def make_all_ones(length):$/;"	f
+make_default	code/rule.py	/^def make_default(length, prefix):$/;"	f
+make_figure	code/figs.py	/^def make_figure(metadata, din, dout, max_accuracy, max_length, delimiter='\\t',$/;"	f
+make_graph	code/utils.py	/^def make_graph(nodes, edges):$/;"	f
+matplotlib	code/explore.py	/^import matplotlib.pyplot as plt$/;"	i
+matplotlib	code/figs.py	/^import matplotlib.pyplot as plt$/;"	i
+matplotlib	code/hongyu.py	/^import matplotlib.pyplot as plt$/;"	i
+matplotlib	code/viz.py	/^import matplotlib.pyplot as plt$/;"	i
+max_accuracy	code/explore.py	/^max_accuracy = 0$/;"	v
+max_accuracy	code/hongyu.py	/^max_accuracy = 0$/;"	v
+max_accuracy	code/serial.py	/^        max_accuracy = accuracy$/;"	v
+max_accuracy	code/serial.py	/^max_accuracy = None$/;"	v
+max_accuracy	code/serial_gc.py	/^max_accuracy = 0.999$/;"	v
+max_accuracy	code/serial_gc.py	/^max_accuracy = None #0.83 # 0.835438$/;"	v
+max_accuracy	code/serial_lazy.py	/^                    max_accuracy = accuracy$/;"	v
+max_accuracy	code/serial_lazy.py	/^max_accuracy = 0.999$/;"	v
+max_prefix_length	code/serial.py	/^max_prefix_length = 2$/;"	v
+max_prefix_length	code/serial_gc.py	/^max_prefix_length = 4$/;"	v
+max_prefix_length	code/serial_gc.py	/^max_prefix_length = 8$/;"	v
+max_prefix_length	code/serial_lazy.py	/^max_prefix_length = 5$/;"	v
+max_prefix_length	code/serial_priority.py	/^        max_prefix_length = args.length$/;"	v
+metadata	code/serial_gc.py	/^metadata = ('%s-serial_gc-max_accuracy=%1.3f-max_length=%d' %$/;"	v
+min_objective	code/serial_gc.py	/^min_objective = 1.$/;"	v
+min_objective	code/serial_gc.py	/^min_objective = None # 673. #512.$/;"	v
+mpz	code/branch_bound.py	/^from gmpy2 import mpz$/;"	i
+mpz	code/rule.py	/^from gmpy2 import mpz$/;"	i
+mpz	code/serial_gc.py	/^from gmpy2 import mpz$/;"	i
+mpz	code/serial_priority.py	/^from gmpy2 import mpz$/;"	i
+mpz_to_array	code/utils.py	/^def mpz_to_array(x):$/;"	f
+mpz_to_string	code/utils.py	/^def mpz_to_string(x):$/;"	f
+names_to_string	code/utils.py	/^    def names_to_string(self, granular=True):$/;"	m	class:Metrics
+new_num_captured	code/serial.py	/^        new_num_captured = num_already_captured + num_captured$/;"	v
+new_num_captured	code/serial_lazy.py	/^                new_num_captured = num_already_captured + num_captured$/;"	v
+new_rule	code/serial.py	/^    new_rule = prefix[-1]$/;"	v
+new_rule	code/serial_lazy.py	/^            new_rule = prefix[-1]$/;"	v
+not_captured	code/serial.py	/^                                   not_captured=not_captured)$/;"	v
+not_captured	code/serial.py	/^    not_captured = not_yet_captured & (1 - rules[new_rule])$/;"	v
+not_captured	code/serial_lazy.py	/^                                           not_captured=not_captured)$/;"	v
+not_captured	code/serial_lazy.py	/^            not_captured = not_yet_captured & (1 - rules[new_rule])$/;"	v
+not_captured_nz	code/serial.py	/^    not_captured_nz = (not_captured).nonzero()[0]$/;"	v
+not_captured_nz	code/serial_lazy.py	/^            not_captured_nz = (not_captured).nonzero()[0]$/;"	v
+not_yet_captured	code/serial.py	/^    not_yet_captured = cached_prefix.get_not_captured()$/;"	v
+not_yet_captured	code/serial_lazy.py	/^        not_yet_captured = cached_prefix.get_not_captured()$/;"	v
+np	code/branch_bound.py	/^import numpy as np$/;"	i
+np	code/explore.py	/^import numpy as np$/;"	i
+np	code/figs.py	/^import numpy as np$/;"	i
+np	code/hongyu.py	/^import numpy as np$/;"	i
+np	code/serial.py	/^import numpy as np$/;"	i
+np	code/serial_gc.py	/^import numpy as np$/;"	i
+np	code/serial_lazy.py	/^import numpy as np$/;"	i
+np	code/serial_priority.py	/^import numpy as np$/;"	i
+np	code/utils.py	/^import numpy as np$/;"	i
+np	code/viz.py	/^import numpy as np$/;"	i
+num_already_captured	code/serial.py	/^    num_already_captured = cached_prefix.num_captured$/;"	v
+num_already_captured	code/serial_lazy.py	/^        num_already_captured = cached_prefix.num_captured$/;"	v
+num_already_correct	code/serial.py	/^    num_already_correct = cached_prefix.num_captured_correct$/;"	v
+num_already_correct	code/serial_lazy.py	/^        num_already_correct = cached_prefix.num_captured_correct$/;"	v
+num_captured	code/serial.py	/^                                   num_captured=new_num_captured,$/;"	v
+num_captured	code/serial.py	/^    num_captured = len(captured_nz)$/;"	v
+num_captured	code/serial_lazy.py	/^                                           num_captured=new_num_captured,$/;"	v
+num_captured	code/serial_lazy.py	/^            num_captured = len(captured_nz)$/;"	v
+num_captured_correct	code/serial.py	/^                                   num_captured_correct=num_correct,$/;"	v
+num_captured_correct	code/serial.py	/^        num_captured_correct = num_captured - num_captured_ones$/;"	v
+num_captured_correct	code/serial.py	/^        num_captured_correct = num_captured_ones$/;"	v
+num_captured_correct	code/serial_lazy.py	/^                                           num_captured_correct=num_correct,$/;"	v
+num_captured_correct	code/serial_lazy.py	/^                num_captured_correct = num_captured - num_captured_ones$/;"	v
+num_captured_correct	code/serial_lazy.py	/^                num_captured_correct = num_captured_ones$/;"	v
+num_captured_ones	code/serial.py	/^    num_captured_ones = ones[captured_nz].sum()$/;"	v
+num_captured_ones	code/serial_lazy.py	/^            num_captured_ones = ones[captured_nz].sum()$/;"	v
+num_correct	code/serial.py	/^        num_correct = num_already_correct + num_captured_correct$/;"	v
+num_correct	code/serial_lazy.py	/^                num_correct = num_already_correct + num_captured_correct$/;"	v
+num_not_captured	code/branch_bound.py	/^    def num_not_captured(self):$/;"	m	class:CacheEntry
+num_not_captured	code/serial.py	/^    num_not_captured = len(not_captured_nz)$/;"	v
+num_not_captured	code/serial_lazy.py	/^            num_not_captured = len(not_captured_nz)$/;"	v
+nx	code/explore.py	/^import networkx as nx$/;"	i
+nx	code/utils.py	/^    import networkx as nx$/;"	i
+nx	code/viz.py	/^    import networkx as nx$/;"	i
+os	code/branch_bound.py	/^import os$/;"	i
+os	code/explore.py	/^import os$/;"	i
+os	code/figs.py	/^import os$/;"	i
+os	code/hongyu.py	/^import os$/;"	i
+os	code/serial.py	/^import os$/;"	i
+os	code/serial_gc.py	/^import os$/;"	i
+os	code/serial_lazy.py	/^import os$/;"	i
+os	code/serial_priority.py	/^import os$/;"	i
+out_file	code/explore.py	/^out_file = '%s.out' % froot$/;"	v
+out_file	code/hongyu.py	/^out_file = '%s.out' % froot$/;"	v
+out_file	code/serial.py	/^out_file = 'tdata_R.out'$/;"	v
+out_file	code/serial_gc.py	/^out_file = '%s.out' % froot$/;"	v
+out_file	code/serial_lazy.py	/^out_file = 'tdata_R.out'$/;"	v
+parse	code/rule.py	/^def parse(filename):$/;"	f
+parser	code/serial_priority.py	/^parser = argparse.ArgumentParser(description='Find rulelists using pure optimization')$/;"	v
+pdict	code/serial_gc.py	/^    pdict = {}$/;"	v
+pfx	code/serial_gc.py	/^    pfx = (43, 69, 122, 121)$/;"	v
+plt	code/explore.py	/^import matplotlib.pyplot as plt$/;"	i
+plt	code/figs.py	/^import matplotlib.pyplot as plt$/;"	i
+plt	code/hongyu.py	/^import matplotlib.pyplot as plt$/;"	i
+plt	code/viz.py	/^import matplotlib.pyplot as plt$/;"	i
+prediction	code/serial.py	/^        prediction = cached_prefix.prediction + (0,)$/;"	v
+prediction	code/serial.py	/^        prediction = cached_prefix.prediction + (1,)$/;"	v
+prediction	code/serial_lazy.py	/^                prediction = cached_prefix.prediction + (0,)$/;"	v
+prediction	code/serial_lazy.py	/^                prediction = cached_prefix.prediction + (1,)$/;"	v
+prefix	code/hongyu.py	/^prefix = (45, 35, 77, 33, 134, 69, 68, 121, 86, 82, 97, 122, 59, 113, 210, 181, 166, 257)$/;"	v
+prefix	code/hongyu.py	/^prefix = (45, 77, 35, 33, 69, 121, 86, 97, 221, 122, 59, 54, 169, 180)$/;"	v
+prefix	code/serial.py	/^    prefix = queue.pop(0)$/;"	v
+prefix	code/serial_gc.py	/^            prefix = queue.pop(0)$/;"	v
+prefix	code/serial_lazy.py	/^            prefix = queue.pop(0)$/;"	v
+prefix_list	code/serial_gc.py	/^    prefix_list = [p for p in cache if (len(p) == (i - 1))]$/;"	v
+prefix_list	code/serial_lazy.py	/^    prefix_list = [p for p in cache.keys() if (len(p) == (i - 1))]$/;"	v
+prefix_summary	code/viz.py	/^def prefix_summary(prefix, cache, rule_names, ndata, rules, ones):$/;"	f
+prefix_trace	code/viz.py	/^def prefix_trace(prefix, cache, rule_names=None, ndata=None, rules=None,$/;"	f
+print_not_captured	code/branch_bound.py	/^    def print_not_captured(self):$/;"	m	class:CacheEntry
+print_rule_list	code/branch_bound.py	/^def print_rule_list(prefix, prediction, default_rule, rule_names):$/;"	f
+print_rule_list	code/hongyu.py	/^from branch_bound import initialize, given_prefix, print_rule_list$/;"	i
+print_rule_list	code/serial_gc.py	/^from branch_bound import given_prefix, initialize, incremental, print_rule_list$/;"	i
+print_rule_list	code/serial_priority.py	/^from branch_bound import given_prefix, initialize, incremental, print_rule_list$/;"	i
+print_rule_list	code/viz.py	/^from branch_bound import print_rule_list$/;"	i
+print_summary	code/utils.py	/^    def print_summary(self):$/;"	m	class:Metrics
+queue	code/serial.py	/^queue = [(r,) for r in range(len(rules))]$/;"	v
+queue	code/serial_gc.py	/^        queue = [prefix_start + (t,) for t in list(rules_to_consider)]$/;"	v
+queue	code/serial_gc.py	/^queue = []$/;"	v
+queue	code/serial_lazy.py	/^        queue = [prefix_start + (t,) for t in list(rule_set.difference(set(p)))]$/;"	v
+queue	code/serial_lazy.py	/^queue = []$/;"	v
+quiet	code/explore.py	/^quiet = True$/;"	v
+quiet	code/hongyu.py	/^quiet = True$/;"	v
+quiet	code/serial_gc.py	/^quiet = True$/;"	v
+re	code/rule.py	/^import re$/;"	i
+read_data	code/branch_bound.py	/^def read_data(fname, seed=None, sample=None):$/;"	f
+rtc	code/serial_gc.py	/^            rtc = rules_to_consider.difference(set(cdict[last_rule]))$/;"	v
+rule	code/branch_bound.py	/^import rule$/;"	i
+rule	code/rule.py	/^class rule(object):$/;"	c
+rule	code/serial_gc.py	/^import rule$/;"	i
+rule	code/serial_priority.py	/^import rule$/;"	i
+rule_copy	code/rule.py	/^def rule_copy(r):$/;"	f
+rule_isset	code/rule.py	/^def rule_isset(tt, ind):$/;"	f
+rule_print	code/rule.py	/^def rule_print(r, verbose=False):$/;"	f
+rule_vand	code/rule.py	/^def rule_vand(tt1, tt2):$/;"	f
+rule_vandnot	code/rule.py	/^def rule_vandnot(tt1, tt2):$/;"	f
+rule_vector_print	code/rule.py	/^def rule_vector_print(r):$/;"	f
+rule_vor	code/rule.py	/^def rule_vor(tt1, tt2):$/;"	f
+rules_init	code/rule.py	/^def rules_init(xs, ys): $/;"	f
+rules_to_array	code/utils.py	/^def rules_to_array(x):$/;"	f
+rules_to_consider	code/serial_gc.py	/^            rules_to_consider = rtc$/;"	v
+rules_to_consider	code/serial_gc.py	/^        rules_to_consider = rule_set.difference(set(prefix_start))$/;"	v
+ruleset	code/rule.py	/^class ruleset(object):$/;"	c
+ruleset_add	code/rule.py	/^def ruleset_add(rs, rule):$/;"	f
+ruleset_delete	code/rule.py	/^def ruleset_delete(rs, rule):$/;"	f
+ruleset_init	code/rule.py	/^def ruleset_init(rules):$/;"	f
+ruleset_print	code/rule.py	/^def ruleset_print(rs):$/;"	f
+sample	code/explore.py	/^sample = None$/;"	v
+sample	code/hongyu.py	/^sample = None$/;"	v
+sample	code/serial_gc.py	/^sample = 0.1$/;"	v
+sample	code/serial_gc.py	/^sample = None$/;"	v
+scl	code/explore.py	/^scl = set(clique_lengths)$/;"	v
+seconds	code/serial_gc.py	/^seconds = np.zeros(m)$/;"	v
+seed	code/explore.py	/^seed = None$/;"	v
+seed	code/hongyu.py	/^seed = None$/;"	v
+seed	code/serial_gc.py	/^seed = 0$/;"	v
+seed	code/serial_gc.py	/^seed = None$/;"	v
+stunted_prefix	code/serial_gc.py	/^stunted_prefix = np.zeros(m, int)$/;"	v
+sublists	code/utils.py	/^def sublists(s, min_length=2):$/;"	f
+sys	code/rule.py	/^import sys$/;"	i
+tb	code/branch_bound.py	/^import tabular as tb$/;"	i
+tb	code/figs.py	/^import tabular as tb$/;"	i
+tb	code/serial.py	/^import tabular as tb$/;"	i
+tb	code/serial_gc.py	/^import tabular as tb$/;"	i
+tb	code/serial_lazy.py	/^import tabular as tb$/;"	i
+tb	code/serial_priority.py	/^import tabular as tb$/;"	i
+tdata_1	code/serial_priority.py	/^def tdata_1():$/;"	f
+tdata_2	code/serial_priority.py	/^def tdata_2():$/;"	f
+tdata_3	code/serial_priority.py	/^def tdata_3():$/;"	f
+tic	code/serial_gc.py	/^    tic = time.time()$/;"	v
+time	code/serial_gc.py	/^import time$/;"	i
+time	code/serial_priority.py	/^import time$/;"	i
+to_file	code/branch_bound.py	/^    def to_file(self, fname, delimiter='\\t'):$/;"	m	class:PrefixCache
+to_kvpairs	code/branch_bound.py	/^    def to_kvpairs(self):$/;"	m	class:CacheEntry
+to_record	code/branch_bound.py	/^    def to_record(self):$/;"	m	class:CacheEntry
+to_string	code/branch_bound.py	/^    def to_string(self, delimiter='\\t'):$/;"	m	class:CacheEntry
+to_string	code/utils.py	/^    def to_string(self, granular=True):$/;"	m	class:Metrics
+upper_bound	code/serial.py	/^                                   upper_bound=upper_bound,$/;"	v
+upper_bound	code/serial.py	/^    upper_bound = float(num_already_correct + num_captured_correct +$/;"	v
+upper_bound	code/serial_lazy.py	/^                                           upper_bound=upper_bound,$/;"	v
+upper_bound	code/serial_lazy.py	/^            upper_bound = float(num_already_correct + num_captured_correct +$/;"	v
+utils	code/explore.py	/^import utils$/;"	i
+utils	code/serial_gc.py	/^import utils$/;"	i
+utils	code/serial_priority.py	/^import utils$/;"	i
+utils	code/viz.py	/^import utils$/;"	i
+viz	code/hongyu.py	/^import viz$/;"	i
+viz_log	code/figs.py	/^def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):$/;"	f
+warm_start	code/explore.py	/^warm_start = False$/;"	v
+warm_start	code/hongyu.py	/^warm_start = False$/;"	v
+warm_start	code/serial.py	/^warm_start = True$/;"	v
+warm_start	code/serial_gc.py	/^warm_start = False ## greedy algorithm is currently broken$/;"	v
+warm_start	code/serial_lazy.py	/^warm_start = True$/;"	v
+x	code/explore.py	/^x = utils.rules_to_array(rules)$/;"	v
+x	code/serial.py	/^x = tb.tabarray(SVfile=fname, delimiter=delimiter)$/;"	v
+x	code/serial_gc.py	/^x = tb.tabarray(SVfile=fname, delimiter=delimiter)$/;"	v
+x	code/serial_gc.py	/^x = utils.rules_to_array(rules)$/;"	v
+x	code/serial_lazy.py	/^x = tb.tabarray(SVfile=fname, delimiter=delimiter)$/;"	v
