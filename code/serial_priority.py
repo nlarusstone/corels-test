@@ -82,10 +82,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         assert (method == 'depth_first')
         heap_metric = lambda key: 1. / (len(key) + 1.)
 
-    if (method == 'breadth_first'):
-        certify = True
-    else:
-        certify = False
+    certify = False
 
     if not os.path.exists(dout):
         os.mkdir(dout)
@@ -110,6 +107,27 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     print 'Writing log to', flog
     fh = open(flog, 'w')
 
+    delete_set = set()
+    for i in range(nrules - 1):
+        for j in range(i + 1, nrules):
+            if (rules[i] == rules[j]):
+                ri = len(rule_names[i].split(','))
+                rj = len(rule_names[j].split(','))
+                if (ri < rj):
+                    delete_set.add(j)
+                elif (rj < ri):
+                    delete_set.add(i)
+                elif (rule_names[i] < rule_names[j]):
+                    delete_set.add(j)
+                else:
+                    delete_set.add(i)
+
+    print 'deleting', len(delete_set), 'redundant rules'
+    rules = [rules[i] for i in range(nrules) if i not in delete_set]
+    rule_names = [rule_names[i] for i in range(nrules) if i not in delete_set]
+    nrules = len(rules)
+    rule_set = set(range(nrules))
+
     x = utils.rules_to_array(rules)
     commuting_pairs = utils.find_commuting_pairs(x)
     cdict = utils.commuting_dict(commuting_pairs, nrules)
@@ -130,6 +148,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
     counter = 0
     tic = time.time()
+    cache.metrics.priority = heap_metric(())
 
     fh.write(cache.metrics.names_to_string() + '\n')
     fh.write(cache.metrics.to_string() + '\n')
@@ -160,12 +179,10 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             rl = set([])
             for ind in range(len(prefix_start)):
                 try:
-                    rl.update(cache[cache.pdict[prefix_start[:ind] + prefix_start[(ind+1):]][0]].reject_list)
+                    rl.update(cache[cache.pdict[prefix_start[:ind] + prefix_start[(ind+1):]][0]].reject_set)
                 except:
                     pass
-            rl = list(rl)
-            rl.sort()
-            cached_prefix.reject_list = rl
+            cached_prefix.reject_set = rl
 
         # construct a queue of all prefixes starting with prefix_start and
         # appended with one additional rule
@@ -181,10 +198,10 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             r1 = len(rtc)
             rtc = rtc.difference(utils.all_relations(rdict, prefix_start))
             cache.metrics.dominates[i] += r1 - len(rtc)
-            # prune rules in the reject_list (that will not capture sufficient
+            # prune rules in the reject_set (that will not capture sufficient
             # data, given prefix_start and min_captured_correct)
             r2 = len(rtc)
-            rtc = rtc.difference(set(cached_prefix.reject_list))
+            rtc = rtc.difference(set(cached_prefix.reject_set))
             cache.metrics.rejects[i] += r2 - len(rtc)
             rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
@@ -255,6 +272,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
                 size_before_gc = cache.metrics.cache_size.copy()
                 cache.garbage_collect(min_objective)
                 cache.metrics.garbage_collect += (size_before_gc - cache.metrics.cache_size)
+                cache.metrics.priority = hm
                 fh.write(cache.metrics.to_string() + '\n')
                 fh.flush()
                 if garbage_collect:
@@ -290,6 +308,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         if ((counter % 1000) == 0):
             cache.metrics.priority_queue_length = len(priority_queue)
             cache.metrics.seconds = time.time() - tic
+            cache.metrics.priority = hm
             fh.write(cache.metrics.to_string() + '\n')
             fh.flush()
             print cache.metrics

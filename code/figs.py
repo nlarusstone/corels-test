@@ -9,14 +9,14 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     fin = os.path.join(din, '%s.txt' % metadata)
     x = tb.tabarray(SVfile=fin, delimiter=delimiter)
     t = x['seconds']
-    names = ['cache_size', 'priority_queue_length',
-             'captured_small', 'captured_all', 'captured_same', 'insufficient',
-             'dominates', 'commutes', 'commutes_II', 'rejects', 'dead_prefix',
-             'inserts', 'inferior', 'garbage_collect', 'prune_up']
+    names = ['cache_size', 'priority_queue_length', 'inserts',
+             'commutes', 'dominates', 'rejects', 'captured_small',
+             'captured_all', 'insufficient', 'dead_prefix', 'inferior',
+             'garbage_collect', 'prune_up', 'commutes_II', 'captured_same']
     rename_dict = {'captured_small': 'insufficient\ncaptured', 'insufficient': 'insufficent\ncorrect'}
     display_names = [rename_dict[n] if n in rename_dict else n for n in names]
     display_names = [n.replace('_', ' ') for n in display_names]
-    color_vec = ['blue', 'blue', 'red', 'orange', 'yellow', 'green', 'blue',
+    color_vec = ['red', 'red', 'red', 'orange', 'yellow', 'green', 'blue',
                  'cyan', 'purple', 'violet', 'magenta', 'pink', 'gray',
                  'black', 'brown']
     plt.ion()
@@ -26,18 +26,22 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
     plt.title(' '.join(title[:4]) + '\n' + ' '.join(title[4:]), fontsize=fs)
 
     plt.subplot(4, 5, 1)
-    plt.plot(t, x['min_objective'], '-', linewidth=lw)
-    plt.title('objective', fontsize=fs)
+    plt.plot(t, x['priority'], '-', linewidth=lw)
+    plt.title('priority', fontsize=fs)
 
     plt.subplot(4, 5, 2)
-    plt.plot(t, x['accuracy'], '-', linewidth=lw)
-    plt.title('accuracy', fontsize=fs)
+    plt.plot(t[1:], x['min_objective'][1:], '-', linewidth=lw)
+    plt.title('objective', fontsize=fs)
 
     plt.subplot(4, 5, 3)
+    plt.plot(t[1:], x['accuracy'][1:], '-', linewidth=lw)
+    plt.title('accuracy', fontsize=fs)
+
+    plt.subplot(4, 5, 4)
     plt.plot(t, [len([q for q in str(p).strip(';').split(';') if q]) for p in x['best_prefix']], '-', linewidth=lw)
     plt.title('prefix length', fontsize=fs)
 
-    plot_num = 3
+    plot_num = 4
     for (n, c, dn) in zip(names, color_vec, display_names):
         plot_num += 1
         plt.subplot(4, 5, plot_num)
@@ -84,19 +88,21 @@ def viz_log(metadata=None, din=None, dout=None, delimiter=',', lw=3, fs=14):
         nrows = int(np.ceil(len(z) / 5.))
         plt.figure(3, figsize=(8, 6))
         plt.clf()
-        plot_num = 0
         y = np.zeros(z.shape[1])
         color_vec = ['red', 'orange', 'yellow', 'green', 'blue', 'cyan',
                      'purple', 'violet', 'magenta', 'pink', 'gray', 'black',
                      'brown']
         ncolor = len(color_vec)
-        for i in range(len(z)):
-            plot_num += 1
-            y += z[i, :]
-            plt.plot(x['seconds'], y, linewidth=lw, color=color_vec[i % ncolor])
+        for i in range(len(z), 0, -1):
+            if (i > 1):
+                y = z[:i, :].sum(axis=0)
+            else:
+                y = z[0, :]
+            plt.plot(x['seconds'], y, linewidth=lw, color=color_vec[(i - 1) % ncolor])
         plt.xlabel('time (sec)', fontsize=fs)
         plt.ylabel('cache entries', fontsize=fs)
         plt.title('cache entries by prefix length', fontsize=fs)
+        plt.legend(['%d' % i for i in range(len(z) - 1, -1, -1)], loc='upper left')
         try:
             plt.tight_layout()
         except:

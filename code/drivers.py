@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import pylab
 
 from branch_bound import initialize
@@ -74,15 +75,15 @@ def example_telco(method='breadth_first', max_cache_size=3000000, c=0.01):
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
 def small(froot, c=0.01, min_captured_correct=0.01, method='curiosity',
-          max_cache_size=3000000):
+          max_cache_size=2000000, max_prefix_length=20):
     (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot=froot, warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=1., c=c, min_captured_correct=min_captured_correct,
-           max_prefix_length=20, max_cache_size=max_cache_size, delimiter='\t',
-           method=method, seed=0, sample=1., quiet=True, clear=True,
-           garbage_collect=True)
+           max_prefix_length=max_prefix_length, max_cache_size=max_cache_size,
+           delimiter='\t', method=method, seed=0, sample=1., quiet=True,
+           clear=True, garbage_collect=True, do_pruning=True)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
 def bcancer():
@@ -266,7 +267,7 @@ def small_expanded(dout='../results/', foutroot='small_expanded', c=0.01,
     import pylab
     if not os.path.exists(dout):
         os.mkdir(dout)
-    fout = '%s-max_cache_size=%d.md' % (foutroot, max_cache_size)
+    fout = '%s-c=%1.2f-max_cache_size=%d.md' % (foutroot, c, max_cache_size)
     fh = open(os.path.join(dout, fout), 'w')
     d = c
     descr = []
@@ -275,8 +276,8 @@ def small_expanded(dout='../results/', foutroot='small_expanded', c=0.01,
     fh.write('| dataset | method | time (s) | cache | queue | objective | lower bound | accuracy | upper bound | length |\n')
     fh.write('| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |\n')
     template = '| %s | %s | %3.3f | %d | %d | %1.3f | %1.3f | %1.3f | %1.3f | %d |\n'
-    flist = ['bcancer', 'cars', 'haberman', 'monks1', 'monks2', 'monks3', 'votes']
-    params = [('breadth_first',), ('curiosity',)]
+    flist = ['bcancer'] #, 'cars', 'haberman', 'monks1', 'monks2', 'monks3', 'votes']
+    params = [('lower_bound',)] #[('breadth_first',), ('curiosity',)]
     for f in flist:
         froot = '%s' % f
         for (method,) in params:
