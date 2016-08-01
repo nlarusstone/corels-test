@@ -442,6 +442,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         cache.metrics.min_objective = objective
         cache.metrics.best_prefix = prefix
         cache.best = cache_entry
+        cache.max_prefix_len_check = int(np.floor(objective / c))
 
     return cache_entry
 
