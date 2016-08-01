@@ -189,7 +189,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             # prune rules in the reject_set (that will not capture sufficient
             # data, given prefix_start and min_captured_correct)
             r2 = len(rtc)
-            rtc = rtc.difference(set(cached_prefix.reject_set))
+            rtc = rtc.difference(cached_prefix.reject_set)
             cache.metrics.rejects[i] += r2 - len(rtc)
             rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
