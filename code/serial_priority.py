@@ -117,22 +117,6 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     rule_set = set(range(nrules))
 
     x = utils.rules_to_array(rules)
-    cc = np.corrcoef(x)
-    mask = np.triu(np.ones(cc.shape, int))
-    mask = mask - np.identity(cc.shape[0], int)
-    equal_pairs = np.array(((cc == 1.) & mask).nonzero()).T
-    equal_pairs = np.array([(i, j) if (len(rule_names[i].split(',')) <=
-                                       len(rule_names[j].split(',')))
-                            else (j, i) for (i, j) in equal_pairs])
-    delete_rules = list(set(equal_pairs[:,1]))
-    delete_rules.sort()
-    print 'deleting', len(delete_rules), 'redundant rules'
-    rules = [rules[i] for i in range(nrules) if i not in delete_rules]
-    rule_names = [rule_names[i] for i in range(nrules) if i not in delete_rules]
-    nrules = len(rules)
-    rule_set = set(range(nrules))
-
-    x = utils.rules_to_array(rules)
     commuting_pairs = utils.find_commuting_pairs(x)
     cdict = utils.commuting_dict(commuting_pairs, nrules)
     rdict = utils.relations_dict(x)
