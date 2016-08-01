@@ -228,8 +228,7 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
     return '\n'.join(lines)
 
 def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
-                captured_dict={}, rule_names=None, min_captured_correct=0.,
-                quiet=True, use_captured_dict=False):
+                rule_names=None, min_captured_correct=0., quiet=True):
     """
     Compute cache entry for prefix via incremental computation.
 
@@ -284,45 +283,6 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         cache.metrics.captured_all[len(prefix)] += 1
         cache[prefix[:-1]].reject_set.add(new_rule)
         return
-
-    # if, given a prefix, two rules capture the same data, only one
-    # should be pursued; the other is added to the reject list
-    # (this might be costly, not sure)
-    if use_captured_dict:
-        if captured_nz in captured_dict:
-            cached_rule = captured_dict[captured_nz]
-            equivalent_prefix = prefix[:-1] + (cached_rule,)
-            if (equivalent_prefix in cache):
-                num_clauses_cached = len(rule_names[cached_rule].split(','))
-                num_clauses = len(rule_names[new_rule].split(','))
-                if (num_clauses_cached <= num_clauses):
-                    # if the cached rule is simpler, keep it and reject the new one
-                    cache.metrics.captured_same[len(prefix)] += 1
-                    cache[prefix[:-1]].reject_set.add(new_rule)
-                    return
-                else:
-                    # otherwise, the new rule is simpler, so reject the cached one
-                    # and delete its cache entry, and use the cached entry to form
-                    # the cache entry for prefix
-                    eq = cache[equivalent_prefix]
-                    captured_dict[captured_nz] = new_rule
-                    cache[prefix[:-1]].reject_set.add(cached_rule)
-                    cache.delete(equivalent_prefix)
-                    cache_entry = CacheEntry(prefix=prefix,
-                            prediction=eq.prediction,
-                            default_rule=eq.default_rule,
-                            accuracy=eq.accuracy, upper_bound=eq.upper_bound,
-                            objective=eq.objective, lower_bound=eq.lower_bound,
-                            num_captured=eq.num_captured,
-                            num_captured_correct=eq.num_captured_correct,
-                            not_captured=eq.not_captured, curiosity=eq.curiosity)
-                    return cache_entry
-            else:
-                # the equivalent prefix isn't in the cache, so there's no reason
-                # for prefix to end up in the cache
-                return
-        else:
-            captured_dict[captured_nz] = new_rule
 
     # not_captured is a binary vector of length ndata indicating those
     # data that are not captured by the current prefix, i.e., not

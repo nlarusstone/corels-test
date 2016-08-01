@@ -194,7 +194,6 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
         lower_bound = None
-        captured_dict = {}
 
         while(queue):
             if prefix_start not in cache:
@@ -205,9 +204,8 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
             # compute cache entry for prefix via incremental computation
             cache_entry = incremental(cache, prefix, rules, ones, ndata,
-                            cached_prefix, c=c, quiet=quiet,
-                            captured_dict=captured_dict, rule_names=rule_names,
-                            min_captured_correct=min_captured_correct)
+                        cached_prefix, c=c, quiet=quiet, rule_names=rule_names,
+                        min_captured_correct=min_captured_correct)
 
             if cache_entry is None:
                 # incremental(.) did not return a cache entry for prefix
