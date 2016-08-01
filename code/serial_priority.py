@@ -95,6 +95,27 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     print 'Writing log to', flog
     fh = open(flog, 'w')
 
+    delete_set = set()
+    for i in range(nrules - 1):
+        for j in range(i + 1, nrules):
+            if (rules[i] == rules[j]):
+                ri = len(rule_names[i].split(','))
+                rj = len(rule_names[j].split(','))
+                if (ri < rj):
+                    delete_set.add(j)
+                elif (rj < ri):
+                    delete_set.add(i)
+                elif (rule_names[i] < rule_names[j]):
+                    delete_set.add(j)
+                else:
+                    delete_set.add(i)
+
+    print 'deleting', len(delete_set), 'redundant rules'
+    rules = [rules[i] for i in range(nrules) if i not in delete_set]
+    rule_names = [rule_names[i] for i in range(nrules) if i not in delete_set]
+    nrules = len(rules)
+    rule_set = set(range(nrules))
+
     x = utils.rules_to_array(rules)
     cc = np.corrcoef(x)
     mask = np.triu(np.ones(cc.shape, int))
