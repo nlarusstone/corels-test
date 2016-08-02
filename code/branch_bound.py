@@ -5,6 +5,7 @@ import gmpy2
 from gmpy2 import mpz
 import tabular as tb
 
+import time
 import rule
 import utils
 
@@ -22,10 +23,10 @@ class PrefixCache(dict):
         self.c = c
         self.max_prefix_len_check = None
 
-    def insert(self, prefix, cache_entry):
+    def insert(self, prefix, cache_entry, is_warm=False):
         self[prefix] = cache_entry
         n = len(prefix)
-        if (n > 0):
+        if (n > 0 and not is_warm):
             parent = self[prefix[:-1]]
             parent.children.add(prefix[-1])
             parent.num_children += 1
@@ -240,7 +241,10 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
 
 def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                 captured_dict={}, rule_names=None, min_captured_correct=0.,
-                quiet=True, use_captured_dict=False):
+                quiet=True, use_captured_dict=False, part=1):
+    true_list = [False for x in range(9)]
+    true_list[part - 1] = True
+    part1, part2, part3, part4, part5, part6, part7, part8, part9 = true_list
     """
     Compute cache entry for prefix via incremental computation.
 
@@ -278,28 +282,39 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     num_captured = cappd[1]
 
     # the additional rule is rejected if it doesn't capture any data
-    if (num_captured < 1):
+    ## Part 1
+    if part1 and (num_captured < 1):
+        begin_time = time.time()
         cache.metrics.captured_zero[len(prefix)] += 1
         cache[prefix[:-1]].reject_set.add(new_rule)
+        cache.metrics.part_time += time.time() - begin_time
         return
 
     # the additional rule is rejected if it doesn't capture enough data
-    if (num_captured < (min_captured_correct * ndata)):
+    ## Part 2
+    if part2 and (num_captured < (min_captured_correct * ndata)):
+        begin_time = time.time()
         cache.metrics.captured_zero[len(prefix)] += 1
         cache[prefix[:-1]].reject_set.add(new_rule)
+        cache.metrics.part_time += time.time() - begin_time
         return
 
     # the additional rule is rejected if it captures all remaining data
     # (equivalent to the default rule)
-    if (num_captured == (ndata - num_already_captured)):
+    ## Part 3
+    if part3 and (num_captured == (ndata - num_already_captured)):
+        begin_time = time.time()
         cache.metrics.captured_all[len(prefix)] += 1
         cache[prefix[:-1]].reject_set.add(new_rule)
+        cache.metrics.part_time += time.time() - begin_time
         return
 
     # if, given a prefix, two rules capture the same data, only one
     # should be pursued; the other is added to the reject list
     # (this might be costly, not sure)
-    if use_captured_dict:
+    ## Part 4
+    if part4 and use_captured_dict:
+        begin_time = time.time()
         if captured_nz in captured_dict:
             cached_rule = captured_dict[captured_nz]
             equivalent_prefix = prefix[:-1] + (cached_rule,)
@@ -310,6 +325,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                     # if the cached rule is simpler, keep it and reject the new one
                     cache.metrics.captured_same[len(prefix)] += 1
                     cache[prefix[:-1]].reject_set.add(new_rule)
+                    cache.metrics.part_time += time.time() - begin_time
                     return
                 else:
                     # otherwise, the new rule is simpler, so reject the cached one
@@ -327,13 +343,16 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
                             num_captured=eq.num_captured,
                             num_captured_correct=eq.num_captured_correct,
                             not_captured=eq.not_captured, curiosity=eq.curiosity)
+                    cache.metrics.part_time += time.time() - begin_time
                     return cache_entry
             else:
                 # the equivalent prefix isn't in the cache, so there's no reason
                 # for prefix to end up in the cache
+                cache.metrics.part_time += time.time() - begin_time
                 return
         else:
             captured_dict[captured_nz] = new_rule
+        cache.metrics.part_time += time.time() - begin_time
 
     # not_captured is a binary vector of length ndata indicating those
     # data that are not captured by the current prefix, i.e., not
@@ -356,7 +375,10 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # fraction_captured_ones is the fraction of data captured by the new
     # rule, given the cached prefix, with label 1
-    fraction_captured_ones = float(num_captured_ones) / num_captured
+    if num_captured == 0:
+        fraction_captured_ones = 0
+    else:
+        fraction_captured_ones = float(num_captured_ones) / num_captured
 
     if (fraction_captured_ones >= 0.5):
         # the predictions of prefix are those of the cached prefix
@@ -379,9 +401,12 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # the additional rule is insufficient if it doesn't correctly capture enough
     # data
-    if (num_captured_correct < (min_captured_correct * ndata)):
+    ## Part 5
+    if part5 and (num_captured_correct < (min_captured_correct * ndata)):
+        begin_time = time.time()
         cache.metrics.insufficient[len(prefix)] += 1
         cache[prefix[:-1]].reject_set.add(new_rule)
+        cache.metrics.part_time += time.time() - begin_time
         return
 
     # the data captured by prefix are either captured by the cached
@@ -401,8 +426,11 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # if the lower bound of prefix is not less than min_objective, then we don't
     # create a cache entry for prefix
-    if (lower_bound >= cache.metrics.min_objective):
+    ## Part 6
+    if part6 and (lower_bound >= cache.metrics.min_objective):
+        begin_time = time.time()
         cache.metrics.dead_prefix[len(prefix)] += 1
+        cache.metrics.part_time += time.time() - begin_time
         return
 
     # compute the default rule on the not captured data
@@ -421,21 +449,30 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # if prefix's children are longer than than max_prefix_len_check,
     # then we don't create a cache entry for prefix
-    if ((len(prefix) + 1) > cache.max_prefix_len_check):
+    ## Part 7
+    if part7 and ((len(prefix) + 1) > cache.max_prefix_len_check):
+        begin_time = time.time()
         cache.metrics.dead_prefix[len(prefix)] += 1
         if not new_best:
+            cache.metrics.part_time += time.time() - begin_time
             return
+        cache.metrics.part_time += time.time() - begin_time
 
     # if the lower bound of prefix's children is not less than min_objective,
     # then we don't create a cache entry for prefix
-    if ((lower_bound + c) >= cache.metrics.min_objective):
+    ## Part 8
+    if part8 and ((lower_bound + c) >= cache.metrics.min_objective):
+        begin_time = time.time()
         cache.metrics.dead_prefix[len(prefix)] += 1
         if not new_best:
+            cache.metrics.part_time += time.time() - begin_time
             return
+        cache.metrics.part_time += time.time() - begin_time
 
     # to do garbage collection, we keep look for prefixes that are
     # equivalent up to permutation
-    if cache.do_garbage_collection:
+    ## Part 9
+    if part9 and cache.do_garbage_collection:
         # sorted_prefix lists the prefix's indices in sorted order
         sorted_prefix = tuple(np.sort(prefix))
         if sorted_prefix in cache.pdict:
@@ -600,7 +637,7 @@ def compute_default(ones, num_uncaptured):
         num_default_correct = n0
     return (default_rule, num_default_correct)
 
-def greedy_rule_list(ones, rules, max_length):
+def greedy_rule_list(ones, rules, c, max_length):
     """
     Grow the rule list greedily.
 
@@ -610,9 +647,10 @@ def greedy_rule_list(ones, rules, max_length):
     greedy_prefix = ()
     predicted_labels = ()
     nrules = len(rules)
-    ndata = rules[0].num_digits(2)
+    # Strip leading one
+    ndata = rules[0].num_digits(2) - 1
     unseen = rule.make_all_ones(ndata + 1)
-    num_uncaptured = ndata
+    not_captured = ndata
     num_captured_correct = 0
 
     for i in range(max_length):
@@ -627,18 +665,39 @@ def greedy_rule_list(ones, rules, max_length):
             magnitude = abs(percent_ones - 0.5)
             if magnitude > best[0] or (magnitude == best[0] and num_cappd > best[1]):
                 best = (magnitude, num_cappd, j, rules[j], pred)
-        num_captured_correct += (best[0] * best[1])
-        num_uncaptured -= best[1]
+        num_captured_correct += (2 * best[0] * best[1])
+        not_captured -= best[1]
         unseen = rule.rule_vandnot(unseen, best[3])[0]
         greedy_prefix += (best[2],)
         predicted_labels += (best[4],)
 
-    (default_rule, num_default_correct) = compute_default(unseen, num_uncaptured)
-    greedy_prefix += (default_rule,)
-    accuracy = float(num_captured_correct + num_default_correct) / ndata
-    upper_bound = float(num_captured_correct + num_uncaptured) / ndata
 
-    return (greedy_prefix, predicted_labels, default_rule, accuracy, upper_bound)
+    (default_rule, num_default_correct) = compute_default(unseen, not_captured)
+    num_captured = ndata - not_captured
+    num_incorrect = num_captured - num_captured_correct
+
+    print 'Num cappd', num_captured
+    print 'Num cappd corr', num_captured_correct
+    print 'Not cappd', not_captured
+    print 'Num incorr', num_incorrect
+    print 'Default corr', num_default_correct
+
+    accuracy = float(num_captured_correct + num_default_correct) / ndata
+    upper_bound = float(num_captured_correct + not_captured) / ndata
+    objective = float(num_incorrect) / ndata + c * len(greedy_prefix)
+    lower_bound = float(ndata - num_captured_correct - num_default_correct) / ndata + c * len(greedy_prefix)
+    curiosity = (float(num_incorrect) / num_captured +
+                 c * len(greedy_prefix) * ndata / num_captured)
+
+    greedy_prefix += (default_rule,)
+
+    print 'Accuracy', accuracy
+    print 'Upper bound', upper_bound
+    print 'Objective', objective
+    print 'Lower_bound', lower_bound
+    print 'Curiosity', curiosity
+    return (greedy_prefix, predicted_labels, default_rule, accuracy, upper_bound, objective,
+            lower_bound, num_captured, num_captured_correct, unseen, curiosity)
 
 def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
                min_objective, best_prefix, seed=None, sample=None,
@@ -678,12 +737,14 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     # max_accuracy is the accuracy of the best_prefix observed so far
     # if not already defined, either use a greedy algorithm to compute a warm
     # start or start cold with an empty prefix
-    if (max_accuracy is None):
+    if (max_accuracy is None or max_accuracy == 0):
         if warm_start:
             # compute warm start rule list using a greedy algorithm
-            ## this is currently broken (hasn't been modified to work for mpz)
-            (best_prefix, greedy_prediction, greedy_default, max_accuracy,
-             greedy_upper_bound) = greedy_rule_list(ones, rules, max_length=max_greedy_length)
+            (best_prefix, greedy_prediction, greedy_default,
+             max_accuracy, greedy_upper_bound, min_objective, 
+             greedy_lower_bound, greedy_num_captured, greedy_num_captured_correct,
+             greedy_not_captured, greedy_curiosity) = \
+                         greedy_rule_list(ones, rules, c, max_length=max_greedy_length)
             print 'greedy solution:'
             print_rule_list(best_prefix, greedy_prediction, greedy_default, rule_names)
         else:
@@ -704,8 +765,17 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
     cache = PrefixCache(do_garbage_collection=do_garbage_collection,
                         metrics=metrics, c=c)
 
-    # initialize the cache with a single entry for the empty rule list
-    cache_entry = CacheEntry(prefix=(), prediction=(),
+    if warm_start:
+        cache_entry = CacheEntry(prefix=best_prefix, prediction=greedy_prediction,
+                                        default_rule=greedy_default, accuracy=max_accuracy,
+                                        upper_bound=greedy_upper_bound, objective=min_objective,
+                                        lower_bound=greedy_lower_bound, num_captured=greedy_num_captured,
+                                        num_captured_correct=greedy_num_captured_correct,
+                                        not_captured=greedy_not_captured, curiosity=greedy_curiosity)
+        cache.insert(best_prefix, cache_entry, is_warm=True)
+    else:
+        # initialize the cache with a single entry for the empty rule list
+        cache_entry = CacheEntry(prefix=(), prediction=(),
                              default_rule=empty_default,
                              accuracy=empty_accuracy, upper_bound=1.,
                              objective=empty_objective,
@@ -713,23 +783,12 @@ def initialize(din, dout, label_file, out_file, warm_start, max_accuracy,
                              num_captured=0, num_captured_correct=0,
                              not_captured=rule.make_all_ones(ndata + 1),
                              curiosity=0.)
-    cache.insert((), cache_entry)
+        cache.insert((), cache_entry)
+
     cache.metrics.inserts[0] = 1
-    cache.pdict[()] = ((), cache_entry.objective)
+    cache.pdict[best_prefix] = (best_prefix, cache_entry.objective)
     cache.metrics.pdict_length += 1
 
-    if warm_start:
-        """
-        cache[best_prefix] = CacheEntry(prefix=best_prefix,
-                                        prediction=greedy_prediction,
-                                        default_rule=greedy_default,
-                                        accuracy=max_accuracy,
-                                        upper_bound=greedy_upper_bound,
-                                        num_captured=None,
-                                        num_captured_correct=None,
-                                        not_captured=None)
-        """
-        pass
-
+    print cache
     return (nrules, ndata, ones, rules, rule_set, rule_names, max_accuracy,
             min_objective, best_prefix, cache)

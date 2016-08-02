@@ -61,6 +61,9 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 
+# OS Generated files
+.DS_Store*
+
 # Specific to bbcache
 *.txt
 figs/

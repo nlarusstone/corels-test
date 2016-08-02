@@ -36,6 +36,7 @@ class Metrics:
         self.accuracy = 0.
         self.priority = 0
         self.best_prefix = ()
+        self.part_time = 0.
 
     def __repr__(self):
         return '\n'.join(('best prefix: %s' % self.best_prefix.__repr__(),
@@ -61,7 +62,10 @@ class Metrics:
                     'garbage collect: %s' % list(self.garbage_collect).__repr__(),
                     'prune up: %s' % list(self.prune_up).__repr__(),
                     'seconds: %2.5f' % self.seconds,
-                    'growth: %s' % format_float_list(self.growth())))
+                    'growth: %s' % format_float_list(self.growth()),
+                    'part time: %f' % self.part_time,
+                    'total dead prefix: %d' % sum(list(self.dead_prefix)),
+                    'dead prefix/part time: %f' % (float(self.dead_prefix.sum()) / float(self.part_time + 0.000001))))
 
     def growth(self):
         c = np.cast[float](self.cache_size)

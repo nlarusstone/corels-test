@@ -40,20 +40,21 @@ parser = argparse.ArgumentParser(description='Find rulelists using pure optimiza
 parser.add_argument('-froot', default='tdata_R')
 parser.add_argument('-warm', default=False)
 parser.add_argument('-maxacc', type=float, default=0.)
-parser.add_argument('-minobj', default=np.inf)
+parser.add_argument('-minobj', default=1.)
 parser.add_argument('-c', type=float, default=0.001)
-parser.add_argument('-method', default='objective')
+parser.add_argument('-method', default='curiosity')
 parser.add_argument('-mpl', type=int, default=20)
 parser.add_argument('-gc', default=True)
-parser.add_argument('-commute', default=True)
+parser.add_argument('-prune', default=False)
+parser.add_argument('-part', type=int, default=1)
 
 def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=np.inf, c=0.01, min_captured_correct=0.01,
-           max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
+           max_prefix_length=20, max_cache_size=500000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=False,
-           garbage_collect=True, do_pruning=False):
+           garbage_collect=True, do_pruning=False, part=1):
     """
     Serial branch-and-bound algorithm for constructing rule lists.
 
@@ -66,7 +67,10 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         String in ['breadth_first', 'curiosity', 'lower_bound', 'objective', 'random'].
 
     """
-    ## greedy algorithm is currently broken
+    part9 = True if part == 9 else False
+    part10 = True if part == 10 else False
+    part11 = True if part == 11 else False
+    part12 = True if part == 12 else False
 
     if (method == 'breadth_first'):
         heap_metric = lambda key: len(key)  # equivalent to breadth-first search
@@ -190,20 +194,34 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         if len(prefix_start):
             # prune rules that commute with the last rule in prefix_start and
             # have a smaller index
-            r0 = len(rules_to_consider)
+            ## Part 10
             rtc = rules_to_consider.difference(set(cdict[prefix_start[-1]]))
-            cache.metrics.commutes[i] += r0 - len(rtc)
+            if part10:
+                begin_time = time.time()
+                r0 = len(rules_to_consider)
+                rtc = rules_to_consider.difference(set(cdict[prefix_start[-1]]))
+                cache.metrics.commutes[i] += r0 - len(rtc)
+                cache.metrics.part_time += time.time() - begin_time
             # prune rules that are dominated by rules in prefix_start
             # definition: A dominates B if A captures all data that B captures
-            r1 = len(rtc)
-            rtc = rtc.difference(utils.all_relations(rdict, prefix_start))
-            cache.metrics.dominates[i] += r1 - len(rtc)
+            ## Part 11
+            if part11:
+                begin_time = time.time()
+                r1 = len(rtc)
+                rtc = rtc.difference(utils.all_relations(rdict, prefix_start))
+                cache.metrics.dominates[i] += r1 - len(rtc)
+                cache.metrics.part_time += time.time() - begin_time
             # prune rules in the reject_set (that will not capture sufficient
             # data, given prefix_start and min_captured_correct)
-            r2 = len(rtc)
-            rtc = rtc.difference(set(cached_prefix.reject_set))
-            cache.metrics.rejects[i] += r2 - len(rtc)
-            rules_to_consider = rtc
+            ## Part 12
+            if part12:
+                begin_time = time.time()
+                r2 = len(rtc)
+                rtc = rtc.difference(set(cached_prefix.reject_set))
+                cache.metrics.rejects[i] += r2 - len(rtc)
+                cache.metrics.part_time += time.time() - begin_time
+            if part10 or part11 or part12:
+                rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
         lower_bound = None
         captured_dict = {}
@@ -215,11 +233,12 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             # remove a prefix from the queue
             prefix = queue.pop(0)
 
+            pass_part = part if part < 10 else 9
             # compute cache entry for prefix via incremental computation
             cache_entry = incremental(cache, prefix, rules, ones, ndata,
                             cached_prefix, c=c, quiet=quiet,
                             captured_dict=captured_dict, rule_names=rule_names,
-                            min_captured_correct=min_captured_correct)
+                            min_captured_correct=min_captured_correct, part=pass_part)
 
             if cache_entry is None:
                 # incremental(.) did not return a cache entry for prefix
@@ -269,13 +288,15 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             if (min_objective < old_min_objective):
                 cache.metrics.priority_queue_length = len(priority_queue)
                 cache.metrics.seconds = time.time() - tic
-                size_before_gc = cache.metrics.cache_size.copy()
-                cache.garbage_collect(min_objective)
-                cache.metrics.garbage_collect += (size_before_gc - cache.metrics.cache_size)
+                ## Part 9
+                if part9:
+                    size_before_gc = cache.metrics.cache_size.copy()
+                    cache.garbage_collect(min_objective)
+                    cache.metrics.garbage_collect += (size_before_gc - cache.metrics.cache_size)
                 cache.metrics.priority = hm
                 fh.write(cache.metrics.to_string() + '\n')
                 fh.flush()
-                if garbage_collect:
+                if part9 and garbage_collect:
                     size_before_gc = sum(cache.metrics.cache_size)
                     cache.garbage_collect(min_objective)
                     cache.metrics.garbage_collect += size_before_gc - sum(cache.metrics.cache_size)
@@ -322,6 +343,13 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     fh.write(cache.metrics.to_string())
     fh.close()
 
+    metric_logs = os.path.join('..', 'logs/nicholas'); 
+    metric_logs = os.path.join(metric_logs, '%s%s%s.txt' % (metadata, 'part', part))
+    ml = open(metric_logs, 'w')
+    ml.write(str(cache.metrics))
+    ml.write(cache.metrics.to_string())
+    ml.close()
+
     print 'prefix length:', len(cache.metrics.best_prefix)
     print cache.metrics
     print cache.metrics.print_summary()
@@ -332,7 +360,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         print cc
         descr = print_rule_list(cc.prefix, cc.prediction, cc.default_rule, rule_names)
 
-    figs.viz_log(metadata=metadata, din=dlog, dout=dfigs, delimiter=',', lw=3, fs=14)
+    #figs.viz_log(metadata=metadata, din=dlog, dout=dfigs, delimiter=',', lw=3, fs=14)
 
     try:
         if (len(priority_queue) > 0):
@@ -430,15 +458,6 @@ def adult():
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    if args.length:
-        max_prefix_length = args.length
-    if args.length == None:
-        bbound()
-    else:
-        bbound(max_prefix_length=args.length)
-
-
-    print args
     bbound(froot=args.froot, warm_start=args.warm, max_accuracy=args.maxacc,
             min_objective=args.minobj, c=args.c, method=args.method, 
-            max_prefix_length=args.mpl, garbage_collect=args.gc, commute=args.commute)
+            max_prefix_length=args.mpl, garbage_collect=args.gc, do_pruning=args.prune, part=args.part)
