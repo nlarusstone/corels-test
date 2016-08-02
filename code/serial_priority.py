@@ -217,14 +217,13 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             if part12:
                 begin_time = time.time()
                 r2 = len(rtc)
-                rtc = rtc.difference(set(cached_prefix.reject_set))
+                rtc = rtc.difference(cached_prefix.reject_set)
                 cache.metrics.rejects[i] += r2 - len(rtc)
                 cache.metrics.part_time += time.time() - begin_time
             if part10 or part11 or part12:
                 rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
         lower_bound = None
-        captured_dict = {}
 
         while(queue):
             if prefix_start not in cache:
@@ -233,12 +232,10 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             # remove a prefix from the queue
             prefix = queue.pop(0)
 
-            pass_part = part if part < 10 else 9
             # compute cache entry for prefix via incremental computation
             cache_entry = incremental(cache, prefix, rules, ones, ndata,
-                            cached_prefix, c=c, quiet=quiet,
-                            captured_dict=captured_dict, rule_names=rule_names,
-                            min_captured_correct=min_captured_correct, part=pass_part)
+                        cached_prefix, c=c, quiet=quiet, rule_names=rule_names,
+                        min_captured_correct=min_captured_correct, part=part)
 
             if cache_entry is None:
                 # incremental(.) did not return a cache entry for prefix

@@ -240,11 +240,7 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
     return '\n'.join(lines)
 
 def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
-                captured_dict={}, rule_names=None, min_captured_correct=0.,
-                quiet=True, use_captured_dict=False, part=1):
-    true_list = [False for x in range(9)]
-    true_list[part - 1] = True
-    part1, part2, part3, part4, part5, part6, part7, part8, part9 = true_list
+                rule_names=None, min_captured_correct=0., quiet=True, part=1):
     """
     Compute cache entry for prefix via incremental computation.
 
@@ -252,6 +248,10 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     """
     new_best = False
+    true_list = [False for x in range(8)]
+    if part < 9:
+        true_list[part - 1] = True
+    part1, part2, part3, part4, part5, part6, part7, part8 = true_list
 
     # num_already_captured is the number of data captured by the cached prefix
     num_already_captured = cached_prefix.num_captured
@@ -309,51 +309,6 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         cache.metrics.part_time += time.time() - begin_time
         return
 
-    # if, given a prefix, two rules capture the same data, only one
-    # should be pursued; the other is added to the reject list
-    # (this might be costly, not sure)
-    ## Part 4
-    if part4 and use_captured_dict:
-        begin_time = time.time()
-        if captured_nz in captured_dict:
-            cached_rule = captured_dict[captured_nz]
-            equivalent_prefix = prefix[:-1] + (cached_rule,)
-            if (equivalent_prefix in cache):
-                num_clauses_cached = len(rule_names[cached_rule].split(','))
-                num_clauses = len(rule_names[new_rule].split(','))
-                if (num_clauses_cached <= num_clauses):
-                    # if the cached rule is simpler, keep it and reject the new one
-                    cache.metrics.captured_same[len(prefix)] += 1
-                    cache[prefix[:-1]].reject_set.add(new_rule)
-                    cache.metrics.part_time += time.time() - begin_time
-                    return
-                else:
-                    # otherwise, the new rule is simpler, so reject the cached one
-                    # and delete its cache entry, and use the cached entry to form
-                    # the cache entry for prefix
-                    eq = cache[equivalent_prefix]
-                    captured_dict[captured_nz] = new_rule
-                    cache[prefix[:-1]].reject_set.add(cached_rule)
-                    cache.delete(equivalent_prefix)
-                    cache_entry = CacheEntry(prefix=prefix,
-                            prediction=eq.prediction,
-                            default_rule=eq.default_rule,
-                            accuracy=eq.accuracy, upper_bound=eq.upper_bound,
-                            objective=eq.objective, lower_bound=eq.lower_bound,
-                            num_captured=eq.num_captured,
-                            num_captured_correct=eq.num_captured_correct,
-                            not_captured=eq.not_captured, curiosity=eq.curiosity)
-                    cache.metrics.part_time += time.time() - begin_time
-                    return cache_entry
-            else:
-                # the equivalent prefix isn't in the cache, so there's no reason
-                # for prefix to end up in the cache
-                cache.metrics.part_time += time.time() - begin_time
-                return
-        else:
-            captured_dict[captured_nz] = new_rule
-        cache.metrics.part_time += time.time() - begin_time
-
     # not_captured is a binary vector of length ndata indicating those
     # data that are not captured by the current prefix, i.e., not
     # captured by the rule list given by the cached prefix appended with
@@ -373,36 +328,31 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     # given the cached prefix, with label 1
     num_captured_ones = rule.rule_vand(captured_nz, ones)[1]
 
-    # fraction_captured_ones is the fraction of data captured by the new
-    # rule, given the cached prefix, with label 1
-    if num_captured == 0:
-        fraction_captured_ones = 0
-    else:
-        fraction_captured_ones = float(num_captured_ones) / num_captured
+    # num_captured_zeros is the number of data captured by the new rule,
+    # given the cached prefix, with label 0
+    num_captured_zeros = num_captured - num_captured_ones
 
-    if (fraction_captured_ones >= 0.5):
-        # the predictions of prefix are those of the cached prefix
-        # appended by the prediction that the data captured by the new
-        # rule have label 1
-        prediction = cached_prediction + (1,)
+    if (num_captured_ones > num_captured_zeros):
+        # new_prediction is the prediction of the new rule, given the
+        # cached prefix
+        new_prediction = 1
 
         # num_captured_correct is the number of data captured by the new
         # rule, given the cached prefix, with label 1
         num_captured_correct = num_captured_ones
     else:
-        # the predictions of prefix are those of the cached prefix
-        # appended by the prediction that the data captured by the new
-        # rule have label 0
-        prediction = cached_prediction + (0,)
+        # new_prediction is the prediction of the new rule, given the
+        # cached prefix
+        new_prediction = 0
 
         # num_captured_correct is the number of data captured by the new
         # rule, given the cached prefix, with label 0
-        num_captured_correct = num_captured - num_captured_ones
+        num_captured_correct = num_captured_zeros
 
     # the additional rule is insufficient if it doesn't correctly capture enough
     # data
-    ## Part 5
-    if part5 and (num_captured_correct < (min_captured_correct * ndata)):
+    ## Part 4
+    if part4 and (num_captured_correct < (min_captured_correct * ndata)):
         begin_time = time.time()
         cache.metrics.insufficient[len(prefix)] += 1
         cache[prefix[:-1]].reject_set.add(new_rule)
@@ -426,8 +376,8 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # if the lower bound of prefix is not less than min_objective, then we don't
     # create a cache entry for prefix
-    ## Part 6
-    if part6 and (lower_bound >= cache.metrics.min_objective):
+    ## Part 5
+    if part5 and (lower_bound >= cache.metrics.min_objective):
         begin_time = time.time()
         cache.metrics.dead_prefix[len(prefix)] += 1
         cache.metrics.part_time += time.time() - begin_time
@@ -449,8 +399,8 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # if prefix's children are longer than than max_prefix_len_check,
     # then we don't create a cache entry for prefix
-    ## Part 7
-    if part7 and ((len(prefix) + 1) > cache.max_prefix_len_check):
+    ## Part 6
+    if part6 and ((len(prefix) + 1) > cache.max_prefix_len_check):
         begin_time = time.time()
         cache.metrics.dead_prefix[len(prefix)] += 1
         if not new_best:
@@ -460,8 +410,8 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # if the lower bound of prefix's children is not less than min_objective,
     # then we don't create a cache entry for prefix
-    ## Part 8
-    if part8 and ((lower_bound + c) >= cache.metrics.min_objective):
+    ## Part 7
+    if part7 and ((lower_bound + c) >= cache.metrics.min_objective):
         begin_time = time.time()
         cache.metrics.dead_prefix[len(prefix)] += 1
         if not new_best:
@@ -471,8 +421,8 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # to do garbage collection, we keep look for prefixes that are
     # equivalent up to permutation
-    ## Part 9
-    if part9 and cache.do_garbage_collection:
+    ## Part 8
+    if part8 and cache.do_garbage_collection:
         # sorted_prefix lists the prefix's indices in sorted order
         sorted_prefix = tuple(np.sort(prefix))
         if sorted_prefix in cache.pdict:
@@ -511,6 +461,10 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     curiosity = (float(num_incorrect) / new_num_captured +
                  c * len(prefix) * ndata / new_num_captured)
 
+    # the predictions of prefix are those of the cached prefix appended by
+    # the prediction associated with data captured by the new rule
+    prediction = cached_prediction + (new_prediction,)
+
     # make a cache entry for prefix
     cache_entry = CacheEntry(prefix=prefix, prediction=prediction,
                              default_rule=default_rule,
@@ -528,6 +482,7 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
         cache.metrics.min_objective = objective
         cache.metrics.best_prefix = prefix
         cache.best = cache_entry
+        cache.max_prefix_len_check = int(np.floor(objective / c))
 
     return cache_entry
 
