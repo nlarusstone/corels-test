@@ -68,3 +68,5 @@ target/
 *.txt
 figs/
 code/tags
+logs/
+cache/
