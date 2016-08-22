@@ -3,8 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
+# C and C++ extensions
 *.so
+*.o
+
+# GNUmakefile deps
+src/.deps/*
 
 # Distribution / packaging
 .Python
@@ -70,3 +74,4 @@ figs/
 code/tags
 logs/
 cache/
+bbcache
