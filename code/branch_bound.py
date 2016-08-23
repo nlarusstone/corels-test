@@ -5,7 +5,6 @@ import gmpy2
 from gmpy2 import mpz
 import tabular as tb
 
-import time
 import rule
 import utils
 
@@ -240,7 +239,7 @@ def print_rule_list(prefix, prediction, default_rule, rule_names):
     return '\n'.join(lines)
 
 def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
-                rule_names=None, min_captured_correct=0., quiet=True, part=1):
+                rule_names=None, min_captured_correct=0., quiet=True, part=None):
     """
     Compute cache entry for prefix via incremental computation.
 
@@ -248,10 +247,6 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     """
     new_best = False
-    true_list = [False for x in range(8)]
-    if part < 9:
-        true_list[part - 1] = True
-    part1, part2, part3, part4, part5, part6, part7, part8 = true_list
 
     # num_already_captured is the number of data captured by the cached prefix
     num_already_captured = cached_prefix.num_captured
@@ -282,31 +277,25 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
     num_captured = cappd[1]
 
     # the additional rule is rejected if it doesn't capture any data
-    ## Part 1
-    if part1 and (num_captured < 1):
-        begin_time = time.time()
+    ## Part 1: Captured zero
+    if (not part or part == 1) and (num_captured < 1):
         cache.metrics.captured_zero[len(prefix)] += 1
         cache[prefix[:-1]].reject_set.add(new_rule)
-        cache.metrics.part_time += time.time() - begin_time
         return
 
     # the additional rule is rejected if it doesn't capture enough data
-    ## Part 2
-    if part2 and (num_captured < (min_captured_correct * ndata)):
-        begin_time = time.time()
+    ## Part 2: Captured too few
+    if (not part or part == 2) and (num_captured < (min_captured_correct * ndata)):
         cache.metrics.captured_zero[len(prefix)] += 1
         cache[prefix[:-1]].reject_set.add(new_rule)
-        cache.metrics.part_time += time.time() - begin_time
         return
 
     # the additional rule is rejected if it captures all remaining data
     # (equivalent to the default rule)
-    ## Part 3
-    if part3 and (num_captured == (ndata - num_already_captured)):
-        begin_time = time.time()
+    ## Part 3: Equivalent to default
+    if (not part or part == 3) and (num_captured == (ndata - num_already_captured)):
         cache.metrics.captured_all[len(prefix)] += 1
         cache[prefix[:-1]].reject_set.add(new_rule)
-        cache.metrics.part_time += time.time() - begin_time
         return
 
     # not_captured is a binary vector of length ndata indicating those
@@ -351,12 +340,10 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # the additional rule is insufficient if it doesn't correctly capture enough
     # data
-    ## Part 4
-    if part4 and (num_captured_correct < (min_captured_correct * ndata)):
-        begin_time = time.time()
+    ## Part 4: Doesn't correctly capture enough
+    if (not part or part == 4) and (num_captured_correct < (min_captured_correct * ndata)):
         cache.metrics.insufficient[len(prefix)] += 1
         cache[prefix[:-1]].reject_set.add(new_rule)
-        cache.metrics.part_time += time.time() - begin_time
         return
 
     # the data captured by prefix are either captured by the cached
@@ -376,11 +363,9 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # if the lower bound of prefix is not less than min_objective, then we don't
     # create a cache entry for prefix
-    ## Part 5
-    if part5 and (lower_bound >= cache.metrics.min_objective):
-        begin_time = time.time()
+    ## Part 5: Lower bound > Min objective
+    if (not part or part == 5) and (lower_bound >= cache.metrics.min_objective):
         cache.metrics.dead_prefix[len(prefix)] += 1
-        cache.metrics.part_time += time.time() - begin_time
         return
 
     # compute the default rule on the not captured data
@@ -399,30 +384,24 @@ def incremental(cache, prefix, rules, ones, ndata, cached_prefix, c=0.,
 
     # if prefix's children are longer than than max_prefix_len_check,
     # then we don't create a cache entry for prefix
-    ## Part 6
-    if part6 and ((len(prefix) + 1) > cache.max_prefix_len_check):
-        begin_time = time.time()
+    ## Part 6: Children longer than max prefix len
+    if (not part or part == 6) and ((len(prefix) + 1) > cache.max_prefix_len_check):
         cache.metrics.dead_prefix[len(prefix)] += 1
         if not new_best:
-            cache.metrics.part_time += time.time() - begin_time
             return
-        cache.metrics.part_time += time.time() - begin_time
 
     # if the lower bound of prefix's children is not less than min_objective,
     # then we don't create a cache entry for prefix
-    ## Part 7
-    if part7 and ((lower_bound + c) >= cache.metrics.min_objective):
-        begin_time = time.time()
+    ## Part 7: Lower bound of children > Min objective
+    if (not part or part == 7) and ((lower_bound + c) >= cache.metrics.min_objective):
         cache.metrics.dead_prefix[len(prefix)] += 1
         if not new_best:
-            cache.metrics.part_time += time.time() - begin_time
             return
-        cache.metrics.part_time += time.time() - begin_time
 
     # to do garbage collection, we keep look for prefixes that are
     # equivalent up to permutation
-    ## Part 8
-    if part8 and cache.do_garbage_collection:
+    ## Part 8: Permutation garbage collection
+    if (not part or part == 8) and cache.do_garbage_collection:
         # sorted_prefix lists the prefix's indices in sorted order
         sorted_prefix = tuple(np.sort(prefix))
         if sorted_prefix in cache.pdict:

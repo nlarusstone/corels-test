@@ -46,15 +46,16 @@ parser.add_argument('-method', default='curiosity')
 parser.add_argument('-mpl', type=int, default=20)
 parser.add_argument('-gc', default=True)
 parser.add_argument('-prune', default=False)
-parser.add_argument('-part', type=int, default=1)
+parser.add_argument('-part', type=int, default=None)
+parser.add_argument('-iter', type=int, default=1)
 
 def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
            froot='tdata_R', warm_start=False, max_accuracy=0., best_prefix=(),
            min_objective=np.inf, c=0.01, min_captured_correct=0.01,
-           max_prefix_length=20, max_cache_size=500000, delimiter='\t',
+           max_prefix_length=20, max_cache_size=3000000, delimiter='\t',
            method='curiosity', seed=0, sample=1., quiet=True, clear=False,
-           garbage_collect=True, do_pruning=False, part=1):
+           garbage_collect=True, do_pruning=False, part=None, iteration=1):
     """
     Serial branch-and-bound algorithm for constructing rule lists.
 
@@ -67,11 +68,6 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         String in ['breadth_first', 'curiosity', 'lower_bound', 'objective', 'random'].
 
     """
-    part9 = True if part == 9 else False
-    part10 = True if part == 10 else False
-    part11 = True if part == 11 else False
-    part12 = True if part == 12 else False
-
     if (method == 'breadth_first'):
         heap_metric = lambda key: len(key)  # equivalent to breadth-first search
     elif (method == 'curiosity'):
@@ -194,33 +190,25 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
         if len(prefix_start):
             # prune rules that commute with the last rule in prefix_start and
             # have a smaller index
-            ## Part 10
+            ## Part 10: Commute locally
             rtc = rules_to_consider.difference(set(cdict[prefix_start[-1]]))
-            if part10:
-                begin_time = time.time()
+            if (not part or part == 10):
                 r0 = len(rules_to_consider)
                 rtc = rules_to_consider.difference(set(cdict[prefix_start[-1]]))
                 cache.metrics.commutes[i] += r0 - len(rtc)
-                cache.metrics.part_time += time.time() - begin_time
             # prune rules that are dominated by rules in prefix_start
             # definition: A dominates B if A captures all data that B captures
-            ## Part 11
-            if part11:
-                begin_time = time.time()
+            ## Part 11: Dominates
+            if (not part or part == 11):
                 r1 = len(rtc)
                 rtc = rtc.difference(utils.all_relations(rdict, prefix_start))
                 cache.metrics.dominates[i] += r1 - len(rtc)
-                cache.metrics.part_time += time.time() - begin_time
             # prune rules in the reject_set (that will not capture sufficient
             # data, given prefix_start and min_captured_correct)
-            ## Part 12
-            if part12:
-                begin_time = time.time()
-                r2 = len(rtc)
-                rtc = rtc.difference(cached_prefix.reject_set)
-                cache.metrics.rejects[i] += r2 - len(rtc)
-                cache.metrics.part_time += time.time() - begin_time
-            if part10 or part11 or part12:
+            r2 = len(rtc)
+            rtc = rtc.difference(cached_prefix.reject_set)
+            cache.metrics.rejects[i] += r2 - len(rtc)
+            if (not part or part > 9):
                 rules_to_consider = rtc
         queue = [prefix_start + (t,) for t in list(rules_to_consider)]
         lower_bound = None
@@ -285,15 +273,15 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
             if (min_objective < old_min_objective):
                 cache.metrics.priority_queue_length = len(priority_queue)
                 cache.metrics.seconds = time.time() - tic
-                ## Part 9
-                if part9:
+                ## Part 9: Min objective garbage collection
+                if (not part or part == 9):
                     size_before_gc = cache.metrics.cache_size.copy()
                     cache.garbage_collect(min_objective)
                     cache.metrics.garbage_collect += (size_before_gc - cache.metrics.cache_size)
                 cache.metrics.priority = hm
                 fh.write(cache.metrics.to_string() + '\n')
                 fh.flush()
-                if part9 and garbage_collect:
+                if (not part or part == 9) and garbage_collect:
                     size_before_gc = sum(cache.metrics.cache_size)
                     cache.garbage_collect(min_objective)
                     cache.metrics.garbage_collect += size_before_gc - sum(cache.metrics.cache_size)
@@ -341,7 +329,7 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     fh.close()
 
     metric_logs = os.path.join('..', 'logs/nicholas'); 
-    metric_logs = os.path.join(metric_logs, '%s%s%s.txt' % (metadata, 'part', part))
+    metric_logs = os.path.join(metric_logs, '%spart%siteration%s.txt' % (metadata, part, iteration))
     ml = open(metric_logs, 'w')
     ml.write(str(cache.metrics))
     ml.write(cache.metrics.to_string())
@@ -359,18 +347,17 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
 
     #figs.viz_log(metadata=metadata, din=dlog, dout=dfigs, delimiter=',', lw=3, fs=14)
 
-    try:
-        if (len(priority_queue) > 0):
-            fname = os.path.join(dout, '%s.txt' % metadata)
-            cache.to_file(fname=fname, delimiter=delimiter)
-            x = tb.tabarray(SVfile=fname, delimiter=delimiter)
-            x.sort(order=['length', 'first'])
-            x.saveSV(fname, delimiter=delimiter)
-            figs.make_figure(metadata=metadata, din=dout, dout=dfigs)
-            pylab.draw()
-    except:
-        pass
-
+#    try:
+#       if (len(priority_queue) > 0):
+#           fname = os.path.join(dout, '%s.txt' % metadata)
+#           cache.to_file(fname=fname, delimiter=delimiter)
+#           x = tb.tabarray(SVfile=fname, delimiter=delimiter)
+#           x.sort(order=['length', 'first'])
+#           x.saveSV(fname, delimiter=delimiter)
+#           figs.make_figure(metadata=metadata, din=dout, dout=dfigs)
+#           pylab.draw()
+#   except:
+#       pass
     return (metadata, cache.metrics, cache, priority_queue, cc, descr)
 
 def tdata_1():
@@ -455,6 +442,8 @@ def adult():
 
 if __name__ == "__main__":
     args = parser.parse_args()
-    bbound(froot=args.froot, warm_start=args.warm, max_accuracy=args.maxacc,
+    for i in xrange(args.iter):
+        bbound(froot=args.froot, warm_start=args.warm, max_accuracy=args.maxacc,
             min_objective=args.minobj, c=args.c, method=args.method, 
-            max_prefix_length=args.mpl, garbage_collect=args.gc, do_pruning=args.prune, part=args.part)
+            max_prefix_length=args.mpl, garbage_collect=args.gc, do_pruning=args.prune, part=args.part,
+            iteration=i)
