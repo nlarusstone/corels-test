@@ -172,12 +172,12 @@ def driver(din, dout, froot, train_suffix='', y_suffix=None, delimiter=' ',
 
     fout = os.path.join(dout, '%s.out' % (froot))
     f = open(fout, 'w')
-    f.write('\n'.join(out))
+    f.write('\n'.join(out) + '\n')
     f.close()
 
     flabel = os.path.join(dout, '%s.label' % (froot))
     f = open(flabel, 'w')
-    f.write('\n'.join(label))
+    f.write('\n'.join(label) + '\n')
     f.close()
     return rule_name_list
 
