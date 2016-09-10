@@ -328,7 +328,9 @@ def bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
     fh.write(cache.metrics.to_string())
     fh.close()
 
-    metric_logs = os.path.join('..', 'logs/nicholas'); 
+    metric_logs = os.path.join('..', 'logs', 'nicholas')
+    if not os.path.exists(metric_logs):
+        os.mkdir(metric_logs)
     metric_logs = os.path.join(metric_logs, '%spart%siteration%s.txt' % (metadata, part, iteration))
     ml = open(metric_logs, 'w')
     ml.write(str(cache.metrics))
