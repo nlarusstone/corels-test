@@ -3,7 +3,7 @@ import os
 import numpy as np
 import pylab
 
-from branch_bound import initialize
+from branch_bound import initialize, greedy_rule_list
 from serial_priority import bbound
 import utils
 
@@ -336,4 +336,22 @@ def telco_metrics(dout='../results/', fout='telco-metrics.md'):
         if os.path.exists('../figs/%s-cache.png' % md):
             fh.write('![%s-cache](../figs/%s-cache.png)\n' % (md, md))
     fh.close()
+    return
+
+def greedy(froot='tdata_R', c=0.001, max_greedy_length=10):
+    label_file = '%s.label' % froot
+    out_file = '%s.out' % froot
+    (nrules, ndata, ones, rules, rule_set, rule_names,
+     max_accuracy, min_objective, best_prefix, cache) = \
+            initialize(din=os.path.join('..', 'data'),
+                       dout=os.path.join('..', 'cache'),
+                       label_file=label_file, out_file=out_file,
+                       warm_start=False, max_accuracy=0., min_objective=1.,
+                       best_prefix=(), seed=0, sample=1.)
+    (best_prefix, greedy_prediction, greedy_default, max_accuracy,
+     greedy_upper_bound, min_objective, greedy_lower_bound, greedy_num_captured,
+     greedy_num_captured_correct, greedy_not_captured, greedy_curiosity) = \
+                 greedy_rule_list(ones, rules, c, max_length=max_greedy_length)
+    print 'greedy solution:'
+    print_rule_list(best_prefix, greedy_prediction, greedy_default, rule_names)
     return
