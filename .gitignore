@@ -7,6 +7,10 @@ __pycache__/
 *.so
 *.o
 
+# Temp files
+*.swp
+*.swo
+
 # GNUmakefile deps
 src/.deps/*
 
@@ -68,10 +72,14 @@ target/
 # OS Generated files
 .DS_Store*
 
+# Ctags
+code/tags
+src/tags
+
 # Specific to bbcache
 *.txt
 figs/
-code/tags
 logs/
 cache/
 bbcache
+profiles/
