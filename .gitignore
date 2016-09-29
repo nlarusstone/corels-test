@@ -69,6 +69,10 @@ target/
 #Ipython Notebook
 .ipynb_checkpoints
 
+# Other Python
+*.py~
+*.py.lprof
+
 # OS Generated files
 .DS_Store*
 
@@ -83,3 +87,9 @@ logs/
 cache/
 bbcache
 profiles/
+
+# Latex
+*.aux
+*.bbl
+*.blg
+paper/arxiv.pdf
