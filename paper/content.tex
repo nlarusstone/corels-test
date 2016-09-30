@@ -103,16 +103,50 @@ This is precisely the structure required and exploited by branch-and-bound.
 
 \subsection{Additional bounds}
 
+\begin{itemize}
+\item permutation bounds
+\item similarity bounds
+\item support positive bound
+\item not-too-many incorrect bound
+\item not too similar to the default rule bound
+\item lower bound with one step lookahead
+\item when rules commute, dominates
+\item when a rule has too-low support after a prefix, then it will always have too-low support below the prefix
+\end{itemize}
+
 \subsection{Cache data structure}
 \label{sec:cache}
 
 \subsection{Scheduling policies}
+
+\begin{itemize}
+\item breadth-first
+\item curiosity
+\end{itemize}
 
 \subsection{Large-scale optimization}
 
 \subsection{System}
 
 \section{Experiments}
+
+\begin{itemize}
+
+\item Value of the objective for us and a few other algorithms (CART, C4.5, CBA, CMAR/CPAR, C5.0 \dots), and algorithm runtimes 
+
+\item Show the effect of each ``piece'' at a time, \eg curiosity -- run it without each in turn and show the difference in either quality of solution or runtime or amount of memory, size of cache or queue
+
+\item Fraction of search space eliminated over time
+
+\item Size of queue over time
+
+\item Total number of things placed in queue (over time?)
+
+\item Objective function value over time -- this also gives an upper bound on the remaining search space -- and also, possibly, the minimum lower bound in the queue over time
+
+\item Some characterization of the number of solutions close to optimal (plot number of suboptimal solutions vs amount of suboptimality, removing permutations)
+
+\end{itemize}
 
 \section{Conclusions}
 
