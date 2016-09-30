@@ -1,16 +1,105 @@
 \section{Introduction}
 
+\emph{Rule lists}, also called decision lists, are one-sided decision trees.
+
 \section{Related work}
+
+\citep{rivest:1987}
 
 \citep{LethamRuMcMa15}
 
 \citep{YangRuSe16}
 
-\section{A branch-and-bound framework for optimizing decision lists}
+\section{A branch-and-bound framework for optimizing rule lists}
 
-\subsection{Decision lists for binary classification}
+\subsection{Rule lists for binary classification}
+
+We restrict our setting to binary classification,
+where rule lists are Boolean functions;
+this framework is straightforward to generalize to multi-class classification.
+%
+Let us denote training data by~${\{(x_n, y_n)\}_{n=1}^N}$,
+where~${x_n \in \{0, 1\}^d}$ are binary features and~${y_n \in \{0, 1\}}$ are labels.
+
+A rule list~$\RL$ of length~$k \ge 0$ is defined by a $(k+1)$-tuple consisting of~$k$
+association rules followed by a default rule~$d$.
+%
+An association rule~${p \rightarrow q}$ is an implication corresponding to the
+conditional statement, ``if~$p$, then~$q$.''
+%
+In our setting, an antecedent~$p$ is a Boolean assertion that evaluates to either
+true or false for each datum~$x_n$, and a consequent~$q$ is a label prediction.
+%
+For example,~${(x_{i, 1} = 0) \wedge (x_{i, 3} = 1) \rightarrow (y_i = 1)}$
+is an association rule that could appear in a rule list.
+%
+The number of conditions in an antecedent is its cardinality;
+the antecedent in the previous example has a cardinality of two.
+%
+The final default rule~$d$ in a rule list can be thought of as a special
+association rule whose antecedent simply asserts true.
+
+A rule list classifies a datum~$x_n$ by providing the predicted label given
+by the consequent of the first rule whose antecedent is true for~$x_n$.
+%
+We say that this rule \emph{captures}~$x_n$ in the context of the rule list;
+note that this rule can be the default rule.
+%
+Let a rule list's \emph{prefix}~$\Prefix$ be a $k$-tuple of its antecedents.
+%
+We say that a prefix~$\Prefix'$ of length~$k'$ starts with prefix~$\Prefix$ of
+length~$k \le k'$ if the first~$k$ association rules of~$\Prefix'$ are given by~$\Prefix$.
+
+Finally, given training data, a prefix of antecedents implies a rule list
+whose label predictions of the corresponding consequents and of the default rule
+are empirically determined to minimize the number misclassification errors made
+by the rule list on the training data.
+%
+In the remainder of our presentation, whenever we refer to a rule list with a
+particular prefix, we implicitly assume these empirically determined label predictions.
 
 \subsection{Branch-and-bound optimization framework}
+
+We define a simple loss function for a rule list~$\RL$ of length~$k$:
+\begin{align}
+\ell(\RL) = m(\RL) + c k.
+\label{eq:objective}
+\end{align}
+The two terms correspond to the misclassification error~$m(\RL)$
+and a regularization term that penalizes longer rule lists.
+%
+$m(\RL)$~is the fraction of training data whose labels are
+incorrectly predicted by~$\RL$.
+%
+In our setting, the regularization parameter~$c$ is a small constant;
+\eg ${c = 0.01}$ can be thought of as adding a penalty equivalent to misclassifying~$1\%$
+of data when increasing a decision rule's length by one association rule.
+
+Our objective has structure amenable to global optimization via a branch-and-bound framework.
+%
+In particular, we can decompose the misclassification error into two contributions, 
+\begin{align}
+m(\RL) = m(\Prefix) + m(d),
+\end{align}
+corresponding to mistakes made by the prefix and default rule, respectively.
+%
+Eliminating the latter error term gives a lower bound on the objective,
+\begin{align}
+\ell(\RL) \ge m(\Prefix) + c k \equiv b(\Prefix),
+\end{align}
+which is actually a lower bound on the objective of \emph{any} rule list
+of length~$k$ or longer whose prefix starts with~$\Prefix$.
+%
+Notice that if a prefix~$\Prefix'$ starts with~$\Prefix$, then~${m(\Prefix') \ge m(\Prefix)}$
+because~$\Prefix'$ makes the same mistakes as~$\Prefix$, and possibly additional mistakes.
+%
+Therefore,~${b(\Prefix') \ge b(\Prefix)}$.
+%
+A sequence of rule lists formed by sequentially appending association rules
+to the end of a prefix thus has a corresponding sequence of
+monotonically increasing objective lower bounds.
+%
+This is precisely the structure required and exploited by branch-and-bound.
 
 \subsection{Additional bounds}
 
@@ -28,6 +117,8 @@
 \section{Conclusions}
 
 \subsubsection*{Acknowledgments}
+
+E.A. is supported by the Miller Institute for Basic Research in Science, University of California, Berkeley.
 
 \bibliography{refs}
 \bibliographystyle{abbrvnat}
