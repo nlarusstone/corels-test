@@ -10,6 +10,7 @@ __pycache__/
 # Temp files
 *.swp
 *.swo
+*~
 
 # GNUmakefile deps
 src/.deps/*
