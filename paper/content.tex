@@ -42,10 +42,10 @@ association rule whose antecedent simply asserts true.
 A rule list classifies a datum~$x_n$ by providing the predicted label given
 by the consequent of the first rule whose antecedent is true for~$x_n$.
 %
-We say that this rule \emph{captures}~$x_n$ in the context of the rule list;
+We say that this rule captures~$x_n$ in the context of the rule list;
 note that this rule can be the default rule.
 %
-Let a rule list's \emph{prefix}~$\Prefix$ be a $k$-tuple of its antecedents.
+Let a rule list's prefix~$\Prefix$ be a $k$-tuple of its antecedents.
 %
 We say that a prefix~$\Prefix'$ of length~$k'$ starts with prefix~$\Prefix$ of
 length~$k \le k'$ if the first~$k$ association rules of~$\Prefix'$ are given by~$\Prefix$.
@@ -86,6 +86,7 @@ corresponding to mistakes made by the prefix and default rule, respectively.
 Eliminating the latter error term gives a lower bound~$b(\Prefix)$ on the objective,
 \begin{align}
 b(\Prefix) \equiv m(\Prefix) + c k \le \ell(\RL),
+\label{eq:lower-bound}
 \end{align}
 which is actually a lower bound on the objective of \emph{any} rule list
 of length~$k$ or longer whose prefix starts with~$\Prefix$.
@@ -101,15 +102,75 @@ monotonically increasing objective lower bounds.
 %
 This is precisely the structure required and exploited by branch-and-bound.
 
-\subsection{Additional bounds}
+Specifically, the lower bound tells us when we can prune the state space.
+%
+While executing branch-and-bound, we keep track of the best (smallest) known objective~$\ell*$.
+%
+If we encounter a prefix~$\Prefix$ with lower bound at least as large as~$\ell*$,
+\begin{align}
+b(\Prefix) \ge \ell*,
+\end{align}
+then we needn't consider any prefix that starts with~$\Prefix$.
+
+\subsection{Additional pruning bounds}
+
+Our problem has rich structure beyond the lower bound in~\eqref{eq:lower-bound}.
+%
+In this section, we enumerate a series of additional bounds that combine to yield
+aggressive pruning opportunities throughout the execution of our branch-and-bound algorithm.
+
+\subsubsection{Lower bound with one-step lookahead}
+
+We begin with an immediate consequence of~\eqref{eq:lower-bound}.
+%
+Given a prefix~$\Prefix$ of length~$k$, any longer prefix~$\Prefix'$ that starts
+with~$\Prefix$ has length at least~${k+1}$.
+%
+Thus, even if we find that~${b(\Prefix) < \ell*}$, we can still prune all longer
+prefixes~$\Prefix'$ if
+\begin{align}
+b(\Prefix) + c = m(\Prefix) + c (k + 1) \ge \ell*,
+\end{align}
+where $\ell*$ is the best known objective.
+
+\subsubsection{Permutation bound for symmetry-aware garbage collection}
+
+Let us say that a prefix of length~$k$ captures those data that are captured
+by one of its~$k$ association rules; for a rule list with prefix~$\Prefix$,
+data not captured by~$\Prefix$ are classified by the default rule.
+%
+If two prefixes~$\cal{P}$ and~$\cal{Q}$ are composed of the same antecedents and
+equivalent up to a permutation, then they also capture the same data.
+%
+Their two corresponding rule lists need not yield the same objective, since the
+loss function depends on rule order.
+%
+Obtain a prefix~$\cal{P}'$ by appending~$\cal{P}$ with some ordered list of
+unique antecedents not contained in~$\cal{P}$, and~$\cal{Q}'$ by appending~$\cal{Q}$
+with the same ordered list.
+%
+The performance of the rule list formed from~$\cal{P}'$ compared to~$\cal{P}$ will be
+the same as that of the rule list formed from~$\cal{Q}'$ compared to~$\cal{Q}$, \eg
+\begin{align}
+\ell(\cal{P}') - \ell(\cal{P}) = \ell(\cal{Q}') - \ell(\cal{Q}).
+\end{align}
+Thus, we can prune whichever of~$\cal{P}$ or~$\cal{Q}$ performs worse than the other.
+%
+We call this symmetry-aware garbage collection.
+%
+Since a prefix of length~$k$ belongs to an equivalence class of~$k!$ prefixes
+equivalent up to permutation, this garbage collection dramatically prunes the search space.
+
+\subsubsection{Not captured bound}
+
+Generalization of captures.
 
 \begin{itemize}
-\item permutation bounds
+\item other permutation bounds
 \item similarity bounds
 \item support positive bound
 \item not-too-many incorrect bound
 \item not too similar to the default rule bound
-\item lower bound with one step lookahead
 \item when rules commute, dominates
 \item when a rule has too-low support after a prefix, then it will always have too-low support below the prefix
 \end{itemize}
@@ -117,11 +178,18 @@ This is precisely the structure required and exploited by branch-and-bound.
 \subsection{Cache data structure}
 \label{sec:cache}
 
+Our cache is a trie.
+
+\subsection{Symmetry-aware data structure}
+
 \subsection{Scheduling policies}
 
 \begin{itemize}
 \item breadth-first
-\item curiosity
+\item depth-first
+\item something based on greedy
+\item (curiosity, lower bound, optimization) $\times$ (priority queue, something like Thompson sampling)
+\item optimistic
 \end{itemize}
 
 \subsection{Large-scale optimization}
