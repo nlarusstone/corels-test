@@ -159,53 +159,54 @@ L = K - 1.
 
 Suppose~$\RL^*$ is the optimal rule list, and rule~$A$ is in~$\RL^*$.
 %
-We can decompose~$\ell(\RL^*)$ into three terms, corresponding to
-the contribution from rules preceding~$A$, the contribution from rule~$A$,
-and the contribution from rules following~$A$, including the default rule:
+Let~$\RL_{<A}^*$ refer to the portion of~$\RL^*$ preceding rule~$A$,
+let~$\RL_A^*$ denote rule~$A$ in the context of~$\RL^*$, and let~$\RL_{>A}^*$
+refer to the portion of~$\RL^*$ following rule~$A$, including the default rule.
+%
+We can decompose~$\ell(\RL^*)$ into three contributions,
+corresponding to the above three components of~$\RL^*$:
 \begin{align}
 \ell^* = \ell(\RL^*) = \ell(\RL_{<A}^*) + (m(\RL_A^*) + c) + \ell(\RL_{>A}^*).
 \end{align}
-%
 Now consider the rule list~$\RL$ derived from~$\RL^*$ by deleting rule~$A$.
 %
 Let~$\RL_{<A}$ and~$\RL_{>A}$ refer to the portions of~$\RL$
-`before' and `after' where rule~$A$ had been.
+preceding and following where rule~$A$ had been, respectively.
 %
 Notice that~$\RL_{<A}$ behaves the same as~$\RL_{<A}^*$,
 but~$\RL_{>A}$ may behave differently from~$\RL_{>A}^*$.
 %
-% ELA is confused about \ell(\RL_{>A}) compared to \ell(\RL_{>A}^*).
-% Had previously written: "Note that in this context, all rules "after R" capture
-% at least the same data they captured before, and thus misclassify the same data." (email 7/22)
+Specifically,~$\RL_{>A}$ captures all data captured by~$\RL_{>A}^*$, as well as
+none, some, or all data captured by~$\RL_A^*$.
 %
-The worst possible loss~$\ell(\RL)$ would occur if all the data captured by~$A$,
-in the context of~$\RL^*$, were now misclassified by~$\RL_{>A}$.
+The worst possible loss~$\ell(\RL)$ would occur if all the data
+captured by~$\RL_A^*$ were now misclassified by~$\RL_{>A}$.
 %
-Let~$s(\RL_A^*)$ denote the normalized support of rule~$A$ --
-\ie the fraction of data captured by rule~$A$ -- in the context of~$\RL^*$.
+Let~$s(\RL_A^*)$ denote the normalized support of~$\RL_A^*$,
+\ie the fraction of data captured by rule~$A$.
 %
-For~$\RL^*$ to be optimal, we must have~${\ell(\RL^*) \le \ell(\RL)}$, which implies that
+For~$\RL^*$ to be optimal, we must have~${\ell(\RL^*) < \ell(\RL)}$, which implies that
 \begin{align}
-m(\RL_A^*) + c \le s(\RL_A^*).
+m(\RL_A^*) + c + \ell(\RL_{>A}^*) < \ell(\RL_{>A}) \le \ell(\RL_{>A}^*) + s(\RL_A^*).
 \end{align}
 Rearranging gives
 \begin{align}
-c \le s(\RL_A^*) - m(\RL_A^*),
+c < s(\RL_A^*) - m(\RL_A^*),
 \label{eq:min-capture-correct}
 \end{align}
 therefore the regularization parameter~$c$ provides a lower bound on the expression
 on the right, which is the fraction of data correctly classified by rule~$A$.
 %
 Thus, we can prune a prefix~$\Prefix$ if any of its antecedents do not capture and
-correctly classify at least a fraction~$c$ of data, even if~${b(\Prefix) < \ell^*}$.
+correctly classify more than a fraction~$c$ of data, even if~${b(\Prefix) < \ell^*}$.
 
 \subsubsection{Lower bound on per-rule support}
 
 A requirement of the previous bound~\eqref{eq:min-capture-correct}
 is that for a rule list~$\RL^*$ to be optimal, every rule~$A$ in~$\RL^*$ must
-capture at least a fraction~$c$ of data:
+capture more than a fraction~$c$ of data:
 \begin{align}
-c \le s(\RL_A^*).
+c < s(\RL_A^*).
 \label{eq:min-capture}
 \end{align}
 Thus, we can prune a prefix if any of its rules do not capture at least
@@ -227,9 +228,9 @@ It follows that for \emph{any} rule list~$\RL'$ that places rule~$A$ after
 a set of rules whose antecedents include in any order the antecedents in~$\Prefix$,
 then rule~$A$ has insufficient accurate support in the context of~$\RL'$.
 %
-Restating this using earlier notation, if~${s(\RL_A) < c}$, then
+Restating this using earlier notation, if~${s(\RL_A) \le c}$, then
 \begin{align}
-s(\RL'_A) < c,
+s(\RL'_A) \le c,
 \end{align}
 where~$s(\RL_A)$ is the fraction of data captured by rule~$A$ in the context of rule list~$\RL$.
 %
@@ -312,7 +313,7 @@ Propagating this forward reduces the (maximum) number of evaluated prefixes to
 %= 1 + \sum_{k=1}^K \frac{M! (M - k + 1)}{(k - 1)! (M - k + 1)!}
 = 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}.
 \end{align}
-Pruning based on permutation symmetries thus yields dramatic computational savings.
+Pruning based on permutation symmetries thus yields significant computational savings.
 
 For example, if~${M = 100}$ and~${K = 5}$, then the na\"ive number of prefix evaluations is
 about ${9.1 \times 10^9}$, while the reduced number of evaluations is about ${3.9 \times 10^8}$,
