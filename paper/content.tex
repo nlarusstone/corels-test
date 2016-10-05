@@ -10,6 +10,8 @@
 
 \citep{YangRuSe16}
 
+\citep{garofalakis:2000-kdd,garofalakis:2000-sigkdd,garofalakis:2003}
+
 \section{A branch-and-bound framework for optimizing rule lists}
 
 \subsection{Rule lists for binary classification}
@@ -47,6 +49,10 @@ note that this rule can be the default rule.
 %
 Let a rule list's prefix~$\Prefix$ be a $k$-tuple of its antecedents.
 %
+We say that a prefix of length~$k$ captures those data that are captured
+by one of its~$k$ association rules; for a rule list with prefix~$\Prefix$,
+data not captured by~$\Prefix$ are classified by the default rule.
+%
 We say that a prefix~$\Prefix'$ of length~$k'$ starts with prefix~$\Prefix$ of
 length~$k \le k'$ if the first~$k$ association rules of~$\Prefix'$ are given by~$\Prefix$.
 
@@ -71,9 +77,12 @@ and a regularization term that penalizes longer rule lists.
 $m(\RL)$~is the fraction of training data whose labels are
 incorrectly predicted by~$\RL$.
 %
-In our setting, the regularization parameter~$c$ is a small constant;
+In our setting, the regularization parameter~${c \ge 0}$ is a small constant;
 \eg ${c = 0.01}$ can be thought of as adding a penalty equivalent to misclassifying~$1\%$
 of data when increasing a decision rule's length by one association rule.
+%
+We will sometimes abuse notation and write~$\ell(\Prefix)$ in place of~$\ell(\RL)$,
+where~$\RL$ is the rule list with prefix~$\Prefix$ and label predictions set by training data.
 
 Our objective has structure amenable to global optimization via a branch-and-bound framework.
 %
@@ -104,11 +113,11 @@ This is precisely the structure required and exploited by branch-and-bound.
 
 Specifically, the lower bound tells us when we can prune the state space.
 %
-While executing branch-and-bound, we keep track of the best (smallest) known objective~$\ell*$.
+While executing branch-and-bound, we keep track of the best (smallest) known objective~$\ell^*$.
 %
-If we encounter a prefix~$\Prefix$ with lower bound at least as large as~$\ell*$,
+If we encounter a prefix~$\Prefix$ with lower bound at least as large as~$\ell^*$,
 \begin{align}
-b(\Prefix) \ge \ell*,
+b(\Prefix) \ge \ell^*,
 \end{align}
 then we needn't consider any prefix that starts with~$\Prefix$.
 
@@ -126,53 +135,159 @@ We begin with an immediate consequence of~\eqref{eq:lower-bound}.
 Given a prefix~$\Prefix$ of length~$k$, any longer prefix~$\Prefix'$ that starts
 with~$\Prefix$ has length at least~${k+1}$.
 %
-Thus, even if we find that~${b(\Prefix) < \ell*}$, we can still prune all longer
+Thus, even if we find that~${b(\Prefix) < \ell^*}$, we can still prune all longer
 prefixes~$\Prefix'$ if
 \begin{align}
-b(\Prefix) + c = m(\Prefix) + c (k + 1) \ge \ell*,
+b(\Prefix) + c = m(\Prefix) + c (k + 1) \ge \ell^*,
 \end{align}
-where $\ell*$ is the best known objective.
+where $\ell^*$ is the best known objective.
+
+\subsubsection{Upper bound on prefix length}
+
+At any point during branch-and-bound execution, the best known objective~$\ell^*$
+implies an upper bound on the maximum prefix length we might still have to consider:
+\begin{align}
+M \equiv \left\lfloor \frac{\ell^*}{c} \right\rfloor \le \left\lfloor \frac{1}{c} \right\rfloor.
+\end{align}
+Furthermore, if we ever encounter a perfect rule list~$\RL$ of length~$L$,
+\ie with~${\ell(\RL) = m(\RL) + c = c}$, then we only have to consider shorter prefixes:
+\begin{align}
+M = L - 1.
+\end{align}
+
+\subsubsection{Lower bound on per-rule accurate support}
+
+Suppose~$\RL^*$ is the optimal rule list, and rule~$A$ is in~$\RL^*$.
+%
+We can decompose~$\ell(\RL^*)$ into three terms, corresponding to
+the contribution from rules preceding~$A$, the contribution from rule~$A$,
+and the contribution from rules following~$A$, including the default rule:
+\begin{align}
+\ell^* = \ell(\RL^*) = \ell(\RL_{<A}^*) + (m(\RL_A^*) + c) + \ell(\RL_{>A}^*).
+\end{align}
+%
+Now consider the rule list~$\RL$ derived from~$\RL^*$ by deleting rule~$A$.
+%
+Let~$\RL_{<A}$ and~$\RL_{>A}$ refer to the portions of~$\RL$
+`before' and `after' where rule~$A$ had been.
+%
+Notice that~$\RL_{<A}$ behaves the same as~$\RL_{<A}^*$,
+but~$\RL_{>A}$ may behave differently from~$\RL_{>A}^*$.
+%
+% ELA is confused about \ell(\RL_{>A}) compared to \ell(\RL_{>A}^*)
+%
+The worst possible loss~$\ell(\RL)$ would occur if all the data captured by~$A$,
+in the context of~$\RL^*$, were now misclassified by~$\RL_{>A}$.
+%
+Let~$s(\RL_A^*)$ denote the normalized support of rule~$A$ --
+\ie the fraction of data captured by rule~$A$ -- in the context of~$\RL^*$.
+%
+For~$\RL^*$ to be optimal, we must have~${\ell(\RL^*) \le \ell(\RL)}$, which implies that
+\begin{align}
+m(\RL_A^*) + c \le s(\RL_A^*).
+\end{align}
+Rearranging gives
+\begin{align}
+c \le s(\RL_A^*) - m(\RL_A^*),
+\label{eq:min-capture-correct}
+\end{align}
+therefore the regularization parameter~$c$ provides a lower bound on the expression
+on the right, which is the fraction of data correctly classified by rule~$A$.
+%
+Thus, we can prune a prefix if any of its rules do not capture and correctly
+classify at least a fraction~$c$ of data.
+
+\subsubsection{Lower bound on per-rule support}
+
+A requirement of the previous bound~\eqref{eq:min-capture-correct}
+is that for a rule list~$\RL^*$ to be optimal, every rule~$A$ in~$\RL^*$ must
+capture at least a fraction~$c$ of data:
+\begin{align}
+c \le s(\RL_A^*).
+\label{eq:min-capture}
+\end{align}
+Thus, we can prune a prefix if any of its rules do not capture at least
+a fraction~$c$ of data.
+%
+This lower bound is easy to check and a sub-condition of~\eqref{eq:min-capture-correct},
+thus checking it first can accelerate pruning.
+
+\subsubsection{Propagation of insufficient accurate support}
+
+When a rule has too-low support after a prefix, then it will always have too-low support below the prefix.
 
 \subsubsection{Permutation bound for symmetry-aware garbage collection}
 
-Let us say that a prefix of length~$k$ captures those data that are captured
-by one of its~$k$ association rules; for a rule list with prefix~$\Prefix$,
-data not captured by~$\Prefix$ are classified by the default rule.
-%
 If two prefixes~$\cal{P}$ and~$\cal{Q}$ are composed of the same antecedents and
 equivalent up to a permutation, then they also capture the same data.
 %
 Their two corresponding rule lists need not yield the same objective, since the
-loss function depends on rule order.
+loss function~\eqref{eq:objective} depends on rule order.
 %
 Obtain a prefix~$\cal{P}'$ by appending~$\cal{P}$ with some ordered list of
 unique antecedents not contained in~$\cal{P}$, and~$\cal{Q}'$ by appending~$\cal{Q}$
 with the same ordered list.
 %
 The performance of the rule list formed from~$\cal{P}'$ compared to~$\cal{P}$ will be
-the same as that of the rule list formed from~$\cal{Q}'$ compared to~$\cal{Q}$, \eg
+the same as that of the rule list formed from~$\cal{Q}'$ compared to~$\cal{Q}$, \ie
 \begin{align}
 \ell(\cal{P}') - \ell(\cal{P}) = \ell(\cal{Q}') - \ell(\cal{Q}).
 \end{align}
-Thus, we can prune whichever of~$\cal{P}$ or~$\cal{Q}$ performs worse than the other.
+Without loss of generality, suppose that~${\ell(\cal{P}) \ge \ell(\cal{Q})}$.
 %
-We call this symmetry-aware garbage collection.
+Let~$\cal{P}^*$ be the optimal prefix that starts with~$\cal{P}$.
+%
+Its counterpart~$\cal{Q}^*$ is the optimal prefix that starts with~$\cal{Q}$,
+and it cannot be superior to~$\cal{P^*}$:
+%
+\begin{align}
+\ell(\cal{P}^*) = \ell(\cal{Q^*}) + (\ell(\cal{P}) - \ell(\cal{Q})) \ge \ell(\cal{Q^*}).
+\end{align}
+%
+Thus, we can prune~$\cal{Q}$;
+in our implementation, we call this symmetry-aware garbage collection.
 %
 Since a prefix of length~$k$ belongs to an equivalence class of~$k!$ prefixes
 equivalent up to permutation, this garbage collection dramatically prunes the search space.
 
+\subsubsection{Equivalence of rule lists when rules commute}
+
+If two rules~$A$ and~$B$ capture disjoint subsets of data,
+then they commute globally in the sense that any rule list where~$A$ and~$B$ are
+adjacent is equivalent to another rule list where~$A$ and~$B$ swap positions.
+%
+More generally, a rule list containing possibly multiple, possibly overlapping
+pairs of commuting rules is equivalent to any other rule list that can be generated
+by swapping one or more such pairs of rules.
+%
+We can avoid evaluating multiple such equivalent rule lists by eliminating all but one.
+%
+%We achieve this by restricting how we grow a prefix (by appending a rule), as informed by a hash map cdict that maps each rule R_i to a set of rules S_i = {R_j} such that R_i commutes with every R_j in S_i and j > i. When growing a prefix that ends with rule R_i, we only append a rule R_j if it is not in S_i.
+
+\subsubsection{Dominates}
+
+Let rule~$A$ dominate rule~$B$ if the data captured by~$B$ is a subset of the data captured by~$A$.
+%
+Rule~$B$ should never follow rule~$A$ in a rule list, because it will never capture additional data.
+%
+More precisely, if~$\RL$ is a rule list that contains rule~$A$ and doesn't contain rule~$B$,
+and~$\RL'$ is derived from~$\RL$ by inserting rule~$B$ anywhere after~$A$, then
+\begin{align}
+\ell(\RL') = \ell(\RL) + c \ge \ell(\RL).
+\end{align}
+%
+%Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
+
 \subsubsection{Not captured bound}
 
-Generalization of captures.
+Generalization of captures, perhaps with some details to work out?
+If two prefixes aren't formed from the same set of rules, then their subtrees aren't quite the same.
 
 \begin{itemize}
 \item other permutation bounds
 \item similarity bounds
-\item support positive bound
 \item not-too-many incorrect bound
 \item not too similar to the default rule bound
-\item when rules commute, dominates
-\item when a rule has too-low support after a prefix, then it will always have too-low support below the prefix
 \end{itemize}
 
 \subsection{Cache data structure}
