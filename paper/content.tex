@@ -147,12 +147,12 @@ where $\ell^*$ is the best known objective.
 At any point during branch-and-bound execution, the best known objective~$\ell^*$
 implies an upper bound on the maximum prefix length we might still have to consider:
 \begin{align}
-M \equiv \left\lfloor \frac{\ell^*}{c} \right\rfloor \le \left\lfloor \frac{1}{c} \right\rfloor.
+L \equiv \left\lfloor \frac{\ell^*}{c} \right\rfloor \le \left\lfloor \frac{1}{c} \right\rfloor.
 \end{align}
-Furthermore, if we ever encounter a perfect rule list~$\RL$ of length~$L$,
+Furthermore, if we ever encounter a perfect rule list~$\RL$ of length~$K$,
 \ie with~${\ell(\RL) = m(\RL) + c = c}$, then we only have to consider shorter prefixes:
 \begin{align}
-M = L - 1.
+L = K - 1.
 \end{align}
 
 \subsubsection{Lower bound on per-rule accurate support}
@@ -279,6 +279,50 @@ in our implementation, we call this symmetry-aware garbage collection.
 %
 Since a prefix of length~$k$ belongs to an equivalence class of~$k!$ prefixes
 equivalent up to permutation, this garbage collection dramatically prunes the search space.
+
+For example, consider a state space defined by rule lists up to length~$K$
+formed from a set of~$M$ available rules.
+%
+We can think of our problem as finding the optimal $k$-permutation of the~$M$ rules,
+where~${k \le K}$.
+%
+This na\"ively gives a state space of size
+\begin{align}
+\sum_{k=0}^K P(M, k) = \sum_{k=0}^K \frac{M!}{(M - k)!}
+%= 1 + M + M(M-1) + M(M-1)(M-2) + \dots + M(M-1)\cdots (M-k+1)
+\end{align}
+where~${P(M, k)}$ denotes the number of $k$-permutations of~$M$.
+
+Now consider a breadth-first exploration of the state space,
+where after evaluating prefixes of length~$k$, we only keep a single best prefix
+from each set of prefixes equivalent up to a permutation.
+%
+For example, we start by evaluating the empty prefix,
+$M$ prefixes of length~${k=1}$, and~${P(M, 2)}$ prefixes of length~${k=2}$.
+%
+Before proceeding to length~${k=3}$, we keep only~${C(M, 2)}$ prefixes of length~${k=2}$,
+where~${C(M, k)}$ denotes the number of $k$-combinations of~$M$.
+%
+Now, the number of length~${k=3}$ prefixes we evaluate is~${C(M, 2) (M - 2)}$.
+%
+Propagating this forward reduces the (maximum) number of evaluated prefixes to
+\begin{align}
+1 + \sum_{k=1}^K C(M, k-1) (M - k + 1)
+%= 1 + \sum_{k=1}^K {M \choose k-1}(M - k + 1)
+%= 1 + \sum_{k=1}^K \frac{M! (M - k + 1)}{(k - 1)! (M - k + 1)!}
+= 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}.
+\end{align}
+Pruning based on permutation symmetries thus yields dramatic computational savings.
+
+For example, if~${M = 100}$ and~${K = 5}$, then the na\"ive number of prefix evaluations is
+about ${9.1 \times 10^9}$, while the reduced number of evaluations is about ${3.9 \times 10^8}$,
+which is smaller by a factor of about~23.
+%
+If~${M=1000}$ and~${K = 10}$, the number of evaluations fall from
+about~${9.6 \times 10^{29}}$ to about~${2.7 \times 10^{24}}$,
+which is smaller by a factor of about~360,000.
+%
+% ELA : someone please double-check these numbers :)
 
 \subsubsection{Equivalence of rule lists when rules commute}
 
