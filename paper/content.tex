@@ -196,8 +196,8 @@ c \le s(\RL_A^*) - m(\RL_A^*),
 therefore the regularization parameter~$c$ provides a lower bound on the expression
 on the right, which is the fraction of data correctly classified by rule~$A$.
 %
-Thus, we can prune a prefix if any of its rules do not capture and correctly
-classify at least a fraction~$c$ of data.
+Thus, we can prune a prefix~$\Prefix$ if any of its antecedents do not capture and
+correctly classify at least a fraction~$c$ of data, even if~${b(\Prefix) < \ell^*}$.
 
 \subsubsection{Lower bound on per-rule support}
 
@@ -214,9 +214,37 @@ a fraction~$c$ of data.
 This lower bound is easy to check and a sub-condition of~\eqref{eq:min-capture-correct},
 thus checking it first can accelerate pruning.
 
-\subsubsection{Propagation of insufficient accurate support}
+\subsubsection{Propagation of insufficient (accurate) support}
 
-When a rule has too-low support after a prefix, then it will always have too-low support below the prefix.
+Suppose we grow a rule list by appending rule~$A$ not already in the rule list,
+\ie by adding an antecedent to its prefix~$\Prefix$.
+%
+Now suppose rule~$A$ in the context of this new rule list~$\RL$ has
+insufficient accurate support~\eqref{eq:min-capture-correct},
+with insufficient support~\eqref{eq:min-capture} being a special case.
+%
+It follows that for \emph{any} rule list~$\RL'$ that places rule~$A$ after
+a set of rules whose antecedents include in any order the antecedents in~$\Prefix$,
+then rule~$A$ has insufficient accurate support in the context of~$\RL'$.
+%
+Restating this using earlier notation, if~${s(\RL_A) < c}$, then
+\begin{align}
+s(\RL'_A) < c,
+\end{align}
+where~$s(\RL_A)$ is the fraction of data captured by rule~$A$ in the context of rule list~$\RL$.
+%
+For example, consider a rule list~$\RL'$ derived from~$\RL$ that holds rule~$A$ fixed
+but permutes any of the other (earlier) antecedents given by those in~$\Prefix$.
+%
+The permutation of~$\Prefix$ captures the same data as~$\Prefix$,
+therefore rule~$A$ behaves the same in both contexts,
+and in particular captures and correctly classifies the same data.
+%
+Another rule list~$\RL''$, derived from~$\RL'$ by inserting additional rules anywhere,
+maintains the invariant that rule~$A$ appears after rules with antecedents in~$\Prefix$;
+it can capture and correctly classify at most as much data as rule~$A$ in~$\RL'$.
+%
+%A rule is rejected by a prefix if it doesn't correctly capture enough data (it must correctly capture >= c * ndata). Let Q be P's parent. If Q rejects a rule, then P will also reject that rule. This 'inheritance' of rejected rules only depends on which data are captured by Q, and doesn't actually depend on the order of rules in Q. Let S be the set of rules formed from (K-1) rules of P, in any order. P inherits rejected rules from any elements of S. Because of our symmetry-based garbage collection of prefixes equivalent up to a permutation, there are at most K elements of S in the cache; we can identify these via the inverse canonical map (ICM) that maps an ordered prefix to its permutation in the cache. We thus lazily initialize the list of P's reject list of rejected rules.
 
 \subsubsection{Permutation bound for symmetry-aware garbage collection}
 
