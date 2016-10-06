@@ -20,7 +20,7 @@ We restrict our setting to binary classification,
 where rule lists are Boolean functions;
 this framework is straightforward to generalize to multi-class classification.
 %
-Let us denote training data by~${\{(x_n, y_n)\}_{n=1}^N}$,
+Let us denote training data by~$\x = {\{(x_n, y_n)\}_{n=1}^N}$,
 where~${x_n \in \{0, 1\}^d}$ are binary features and~${y_n \in \{0, 1\}}$ are labels.
 
 A rule list~$\RL$ of length~$k \ge 0$ is defined by a $(k+1)$-tuple consisting of~$k$
@@ -68,20 +68,22 @@ particular prefix, we implicitly assume these empirically determined label predi
 
 We define a simple loss function for a rule list~$\RL$ of length~$k$:
 \begin{align}
-\ell(\RL) = m(\RL) + c k.
+\ell(\RL, \x) = m(\RL, \x) + c k.
 \label{eq:objective}
 \end{align}
-The two terms correspond to the misclassification error~$m(\RL)$
+The two terms correspond to the misclassification error~$m(\RL, \x)$
 and a regularization term that penalizes longer rule lists.
 %
-$m(\RL)$~is the fraction of training data whose labels are
+$m(\RL, \x)$~is the fraction of training data whose labels are
 incorrectly predicted by~$\RL$.
 %
 In our setting, the regularization parameter~${c \ge 0}$ is a small constant;
 \eg ${c = 0.01}$ can be thought of as adding a penalty equivalent to misclassifying~$1\%$
 of data when increasing a decision rule's length by one association rule.
 %
-We will sometimes abuse notation and write~$\ell(\Prefix)$ in place of~$\ell(\RL)$,
+In the remainder, we will typically suppress the dependence on training data~$\x$ in our notation.
+%
+We will also sometimes abuse notation and write~$\ell(\Prefix)$ in place of~$\ell(\RL)$,
 where~$\RL$ is the rule list with prefix~$\Prefix$ and label predictions set by training data.
 
 Our objective has structure amenable to global optimization via a branch-and-bound framework.
@@ -105,11 +107,12 @@ because~$\Prefix'$ makes the same mistakes as~$\Prefix$, and possibly additional
 %
 Therefore,~${b(\Prefix') \ge b(\Prefix)}$.
 %
-A sequence of rule lists formed by sequentially appending association rules
+A sequence of rule lists formed by sequentially appending antecedents
 to the end of a prefix thus has a corresponding sequence of
 monotonically increasing objective lower bounds.
 %
-This is precisely the structure required and exploited by branch-and-bound.
+This is precisely the structure required and exploited by branch-and-bound,
+illustrated in Algorithm~\ref{alg:branch-and-bound}.
 
 Specifically, the lower bound tells us when we can prune the state space.
 %
@@ -120,6 +123,32 @@ If we encounter a prefix~$\Prefix$ with lower bound at least as large as~$\ell^*
 b(\Prefix) \ge \ell^*,
 \end{align}
 then we needn't consider any prefix that starts with~$\Prefix$.
+
+\begin{algorithm}[t!]
+\caption{Branch-and-bound for learning rule lists.}
+\label{alg:branch-and-bound}
+\begin{algorithmic}
+\normalsize
+\State \textbf{Input:} Objective function~$\ell(\RL, \x)$, objective lower bound~${b(\Prefix, \x)}$,
+set of antecedents~${\RuleSet = \{s_m\}_{m=1}^M}$, training data~$\x = {\{(x_n, y_n)\}_{n=1}^N}$,
+initial best known rule list~$\RL_0$ with objective~${\ell_0 = \ell(\RL_0, \x)}$
+\State \textbf{Output:} Optimal rule list~$\RL^*$ with minimum objective~$\ell^*$
+\State $(\RL^*, \ell^*) \gets (\RL_0, \ell_0)$ \Comment{Initialize best known prefix and objective}
+\State queue~$Q$.push$(())$ \Comment{Initialize queue with empty prefix}
+\While {$Q$ not empty} \Comment{Optimization complete when the queue is empty}
+	\State $\Prefix \gets Q$.pop() \Comment{Remove a prefix from the queue}
+	\If {$b(\Prefix, \x) < \ell^*$} \Comment{Only extend prefix if lower bound is smaller than~$\ell^*$}
+        \For {$s$ in $\RuleSet$ if $s$ not in $\Prefix$} \Comment{Generate prefixes with distinct antecedents}
+            \State $Q$.push$(\Prefix$.append$(s))$ \Comment{Add single antecedent extensions of prefix to queue}
+        \EndFor
+        \State $\ell \gets \ell(\RL, \x)$ \Comment{Compute objective of~$\RL$, the rule list with prefix~$\Prefix$}
+        \If {$\ell < \ell^*$}
+            \State $(\RL^*, \ell^*) \gets (\RL, \ell)$ \Comment{Update best known prefix and objective}
+        \EndIf
+    \EndIf
+\EndWhile
+\end{algorithmic}
+\end{algorithm}
 
 \subsection{Additional pruning bounds}
 
