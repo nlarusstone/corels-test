@@ -259,31 +259,71 @@ and~$\RL'$ is derived from~$\RL$ by inserting rule~$B$ anywhere after~$A$, then
 By considering rule semantics, it is easy to think of common situations
 leading to dominance relationships between rules.
 %
-For example, if rules~$A$ and~$B$ have antecedents~${(x_1 = 0)}$
-and~${(x_1 = 0) \wedge (x_2 = 1)}$, then rule~$A$ dominates rule~$B$.
+For example, if rule~$A$'s antecedent is~${(x_1 = 0)}$ and rule~$B$'s
+antecedent is~${(x_1 = 0) \wedge (x_2 = 1)}$, then rule~$A$ dominates rule~$B$.
 %
 %Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
 
-\subsubsection{Propagation of insufficient (accurate) support}
+\subsubsection{Lower bound on rule similarity to a default rule}
 
-Suppose we grow a rule list by appending rule~$A$ not already in the rule list,
-\ie by adding an antecedent to its prefix~$\Prefix$.
+Let~$\RL$ be a rule list with prefix~$\Prefix$, default rule~$d$, and objective~$\ell(\RL)$.
 %
-Now suppose rule~$A$ in the context of this new rule list~$\RL$ has
-insufficient accurate support~\eqref{eq:min-capture-correct},
-with insufficient support~\eqref{eq:min-capture} being a special case.
+Let~$\RL'$ be a rule list with prefix~$\Prefix'$ that starts with~$\Prefix$ and adds one rule~$A$.
 %
-It follows that for \emph{any} rule list~$\RL'$ that places rule~$A$ after
-a set of rules whose antecedents include in any order the antecedents in~$\Prefix$,
-then rule~$A$ has insufficient accurate support in the context of~$\RL'$.
+If, in the context of~$\RL'$, rule~$A$ captures all remaining data not captured by~$\Prefix$,
+then rule~$A$ behaves like~$\RL$'s default rule~$d$ while incurring a penalty of~$c$,
+\ie ~${\ell(\RL') = \ell(\RL) + c}$.
+
+More generally, suppose rule~$A$ captures all data in the support of~$d$
+except for a fraction~${f < c}$.
 %
-Restating this using earlier notation, if~${s(\RL_A) \le c}$, then
+Then, the best outcome for~$\RL'$ would be if it could correctly classify
+the entire majority class with respect to the support of~$d$,
+plus a fraction~$f$ of data belonging to the minority class.
+%
+This would yield a reduction in misclassification of a fraction~${f < c}$
+of data while incurring a penalty of~$c$, yielding~${\ell(\RL') \ge \ell(\RL)}$.
+%
+Furthermore, we would never extend~$\RL'$ with additional rules,
+since insufficient data remain to be captured~\eqref{eq:min-capture}.
+%
+Thus, we require
 \begin{align}
-s(\RL'_A) \le c,
+s(\RL'_A) \le s(\RL_d) - c,
+\label{eq:max-capture}
 \end{align}
-where~$s(\RL_A)$ is the fraction of data captured by rule~$A$ in the context of rule list~$\RL$.
+where~$s(\RL'_A)$ is the normalized support of~$A$ in~$\RL'$,
+$s(\RL_d)$ is the normalized support of~$d$ in~$\RL$,
+and~$c$ is the regularization parameter.
+
+\subsubsection{Propagation of rejected rules}
+
+Suppose we grow a rule list~$\RL$ by appending rule~$A$ not already in the rule list,
+\ie by adding an antecedent to its prefix~$\Prefix$; call this new rule list~$\RL'$.
 %
-For example, consider a rule list~$\RL'$ derived from~$\RL$ that holds rule~$A$ fixed
+If in the context of~$\RL'$ rule~$A$ has insufficient accurate support~\eqref{eq:min-capture-correct},
+insufficient support~\eqref{eq:min-capture},
+or captures too many data compared to the original default rule~\eqref{eq:max-capture},
+then we say that rule list~$\RL$~\emph{rejects} rule~$A$.
+
+We now describe a large class of rule lists related to~$\RL$ that also reject rule~$A$:
+if~$\RL'$ is \emph{any} rule list containing rules whose antecedents include,
+in any order, the antecedents in~$\Prefix$, then~$\RL'$ also rejects rule~$A$.
+%
+Furthermore,~$\RL'$ rejects~$A$ for the same reason that~$\RL$ rejects~$A$.
+%
+For example, suppose that when we add rule~$A$ to rule list~$\RL$,
+it has insufficient support~\eqref{eq:min-capture}: ${s(\RL_A) \le c}$,
+where~$s(\RL_A)$ is the normalized support of~$A$ in the context of~$\RL$.
+%
+In the context of~$\RL'$, the prefix preceding~$A$ captures at least
+as much data as the prefix of~$\RL$, thus
+\begin{align}
+s(\RL'_A) \le s(\RL_A) \le c,
+\end{align}
+where~$s(\RL'_A)$ is the normalized support of rule~$A$ in~$\RL'$.
+
+As another example, consider a rule list~$\RL'$ derived from~$\RL$ that holds rule~$A$ fixed
 but permutes any of the other (earlier) antecedents given by those in~$\Prefix$.
 %
 The permutation of~$\Prefix$ captures the same data as~$\Prefix$,
@@ -292,7 +332,7 @@ and in particular captures and correctly classifies the same data.
 %
 Another rule list~$\RL''$, derived from~$\RL'$ by inserting additional rules anywhere,
 maintains the invariant that rule~$A$ appears after rules with antecedents in~$\Prefix$;
-it can capture and correctly classify at most as much data as rule~$A$ in~$\RL'$.
+it can capture and correctly classify at most as much data as rule~$A$ in rule list~$\RL'$.
 %
 %A rule is rejected by a prefix if it doesn't correctly capture enough data (it must correctly capture >= c * ndata). Let Q be P's parent. If Q rejects a rule, then P will also reject that rule. This 'inheritance' of rejected rules only depends on which data are captured by Q, and doesn't actually depend on the order of rules in Q. Let S be the set of rules formed from (K-1) rules of P, in any order. P inherits rejected rules from any elements of S. Because of our symmetry-based garbage collection of prefixes equivalent up to a permutation, there are at most K elements of S in the cache; we can identify these via the inverse canonical map (ICM) that maps an ordered prefix to its permutation in the cache. We thus lazily initialize the list of P's reject list of rejected rules.
 
@@ -388,22 +428,6 @@ We can avoid evaluating multiple such equivalent rule lists by eliminating all b
 %
 %We achieve this by restricting how we grow a prefix (by appending a rule), as informed by a hash map cdict that maps each rule R_i to a set of rules S_i = {R_j} such that R_i commutes with every R_j in S_i and j > i. When growing a prefix that ends with rule R_i, we only append a rule R_j if it is not in S_i.
 
-\subsubsection{Lower bound on similarity to the default rule}
-
-Let~$\RL$ be a rule list with prefix~$\Prefix$, default rule~$d$, and objective~$\ell(\RL)$.
-%
-Let~$\RL'$ be a rule list with prefix~$\Prefix'$ that starts with~$\Prefix$ and adds one rule~$A$.
-%
-If, in the context of~$\RL'$, rule~$A$ captures all remaining data not captured by~$\Prefix$,
-then rule~$A$ behaves like~$\RL$'s default rule~$d$ while incurring a penalty of~$c$,
-\ie ~${\ell(\RL') = \ell(\RL) + c}$.
-%
-% It would never make sense to extend~$\RL'$ with more rules, since no data remains to be captured.
-%
-More generally, \dots
-%
-% ELA appears to have gotten confused here
-
 \subsubsection{Not captured bound}
 
 Generalization of captures, perhaps with some details to work out?
@@ -412,7 +436,7 @@ If two prefixes aren't formed from the same set of rules, then their subtrees ar
 \begin{itemize}
 \item other permutation bounds
 \item similarity bounds
-\item not-too-many incorrect bound
+\item not-too-many incorrect bound:  ELA doesn't remember this one
 \end{itemize}
 
 \subsection{Cache data structure}
