@@ -123,7 +123,7 @@ then we needn't consider any prefix that starts with~$\Prefix$.
 
 \subsection{Additional pruning bounds}
 
-Our problem has rich structure beyond the lower bound in~\eqref{eq:lower-bound}.
+Our problem has rich structure beyond the objective lower bound in~\eqref{eq:lower-bound}.
 %
 In this section, we enumerate a series of additional bounds that combine to yield
 aggressive pruning opportunities throughout the execution of our branch-and-bound algorithm.
@@ -214,6 +214,26 @@ a fraction~$c$ of data.
 %
 This lower bound is easy to check and a sub-condition of~\eqref{eq:min-capture-correct},
 thus checking it first can accelerate pruning.
+
+\subsubsection{Insufficient per-rule support due to rule dominance}
+
+Let us say that rule~$A$ dominates rule~$B$ if the data captured by~$B$ is a subset of the data captured by~$A$.
+%
+Rule~$B$ should never follow rule~$A$ in a rule list because it will never capture additional data;
+this scenario is a special case where~\eqref{eq:min-capture} immediately applies.
+%
+More precisely, if~$\RL$ is a rule list that contains rule~$A$ and doesn't contain rule~$B$,
+and~$\RL'$ is derived from~$\RL$ by inserting rule~$B$ anywhere after~$A$, then
+\begin{align}
+\ell(\RL') = \ell(\RL) + c \ge \ell(\RL).
+\end{align}
+By considering rule semantics, it is easy to think of common situations
+leading to dominance relationships between rules.
+%
+For example, if rules~$A$ and~$B$ have antecedents~${(x_1 = 0)}$
+and~${(x_1 = 0) \wedge (x_2 = 1)}$, then rule~$A$ dominates rule~$B$.
+%
+%Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
 
 \subsubsection{Propagation of insufficient (accurate) support}
 
@@ -339,19 +359,21 @@ We can avoid evaluating multiple such equivalent rule lists by eliminating all b
 %
 %We achieve this by restricting how we grow a prefix (by appending a rule), as informed by a hash map cdict that maps each rule R_i to a set of rules S_i = {R_j} such that R_i commutes with every R_j in S_i and j > i. When growing a prefix that ends with rule R_i, we only append a rule R_j if it is not in S_i.
 
-\subsubsection{Dominates}
+\subsubsection{Lower bound on similarity to the default rule}
 
-Let rule~$A$ dominate rule~$B$ if the data captured by~$B$ is a subset of the data captured by~$A$.
+Let~$\RL$ be a rule list with prefix~$\Prefix$, default rule~$d$, and objective~$\ell(\RL)$.
 %
-Rule~$B$ should never follow rule~$A$ in a rule list, because it will never capture additional data.
+Let~$\RL'$ be a rule list with prefix~$\Prefix'$ that starts with~$\Prefix$ and adds one rule~$A$.
 %
-More precisely, if~$\RL$ is a rule list that contains rule~$A$ and doesn't contain rule~$B$,
-and~$\RL'$ is derived from~$\RL$ by inserting rule~$B$ anywhere after~$A$, then
-\begin{align}
-\ell(\RL') = \ell(\RL) + c \ge \ell(\RL).
-\end{align}
+If, in the context of~$\RL'$, rule~$A$ captures all remaining data not captured by~$\Prefix$,
+then rule~$A$ behaves like~$\RL$'s default rule~$d$ while incurring a penalty of~$c$,
+\ie ~${\ell(\RL') = \ell(\RL) + c}$.
 %
-%Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
+% It would never make sense to extend~$\RL'$ with more rules, since no data remains to be captured.
+%
+More generally, \dots
+%
+% ELA appears to have gotten confused here
 
 \subsubsection{Not captured bound}
 
@@ -362,7 +384,6 @@ If two prefixes aren't formed from the same set of rules, then their subtrees ar
 \item other permutation bounds
 \item similarity bounds
 \item not-too-many incorrect bound
-\item not too similar to the default rule bound
 \end{itemize}
 
 \subsection{Cache data structure}
