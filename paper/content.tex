@@ -202,67 +202,12 @@ By comparing the lower bound~$b(\Prefix)$ to~$\ell^*$, we can write
 L(\Prefix) \le \left\lfloor \frac{\ell^* - b(\Prefix)}{c} \right\rfloor.
 \label{eq:max-length-prefix}
 \end{align}
-This bound can be viewed as a generalization of~\eqref{eq:lookahead};
-also note that when~$\Prefix$ is the empty prefix,
+This can be viewed as a generalization of our one-step lookahead
+bound~\eqref{eq:lookahead}; it is an upper bound on the number of remaining `steps'
+corresponding to sequential, single-rule extensions of~$\Prefix$.
+%
+Note also that when~$\Prefix$ is the empty prefix,
 this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix) = 0}$.
-
-\subsubsection{Upper bounds on the number of remaining prefix evaluations}
-\label{sec:ub-size}
-
-We can use our upper bounds on prefix length~(\S\ref{sec:ub-prefix-length})
-to calculate upper bounds on the number of remaining prefix evaluations.
-%
-For example, once we've evaluated the empty prefix, we'll have~${\ell^* \le 0.5}$,
-therefore by~\eqref{eq:max-length}, ${K = \lfloor 0.5 / c \rfloor}$ gives
-an upper bound on the maximum prefix length to consider.
-
-Suppose our state space is defined by rule lists formed from a set of~$M$ rules.
-%
-We can think of our problem as finding the optimal $k$-permutation of the~$M$ rules,
-where~${k \le K}$.
-%
-This na\"ively gives a remaining state space of size
-\begin{align}
-\sum_{k=1}^K P(M, k) = \sum_{k=1}^K \frac{M!}{(M - k)!},
-\label{eq:size-naive}
-\end{align}
-where~${P(M, k)}$ denotes the number of $k$-permutations of~$M$.
-
-At any point during branch-and-bound execution, we can calculate an upper bound
-on the number of remaining prefix evaluations from the current best objective~$\ell^*$
-and information about prefixes are planning to evaluate,
-\ie prefixes in the queue of Algorithm~\ref{alg:branch-and-bound}.
-%
-First, let's define~$K$ to be the upper bound on prefix length
-given by combining~\eqref{eq:max-length} and~\eqref{eq:max-length-perfect}.
-%
-For any length-$j$ prefix~$\Prefix$ in the queue,
-the maximum number of prefixes that start with~$\Prefix$ and remain to be evaluated is:
-\begin{align}
-\sum_{k=0}^{K-j} P(M-j, k) = \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!}.
-\end{align}
-Let~$n_j$ denote the number of prefixes of length~$j$ in the queue,
-then an upper bound on the number of remaining prefix evaluations is:
-\begin{align}
-\sum_{j=1}^J n_j \left( \sum_{k=0}^{K-j} P(M-j, k) \right)
-= \sum_{j=1}^J n_j \left( \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!} \right),
-\end{align}
-where~$J \le K$ is the maximum prefix length in the queue.
-
-We can use more finely grained information about prefixes in the queue
-to obtain a tighter upper bound.
-%
-Let~$Q$ denote the queue.
-%
-Let~$j(\Prefix)$ denote the length of prefix~$\Prefix$,
-and let~$K(\Prefix)$ denote the upper bound on prefix length
-for prefixes that start with~$\Prefix$, given by~\eqref{eq:max-length-prefix}.
-%
-We can now write the following upper bound on the number of remaining prefix evaluations:
-\begin{align}
-\sum_{\Prefix \in Q} \sum_{k=0}^{K(\Prefix) - j(P)} P(M - j(P), k)
-= \sum_{\Prefix \in Q} \sum_{k=0}^{K(\Prefix) - j(P)} \frac{(M-j(P))!}{(M-j(P) - k)!}
-\end{align}
 
 \subsubsection{Lower bound on per-rule accurate support}
 
@@ -463,53 +408,7 @@ and it cannot be superior to~$\cal{P^*}$:
 Thus, we can prune~$\cal{Q}$;
 in our implementation, we call this symmetry-aware garbage collection.
 %
-We illustrate the subsequent computational savings below in~\S\ref{sec:permutation-counting}.
-
-\subsubsection{Upper bound on the number of prefix evaluations with symmetry-aware garbage collection}
-\label{sec:permutation-counting}
-
-Since a prefix of length~$k$ belongs to an equivalence class of~$k!$ prefixes
-equivalent up to permutation, symmetry-aware garbage collection~(\S\ref{sec:permutation})
-dramatically prunes the search space.
-%
-Recall the na\"ive state space size calculation~\eqref{eq:size-naive},
-for rule lists up to length~$K$ formed from a set of~$M$ available rules:
-\begin{align}
-\sum_{k=0}^K P(M, k) = \sum_{k=0}^K \frac{M!}{(M - k)!}
-%= 1 + M + M(M-1) + M(M-1)(M-2) + \dots + M(M-1)\cdots (M-k+1)
-\end{align}
-where~${P(M, k)}$ denotes the number of $k$-permutations of~$M$.
-
-Now consider a breadth-first exploration of the state space,
-where after evaluating prefixes of length~$k$, we only keep a single best prefix
-from each set of prefixes equivalent up to a permutation.
-%
-For example, we start by evaluating the empty prefix,
-$M$ prefixes of length~${k=1}$, and~${P(M, 2)}$ prefixes of length~${k=2}$.
-%
-Before proceeding to length~${k=3}$, we keep only~${C(M, 2)}$ prefixes of length~${k=2}$,
-where~${C(M, k)}$ denotes the number of $k$-combinations of~$M$.
-%
-Now, the number of length~${k=3}$ prefixes we evaluate is~${C(M, 2) (M - 2)}$.
-%
-Propagating this forward reduces the (maximum) number of evaluated prefixes to
-\begin{align}
-1 + \sum_{k=1}^K C(M, k-1) (M - k + 1)
-%= 1 + \sum_{k=1}^K {M \choose k-1}(M - k + 1)
-%= 1 + \sum_{k=1}^K \frac{M! (M - k + 1)}{(k - 1)! (M - k + 1)!}
-= 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}.
-\end{align}
-Pruning based on permutation symmetries thus yields significant computational savings.
-
-For example, if~${M = 100}$ and~${K = 5}$, then the na\"ive number of prefix evaluations is
-about ${9.1 \times 10^9}$, while the reduced number of evaluations is about ${3.9 \times 10^8}$,
-which is smaller by a factor of about~23.
-%
-If~${M=1000}$ and~${K = 10}$, the number of evaluations fall from
-about~${9.6 \times 10^{29}}$ to about~${2.7 \times 10^{24}}$,
-which is smaller by a factor of about~360,000.
-%
-% ELA : someone please double-check these numbers :)
+We illustrate the subsequent computational savings in~\S\ref{sec:permutation-counting}.
 
 \subsubsection{Equivalent support bound for symmetry-aware garbage collection}
 
@@ -570,6 +469,126 @@ provides a lower bound on~$\ell(\cal{Q}^*)$.
 \item other permutation bounds
 \item not-too-many incorrect bound:  ELA doesn't remember this one
 \end{itemize}
+
+%For any prefix P, we can write down a lower bound on its permutations' objectives.  (I'm not talking about longer prefixes, just permutations of the same length, call it L.)   An easy bound comes from assuming that there is a permutation that makes no mistakes on captured data, so the only contributions to the objective come from the mistakes of the default rule (call this m) and c*L.  All the permutations capture the same data, so m is constant and this gives
+
+%min objective( any permutation of P ) >= m/n + c*L
+
+%Actually we can make this tighter if we know lower bound information from permutations of sub-prefixes.  For example, the length (L-1) "sub-prefixes" of P generate L permutation groups.  We can add the minimum number of mistakes (on captured data) made by prefixes over all of these groups to our bound, call this k
+
+%min objective( any permutation of P ) >= k/n + m/n + c*L
+
+%We only know k if we've already evaluated the length (L-1) permutations -- we do know it in the breadth-first setting.  (This idea could be generalized to shorter sub-prefixes if desired, e.g., for policies other than breadth first.)
+
+\subsection{Upper bounds on the number of prefix evaluations}
+
+In this section, we use our upper bounds on prefix length to derive upper bounds on
+the number of remaining prefix evaluations during branch-and-bound execution.
+
+\subsubsection{Upper bounds on the number of remaining prefix evaluations}
+\label{sec:ub-size}
+
+First, we use upper bounds on prefix length from~\S\ref{sec:ub-prefix-length};
+these bounds do not take into account symmetry-aware garbage collection,
+which we consider separately in~\S\ref{sec:permutation-counting}.
+%
+For example, once we've evaluated the empty prefix, we'll have~${\ell^* \le 0.5}$,
+therefore by~\eqref{eq:max-length}, ${K = \lfloor 0.5 / c \rfloor}$ gives
+an upper bound on the maximum prefix length to consider.
+
+Suppose our state space is defined by rule lists formed from a set of~$M$ rules.
+%
+We can think of our problem as finding the optimal $k$-permutation of the~$M$ rules,
+where~${k \le K}$.
+%
+This na\"ively gives a remaining state space of size
+\begin{align}
+\sum_{k=1}^K P(M, k) = \sum_{k=1}^K \frac{M!}{(M - k)!},
+\label{eq:size-naive}
+\end{align}
+where~${P(M, k)}$ denotes the number of $k$-permutations of~$M$.
+
+At any point during branch-and-bound execution, we can calculate an upper bound
+on the number of remaining prefix evaluations from the current best objective~$\ell^*$
+and information about prefixes are planning to evaluate,
+\ie prefixes in the queue of Algorithm~\ref{alg:branch-and-bound}.
+%
+First, let's define~$K$ to be the upper bound on prefix length
+given by combining~\eqref{eq:max-length} and~\eqref{eq:max-length-perfect}.
+%
+For any length-$j$ prefix~$\Prefix$ in the queue,
+the maximum number of prefixes that start with~$\Prefix$ and remain to be evaluated is:
+\begin{align}
+\sum_{k=0}^{K-j} P(M-j, k) = \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!}.
+\end{align}
+Let~$n_j$ denote the number of prefixes of length~$j$ in the queue,
+then an upper bound on the number of remaining prefix evaluations is:
+\begin{align}
+\sum_{j=1}^J n_j \left( \sum_{k=0}^{K-j} P(M-j, k) \right)
+= \sum_{j=1}^J n_j \left( \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!} \right),
+\end{align}
+where~$J \le K$ is the maximum prefix length in the queue.
+
+We can use more finely grained information about prefixes in the queue
+to obtain a tighter upper bound.
+%
+Let~$Q$ denote the queue.
+%
+Let~$j(\Prefix)$ denote the length of prefix~$\Prefix$,
+and let~$K(\Prefix)$ denote the upper bound on prefix length
+for prefixes that start with~$\Prefix$, given by~\eqref{eq:max-length-prefix}.
+%
+We can now write the following upper bound on the number of remaining prefix evaluations:
+\begin{align}
+\sum_{\Prefix \in Q} \sum_{k=0}^{K(\Prefix) - j(P)} P(M - j(P), k)
+= \sum_{\Prefix \in Q} \sum_{k=0}^{K(\Prefix) - j(P)} \frac{(M-j(P))!}{(M-j(P) - k)!}
+\end{align}
+
+\subsubsection{Upper bound on the number of prefix evaluations with symmetry-aware garbage collection}
+\label{sec:permutation-counting}
+
+Since a prefix of length~$k$ belongs to an equivalence class of~$k!$ prefixes
+equivalent up to permutation, symmetry-aware garbage collection~(\S\ref{sec:permutation})
+dramatically prunes the search space.
+%
+Recall the na\"ive state space size calculation~\eqref{eq:size-naive},
+for rule lists up to length~$K$ formed from a set of~$M$ available rules:
+\begin{align}
+\sum_{k=0}^K P(M, k) = \sum_{k=0}^K \frac{M!}{(M - k)!}
+%= 1 + M + M(M-1) + M(M-1)(M-2) + \dots + M(M-1)\cdots (M-k+1)
+\end{align}
+where~${P(M, k)}$ denotes the number of $k$-permutations of~$M$.
+
+Now consider a breadth-first exploration of the state space,
+where after evaluating prefixes of length~$k$, we only keep a single best prefix
+from each set of prefixes equivalent up to a permutation.
+%
+For example, we start by evaluating the empty prefix,
+$M$ prefixes of length~${k=1}$, and~${P(M, 2)}$ prefixes of length~${k=2}$.
+%
+Before proceeding to length~${k=3}$, we keep only~${C(M, 2)}$ prefixes of length~${k=2}$,
+where~${C(M, k)}$ denotes the number of $k$-combinations of~$M$.
+%
+Now, the number of length~${k=3}$ prefixes we evaluate is~${C(M, 2) (M - 2)}$.
+%
+Propagating this forward reduces the (maximum) number of evaluated prefixes to
+\begin{align}
+1 + \sum_{k=1}^K C(M, k-1) (M - k + 1)
+%= 1 + \sum_{k=1}^K {M \choose k-1}(M - k + 1)
+%= 1 + \sum_{k=1}^K \frac{M! (M - k + 1)}{(k - 1)! (M - k + 1)!}
+= 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}.
+\end{align}
+Pruning based on permutation symmetries thus yields significant computational savings.
+
+For example, if~${M = 100}$ and~${K = 5}$, then the na\"ive number of prefix evaluations is
+about ${9.1 \times 10^9}$, while the reduced number of evaluations is about ${3.9 \times 10^8}$,
+which is smaller by a factor of about~23.
+%
+If~${M=1000}$ and~${K = 10}$, the number of evaluations fall from
+about~${9.6 \times 10^{29}}$ to about~${2.7 \times 10^{24}}$,
+which is smaller by a factor of about~360,000.
+%
+% ELA : someone please double-check these numbers :)
 
 \subsection{Cache data structure}
 \label{sec:cache}
