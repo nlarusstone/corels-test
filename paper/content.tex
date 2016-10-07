@@ -150,12 +150,14 @@ initial best known rule list~$\RL_0$ with objective~${\ell_0 = \ell(\RL_0, \x)}$
 \end{algorithmic}
 \end{algorithm}
 
-\subsection{Additional pruning bounds}
+\subsection{Additional pruning bounds and problem symmetries}
 
-Our problem has rich structure beyond the objective lower bound in~\eqref{eq:lower-bound}.
+Our problem has rich structure beyond the objective lower bound in~\eqref{eq:lower-bound},
+including several instances of symmetries.
 %
-In this section, we enumerate a series of additional bounds that combine to yield
-aggressive pruning opportunities throughout the execution of our branch-and-bound algorithm.
+In this section, we enumerate a series of additional bounds and symmetries that
+combine to yield aggressive pruning opportunities throughout the execution of
+our branch-and-bound algorithm.
 
 \subsubsection{Lower bound with one-step lookahead}
 
@@ -336,7 +338,22 @@ it can capture and correctly classify at most as much data as rule~$A$ in rule l
 %
 %A rule is rejected by a prefix if it doesn't correctly capture enough data (it must correctly capture >= c * ndata). Let Q be P's parent. If Q rejects a rule, then P will also reject that rule. This 'inheritance' of rejected rules only depends on which data are captured by Q, and doesn't actually depend on the order of rules in Q. Let S be the set of rules formed from (K-1) rules of P, in any order. P inherits rejected rules from any elements of S. Because of our symmetry-based garbage collection of prefixes equivalent up to a permutation, there are at most K elements of S in the cache; we can identify these via the inverse canonical map (ICM) that maps an ordered prefix to its permutation in the cache. We thus lazily initialize the list of P's reject list of rejected rules.
 
+\subsubsection{Equivalence of rule lists when rules commute}
+
+If two rules~$A$ and~$B$ capture disjoint subsets of data,
+then they commute globally in the sense that any rule list where~$A$ and~$B$ are
+adjacent is equivalent to another rule list where~$A$ and~$B$ swap positions.
+%
+More generally, a rule list containing possibly multiple, possibly overlapping
+pairs of commuting rules is equivalent to any other rule list that can be generated
+by swapping one or more such pairs of rules.
+%
+We can avoid evaluating multiple such equivalent rule lists by eliminating all but one.
+%
+%We achieve this by restricting how we grow a prefix (by appending a rule), as informed by a hash map cdict that maps each rule R_i to a set of rules S_i = {R_j} such that R_i commutes with every R_j in S_i and j > i. When growing a prefix that ends with rule R_i, we only append a rule R_j if it is not in S_i.
+
 \subsubsection{Permutation bound for symmetry-aware garbage collection}
+\label{sec:permutation}
 
 If two prefixes~$\cal{P}$ and~$\cal{Q}$ are composed of the same antecedents and
 equivalent up to a permutation, then they also capture the same data.
@@ -362,6 +379,7 @@ and it cannot be superior to~$\cal{P^*}$:
 %
 \begin{align}
 \ell(\cal{P}^*) = \ell(\cal{Q^*}) + (\ell(\cal{P}) - \ell(\cal{Q})) \ge \ell(\cal{Q^*}).
+\label{eq:permutation}
 \end{align}
 %
 Thus, we can prune~$\cal{Q}$;
@@ -414,28 +432,63 @@ which is smaller by a factor of about~360,000.
 %
 % ELA : someone please double-check these numbers :)
 
-\subsubsection{Equivalence of rule lists when rules commute}
+\subsubsection{Equivalent support bound for symmetry-aware garbage collection}
 
-If two rules~$A$ and~$B$ capture disjoint subsets of data,
-then they commute globally in the sense that any rule list where~$A$ and~$B$ are
-adjacent is equivalent to another rule list where~$A$ and~$B$ swap positions.
+Here, we present a bound that generalizes our permutation bound~\eqref{eq:permutation},
+which can be viewed as special case.
 %
-More generally, a rule list containing possibly multiple, possibly overlapping
-pairs of commuting rules is equivalent to any other rule list that can be generated
-by swapping one or more such pairs of rules.
+Consider two prefixes~$\cal P$ and~$\cal Q$ that capture exactly the same data.
 %
-We can avoid evaluating multiple such equivalent rule lists by eliminating all but one.
+Note that~$\cal P$ rejects each of the rules in~$\cal Q$, and vice versa;
+any other rules rejected by~$\cal P$ are also rejected by~$\cal Q$, and vice versa.
 %
-%We achieve this by restricting how we grow a prefix (by appending a rule), as informed by a hash map cdict that maps each rule R_i to a set of rules S_i = {R_j} such that R_i commutes with every R_j in S_i and j > i. When growing a prefix that ends with rule R_i, we only append a rule R_j if it is not in S_i.
+More importantly, any possible extension of~$\cal P$ yields the same additive effect,
+with respect to lower bound~$b(\Prefix)$ and corresponding objective~$\ell(\Prefix)$,
+compared to the analogous extension of~$\cal Q$.
+%
+By reasoning analogous to the special case of permutations~(\S\ref{sec:permutation}),
+we only ever have to keep the prefix with the better objective.
 
-\subsubsection{Not captured bound}
+\subsubsection{Bound on differences between similar prefixes}
 
-Generalization of captures, perhaps with some details to work out?
-If two prefixes aren't formed from the same set of rules, then their subtrees aren't quite the same.
+We now present a slight relaxation of our equivalent support bound.
+%
+Suppose prefixes~$\cal P$ and~$\cal Q$ capture the same data,
+and now derive~$\cal P'$ from~$\cal P$ by appending antecedent~$p$
+and derive~$\cal Q'$ from~$\cal Q$ by appending antecedent~$q$.
+%
+Suppose further that~$p$ and~$q$ capture nearly the same data, except that
+they exclusively capture data~$x_p$ and~$x_q$ in their respective contexts,
+such that the normalized support of~$x_p$ and of~$x_q$ are each bounded by
+the regularization parameter: ${s(x_p), s(x_q) < c}$.
+%
+Our minimum support bound~\eqref{eq:min-capture} implies
+that~$p$ would never be placed below~$\cal Q'$ nor~$q$ below~$\cal P'$.
+
+Extensions of~$\cal P'$ and~$\cal Q'$ will behave similarly.
+%
+The largest difference would occur if a rule list starting with~$\cal P'$
+misclassified all of~$x_p$ and~$x_q$, while the analogous rule list starting
+with~$\cal Q'$ correctly classified all these data, or vice versa,
+yielding a difference between objectives bounded by~$2c$.
+%
+Let~$\cal P^*$ and~$\cal Q^*$ be the optimal prefixes
+starting with~$\cal P'$ and~$\cal Q'$, respectively.
+%
+Note that~$\cal P^*$ and~$\cal Q^*$ need not be derived from~$\cal P'$ and~$\cal Q'$
+via analogous extensions.
+%
+If we know~$\cal P^*$, then we can avoid evaluating \emph{any} extensions of~$\cal Q'$ if
+\begin{align}
+\ell(\Prefix^*) - 2 c \ge \ell^*,
+\end{align}
+where~$\ell^*$ is the best known objective, since the left had expression
+provides a lower bound on~$\ell(\cal{Q}^*)$.
+
+% ELA would like to generalize this to any two prefixes that capture similar data
 
 \begin{itemize}
 \item other permutation bounds
-\item similarity bounds
 \item not-too-many incorrect bound:  ELA doesn't remember this one
 \end{itemize}
 
