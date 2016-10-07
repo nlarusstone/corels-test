@@ -130,11 +130,11 @@ then we needn't consider any prefix that starts with~$\Prefix$.
 \begin{algorithmic}
 \normalsize
 \State \textbf{Input:} Objective function~$\ell(\RL, \x)$, objective lower bound~${b(\Prefix, \x)}$,
-set of antecedents~${\RuleSet = \{s_m\}_{m=1}^M}$, training data~$\x = {\{(x_n, y_n)\}_{n=1}^N}$,
+set of antecedents ${\RuleSet = \{s_m\}_{m=1}^M}$, training data~$\x = {\{(x_n, y_n)\}_{n=1}^N}$,
 initial best known rule list~$\RL_0$ with objective~${\ell_0 = \ell(\RL_0, \x)}$
 \State \textbf{Output:} Optimal rule list~$\RL^*$ with minimum objective~$\ell^*$
 \State $(\RL^*, \ell^*) \gets (\RL_0, \ell_0)$ \Comment{Initialize best known prefix and objective}
-\State queue~$Q$.push$(())$ \Comment{Initialize queue with empty prefix}
+\State $Q \gets $ queue$(())$ \Comment{Initialize queue with empty prefix}
 \While {$Q$ not empty} \Comment{Optimization complete when the queue is empty}
 	\State $\Prefix \gets Q$.pop() \Comment{Remove a prefix from the queue}
 	\If {$b(\Prefix, \x) < \ell^*$} \Comment{Only extend prefix if lower bound is smaller than~$\ell^*$}
@@ -170,20 +170,98 @@ Thus, even if we find that~${b(\Prefix) < \ell^*}$, we can still prune all longe
 prefixes~$\Prefix'$ if
 \begin{align}
 b(\Prefix) + c = m(\Prefix) + c (k + 1) \ge \ell^*,
+\label{eq:lookahead}
 \end{align}
 where $\ell^*$ is the best known objective.
 
-\subsubsection{Upper bound on prefix length}
+\subsubsection{Upper bounds on prefix length}
+\label{sec:ub-prefix-length}
 
 At any point during branch-and-bound execution, the best known objective~$\ell^*$
-implies an upper bound on the maximum prefix length we might still have to consider:
+implies an upper bound on the maximum prefix length~$L$ we might still have to consider:
 \begin{align}
-L \equiv \left\lfloor \frac{\ell^*}{c} \right\rfloor \le \left\lfloor \frac{1}{c} \right\rfloor.
+L \le \left\lfloor \frac{\ell^*}{c} \right\rfloor \le \left\lfloor \frac{1}{c} \right\rfloor.
+\label{eq:max-length}
 \end{align}
-Furthermore, if we ever encounter a perfect rule list~$\RL$ of length~$K$,
-\ie with~${\ell(\RL) = m(\RL) + c = c}$, then we only have to consider shorter prefixes:
+Furthermore, if we ever encounter a perfect rule list~$\RL$ of length~$k$,
+\ie with~${\ell(\RL) = m(\RL) + ck = ck}$, then as we continue,
+we only ever have to consider shorter prefixes:
 \begin{align}
-L = K - 1.
+L = k - 1.
+\label{eq:max-length-perfect}
+\end{align}
+
+For any particular prefix~$\Prefix$, we can obtain potentially tighter bounds on
+prefix length for the family of all prefixes that start with~$\Prefix$.
+%
+Let~$L(\Prefix)$ denote the length of the longest prefix that is evaluated by
+branch-and-bound and starts with~$\Prefix$.
+%
+By comparing the lower bound~$b(\Prefix)$ to~$\ell^*$, we can write
+\begin{align}
+L(\Prefix) \le \left\lfloor \frac{\ell^* - b(\Prefix)}{c} \right\rfloor.
+\label{eq:max-length-prefix}
+\end{align}
+This bound can be viewed as a generalization of~\eqref{eq:lookahead};
+also note that when~$\Prefix$ is the empty prefix,
+this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix) = 0}$.
+
+\subsubsection{Upper bounds on the number of remaining prefix evaluations}
+\label{sec:ub-size}
+
+We can use our upper bounds on prefix length~(\S\ref{sec:ub-prefix-length})
+to calculate upper bounds on the number of remaining prefix evaluations.
+%
+For example, once we've evaluated the empty prefix, we'll have~${\ell^* \le 0.5}$,
+therefore by~\eqref{eq:max-length}, ${K = \lfloor 0.5 / c \rfloor}$ gives
+an upper bound on the maximum prefix length to consider.
+
+Suppose our state space is defined by rule lists formed from a set of~$M$ rules.
+%
+We can think of our problem as finding the optimal $k$-permutation of the~$M$ rules,
+where~${k \le K}$.
+%
+This na\"ively gives a remaining state space of size
+\begin{align}
+\sum_{k=1}^K P(M, k) = \sum_{k=1}^K \frac{M!}{(M - k)!},
+\label{eq:size-naive}
+\end{align}
+where~${P(M, k)}$ denotes the number of $k$-permutations of~$M$.
+
+At any point during branch-and-bound execution, we can calculate an upper bound
+on the number of remaining prefix evaluations from the current best objective~$\ell^*$
+and information about prefixes are planning to evaluate,
+\ie prefixes in the queue of Algorithm~\ref{alg:branch-and-bound}.
+%
+First, let's define~$K$ to be the upper bound on prefix length
+given by combining~\eqref{eq:max-length} and~\eqref{eq:max-length-perfect}.
+%
+For any length-$j$ prefix~$\Prefix$ in the queue,
+the maximum number of prefixes that start with~$\Prefix$ and remain to be evaluated is:
+\begin{align}
+\sum_{k=0}^{K-j} P(M-j, k) = \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!}.
+\end{align}
+Let~$n_j$ denote the number of prefixes of length~$j$ in the queue,
+then an upper bound on the number of remaining prefix evaluations is:
+\begin{align}
+\sum_{j=1}^J n_j \left( \sum_{k=0}^{K-j} P(M-j, k) \right)
+= \sum_{j=1}^J n_j \left( \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!} \right),
+\end{align}
+where~$J \le K$ is the maximum prefix length in the queue.
+
+We can use more finely grained information about prefixes in the queue
+to obtain a tighter upper bound.
+%
+Let~$Q$ denote the queue.
+%
+Let~$j(\Prefix)$ denote the length of prefix~$\Prefix$,
+and let~$K(\Prefix)$ denote the upper bound on prefix length
+for prefixes that start with~$\Prefix$, given by~\eqref{eq:max-length-prefix}.
+%
+We can now write the following upper bound on the number of remaining prefix evaluations:
+\begin{align}
+\sum_{\Prefix \in Q} \sum_{k=0}^{K(\Prefix) - j(P)} P(M - j(P), k)
+= \sum_{\Prefix \in Q} \sum_{k=0}^{K(\Prefix) - j(P)} \frac{(M-j(P))!}{(M-j(P) - k)!}
 \end{align}
 
 \subsubsection{Lower bound on per-rule accurate support}
@@ -385,16 +463,17 @@ and it cannot be superior to~$\cal{P^*}$:
 Thus, we can prune~$\cal{Q}$;
 in our implementation, we call this symmetry-aware garbage collection.
 %
-Since a prefix of length~$k$ belongs to an equivalence class of~$k!$ prefixes
-equivalent up to permutation, this garbage collection dramatically prunes the search space.
+We illustrate the subsequent computational savings below in~\S\ref{sec:permutation-counting}.
 
-For example, consider a state space defined by rule lists up to length~$K$
-formed from a set of~$M$ available rules.
+\subsubsection{Upper bound on the number of prefix evaluations with symmetry-aware garbage collection}
+\label{sec:permutation-counting}
+
+Since a prefix of length~$k$ belongs to an equivalence class of~$k!$ prefixes
+equivalent up to permutation, symmetry-aware garbage collection~(\S\ref{sec:permutation})
+dramatically prunes the search space.
 %
-We can think of our problem as finding the optimal $k$-permutation of the~$M$ rules,
-where~${k \le K}$.
-%
-This na\"ively gives a state space of size
+Recall the na\"ive state space size calculation~\eqref{eq:size-naive},
+for rule lists up to length~$K$ formed from a set of~$M$ available rules:
 \begin{align}
 \sum_{k=0}^K P(M, k) = \sum_{k=0}^K \frac{M!}{(M - k)!}
 %= 1 + M + M(M-1) + M(M-1)(M-2) + \dots + M(M-1)\cdots (M-k+1)
