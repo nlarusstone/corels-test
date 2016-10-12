@@ -20,11 +20,15 @@ We restrict our setting to binary classification,
 where rule lists are Boolean functions;
 this framework is straightforward to generalize to multi-class classification.
 %
-Let us denote training data by~$\x = {\{(x_n, y_n)\}_{n=1}^N}$,
-where~${x_n \in \{0, 1\}^d}$ are binary features and~${y_n \in \{0, 1\}}$ are labels.
+Let~${\{(x_n, y_n)\}_{n=1}^N}$ denote training data,
+where~${x_n \in \{0, 1\}^M}$ are binary features and~${y_n \in \{0, 1\}}$ are labels.
+%
+Let~${\x = \{x_n\}_{n=1}^N}$ and~${\y = \{y_n\}_{n=1}^N}$,
+and let~${x_{n,m}}$ denote the $m$-th feature of~$x_n$.
 
-A rule list~$\RL$ of length~$k \ge 0$ is defined by a $(k+1)$-tuple consisting of~$k$
-association rules followed by a default rule~$d$.
+A rule list~${\RL = (r_1, r_2, \dots, r_K, r_0)}$ is a ${(K+1)}$-tuple
+consisting of~$K$ association rules followed by a default rule~$r_0$;
+define the length of~$\RL$ to be~${K \ge 0}$.
 %
 An association rule~${p \rightarrow q}$ is an implication corresponding to the
 conditional statement, ``if~$p$, then~$q$.''
@@ -32,32 +36,39 @@ conditional statement, ``if~$p$, then~$q$.''
 In our setting, an antecedent~$p$ is a Boolean assertion that evaluates to either
 true or false for each datum~$x_n$, and a consequent~$q$ is a label prediction.
 %
-For example,~${(x_{i, 1} = 0) \wedge (x_{i, 3} = 1) \rightarrow (y_i = 1)}$
+For example,~${(x_{n, 1} = 0) \wedge (x_{n, 3} = 1) \rightarrow (y_n = 1)}$
 is an association rule that could appear in a rule list.
 %
 The number of conditions in an antecedent is its cardinality;
 the antecedent in the previous example has a cardinality of two.
 %
-The final default rule~$d$ in a rule list can be thought of as a special
+The final default rule~$r_0$ in a rule list can be thought of as a special
 association rule whose antecedent simply asserts true.
 
-A rule list classifies a datum~$x_n$ by providing the predicted label given
-by the consequent of the first rule whose antecedent is true for~$x_n$.
+A prefix~${\Prefix = (p_1, \dots, p_K)}$ is a $K$-tuple of antecedents.
 %
-We say that this rule captures~$x_n$ in the context of the rule list;
-note that this rule can be the default rule.
+We sometimes define a rule list with respect to its prefix,
+\ie as~${\RL = (\RL_\Prefix, \RL_q, q_0, K)}$,
+where~$\RL_\Prefix$ is the $K$-tuple of antecedents before the default rule,
+$\RL_q$ is a $K$-tuple of label predictions (consequents) corresponding to the prefix,
+and~$q_0$ is the default label prediction.
 %
-Let a rule list's prefix~$\Prefix$ be a $k$-tuple of its antecedents.
-%
-We say that a prefix of length~$k$ captures those data that are captured
-by one of its~$k$ association rules; for a rule list with prefix~$\Prefix$,
-data not captured by~$\Prefix$ are classified by the default rule.
-%
-We say that a prefix~$\Prefix'$ of length~$k'$ starts with prefix~$\Prefix$ of
-length~$k \le k'$ if the first~$k$ association rules of~$\Prefix'$ are given by~$\Prefix$.
+Also, we say that prefix~${\Prefix' = (p_1, \dots, p_K, \dots, p_{K'})}$
+starts with prefix~${\Prefix = (p_1, \dots, p_K)}$, for any~${1 \le K \le K'}$.
 
-Finally, given training data, a prefix of antecedents implies a rule list
-whose label predictions of the corresponding consequents and of the default rule
+A rule list~$r$ classifies a datum~$x_n$ by providing the label prediction~$q_k$
+of the first rule~$r_k$ whose antecedent~$p_k$ is true for~$x_n$.
+%
+We say that antecedent~$p_k$ captures~$x_n$ in the context of rule list~$r$;
+note that~$r_k$ can be the default rule~$r_0$.
+%
+A prefix captures those data that are captured by one of its antecedents;
+for a rule list with prefix~$\RL_\Prefix$, data not captured by~$\RL_\Prefix$
+are classified according to the default label prediction~$q_0$.
+
+Finally, given training data~${(\x, \y)}$, a prefix~${\Prefix = (p_1, \dots, p_K)}$
+implies a rule list~$\RL = (\RL_\Prefix, \RL_q, q_0, K)$,
+where~${\RL_\Prefix = \Prefix}$, and the label predictions~$\RL_q$ and~$q_0$
 are empirically determined to minimize the number misclassification errors made
 by the rule list on the training data.
 %
