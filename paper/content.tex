@@ -183,8 +183,10 @@ illustrated in Algorithm~\ref{alg:branch-and-bound}.
 \label{alg:branch-and-bound}
 \begin{algorithmic}
 \normalsize
-\State \textbf{Input:} Objective function~$\ell(\RL, \x)$, objective lower bound~${b(\Prefix, \x)}$,
-set of antecedents ${\RuleSet = \{s_m\}_{m=1}^M}$, training data~$\x = {\{(x_n, y_n)\}_{n=1}^N}$,
+\State \textbf{Input:} Objective function~$\ell(\RL, \x, \y)$,
+objective lower bound~${b(\Prefix, \x, \y)}$,
+set of antecedents ${\RuleSet = \{s_m\}_{m=1}^M}$,
+training data~$(\x, \y) = {\{(x_n, y_n)\}_{n=1}^N}$,
 initial best known rule list~$\RL_0$ with objective~${\ell_0 = \ell(\RL_0, \x)}$
 \State \textbf{Output:} Optimal rule list~$\RL^*$ with minimum objective~$\ell^*$
 \State $(\RL^*, \ell^*) \gets (\RL_0, \ell_0)$ \Comment{Initialize best known prefix and objective}
@@ -193,7 +195,7 @@ initial best known rule list~$\RL_0$ with objective~${\ell_0 = \ell(\RL_0, \x)}$
 	\State $\Prefix \gets Q$.pop() \Comment{Remove a prefix from the queue}
 	\If {$b(\Prefix, \x) < \ell^*$} \Comment{Only extend prefix if lower bound is smaller than~$\ell^*$}
         \For {$s$ in $\RuleSet$ if $s$ not in $\Prefix$} \Comment{Generate prefixes with distinct antecedents}
-            \State $Q$.push$(\Prefix$.append$(s))$ \Comment{Add single antecedent extensions of prefix to queue}
+            \State $Q$.push$((\Prefix, s))$ \Comment{Add single antecedent extensions of prefix to queue}
         \EndFor
         \State $\ell \gets \ell(\RL, \x)$ \Comment{Compute objective of~$\RL$, the rule list with prefix~$\Prefix$}
         \If {$\ell < \ell^*$}
