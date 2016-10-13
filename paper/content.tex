@@ -132,12 +132,12 @@ m(\RL, \x, \y) = m(\Prefix, r_q, q_0, \x, \y) \equiv m_p(\Prefix, \RL_q, \x, \y)
 where ${\Prefix = (p_1, \dots, p_K)}$ and ${\RL_q = (q_1, \dots, q_K)}$;
 \begin{align}
 m_p(\Prefix, \RL_q, \x, \y) =
-\frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K \one ~[~ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ~]
+\frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
 \end{align}
 is the fraction of data captured and misclassified by the prefix, and
 \begin{align}
 m_0(\Prefix, q_0, \x, \y) =
-\frac{1}{N} \sum_{n=1}^N \one ~[~ \neg~ \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ~]
+\frac{1}{N} \sum_{n=1}^N \one [ \neg~ \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
 \end{align}
 is the fraction of data not captured by the prefix and misclassified by the default.
 %
@@ -162,9 +162,9 @@ and ${\RL'_q = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$.
 Notice then that~$\Prefix'$ yields the same mistakes as~$\Prefix$,
 and possibly additional mistakes:
 \begin{align}
-&m_p(\Prefix', \RL'_q, \x, \y) \nn \\
-&= \frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \one ~[~ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ~]
-+ \sum_{k=K+1}^{K'} \one ~[~ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ~] \right) \nn \\
+m_p(\Prefix', \RL'_q, \x, \y)
+&= \frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
++ \sum_{k=K+1}^{K'} \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \right) \nn \\
 &\ge m_p(\Prefix, \RL_q, \x, \y).
 \end{align}
 Therefore, if~$\Prefix'$ starts with~$\Prefix$, then
