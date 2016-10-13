@@ -148,19 +148,24 @@ Furthermore, $b(\Prefix, \x, \y)$ gives a lower bound on the objective of
 Let ${\RL = (\Prefix, \RL_q, q_0, K)}$ and ${\RL' = (\PrefixP, \RL'_q, q'_0, K')}$,
 where~${K' \ge K}$ and $\PrefixP$ starts with~$\Prefix$.
 %
+%More explicitly, let ${\Prefix = (p_1, \dots, p_K)}$ and ${\RL_q = (q_1, \dots, q_K)}$;
+Let ${\PrefixP = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
+and ${\RL'_q = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$.
+%
 Notice then that~$\PrefixP$ yields the same mistakes as~$\Prefix$,
 and possibly additional mistakes:
 \begin{align}
-m_p(\PrefixP, \RL'_q, \x, \y) &=
-\frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \eins ~[~ p_k(x_n \given \Prefix) \wedge (q_k \neq y_n) ~]
-+ \sum_{k=K}^{K'} \eins ~[~ p_k(x_n \given \Prefix) \wedge (q_k \neq y_n) ~] \right) \nn \\
+m_p(\PrefixP, \RL'_q, \x, \y)
+%&= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K'} \eins ~[~ p'_k(x_n \given \PrefixP) \wedge (q'_k \neq y_n) ~] \nn \\
+&= \frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \eins ~[~ p_k(x_n \given \Prefix) \wedge (q_k \neq y_n) ~]
++ \sum_{k=K+1}^{K'} \eins ~[~ p_k(x_n \given \PrefixP) \wedge (q_k \neq y_n) ~] \right) \nn \\
 &\ge m_p(\Prefix, \RL_q, \x, \y).
 \end{align}
 Therefore, if~$\PrefixP$ starts with~$\Prefix$, then
 \begin{align}
-b(\PrefixP, \x, \y) = m_p(\PrefixP, \RL'_q, \x, \y) + \lambda K'
-\ge m_p(\Prefix, \RL_q, \x, \y) + \lambda K
-= b(\Prefix, \x, \y).
+b(\Prefix, \x, \y) &= m_p(\Prefix, \RL_q, \x, \y) + \lambda K \nn \\
+&\le  m_p(\PrefixP, \RL'_q, \x, \y) + \lambda K' = b(\PrefixP, \x, \y)
+\le \ell(\RL', \x, \y).
 \label{eq:prefix-lb}
 \end{align}
 %
