@@ -15,20 +15,21 @@
 \section{A branch-and-bound framework for optimizing rule lists}
 
 \subsection{Rule lists for binary classification}
+\label{sec:setup}
 
 We restrict our setting to binary classification,
 where rule lists are Boolean functions;
 this framework is straightforward to generalize to multi-class classification.
 %
 Let~${\{(x_n, y_n)\}_{n=1}^N}$ denote training data,
-where~${x_n \in \{0, 1\}^M}$ are binary features and~${y_n \in \{0, 1\}}$ are labels.
+where ${x_n \in \{0, 1\}^M}$ are binary features and ${y_n \in \{0, 1\}}$ are labels.
 %
 Let~${\x = \{x_n\}_{n=1}^N}$ and~${\y = \{y_n\}_{n=1}^N}$,
 and let~${x_{n,m}}$ denote the $m$-th feature of~$x_n$.
 
-A rule list~${\RL = (r_1, r_2, \dots, r_K, r_0)}$ is a ${(K+1)}$-tuple
-consisting of~$K$ association rules followed by a default rule~$r_0$;
-define the length of~$\RL$ to be~${K \ge 0}$.
+A rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$ of length~${K \ge 0}$ is a
+${(K+1)}$-tuple consisting of~$K$ association rules followed by a default rule~$r_0$;
+for clarity, we sometimes call this a $K$-rule list.
 %
 An association rule~${p \rightarrow q}$ is an implication corresponding to the
 conditional statement, ``if~$p$, then~$q$.''
@@ -45,78 +46,109 @@ the antecedent in the previous example has a cardinality of two.
 The final default rule~$r_0$ in a rule list can be thought of as a special
 association rule whose antecedent simply asserts true.
 
-A prefix~${\Prefix = (p_1, \dots, p_K)}$ is a $K$-tuple of antecedents.
+A $k$-prefix ${p = (p_1, \dots, p_k)}$ is a $k$-tuple of antecedents.
 %
-We sometimes define a rule list with respect to its prefix,
-\ie as~${\RL = (\RL_\Prefix, \RL_q, q_0, K)}$,
-where~$\RL_\Prefix$ is the $K$-tuple of antecedents before the default rule,
-$\RL_q$ is a $K$-tuple of label predictions (consequents) corresponding to the prefix,
-and~$q_0$ is the default label prediction.
+For~$k \le K$, the $k$-prefix of a $K$-rule list~$\RL$
+is a $k$-tuple of the first~$k$ antecedents in~$\RL$;
+we refer to the $K$-prefix of a $K$-rule list simply as its prefix.
 %
-Also, we say that prefix~${\Prefix' = (p_1, \dots, p_K, \dots, p_{K'})}$
-starts with prefix~${\Prefix = (p_1, \dots, p_K)}$, for any~${1 \le K \le K'}$.
+We often define a rule list with respect to its prefix as follows:
+${\RL = (\Prefix, \RL_q, q_0, K)}$, where~$\Prefix$ is $\RL$'s prefix,
+${\RL_q \in \{0, 1\}^K}$~are the label predictions associated with~$\Prefix$,
+and~${q_0 \in \{0, 1\}}$ is the default label prediction.
 
-A rule list~$r$ classifies a datum~$x_n$ by providing the label prediction~$q_k$
+A rule list~$\RL$ classifies datum~$x_n$ by providing the label prediction~$q_k$
 of the first rule~$r_k$ whose antecedent~$p_k$ is true for~$x_n$.
 %
-We say that antecedent~$p_k$ captures~$x_n$ in the context of rule list~$r$;
-note that~$r_k$ can be the default rule~$r_0$.
+We say that an antecedent~$p_k$ of prefix~$p$ captures~$x_n$ in the context of~$p$
+if~$p_k$ is the first antecedent in~$p$ that evaluates to true for~$x_n$.
 %
-A prefix captures those data that are captured by one of its antecedents;
-for a rule list with prefix~$\RL_\Prefix$, data not captured by~$\RL_\Prefix$
+We also say that a prefix captures those data captured by its antecedents;
+for a rule list with prefix~$\Prefix$, data not captured by~$\Prefix$
 are classified according to the default label prediction~$q_0$.
+%
+We say that prefix ${\Prefix' = (p_1, \dots, p_K, \dots, p_{K'})}$
+starts with prefix ${\Prefix = (p_1, \dots, p_K)}$, for any~${1 \le K \le K'}$;
+if~$\Prefix'$ starts with~$\Prefix$, then~$\Prefix'$ captures all the data
+that~$\Prefix$ captures.
 
-Finally, given training data~${(\x, \y)}$, a prefix~${\Prefix = (p_1, \dots, p_K)}$
-implies a rule list~$\RL = (\RL_\Prefix, \RL_q, q_0, K)$,
-where~${\RL_\Prefix = \Prefix}$, and the label predictions~$\RL_q$ and~$q_0$
-are empirically determined to minimize the number misclassification errors made
+Finally, given training data~${(\x, \y)}$, a prefix ${\Prefix = (p_1, \dots, p_K)}$
+implies a rule list ${\RL = (\Prefix, \RL_q, q_0, K)}$, where~${\Prefix = \Prefix}$,
+and the label predictions ${\RL_q = (q_1, \dots, q_K)}$ and~$q_0$
+are empirically set to minimize the number misclassification errors made
 by the rule list on the training data.
+%
+Thus, label prediction~$q_k$ corresponds to the majority label of data captured
+by~$p_k$ in the context of~$\Prefix$, and the default~$q_0$ corresponds to
+the majority label of data not captured by~$\Prefix$.
 %
 In the remainder of our presentation, whenever we refer to a rule list with a
 particular prefix, we implicitly assume these empirically determined label predictions.
 
 \subsection{Branch-and-bound optimization framework}
 
-We define a simple loss function for a rule list~$\RL$ of length~$k$:
+We define a simple loss function for a rule list~${\RL = (\Prefix, \RL_q, q_0, K)}$:
 \begin{align}
-\ell(\RL, \x) = m(\RL, \x) + c k.
+\ell(\RL, \x, \y) = m(\RL, \x, \y) + \Reg K.
 \label{eq:objective}
 \end{align}
-The two terms correspond to the misclassification error~$m(\RL, \x)$
+The two terms correspond to the misclassification error~$m(\RL, \x, \y)$
 and a regularization term that penalizes longer rule lists.
 %
-$m(\RL, \x)$~is the fraction of training data whose labels are
+$m(\RL, \x, \y)$~is the fraction of training data whose labels are
 incorrectly predicted by~$\RL$.
 %
-In our setting, the regularization parameter~${c \ge 0}$ is a small constant;
-\eg ${c = 0.01}$ can be thought of as adding a penalty equivalent to misclassifying~$1\%$
+In our setting, the regularization parameter~${\Reg \ge 0}$ is a small constant;
+\eg ${\Reg = 0.01}$ can be thought of as adding a penalty equivalent to misclassifying~$1\%$
 of data when increasing a decision rule's length by one association rule.
 %
-In the remainder, we will typically suppress the dependence on training data~$\x$ in our notation.
+%In the remainder, we will sometimes suppress the dependence on training data in our notation.
 %
-We will also sometimes abuse notation and write~$\ell(\Prefix)$ in place of~$\ell(\RL)$,
-where~$\RL$ is the rule list with prefix~$\Prefix$ and label predictions set by training data.
+%As noted in~\S\ref{sec:setup}, a prefix~$\Prefix$ and training data together
+%fully specify a rule list~${\RL = (\Prefix, \RL_q, q_0, K)}$,
+%thus let us define~${\ell(\Prefix, \x, \y) \equiv \ell(\RL, \x, \y)}$.
 
 Our objective has structure amenable to global optimization via a branch-and-bound framework.
 %
-In particular, we can decompose the misclassification error into two contributions, 
-\begin{align}
-m(\RL) = m(\Prefix) + m(d),
-\end{align}
-corresponding to mistakes made by the prefix and default rule, respectively.
+%First, define~${p_k(x_n) = 1}$ if antecedent~$p_k$ captures~$x_n$, and 0 otherwise;
+First, define~${p_k(x_n \given p) = 1}$ if antecedent~$p_k$ captures~$x_n$
+in the context of prefix~$p$, and 0 otherwise;
+define~${p(x_n) = 1}$ if prefix~$p$ captures~$x_n$, and 0 otherwise.
 %
-Eliminating the latter error term gives a lower bound~$b(\Prefix)$ on the objective,
+We can decompose the misclassification error into two contributions
+corresponding to the prefix and default:
 \begin{align}
-b(\Prefix) \equiv m(\Prefix) + c k \le \ell(\RL),
+m(\RL, \x, \y) = m(\Prefix, r_q, q_0, \x, \y) \equiv m_p(\Prefix, \RL_q, \x, \y) + m_0(\Prefix, q_0, \x, \y),
+\end{align}
+where
+\begin{align}
+m_p(\Prefix, \RL_q, \x, \y) =
+\frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K \eins ~[~ p_k(x_n \given \Prefix) \wedge (q_k \neq y_n) ~]
+\end{align}
+is the fraction of data captured and misclassified by the prefix, and
+\begin{align}
+m_0(\Prefix, q_0, \x, \y) =
+\frac{1}{N} \sum_{n=1}^N \eins ~[~ \neg~ \Prefix(x_n) \wedge (q_0 \neq y_n) ~]
+\end{align}
+is the fraction of data not captured by the prefix and misclassified by the default.
+%
+Eliminating the latter error term gives a lower bound~$b(\Prefix, \x, \y)$ on the objective,
+\begin{align}
+b(\Prefix, \x, \y) \equiv m_p(\Prefix, \RL_q, \x, \y) + \Reg K \le \ell(\Prefix, \x, \y) = \ell(\RL, \x, \y),
 \label{eq:lower-bound}
 \end{align}
-which is actually a lower bound on the objective of \emph{any} rule list
-of length~$k$ or longer whose prefix starts with~$\Prefix$.
+where we have suppressed the lower bound's dependence on label predictions~$\RL_q$
+because they are fully determined, given~${(\Prefix, \x, \y)}$.
 %
-Notice that if a prefix~$\Prefix'$ starts with~$\Prefix$, then~${m(\Prefix') \ge m(\Prefix)}$
-because~$\Prefix'$ makes the same mistakes as~$\Prefix$, and possibly additional mistakes.
+Furthermore,~\eqref{eq:lower-bound} gives a lower bound on the objective of
+\emph{any} rule list whose prefix starts with~$\Prefix$.
+
+Notice that if~$\RL$ and~$\RL'$ are rule lists with prefixes~$\Prefix$
+and~$\Prefixp$ such that~$\Prefixp$ starts with~$\Prefix$,
+then ${m_p(\Prefixp, \RL_q, \x, \y) \ge m_p(\Prefix, \RL'_q, \x, \y)}$
+because~$\Prefixp$ yields the same mistakes as~$\Prefix$, and possibly additional mistakes.
 %
-Therefore,~${b(\Prefix') \ge b(\Prefix)}$.
+Therefore, ${b(\Prefixp, \x, \y) \ge b(\Prefix, \x, \y)}$.
 %
 A sequence of rule lists formed by sequentially appending antecedents
 to the end of a prefix thus has a corresponding sequence of
@@ -124,16 +156,6 @@ monotonically increasing objective lower bounds.
 %
 This is precisely the structure required and exploited by branch-and-bound,
 illustrated in Algorithm~\ref{alg:branch-and-bound}.
-
-Specifically, the lower bound tells us when we can prune the state space.
-%
-While executing branch-and-bound, we keep track of the best (smallest) known objective~$\ell^*$.
-%
-If we encounter a prefix~$\Prefix$ with lower bound at least as large as~$\ell^*$,
-\begin{align}
-b(\Prefix) \ge \ell^*,
-\end{align}
-then we needn't consider any prefix that starts with~$\Prefix$.
 
 \begin{algorithm}[t!]
 \caption{Branch-and-bound for learning rule lists.}
@@ -160,6 +182,17 @@ initial best known rule list~$\RL_0$ with objective~${\ell_0 = \ell(\RL_0, \x)}$
 \EndWhile
 \end{algorithmic}
 \end{algorithm}
+
+Specifically, the lower bound tells us when we can prune the state space.
+%
+While executing branch-and-bound, we keep track of the best (smallest) known
+objective~$\ell^*$; this is a dynamic, monotonically decreasing quantity.
+%
+If we encounter a prefix~$\Prefix$ with lower bound at least as large as~$\ell^*$,
+\begin{align}
+b(\Prefix, \x, \y) \ge \ell^*,
+\end{align}
+then we needn't consider any prefix that starts with~$\Prefix$.
 
 \subsection{Additional pruning bounds and problem symmetries}
 
