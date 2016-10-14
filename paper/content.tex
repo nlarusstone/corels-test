@@ -176,8 +176,12 @@ and possibly additional mistakes:
 m_p(\Prefix', \RL'_q, \x, \y)
 &= \frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
 + \sum_{k=K+1}^{K'} \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \right) \nn \\
-&\ge m_p(\Prefix, \RL_q, \x, \y).
+&\ge m_p(\Prefix, \RL_q, \x, \y),
 \end{align}
+where we have used the fact that
+${\Cap(x_n, p_k \given \Prefix') = \Cap(x_n, p_k \given \Prefix)}$
+for~${1 \le k \le K}$.
+%
 Therefore, if~$\Prefix'$ starts with~$\Prefix$, then
 \begin{align}
 b(\Prefix, \x, \y) &= m_p(\Prefix, \RL_q, \x, \y) + \Reg K \nn \\
