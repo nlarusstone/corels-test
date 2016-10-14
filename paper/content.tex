@@ -73,10 +73,14 @@ if~$p_k$ is the first antecedent in~$p$ that evaluates to true for~$x_n$
 We also say that a prefix captures those data captured by its antecedents;
 for a rule list with prefix~$\Prefix$, data not captured by~$\Prefix$
 are classified according to the default label prediction~$q_0$.
+
+Let~$\alpha$ be a single antecedent or an antecedent list,
+such as a prefix, or a set of antecedents,
+and let~$\beta$ be a list or set of antecedents
+that contains the antecedent or antecedents represented by~$\alpha$.
 %
 Let us define~${\Cap(x_n, \alpha) = 1}$ if~$\alpha$ captures datum~$x_n$,
-and~0 otherwise, where~$\alpha$ can be a single antecedent or an antecedent list,
-such as a prefix, or a set of antecedents.
+and~0 otherwise.
 %
 For example, let~$p$ and~$p'$ be antecedent lists such that~$p'$
 starts with~$p$, then~$p'$ captures all the data that~$p$ captures:
@@ -84,9 +88,15 @@ starts with~$p$, then~$p'$ captures all the data that~$p$ captures:
 \{x_n: \Cap(x_n, p)\} \subseteq \{x_n: \Cap(x_n, p')\}.
 \end{align}
 %
-We also define~${\Cap(x_n, \alpha \given \beta) = 1}$ if~$\alpha$ captures datum~$x_n$
-in the context of~$\beta$, where now~$\beta$ is a list or set of antecedents
-that contains the antecedent or antecedents denoted by~$\alpha$.
+Let us also define~${\Cap(x_n, \alpha \given \beta) = 1}$ if~$\alpha$
+captures datum~$x_n$ in the context of~$\beta$.
+%
+Now, define~${\Supp(\alpha, \x)}$ to be the normalized support of~$\alpha$,
+\begin{align}
+\Supp(\alpha, \x) = \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p),
+\end{align}
+and similarly define~${\Supp(\alpha, \x \given \beta)}$
+to be the normalized support of~$\alpha$ in the context of~$\beta$.
 
 Finally, given training data~${(\x, \y)}$, an antecedent list~$p$
 implies a rule list ${\RL = (\Prefix, \RL_q, q_0, K)}$,
@@ -137,7 +147,7 @@ m_p(\Prefix, \RL_q, \x, \y) =
 is the fraction of data captured and misclassified by the prefix, and
 \begin{align}
 m_0(\Prefix, q_0, \x, \y) =
-\frac{1}{N} \sum_{n=1}^N \one [ \neg~ \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
+\frac{1}{N} \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
 \end{align}
 is the fraction of data not captured by the prefix and misclassified by the default.
 %
@@ -169,8 +179,8 @@ m_p(\Prefix', \RL'_q, \x, \y)
 \end{align}
 Therefore, if~$\Prefix'$ starts with~$\Prefix$, then
 \begin{align}
-b(\Prefix, \x, \y) &= m_p(\Prefix, \RL_q, \x, \y) + \lambda K \nn \\
-&\le  m_p(\Prefix', \RL'_q, \x, \y) + \lambda K' = b(\Prefix', \x, \y)
+b(\Prefix, \x, \y) &= m_p(\Prefix, \RL_q, \x, \y) + \Reg K \nn \\
+&\le  m_p(\Prefix', \RL'_q, \x, \y) + \Reg K' = b(\Prefix', \x, \y)
 \le \Obj(\RL', \x, \y).
 \label{eq:prefix-lb}
 \end{align}
@@ -255,7 +265,6 @@ we can prune all~$\Prefix'$ if
 \label{eq:lookahead}
 \end{align}
 
-
 \subsubsection{Upper bounds on prefix length}
 \label{sec:ub-prefix-length}
 
@@ -292,18 +301,32 @@ this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix) = 0}$.
 
 \subsubsection{Lower bound on per-rule accurate support}
 
-Suppose~$\RL^*$ is the optimal rule list, and rule~$A$ is in~$\RL^*$.
-%
-Let~$\RL_{<A}^*$ refer to the portion of~$\RL^*$ preceding rule~$A$,
-let~$\RL_A^*$ denote rule~$A$ in the context of~$\RL^*$, and let~$\RL_{>A}^*$
-refer to the portion of~$\RL^*$ following rule~$A$, including the default rule.
-%
-We can decompose~$\Obj(\RL^*)$ into three contributions,
-corresponding to the above three components of~$\RL^*$:
+Let ${\RL^* = (\Prefix, \RL_q, q_0, K)}$ be the optimal rule list,
+with objective~$\ell^*$:
 \begin{align}
-\Obj^* = \Obj(\RL^*) = \Obj(\RL_{<A}^*) + (m(\RL_A^*) + c) + \Obj(\RL_{>A}^*).
+\Obj^* = \Obj(\RL^*, \x, \y) &= m(\RL^*, \x, \y) + \Reg K \nn \\
+&= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
+  + \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \right)
+  + \Reg K
 \end{align}
-Now consider the rule list~$\RL$ derived from~$\RL^*$ by deleting rule~$A$.
+Consider a rule~$r_i$ in~$\RL^*$, ${i \ge 1}$, and let us write
+${\RL^* = (r_1, \dots, r_{i-1}, r_i, r_{i+1}, \dots, r_K, r_0)}$.
+%
+We can decompose~$\Obj^*$ into three contributions,
+corresponding to the rules before~$r_i$, rule~$r_i$,
+and rules after~$r_i$, including the default rule:
+${\Obj^* \equiv \Obj_- + \Obj_i + \Obj_+}$, where
+\begin{align}
+\Obj_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
+  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) \nn \\
+\Obj_i &= \frac{1}{N} \sum_{n=1}^N
+  \one [ \Cap(x_n, p_i \given \Prefix^i) \wedge (q_k \neq y_n) ] + \Reg \\
+\Obj_+ &= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
+  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] \right)
+  + \Reg (K - i) \nn
+\end{align}
+Now consider the rule list ${\RL =  (r_1, \dots, r_{i-1}, r_{i+1}, \dots, r_K, r_0)}$
+derived from~$\RL^*$ by deleting rule~$r_i$.
 %
 Let~$\RL_{<A}$ and~$\RL_{>A}$ refer to the portions of~$\RL$
 preceding and following where rule~$A$ had been, respectively.
