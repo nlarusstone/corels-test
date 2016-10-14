@@ -86,6 +86,7 @@ For example, let~$p$ and~$p'$ be antecedent lists such that~$p'$
 starts with~$p$, then~$p'$ captures all the data that~$p$ captures:
 \begin{align}
 \{x_n: \Cap(x_n, p)\} \subseteq \{x_n: \Cap(x_n, p')\}.
+\label{eq:cap-subset}
 \end{align}
 %
 Let us also define~${\Cap(x_n, \alpha \given \beta) = 1}$ if~$\alpha$
@@ -299,14 +300,14 @@ corresponding to an iterative sequence of single-rule extensions of~$\Prefix$.
 Note also that when~$\Prefix$ is the empty prefix,
 this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix) = 0}$.
 
-\subsubsection{Lower bound on per-rule accurate support}
+\subsubsection{Lower bound on per-rule support}
 
 Let ${\RL^* = (\Prefix, \RL_q, q_0, K)}$ be the optimal rule list,
 with objective~$\ell^*$:
 \begin{align}
 \Obj^* = \Obj(\RL^*, \x, \y) &= m(\RL^*, \x, \y) + \Reg K \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
-  + \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \right)
+  + \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] \right)
   + \Reg K
 \end{align}
 Consider a rule~$r_i$ in~$\RL^*$, ${i \ge 1}$, and let us write
@@ -315,63 +316,107 @@ ${\RL^* = (r_1, \dots, r_{i-1}, r_i, r_{i+1}, \dots, r_K, r_0)}$.
 We can decompose~$\Obj^*$ into three contributions,
 corresponding to the rules before~$r_i$, rule~$r_i$,
 and rules after~$r_i$, including the default rule:
-${\Obj^* \equiv \Obj_- + \Obj_i + \Obj_+}$, where
-\begin{align}
+${\Obj^* \equiv \Obj^*_- + \Obj^*_i + \Obj^*_+}$, where
+\begin{align*}
+\Obj^*_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
+  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) \,, \\
+\Obj^*_i &= \frac{1}{N} \sum_{n=1}^N
+  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ] + \Reg \,, \nn \\
+\Obj^*_+ &= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
+  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \right)
+  + \Reg (K - i) \,.
+\end{align*}
+For~$\Obj^*_-$, we have used the fact that
+${\Cap(x_n, p_k \given \Prefix) = \Cap(x_n, p_k \given \Prefix^k)}$,
+since a rule in a rule list is only affected by preceding rules.
+
+Now consider the rule list ${\RL =  (\Prefix', \RL'_q, q'_0, K-1)}$
+derived from~$\RL^*$ by deleting rule~$r_i$,
+therefore ${\Prefix' = (p_1, \dots, p_{i-1}, p_{i+1}, \dots, p_K)}$
+and ${\RL'_q = (q_1, \dots, q_{i-1}, q'_{i+1}, \dots, q'_K)}$,
+where~$q'_k$ need not be the same as~$q_k$, for ${k > i}$ and~${k = 0}$.
+%
+Let us now decompose the objective of~$\RL$ into two terms,
+corresponding to the rules before and after where~$r_i$ had been:
+${\Obj(\RL, \x, \y) \equiv \Obj_- + \Obj_+}$, where
+\begin{align*}
 \Obj_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
-  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) \nn \\
-\Obj_i &= \frac{1}{N} \sum_{n=1}^N
-  \one [ \Cap(x_n, p_i \given \Prefix^i) \wedge (q_k \neq y_n) ] + \Reg \\
-\Obj_+ &= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
-  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] \right)
-  + \Reg (K - i) \nn
-\end{align}
-Now consider the rule list ${\RL =  (r_1, \dots, r_{i-1}, r_{i+1}, \dots, r_K, r_0)}$
-derived from~$\RL^*$ by deleting rule~$r_i$.
-%
-Let~$\RL_{<A}$ and~$\RL_{>A}$ refer to the portions of~$\RL$
-preceding and following where rule~$A$ had been, respectively.
-%
-Notice that~$\RL_{<A}$ behaves the same as~$\RL_{<A}^*$,
-but~$\RL_{>A}$ may behave differently from~$\RL_{>A}^*$.
-%
-Specifically,~$\RL_{>A}$ captures all data captured by~$\RL_{>A}^*$, as well as
-none, some, or all data captured by~$\RL_A^*$.
-%
-The worst possible loss~$\Obj(\RL)$ would occur if all the data
-captured by~$\RL_A^*$ were now misclassified by~$\RL_{>A}$.
-%
-Let~$s(\RL_A^*)$ denote the normalized support of~$\RL_A^*$,
-\ie the fraction of data captured by rule~$A$.
-%
-For~$\RL^*$ to be optimal, we must have~${\Obj(\RL^*) < \Obj(\RL)}$, which implies that
-\begin{align}
-m(\RL_A^*) + c + \Obj(\RL_{>A}^*) < \Obj(\RL_{>A}) \le \Obj(\RL_{>A}^*) + s(\RL_A^*).
-\end{align}
-Rearranging gives
-\begin{align}
-c < s(\RL_A^*) - m(\RL_A^*),
-\label{eq:min-capture-correct}
-\end{align}
-therefore the regularization parameter~$c$ provides a lower bound on the expression
-on the right, which is the fraction of data correctly classified by rule~$A$.
-%
-Thus, we can prune a prefix~$\Prefix$ if any of its antecedents do not capture and
-correctly classify more than a fraction~$c$ of data, even if~${b(\Prefix) < \Obj^*}$.
+  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) = \Obj^*_-  \,, \\
+\Obj_+ &= \frac{1}{N} \sum_{n=1}^N
+  \left( \one [ \neg\, \Cap(x_n, \Prefix') \wedge (q'_0 \neq y_n) ]
+  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q'_k \neq y_n) ] \right)
+  + \Reg (K - i) \,.
+\end{align*}
 
-\subsubsection{Lower bound on per-rule support}
-
-A requirement of the previous bound~\eqref{eq:min-capture-correct}
-is that for a rule list~$\RL^*$ to be optimal, every rule~$A$ in~$\RL^*$ must
-capture more than a fraction~$c$ of data:
+The largest possible discrepancy between~$\RL^*$ and~$\RL$ would occur
+if~$\RL^*$ correctly classified all the data captured by~$p_i$,
+while~$\RL$ misclassified these data.
+%
+This gives an upper bound:
 \begin{align}
-c < s(\RL_A^*).
+\Obj(\RL, \x, \y) \le \Obj^* + \Supp(p_i, \x \given \Prefix) - \Reg,
+\label{eq:ub-i}
+\end{align}
+where~$\Supp(p_i, \x \given \Prefix)$ is the normalized support of~$p_i$
+in the context of~$\RL^*$, and the regularization `bonus'
+comes from the fact that~$\RL$ is one rule shorter than~$\RL^*$.
+
+At the same time, we must have ${\Obj^* < \Obj(\RL, \x, \y)}$ for~$\RL^*$ to be optimal.
+%
+Combining this with~\eqref{eq:ub-i} rearranging gives
+\begin{align}
+\Reg < \Supp(p_i, \x \given \Prefix),
 \label{eq:min-capture}
 \end{align}
-Thus, we can prune a prefix if any of its rules do not capture at least
-a fraction~$c$ of data.
+therefore the regularization parameter~$\Reg$ provides a lower bound
+on the support of an antecedent~$p_i$ in an optimal rule list~$\RL^*$.
 %
-This lower bound is easy to check and a sub-condition of~\eqref{eq:min-capture-correct},
-thus checking it first can accelerate pruning.
+Thus, we can prune a prefix~$\Prefix$ if any of its antecedents do not capture
+more than a fraction~$\Reg$ of data, even if~${b(\Prefix, \x, \y) < \Obj^*}$.
+
+\subsubsection{Lower bound on per-rule accurate support}
+
+We can tighten the previous bound~\eqref{eq:min-capture}
+by tightening the upper bound on~$\Obj(\RL, \x, \y)$ in~\eqref{eq:ub-i}.
+%
+First, recall that~$\Obj^*_i$ is the contribution of rule~$r_i$ to~$\Obj^*$.
+%
+Now, define~$m_i$ to be the portion of~$\Obj^*_i$ due to misclassification error:
+\begin{align}
+m_i = \frac{1}{N} \sum_{n=1}^N
+  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ].
+\end{align}
+Recall that the worst possible loss for~$\RL$ would occur if it were to
+misclassify all data captured by~$p_i$ in~$\RL^*$,
+corresponding to an increase in misclassification error by an amount,
+\begin{align}
+\Supp(p_i, \x \given \Prefix) - m_i
+&= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_i \given \Prefix)
+  - \frac{1}{N} \sum_{n=1}^N
+  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ] \nn \\
+&= \frac{1}{N} \sum_{n=1}^N
+  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k = y_n) ] \equiv a_i.
+\end{align}
+The second equality above reflects that the largest increase in
+misclassification error is equivalent to~$a_i$, the fraction of data that
+are captured by~$p_i$ and correctly classified in the context of~$\RL^*$.
+%
+Since ${a_i \le \Supp(p_i, \x \given \Prefix)}$, we now have
+an upper bound on~$\Obj(\RL, \x, \y)$ that's tighter than~\eqref{eq:ub-i}:
+\begin{align}
+\Obj(\RL, \x, \y) \le \Obj^* + a_i - \Reg.
+\end{align}
+Combining this bound with the requirement~${\Obj^* < \Obj(\RL, \x, \y)}$ now gives
+\begin{align}
+\Reg < a_i.
+\label{eq:min-capture-correct}
+\end{align}
+Thus, we can prune a prefix if any of its rules do not capture
+and correctly classify at least a fraction~$\Reg$ of data.
+%
+While the earlier lower bound~\eqref{eq:min-capture} is a sub-condition
+of~\eqref{eq:min-capture-correct}, we can still leverage both;
+the sub-condition is easer to check, thus checking it first can accelerate pruning.
 
 \subsubsection{Insufficient per-rule support due to rule dominance}
 
