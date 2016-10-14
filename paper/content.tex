@@ -766,23 +766,53 @@ Our cache is a trie.
 
 \section{Experiments}
 
+Notes:
 \begin{itemize}
 
-\item Value of the objective for us and a few other algorithms (CART, C4.5, CBA, CMAR/CPAR, C5.0 \dots), and algorithm runtimes 
+\item Measurements over multiple executions (corresponding to ten folds)
+should include standard deviations
 
-\item Show the effect of each ``piece'' at a time, \eg curiosity -- run it without each in turn and show the difference in either quality of solution or runtime or amount of memory, size of cache or queue
+\item Most figures will be generated with one particular big dataset
+\end{itemize}
 
-\item Fraction of search space eliminated over time
+Figures:
+\begin{itemize}
 
-\item Size of queue over time
+\item Figure~\ref{fig:comparison}, Comparison with other methods:
+Value of the objective for us and a few other algorithms
+(CART, C4.5, CBA, CMAR/CPAR, C5.0, Ripper, \dots), and algorithm runtimes,
+over ten folds (box plots)
 
-\item Total number of things placed in queue (over time?)
+\item Figure~\ref{fig:ablation},  Ablation experiment:
+Show the effect of each ``piece'' at a time,
+run X without each in turn and show the difference in either
+quality of solution or runtime or amount of memory, size of cache or queue,
+where X is a specific implementation
 
-\item Objective function value over time -- this also gives an upper bound on the remaining search space -- and also, possibly, the minimum lower bound in the queue over time
+\item Figure~\ref{fig:search-space},
+Fraction of search space we've proven we've handled
 
-\item Some characterization of the number of solutions close to optimal (plot number of suboptimal solutions vs amount of suboptimality, removing permutations)
+\item Figure~\ref{fig:queue-size}, Size of queue over time
 
-\item Some example rule lists to show how interpretable they are. Potentially we could display equally optimal rule lists that look very different from each other. 
+\item Figure~\ref{fig:queue-cumulative},
+Cumulative number of things placed in queue over time
+
+\item Figure~\ref{fig:objective}, Objective value over time,
+with horizontal lines and x-ticks for CART and C4.5
+%-- this also gives an upper bound on the remaining search space --
+%and also, possibly, the minimum lower bound in the queue over time
+
+\item Figure~\ref{fig:max-length},
+Max prefix length over time (computed from objective value);
+maybe also add the best prefix length over time
+
+\item Some characterization of the number of solutions close to optimal
+(plot number of suboptimal solutions vs amount of suboptimality,
+removing permutations)
+
+\item Some example rule lists to show how interpretable they are.
+Potentially we could display equally optimal rule lists that look
+very different from each other.
 
 \end{itemize}
 
@@ -790,7 +820,75 @@ Our cache is a trie.
 
 \subsubsection*{Acknowledgments}
 
-E.A. is supported by the Miller Institute for Basic Research in Science, University of California, Berkeley.
+E.A. is supported by the Miller Institute for Basic Research in Science,
+University of California, Berkeley.
 
 \bibliography{refs}
 \bibliographystyle{abbrvnat}
+
+\newpage
+
+\begin{figure}[t!]
+\begin{center}
+\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
+\end{center}
+\caption{Comparison with other methods:
+Value of the objective for us and a few other algorithms
+(CART, C4.5, CBA, CMAR/CPAR, C5.0, Ripper, \dots), and algorithm runtimes,
+over ten folds, for one big dataset (box plots)}
+\label{fig:comparison}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
+\end{center}
+\caption{Ablation experiment:
+Show the effect of each ``piece'' at a time,
+run X without each in turn and show the difference in either
+quality of solution or runtime or amount of memory, size of cache or queue,
+where X is a specific implementation}
+\label{fig:ablation}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+\includegraphics[width=0.65\textwidth]{figs/sketch-search-space.png}
+\end{center}
+\caption{Fraction of search space we've proven we've handled}
+\label{fig:search-space}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+\includegraphics[width=0.65\textwidth]{figs/sketch-queue-size.png}
+\end{center}
+\caption{Size of queue over time}
+\label{fig:queue-size}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+\includegraphics[width=0.65\textwidth]{figs/sketch-queue-cumulative.png}
+\end{center}
+\caption{Cumulative number of things placed in queue over time}
+\label{fig:queue-cumulative}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
+\end{center}
+\caption{Objective value over time,
+with horizontal lines and x-ticks for CART and C4.5}
+\label{fig:objective}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+\includegraphics[width=0.65\textwidth]{figs/sketch-max-length.png}
+\end{center}
+\caption{Max prefix length over time (computed from objective value);
+maybe also add the best prefix length over time}
+\label{fig:max-length}
+\end{figure}
