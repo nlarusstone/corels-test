@@ -125,15 +125,16 @@ particular prefix, we implicitly assume these empirically determined label predi
 
 \subsection{Branch-and-bound optimization framework}
 
-We define a simple loss function for a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$:
+We define a simple objective function for a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$:
 \begin{align}
-\Obj(\RL, \x, \y) = m(\RL, \x, \y) + \Reg K.
+\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K.
 \label{eq:objective}
 \end{align}
-The two terms correspond to the misclassification error~$m(\RL, \x, \y)$
+This objective function is a regularized empirical risk;
+it consists of a loss~$\Loss(\RL, \x, \y)$ measuring misclassification error,
 and a regularization term that penalizes longer rule lists.
 %
-$m(\RL, \x, \y)$~is the fraction of training data whose labels are
+$\Loss(\RL, \x, \y)$~is the fraction of training data whose labels are
 incorrectly predicted by~$\RL$.
 %
 In our setting, the regularization parameter~${\Reg \ge 0}$ is a small constant;
@@ -149,23 +150,23 @@ Our objective has structure amenable to global optimization via a branch-and-bou
 We can decompose the misclassification error into two contributions
 corresponding to the prefix and default:
 \begin{align}
-m(\RL, \x, \y) = m(\Prefix, r_q, \Default, \x, \y) \equiv m_p(\Prefix, \Labels, \x, \y) + m_0(\Prefix, \Default, \x, \y),
+\Loss(\RL, \x, \y) = \Loss(\Prefix, r_q, \Default, \x, \y) \equiv \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y),
 \end{align}
 where ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
 \begin{align}
-m_p(\Prefix, \Labels, \x, \y) =
+\Loss_p(\Prefix, \Labels, \x, \y) =
 \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
 \end{align}
 is the fraction of data captured and misclassified by the prefix, and
 \begin{align}
-m_0(\Prefix, \Default, \x, \y) =
+\Loss_0(\Prefix, \Default, \x, \y) =
 \frac{1}{N} \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
 \end{align}
 is the fraction of data not captured by the prefix and misclassified by the default.
 %
 Eliminating the latter error term gives a lower bound~$b(\Prefix, \x, \y)$ on the objective,
 \begin{align}
-b(\Prefix, \x, \y) \equiv m_p(\Prefix, \Labels, \x, \y) + \Reg K \le \Obj(\RL, \x, \y),
+b(\Prefix, \x, \y) \equiv \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K \le \Obj(\RL, \x, \y),
 \label{eq:lower-bound}
 \end{align}
 where we have suppressed the lower bound's dependence on label predictions~$\Labels$
@@ -184,10 +185,10 @@ and ${\Labels' = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$.
 Notice then that~$\Prefix'$ yields the same mistakes as~$\Prefix$,
 and possibly additional mistakes:
 \begin{align}
-m_p(\Prefix', \Labels', \x, \y)
+\Loss_p(\Prefix', \Labels', \x, \y)
 &= \frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
 + \sum_{k=K+1}^{K'} \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \right) \nn \\
-&\ge m_p(\Prefix, \Labels, \x, \y),
+&\ge \Loss_p(\Prefix, \Labels, \x, \y),
 \end{align}
 where we have used the fact that
 ${\Cap(x_n, p_k \given \Prefix') = \Cap(x_n, p_k \given \Prefix)}$
@@ -195,8 +196,8 @@ for~${1 \le k \le K}$.
 %
 Therefore, if~$\Prefix'$ starts with~$\Prefix$, then
 \begin{align}
-b(\Prefix, \x, \y) &= m_p(\Prefix, \Labels, \x, \y) + \Reg K \nn \\
-&\le  m_p(\Prefix', \Labels', \x, \y) + \Reg K' = b(\Prefix', \x, \y)
+b(\Prefix, \x, \y) &= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K \nn \\
+&\le  \Loss_p(\Prefix', \Labels', \x, \y) + \Reg K' = b(\Prefix', \x, \y)
 \le \Obj(\RL', \x, \y).
 \label{eq:prefix-lb}
 \end{align}
@@ -292,7 +293,7 @@ implies an upper bound on the maximum prefix length~$\MaxLength$ we might still 
 \label{eq:max-length}
 \end{align}
 Furthermore, if we ever encounter a perfect $K$-rule list~$\RL$
-such that~${\Obj(\RL) = m(\RL) + \Reg K = \Reg K}$, then as we continue,
+such that~${\Obj(\RL) = \Loss(\RL) + \Reg K = \Reg K}$, then as we continue,
 we only ever have to consider shorter prefixes:
 \begin{align}
 \MaxLength = K - 1.
@@ -320,7 +321,7 @@ this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix) = 0}$.
 Let ${\RL^* = (\Prefix, \Labels, \Default, K)}$ be the optimal rule list,
 with objective~$\ell^*$:
 \begin{align}
-\Obj^* = \Obj(\RL^*, \x, \y) &= m(\RL^*, \x, \y) + \Reg K \nn \\
+\Obj^* = \Obj(\RL^*, \x, \y) &= \Loss(\RL^*, \x, \y) + \Reg K \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
   + \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] \right)
   + \Reg K
@@ -396,16 +397,16 @@ by tightening the upper bound on~$\Obj(\RL, \x, \y)$ in~\eqref{eq:ub-i}.
 %
 First, recall that~$\Obj^*_i$ is the contribution of rule~$r_i$ to~$\Obj^*$.
 %
-Now, define~$m_i$ to be the portion of~$\Obj^*_i$ due to misclassification error:
+Now, define~$\Loss_i$ to be the portion of~$\Obj^*_i$ due to misclassification error:
 \begin{align}
-m_i = \frac{1}{N} \sum_{n=1}^N
+\Loss_i = \frac{1}{N} \sum_{n=1}^N
   \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ].
 \end{align}
 Recall that the worst possible loss for~$\RL$ would occur if it were to
 misclassify all data captured by~$p_i$ in~$\RL^*$,
 corresponding to an increase in misclassification error by an amount,
 \begin{align}
-\Supp(p_i, \x \given \Prefix) - m_i
+\Supp(p_i, \x \given \Prefix) - \Loss_i
 &= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_i \given \Prefix)
   - \frac{1}{N} \sum_{n=1}^N
   \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ] \nn \\
