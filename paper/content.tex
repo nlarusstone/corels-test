@@ -59,10 +59,10 @@ For an antecedent list~$p$, we similarly define~$p^k$ to be the $k$-prefix of~$p
 and for any $k$-prefix~$p^k$, we say that~$p$ starts with~$p^k$.
 %
 We now give a useful alternate rule list representation:
-${\RL = (\Prefix, \RL_q, q_0, K)}$,
+${\RL = (\Prefix, \Labels, \Default, K)}$,
 where ${\Prefix = (p_1, \dots, p_K)}$ is $\RL$'s prefix,
-${\RL_q = (q_1, \dots, q_K) \in \{0, 1\}^K}$~are the label predictions associated
-with~$\Prefix$, and~${q_0 \in \{0, 1\}}$ is the default label prediction.
+${\Labels = (q_1, \dots, q_K) \in \{0, 1\}^K}$~are the label predictions associated
+with~$\Prefix$, and~${\Default \in \{0, 1\}}$ is the default label prediction.
 
 A rule list~$\RL$ classifies datum~$x_n$ by providing the label prediction~$q_k$
 of the first rule~$r_k$ whose antecedent~$p_k$ is true for~$x_n$.
@@ -72,7 +72,7 @@ if~$p_k$ is the first antecedent in~$p$ that evaluates to true for~$x_n$
 %
 We also say that a prefix captures those data captured by its antecedents;
 for a rule list with prefix~$\Prefix$, data not captured by~$\Prefix$
-are classified according to the default label prediction~$q_0$.
+are classified according to the default label prediction~$\Default$.
 
 Let~$\alpha$ be a single antecedent or an antecedent list,
 such as a prefix, or a set of antecedents,
@@ -100,13 +100,13 @@ and similarly define~${\Supp(\alpha, \x \given \beta)}$
 to be the normalized support of~$\alpha$ in the context of~$\beta$.
 
 Finally, given training data~${(\x, \y)}$, an antecedent list~$p$
-implies a rule list ${\RL = (\Prefix, \RL_q, q_0, K)}$,
-where~${\Prefix = p}$, and the label predictions $\RL_q$  and~$q_0$ are
+implies a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$,
+where~${\Prefix = p}$, and the label predictions $\Labels$  and~$\Default$ are
 empirically set to minimize the number misclassification errors made
 by the rule list on the training data.
 %
 Thus, label prediction~$q_k$ corresponds to the majority label of data captured
-by~$p_k$ in the context of~$\Prefix$, and the default~$q_0$ corresponds to
+by~$p_k$ in the context of~$\Prefix$, and the default~$\Default$ corresponds to
 the majority label of data not captured by~$\Prefix$.
 %
 In the remainder of our presentation, whenever we refer to a rule list with a
@@ -114,7 +114,7 @@ particular prefix, we implicitly assume these empirically determined label predi
 
 \subsection{Branch-and-bound optimization framework}
 
-We define a simple loss function for a rule list ${\RL = (\Prefix, \RL_q, q_0, K)}$:
+We define a simple loss function for a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$:
 \begin{align}
 \Obj(\RL, \x, \y) = m(\RL, \x, \y) + \Reg K.
 \label{eq:objective}
@@ -130,7 +130,7 @@ In our setting, the regularization parameter~${\Reg \ge 0}$ is a small constant;
 of data when increasing a rule list's length by one association rule.
 %
 %As noted in~\S\ref{sec:setup}, a prefix~$\Prefix$ and training data together
-%fully specify a rule list~${\RL = (\Prefix, \RL_q, q_0, K)}$,
+%fully specify a rule list~${\RL = (\Prefix, \Labels, \Default, K)}$,
 %thus let us define~${\Obj(\Prefix, \x, \y) \equiv \Obj(\RL, \x, \y)}$.
 
 Our objective has structure amenable to global optimization via a branch-and-bound framework.
@@ -138,45 +138,45 @@ Our objective has structure amenable to global optimization via a branch-and-bou
 We can decompose the misclassification error into two contributions
 corresponding to the prefix and default:
 \begin{align}
-m(\RL, \x, \y) = m(\Prefix, r_q, q_0, \x, \y) \equiv m_p(\Prefix, \RL_q, \x, \y) + m_0(\Prefix, q_0, \x, \y),
+m(\RL, \x, \y) = m(\Prefix, r_q, \Default, \x, \y) \equiv m_p(\Prefix, \Labels, \x, \y) + m_0(\Prefix, \Default, \x, \y),
 \end{align}
-where ${\Prefix = (p_1, \dots, p_K)}$ and ${\RL_q = (q_1, \dots, q_K)}$;
+where ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
 \begin{align}
-m_p(\Prefix, \RL_q, \x, \y) =
+m_p(\Prefix, \Labels, \x, \y) =
 \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
 \end{align}
 is the fraction of data captured and misclassified by the prefix, and
 \begin{align}
-m_0(\Prefix, q_0, \x, \y) =
-\frac{1}{N} \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
+m_0(\Prefix, \Default, \x, \y) =
+\frac{1}{N} \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
 \end{align}
 is the fraction of data not captured by the prefix and misclassified by the default.
 %
 Eliminating the latter error term gives a lower bound~$b(\Prefix, \x, \y)$ on the objective,
 \begin{align}
-b(\Prefix, \x, \y) \equiv m_p(\Prefix, \RL_q, \x, \y) + \Reg K \le \Obj(\RL, \x, \y),
+b(\Prefix, \x, \y) \equiv m_p(\Prefix, \Labels, \x, \y) + \Reg K \le \Obj(\RL, \x, \y),
 \label{eq:lower-bound}
 \end{align}
-where we have suppressed the lower bound's dependence on label predictions~$\RL_q$
+where we have suppressed the lower bound's dependence on label predictions~$\Labels$
 because they are fully determined, given~${(\Prefix, \x, \y)}$.
 
 Furthermore, $b(\Prefix, \x, \y)$ gives a lower bound on the objective of
 \emph{any} rule list whose prefix starts with~$\Prefix$.
 %
-Let ${\RL = (\Prefix, \RL_q, q_0, K)}$ and ${\RL' = (\Prefix', \RL'_q, q'_0, K')}$,
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$ and ${\RL' = (\Prefix', \Labels', \Default', K')}$,
 where~${K' \ge K}$ and $\Prefix'$ starts with~$\Prefix$.
 %
-%More explicitly, let ${\Prefix = (p_1, \dots, p_K)}$ and ${\RL_q = (q_1, \dots, q_K)}$;
+%More explicitly, let ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
 Let ${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
-and ${\RL'_q = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$.
+and ${\Labels' = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$.
 %
 Notice then that~$\Prefix'$ yields the same mistakes as~$\Prefix$,
 and possibly additional mistakes:
 \begin{align}
-m_p(\Prefix', \RL'_q, \x, \y)
+m_p(\Prefix', \Labels', \x, \y)
 &= \frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
 + \sum_{k=K+1}^{K'} \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \right) \nn \\
-&\ge m_p(\Prefix, \RL_q, \x, \y),
+&\ge m_p(\Prefix, \Labels, \x, \y),
 \end{align}
 where we have used the fact that
 ${\Cap(x_n, p_k \given \Prefix') = \Cap(x_n, p_k \given \Prefix)}$
@@ -184,8 +184,8 @@ for~${1 \le k \le K}$.
 %
 Therefore, if~$\Prefix'$ starts with~$\Prefix$, then
 \begin{align}
-b(\Prefix, \x, \y) &= m_p(\Prefix, \RL_q, \x, \y) + \Reg K \nn \\
-&\le  m_p(\Prefix', \RL'_q, \x, \y) + \Reg K' = b(\Prefix', \x, \y)
+b(\Prefix, \x, \y) &= m_p(\Prefix, \Labels, \x, \y) + \Reg K \nn \\
+&\le  m_p(\Prefix', \Labels', \x, \y) + \Reg K' = b(\Prefix', \x, \y)
 \le \Obj(\RL', \x, \y).
 \label{eq:prefix-lb}
 \end{align}
@@ -306,11 +306,11 @@ this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix) = 0}$.
 
 \subsubsection{Lower bound on per-rule support}
 
-Let ${\RL^* = (\Prefix, \RL_q, q_0, K)}$ be the optimal rule list,
+Let ${\RL^* = (\Prefix, \Labels, \Default, K)}$ be the optimal rule list,
 with objective~$\ell^*$:
 \begin{align}
 \Obj^* = \Obj(\RL^*, \x, \y) &= m(\RL^*, \x, \y) + \Reg K \nn \\
-&= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
+&= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
   + \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] \right)
   + \Reg K
 \end{align}
@@ -326,7 +326,7 @@ ${\Obj^* \equiv \Obj^*_- + \Obj^*_i + \Obj^*_+}$, where
   \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) \,, \\
 \Obj^*_i &= \frac{1}{N} \sum_{n=1}^N
   \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ] + \Reg \,, \nn \\
-\Obj^*_+ &= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
+\Obj^*_+ &= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
   + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \right)
   + \Reg (K - i) \,.
 \end{align*}
@@ -334,10 +334,10 @@ For~$\Obj^*_-$, we have used the fact that
 ${\Cap(x_n, p_k \given \Prefix) = \Cap(x_n, p_k \given \Prefix^k)}$,
 since a rule in a rule list is only affected by preceding rules.
 
-Now consider the rule list ${\RL =  (\Prefix', \RL'_q, q'_0, K-1)}$
+Now consider the rule list ${\RL =  (\Prefix', \Labels', \Default', K-1)}$
 derived from~$\RL^*$ by deleting rule~$r_i$,
 therefore ${\Prefix' = (p_1, \dots, p_{i-1}, p_{i+1}, \dots, p_K)}$
-and ${\RL'_q = (q_1, \dots, q_{i-1}, q'_{i+1}, \dots, q'_K)}$,
+and ${\Labels' = (q_1, \dots, q_{i-1}, q'_{i+1}, \dots, q'_K)}$,
 where~$q'_k$ need not be the same as~$q_k$, for ${k > i}$ and~${k = 0}$.
 %
 Let us now decompose the objective of~$\RL$ into two terms,
@@ -347,7 +347,7 @@ ${\Obj(\RL, \x, \y) \equiv \Obj_- + \Obj_+}$, where
 \Obj_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
   \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) = \Obj^*_-  \,, \\
 \Obj_+ &= \frac{1}{N} \sum_{n=1}^N
-  \left( \one [ \neg\, \Cap(x_n, \Prefix') \wedge (q'_0 \neq y_n) ]
+  \left( \one [ \neg\, \Cap(x_n, \Prefix') \wedge (\Default' \neq y_n) ]
   + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q'_k \neq y_n) ] \right)
   + \Reg (K - i) \,.
 \end{align*}
