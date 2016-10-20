@@ -91,7 +91,12 @@ starts with~$p$, then~$p'$ captures all the data that~$p$ captures:
 \end{align}
 %
 Let us also define~${\Cap(x_n, \alpha \given \beta) = 1}$ if~$\alpha$
-captures datum~$x_n$ in the context of~$\beta$.
+captures datum~$x_n$ in the context of~$\beta$, and~$0$ otherwise.
+%
+Note that ${\Cap(x_n, \alpha \given \beta) = 1}$ only if ${\Cap(x_n, \alpha) = 1}$;
+${\Cap(x_n, \alpha \given \beta) = 0}$ either if ${\Cap(x_n, \alpha) = 0}$,
+or if ${\Cap(x_n, \alpha) = 1}$ but there is an antecedent~$\gamma$
+preceding~$\alpha$ in~$\beta$ such that ${\Cap(x_n, \gamma) = 1}$.
 %
 Now, define~${\Supp(\alpha, \x)}$ to be the normalized support of~$\alpha$,
 \begin{align}
