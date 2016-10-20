@@ -272,8 +272,8 @@ We begin with an immediate consequence of~\eqref{eq:lower-bound}.
 Given a $K$-prefix~$\Prefix$, any longer prefix~$\Prefix'$ that starts
 with~$\Prefix$ has length at least~${K+1}$.
 %
-Thus, even if we find that~${b(\Prefix) < \Obj^*}$, we can still prune all longer
-prefixes~$\Prefix'$ if ${b(\Prefix') \ge \Obj^*}$,
+Thus, even if we find that~${b(\Prefix) < \CurrentObj}$, we can still prune all longer
+prefixes~$\Prefix'$ if ${b(\Prefix') \ge \CurrentObj}$,
 where $\CurrentObj$ is the current best objective.
 %
 Since~${b(\Prefix') \ge b(\Prefix) + \Reg}$,
