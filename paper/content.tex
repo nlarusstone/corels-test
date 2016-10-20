@@ -176,8 +176,8 @@ Furthermore, as we state next in Theorem~\ref{thm:bound},
 $b(\Prefix, \x, \y)$ gives a lower bound on the objective of
 \emph{any} rule list whose prefix starts with~$\Prefix$.
 
-\begin{theorem}
-Define bound~${b(\Prefix, \x, \y) = \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K}$.
+\begin{theorem}[Hierarchical objective lower bound]
+Define~${b(\Prefix, \x, \y) = \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K}$.
 %
 Let ${\RL = (\Prefix, \Labels, \Default, K)}$
 and let ${\RL' = (\Prefix', \Labels', \Default', K')}$,
@@ -213,7 +213,6 @@ b(\Prefix, \x, \y) &= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K \nn \\
 \end{align}
 \end{proof}
 
-%
 To generalize, consider a sequence of prefixes such that each prefix
 starts with all previous prefixes in the sequence.
 %
@@ -277,23 +276,36 @@ our branch-and-bound algorithm.
 In the remainder, we will sometimes suppress the dependence on
 training data~$(\x, \y)$ in our notation.
 
-\subsubsection{Lower bound with one-step lookahead}
-
 We begin with an immediate consequence of Theorem~\ref{thm:bound}.
+
+\begin{theorem}[Objective lower bound with one-step lookahead]
+Let~$\Prefix$ be a $K$-prefix
+and let~$\CurrentObj$ be the current best objective.
 %
-Given a $K$-prefix~$\Prefix$, any longer prefix~$\Prefix'$ that starts
-with~$\Prefix$ has length at least~${K+1}$.
-%
-Thus, even if we find that~${b(\Prefix) < \CurrentObj}$, we can still prune all longer
-prefixes~$\Prefix'$ if ${b(\Prefix') \ge \CurrentObj}$,
-where $\CurrentObj$ is the current best objective.
-%
-Since~${b(\Prefix') \ge b(\Prefix) + \Reg}$,
-we can prune all~$\Prefix'$ if
+If
 \begin{align}
- b(\Prefix) + \Reg \ge \CurrentObj.
+ b(\Prefix) + \Reg \ge \CurrentObj,
 \label{eq:lookahead}
 \end{align}
+then we can prune~$\Prefix$ and all longer prefixes that start with~$\Prefix$.
+\end{theorem}
+
+\begin{proof}
+
+Let~$\Prefix'$ be a $K'$-prefix that starts with~$\Prefix$,
+such that ${K' \ge K + 1}$.
+%
+The penalty for longer prefixes ensures that
+${b(\Prefix') \ge b(\Prefix) + \Reg}$.
+%
+Thus, even if we find that~${b(\Prefix) < \CurrentObj}$,
+as long as~\eqref{eq:lookahead} is true,
+then ${b(\Prefix') \ge \CurrentObj}$
+and we can prune~$\Prefix'$.
+%
+Since we can prune any prefix~$\Prefix'$ longer than~$\Prefix$,
+we can also prune~$\Prefix$.
+\end{proof}
 
 \subsubsection{Upper bounds on prefix length}
 \label{sec:ub-prefix-length}
