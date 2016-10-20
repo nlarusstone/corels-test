@@ -105,15 +105,20 @@ Now, define~${\Supp(\alpha, \x)}$ to be the normalized support of~$\alpha$,
 and similarly define~${\Supp(\alpha, \x \given \beta)}$
 to be the normalized support of~$\alpha$ in the context of~$\beta$.
 
-Finally, given training data~${(\x, \y)}$, an antecedent list~$\Prefix$
-implies a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$,
-with prefix~$\Prefix$, and where the label predictions $\Labels$
-and~$\Default$ are empirically set to minimize the number of
-misclassification errors made by the rule list on the training data.
+Finally, we address how empirical data constrains rule lists.
 %
-Thus, label prediction~$q_k$ corresponds to the majority label of data captured
-by~$p_k$ in the context of~$\Prefix$, and the default~$\Default$ corresponds to
-the majority label of data not captured by~$\Prefix$.
+Given training data~${(\x, \y)}$,
+an antecedent list ${\Prefix = (p_1, \dots, p_K)}$
+implies a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$
+with prefix~$\Prefix$, where the label predictions
+${\Labels = (q_1, \dots, q_K)}$ and~$\Default$ are empirically set
+to minimize the number of misclassification errors made by
+the rule list on the training data.
+%
+Thus for~${1 \le k \le K}$, label prediction~$q_k$ corresponds to the
+majority label of data captured by antecedent~$p_k$ in the context of~$\Prefix$,
+and the default~$\Default$ corresponds to the majority label of data
+not captured by~$\Prefix$.
 %
 In the remainder of our presentation, whenever we refer to a rule list with a
 particular prefix, we implicitly assume these empirically determined label predictions.
