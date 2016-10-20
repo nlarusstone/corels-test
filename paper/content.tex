@@ -171,18 +171,28 @@ b(\Prefix, \x, \y) \equiv \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K \le \Obj(\R
 \end{align}
 where we have suppressed the lower bound's dependence on label predictions~$\Labels$
 because they are fully determined, given~${(\Prefix, \x, \y)}$.
-
-Furthermore, $b(\Prefix, \x, \y)$ gives a lower bound on the objective of
+%
+Furthermore, as we state next in Theorem~\ref{thm:bound},
+$b(\Prefix, \x, \y)$ gives a lower bound on the objective of
 \emph{any} rule list whose prefix starts with~$\Prefix$.
+
+\begin{theorem}
+Define bound~${b(\Prefix, \x, \y) = \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K}$.
 %
-Let ${\RL = (\Prefix, \Labels, \Default, K)}$ and ${\RL' = (\Prefix', \Labels', \Default', K')}$,
-where~${K' \ge K}$ and $\Prefix'$ starts with~$\Prefix$.
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$
+and let ${\RL' = (\Prefix', \Labels', \Default', K')}$,
+such that~${K' \ge K}$ and $\Prefix'$ starts with~$\Prefix$.
 %
+Then, ${b(\Prefix, \x, \y) \le \Obj(\RL', \x, \y)}$.
+\label{thm:bound}
+\end{theorem}
+
+\begin{proof}
 %More explicitly, let ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
 Let ${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
 and ${\Labels' = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$.
 %
-Notice then that~$\Prefix'$ yields the same mistakes as~$\Prefix$,
+Notice that~$\Prefix'$ yields the same mistakes as~$\Prefix$,
 and possibly additional mistakes:
 \begin{align}
 \Loss_p(\Prefix', \Labels', \x, \y)
@@ -194,13 +204,15 @@ where we have used the fact that
 ${\Cap(x_n, p_k \given \Prefix') = \Cap(x_n, p_k \given \Prefix)}$
 for~${1 \le k \le K}$.
 %
-Therefore, if~$\Prefix'$ starts with~$\Prefix$, then
+It follows that
 \begin{align}
 b(\Prefix, \x, \y) &= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K \nn \\
 &\le  \Loss_p(\Prefix', \Labels', \x, \y) + \Reg K' = b(\Prefix', \x, \y)
 \le \Obj(\RL', \x, \y).
 \label{eq:prefix-lb}
 \end{align}
+\end{proof}
+
 %
 To generalize, consider a sequence of prefixes such that each prefix
 starts with all previous prefixes in the sequence.
@@ -240,8 +252,8 @@ initial best known rule list~$\InitialRL$ with objective~${\InitialObj = \Obj(\I
 \end{algorithmic}
 \end{algorithm}
 
-Specifically, the objective lower bound~\eqref{eq:lower-bound} enables us to prune
-the state space hierarchically.
+Specifically, the objective lower bound in Theorem~\ref{thm:bound}
+enables us to prune the state space hierarchically.
 %
 While executing branch-and-bound, we keep track of the current best (smallest)
 objective~$\CurrentObj$, thus it is a dynamic, monotonically decreasing quantity.
@@ -255,8 +267,8 @@ that starts with~$\Prefix$.
 
 \subsection{Additional pruning bounds and problem symmetries}
 
-Our problem has rich structure beyond the objective lower bound in~\eqref{eq:lower-bound},
-including several instances of symmetries.
+Our problem has rich structure beyond the objective lower bound in
+Theorem~\ref{thm:bound}, including several instances of symmetries.
 %
 In this section, we enumerate a series of additional bounds and symmetries that
 combine to yield aggressive pruning opportunities throughout the execution of
@@ -267,7 +279,7 @@ training data~$(\x, \y)$ in our notation.
 
 \subsubsection{Lower bound with one-step lookahead}
 
-We begin with an immediate consequence of~\eqref{eq:lower-bound}.
+We begin with an immediate consequence of Theorem~\ref{thm:bound}.
 %
 Given a $K$-prefix~$\Prefix$, any longer prefix~$\Prefix'$ that starts
 with~$\Prefix$ has length at least~${K+1}$.
