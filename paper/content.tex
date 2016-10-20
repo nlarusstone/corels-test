@@ -68,7 +68,7 @@ A rule list~$\RL$ classifies datum~$x_n$ by providing the label prediction~$q_k$
 of the first rule~$r_k$ whose antecedent~$p_k$ is true for~$x_n$.
 %
 We say that an antecedent~$p_k$ of prefix~$p$ captures~$x_n$ in the context of~$p$
-if~$p_k$ is the first antecedent in~$p$ that evaluates to true for~$x_n$
+if~$p_k$ is the first antecedent in~$p$ that evaluates to true for~$x_n$.
 %
 We also say that a prefix captures those data captured by its antecedents;
 for a rule list~${\RL = (\Prefix, \Labels, \Default, K)}$,
@@ -105,11 +105,11 @@ Now, define~${\Supp(\alpha, \x)}$ to be the normalized support of~$\alpha$,
 and similarly define~${\Supp(\alpha, \x \given \beta)}$
 to be the normalized support of~$\alpha$ in the context of~$\beta$.
 
-Finally, given training data~${(\x, \y)}$, an antecedent list~$p$
+Finally, given training data~${(\x, \y)}$, an antecedent list~$\Prefix$
 implies a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$,
-where~${\Prefix = p}$, and the label predictions $\Labels$  and~$\Default$ are
-empirically set to minimize the number misclassification errors made
-by the rule list on the training data.
+with prefix~$\Prefix$, and where the label predictions $\Labels$
+and~$\Default$ are empirically set to minimize the number of
+misclassification errors made by the rule list on the training data.
 %
 Thus, label prediction~$q_k$ corresponds to the majority label of data captured
 by~$p_k$ in the context of~$\Prefix$, and the default~$\Default$ corresponds to
