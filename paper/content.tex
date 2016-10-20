@@ -272,11 +272,8 @@ Theorem~\ref{thm:bound}, including several instances of symmetries.
 In this section, we enumerate a series of additional bounds and symmetries that
 combine to yield aggressive pruning opportunities throughout the execution of
 our branch-and-bound algorithm.
-%
-In the remainder, we will sometimes suppress the dependence on
-training data~$(\x, \y)$ in our notation.
 
-We begin with an immediate consequence of Theorem~\ref{thm:bound}.
+We begin with an immediate consequence of Theorem~\ref{thm:bound}, followed by \dots
 
 \begin{theorem}[Objective lower bound with one-step lookahead]
 Let~$\Prefix$ be a $K$-prefix
@@ -284,7 +281,7 @@ and let~$\CurrentObj$ be the current best objective.
 %
 If
 \begin{align}
- b(\Prefix) + \Reg \ge \CurrentObj,
+ b(\Prefix, \x, \y) + \Reg \ge \CurrentObj,
 \label{eq:lookahead}
 \end{align}
 then we can prune~$\Prefix$ and all longer prefixes that start with~$\Prefix$.
@@ -296,15 +293,14 @@ Let~$\Prefix'$ be a $K'$-prefix that starts with~$\Prefix$,
 such that ${K' \ge K + 1}$.
 %
 The penalty for longer prefixes ensures that
-${b(\Prefix') \ge b(\Prefix) + \Reg}$.
+${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y) + \Reg}$.
 %
-Thus, even if we find that~${b(\Prefix) < \CurrentObj}$,
-as long as~\eqref{eq:lookahead} is true,
-then ${b(\Prefix') \ge \CurrentObj}$
-and we can prune~$\Prefix'$.
+Even if we find that~${b(\Prefix, \x, \y) < \CurrentObj}$,
+the bound~\eqref{eq:lookahead} implies that
+${b(\Prefix', \x, \y) \ge \CurrentObj}$.
 %
-Since we can prune any prefix~$\Prefix'$ longer than~$\Prefix$,
-we can also prune~$\Prefix$.
+Thus, we can prune any prefix~$\Prefix'$ longer than~$\Prefix$,
+and it follows that we can also prune~$\Prefix$.
 \end{proof}
 
 \subsubsection{Upper bounds on prefix length}
@@ -318,7 +314,7 @@ implies an upper bound on the maximum prefix length~$\MaxLength$ we might still 
 \label{eq:max-length}
 \end{align}
 Furthermore, if we ever encounter a perfect $K$-rule list~$\RL$
-such that~${\Obj(\RL) = \Loss(\RL) + \Reg K = \Reg K}$, then as we continue,
+such that~${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K = \Reg K}$, then as we continue,
 we only ever have to consider shorter prefixes:
 \begin{align}
 \MaxLength = K - 1.
@@ -331,7 +327,7 @@ prefix length for the family of all prefixes that start with~$\Prefix$.
 Let~$\MaxLength(\Prefix)$ denote the length of the longest prefix that is
 evaluated by branch-and-bound and starts with~$\Prefix$, then
 \begin{align}
-\MaxLength(\Prefix) \le \left\lfloor \frac{\CurrentObj - b(\Prefix)}{\Reg} \right\rfloor.
+\MaxLength(\Prefix) \le \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor.
 \label{eq:max-length-prefix}
 \end{align}
 This can be viewed as a generalization of our one-step lookahead
@@ -339,7 +335,7 @@ bound~\eqref{eq:lookahead}; it is an upper bound on the number of remaining `ste
 corresponding to an iterative sequence of single-rule extensions of~$\Prefix$.
 %
 Note also that when~$\Prefix$ is the empty prefix,
-this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix) = 0}$.
+this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix, \x, \y) = 0}$.
 
 \subsubsection{Lower bound on per-rule support}
 
@@ -469,7 +465,7 @@ this scenario is a special case where~\eqref{eq:min-capture} immediately applies
 More precisely, if~$\RL$ is a rule list that contains rule~$A$ and doesn't contain rule~$B$,
 and~$\RL'$ is derived from~$\RL$ by inserting rule~$B$ anywhere after~$A$, then
 \begin{align}
-\Obj(\RL') = \Obj(\RL) + c \ge \Obj(\RL).
+\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c \ge \Obj(\RL, \x, \y).
 \end{align}
 By considering rule semantics, it is easy to think of common situations
 leading to dominance relationships between rules.
@@ -487,7 +483,7 @@ Let~$\RL'$ be a rule list with prefix~$\Prefix'$ that starts with~$\Prefix$ and 
 %
 If, in the context of~$\RL'$, rule~$A$ captures all remaining data not captured by~$\Prefix$,
 then rule~$A$ behaves like~$\RL$'s default rule~$d$ while incurring a penalty of~$c$,
-\ie ~${\Obj(\RL') = \Obj(\RL) + c}$.
+\ie ~${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c}$.
 
 More generally, suppose rule~$A$ captures all data in the support of~$d$
 except for a fraction~${f < c}$.
@@ -497,7 +493,8 @@ the entire majority class with respect to the support of~$d$,
 plus a fraction~$f$ of data belonging to the minority class.
 %
 This would yield a reduction in misclassification of a fraction~${f < c}$
-of data while incurring a penalty of~$c$, yielding~${\Obj(\RL') \ge \Obj(\RL)}$.
+of data while incurring a penalty of~$c$, yielding
+${\Obj(\RL', \x, \y) \ge \Obj(\RL, \x, \y)}$.
 %
 Furthermore, we would never extend~$\RL'$ with additional rules,
 since insufficient data remain to be captured~\eqref{eq:min-capture}.
