@@ -303,23 +303,43 @@ Thus, we can prune any prefix~$\Prefix'$ longer than~$\Prefix$,
 and it follows that we can also prune~$\Prefix$.
 \end{proof}
 
-\subsubsection{Upper bounds on prefix length}
-\label{sec:ub-prefix-length}
-
 At any point during branch-and-bound execution, the current best objective~$\CurrentObj$
-implies an upper bound on the maximum prefix length~$\MaxLength$ we might still have to consider:
+implies an upper bound on the maximum prefix length we might still have to consider.
+
+\begin{theorem}[Upper bound on prefix length]
+\label{thm:ub-prefix-length}
+Let~$L(d)$ be the length of rule list~$d$
+and let~$\CurrentObj$ be the current best objective.
+For all optimal rule lists ${\OptimalRL \in \argmin_d R(d)}$
 \begin{align}
-\MaxLength \le \left\lfloor \frac{\CurrentObj}{\Reg} \right\rfloor
-\le \left\lfloor \frac{1}{\Reg} \right\rfloor.
+L(\OptimalRL) \le \left\lfloor \frac{\CurrentObj}{\Reg} \right\rfloor.
 \label{eq:max-length}
 \end{align}
 Furthermore, if we ever encounter a perfect $K$-rule list~$\RL$
-such that~${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K = \Reg K}$, then as we continue,
-we only ever have to consider shorter prefixes:
+such that~${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K = \Reg K}$,
+then as we continue, we only ever have to consider shorter prefixes:
 \begin{align}
-\MaxLength = K - 1.
+L(\OptimalRL) = K - 1.
 \label{eq:max-length-perfect}
 \end{align}
+\end{theorem}
+
+\begin{proof}
+\dots
+\end{proof}
+
+\begin{corollary}[Trivial upper bound on prefix length]
+For all optimal rule lists ${\OptimalRL \in \argmin_d R(d)}$,
+\begin{align}
+L(\OptimalRL) \le \left\lfloor \frac{1}{\Reg} \right\rfloor.
+\end{align}
+\end{corollary}
+
+\begin{proof}
+Let ${d = ((), (), q_0, 0)}$ be the empty rule list;
+it has objective ${\Obj(d) = \Loss(d, \x, \y) \le \frac{1}{2}}$,
+which gives an upper bound on~$\CurrentObj$.
+\end{proof}
 
 For any particular prefix~$\Prefix$, we can obtain potentially tighter bounds on
 prefix length for the family of all prefixes that start with~$\Prefix$.
@@ -675,7 +695,7 @@ the number of remaining prefix evaluations during branch-and-bound execution.
 \subsubsection{Upper bounds on the number of remaining prefix evaluations}
 \label{sec:ub-size}
 
-First, we use upper bounds on prefix length from~\S\ref{sec:ub-prefix-length};
+First, we use upper bounds on prefix length from Theorem~\ref{thm:ub-prefix-length};
 these bounds do not take into account symmetry-aware garbage collection,
 which we consider separately in~\S\ref{sec:permutation-counting}.
 %
