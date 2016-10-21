@@ -199,6 +199,7 @@ and possibly additional mistakes:
 &= \frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
 + \sum_{k=K+1}^{K'} \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \right) \nn \\
 &\ge \Loss_p(\Prefix, \Labels, \x, \y),
+\label{eq:prefix-loss}
 \end{align}
 where we have used the fact that
 ${\Cap(x_n, p_k \given \Prefix') = \Cap(x_n, p_k \given \Prefix)}$
@@ -308,53 +309,114 @@ implies an upper bound on the maximum prefix length we might still have to consi
 
 \begin{theorem}[Upper bound on prefix length]
 \label{thm:ub-prefix-length}
-Let~$L(d)$ be the length of rule list~$d$
+Let~$L(\RL)$ be the length of rule list~$\RL$
 and let~$\CurrentObj$ be the current best objective.
-For all optimal rule lists ${\OptimalRL \in \argmin_d R(d)}$
+For all optimal rule lists ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$
 \begin{align}
 L(\OptimalRL) \le \left\lfloor \frac{\CurrentObj}{\Reg} \right\rfloor.
 \label{eq:max-length}
 \end{align}
-Furthermore, if we ever encounter a perfect $K$-rule list~$\RL$
-such that~${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K = \Reg K}$,
-then as we continue, we only ever have to consider shorter prefixes:
-\begin{align}
-L(\OptimalRL) = K - 1.
-\label{eq:max-length-perfect}
-\end{align}
+Furthermore, if the current best rule list~$\CurrentRL$
+has length~$K$ and zero misclassification error,
+then for every ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
+either ${L(\OptimalRL) \le K}$ if ${\CurrentRL \in \argmin_d \Obj(\RL, \x, \y)}$,
+or otherwise ${L(\OptimalRL) \le K - 1}$.
 \end{theorem}
 
 \begin{proof}
-\dots
+For an optimal rule list~$\OptimalRL$ with objective~$\OptimalObj$,
+\begin{align}
+\OptimalObj = \Obj(\OptimalRL, \x, \y)
+= \Loss(\OptimalRL, \x, \y) + \Reg L(\OptimalRL)
+\le \CurrentObj.
+\end{align}
+The maximum possible length for~$\OptimalRL$ occurs
+when~$\Loss(\OptimalRL, \x, \y)$ is minimized;
+this gives bound~\eqref{eq:max-length}.
+%
+Furthermore, if the current rule list~$\CurrentRL$ is perfect, then
+\begin{align}
+\Obj(\CurrentRL, \x, \y) = \Loss(\CurrentRL, \x, \y) + \Reg K = \Reg K.
+\end{align}
+If ${\CurrentRL \in \argmin_\RL \Obj(\RL, \x, \y)}$, then any longer rule list~$\RL$
+would have objective~${\Obj(\RL, \x, \y) \ge \Reg (K+1)}$,
+and thus could not be optimal.
+%
+If ${\CurrentRL \notin \argmin_\RL \Obj(\RL, \x, \y)}$, then any $K'$-rule list~$\RL'$
+with~${K' \ge K}$ would have objective~${\Obj(\RL', \x, \y) \ge \Reg K}$,
+and thus could not be optimal.
 \end{proof}
 
+The latter part of Theorem~\ref{thm:ub-prefix-length} tells us that
+if we only need to identify a single instance of an optimal rule list
+${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$, and we encounter a perfect
+$K$-prefix with zero misclassification error, then we can prune all
+prefixes of length~$K$ or greater.
+
 \begin{corollary}[Trivial upper bound on prefix length]
-For all optimal rule lists ${\OptimalRL \in \argmin_d R(d)}$,
+Let~$L(\RL)$ be the length of rule list~$\RL$.
+%
+For all optimal rule lists ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
 \begin{align}
-L(\OptimalRL) \le \left\lfloor \frac{1}{\Reg} \right\rfloor.
+L(\OptimalRL) \le \left\lfloor \frac{1}{2\Reg} \right\rfloor.
+\label{eq:max-length-trivial}
 \end{align}
 \end{corollary}
 
 \begin{proof}
 Let ${d = ((), (), q_0, 0)}$ be the empty rule list;
-it has objective ${\Obj(d) = \Loss(d, \x, \y) \le \frac{1}{2}}$,
+it has objective ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) \le \frac{1}{2}}$,
 which gives an upper bound on~$\CurrentObj$.
+%
+Combining with~\eqref{eq:max-length} gives~\eqref{eq:max-length-trivial}.
 \end{proof}
 
 For any particular prefix~$\Prefix$, we can obtain potentially tighter bounds on
 prefix length for the family of all prefixes that start with~$\Prefix$.
+
+\begin{theorem}[Prefix-specific upper bound on prefix length]
+\label{thm:ub-prefix-specific}
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$
+and let ${\RL' = (\Prefix', \Labels', \Default', K')}$,
+such that~$\Prefix'$ starts with~$\Prefix$,
+and let~$\CurrentObj$ be the current best objective.
 %
-Let~$\MaxLength(\Prefix)$ denote the length of the longest prefix that is
-evaluated by branch-and-bound and starts with~$\Prefix$, then
+If~$\Prefix'$ has lower bound~${b(\Prefix', \x, \y) < \CurrentObj}$, then
 \begin{align}
-\MaxLength(\Prefix) \le \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor.
+K' < K + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor.
 \label{eq:max-length-prefix}
 \end{align}
-This can be viewed as a generalization of our one-step lookahead
-bound~\eqref{eq:lookahead}; it is an upper bound on the number of remaining `steps'
-corresponding to an iterative sequence of single-rule extensions of~$\Prefix$.
+\end{theorem}
+
+\begin{proof}
+First note that~${K' \ge K}$, since~$\Prefix'$ starts with~$\Prefix$.
 %
-Note also that when~$\Prefix$ is the empty prefix,
+Now recall from~\eqref{eq:prefix-lb} that
+%
+\begin{align}
+b(\Prefix, \x, \y) = \Loss(\RL, \Labels, \x, \y) + \Reg K
+\le \Loss(\RL', \Labels', \x, \y) + \Reg K' = b(\Prefix', \x, \y),
+\end{align}
+%
+and from~\eqref{eq:prefix-loss} that
+${\Loss(\RL, \Labels, \x, \y) \le \Loss(\RL', \Labels', \x, \y)}$.
+%
+Combining these bounds and rearranging gives
+\begin{align}
+b(\Prefix, \x, \y) + \Reg (K' - K) \le b(\Prefix', \x, \y).
+\label{eq:length-diff}
+\end{align}
+Combining~\eqref{eq:length-diff} with~${b(\Prefix', \x, \y) < \CurrentObj}$
+gives~\eqref{eq:max-length-prefix}.
+\end{proof}
+
+Theorem~\ref{thm:ub-prefix-specific} can be viewed as a generalization
+of our one-step lookahead bound~\eqref{eq:lookahead};
+the equivalent upper bound on~${K' - K}$ is an upper bound on the number
+of remaining `steps' corresponding
+to an iterative sequence of single-rule extensions of a prefix~$\Prefix$.
+%
+Note also that when~${\RL = ((), (), q_0, 0)}$ is the empty rule list,
 this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix, \x, \y) = 0}$.
 
 \subsubsection{Lower bound on per-rule support}
