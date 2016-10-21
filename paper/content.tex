@@ -101,6 +101,7 @@ preceding~$\alpha$ in~$\beta$ such that ${\Cap(x_n, \gamma) = 1}$.
 Now, define~${\Supp(\alpha, \x)}$ to be the normalized support of~$\alpha$,
 \begin{align}
 \Supp(\alpha, \x) = \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p),
+\label{eq:support}
 \end{align}
 and similarly define~${\Supp(\alpha, \x \given \beta)}$
 to be the normalized support of~$\alpha$ in the context of~$\beta$.
@@ -267,14 +268,14 @@ that starts with~$\Prefix$.
 
 \subsection{Additional pruning bounds and problem symmetries}
 
-Our problem has rich structure beyond the objective lower bound in
-Theorem~\ref{thm:bound}, including several instances of symmetries.
+Our problem has rich structure beyond the hierarchical objective lower bound
+in Theorem~\ref{thm:bound}, including several instances of symmetries.
 %
 In this section, we enumerate a series of additional bounds and symmetries that
 combine to yield aggressive pruning opportunities throughout the execution of
 our branch-and-bound algorithm.
-
-We begin with an immediate consequence of Theorem~\ref{thm:bound}, followed by \dots
+%
+We begin with an immediate consequence of Theorem~\ref{thm:bound}.
 
 \begin{theorem}[Objective lower bound with one-step lookahead]
 Let~$\Prefix$ be a $K$-prefix
@@ -289,7 +290,6 @@ then we can prune~$\Prefix$ and all longer prefixes that start with~$\Prefix$.
 \end{theorem}
 
 \begin{proof}
-
 Let~$\Prefix'$ be a $K'$-prefix that starts with~$\Prefix$,
 such that ${K' \ge K + 1}$.
 %
@@ -303,6 +303,14 @@ ${b(\Prefix', \x, \y) \ge \CurrentObj}$.
 Thus, we can prune any prefix~$\Prefix'$ longer than~$\Prefix$,
 and it follows that we can also prune~$\Prefix$.
 \end{proof}
+
+In the next subsections, we prove
+upper bounds on prefix length~(\S\ref{sec:ub-prefix-length}),
+lower bounds on per-rule support~(\S\ref{sec:lb-support}),
+\dots
+
+\subsubsection{Upper bounds on prefix length}
+\label{sec:ub-prefix-length}
 
 At any point during branch-and-bound execution, the current best objective~$\CurrentObj$
 implies an upper bound on the maximum prefix length we might still have to consider.
@@ -412,60 +420,77 @@ gives~\eqref{eq:max-length-prefix}.
 
 Theorem~\ref{thm:ub-prefix-specific} can be viewed as a generalization
 of our one-step lookahead bound~\eqref{eq:lookahead};
-the equivalent upper bound on~${K' - K}$ is an upper bound on the number
-of remaining `steps' corresponding
+rearranging to obtain a bound on~${K' - K}$
+gives an upper bound on the number of remaining `steps' corresponding
 to an iterative sequence of single-rule extensions of a prefix~$\Prefix$.
 %
 Note also that when~${\RL = ((), (), q_0, 0)}$ is the empty rule list,
 this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix, \x, \y) = 0}$.
 
-\subsubsection{Lower bound on per-rule support}
+\subsubsection{Lower bounds on per-rule support}
+\label{sec:lb-support}
 
-Let ${\OptimalRL = (\Prefix, \Labels, \Default, K)}$ be the optimal rule list,
-with objective~$\OptimalObj$:
-\begin{align}
-\OptimalObj = \Obj(\OptimalRL, \x, \y) &= \Loss(\OptimalRL, \x, \y) + \Reg K \nn \\
-&= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
-  + \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] \right)
-  + \Reg K
-\end{align}
-Consider a rule~$r_i$ in~$\OptimalRL$, ${i \ge 1}$, and let us write
-${\OptimalRL = (r_1, \dots, r_{i-1}, r_i, r_{i+1}, \dots, r_K, r_0)}$.
+\begin{theorem}[Lower bound on per-rule support]
+Let ${\OptimalRL = (\Prefix, \Labels, \Default, K) \in \argmin_\RL \Obj(\RL, \x, \y)}$
+be any optimal rule list, with objective~$\OptimalObj$.
 %
-We can decompose~$\OptimalObj$ into three contributions,
-corresponding to the rules before~$r_i$, rule~$r_i$,
-and rules after~$r_i$, including the default rule:
-${\OptimalObj \equiv \OptimalObj_- + \OptimalObj_i + \OptimalObj_+}$, where
-\begin{align*}
-\OptimalObj_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
-  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) \,, \\
-\OptimalObj_i &= \frac{1}{N} \sum_{n=1}^N
-  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ] + \Reg \,, \nn \\
-\OptimalObj_+ &= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
-  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \right)
-  + \Reg (K - i) \,.
-\end{align*}
-For~$\OptimalObj_-$, we have used the fact that
-${\Cap(x_n, p_k \given \Prefix) = \Cap(x_n, p_k \given \Prefix^k)}$,
-since a rule in a rule list is only affected by preceding rules.
+For each antecedent~$p_i$ in prefix~$\Prefix$, the regularization
+parameter~$\Reg$ provides a lower bound on normalized support:
+\begin{align}
+\Reg < \Supp(p_i, \x \given \Prefix).
+\label{eq:min-capture}
+\end{align}
+\end{theorem}
 
-Now consider the rule list ${\RL =  (\Prefix', \Labels', \Default', K-1)}$
+\begin{proof}
+%First, let us write an expression for the optimal objective~$\OptimalObj$:
+%\begin{align}
+%\OptimalObj = \Obj(\OptimalRL, \x, \y) &= \Loss(\OptimalRL, \x, \y) + \Reg K \nn \\
+%&= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
+%  + \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] \right)
+%  + \Reg K
+%\end{align}
+%Consider a rule~$r_i$ in~$\OptimalRL$, ${i \ge 1}$, and let us write
+%${\OptimalRL = (r_1, \dots, r_{i-1}, r_i, r_{i+1}, \dots, r_K, r_0)}$.
+%%
+%We can decompose~$\OptimalObj$ into three contributions,
+%corresponding to the rules before~$r_i$, rule~$r_i$,
+%and rules after~$r_i$, including the default rule:
+%${\OptimalObj \equiv \OptimalObj_- + \OptimalObj_i + \OptimalObj_+}$, where
+%\begin{align*}
+%\OptimalObj_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
+%  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) \,, \\
+%\OptimalObj_i &= \frac{1}{N} \sum_{n=1}^N
+%  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ] + \Reg \,, \nn \\
+%\OptimalObj_+ &= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
+%  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \right)
+%  + \Reg (K - i) \,.
+%\end{align*}
+%For~$\OptimalObj_-$, we have used the fact that
+%${\Cap(x_n, p_k \given \Prefix) = \Cap(x_n, p_k \given \Prefix^k)}$,
+%since a rule in a rule list is only affected by preceding rules.
+
+Let ${\OptimalRL = (\Prefix, \Labels, \Default, K)}$ be an optimal
+rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
+and labels ${\Labels = (q_1, \dots, q_K)}$.
+%
+Consider the rule list ${\RL =  (\Prefix', \Labels', \Default', K-1)}$
 derived from~$\OptimalRL$ by deleting rule~$r_i$,
 therefore ${\Prefix' = (p_1, \dots, p_{i-1}, p_{i+1}, \dots, p_K)}$
 and ${\Labels' = (q_1, \dots, q_{i-1}, q'_{i+1}, \dots, q'_K)}$,
 where~$q'_k$ need not be the same as~$q_k$, for ${k > i}$ and~${k = 0}$.
 %
-Let us now decompose the objective of~$\RL$ into two terms,
-corresponding to the rules before and after where~$r_i$ had been:
-${\Obj(\RL, \x, \y) \equiv \Obj_- + \Obj_+}$, where
-\begin{align*}
-\Obj_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
-  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) = \OptimalObj_-  \,, \\
-\Obj_+ &= \frac{1}{N} \sum_{n=1}^N
-  \left( \one [ \neg\, \Cap(x_n, \Prefix') \wedge (\Default' \neq y_n) ]
-  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q'_k \neq y_n) ] \right)
-  + \Reg (K - i) \,.
-\end{align*}
+%Let us now decompose the objective of~$\RL$ into two terms,
+%corresponding to the rules before and after where~$r_i$ had been:
+%${\Obj(\RL, \x, \y) \equiv \Obj_- + \Obj_+}$, where
+%\begin{align*}
+%\Obj_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
+%  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) = \OptimalObj_-  \,, \\
+%\Obj_+ &= \frac{1}{N} \sum_{n=1}^N
+%  \left( \one [ \neg\, \Cap(x_n, \Prefix') \wedge (\Default' \neq y_n) ]
+%  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q'_k \neq y_n) ] \right)
+%  + \Reg (K - i) \,.
+%\end{align*}
 
 The largest possible discrepancy between~$\OptimalRL$ and~$\RL$ would occur
 if~$\OptimalRL$ correctly classified all the data captured by~$p_i$,
@@ -473,31 +498,34 @@ while~$\RL$ misclassified these data.
 %
 This gives an upper bound:
 \begin{align}
-\Obj(\RL, \x, \y) \le \OptimalObj + \Supp(p_i, \x \given \Prefix) - \Reg,
+\Obj(\RL, \x, \y) = \Loss(\Prefix', \Labels', \x, \y) + \Reg (K - 1)
+&\le \Loss(\Prefix, \Labels, \x, \y) + \Supp(p_i, \x \given \Prefix) + \Reg(K - 1) \nn \\
+&= \Obj(\OptimalRL, \x, \y) + \Supp(p_i, \x \given \Prefix) - \Reg \nn \\
+&= \OptimalObj + \Supp(p_i, \x \given \Prefix) - \Reg
 \label{eq:ub-i}
 \end{align}
 where~$\Supp(p_i, \x \given \Prefix)$ is the normalized support of~$p_i$
-in the context of~$\OptimalRL$, and the regularization `bonus'
-comes from the fact that~$\RL$ is one rule shorter than~$\OptimalRL$.
+in the context of~$\Prefix$, defined in~\S\ref{sec:setup},
+and the regularization `bonus' comes from the fact that~$\RL$
+is one rule shorter than~$\OptimalRL$.
 
 At the same time, we must have ${\OptimalObj < \Obj(\RL, \x, \y)}$ for~$\OptimalRL$ to be optimal.
 %
-Combining this with~\eqref{eq:ub-i} rearranging gives
-\begin{align}
-\Reg < \Supp(p_i, \x \given \Prefix),
-\label{eq:min-capture}
-\end{align}
+Combining this with~\eqref{eq:ub-i} and rearranging gives~\eqref{eq:min-capture},
 therefore the regularization parameter~$\Reg$ provides a lower bound
 on the support of an antecedent~$p_i$ in an optimal rule list~$\OptimalRL$.
-%
+\end{proof}
+
 Thus, we can prune a prefix~$\Prefix$ if any of its antecedents do not capture
 more than a fraction~$\Reg$ of data, even if~${b(\Prefix, \x, \y) < \OptimalObj}$.
-
-\subsubsection{Lower bound on per-rule accurate support}
-
+%
 We can tighten the previous bound~\eqref{eq:min-capture}
 by tightening the upper bound on~$\Obj(\RL, \x, \y)$ in~\eqref{eq:ub-i}.
-%
+
+\begin{theorem}[Lower bound on per-rule accurate support]
+\dots
+\end{theorem}
+
 First, recall that~$\OptimalObj_i$ is the contribution of rule~$r_i$ to~$\OptimalObj$.
 %
 Now, define~$\Loss_i$ to be the portion of~$\OptimalObj_i$ due to misclassification error:
