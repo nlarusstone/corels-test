@@ -55,10 +55,14 @@ For~$k \le K$, let ${\RL_p^k = (p_1, \dots, p_k)}$ be the $k$-prefix of~$\RL$,
 a $k$-tuple of the first~$k$ antecedents in~$\RL$;
 we refer to the $K$-prefix simply as~$\RL$'s prefix~$\Prefix$.
 %
-%For an antecedent list~$\Prefix$, we similarly define~$\Prefix^k$
-%to be the $k$-prefix of~$\Prefix$, and for any $k$-prefix~$\Prefix^k$,
-%we say that~$\Prefix$ starts with~$\Prefix^k$.
+For an antecedent list~$\Prefix$, we similarly define~$\Prefix^k$
+to be the $k$-prefix of~$\Prefix$, and for any $k$-prefix~$\Prefix^k$,
+we say that~$\Prefix$ starts with~$\Prefix^k$.
 %
+We also say that an antecedent list~$\Prefix$ contains another
+antecedent list~$\Prefix'$ if the antecedents in~$\Prefix'$ correspond to
+a contiguous subsequence of antecedents in~$\Prefix$.
+
 We now give a useful alternate rule list representation:
 ${\RL = (\Prefix, \Labels, \Default, K)}$,
 where ${\Prefix = (p_1, \dots, p_K)}$ is $\RL$'s prefix,
@@ -273,7 +277,12 @@ If we encounter a prefix~$\Prefix$ such that
 b(\Prefix, \x, \y) \ge \CurrentObj,
 \end{align}
 then by~\eqref{eq:prefix-lb}, we needn't consider \emph{any} prefix~$\Prefix'$
-that starts with~$\Prefix$.
+that starts with~$\Prefix$, because ${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y)}$.
+%
+In fact, we can further generalize this result:
+we can hierarchically prune any prefix~$\Prefix''$ that contains
+a contiguous subsequence of antecedents equal to~$\Prefix$,
+since ${b(\Prefix'', \x, \y) \ge b(\Prefix, \x, \y) \ge \CurrentObj}$.
 
 \subsection{Additional pruning bounds and problem symmetries}
 
