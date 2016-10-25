@@ -159,7 +159,8 @@ Our objective has structure amenable to global optimization via a branch-and-bou
 We can decompose the misclassification error into two contributions
 corresponding to the prefix and default:
 \begin{align}
-\Loss(\RL, \x, \y) = \Loss(\Prefix, r_q, \Default, \x, \y) \equiv \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y),
+\Loss(\RL, \x, \y) %= \Loss(\Prefix, r_q, \Default, \x, \y)
+\equiv \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y),
 \end{align}
 where ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
 \begin{align}
