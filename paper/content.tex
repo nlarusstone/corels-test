@@ -55,8 +55,9 @@ For~$k \le K$, let ${\RL_p^k = (p_1, \dots, p_k)}$ be the $k$-prefix of~$\RL$,
 a $k$-tuple of the first~$k$ antecedents in~$\RL$;
 we refer to the $K$-prefix simply as~$\RL$'s prefix~$\Prefix$.
 %
-For an antecedent list~$p$, we similarly define~$p^k$ to be the $k$-prefix of~$p$,
-and for any $k$-prefix~$p^k$, we say that~$p$ starts with~$p^k$.
+%For an antecedent list~$\Prefix$, we similarly define~$\Prefix^k$
+%to be the $k$-prefix of~$\Prefix$, and for any $k$-prefix~$\Prefix^k$,
+%we say that~$\Prefix$ starts with~$\Prefix^k$.
 %
 We now give a useful alternate rule list representation:
 ${\RL = (\Prefix, \RL_q, q_0, K)}$,
@@ -82,10 +83,10 @@ that contains the antecedent or antecedents represented by~$\alpha$.
 Let us define~${\Cap(x_n, \alpha) = 1}$ if~$\alpha$ captures datum~$x_n$,
 and~0 otherwise.
 %
-For example, let~$p$ and~$p'$ be antecedent lists such that~$p'$
-starts with~$p$, then~$p'$ captures all the data that~$p$ captures:
+For example, let~$\Prefix$ and~$\Prefix'$ be prefixes such that~$\Prefix'$ starts
+with~$\Prefix$, then~$\Prefix'$ captures all the data that~$\Prefix$ captures:
 \begin{align}
-\{x_n: \Cap(x_n, p)\} \subseteq \{x_n: \Cap(x_n, p')\}.
+\{x_n: \Cap(x_n, \Prefix)\} \subseteq \{x_n: \Cap(x_n, \Prefix')\}.
 \label{eq:cap-subset}
 \end{align}
 %
