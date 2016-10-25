@@ -252,14 +252,14 @@ initial best known rule list~$\InitialRL$ with objective~${\InitialObj = \Obj(\I
 \State $Q \gets $ queue$(())$ \Comment{Initialize queue with empty prefix}
 \While {$Q$ not empty} \Comment{Optimization complete when the queue is empty}
 	\State $\Prefix \gets Q$.pop() \Comment{Remove a prefix from the queue}
-	\If {$b(\Prefix, \x) < \CurrentObj$} \Comment{Only extend prefix if lower bound is smaller than~$\CurrentObj$}
-        \For {$s$ in $\RuleSet$ if $s$ not in $\Prefix$} \Comment{Generate prefixes with distinct antecedents}
-            \State $Q$.push$((\Prefix, s))$ \Comment{Add single antecedent extensions of prefix to queue}
-        \EndFor
+	\If {$b(\Prefix, \x) < \CurrentObj$} \Comment{Apply Theorem~\ref{thm:bound} (hierarchical objective lower bound)}
         \State $\Obj \gets \Obj(\RL, \x)$ \Comment{Compute objective of~$\RL$, the rule list with prefix~$\Prefix$}
         \If {$\Obj < \CurrentObj$}
             \State $(\CurrentRL, \CurrentObj) \gets (\RL, \Obj)$ \Comment{Update current best prefix and objective}
         \EndIf
+        \For {$s$ in $\RuleSet$ if $s$ not in $\Prefix$} \Comment{Generate prefixes with distinct antecedents}
+            \State $Q$.push$((\Prefix, s))$ \Comment{Add single antecedent extensions of prefix to queue}
+        \EndFor
     \EndIf
 \EndWhile
 \State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Provably optimal prefix and objective}
