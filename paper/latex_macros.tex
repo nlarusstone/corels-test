@@ -25,12 +25,23 @@
 \newcommand{\y}{\mathbf{y}}
 \def\RL{{d}}
 \def\Prefix{d_p}
-\def\Obj{\ell}
+\def\Labels{\delta_p}
+\def\Default{q_0}
+\def\Obj{R}
+\def\Loss{\ell}
 \def\Reg{{\lambda}}
-\def\MaxLength{{K_{\text{max}}}}
+\def\MaxLength{{K_{\textnormal{max}}}}
 \def\RuleSet{{\mathcal S}}
-\def\Cap{\text{cap}}
-\def\Supp{\text{supp}}
+\def\Cap{\textnormal{cap}}
+\def\Supp{\textnormal{supp}}
+\def\InitialObj{R^0}
+\def\InitialRL{d^0}
+\def\CurrentObj{R^c}
+\def\CurrentRL{d^c}
+\def\OptimalObj{R^*}
+\def\OptimalRL{d^*}
+\DeclareMathOperator*{\argmin}{argmin}
+\DeclareMathOperator*{\argmax}{argmax}
 
 \newcommand{\A}{\mathcal{A}}
 \newcommand{\Ac}{\mathcal{A}^c}
@@ -44,6 +55,7 @@
 \newtheorem{definition}{Definition}
 \newtheorem{proposition}{Proposition}
 \newtheorem{claim}{Claim}
+\newtheorem{corollary}{Corollary}
 
 \newcommand{\noi}{\noindent}
 \newcommand{\nn}{\nonumber}

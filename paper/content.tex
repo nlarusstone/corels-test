@@ -60,20 +60,21 @@ we refer to the $K$-prefix simply as~$\RL$'s prefix~$\Prefix$.
 %we say that~$\Prefix$ starts with~$\Prefix^k$.
 %
 We now give a useful alternate rule list representation:
-${\RL = (\Prefix, \RL_q, q_0, K)}$,
+${\RL = (\Prefix, \Labels, \Default, K)}$,
 where ${\Prefix = (p_1, \dots, p_K)}$ is $\RL$'s prefix,
-${\RL_q = (q_1, \dots, q_K) \in \{0, 1\}^K}$~are the label predictions associated
-with~$\Prefix$, and~${q_0 \in \{0, 1\}}$ is the default label prediction.
+${\Labels = (q_1, \dots, q_K) \in \{0, 1\}^K}$~are the label predictions associated
+with~$\Prefix$, and~${\Default \in \{0, 1\}}$ is the default label prediction.
 
 A rule list~$\RL$ classifies datum~$x_n$ by providing the label prediction~$q_k$
 of the first rule~$r_k$ whose antecedent~$p_k$ is true for~$x_n$.
 %
 We say that an antecedent~$p_k$ of prefix~$p$ captures~$x_n$ in the context of~$p$
-if~$p_k$ is the first antecedent in~$p$ that evaluates to true for~$x_n$
+if~$p_k$ is the first antecedent in~$p$ that evaluates to true for~$x_n$.
 %
 We also say that a prefix captures those data captured by its antecedents;
-for a rule list with prefix~$\Prefix$, data not captured by~$\Prefix$
-are classified according to the default label prediction~$q_0$.
+for a rule list~${\RL = (\Prefix, \Labels, \Default, K)}$,
+data not captured by the prefix~$\Prefix$
+are classified according to the default label prediction~$\Default$.
 
 Let~$\alpha$ be a single antecedent or an antecedent list,
 such as a prefix, or a set of antecedents,
@@ -91,39 +92,51 @@ with~$\Prefix$, then~$\Prefix'$ captures all the data that~$\Prefix$ captures:
 \end{align}
 %
 Let us also define~${\Cap(x_n, \alpha \given \beta) = 1}$ if~$\alpha$
-captures datum~$x_n$ in the context of~$\beta$.
+captures datum~$x_n$ in the context of~$\beta$, and~$0$ otherwise.
+%
+Note that ${\Cap(x_n, \alpha \given \beta) = 1}$ only if ${\Cap(x_n, \alpha) = 1}$;
+${\Cap(x_n, \alpha \given \beta) = 0}$ either if ${\Cap(x_n, \alpha) = 0}$,
+or if ${\Cap(x_n, \alpha) = 1}$ but there is an antecedent~$\gamma$
+preceding~$\alpha$ in~$\beta$ such that ${\Cap(x_n, \gamma) = 1}$.
 %
 Now, define~${\Supp(\alpha, \x)}$ to be the normalized support of~$\alpha$,
 \begin{align}
 \Supp(\alpha, \x) = \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p),
+\label{eq:support}
 \end{align}
 and similarly define~${\Supp(\alpha, \x \given \beta)}$
 to be the normalized support of~$\alpha$ in the context of~$\beta$.
 
-Finally, given training data~${(\x, \y)}$, an antecedent list~$p$
-implies a rule list ${\RL = (\Prefix, \RL_q, q_0, K)}$,
-where~${\Prefix = p}$, and the label predictions $\RL_q$  and~$q_0$ are
-empirically set to minimize the number misclassification errors made
-by the rule list on the training data.
+Finally, we address how empirical data constrains rule lists.
 %
-Thus, label prediction~$q_k$ corresponds to the majority label of data captured
-by~$p_k$ in the context of~$\Prefix$, and the default~$q_0$ corresponds to
-the majority label of data not captured by~$\Prefix$.
+Given training data~${(\x, \y)}$,
+an antecedent list ${\Prefix = (p_1, \dots, p_K)}$
+implies a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$
+with prefix~$\Prefix$, where the label predictions
+${\Labels = (q_1, \dots, q_K)}$ and~$\Default$ are empirically set
+to minimize the number of misclassification errors made by
+the rule list on the training data.
+%
+Thus for~${1 \le k \le K}$, label prediction~$q_k$ corresponds to the
+majority label of data captured by antecedent~$p_k$ in the context of~$\Prefix$,
+and the default~$\Default$ corresponds to the majority label of data
+not captured by~$\Prefix$.
 %
 In the remainder of our presentation, whenever we refer to a rule list with a
 particular prefix, we implicitly assume these empirically determined label predictions.
 
 \subsection{Branch-and-bound optimization framework}
 
-We define a simple loss function for a rule list ${\RL = (\Prefix, \RL_q, q_0, K)}$:
+We define a simple objective function for a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$:
 \begin{align}
-\Obj(\RL, \x, \y) = m(\RL, \x, \y) + \Reg K.
+\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K.
 \label{eq:objective}
 \end{align}
-The two terms correspond to the misclassification error~$m(\RL, \x, \y)$
+This objective function is a regularized empirical risk;
+it consists of a loss~$\Loss(\RL, \x, \y)$ measuring misclassification error,
 and a regularization term that penalizes longer rule lists.
 %
-$m(\RL, \x, \y)$~is the fraction of training data whose labels are
+$\Loss(\RL, \x, \y)$~is the fraction of training data whose labels are
 incorrectly predicted by~$\RL$.
 %
 In our setting, the regularization parameter~${\Reg \ge 0}$ is a small constant;
@@ -131,7 +144,7 @@ In our setting, the regularization parameter~${\Reg \ge 0}$ is a small constant;
 of data when increasing a rule list's length by one association rule.
 %
 %As noted in~\S\ref{sec:setup}, a prefix~$\Prefix$ and training data together
-%fully specify a rule list~${\RL = (\Prefix, \RL_q, q_0, K)}$,
+%fully specify a rule list~${\RL = (\Prefix, \Labels, \Default, K)}$,
 %thus let us define~${\Obj(\Prefix, \x, \y) \equiv \Obj(\RL, \x, \y)}$.
 
 Our objective has structure amenable to global optimization via a branch-and-bound framework.
@@ -139,58 +152,70 @@ Our objective has structure amenable to global optimization via a branch-and-bou
 We can decompose the misclassification error into two contributions
 corresponding to the prefix and default:
 \begin{align}
-m(\RL, \x, \y) = m(\Prefix, r_q, q_0, \x, \y) \equiv m_p(\Prefix, \RL_q, \x, \y) + m_0(\Prefix, q_0, \x, \y),
+\Loss(\RL, \x, \y) = \Loss(\Prefix, r_q, \Default, \x, \y) \equiv \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y),
 \end{align}
-where ${\Prefix = (p_1, \dots, p_K)}$ and ${\RL_q = (q_1, \dots, q_K)}$;
+where ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
 \begin{align}
-m_p(\Prefix, \RL_q, \x, \y) =
+\Loss_p(\Prefix, \Labels, \x, \y) =
 \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
 \end{align}
 is the fraction of data captured and misclassified by the prefix, and
 \begin{align}
-m_0(\Prefix, q_0, \x, \y) =
-\frac{1}{N} \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
+\Loss_0(\Prefix, \Default, \x, \y) =
+\frac{1}{N} \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
 \end{align}
 is the fraction of data not captured by the prefix and misclassified by the default.
 %
 Eliminating the latter error term gives a lower bound~$b(\Prefix, \x, \y)$ on the objective,
 \begin{align}
-b(\Prefix, \x, \y) \equiv m_p(\Prefix, \RL_q, \x, \y) + \Reg K \le \Obj(\RL, \x, \y),
+b(\Prefix, \x, \y) \equiv \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K \le \Obj(\RL, \x, \y),
 \label{eq:lower-bound}
 \end{align}
-where we have suppressed the lower bound's dependence on label predictions~$\RL_q$
+where we have suppressed the lower bound's dependence on label predictions~$\Labels$
 because they are fully determined, given~${(\Prefix, \x, \y)}$.
-
-Furthermore, $b(\Prefix, \x, \y)$ gives a lower bound on the objective of
+%
+Furthermore, as we state next in Theorem~\ref{thm:bound},
+$b(\Prefix, \x, \y)$ gives a lower bound on the objective of
 \emph{any} rule list whose prefix starts with~$\Prefix$.
+
+\begin{theorem}[Hierarchical objective lower bound]
+Define~${b(\Prefix, \x, \y) = \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K}$.
 %
-Let ${\RL = (\Prefix, \RL_q, q_0, K)}$ and ${\RL' = (\Prefix', \RL'_q, q'_0, K')}$,
-where~${K' \ge K}$ and $\Prefix'$ starts with~$\Prefix$.
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$
+and let ${\RL' = (\Prefix', \Labels', \Default', K')}$,
+such that~${K' \ge K}$ and $\Prefix'$ starts with~$\Prefix$.
 %
-%More explicitly, let ${\Prefix = (p_1, \dots, p_K)}$ and ${\RL_q = (q_1, \dots, q_K)}$;
+Then, ${b(\Prefix, \x, \y) \le \Obj(\RL', \x, \y)}$.
+\label{thm:bound}
+\end{theorem}
+
+\begin{proof}
+%More explicitly, let ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
 Let ${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
-and ${\RL'_q = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$.
+and ${\Labels' = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$.
 %
-Notice then that~$\Prefix'$ yields the same mistakes as~$\Prefix$,
+Notice that~$\Prefix'$ yields the same mistakes as~$\Prefix$,
 and possibly additional mistakes:
 \begin{align}
-m_p(\Prefix', \RL'_q, \x, \y)
+\Loss_p(\Prefix', \Labels', \x, \y)
 &= \frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
 + \sum_{k=K+1}^{K'} \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \right) \nn \\
-&\ge m_p(\Prefix, \RL_q, \x, \y),
+&\ge \Loss_p(\Prefix, \Labels, \x, \y),
+\label{eq:prefix-loss}
 \end{align}
 where we have used the fact that
 ${\Cap(x_n, p_k \given \Prefix') = \Cap(x_n, p_k \given \Prefix)}$
 for~${1 \le k \le K}$.
 %
-Therefore, if~$\Prefix'$ starts with~$\Prefix$, then
+It follows that
 \begin{align}
-b(\Prefix, \x, \y) &= m_p(\Prefix, \RL_q, \x, \y) + \Reg K \nn \\
-&\le  m_p(\Prefix', \RL'_q, \x, \y) + \Reg K' = b(\Prefix', \x, \y)
+b(\Prefix, \x, \y) &= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K \nn \\
+&\le  \Loss_p(\Prefix', \Labels', \x, \y) + \Reg K' = b(\Prefix', \x, \y)
 \le \Obj(\RL', \x, \y).
 \label{eq:prefix-lb}
 \end{align}
-%
+\end{proof}
+
 To generalize, consider a sequence of prefixes such that each prefix
 starts with all previous prefixes in the sequence.
 %
@@ -209,193 +234,311 @@ illustrated in Algorithm~\ref{alg:branch-and-bound}.
 objective lower bound~${b(\Prefix, \x, \y)}$,
 set of antecedents ${\RuleSet = \{s_m\}_{m=1}^M}$,
 training data~$(\x, \y) = {\{(x_n, y_n)\}_{n=1}^N}$,
-initial best known rule list~$\RL_0$ with objective~${\Obj_0 = \Obj(\RL_0, \x)}$
-\State \textbf{Output:} Optimal rule list~$\RL^*$ with minimum objective~$\Obj^*$
-\State $(\RL^*, \Obj^*) \gets (\RL_0, \Obj_0)$ \Comment{Initialize best known prefix and objective}
+initial best known rule list~$\InitialRL$ with objective~${\InitialObj = \Obj(\InitialRL, \x)}$
+\State \textbf{Output:} Provably optimal rule list~$\OptimalRL$ with minimum objective~$\OptimalObj$
+\State $(\CurrentRL, \CurrentObj) \gets (\InitialRL, \InitialObj)$ \Comment{Initialize current best prefix and objective}
 \State $Q \gets $ queue$(())$ \Comment{Initialize queue with empty prefix}
 \While {$Q$ not empty} \Comment{Optimization complete when the queue is empty}
 	\State $\Prefix \gets Q$.pop() \Comment{Remove a prefix from the queue}
-	\If {$b(\Prefix, \x) < \Obj^*$} \Comment{Only extend prefix if lower bound is smaller than~$\Obj^*$}
+	\If {$b(\Prefix, \x) < \CurrentObj$} \Comment{Only extend prefix if lower bound is smaller than~$\CurrentObj$}
         \For {$s$ in $\RuleSet$ if $s$ not in $\Prefix$} \Comment{Generate prefixes with distinct antecedents}
             \State $Q$.push$((\Prefix, s))$ \Comment{Add single antecedent extensions of prefix to queue}
         \EndFor
         \State $\Obj \gets \Obj(\RL, \x)$ \Comment{Compute objective of~$\RL$, the rule list with prefix~$\Prefix$}
-        \If {$\Obj < \Obj^*$}
-            \State $(\RL^*, \Obj^*) \gets (\RL, \Obj)$ \Comment{Update best known prefix and objective}
+        \If {$\Obj < \CurrentObj$}
+            \State $(\CurrentRL, \CurrentObj) \gets (\RL, \Obj)$ \Comment{Update current best prefix and objective}
         \EndIf
     \EndIf
 \EndWhile
+\State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Provably optimal prefix and objective}
 \end{algorithmic}
 \end{algorithm}
 
-Specifically, the objective lower bound~\eqref{eq:lower-bound} enables us to prune
-the state space hierarchically.
+Specifically, the objective lower bound in Theorem~\ref{thm:bound}
+enables us to prune the state space hierarchically.
 %
-While executing branch-and-bound, we keep track of the best (smallest) known
-objective~$\Obj^*$, thus it is a dynamic, monotonically decreasing quantity.
+While executing branch-and-bound, we keep track of the current best (smallest)
+objective~$\CurrentObj$, thus it is a dynamic, monotonically decreasing quantity.
 %
 If we encounter a prefix~$\Prefix$ such that
 \begin{align}
-b(\Prefix, \x, \y) \ge \Obj^*,
+b(\Prefix, \x, \y) \ge \CurrentObj,
 \end{align}
 then by~\eqref{eq:prefix-lb}, we needn't consider \emph{any} prefix~$\Prefix'$
 that starts with~$\Prefix$.
 
 \subsection{Additional pruning bounds and problem symmetries}
 
-Our problem has rich structure beyond the objective lower bound in~\eqref{eq:lower-bound},
-including several instances of symmetries.
+Our problem has rich structure beyond the hierarchical objective lower bound
+in Theorem~\ref{thm:bound}, including several instances of symmetries.
 %
 In this section, we enumerate a series of additional bounds and symmetries that
 combine to yield aggressive pruning opportunities throughout the execution of
 our branch-and-bound algorithm.
 %
-In the remainder, we will sometimes suppress the dependence on
-training data~$(\x, \y)$ in our notation.
+We begin with an immediate consequence of Theorem~\ref{thm:bound}.
 
-\subsubsection{Lower bound with one-step lookahead}
-
-We begin with an immediate consequence of~\eqref{eq:lower-bound}.
+\begin{theorem}[Objective lower bound with one-step lookahead]
+Let~$\Prefix$ be a $K$-prefix
+and let~$\CurrentObj$ be the current best objective.
 %
-Given a $K$-prefix~$\Prefix$, any longer prefix~$\Prefix'$ that starts
-with~$\Prefix$ has length at least~${K+1}$.
-%
-Thus, even if we find that~${b(\Prefix) < \Obj^*}$, we can still prune all longer
-prefixes~$\Prefix'$ if ${b(\Prefix') \ge \Obj^*}$,
-where $\Obj^*$ is the best known objective.
-%
-Since~${b(\Prefix') \ge b(\Prefix) + \Reg}$,
-we can prune all~$\Prefix'$ if
+If
 \begin{align}
- b(\Prefix) + \Reg \ge \Obj^*.
+ b(\Prefix, \x, \y) + \Reg \ge \CurrentObj,
 \label{eq:lookahead}
 \end{align}
+then we can prune~$\Prefix$ and all longer prefixes that start with~$\Prefix$.
+\end{theorem}
+
+\begin{proof}
+Let~$\Prefix'$ be a $K'$-prefix that starts with~$\Prefix$,
+such that ${K' \ge K + 1}$.
+%
+The penalty for longer prefixes ensures that
+${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y) + \Reg}$.
+%
+Even if we find that~${b(\Prefix, \x, \y) < \CurrentObj}$,
+the bound~\eqref{eq:lookahead} implies that
+${b(\Prefix', \x, \y) \ge \CurrentObj}$.
+%
+Thus, we can prune any prefix~$\Prefix'$ longer than~$\Prefix$,
+and it follows that we can also prune~$\Prefix$.
+\end{proof}
+
+In the next subsections, we prove
+upper bounds on prefix length~(\S\ref{sec:ub-prefix-length}),
+lower bounds on per-rule support~(\S\ref{sec:lb-support}),
+\dots
 
 \subsubsection{Upper bounds on prefix length}
 \label{sec:ub-prefix-length}
 
-At any point during branch-and-bound execution, the best known objective~$\Obj^*$
-implies an upper bound on the maximum prefix length~$\MaxLength$ we might still have to consider:
+At any point during branch-and-bound execution, the current best objective~$\CurrentObj$
+implies an upper bound on the maximum prefix length we might still have to consider.
+
+\begin{theorem}[Upper bound on prefix length]
+\label{thm:ub-prefix-length}
+Let~$L(\RL)$ be the length of rule list~$\RL$
+and let~$\CurrentObj$ be the current best objective.
+For all optimal rule lists ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$
 \begin{align}
-\MaxLength \le \left\lfloor \frac{\Obj^*}{\Reg} \right\rfloor
-\le \left\lfloor \frac{1}{\Reg} \right\rfloor.
+L(\OptimalRL) \le \left\lfloor \frac{\CurrentObj}{\Reg} \right\rfloor.
 \label{eq:max-length}
 \end{align}
-Furthermore, if we ever encounter a perfect $K$-rule list~$\RL$
-such that~${\Obj(\RL) = m(\RL) + \Reg K = \Reg K}$, then as we continue,
-we only ever have to consider shorter prefixes:
+Furthermore, if the current best rule list~$\CurrentRL$
+has length~$K$ and zero misclassification error,
+then for every ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
+either ${L(\OptimalRL) \le K}$ if ${\CurrentRL \in \argmin_d \Obj(\RL, \x, \y)}$,
+or otherwise ${L(\OptimalRL) \le K - 1}$.
+\end{theorem}
+
+\begin{proof}
+For an optimal rule list~$\OptimalRL$ with objective~$\OptimalObj$,
 \begin{align}
-\MaxLength = K - 1.
-\label{eq:max-length-perfect}
+\OptimalObj = \Obj(\OptimalRL, \x, \y)
+= \Loss(\OptimalRL, \x, \y) + \Reg L(\OptimalRL)
+\le \CurrentObj.
 \end{align}
+The maximum possible length for~$\OptimalRL$ occurs
+when~$\Loss(\OptimalRL, \x, \y)$ is minimized;
+this gives bound~\eqref{eq:max-length}.
+%
+Furthermore, if the current rule list~$\CurrentRL$ is perfect, then
+\begin{align}
+\Obj(\CurrentRL, \x, \y) = \Loss(\CurrentRL, \x, \y) + \Reg K = \Reg K.
+\end{align}
+If ${\CurrentRL \in \argmin_\RL \Obj(\RL, \x, \y)}$, then any longer rule list~$\RL$
+would have objective~${\Obj(\RL, \x, \y) \ge \Reg (K+1)}$,
+and thus could not be optimal.
+%
+If ${\CurrentRL \notin \argmin_\RL \Obj(\RL, \x, \y)}$, then any $K'$-rule list~$\RL'$
+with~${K' \ge K}$ would have objective~${\Obj(\RL', \x, \y) \ge \Reg K}$,
+and thus could not be optimal.
+\end{proof}
+
+The latter part of Theorem~\ref{thm:ub-prefix-length} tells us that
+if we only need to identify a single instance of an optimal rule list
+${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$, and we encounter a perfect
+$K$-prefix with zero misclassification error, then we can prune all
+prefixes of length~$K$ or greater.
+
+\begin{corollary}[Trivial upper bound on prefix length]
+Let~$L(\RL)$ be the length of rule list~$\RL$.
+%
+For all optimal rule lists ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
+\begin{align}
+L(\OptimalRL) \le \left\lfloor \frac{1}{2\Reg} \right\rfloor.
+\label{eq:max-length-trivial}
+\end{align}
+\end{corollary}
+
+\begin{proof}
+Let ${d = ((), (), q_0, 0)}$ be the empty rule list;
+it has objective ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) \le \frac{1}{2}}$,
+which gives an upper bound on~$\CurrentObj$.
+%
+Combining with~\eqref{eq:max-length} gives~\eqref{eq:max-length-trivial}.
+\end{proof}
 
 For any particular prefix~$\Prefix$, we can obtain potentially tighter bounds on
 prefix length for the family of all prefixes that start with~$\Prefix$.
+
+\begin{theorem}[Prefix-specific upper bound on prefix length]
+\label{thm:ub-prefix-specific}
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$
+and let ${\RL' = (\Prefix', \Labels', \Default', K')}$,
+such that~$\Prefix'$ starts with~$\Prefix$,
+and let~$\CurrentObj$ be the current best objective.
 %
-Let~$\MaxLength(\Prefix)$ denote the length of the longest prefix that is
-evaluated by branch-and-bound and starts with~$\Prefix$, then
+If~$\Prefix'$ has lower bound~${b(\Prefix', \x, \y) < \CurrentObj}$, then
 \begin{align}
-\MaxLength(\Prefix) \le \left\lfloor \frac{\Obj^* - b(\Prefix)}{\Reg} \right\rfloor.
+K' < K + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor.
 \label{eq:max-length-prefix}
 \end{align}
-This can be viewed as a generalization of our one-step lookahead
-bound~\eqref{eq:lookahead}; it is an upper bound on the number of remaining `steps'
-corresponding to an iterative sequence of single-rule extensions of~$\Prefix$.
+\end{theorem}
+
+\begin{proof}
+First note that~${K' \ge K}$, since~$\Prefix'$ starts with~$\Prefix$.
 %
-Note also that when~$\Prefix$ is the empty prefix,
-this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix) = 0}$.
-
-\subsubsection{Lower bound on per-rule support}
-
-Let ${\RL^* = (\Prefix, \RL_q, q_0, K)}$ be the optimal rule list,
-with objective~$\ell^*$:
+Now recall from~\eqref{eq:prefix-lb} that
+%
 \begin{align}
-\Obj^* = \Obj(\RL^*, \x, \y) &= m(\RL^*, \x, \y) + \Reg K \nn \\
-&= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
-  + \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] \right)
-  + \Reg K
+b(\Prefix, \x, \y) = \Loss(\RL, \Labels, \x, \y) + \Reg K
+\le \Loss(\RL', \Labels', \x, \y) + \Reg K' = b(\Prefix', \x, \y),
 \end{align}
-Consider a rule~$r_i$ in~$\RL^*$, ${i \ge 1}$, and let us write
-${\RL^* = (r_1, \dots, r_{i-1}, r_i, r_{i+1}, \dots, r_K, r_0)}$.
 %
-We can decompose~$\Obj^*$ into three contributions,
-corresponding to the rules before~$r_i$, rule~$r_i$,
-and rules after~$r_i$, including the default rule:
-${\Obj^* \equiv \Obj^*_- + \Obj^*_i + \Obj^*_+}$, where
-\begin{align*}
-\Obj^*_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
-  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) \,, \\
-\Obj^*_i &= \frac{1}{N} \sum_{n=1}^N
-  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ] + \Reg \,, \nn \\
-\Obj^*_+ &= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (q_0 \neq y_n) ]
-  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \right)
-  + \Reg (K - i) \,.
-\end{align*}
-For~$\Obj^*_-$, we have used the fact that
-${\Cap(x_n, p_k \given \Prefix) = \Cap(x_n, p_k \given \Prefix^k)}$,
-since a rule in a rule list is only affected by preceding rules.
+and from~\eqref{eq:prefix-loss} that
+${\Loss(\RL, \Labels, \x, \y) \le \Loss(\RL', \Labels', \x, \y)}$.
+%
+Combining these bounds and rearranging gives
+\begin{align}
+b(\Prefix, \x, \y) + \Reg (K' - K) \le b(\Prefix', \x, \y).
+\label{eq:length-diff}
+\end{align}
+Combining~\eqref{eq:length-diff} with~${b(\Prefix', \x, \y) < \CurrentObj}$
+gives~\eqref{eq:max-length-prefix}.
+\end{proof}
 
-Now consider the rule list ${\RL =  (\Prefix', \RL'_q, q'_0, K-1)}$
-derived from~$\RL^*$ by deleting rule~$r_i$,
+Theorem~\ref{thm:ub-prefix-specific} can be viewed as a generalization
+of our one-step lookahead bound~\eqref{eq:lookahead};
+rearranging to obtain a bound on~${K' - K}$
+gives an upper bound on the number of remaining `steps' corresponding
+to an iterative sequence of single-rule extensions of a prefix~$\Prefix$.
+%
+Note also that when~${\RL = ((), (), q_0, 0)}$ is the empty rule list,
+this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix, \x, \y) = 0}$.
+
+\subsubsection{Lower bounds on per-rule support}
+\label{sec:lb-support}
+
+\begin{theorem}[Lower bound on per-rule support]
+Let ${\OptimalRL = (\Prefix, \Labels, \Default, K) \in \argmin_\RL \Obj(\RL, \x, \y)}$
+be any optimal rule list, with objective~$\OptimalObj$.
+%
+For each antecedent~$p_i$ in prefix~$\Prefix$, the regularization
+parameter~$\Reg$ provides a lower bound on normalized support:
+\begin{align}
+\Reg < \Supp(p_i, \x \given \Prefix).
+\label{eq:min-capture}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+%First, let us write an expression for the optimal objective~$\OptimalObj$:
+%\begin{align}
+%\OptimalObj = \Obj(\OptimalRL, \x, \y) &= \Loss(\OptimalRL, \x, \y) + \Reg K \nn \\
+%&= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
+%  + \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] \right)
+%  + \Reg K
+%\end{align}
+%Consider a rule~$r_i$ in~$\OptimalRL$, ${i \ge 1}$, and let us write
+%${\OptimalRL = (r_1, \dots, r_{i-1}, r_i, r_{i+1}, \dots, r_K, r_0)}$.
+%%
+%We can decompose~$\OptimalObj$ into three contributions,
+%corresponding to the rules before~$r_i$, rule~$r_i$,
+%and rules after~$r_i$, including the default rule:
+%${\OptimalObj \equiv \OptimalObj_- + \OptimalObj_i + \OptimalObj_+}$, where
+%\begin{align*}
+%\OptimalObj_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
+%  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) \,, \\
+%\OptimalObj_i &= \frac{1}{N} \sum_{n=1}^N
+%  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ] + \Reg \,, \nn \\
+%\OptimalObj_+ &= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
+%  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \right)
+%  + \Reg (K - i) \,.
+%\end{align*}
+%For~$\OptimalObj_-$, we have used the fact that
+%${\Cap(x_n, p_k \given \Prefix) = \Cap(x_n, p_k \given \Prefix^k)}$,
+%since a rule in a rule list is only affected by preceding rules.
+
+Let ${\OptimalRL = (\Prefix, \Labels, \Default, K)}$ be an optimal
+rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
+and labels ${\Labels = (q_1, \dots, q_K)}$.
+%
+Consider the rule list ${\RL =  (\Prefix', \Labels', \Default', K-1)}$
+derived from~$\OptimalRL$ by deleting rule~$r_i$,
 therefore ${\Prefix' = (p_1, \dots, p_{i-1}, p_{i+1}, \dots, p_K)}$
-and ${\RL'_q = (q_1, \dots, q_{i-1}, q'_{i+1}, \dots, q'_K)}$,
+and ${\Labels' = (q_1, \dots, q_{i-1}, q'_{i+1}, \dots, q'_K)}$,
 where~$q'_k$ need not be the same as~$q_k$, for ${k > i}$ and~${k = 0}$.
 %
-Let us now decompose the objective of~$\RL$ into two terms,
-corresponding to the rules before and after where~$r_i$ had been:
-${\Obj(\RL, \x, \y) \equiv \Obj_- + \Obj_+}$, where
-\begin{align*}
-\Obj_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
-  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) = \Obj^*_-  \,, \\
-\Obj_+ &= \frac{1}{N} \sum_{n=1}^N
-  \left( \one [ \neg\, \Cap(x_n, \Prefix') \wedge (q'_0 \neq y_n) ]
-  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q'_k \neq y_n) ] \right)
-  + \Reg (K - i) \,.
-\end{align*}
+%Let us now decompose the objective of~$\RL$ into two terms,
+%corresponding to the rules before and after where~$r_i$ had been:
+%${\Obj(\RL, \x, \y) \equiv \Obj_- + \Obj_+}$, where
+%\begin{align*}
+%\Obj_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
+%  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) = \OptimalObj_-  \,, \\
+%\Obj_+ &= \frac{1}{N} \sum_{n=1}^N
+%  \left( \one [ \neg\, \Cap(x_n, \Prefix') \wedge (\Default' \neq y_n) ]
+%  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q'_k \neq y_n) ] \right)
+%  + \Reg (K - i) \,.
+%\end{align*}
 
-The largest possible discrepancy between~$\RL^*$ and~$\RL$ would occur
-if~$\RL^*$ correctly classified all the data captured by~$p_i$,
+The largest possible discrepancy between~$\OptimalRL$ and~$\RL$ would occur
+if~$\OptimalRL$ correctly classified all the data captured by~$p_i$,
 while~$\RL$ misclassified these data.
 %
 This gives an upper bound:
 \begin{align}
-\Obj(\RL, \x, \y) \le \Obj^* + \Supp(p_i, \x \given \Prefix) - \Reg,
+\Obj(\RL, \x, \y) = \Loss(\Prefix', \Labels', \x, \y) + \Reg (K - 1)
+&\le \Loss(\Prefix, \Labels, \x, \y) + \Supp(p_i, \x \given \Prefix) + \Reg(K - 1) \nn \\
+&= \Obj(\OptimalRL, \x, \y) + \Supp(p_i, \x \given \Prefix) - \Reg \nn \\
+&= \OptimalObj + \Supp(p_i, \x \given \Prefix) - \Reg
 \label{eq:ub-i}
 \end{align}
 where~$\Supp(p_i, \x \given \Prefix)$ is the normalized support of~$p_i$
-in the context of~$\RL^*$, and the regularization `bonus'
-comes from the fact that~$\RL$ is one rule shorter than~$\RL^*$.
+in the context of~$\Prefix$, defined in~\S\ref{sec:setup},
+and the regularization `bonus' comes from the fact that~$\RL$
+is one rule shorter than~$\OptimalRL$.
 
-At the same time, we must have ${\Obj^* < \Obj(\RL, \x, \y)}$ for~$\RL^*$ to be optimal.
+At the same time, we must have ${\OptimalObj < \Obj(\RL, \x, \y)}$ for~$\OptimalRL$ to be optimal.
 %
-Combining this with~\eqref{eq:ub-i} rearranging gives
-\begin{align}
-\Reg < \Supp(p_i, \x \given \Prefix),
-\label{eq:min-capture}
-\end{align}
+Combining this with~\eqref{eq:ub-i} and rearranging gives~\eqref{eq:min-capture},
 therefore the regularization parameter~$\Reg$ provides a lower bound
-on the support of an antecedent~$p_i$ in an optimal rule list~$\RL^*$.
-%
+on the support of an antecedent~$p_i$ in an optimal rule list~$\OptimalRL$.
+\end{proof}
+
 Thus, we can prune a prefix~$\Prefix$ if any of its antecedents do not capture
-more than a fraction~$\Reg$ of data, even if~${b(\Prefix, \x, \y) < \Obj^*}$.
-
-\subsubsection{Lower bound on per-rule accurate support}
-
+more than a fraction~$\Reg$ of data, even if~${b(\Prefix, \x, \y) < \OptimalObj}$.
+%
 We can tighten the previous bound~\eqref{eq:min-capture}
 by tightening the upper bound on~$\Obj(\RL, \x, \y)$ in~\eqref{eq:ub-i}.
+
+\begin{theorem}[Lower bound on per-rule accurate support]
+\dots
+\end{theorem}
+
+First, recall that~$\OptimalObj_i$ is the contribution of rule~$r_i$ to~$\OptimalObj$.
 %
-First, recall that~$\Obj^*_i$ is the contribution of rule~$r_i$ to~$\Obj^*$.
-%
-Now, define~$m_i$ to be the portion of~$\Obj^*_i$ due to misclassification error:
+Now, define~$\Loss_i$ to be the portion of~$\OptimalObj_i$ due to misclassification error:
 \begin{align}
-m_i = \frac{1}{N} \sum_{n=1}^N
+\Loss_i = \frac{1}{N} \sum_{n=1}^N
   \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ].
 \end{align}
 Recall that the worst possible loss for~$\RL$ would occur if it were to
-misclassify all data captured by~$p_i$ in~$\RL^*$,
+misclassify all data captured by~$p_i$ in~$\OptimalRL$,
 corresponding to an increase in misclassification error by an amount,
 \begin{align}
-\Supp(p_i, \x \given \Prefix) - m_i
+\Supp(p_i, \x \given \Prefix) - \Loss_i
 &= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_i \given \Prefix)
   - \frac{1}{N} \sum_{n=1}^N
   \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ] \nn \\
@@ -404,14 +547,14 @@ corresponding to an increase in misclassification error by an amount,
 \end{align}
 The second equality above reflects that the largest increase in
 misclassification error is equivalent to~$a_i$, the fraction of data that
-are captured by~$p_i$ and correctly classified in the context of~$\RL^*$.
+are captured by~$p_i$ and correctly classified in the context of~$\OptimalRL$.
 %
 Since ${a_i \le \Supp(p_i, \x \given \Prefix)}$, we now have
 an upper bound on~$\Obj(\RL, \x, \y)$ that's tighter than~\eqref{eq:ub-i}:
 \begin{align}
-\Obj(\RL, \x, \y) \le \Obj^* + a_i - \Reg.
+\Obj(\RL, \x, \y) \le \OptimalObj + a_i - \Reg.
 \end{align}
-Combining this bound with the requirement~${\Obj^* < \Obj(\RL, \x, \y)}$ now gives
+Combining this bound with the requirement~${\OptimalObj < \Obj(\RL, \x, \y)}$ now gives
 \begin{align}
 \Reg < a_i.
 \label{eq:min-capture-correct}
@@ -433,7 +576,7 @@ this scenario is a special case where~\eqref{eq:min-capture} immediately applies
 More precisely, if~$\RL$ is a rule list that contains rule~$A$ and doesn't contain rule~$B$,
 and~$\RL'$ is derived from~$\RL$ by inserting rule~$B$ anywhere after~$A$, then
 \begin{align}
-\Obj(\RL') = \Obj(\RL) + c \ge \Obj(\RL).
+\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c \ge \Obj(\RL, \x, \y).
 \end{align}
 By considering rule semantics, it is easy to think of common situations
 leading to dominance relationships between rules.
@@ -451,7 +594,7 @@ Let~$\RL'$ be a rule list with prefix~$\Prefix'$ that starts with~$\Prefix$ and 
 %
 If, in the context of~$\RL'$, rule~$A$ captures all remaining data not captured by~$\Prefix$,
 then rule~$A$ behaves like~$\RL$'s default rule~$d$ while incurring a penalty of~$c$,
-\ie ~${\Obj(\RL') = \Obj(\RL) + c}$.
+\ie ~${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c}$.
 
 More generally, suppose rule~$A$ captures all data in the support of~$d$
 except for a fraction~${f < c}$.
@@ -461,7 +604,8 @@ the entire majority class with respect to the support of~$d$,
 plus a fraction~$f$ of data belonging to the minority class.
 %
 This would yield a reduction in misclassification of a fraction~${f < c}$
-of data while incurring a penalty of~$c$, yielding~${\Obj(\RL') \ge \Obj(\RL)}$.
+of data while incurring a penalty of~$c$, yielding
+${\Obj(\RL', \x, \y) \ge \Obj(\RL, \x, \y)}$.
 %
 Furthermore, we would never extend~$\RL'$ with additional rules,
 since insufficient data remain to be captured~\eqref{eq:min-capture}.
@@ -642,11 +786,11 @@ the number of remaining prefix evaluations during branch-and-bound execution.
 \subsubsection{Upper bounds on the number of remaining prefix evaluations}
 \label{sec:ub-size}
 
-First, we use upper bounds on prefix length from~\S\ref{sec:ub-prefix-length};
+First, we use upper bounds on prefix length from Theorem~\ref{thm:ub-prefix-length};
 these bounds do not take into account symmetry-aware garbage collection,
 which we consider separately in~\S\ref{sec:permutation-counting}.
 %
-For example, once we've evaluated the empty prefix, we'll have~${\Obj^* \le 0.5}$,
+For example, once we've evaluated the empty prefix, we'll have~${\CurrentObj \le 0.5}$,
 therefore by~\eqref{eq:max-length}, ${K = \lfloor 0.5 / c \rfloor}$ gives
 an upper bound on the maximum prefix length to consider.
 
@@ -663,7 +807,7 @@ This na\"ively gives a remaining state space of size
 where~${P(M, k)}$ denotes the number of $k$-permutations of~$M$.
 
 At any point during branch-and-bound execution, we can calculate an upper bound
-on the number of remaining prefix evaluations from the current best objective~$\Obj^*$
+on the number of remaining prefix evaluations from the current best objective~$\CurrentObj$
 and information about prefixes are planning to evaluate,
 \ie prefixes in the queue of Algorithm~\ref{alg:branch-and-bound}.
 %
