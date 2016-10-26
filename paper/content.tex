@@ -447,6 +447,10 @@ this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix, \x, \y) = 0}$.
 \subsubsection{Lower bounds on per-rule support}
 \label{sec:lb-support}
 
+In this section, we give two lower bounds on the normalized support
+of each rule in any optimal rule list;
+both are related to the regularization parameter~$\Reg$.
+
 \begin{theorem}[Lower bound on per-rule support]
 \label{thm:min-capture}
 Let ${\OptimalRL = (\Prefix, \Labels, \Default, K) \in \argmin_\RL \Obj(\RL, \x, \y)}$
@@ -462,33 +466,6 @@ on the normalized support of~$p_k$,
 \end{theorem}
 
 \begin{proof}
-%First, let us write an expression for the optimal objective~$\OptimalObj$:
-%\begin{align}
-%\OptimalObj = \Obj(\OptimalRL, \x, \y) &= \Loss(\OptimalRL, \x, \y) + \Reg K \nn \\
-%&= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
-%  + \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] \right)
-%  + \Reg K
-%\end{align}
-%Consider a rule~$r_i$ in~$\OptimalRL$, ${i \ge 1}$, and let us write
-%${\OptimalRL = (r_1, \dots, r_{i-1}, r_i, r_{i+1}, \dots, r_K, r_0)}$.
-%%
-%We can decompose~$\OptimalObj$ into three contributions,
-%corresponding to the rules before~$r_i$, rule~$r_i$,
-%and rules after~$r_i$, including the default rule:
-%${\OptimalObj \equiv \OptimalObj_- + \OptimalObj_i + \OptimalObj_+}$, where
-%\begin{align*}
-%\OptimalObj_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
-%  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) \,, \\
-%\OptimalObj_i &= \frac{1}{N} \sum_{n=1}^N
-%  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ] + \Reg \,, \nn \\
-%\OptimalObj_+ &= \frac{1}{N} \sum_{n=1}^N \left( \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
-%  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \right)
-%  + \Reg (K - i) \,.
-%\end{align*}
-%For~$\OptimalObj_-$, we have used the fact that
-%${\Cap(x_n, p_k \given \Prefix) = \Cap(x_n, p_k \given \Prefix^k)}$,
-%since a rule in a rule list is only affected by preceding rules.
-
 Let ${\OptimalRL = (\Prefix, \Labels, \Default, K)}$ be an optimal
 rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
 and labels ${\Labels = (q_1, \dots, q_K)}$.
@@ -498,18 +475,6 @@ derived from~$\OptimalRL$ by deleting a rule ${p_i \rightarrow q_i}$,
 therefore ${\Prefix' = (p_1, \dots, p_{i-1}, p_{i+1}, \dots, p_K)}$
 and ${\Labels' = (q_1, \dots, q_{i-1}, q'_{i+1}, \dots, q'_K)}$,
 where~$q'_k$ need not be the same as~$q_k$, for ${k > i}$ and~${k = 0}$.
-%
-%Let us now decompose the objective of~$\RL$ into two terms,
-%corresponding to the rules before and after where~$r_i$ had been:
-%${\Obj(\RL, \x, \y) \equiv \Obj_- + \Obj_+}$, where
-%\begin{align*}
-%\Obj_- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{i-1}
-%  \one [ \Cap(x_n, p_k \given \Prefix^k) \wedge (q_k \neq y_n) ] + \Reg (k - 1) = \OptimalObj_-  \,, \\
-%\Obj_+ &= \frac{1}{N} \sum_{n=1}^N
-%  \left( \one [ \neg\, \Cap(x_n, \Prefix') \wedge (\Default' \neq y_n) ]
-%  + \sum_{k=i+1}^K \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q'_k \neq y_n) ] \right)
-%  + \Reg (K - i) \,.
-%\end{align*}
 
 The largest possible discrepancy between~$\OptimalRL$ and~$\RL$ would occur
 if~$\OptimalRL$ correctly classified all the data captured by~$p_i$,
@@ -565,14 +530,6 @@ The regularization parameter~$\Reg$ provides a lower bound on~$a_k$:
 \end{theorem}
 
 \begin{proof}
-%Let us begin by defining
-%\begin{align}
-%\OptimalObj_k = \frac{1}{N} \sum_{n=1}^N
-%  \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] + \Reg.
-%\end{align}
-%We can think of~$\OptimalObj_k$ as the contribution of rule
-%${p_k \rightarrow q_k}$ to~$\OptimalObj$.
-%
 As in Theorem~\ref{thm:min-capture},
 let ${\RL =  (\Prefix', \Labels', \Default', K-1)}$ be the rule list
 derived from~$\OptimalRL$ by deleting a rule~${p_i \rightarrow q_i}$.
