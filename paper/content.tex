@@ -262,7 +262,7 @@ initial best known rule list~$\InitialRL$ with objective~${\InitialObj = \Obj(\I
         \EndFor
     \EndIf
 \EndWhile
-\State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Provably optimal prefix and objective}
+\State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Identify provably optimal prefix and objective}
 \end{algorithmic}
 \end{algorithm}
 
@@ -299,28 +299,25 @@ We begin with an immediate consequence of Theorem~\ref{thm:bound}.
 Let~$\Prefix$ be a $K$-prefix
 and let~$\CurrentObj$ be the current best objective.
 %
-If
+If ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$,
+then for any $K'$-prefix~$\Prefix'$ such that~${K' > K}$
+and~$\Prefix'$ starts with~$\Prefix$,
 \begin{align}
- b(\Prefix, \x, \y) + \Reg \ge \CurrentObj,
+ b(\Prefix', \x, \y) \ge \CurrentObj.
 \label{eq:lookahead}
 \end{align}
-then we can prune~$\Prefix$ and all longer prefixes that start with~$\Prefix$.
 \end{theorem}
 
 \begin{proof}
-Let~$\Prefix'$ be a $K'$-prefix that starts with~$\Prefix$,
-such that ${K' \ge K + 1}$.
-%
 The penalty for longer prefixes ensures that
 ${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y) + \Reg}$.
-%
-Even if we find that~${b(\Prefix, \x, \y) < \CurrentObj}$,
-the bound~\eqref{eq:lookahead} implies that
-${b(\Prefix', \x, \y) \ge \CurrentObj}$.
-%
-Thus, we can prune any prefix~$\Prefix'$ longer than~$\Prefix$,
-and it follows that we can also prune~$\Prefix$.
 \end{proof}
+
+Thus, even if we encounter a prefix~$\Prefix$
+with lower bound~${b(\Prefix, \x, \y) < \CurrentObj}$,
+if ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$,
+then we can prune any prefix~$\Prefix'$ longer than~$\Prefix$. \\
+%and it follows that we can also prune~$\Prefix$. \\
 
 In the next subsections, we prove
 upper bounds on prefix length~(\S\ref{sec:ub-prefix-length}),
