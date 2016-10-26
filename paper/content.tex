@@ -116,6 +116,7 @@ and similarly define~${\Supp(\beta, \x \given \Prefix)}$
 to be the normalized support of~$\beta$ in the context of~$\Prefix$,
 \begin{align}
 \Supp(\beta, \x \given \Prefix) = \frac{1}{N} \sum_{n=1}^N \Cap(x_n, \beta \given \Prefix),
+\label{eq:support-context}
 \end{align}
 
 Finally, we address how empirical data constrains rule lists.
@@ -170,6 +171,7 @@ where ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
 \begin{align}
 \Loss_p(\Prefix, \Labels, \x, \y) =
 \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
+\label{eq:loss}
 \end{align}
 is the fraction of data captured and misclassified by the prefix, and
 \begin{align}
@@ -446,13 +448,15 @@ this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix, \x, \y) = 0}$.
 \label{sec:lb-support}
 
 \begin{theorem}[Lower bound on per-rule support]
+\label{thm:min-capture}
 Let ${\OptimalRL = (\Prefix, \Labels, \Default, K) \in \argmin_\RL \Obj(\RL, \x, \y)}$
 be any optimal rule list, with objective~$\OptimalObj$.
 %
-For each antecedent~$p_i$ in prefix~$\Prefix$, the regularization
-parameter~$\Reg$ provides a lower bound on normalized support:
+For each antecedent~$p_k$ in prefix ${\Prefix = (p_1, \dots, p_K)}$,
+the regularization parameter~$\Reg$ provides a lower bound
+on the normalized support of~$p_k$,
 \begin{align}
-\Reg < \Supp(p_i, \x \given \Prefix).
+\Reg < \Supp(p_k, \x \given \Prefix).
 \label{eq:min-capture}
 \end{align}
 \end{theorem}
@@ -490,7 +494,7 @@ rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
 and labels ${\Labels = (q_1, \dots, q_K)}$.
 %
 Consider the rule list ${\RL =  (\Prefix', \Labels', \Default', K-1)}$
-derived from~$\OptimalRL$ by deleting rule~$r_i$,
+derived from~$\OptimalRL$ by deleting a rule ${p_i \rightarrow q_i}$,
 therefore ${\Prefix' = (p_1, \dots, p_{i-1}, p_{i+1}, \dots, p_K)}$
 and ${\Labels' = (q_1, \dots, q_{i-1}, q'_{i+1}, \dots, q'_K)}$,
 where~$q'_k$ need not be the same as~$q_k$, for ${k > i}$ and~${k = 0}$.
@@ -513,14 +517,14 @@ while~$\RL$ misclassified these data.
 %
 This gives an upper bound:
 \begin{align}
-\Obj(\RL, \x, \y) = \Loss(\Prefix', \Labels', \x, \y) + \Reg (K - 1)
-&\le \Loss(\Prefix, \Labels, \x, \y) + \Supp(p_i, \x \given \Prefix) + \Reg(K - 1) \nn \\
+\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg (K - 1)
+&\le \Loss(\OptimalRL, \x, \y) + \Supp(p_i, \x \given \Prefix) + \Reg(K - 1) \nn \\
 &= \Obj(\OptimalRL, \x, \y) + \Supp(p_i, \x \given \Prefix) - \Reg \nn \\
 &= \OptimalObj + \Supp(p_i, \x \given \Prefix) - \Reg
 \label{eq:ub-i}
 \end{align}
 where~$\Supp(p_i, \x \given \Prefix)$ is the normalized support of~$p_i$
-in the context of~$\Prefix$, defined in~\S\ref{sec:setup},
+in the context of~$\Prefix$, defined in~\eqref{eq:support-context},
 and the regularization `bonus' comes from the fact that~$\RL$
 is one rule shorter than~$\OptimalRL$.
 
@@ -538,47 +542,82 @@ We can tighten the previous bound~\eqref{eq:min-capture}
 by tightening the upper bound on~$\Obj(\RL, \x, \y)$ in~\eqref{eq:ub-i}.
 
 \begin{theorem}[Lower bound on per-rule accurate support]
-\dots
-\end{theorem}
-
-First, recall that~$\OptimalObj_i$ is the contribution of rule~$r_i$ to~$\OptimalObj$.
+\label{thm:min-capture-correct}
+Let ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$
+be any optimal rule list, with objective~$\OptimalObj$;
+let ${\OptimalRL = (\Prefix, \Labels, \Default, K)}$,
+with prefix ${\Prefix = (p_1, \dots, p_K)}$
+and labels ${\Labels = (q_1, \dots, q_K)}$.
 %
-Now, define~$\Loss_i$ to be the portion of~$\OptimalObj_i$ due to misclassification error:
+For each rule~${p_k \rightarrow q_k}$ in~$\OptimalRL$,
+define~$a_k$ to be the fraction of data that are captured by~$p_k$
+and correctly classified:
 \begin{align}
-\Loss_i = \frac{1}{N} \sum_{n=1}^N
-  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ].
+a_k \equiv \frac{1}{N} \sum_{n=1}^N
+  \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k = y_n) ].
+\label{eq:rule-correct}
 \end{align}
-Recall that the worst possible loss for~$\RL$ would occur if it were to
-misclassify all data captured by~$p_i$ in~$\OptimalRL$,
-corresponding to an increase in misclassification error by an amount,
+The regularization parameter~$\Reg$ provides a lower bound on~$a_k$:
 \begin{align}
-\Supp(p_i, \x \given \Prefix) - \Loss_i
-&= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_i \given \Prefix)
-  - \frac{1}{N} \sum_{n=1}^N
-  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k \neq y_n) ] \nn \\
-&= \frac{1}{N} \sum_{n=1}^N
-  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_k = y_n) ] \equiv a_i.
-\end{align}
-The second equality above reflects that the largest increase in
-misclassification error is equivalent to~$a_i$, the fraction of data that
-are captured by~$p_i$ and correctly classified in the context of~$\OptimalRL$.
-%
-Since ${a_i \le \Supp(p_i, \x \given \Prefix)}$, we now have
-an upper bound on~$\Obj(\RL, \x, \y)$ that's tighter than~\eqref{eq:ub-i}:
-\begin{align}
-\Obj(\RL, \x, \y) \le \OptimalObj + a_i - \Reg.
-\end{align}
-Combining this bound with the requirement~${\OptimalObj < \Obj(\RL, \x, \y)}$ now gives
-\begin{align}
-\Reg < a_i.
+\Reg < a_k.
 \label{eq:min-capture-correct}
 \end{align}
+\end{theorem}
+
+\begin{proof}
+%Let us begin by defining
+%\begin{align}
+%\OptimalObj_k = \frac{1}{N} \sum_{n=1}^N
+%  \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] + \Reg.
+%\end{align}
+%We can think of~$\OptimalObj_k$ as the contribution of rule
+%${p_k \rightarrow q_k}$ to~$\OptimalObj$.
+%
+As in Theorem~\ref{thm:min-capture},
+let ${\RL =  (\Prefix', \Labels', \Default', K-1)}$ be the rule list
+derived from~$\OptimalRL$ by deleting a rule~${p_i \rightarrow q_i}$.
+%
+Now, let us define~$\Loss_i$ to be the portion of~$\OptimalObj$
+due to this rule's misclassification error,
+\begin{align}
+\Loss_i \equiv \frac{1}{N} \sum_{n=1}^N
+  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_i \neq y_n) ].
+\end{align}
+The largest discrepancy between~$\OptimalRL$ and~$\RL$ would
+occur if~$\RL$ misclassified all the data captured by~$p_i$.
+%
+This gives an upper bound on the difference between
+the misclassification error of~$\RL$ and~$\OptimalRL$:
+\begin{align}
+\Loss(\RL, \x, \y) - \Loss(\OptimalRL, \x, \y)
+&\le \Supp(p_i, \x \given \Prefix) - \Loss_i \nn \\
+&= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_i \given \Prefix)
+  - \frac{1}{N} \sum_{n=1}^N
+  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_i \neq y_n) ] \nn \\
+&= \frac{1}{N} \sum_{n=1}^N
+  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_i = y_n) ] = a_i,
+\end{align}
+where we defined~$a_i$ in~\eqref{eq:rule-correct}.
+%
+Relating this bound to the objectives of~$\RL$ and~$\OptimalRL$ gives
+\begin{align}
+\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg (K - 1)
+&\le \Loss(\OptimalRL, \x, \y) + a_i + \Reg(K - 1) \nn \\
+&= \Obj(\OptimalRL, \x, \y) + a_i - \Reg \nn \\
+&= \OptimalObj + a_i - \Reg
+\label{eq:ub-ii}
+\end{align}
+Combining~\eqref{eq:ub-ii} with the requirement
+${\OptimalObj < \Obj(\RL, \x, \y)}$ gives the bound~${\Reg < a_i}$.
+\end{proof}
+
 Thus, we can prune a prefix if any of its rules do not capture
 and correctly classify at least a fraction~$\Reg$ of data.
 %
-While the earlier lower bound~\eqref{eq:min-capture} is a sub-condition
-of~\eqref{eq:min-capture-correct}, we can still leverage both;
-the sub-condition is easer to check, thus checking it first can accelerate pruning.
+While the lower bound in Theorem~\ref{thm:min-capture} is a sub-condition
+of the lower bound in in Theorem~\ref{thm:min-capture-correct},
+we can still leverage both -- since the sub-condition is easier to check,
+checking it first can accelerate pruning.
 
 \subsubsection{Insufficient per-rule support due to rule dominance}
 
