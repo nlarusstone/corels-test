@@ -253,14 +253,16 @@ initial best known rule list~$\InitialRL$ with objective~${\InitialObj = \Obj(\I
 \State $(\CurrentRL, \CurrentObj) \gets (\InitialRL, \InitialObj)$ \Comment{Initialize current best prefix and objective}
 \State $Q \gets $ queue$(())$ \Comment{Initialize queue with empty prefix}
 \While {$Q$ not empty} \Comment{Optimization complete when the queue is empty}
-	\State $\Prefix \gets Q$.pop() \Comment{Remove a prefix from the queue}
-	\If {$b(\Prefix, \x) < \CurrentObj$} \Comment{Apply Theorem~\ref{thm:bound} (hierarchical objective lower bound)}
+	\State $\Prefix \gets Q$.pop() \Comment{Remove a prefix~$\Prefix$ from the queue}
+	\If {$b(\Prefix, \x) < \CurrentObj$} \Comment{\textbf{Bounding step}: Apply bound from Theorem~\ref{thm:bound}}
         \State $\Obj \gets \Obj(\RL, \x)$ \Comment{Compute objective of~$\RL$, the rule list with prefix~$\Prefix$}
         \If {$\Obj < \CurrentObj$}
             \State $(\CurrentRL, \CurrentObj) \gets (\RL, \Obj)$ \Comment{Update current best prefix and objective}
         \EndIf
-        \For {$s$ in $\RuleSet$ if $s$ not in $\Prefix$} \Comment{Generate prefixes with distinct antecedents}
-            \State $Q$.push$((\Prefix, s))$ \Comment{Add single antecedent extensions of prefix to queue}
+        \For {$s$ in $\RuleSet$}
+            \If {$s$ not in $\Prefix$} \Comment{\textbf{Branching step}: Identify antecedents not in~$\Prefix$}
+                \State $Q$.push$((\Prefix, s))$ \Comment{and add corresponding extensions of~$\Prefix$ to the queue}
+            \EndIf
         \EndFor
     \EndIf
 \EndWhile
@@ -286,16 +288,30 @@ we can hierarchically prune any prefix~$\Prefix''$ that contains
 a contiguous subsequence of antecedents equal to~$\Prefix$,
 since ${b(\Prefix'', \x, \y) \ge b(\Prefix, \x, \y) \ge \CurrentObj}$.
 
-\subsection{Additional pruning bounds and problem symmetries}
+\subsection{Incremental branch-and-bound computation}
+
+\dots
+
+\subsection{Rule mining}
+
+Thus far, we have't addressed how to generate rules.
+%
+We follow the rule mining approach taken by~\citet{LethamRuMcMa15}
+and~\citet{YangRuSe16} \dots
+
+\section{Additional problem structure and computational consequences}
 
 Our problem has rich structure beyond the hierarchical objective lower bound
 in Theorem~\ref{thm:bound}, including several instances of symmetries.
 %
-In this section, we enumerate a series of additional bounds and symmetries that
-combine to yield aggressive pruning opportunities throughout the execution of
-our branch-and-bound algorithm.
+In this section, we enumerate a series of additional bounds and
+symmetries that combine to yield aggressive pruning opportunities
+throughout the execution of our branch-and-bound algorithm.
 %
-We begin with an immediate consequence of Theorem~\ref{thm:bound}.
+We additionally quantify the computational consequences of many
+of these observations.
+%
+Below, we begin with an immediate consequence of Theorem~\ref{thm:bound}.
 
 \begin{theorem}[Objective lower bound with one-step lookahead]
 Let~$\Prefix$ be a $K$-prefix
@@ -321,12 +337,16 @@ if ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$,
 then we can prune any prefix~$\Prefix'$ longer than~$\Prefix$. \\
 %and it follows that we can also prune~$\Prefix$. \\
 
-In the next subsections, we prove
-upper bounds on prefix length~(\S\ref{sec:ub-prefix-length}),
-lower bounds on per-rule support~(\S\ref{sec:lb-support}),
-\dots
+In the next two subsections, we prove
+upper bounds on prefix length~(\S\ref{sec:ub-prefix-length})
+and corresponding upper bounds on the number of
+prefix evaluations~(\S\ref{sec:ub-size}).
+%
+Next, we prove lower bounds on per-rule support~(\S\ref{sec:lb-support}),
+followed by some things about symmetry~(\S\ref{sec:})
+and another corresponding upper bound on the number of prefix evaluations~(\S\ref{sec:permutation-counting}), \dots
 
-\subsubsection{Upper bounds on prefix length}
+\subsection{Upper bounds on prefix length}
 \label{sec:ub-prefix-length}
 
 At any point during branch-and-bound execution, the current best objective~$\CurrentObj$
@@ -379,6 +399,7 @@ $K$-prefix with zero misclassification error, then we can prune all
 prefixes of length~$K$ or greater.
 
 \begin{corollary}[Trivial upper bound on prefix length]
+\label{cor:ub-prefix-length}
 Let~$L(\RL)$ be the length of rule list~$\RL$.
 %
 For all optimal rule lists ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
@@ -444,7 +465,141 @@ to an iterative sequence of single-rule extensions of a prefix~$\Prefix$.
 Note also that when~${\RL = ((), (), q_0, 0)}$ is the empty rule list,
 this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix, \x, \y) = 0}$.
 
-\subsubsection{Lower bounds on per-rule support}
+\subsection{Upper bounds on the number of prefix evaluations}
+\label{sec:ub-size}
+
+In this section, we use our three upper bounds on prefix length
+from~\S\ref{sec:ub-prefix-length} to derive corresponding
+upper bounds on the number of prefix evaluations made by
+Algorithm~\ref{alg:branch-and-bound}.
+%
+Our first corollary below is a na\"ive upper bound on
+the total number of prefix evaluations.
+%
+In the following two corollaries, we observe that at any point during
+branch-and-bound execution, we can calculate tighter upper bounds
+on the number of remaining prefix evaluations.
+%
+These require the current best objective~$\CurrentObj$
+and information about prefixes we are planning to evaluate,
+\ie prefixes in the queue~$\Queue$ of Algorithm~\ref{alg:branch-and-bound}.
+
+\begin{corollary}[Upper bound on the total number of prefix evaluations]
+\label{thm:ub-total-eval}
+%
+Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes
+evaluated by Algorithm~\ref{alg:branch-and-bound}, given the state space of
+all rule lists formed from a set~$\RuleSet$ of~$M$ rules.
+%
+For any set~$\RuleSet$ of $M$ rules,
+\begin{align}
+\TotalRemaining(\RuleSet) \le \sum_{k=0}^K \frac{M!}{(M - k)!},
+\label{eq:size-naive}
+\end{align}
+where ${K = \lfloor 1/2 \Reg \rfloor}$.
+\end{corollary}
+
+\begin{proof}
+By Corollary~\ref{cor:ub-prefix-length},
+${K \equiv \lfloor 1 / 2 \Reg \rfloor}$
+gives an upper bound on the length of any optimal rule list.
+%
+Since we can think of our problem as finding the optimal
+$k$-permutation of the~$M$ rules, over all~${k \le K}$,
+\begin{align}
+\TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K P(M, k)
+= \sum_{k=0}^K \frac{M!}{(M - k)!}.
+\end{align}
+\end{proof}
+
+\begin{corollary}[Upper bound on the number of remaining prefix evaluations]
+Consider a state space of all rule lists formed from a set of~$M$ rules,
+and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
+during execution.
+%
+Let~$\CurrentObj$ be the current best objective, let~$\Queue$ be the queue,
+and let~$L(\Prefix)$ be the length of prefix~$\Prefix$.
+%
+Let~$n_j$ be the number of prefixes of length~$j$ in~$\Queue$,
+\begin{align}
+n_j = \big | \{ \Prefix : L(\Prefix) = j, \Prefix \in \Queue \} \big |
+\end{align}
+and let~${J = \argmax_{\Prefix \in \Queue} L(\Prefix)}$
+be the length of the longest prefix in~$\Queue$.
+%
+Define~${\Remaining(\CurrentObj, \Queue)}$ to be the number of remaining
+prefix evaluations, then
+\begin{align}
+\Remaining(\CurrentObj, \Queue)
+\le \sum_{j=1}^J n_j \left( \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!} \right),
+\end{align}
+where~${K = \lfloor \CurrentObj / \Reg \rfloor}$.
+\end{corollary}
+
+\begin{proof}
+For any prefix~$\Prefix$ remaining to be evaluated,
+Theorem~\ref{thm:ub-prefix-length} gives an upper bound on its length,
+${L(\Prefix) \le \lfloor \CurrentObj / \Reg \rfloor}$.
+%
+Define~${K = \lfloor \CurrentObj / \Reg \rfloor}$.
+%
+For any prefix~$\Prefix$ in queue~$\Queue$ with length~${L(\Prefix) = j}$,
+the maximum number of prefixes that start with~$\Prefix$
+and remain to be evaluated is:
+\begin{align}
+\sum_{k=0}^{K-j} P(M-j, k) = \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!},
+\end{align}
+where~${P(T, k)}$ denotes the number of $k$-permutations of~$T$.
+%
+This gives an upper bound on the number of remaining prefix evaluations:
+\begin{align}
+\Remaining(\CurrentObj, \Queue)
+\le \sum_{j=0}^J n_j \left( \sum_{k=0}^{K-j} P(M-j, k) \right)
+= \sum_{j=0}^J n_j \left( \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!} \right).
+\end{align}
+\end{proof}
+
+We can use more finely grained information about prefixes in the queue
+to obtain a tighter upper bound on the number of remaining prefix evaluations.
+
+\begin{corollary}[Fine-grain upper bound on the number of remaining prefix evaluations]
+Consider a state space of all rule lists formed from a set of~$M$ rules,
+and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
+during execution.
+%
+Let~$\CurrentObj$ be the current best objective, let~$\Queue$ be the queue,
+and let~$L(\Prefix)$ be the length of prefix~$\Prefix$.
+%
+Define~${\Remaining(\CurrentObj, \Queue)}$ to be the number of remaining
+prefix evaluations, then
+\begin{align}
+\Remaining(\CurrentObj, \Queue)
+\le \sum_{\Prefix \in Q} \sum_{k=0}^{f(\Prefix)} \frac{(M - L(\Prefix))!}{(M - L(\Prefix) - k)!},
+\end{align}
+where
+\begin{align}
+f(\Prefix) = \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor.
+\label{eq:f}
+\end{align}
+\end{corollary}
+
+\begin{proof}
+For any prefix~$\Prefix$, Theorem~\ref{thm:ub-prefix-specific}
+gives an upper bound on the length of any prefix~$\Prefix'$
+that starts with~$\Prefix$:
+\begin{align}
+L(\Prefix') \le L(\Prefix) + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor
+\equiv U(\Prefix).
+\end{align}
+This gives an upper bound on the number of remaining prefix evaluations:
+\begin{align}
+\Remaining(\CurrentObj, \Queue)
+\le \sum_{\Prefix \in Q} \sum_{k=0}^{U(\Prefix) - L(\Prefix)} P(M - L(\Prefix), k)
+= \sum_{\Prefix \in Q} \sum_{k=0}^{f(\Prefix)} \frac{(M - L(\Prefix))!}{(M - L(\Prefix) - k)!}.
+\end{align}
+\end{proof}
+
+\subsection{Lower bounds on per-rule support}
 \label{sec:lb-support}
 
 In this section, we give two lower bounds on the normalized support
@@ -576,7 +731,7 @@ of the lower bound in in Theorem~\ref{thm:min-capture-correct},
 we can still leverage both -- since the sub-condition is easier to check,
 checking it first can accelerate pruning.
 
-\subsubsection{Permutation bound for symmetry-aware garbage collection}
+\subsection{Permutation bound for symmetry-aware garbage collection}
 \label{sec:permutation}
 
 If two prefixes~$\cal{P}$ and~$\cal{Q}$ are composed of the same antecedents and
@@ -610,6 +765,85 @@ Thus, we can prune~$\cal{Q}$;
 in our implementation, we call this symmetry-aware garbage collection.
 %
 We illustrate the subsequent computational savings in~\S\ref{sec:permutation-counting}.
+
+\subsection{Upper bound on prefix evaluations with permutation-aware garbage collection}
+\label{sec:permutation-counting}
+
+Here, we present an upper bound on the total number of prefix
+evaluations that accounts for the effect of permutation-aware
+garbage collection~(\S\ref{sec:permutation}).
+%
+Since a prefix of length~$k$ belongs to an equivalence class of~$k!$
+prefixes equivalent up to permutation, permutation-aware garbage
+collection dramatically prunes the search space.
+
+First, notice that Algorithm~\ref{alg:branch-and-bound} describes a
+breadth-first exploration of the state space of rule lists.
+%
+Now suppose we integrate permutation-aware garbage collection into
+our execution of branch-and-bound, so that after evaluating
+prefixes of length~$k$, we only keep a single best prefix
+from each set of prefixes equivalent up to a permutation.
+
+\begin{theorem}[Upper bound on the total number of prefix evaluations with
+permutation-aware garbage collection]
+%
+Consider a state space of all rule lists formed from a set~$\RuleSet$
+of~$M$ rules, and consider the branch-and-bound algorithm with
+permutation-aware garbage collection.
+%
+Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes evaluated.
+%
+For any set~$\RuleSet$ of $M$ rules,
+\begin{align}
+\TotalRemaining(\RuleSet)
+\le  1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!},
+\label{eq:size-naive}
+\end{align}
+where ${K = \lfloor 1 / 2 \Reg \rfloor}$.
+\end{theorem}
+
+\begin{proof}
+By Corollary~\ref{cor:ub-prefix-length},
+${K \equiv \lfloor 1 / 2 \Reg \rfloor}$
+gives an upper bound on the length of any optimal rule list.
+%
+The algorithm begins by evaluating the empty prefix,
+followed by~$M$ prefixes of length~${k=1}$,
+then~${P(M, 2)}$ prefixes of length~${k=2}$,
+where~${P(M, k)}$ denotes the number of $k$-permutations of~$M$.
+%
+Before proceeding to length~${k=3}$, we keep only~${C(M, 2)}$
+prefixes of length~${k=2}$, where~${C(M, k)}$ denotes the
+number of $k$-combinations of~$M$.
+%
+Now, the number of length~${k=3}$ prefixes we evaluate is~${C(M, 2) (M - 2)}$.
+%
+Propagating this forward gives
+\begin{align}
+\TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K C(M, k-1) (M - k + 1)
+%= 1 + \sum_{k=1}^K {M \choose k-1}(M - k + 1)
+%= 1 + \sum_{k=1}^K \frac{M! (M - k + 1)}{(k - 1)! (M - k + 1)!}
+= 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}.
+\end{align}
+\end{proof}
+
+Pruning based on permutation symmetries thus yields significant
+computational savings.
+%
+Let us compare, for example, to the na\"ive number of prefix evaluations
+given by the upper bound in~\eqref{eq:size-naive}.
+%
+If~${M = 100}$ and~${K = 5}$, then the na\"ive number is about
+${9.1 \times 10^9}$, while the reduced number due to permutation-aware
+garbage collection is about ${3.9 \times 10^8}$,
+which is smaller by a factor of about~23.
+%
+If~${M=1000}$ and~${K = 10}$, the number of evaluations falls from
+about~${9.6 \times 10^{29}}$ to about~${2.7 \times 10^{24}}$,
+which is smaller by a factor of about~360,000.
+%
+% ELA : someone please double-check these numbers :)
 
 \subsubsection{Equivalent support bound for symmetry-aware garbage collection}
 
@@ -665,226 +899,6 @@ where~$\Obj^*$ is the best known objective, since the left had expression
 provides a lower bound on~$\Obj(\cal{Q}^*)$.
 
 % ELA would like to generalize this to any two prefixes that capture similar data
-
-\subsection{Upper bounds on the number of prefix evaluations}
-
-In this section, we use our upper bounds on prefix length to derive upper bounds
-on the number of prefix evaluations made by Algorithm~\ref{alg:branch-and-bound}.
-%
-First, in~\S\ref{sec:ub-size}, we present three bounds corresponding to
-the three upper bounds on prefix length from~\S\ref{sec:ub-prefix-length}.
-%
-Next, in~\S\ref{sec:permutation-counting}, we present a bound
-that accounts for the effect of symmetry-aware garbage collection.
-
-\subsubsection{Upper bounds on prefix evaluations from upper bounds on prefix length}
-\label{sec:ub-size}
-
-Our first result below is a na\"ive upper bound on the total number of prefix evaluations.
-%
-For the following two theorems, we observe that at any point during
-branch-and-bound execution, we can calculate tighter upper bounds
-on the number of remaining prefix evaluations.
-%
-These require the current best objective~$\CurrentObj$
-and information about prefixes we are planning to evaluate,
-\ie prefixes in the queue~$\Queue$ of Algorithm~\ref{alg:branch-and-bound}.
-
-\begin{theorem}[Upper bound on the total number of prefix evaluations]
-\label{thm:ub-total-eval}
-%
-Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes
-evaluated by Algorithm~\ref{alg:branch-and-bound}, given the state space of
-all rule lists formed from a set~$\RuleSet$ of~$M$ rules.
-%
-For any set~$\RuleSet$ of $M$ rules,
-\begin{align}
-\TotalRemaining(\RuleSet) \le \sum_{k=0}^K \frac{M!}{(M - k)!},
-\label{eq:size-naive}
-\end{align}
-where ${K = \lfloor 1/2 \Reg \rfloor}$.
-\end{theorem}
-
-\begin{proof}
-At the beginning of Algorithm~\ref{alg:branch-and-bound},
-the queue~${\Queue = ((),)}$ contains a single element, the empty prefix.
-%
-Once we've evaluated the empty prefix, we'll have an upper bound
-on the current best objective, ${\CurrentObj \le 1/2}$,
-and the queue will contain~$M$ elements.
-%
-By~\eqref{eq:max-length}, ${K = \lfloor 1 / 2 \Reg \rfloor}$ gives
-an upper bound on the length of any optimal rule list.
-%
-Notice now that we can think of our problem as finding the optimal
-$k$-permutation of the~$M$ rules, where~${k \le K}$, therefore
-\begin{align}
-\TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K P(M, k) = \sum_{k=0}^K \frac{M!}{(M - k)!}.
-\end{align}
-\end{proof}
-
-\begin{theorem}[Upper bound on the number of remaining prefix evaluations]
-Consider a state space of all rule lists formed from a set of~$M$ rules,
-and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
-during execution.
-%
-Let~$\CurrentObj$ be the current best objective, let~$\Queue$ be the queue,
-and let~$L(\Prefix)$ be the length of prefix~$\Prefix$.
-%
-Let~$n_j$ be the number of prefixes of length~$j$ in~$\Queue$,
-\begin{align}
-n_j = \big | \{ \Prefix : L(\Prefix) = j, \Prefix \in \Queue \} \big |
-\end{align}
-and let~${J = \argmax_{\Prefix \in \Queue} L(\Prefix)}$
-be the length of the longest prefix in~$\Queue$.
-%
-Define~${\Remaining(\CurrentObj, \Queue)}$ to be the number of remaining
-prefix evaluations, then
-\begin{align}
-\Remaining(\CurrentObj, \Queue)
-\le \sum_{j=1}^J n_j \left( \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!} \right),
-\end{align}
-where~${K = \lfloor \CurrentObj / \Reg \rfloor}$.
-\end{theorem}
-
-\begin{proof}
-For any prefix~$\Prefix$ remaining to be evaluated,
-Theorem~\ref{thm:ub-prefix-length} gives an upper bound on its length,
-${L(\Prefix) \le \lfloor \CurrentObj / \Reg \rfloor}$.
-%
-Define~${K = \lfloor \CurrentObj / \Reg \rfloor}$.
-%
-For any prefix~$\Prefix$ in queue~$\Queue$ with length~${L(\Prefix) = j}$,
-the maximum number of prefixes that start with~$\Prefix$
-and remain to be evaluated is:
-\begin{align}
-\sum_{k=0}^{K-j} P(M-j, k) = \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!},
-\end{align}
-where~${P(T, k)}$ denotes the number of $k$-permutations of~$T$.
-%
-This gives an upper bound on the number of remaining prefix evaluations:
-\begin{align}
-\Remaining(\CurrentObj, \Queue)
-\le \sum_{j=0}^J n_j \left( \sum_{k=0}^{K-j} P(M-j, k) \right)
-= \sum_{j=0}^J n_j \left( \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!} \right).
-\end{align}
-\end{proof}
-
-We can use more finely grained information about prefixes in the queue
-to obtain a tighter upper bound on the number of remaining prefix evaluations.
-
-\begin{theorem}[Fine-grain upper bound on the number of remaining prefix evaluations]
-Consider a state space of all rule lists formed from a set of~$M$ rules,
-and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
-during execution.
-%
-Let~$\CurrentObj$ be the current best objective, let~$\Queue$ be the queue,
-and let~$L(\Prefix)$ be the length of prefix~$\Prefix$.
-%
-Define~${\Remaining(\CurrentObj, \Queue)}$ to be the number of remaining
-prefix evaluations, then
-\begin{align}
-\Remaining(\CurrentObj, \Queue)
-\le \sum_{\Prefix \in Q} \sum_{k=0}^{f(\Prefix)} \frac{(M - L(\Prefix))!}{(M - L(\Prefix) - k)!},
-\end{align}
-where
-\begin{align}
-f(\Prefix) = \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor.
-\label{eq:f}
-\end{align}
-\end{theorem}
-
-\begin{proof}
-Recall our upper bound on prefix length~\eqref{eq:max-length-prefix}
-for prefixes~$\Prefix'$ that start with some prefix~$\Prefix$:
-\begin{align}
-L(\Prefix') \le L(\Prefix) + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor
-\equiv U(\Prefix).
-\end{align}
-This gives an upper bound on the number of remaining prefix evaluations:
-\begin{align}
-\Remaining(\CurrentObj, \Queue)
-\le \sum_{\Prefix \in Q} \sum_{k=0}^{U(\Prefix) - L(\Prefix)} P(M - L(\Prefix), k)
-= \sum_{\Prefix \in Q} \sum_{k=0}^{f(\Prefix)} \frac{(M - L(\Prefix))!}{(M - L(\Prefix) - k)!}.
-\end{align}
-\end{proof}
-
-\subsubsection{Upper bound on prefix evaluations with symmetry-aware garbage collection}
-\label{sec:permutation-counting}
-
-Since a prefix of length~$k$ belongs to an equivalence class of~$k!$
-prefixes equivalent up to permutation, symmetry-aware garbage
-collection~(\S\ref{sec:permutation}) dramatically prunes the search space.
-
-Notice that Algorithm~\ref{alg:branch-and-bound} describes a
-breadth-first exploration of the state space of rule lists.
-%
-Now suppose we integrate symmetry-aware garbage collection into
-our execution of branch-and-bound, so that after evaluating
-prefixes of length~$k$, we only keep a single best prefix
-from each set of prefixes equivalent up to a permutation.
-
-\begin{theorem}[Upper bound on the total number of prefix evaluations with
-permutation-aware garbage collection]
-%
-Consider a state space of all rule lists formed from a set~$\RuleSet$
-of~$M$ rules, and consider the branch-and-bound algorithm with
-permutation-aware garbage collection.
-%
-Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes evaluated.
-%
-For any set~$\RuleSet$ of $M$ rules,
-\begin{align}
-\TotalRemaining(\RuleSet)
-\le  1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!},
-\label{eq:size-naive}
-\end{align}
-where ${K = \lfloor 1 / 2 \Reg \rfloor}$.
-\end{theorem}
-
-\begin{proof}
-At the start of the algorithm we evaluate the empty prefix,
-yielding an upper bound on the current best objective,
-${\CurrentObj \le 1/2}$.
-%
-By~\eqref{eq:max-length}, ${K = \lfloor 1 / 2 \Reg \rfloor}$ gives
-an upper bound on the length of any optimal rule list.
-%
-Next, we evaluate~$M$ prefixes of length~${k=1}$,
-followed by~${P(M, 2)}$ prefixes of length~${k=2}$,
-where~${P(M, k)}$ denotes the number of $k$-permutations of~$M$.
-%
-Before proceeding to length~${k=3}$, we keep only~${C(M, 2)}$
-prefixes of length~${k=2}$, where~${C(M, k)}$ denotes the
-number of $k$-combinations of~$M$.
-%
-Now, the number of length~${k=3}$ prefixes we evaluate is~${C(M, 2) (M - 2)}$.
-%
-Propagating this forward gives
-\begin{align}
-\TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K C(M, k-1) (M - k + 1)
-%= 1 + \sum_{k=1}^K {M \choose k-1}(M - k + 1)
-%= 1 + \sum_{k=1}^K \frac{M! (M - k + 1)}{(k - 1)! (M - k + 1)!}
-= 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}.
-\end{align}
-\end{proof}
-
-Pruning based on permutation symmetries thus yields significant
-computational savings.
-%
-Let us compare, for example, to the na\"ive number of prefix evaluations
-given by the upper bound in~\eqref{eq:size-naive}.
-%
-If~${M = 100}$ and~${K = 5}$, then the na\"ive number is about
-${9.1 \times 10^9}$, while the reduced number due to permutation-aware
-garbage collection is about ${3.9 \times 10^8}$,
-which is smaller by a factor of about~23.
-%
-If~${M=1000}$ and~${K = 10}$, the number of evaluations falls from
-about~${9.6 \times 10^{29}}$ to about~${2.7 \times 10^{24}}$,
-which is smaller by a factor of about~360,000.
-%
-% ELA : someone please double-check these numbers :)
 
 \subsection{Cache data structure}
 \label{sec:cache}
