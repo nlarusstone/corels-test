@@ -390,7 +390,7 @@ L(\OptimalRL) \le \left\lfloor \frac{1}{2\Reg} \right\rfloor.
 
 \begin{proof}
 Let ${d = ((), (), q_0, 0)}$ be the empty rule list;
-it has objective ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) \le \frac{1}{2}}$,
+it has objective ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) \le 1/2}$,
 which gives an upper bound on~$\CurrentObj$.
 %
 Combining with~\eqref{eq:max-length} gives~\eqref{eq:max-length-trivial}.
@@ -576,113 +576,6 @@ of the lower bound in in Theorem~\ref{thm:min-capture-correct},
 we can still leverage both -- since the sub-condition is easier to check,
 checking it first can accelerate pruning.
 
-\subsubsection{Insufficient per-rule support due to rule dominance}
-
-Let us say that rule~$A$ dominates rule~$B$ if the data captured by~$B$ is a subset of the data captured by~$A$.
-%
-Rule~$B$ should never follow rule~$A$ in a rule list because it will never capture additional data;
-this scenario is a special case where~\eqref{eq:min-capture} immediately applies.
-%
-More precisely, if~$\RL$ is a rule list that contains rule~$A$ and doesn't contain rule~$B$,
-and~$\RL'$ is derived from~$\RL$ by inserting rule~$B$ anywhere after~$A$, then
-\begin{align}
-\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c \ge \Obj(\RL, \x, \y).
-\end{align}
-By considering rule semantics, it is easy to think of common situations
-leading to dominance relationships between rules.
-%
-For example, if rule~$A$'s antecedent is~${(x_1 = 0)}$ and rule~$B$'s
-antecedent is~${(x_1 = 0) \wedge (x_2 = 1)}$, then rule~$A$ dominates rule~$B$.
-%
-%Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
-
-\subsubsection{Lower bound on rule similarity to a default rule}
-
-Let~$\RL$ be a rule list with prefix~$\Prefix$, default rule~$d$, and objective~$\Obj(\RL)$.
-%
-Let~$\RL'$ be a rule list with prefix~$\Prefix'$ that starts with~$\Prefix$ and adds one rule~$A$.
-%
-If, in the context of~$\RL'$, rule~$A$ captures all remaining data not captured by~$\Prefix$,
-then rule~$A$ behaves like~$\RL$'s default rule~$d$ while incurring a penalty of~$c$,
-\ie ~${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c}$.
-
-More generally, suppose rule~$A$ captures all data in the support of~$d$
-except for a fraction~${f < c}$.
-%
-Then, the best outcome for~$\RL'$ would be if it could correctly classify
-the entire majority class with respect to the support of~$d$,
-plus a fraction~$f$ of data belonging to the minority class.
-%
-This would yield a reduction in misclassification of a fraction~${f < c}$
-of data while incurring a penalty of~$c$, yielding
-${\Obj(\RL', \x, \y) \ge \Obj(\RL, \x, \y)}$.
-%
-Furthermore, we would never extend~$\RL'$ with additional rules,
-since insufficient data remain to be captured~\eqref{eq:min-capture}.
-%
-Thus, we require
-\begin{align}
-s(\RL'_A) \le s(\RL_d) - c,
-\label{eq:max-capture}
-\end{align}
-where~$s(\RL'_A)$ is the normalized support of~$A$ in~$\RL'$,
-$s(\RL_d)$ is the normalized support of~$d$ in~$\RL$,
-and~$c$ is the regularization parameter.
-
-\subsubsection{Propagation of rejected rules}
-
-Suppose we grow a rule list~$\RL$ by appending rule~$A$ not already in the rule list,
-\ie by adding an antecedent to its prefix~$\Prefix$; call this new rule list~$\RL'$.
-%
-If in the context of~$\RL'$ rule~$A$ has insufficient accurate support~\eqref{eq:min-capture-correct},
-insufficient support~\eqref{eq:min-capture},
-or captures too many data compared to the original default rule~\eqref{eq:max-capture},
-then we say that rule list~$\RL$~\emph{rejects} rule~$A$.
-
-We now describe a large class of rule lists related to~$\RL$ that also reject rule~$A$:
-if~$\RL'$ is \emph{any} rule list containing rules whose antecedents include,
-in any order, the antecedents in~$\Prefix$, then~$\RL'$ also rejects rule~$A$.
-%
-Furthermore,~$\RL'$ rejects~$A$ for the same reason that~$\RL$ rejects~$A$.
-%
-For example, suppose that when we add rule~$A$ to rule list~$\RL$,
-it has insufficient support~\eqref{eq:min-capture}: ${s(\RL_A) \le c}$,
-where~$s(\RL_A)$ is the normalized support of~$A$ in the context of~$\RL$.
-%
-In the context of~$\RL'$, the prefix preceding~$A$ captures at least
-as much data as the prefix of~$\RL$, thus
-\begin{align}
-s(\RL'_A) \le s(\RL_A) \le c,
-\end{align}
-where~$s(\RL'_A)$ is the normalized support of rule~$A$ in~$\RL'$.
-
-As another example, consider a rule list~$\RL'$ derived from~$\RL$ that holds rule~$A$ fixed
-but permutes any of the other (earlier) antecedents given by those in~$\Prefix$.
-%
-The permutation of~$\Prefix$ captures the same data as~$\Prefix$,
-therefore rule~$A$ behaves the same in both contexts,
-and in particular captures and correctly classifies the same data.
-%
-Another rule list~$\RL''$, derived from~$\RL'$ by inserting additional rules anywhere,
-maintains the invariant that rule~$A$ appears after rules with antecedents in~$\Prefix$;
-it can capture and correctly classify at most as much data as rule~$A$ in rule list~$\RL'$.
-%
-%A rule is rejected by a prefix if it doesn't correctly capture enough data (it must correctly capture >= c * ndata). Let Q be P's parent. If Q rejects a rule, then P will also reject that rule. This 'inheritance' of rejected rules only depends on which data are captured by Q, and doesn't actually depend on the order of rules in Q. Let S be the set of rules formed from (K-1) rules of P, in any order. P inherits rejected rules from any elements of S. Because of our symmetry-based garbage collection of prefixes equivalent up to a permutation, there are at most K elements of S in the cache; we can identify these via the inverse canonical map (ICM) that maps an ordered prefix to its permutation in the cache. We thus lazily initialize the list of P's reject list of rejected rules.
-
-\subsubsection{Equivalence of rule lists when rules commute}
-
-If two rules~$A$ and~$B$ capture disjoint subsets of data,
-then they commute globally in the sense that any rule list where~$A$ and~$B$ are
-adjacent is equivalent to another rule list where~$A$ and~$B$ swap positions.
-%
-More generally, a rule list containing possibly multiple, possibly overlapping
-pairs of commuting rules is equivalent to any other rule list that can be generated
-by swapping one or more such pairs of rules.
-%
-We can avoid evaluating multiple such equivalent rule lists by eliminating all but one.
-%
-%We achieve this by restricting how we grow a prefix (by appending a rule), as informed by a hash map cdict that maps each rule R_i to a set of rules S_i = {R_j} such that R_i commutes with every R_j in S_i and j > i. When growing a prefix that ends with rule R_i, we only append a rule R_j if it is not in S_i.
-
 \subsubsection{Permutation bound for symmetry-aware garbage collection}
 \label{sec:permutation}
 
@@ -773,21 +666,6 @@ provides a lower bound on~$\Obj(\cal{Q}^*)$.
 
 % ELA would like to generalize this to any two prefixes that capture similar data
 
-\begin{itemize}
-\item other permutation bounds
-\item not-too-many incorrect bound:  ELA doesn't remember this one
-\end{itemize}
-
-%For any prefix P, we can write down a lower bound on its permutations' objectives.  (I'm not talking about longer prefixes, just permutations of the same length, call it L.)   An easy bound comes from assuming that there is a permutation that makes no mistakes on captured data, so the only contributions to the objective come from the mistakes of the default rule (call this m) and c*L.  All the permutations capture the same data, so m is constant and this gives
-
-%min objective( any permutation of P ) >= m/n + c*L
-
-%Actually we can make this tighter if we know lower bound information from permutations of sub-prefixes.  For example, the length (L-1) "sub-prefixes" of P generate L permutation groups.  We can add the minimum number of mistakes (on captured data) made by prefixes over all of these groups to our bound, call this k
-
-%min objective( any permutation of P ) >= k/n + m/n + c*L
-
-%We only know k if we've already evaluated the length (L-1) permutations -- we do know it in the breadth-first setting.  (This idea could be generalized to shorter sub-prefixes if desired, e.g., for policies other than breadth first.)
-
 \subsection{Upper bounds on the number of prefix evaluations}
 
 In this section, we use our upper bounds on prefix length to derive upper bounds
@@ -813,17 +691,18 @@ and information about prefixes we are planning to evaluate,
 \ie prefixes in the queue~$\Queue$ of Algorithm~\ref{alg:branch-and-bound}.
 
 \begin{theorem}[Upper bound on the total number of prefix evaluations]
+\label{thm:ub-total-eval}
 %
 Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes
 evaluated by Algorithm~\ref{alg:branch-and-bound}, given the state space of
-all rule lists formed from a set~${\RuleSet = \{s_m \}_{m=1}^M}$ of~$M$ rules.
+all rule lists formed from a set~$\RuleSet$ of~$M$ rules.
 %
 For any set~$\RuleSet$ of $M$ rules,
 \begin{align}
 \TotalRemaining(\RuleSet) \le \sum_{k=0}^K \frac{M!}{(M - k)!},
 \label{eq:size-naive}
 \end{align}
-where ${K = \lfloor 0.5 / c \rfloor}$.
+where ${K = \lfloor 1/2 \Reg \rfloor}$.
 \end{theorem}
 
 \begin{proof}
@@ -831,10 +710,10 @@ At the beginning of Algorithm~\ref{alg:branch-and-bound},
 the queue~${\Queue = ((),)}$ contains a single element, the empty prefix.
 %
 Once we've evaluated the empty prefix, we'll have an upper bound
-on the current best objective, ${\CurrentObj \le 0.5}$,
+on the current best objective, ${\CurrentObj \le 1/2}$,
 and the queue will contain~$M$ elements.
 %
-By~\eqref{eq:max-length}, ${K = \lfloor 0.5 / c \rfloor}$ gives
+By~\eqref{eq:max-length}, ${K = \lfloor 1 / 2 \Reg \rfloor}$ gives
 an upper bound on the length of any optimal rule list.
 %
 Notice now that we can think of our problem as finding the optimal
@@ -933,44 +812,75 @@ This gives an upper bound on the number of remaining prefix evaluations:
 \subsubsection{Upper bound on prefix evaluations with symmetry-aware garbage collection}
 \label{sec:permutation-counting}
 
-Since a prefix of length~$k$ belongs to an equivalence class of~$k!$ prefixes
-equivalent up to permutation, symmetry-aware garbage collection~(\S\ref{sec:permutation})
-dramatically prunes the search space.
-%
-Recall the na\"ive state space size calculation~\eqref{eq:size-naive},
-for rule lists up to length~$K$ formed from a set of~$M$ available rules:
-\begin{align}
-\sum_{k=0}^K P(M, k) = \sum_{k=0}^K \frac{M!}{(M - k)!}
-%= 1 + M + M(M-1) + M(M-1)(M-2) + \dots + M(M-1)\cdots (M-k+1)
-\end{align}
-where~${P(M, k)}$ denotes the number of $k$-permutations of~$M$.
+Since a prefix of length~$k$ belongs to an equivalence class of~$k!$
+prefixes equivalent up to permutation, symmetry-aware garbage
+collection~(\S\ref{sec:permutation}) dramatically prunes the search space.
 
-Now consider a breadth-first exploration of the state space,
-where after evaluating prefixes of length~$k$, we only keep a single best prefix
+Notice that Algorithm~\ref{alg:branch-and-bound} describes a
+breadth-first exploration of the state space of rule lists.
+%
+Now suppose we integrate symmetry-aware garbage collection into
+our execution of branch-and-bound, so that after evaluating
+prefixes of length~$k$, we only keep a single best prefix
 from each set of prefixes equivalent up to a permutation.
+
+\begin{theorem}[Upper bound on the total number of prefix evaluations with
+permutation-aware garbage collection]
 %
-For example, we start by evaluating the empty prefix,
-$M$ prefixes of length~${k=1}$, and~${P(M, 2)}$ prefixes of length~${k=2}$.
+Consider a state space of all rule lists formed from a set~$\RuleSet$
+of~$M$ rules, and consider the branch-and-bound algorithm with
+permutation-aware garbage collection.
 %
-Before proceeding to length~${k=3}$, we keep only~${C(M, 2)}$ prefixes of length~${k=2}$,
-where~${C(M, k)}$ denotes the number of $k$-combinations of~$M$.
+Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes evaluated.
+%
+For any set~$\RuleSet$ of $M$ rules,
+\begin{align}
+\TotalRemaining(\RuleSet)
+\le  1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!},
+\label{eq:size-naive}
+\end{align}
+where ${K = \lfloor 1 / 2 \Reg \rfloor}$.
+\end{theorem}
+
+\begin{proof}
+At the start of the algorithm we evaluate the empty prefix,
+yielding an upper bound on the current best objective,
+${\CurrentObj \le 1/2}$.
+%
+By~\eqref{eq:max-length}, ${K = \lfloor 1 / 2 \Reg \rfloor}$ gives
+an upper bound on the length of any optimal rule list.
+%
+Next, we evaluate~$M$ prefixes of length~${k=1}$,
+followed by~${P(M, 2)}$ prefixes of length~${k=2}$,
+where~${P(M, k)}$ denotes the number of $k$-permutations of~$M$.
+%
+Before proceeding to length~${k=3}$, we keep only~${C(M, 2)}$
+prefixes of length~${k=2}$, where~${C(M, k)}$ denotes the
+number of $k$-combinations of~$M$.
 %
 Now, the number of length~${k=3}$ prefixes we evaluate is~${C(M, 2) (M - 2)}$.
 %
-Propagating this forward reduces the (maximum) number of evaluated prefixes to
+Propagating this forward gives
 \begin{align}
-1 + \sum_{k=1}^K C(M, k-1) (M - k + 1)
+\TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K C(M, k-1) (M - k + 1)
 %= 1 + \sum_{k=1}^K {M \choose k-1}(M - k + 1)
 %= 1 + \sum_{k=1}^K \frac{M! (M - k + 1)}{(k - 1)! (M - k + 1)!}
 = 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}.
 \end{align}
-Pruning based on permutation symmetries thus yields significant computational savings.
+\end{proof}
 
-For example, if~${M = 100}$ and~${K = 5}$, then the na\"ive number of prefix evaluations is
-about ${9.1 \times 10^9}$, while the reduced number of evaluations is about ${3.9 \times 10^8}$,
+Pruning based on permutation symmetries thus yields significant
+computational savings.
+%
+Let us compare, for example, to the na\"ive number of prefix evaluations
+given by the upper bound in~\eqref{eq:size-naive}.
+%
+If~${M = 100}$ and~${K = 5}$, then the na\"ive number is about
+${9.1 \times 10^9}$, while the reduced number due to permutation-aware
+garbage collection is about ${3.9 \times 10^8}$,
 which is smaller by a factor of about~23.
 %
-If~${M=1000}$ and~${K = 10}$, the number of evaluations fall from
+If~${M=1000}$ and~${K = 10}$, the number of evaluations falls from
 about~${9.6 \times 10^{29}}$ to about~${2.7 \times 10^{24}}$,
 which is smaller by a factor of about~360,000.
 %
@@ -1063,6 +973,130 @@ University of California, Berkeley.
 \bibliography{refs}
 \bibliographystyle{abbrvnat}
 
+\begin{appendix}
+
+\subsubsection{Lower bound on rule similarity to a default rule}
+
+Let~$\RL$ be a rule list with prefix~$\Prefix$, default rule~$d$, and objective~$\Obj(\RL)$.
+%
+Let~$\RL'$ be a rule list with prefix~$\Prefix'$ that starts with~$\Prefix$ and adds one rule~$A$.
+%
+If, in the context of~$\RL'$, rule~$A$ captures all remaining data not captured by~$\Prefix$,
+then rule~$A$ behaves like~$\RL$'s default rule~$d$ while incurring a penalty of~$c$,
+\ie ~${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c}$.
+
+More generally, suppose rule~$A$ captures all data in the support of~$d$
+except for a fraction~${f < c}$.
+%
+Then, the best outcome for~$\RL'$ would be if it could correctly classify
+the entire majority class with respect to the support of~$d$,
+plus a fraction~$f$ of data belonging to the minority class.
+%
+This would yield a reduction in misclassification of a fraction~${f < c}$
+of data while incurring a penalty of~$c$, yielding
+${\Obj(\RL', \x, \y) \ge \Obj(\RL, \x, \y)}$.
+%
+Furthermore, we would never extend~$\RL'$ with additional rules,
+since insufficient data remain to be captured~\eqref{eq:min-capture}.
+%
+Thus, we require
+\begin{align}
+s(\RL'_A) \le s(\RL_d) - c,
+\label{eq:max-capture}
+\end{align}
+where~$s(\RL'_A)$ is the normalized support of~$A$ in~$\RL'$,
+$s(\RL_d)$ is the normalized support of~$d$ in~$\RL$,
+and~$c$ is the regularization parameter.
+
+\subsubsection{Insufficient per-rule support due to rule dominance}
+
+Let us say that rule~$A$ dominates rule~$B$ if the data captured by~$B$ is a subset of the data captured by~$A$.
+%
+Rule~$B$ should never follow rule~$A$ in a rule list because it will never capture additional data;
+this scenario is a special case where~\eqref{eq:min-capture} immediately applies.
+%
+More precisely, if~$\RL$ is a rule list that contains rule~$A$ and doesn't contain rule~$B$,
+and~$\RL'$ is derived from~$\RL$ by inserting rule~$B$ anywhere after~$A$, then
+\begin{align}
+\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c \ge \Obj(\RL, \x, \y).
+\end{align}
+By considering rule semantics, it is easy to think of common situations
+leading to dominance relationships between rules.
+%
+For example, if rule~$A$'s antecedent is~${(x_1 = 0)}$ and rule~$B$'s
+antecedent is~${(x_1 = 0) \wedge (x_2 = 1)}$, then rule~$A$ dominates rule~$B$.
+%
+%Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
+
+\subsubsection{Propagation of rejected rules}
+
+Suppose we grow a rule list~$\RL$ by appending rule~$A$ not already in the rule list,
+\ie by adding an antecedent to its prefix~$\Prefix$; call this new rule list~$\RL'$.
+%
+If in the context of~$\RL'$ rule~$A$ has insufficient accurate support~\eqref{eq:min-capture-correct},
+insufficient support~\eqref{eq:min-capture},
+or captures too many data compared to the original default rule~\eqref{eq:max-capture},
+then we say that rule list~$\RL$~\emph{rejects} rule~$A$.
+
+We now describe a large class of rule lists related to~$\RL$ that also reject rule~$A$:
+if~$\RL'$ is \emph{any} rule list containing rules whose antecedents include,
+in any order, the antecedents in~$\Prefix$, then~$\RL'$ also rejects rule~$A$.
+%
+Furthermore,~$\RL'$ rejects~$A$ for the same reason that~$\RL$ rejects~$A$.
+%
+For example, suppose that when we add rule~$A$ to rule list~$\RL$,
+it has insufficient support~\eqref{eq:min-capture}: ${s(\RL_A) \le c}$,
+where~$s(\RL_A)$ is the normalized support of~$A$ in the context of~$\RL$.
+%
+In the context of~$\RL'$, the prefix preceding~$A$ captures at least
+as much data as the prefix of~$\RL$, thus
+\begin{align}
+s(\RL'_A) \le s(\RL_A) \le c,
+\end{align}
+where~$s(\RL'_A)$ is the normalized support of rule~$A$ in~$\RL'$.
+
+As another example, consider a rule list~$\RL'$ derived from~$\RL$ that holds rule~$A$ fixed
+but permutes any of the other (earlier) antecedents given by those in~$\Prefix$.
+%
+The permutation of~$\Prefix$ captures the same data as~$\Prefix$,
+therefore rule~$A$ behaves the same in both contexts,
+and in particular captures and correctly classifies the same data.
+%
+Another rule list~$\RL''$, derived from~$\RL'$ by inserting additional rules anywhere,
+maintains the invariant that rule~$A$ appears after rules with antecedents in~$\Prefix$;
+it can capture and correctly classify at most as much data as rule~$A$ in rule list~$\RL'$.
+%
+%A rule is rejected by a prefix if it doesn't correctly capture enough data (it must correctly capture >= c * ndata). Let Q be P's parent. If Q rejects a rule, then P will also reject that rule. This 'inheritance' of rejected rules only depends on which data are captured by Q, and doesn't actually depend on the order of rules in Q. Let S be the set of rules formed from (K-1) rules of P, in any order. P inherits rejected rules from any elements of S. Because of our symmetry-based garbage collection of prefixes equivalent up to a permutation, there are at most K elements of S in the cache; we can identify these via the inverse canonical map (ICM) that maps an ordered prefix to its permutation in the cache. We thus lazily initialize the list of P's reject list of rejected rules.
+
+\subsubsection{Equivalence of rule lists when rules commute}
+
+If two rules~$A$ and~$B$ capture disjoint subsets of data,
+then they commute globally in the sense that any rule list where~$A$ and~$B$ are
+adjacent is equivalent to another rule list where~$A$ and~$B$ swap positions.
+%
+More generally, a rule list containing possibly multiple, possibly overlapping
+pairs of commuting rules is equivalent to any other rule list that can be generated
+by swapping one or more such pairs of rules.
+%
+We can avoid evaluating multiple such equivalent rule lists by eliminating all but one.
+%
+%We achieve this by restricting how we grow a prefix (by appending a rule), as informed by a hash map cdict that maps each rule R_i to a set of rules S_i = {R_j} such that R_i commutes with every R_j in S_i and j > i. When growing a prefix that ends with rule R_i, we only append a rule R_j if it is not in S_i.
+
+\begin{itemize}
+\item other permutation bounds
+\item not-too-many incorrect bound:  ELA doesn't remember this one
+\end{itemize}
+
+%For any prefix P, we can write down a lower bound on its permutations' objectives.  (I'm not talking about longer prefixes, just permutations of the same length, call it L.)   An easy bound comes from assuming that there is a permutation that makes no mistakes on captured data, so the only contributions to the objective come from the mistakes of the default rule (call this m) and c*L.  All the permutations capture the same data, so m is constant and this gives
+
+%min objective( any permutation of P ) >= m/n + c*L
+
+%Actually we can make this tighter if we know lower bound information from permutations of sub-prefixes.  For example, the length (L-1) "sub-prefixes" of P generate L permutation groups.  We can add the minimum number of mistakes (on captured data) made by prefixes over all of these groups to our bound, call this k
+
+%min objective( any permutation of P ) >= k/n + m/n + c*L
+
+%We only know k if we've already evaluated the length (L-1) permutations -- we do know it in the breadth-first setting.  (This idea could be generalized to shorter sub-prefixes if desired, e.g., for policies other than breadth first.)
+
 \newpage
 
 \begin{figure}[t!]
@@ -1137,3 +1171,5 @@ with horizontal lines and x-ticks for CART and C4.5}
 maybe also add the best prefix length over time}
 \label{fig:max-length}
 \end{figure}
+
+\end{appendix}
