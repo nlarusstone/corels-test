@@ -790,31 +790,37 @@ provides a lower bound on~$\Obj(\cal{Q}^*)$.
 
 \subsection{Upper bounds on the number of prefix evaluations}
 
-In this section, we use our upper bounds on
-prefix length~(\S\ref{sec:ub-prefix-length})
-to derive upper bounds on the number of remaining
-prefix evaluations during branch-and-bound execution.
+In this section, we use our upper bounds on prefix length to derive upper bounds
+on the number of prefix evaluations made by Algorithm~\ref{alg:branch-and-bound}.
 %
-At any point during branch-and-bound execution, we can calculate an upper bound
-on the number of remaining prefix evaluations from the current best
-objective~$\CurrentObj$ and information about prefixes are planning to evaluate,
-\ie prefixes in the queue~$\Queue$ of Algorithm~\ref{alg:branch-and-bound}.
+First, in~\S\ref{sec:ub-size}, we present three bounds corresponding to
+the three upper bounds on prefix length from~\S\ref{sec:ub-prefix-length}.
+%
+Next, in~\S\ref{sec:permutation-counting}, we present a bound
+that accounts for the effect of symmetry-aware garbage collection.
 
-\subsubsection{Upper bounds on the number of prefix evaluations}
+\subsubsection{Upper bounds on prefix evaluations from upper bounds on prefix length}
 \label{sec:ub-size}
 
-We present three theorems \dots
+Our first result below is a na\"ive upper bound on the total number of prefix evaluations.
 %
-These bounds do not take into account symmetry-aware garbage collection,
-which we consider separately in~\S\ref{sec:permutation-counting}.
+For the following two theorems, we observe that at any point during
+branch-and-bound execution, we can calculate tighter upper bounds
+on the number of remaining prefix evaluations.
+%
+These require the current best objective~$\CurrentObj$
+and information about prefixes we are planning to evaluate,
+\ie prefixes in the queue~$\Queue$ of Algorithm~\ref{alg:branch-and-bound}.
 
 \begin{theorem}[Upper bound on the total number of prefix evaluations]
-Let our state space correspond to rule lists formed from a set of~$M$ rules.
 %
-Let~$\MaxRemaining$ be the maximum number of prefixes evaluated by
-Algorithm~\ref{alg:branch-and-bound}.
+Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes
+evaluated by Algorithm~\ref{alg:branch-and-bound}, given the state space of
+all rule lists formed from a set~${\RuleSet = \{s_m \}_{m=1}^M}$ of~$M$ rules.
+%
+For any set~$\RuleSet$ of $M$ rules,
 \begin{align}
-\MaxRemaining = \sum_{k=1}^K P(M, k) = \sum_{k=1}^K \frac{M!}{(M - k)!},
+\TotalRemaining(\RuleSet) \le \sum_{k=0}^K \frac{M!}{(M - k)!},
 \label{eq:size-naive}
 \end{align}
 where ${K = \lfloor 0.5 / c \rfloor}$.
@@ -824,20 +830,24 @@ where ${K = \lfloor 0.5 / c \rfloor}$.
 At the beginning of Algorithm~\ref{alg:branch-and-bound},
 the queue~${\Queue = ((),)}$ contains a single element, the empty prefix.
 %
-Once we've evaluated the empty prefix, we'll have~${\CurrentObj \le 0.5}$,
+Once we've evaluated the empty prefix, we'll have an upper bound
+on the current best objective, ${\CurrentObj \le 0.5}$,
 and the queue will contain~$M$ elements.
 %
 By~\eqref{eq:max-length}, ${K = \lfloor 0.5 / c \rfloor}$ gives
 an upper bound on the length of any optimal rule list.
 %
-We can think of our problem as finding the optimal $k$-permutation of
-the~$M$ rules, where~${k \le K}$.
-%
-This gives
+Notice now that we can think of our problem as finding the optimal
+$k$-permutation of the~$M$ rules, where~${k \le K}$, therefore
+\begin{align}
+\TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K P(M, k) = \sum_{k=0}^K \frac{M!}{(M - k)!}.
+\end{align}
 \end{proof}
 
 \begin{theorem}[Upper bound on the number of remaining prefix evaluations]
-Let our state space correspond to rule lists formed from a set of~$M$ rules.
+Consider a state space of all rule lists formed from a set of~$M$ rules,
+and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
+during execution.
 %
 Let~$\CurrentObj$ be the current best objective, let~$\Queue$ be the queue,
 and let~$L(\Prefix)$ be the length of prefix~$\Prefix$.
@@ -865,8 +875,9 @@ ${L(\Prefix) \le \lfloor \CurrentObj / \Reg \rfloor}$.
 %
 Define~${K = \lfloor \CurrentObj / \Reg \rfloor}$.
 %
-For any length-$j$ prefix~$\Prefix$ in the queue, the maximum number
-of prefixes that start with~$\Prefix$ and remain to be evaluated is:
+For any prefix~$\Prefix$ in queue~$\Queue$ with length~${L(\Prefix) = j}$,
+the maximum number of prefixes that start with~$\Prefix$
+and remain to be evaluated is:
 \begin{align}
 \sum_{k=0}^{K-j} P(M-j, k) = \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!},
 \end{align}
@@ -884,24 +895,42 @@ We can use more finely grained information about prefixes in the queue
 to obtain a tighter upper bound on the number of remaining prefix evaluations.
 
 \begin{theorem}[Fine-grain upper bound on the number of remaining prefix evaluations]
-Let~$Q$ denote the queue.
+Consider a state space of all rule lists formed from a set of~$M$ rules,
+and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
+during execution.
 %
-Let~$j(\Prefix)$ denote the length of prefix~$\Prefix$,
-and let~$K(\Prefix)$ denote the upper bound on prefix length
-for prefixes that start with~$\Prefix$, given by~\eqref{eq:max-length-prefix}.
+Let~$\CurrentObj$ be the current best objective, let~$\Queue$ be the queue,
+and let~$L(\Prefix)$ be the length of prefix~$\Prefix$.
 %
-We can now write the following upper bound on the number of remaining prefix evaluations:
+Define~${\Remaining(\CurrentObj, \Queue)}$ to be the number of remaining
+prefix evaluations, then
 \begin{align}
-\sum_{\Prefix \in Q} \sum_{k=0}^{K(\Prefix) - j(P)} P(M - j(P), k)
-= \sum_{\Prefix \in Q} \sum_{k=0}^{K(\Prefix) - j(P)} \frac{(M-j(P))!}{(M-j(P) - k)!}
+\Remaining(\CurrentObj, \Queue)
+\le \sum_{\Prefix \in Q} \sum_{k=0}^{f(\Prefix)} \frac{(M - L(\Prefix))!}{(M - L(\Prefix) - k)!},
+\end{align}
+where
+\begin{align}
+f(\Prefix) = \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor.
+\label{eq:f}
 \end{align}
 \end{theorem}
 
 \begin{proof}
-\dots
+Recall our upper bound on prefix length~\eqref{eq:max-length-prefix}
+for prefixes~$\Prefix'$ that start with some prefix~$\Prefix$:
+\begin{align}
+L(\Prefix') \le L(\Prefix) + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor
+\equiv U(\Prefix).
+\end{align}
+This gives an upper bound on the number of remaining prefix evaluations:
+\begin{align}
+\Remaining(\CurrentObj, \Queue)
+\le \sum_{\Prefix \in Q} \sum_{k=0}^{U(\Prefix) - L(\Prefix)} P(M - L(\Prefix), k)
+= \sum_{\Prefix \in Q} \sum_{k=0}^{f(\Prefix)} \frac{(M - L(\Prefix))!}{(M - L(\Prefix) - k)!}.
+\end{align}
 \end{proof}
 
-\subsubsection{Upper bound on the number of prefix evaluations with symmetry-aware garbage collection}
+\subsubsection{Upper bound on prefix evaluations with symmetry-aware garbage collection}
 \label{sec:permutation-counting}
 
 Since a prefix of length~$k$ belongs to an equivalence class of~$k!$ prefixes
