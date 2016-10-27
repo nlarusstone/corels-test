@@ -337,14 +337,22 @@ if ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$,
 then we can prune any prefix~$\Prefix'$ longer than~$\Prefix$. \\
 %and it follows that we can also prune~$\Prefix$. \\
 
-In the next two subsections, we prove
-upper bounds on prefix length~(\S\ref{sec:ub-prefix-length})
+Before proceeding, let us summarize the remainder of this section.
+%
+First, we prove upper bounds on prefix
+length~(\S\ref{sec:ub-prefix-length}),
 and corresponding upper bounds on the number of
 prefix evaluations~(\S\ref{sec:ub-size}).
 %
 Next, we prove lower bounds on per-rule support~(\S\ref{sec:lb-support}),
-followed by some things about symmetry~(\S\ref{sec:})
-and another corresponding upper bound on the number of prefix evaluations~(\S\ref{sec:permutation-counting}), \dots
+followed by several bounds arising from problem symmetries.
+%
+We then analyze rule lists whose prefixes are equivalent up to
+a permutation of their antecedents~(\S\ref{sec:permutation});
+this enables permutation-aware garbage collection, which we
+characterize via another upper bound on the number of prefix evaluations~(\S\ref{sec:permutation-counting}).
+%
+\dots
 
 \subsection{Upper bounds on prefix length}
 \label{sec:ub-prefix-length}
@@ -731,12 +739,38 @@ of the lower bound in in Theorem~\ref{thm:min-capture-correct},
 we can still leverage both -- since the sub-condition is easier to check,
 checking it first can accelerate pruning.
 
-\subsection{Permutation bound for symmetry-aware garbage collection}
+\subsection{Permutation bound for permutation-aware garbage collection}
 \label{sec:permutation}
 
-If two prefixes~$\cal{P}$ and~$\cal{Q}$ are composed of the same antecedents and
-equivalent up to a permutation, then they also capture the same data.
+\begin{theorem}[Permutation bound]
+Let~$\Prefix$ and~$\tilde\Prefix$ two prefixes that are
+equivalent up to a permutation of their antecedents,
+such that their lower bounds are related by
+${b(\Prefix, \x, \y) \le b(\tilde\Prefix, \x, \y)}$.
 %
+Let~$\Prefix^*$ be the optimal prefix that starts with~$\Prefix$,
+\begin{align}
+\Prefix^* = \argmin_{\Prefix' : \Prefix' \textnormal{ starts with } \Prefix}
+b(\Prefix, \x, \y),
+\end{align}
+and let~$\tilde\Prefix^*$ be the optimal prefix that starts with~$\tilde\Prefix$,
+\begin{align}
+\Prefix^* = \argmin_{\Prefix' : \Prefix' \textnormal{ starts with } \Prefix}
+b(\Prefix, \x, \y),
+\end{align}
+It follows that~$\tilde\Prefix^*$ cannot be superior to~$\cal{P^*}$:
+\begin{align}
+\Obj(\cal{P}^*) = \Obj(\cal{Q^*}) + (\Obj(\cal{P}) - \Obj(\cal{Q})) \ge \Obj(\cal{Q^*}).
+\label{eq:permutation}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+Since $\Prefix$ and~$\tilde\Prefix$ have the same antecedents,
+they also capture the same data, \ie
+\begin{align}
+\{x_n : \Cap(x_n, \Prefix)\} = \{x_n : \Cap(x_n, \tilde \Prefix)\}.
+\end{align}
 Their two corresponding rule lists need not yield the same objective, since the
 loss function~\eqref{eq:objective} depends on rule order.
 %
@@ -750,21 +784,13 @@ the same as that of the rule list formed from~$\cal{Q}'$ compared to~$\cal{Q}$, 
 \Obj(\cal{P}') - \Obj(\cal{P}) = \Obj(\cal{Q}') - \Obj(\cal{Q}).
 \end{align}
 Without loss of generality, suppose that~${\Obj(\cal{P}) \ge \Obj(\cal{Q})}$.
-%
-Let~$\cal{P}^*$ be the optimal prefix that starts with~$\cal{P}$.
-%
-Its counterpart~$\cal{Q}^*$ is the optimal prefix that starts with~$\cal{Q}$,
-and it cannot be superior to~$\cal{P^*}$:
-%
-\begin{align}
-\Obj(\cal{P}^*) = \Obj(\cal{Q^*}) + (\Obj(\cal{P}) - \Obj(\cal{Q})) \ge \Obj(\cal{Q^*}).
-\label{eq:permutation}
-\end{align}
-%
+\end{proof}
+
 Thus, we can prune~$\cal{Q}$;
 in our implementation, we call this symmetry-aware garbage collection.
 %
-We illustrate the subsequent computational savings in~\S\ref{sec:permutation-counting}.
+We illustrate the subsequent computational savings next
+in~\S\ref{sec:permutation-counting}.
 
 \subsection{Upper bound on prefix evaluations with permutation-aware garbage collection}
 \label{sec:permutation-counting}
