@@ -742,31 +742,42 @@ checking it first can accelerate pruning.
 \subsection{Permutation bound for permutation-aware garbage collection}
 \label{sec:permutation}
 
-\begin{theorem}[Permutation bound]
-Let~$\Prefix$ and~$\tilde\Prefix$ two prefixes that are
-equivalent up to a permutation of their antecedents,
-such that their lower bounds are related by
-${b(\Prefix, \x, \y) \le b(\tilde\Prefix, \x, \y)}$.
+Let~$A$ be a set of~$K$ antecedents, and let~$P$ be the set of all
+$K$-prefixes corresponding to permutations of antecedents in~$A$.
 %
-Let~$\Prefix^*$ be the optimal prefix that starts with~$\Prefix$,
+Let ${\RL = (\Prefix, \Labels, q_0, K)}$ be an optimal rule list
+with prefix~$\Prefix$ in~$P$.
+%
+Theorem~\ref{thm:permutation} below implies that
+an optimal rule list constrained to start with~$\Prefix$
+is also optimal with respect to the looser constraint of
+starting with any prefix in~$P$.
+
+\begin{theorem}[Permutation bound]
+\label{thm:permutation}
+Let~$\RL$ and~$\tilde \RL$ be two rule lists
+whose prefixes~$\Prefix$ and~$\tPrefix$, respectively,
+are equivalent up to a permutation of their antecedents.
+%
+Let~$T(\Prefix)$ denote the set of all rule lists whose
+prefixes start with~$\Prefix$.
+%
+If the objectives of~$\RL$ and~$\tilde \RL$ are related by
+${\Obj(\RL, \x, \y) \le \Obj(\tilde \RL, \x, \y)}$,
+then the objective of the optimal rule list whose prefix
+starts with~$\RL$ gives a lower bound on the objective of
+the optimal rule list whose prefix starts with~$\tilde \RL$:
 \begin{align}
-\Prefix^* = \argmin_{\Prefix' : \Prefix' \textnormal{ starts with } \Prefix}
-b(\Prefix, \x, \y),
-\end{align}
-and let~$\tilde\Prefix^*$ be the optimal prefix that starts with~$\tilde\Prefix$,
-\begin{align}
-\Prefix^* = \argmin_{\Prefix' : \Prefix' \textnormal{ starts with } \Prefix}
-b(\Prefix, \x, \y),
-\end{align}
-It follows that~$\tilde\Prefix^*$ cannot be superior to~$\cal{P^*}$:
-\begin{align}
-\Obj(\cal{P}^*) = \Obj(\cal{Q^*}) + (\Obj(\cal{P}) - \Obj(\cal{Q})) \ge \Obj(\cal{Q^*}).
+\min_{\RL' : \Prefix' \textnormal{ starts with } \Prefix}
+\Obj(\RL', \x, \y)
+\le \min_{\tilde \RL' : \tPrefix' \textnormal{ starts with } \tPrefix}
+\Obj(\tilde \RL', \x, \y)
 \label{eq:permutation}
 \end{align}
 \end{theorem}
 
 \begin{proof}
-Since $\Prefix$ and~$\tilde\Prefix$ have the same antecedents,
+Since $\Prefix$ and~$\tPrefix$ have the same antecedents,
 they also capture the same data, \ie
 \begin{align}
 \{x_n : \Cap(x_n, \Prefix)\} = \{x_n : \Cap(x_n, \tilde \Prefix)\}.
@@ -784,6 +795,22 @@ the same as that of the rule list formed from~$\cal{Q}'$ compared to~$\cal{Q}$, 
 \Obj(\cal{P}') - \Obj(\cal{P}) = \Obj(\cal{Q}') - \Obj(\cal{Q}).
 \end{align}
 Without loss of generality, suppose that~${\Obj(\cal{P}) \ge \Obj(\cal{Q})}$.
+
+Let~$\RL^*$ be the optimal rule list whose prefix starts with~$\Prefix$,
+\begin{align}
+\RL^* = \argmin_{\RL' : \Prefix' \textnormal{ starts with } \Prefix}
+\Obj(\RL', \x, \y),
+\end{align}
+and let~$\tilde \RL^*$ be the optimal rule list whose prefix
+starts with~$\tPrefix$,
+\begin{align}
+\tilde \RL^* =
+\end{align}
+then~$\tilde \RL^*$ cannot be superior to~$\RL^*$:
+\begin{align}
+\Obj(\RL^*, \x, \y) \le \Obj(\tilde \RL^*, \x, \y).
+\end{align}
+
 \end{proof}
 
 Thus, we can prune~$\cal{Q}$;
