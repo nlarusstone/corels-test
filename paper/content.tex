@@ -755,77 +755,127 @@ starting with any prefix in~$P$.
 
 \begin{theorem}[Permutation bound]
 \label{thm:permutation}
-Let~$\RL$ and~$\tilde \RL$ be rule lists
-whose prefixes~$\Prefix$ and~$\tilde\Prefix$, respectively,
-are equivalent up to a permutation of their antecedents.
-%
-Also define~$T(\Prefix)$ to be the set of all rule lists whose
-prefixes start with~$\Prefix$:
+Let~$\pi$ define a permutation of ${\{1, \dots, K\}}$,
+and define~$\StartsWith(\Prefix)$ to be the set of all rule lists
+whose prefixes start with~$\Prefix$:
 \begin{align}
-T(\Prefix) =
-\{(\Prefix', \Labels', q'_0, K') : \Prefix' \textnormal{ starts with } \Prefix \}.
+\StartsWith(\Prefix) =
+\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}.
 \end{align}
-If the objectives of~$\RL$ and~$\tilde \RL$ are related by
-${\Obj(\RL, \x, \y) \le \Obj(\tilde \RL, \x, \y)}$,
-then the objective of the optimal rule list in~$T(\Prefix)$ gives a
-lower bound on the objective of the optimal rule list in~$\tilde \RL$:
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$
+and ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K)}$
+be rule lists with prefixes ${\Prefix = (p_1, \dots, p_K)}$
+and ${\PrefixB = (p_{\pi(1)}, \dots, p_{\pi(K)})}$, respectively.
+%
+If the lower bounds of~$\Prefix$ and~$\PrefixB$
+obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
+then the objective of the optimal rule list in~$\StartsWith(\Prefix)$ gives a
+lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$:
 \begin{align}
-\min_{\RL' \in T(\Prefix)} \Obj(\RL', \x, \y)
-\le \min_{\tilde \RL' \in T(\tPrefix)} \Obj(\tilde \RL', \x, \y)
+\min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
+\le \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y).
 \label{eq:permutation}
 \end{align}
 \end{theorem}
 
 \begin{proof}
-Let~$\pi$ define a permutation of ${\{1, \dots, K\}}$.
-%
-Let ${\RL = (\Prefix, \Labels, q_0, K)}$
-and ${\tilde\RL = (\tilde\Prefix, \tilde\Labels, \tilde{q}_0, K)}$
-be rule lists such that ${\Prefix = (p_1, \dots, p_K)}$
-and ${\tilde\Prefix = (p_{\pi(1)}, \dots, p_{\pi(K)})}$.
-%
-Since~$\Prefix$ and~$\tilde\Prefix$ contain the same antecedents,
-they both capture the same data,
+Let us begin by writing the rule list~$\RL$'s objective as
 \begin{align}
-\{x_n : \Cap(x_n, \Prefix)\} = \{x_n : \Cap(x_n, \tilde \Prefix)\},
+\Obj(\RL, \x, \y) &= \Loss_p(\Prefix, \Labels, \x, \y)
+  + \Loss_0(\Prefix, \Default, \x, \y) + \Reg K \\
+&= b(\Prefix, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y),
 \end{align}
-and also have the same default rule, thus ${q_0 = \tilde{q}_0}$.
+using our derivation of the lower bound~\eqref{eq:lower-bound},
+and similarly, the rule list~$\RLB$'s objective as
+\begin{align}
+\Obj(\RLB, \x, \y) &= \Loss_p(\PrefixB, \LabelsB, \x, \y)
+  + \Loss_0(\PrefixB, \DefaultB, \x, \y) + \Reg K \\
+&= b(\PrefixB, \x, \y) + \Loss_0(\PrefixB, \DefaultB, \x, \y).
+\end{align}
+Since the prefixes~$\Prefix$ and~$\PrefixB$ contain
+the same antecedents, they both capture the same data,
+\begin{align}
+\{x_n : \Cap(x_n, \Prefix)\} = \{x_n : \Cap(x_n, \PrefixB)\}.
+\end{align}
+Equivalently, they don't capture the same data,
+and thus the corresponding rule lists~$\RL$ and~$\RLB$
+share the same default rule ${\Default = \DefaultB}$,
+yielding the same misclassification error:
+\begin{align}
+\Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
+\label{eq:same-default}
+\end{align}
+Note that in general, ${\Obj(\RL, \x, \y) \neq \Obj(\RLB, \x, \y)}$,
+since the objective function depends on rule order,
+\ie ${b(\Prefix, \x, \y) \neq b(\PrefixB, \x, \y)}$.
 
-In general, ${\Obj(\RL, \x, \y) \neq \Obj(\tilde\RL, \x, \y)}$,
-since the objective function depends on rule order.
+Now let ${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
+be any prefix that starts with~$\Prefix$, where~${K' \ge K}$,
+and define the analogous prefix in~$\StartsWith(\PrefixB)$ to be
+${\PrefixB' = (p_{\pi(1)}, \dots, p_{\pi(K)}, p_{K+1}, \dots, p_{K'})}$,
+\ie the prefix that starts with~$\PrefixB$
+and ends with the same~${K'-K}$ antecedents as~$\Prefix'$.
 %
-Let
-
-Obtain a prefix~$\cal{P}'$ by appending~$\cal{P}$ with some ordered list of
-unique antecedents not contained in~$\cal{P}$, and~$\cal{Q}'$ by appending~$\cal{Q}$
-with the same ordered list.
+Also let~$\RL'$ and~$\RLB'$ be the rule lists that
+start with~$\Prefix'$ and~$\PrefixB'$, respectively.
 %
-The performance of the rule list formed from~$\cal{P}'$ compared to~$\cal{P}$ will be
-the same as that of the rule list formed from~$\cal{Q}'$ compared to~$\cal{Q}$, \ie
+Let us explicitly write the misclassification error for~$\RL$,
 \begin{align}
-\Obj(\cal{P}') - \Obj(\cal{P}) = \Obj(\cal{Q}') - \Obj(\cal{Q}).
+\Loss(\RL, \x, \y) = \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K
+\one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
++ \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ],
 \end{align}
-Without loss of generality, suppose that~${\Obj(\cal{P}) \ge \Obj(\cal{Q})}$.
+and for~$\Prefix'$,
+\begin{align}
+\Loss(\RL', \x, \y) = \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K'}
+\one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ]
++ \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix') \wedge (\Default' \neq y_n) ],
+\end{align}
+therefore
+\begin{align}
+\Loss(\RL', \x, \y) - \Loss(\RL, \x, \y)
+= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
+\one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ]
++ \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix') \wedge (\Default' \neq y_n) ]
+- \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ].
+\label{eq:loss-a}
+\end{align}
+Similarly,
+\begin{align}
+\Loss_p(\PrefixB', \LabelsB', \x, \y) - \Loss_p(\PrefixB, \LabelsB, \x, \y)
+&= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
+\one [ \Cap(x_n, p_{\pi(k)} \given \PrefixB') \wedge (q_k \neq y_n) ].
+\label{eq:loss-b}
+\end{align}
 
-Let~$\RL^*$ be the optimal rule list whose prefix starts with~$\Prefix$,
+%
+Combining this with~\eqref{eq:same-default} implies that
+the difference between the objectives of~$\RL'$ and~$\RL$
+is the same as that between~$\RLB'$ and~$\RLB$, \ie
 \begin{align}
-\RL^* = \argmin_{\RL' : \Prefix' \textnormal{ starts with } \Prefix}
-\Obj(\RL', \x, \y),
-\end{align}
-and let~$\tilde \RL^*$ be the optimal rule list whose prefix
-starts with~$\tPrefix$,
-\begin{align}
-\tilde \RL^* =
-\end{align}
-then~$\tilde \RL^*$ cannot be superior to~$\RL^*$:
-\begin{align}
-\Obj(\RL^*, \x, \y) \le \Obj(\tilde \RL^*, \x, \y).
+\Obj(\RL', \x, \y) - \Obj(\RL, \x, \y)
+= \Obj(\RLB', \x, \y) - \Obj(\RLB, \x, \y).
+\label{eq:analogous}
 \end{align}
 
+Without loss of generality, suppose that
+${\Obj(\RL, \x, \y) \le \Obj(\RLB, \x, \y)}$,
+and let~$\RL^*$ be an optimal rule list whose prefix starts with~$\Prefix$,
+\begin{align}
+\RL^* \in \argmin_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y).
+\end{align}
+Let~$\RLB^*$ be the analogous rule list whose prefix starts with~$\PrefixB$.
+%
+It follows by~\eqref{eq:analogous} that
+\begin{align}
+\RLB^* \in \argmin_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y),
+\end{align}
+and furthermore that~${\RL^* \le \RLB^*}$.
 \end{proof}
 
-Thus, we can prune~$\cal{Q}$;
-in our implementation, we call this symmetry-aware garbage collection.
+Thus if~${b(\Prefix, \x, \y) \le b(\Prefix', \x, \y)}$,
+Theorem~\ref{thm:permutation} implies that we can prune~$\Prefix'$; 
+in our implementation, we call this permutation-aware garbage collection.
 %
 We illustrate the subsequent computational savings next
 in~\S\ref{sec:permutation-counting}.
@@ -837,9 +887,9 @@ Here, we present an upper bound on the total number of prefix
 evaluations that accounts for the effect of permutation-aware
 garbage collection~(\S\ref{sec:permutation}).
 %
-Since a prefix of length~$k$ belongs to an equivalence class of~$k!$
-prefixes equivalent up to permutation, permutation-aware garbage
-collection dramatically prunes the search space.
+Since every subset of~$K$ antecedents generates an equivalence
+class of~$K!$ prefixes equivalent up to permutation, permutation-aware
+garbage collection dramatically prunes the search space.
 
 First, notice that Algorithm~\ref{alg:branch-and-bound} describes a
 breadth-first exploration of the state space of rule lists.
