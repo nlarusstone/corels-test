@@ -27,47 +27,65 @@ where ${x_n \in \{0, 1\}^J}$ are binary features and ${y_n \in \{0, 1\}}$ are la
 Let~${\x = \{x_n\}_{n=1}^N}$ and~${\y = \{y_n\}_{n=1}^N}$,
 and let~${x_{n,j}}$ denote the $j$-th feature of~$x_n$.
 
-A rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$ of length~${K \ge 0}$ is a
-${(K+1)}$-tuple consisting of~$K$ association rules followed by a default rule~$r_0$;
-we sometimes call this a $K$-rule list.
+\begin{figure}[b!]
+\begin{algorithmic}
+\normalsize
+\State \bif $p_1$ \bthen $q_1$
+\State \belif $p_2$ \bthen $q_2$
+\State \dots
+\State \belif $p_K$ \bthen $q_K$
+\State \belse $q_0$.
+\end{algorithmic}
+\caption{A $K$-rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$, where
+each rule ${r_k = p_k \rightarrow q_k}$, for all ${k = 0, \dots K}$.
+We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
+where ${\Prefix = (p_1, \dots, p_K)}$
+and ${\Labels = (q_1, \dots, q_K)}$.}
+\label{fig:rule-list}
+\end{figure}
+
+A rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$ of length~${K \ge 0}$
+is a ${(K+1)}$-tuple consisting of~$K$ association rules,
+${r_k = p_k \rightarrow q_k}$, for ${k = 1, \dots, K}$,
+followed by a default rule~$r_0$.
 %
-An association rule~${p \rightarrow q}$ is an implication corresponding to the
-conditional statement, ``if~$p$, then~$q$.''
+Figure~\ref{fig:rule-list} illustrates~$\RL$,
+which for clarity, we sometimes call a $K$-rule list.
 %
-In our setting, an antecedent~$p$ is a Boolean assertion that evaluates to either
-true or false for each datum~$x_n$, and a consequent~$q$ is a label prediction.
+An association rule~${r = p \rightarrow q}$ is an implication
+corresponding to the conditional statement, ``if~$p$, then~$q$.''
 %
-For example,~${(x_{n, 1} = 0) \wedge (x_{n, 3} = 1) \rightarrow (y_n = 1)}$
-is an association rule that could appear in a rule list.
+In our setting, an antecedent~$p$ is a Boolean assertion that
+evaluates to either true or false for each datum~$x_n$,
+and a consequent~$q$ is a label prediction.
+%
+For example, ${(x_{n, 1} = 0) \wedge (x_{n, 3} = 1) \rightarrow (y_n = 1)}$
+is an association rule.
 %
 %The number of conditions in an antecedent is its cardinality;
 %the antecedent in the previous example has a cardinality of two.
 %
-The final default rule~$r_0$ in a rule list can be thought of as a special
-association rule whose antecedent simply asserts true.
-%
-Thus, every~$r_k$ in~$\RL$ represents an association rule~${p_k \rightarrow q_k}$,
-where ${0 \le k\le K}$.
+The final default rule~$r_0$ in a rule list can be thought of
+as a special association rule~${p_0 \rightarrow q_0}$
+whose antecedent~$p_0$ simply asserts true.
 
-Let~$\RL$ be a $K$-rule list.
+Let ${\RL = (r_1, r_2, \dots, r_K, r_0)}$ be a $K$-rule list,
+where ${r_k = p_k \rightarrow q_k}$ for each ${k = 0, \dots, K}$.
 %
-For~$k \le K$, let ${\RL_p^k = (p_1, \dots, p_k)}$ be the $k$-prefix of~$\RL$,
-a $k$-tuple of the first~$k$ antecedents in~$\RL$;
-we refer to the $K$-prefix simply as~$\RL$'s prefix~$\Prefix$.
-%
-For an antecedent list~$\Prefix$, we similarly define~$\Prefix^k$
+We introduce a useful alternate rule list representation:
+${\RL = (\Prefix, \Labels, \Default, K)}$,
+where we define ${\Prefix = (p_1, \dots, p_K)}$ to be $\RL$'s prefix,
+${\Labels = (q_1, \dots, q_K) \in \{0, 1\}^K}$~gives
+the label predictions associated with~$\Prefix$,
+and we call ${\Default \in \{0, 1\}}$ the default label prediction.
+
+For an antecedent list~$\Prefix$, we define~$\Prefix^k$
 to be the $k$-prefix of~$\Prefix$, and for any $k$-prefix~$\Prefix^k$,
 we say that~$\Prefix$ starts with~$\Prefix^k$.
 %
 We also say that an antecedent list~$\Prefix$ contains another
 antecedent list~$\Prefix'$ if the antecedents in~$\Prefix'$ correspond to
 a contiguous subsequence of antecedents in~$\Prefix$.
-
-We now give a useful alternate rule list representation:
-${\RL = (\Prefix, \Labels, \Default, K)}$,
-where ${\Prefix = (p_1, \dots, p_K)}$ is $\RL$'s prefix,
-${\Labels = (q_1, \dots, q_K) \in \{0, 1\}^K}$~are the label predictions associated
-with~$\Prefix$, and~${\Default \in \{0, 1\}}$ is the default label prediction.
 
 A rule list~$\RL$ classifies datum~$x_n$ by providing the label prediction~$q_k$
 of the first rule~$r_k$ whose antecedent~$p_k$ is true for~$x_n$.
@@ -92,7 +110,6 @@ with~$\Prefix$, then~$\Prefix'$ captures all the data that~$\Prefix$ captures:
 \{x_n: \Cap(x_n, \Prefix)\} \subseteq \{x_n: \Cap(x_n, \Prefix')\}.
 \label{eq:cap-subset}
 \end{align}
-%
 Now let~$\Prefix$ be an ordered list of antecedents,
 and let~$\beta$ be a subset of antecedents in~$\Prefix$.
 %
