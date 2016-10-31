@@ -412,9 +412,12 @@ L(\OptimalRL) \le \left\lfloor \frac{\CurrentObj}{\Reg} \right\rfloor.
 \end{align}
 Furthermore, if the current best rule list~$\CurrentRL$
 has length~$K$ and zero misclassification error,
-then for every ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
-either ${L(\OptimalRL) \le K}$ if ${\CurrentRL \in \argmin_d \Obj(\RL, \x, \y)}$,
-or otherwise ${L(\OptimalRL) \le K - 1}$.
+then for every optimal rule list
+${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
+if ${\CurrentRL \in \argmin_d \Obj(\RL, \x, \y)}$,
+then ${L(\OptimalRL) \le K}$,
+or otherwise if ${\CurrentRL \notin \argmin_d \Obj(\RL, \x, \y)}$,
+then ${L(\OptimalRL) \le K - 1}$.
 \end{theorem}
 
 \begin{proof}
@@ -776,7 +779,7 @@ Thus, we can prune a prefix if any of its rules do not capture
 and correctly classify at least a fraction~$\Reg$ of data.
 %
 While the lower bound in Theorem~\ref{thm:min-capture} is a sub-condition
-of the lower bound in in Theorem~\ref{thm:min-capture-correct},
+of the lower bound in Theorem~\ref{thm:min-capture-correct},
 we can still leverage both -- since the sub-condition is easier to check,
 checking it first can accelerate pruning.
 
