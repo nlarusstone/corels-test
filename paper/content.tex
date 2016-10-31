@@ -573,6 +573,11 @@ over all~${k \le K}$,
 \end{align}
 \end{proof}
 
+Our next upper bound on the number of prefix evaluations is
+strictly tighter than the bound in Corollary 2, because it
+uses the current best objective to constrain the lengths of
+all prefixes in the remaining search space.
+
 \begin{corollary}[Upper bound on the number of remaining prefix evaluations]
 Consider a state space of all rule lists formed from a set of~$M$ rules,
 and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
