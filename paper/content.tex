@@ -299,13 +299,6 @@ b(\Prefix, \x, \y) \ge \CurrentObj,
 \end{align}
 then by~\eqref{eq:prefix-lb}, we needn't consider \emph{any} prefix~$\Prefix'$
 that starts with~$\Prefix$, because ${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y)}$.
-%
-In fact, we can further generalize this result:
-we can hierarchically prune any prefix~$\Prefix''$ that
-contains~$\Prefix$, \ie if the antecedents in~$\Prefix$
-correspond to a contiguous subsequents of antecedents
-anywhere in~$\Prefix''$,
-since ${b(\Prefix'', \x, \y) \ge b(\Prefix, \x, \y) \ge \CurrentObj}$.
 
 \subsection{Incremental branch-and-bound computation}
 
@@ -313,7 +306,7 @@ since ${b(\Prefix'', \x, \y) \ge b(\Prefix, \x, \y) \ge \CurrentObj}$.
 
 \subsection{Rule mining}
 
-Thus far, we have't addressed how to generate rules.
+Thus far, we haven't addressed how to generate rules.
 %
 We follow the rule mining approach taken by~\citet{LethamRuMcMa15}
 and~\citet{YangRuSe16} \dots
@@ -330,7 +323,8 @@ throughout the execution of our branch-and-bound algorithm.
 We additionally quantify the computational consequences of many
 of these observations.
 %
-Below, we begin with an immediate consequence of Theorem~\ref{thm:bound}.
+Below, we begin with an immediate consequence of Theorem~\ref{thm:bound},
+followed by a more general version of Theorem~\ref{thm:bound}.
 
 \begin{theorem}[Objective lower bound with one-step lookahead]
 Let~$\Prefix$ be a $K$-prefix
@@ -355,6 +349,23 @@ with lower bound~${b(\Prefix, \x, \y) \le \CurrentObj}$,
 if ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$,
 then we can prune any prefix~$\Prefix'$ longer than~$\Prefix$. \\
 %and it follows that we can also prune~$\Prefix$. \\
+
+The next result extends Theorem~\ref{thm:bound} to a more
+general notion of hierarchical structure.
+
+\begin{theorem}[Generalized hierarchical objective lower bound]
+\dots
+\end{theorem}
+\begin{proof}
+\dots
+\end{proof}
+
+Thus, if~${b(\Prefix, \x, \y) \le \CurrentObj}$, in addition to
+hierarchically pruning any~$\Prefix'$ that starts with~$\Prefix$,
+we can more generally hierarchically prune any prefix~$\Prefix''$
+that contains~$\Prefix$, \ie if the antecedents in~$\Prefix$
+correspond to a contiguous subsequents of antecedents
+anywhere in~$\Prefix''$. \\
 
 Before proceeding, let us summarize the remainder of this section.
 %
