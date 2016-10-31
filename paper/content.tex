@@ -311,6 +311,10 @@ Thus far, we haven't addressed how to generate rules.
 We follow the rule mining approach taken by~\citet{LethamRuMcMa15}
 and~\citet{YangRuSe16} \dots
 
+One the results we prove later implies a constraint on the rules
+we need to generate -- they must have at least some minimum support
+given by the lower bound in Theorem~\ref{thm:min-capture}.
+
 \section{Additional problem structure and computational consequences}
 
 Our problem has rich structure beyond the hierarchical objective lower bound
@@ -326,7 +330,7 @@ of these observations.
 Below, we begin with an immediate consequence of Theorem~\ref{thm:bound},
 followed by a more general version of Theorem~\ref{thm:bound}.
 
-\begin{theorem}[Objective lower bound with one-step lookahead]
+\begin{lemma}[Objective lower bound with one-step lookahead]
 Let~$\Prefix$ be a $K$-prefix
 and let~$\CurrentObj$ be the current best objective.
 %
@@ -337,7 +341,7 @@ and~$\Prefix'$ starts with~$\Prefix$,
  b(\Prefix', \x, \y) \ge \CurrentObj.
 \label{eq:lookahead}
 \end{align}
-\end{theorem}
+\end{lemma}
 
 \begin{proof}
 The penalty for longer prefixes ensures that
@@ -353,9 +357,10 @@ then we can prune any prefix~$\Prefix'$ longer than~$\Prefix$. \\
 The next result extends Theorem~\ref{thm:bound} to a more
 general notion of hierarchical structure.
 
-\begin{theorem}[Generalized hierarchical objective lower bound]
+\begin{lemma}[Generalized hierarchical objective lower bound]
 \dots
-\end{theorem}
+\end{lemma}
+
 \begin{proof}
 \dots
 \end{proof}
