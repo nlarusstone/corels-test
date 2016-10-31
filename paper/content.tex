@@ -344,8 +344,14 @@ and~$\Prefix'$ starts with~$\Prefix$,
 \end{lemma}
 
 \begin{proof}
-The penalty for longer prefixes ensures that
-${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y) + \Reg}$.
+By the definition of the lower bound~\eqref{eq:lower-bound},
+which includes the penalty for longer prefixes,
+\begin{align}
+\Obj(\Prefix', \x, y) \ge b(\Prefix', \x, \y) &= \Loss_p(\Prefix', \x, \y) + \Reg K' \nn \\
+&= \Loss_p(\Prefix', \x, \y) + \Reg K + \Reg (K' - K) \nn \\
+&= b(\Prefix, \x, \y) + \Reg (K' - K)
+\ge b(\Prefix, \x, \y) + \Reg \ge \CurrentObj.
+\end{align}
 \end{proof}
 
 Thus, even if we encounter a prefix~$\Prefix$
