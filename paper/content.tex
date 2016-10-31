@@ -423,25 +423,33 @@ then ${L(\OptimalRL) \le K - 1}$.
 \begin{proof}
 For an optimal rule list~$\OptimalRL$ with objective~$\OptimalObj$,
 \begin{align}
-\OptimalObj = \Obj(\OptimalRL, \x, \y)
+\Reg L(\OptimalRL) \le \OptimalObj = \Obj(\OptimalRL, \x, \y)
 = \Loss(\OptimalRL, \x, \y) + \Reg L(\OptimalRL)
 \le \CurrentObj.
 \end{align}
 The maximum possible length for~$\OptimalRL$ occurs
 when~$\Loss(\OptimalRL, \x, \y)$ is minimized;
 this gives bound~\eqref{eq:max-length}.
+
+For the rest of the proof,
+let~${K^* = L(\OptimalRL)}$ be the length of~$\OptimalRL$.
 %
-Furthermore, if the current rule list~$\CurrentRL$ is perfect, then
+If the current best rule list~$\CurrentRL$ has zero
+misclassification error, then
 \begin{align}
-\Obj(\CurrentRL, \x, \y) = \Loss(\CurrentRL, \x, \y) + \Reg K = \Reg K.
+\Reg K^* \leq \Loss(\OptimalRL, \x, \y) + \Reg K^* = \Obj(\OptimalRL, \x, \y)
+\le \CurrentObj = \Obj(\CurrentRL, \x, \y) = \Reg K,
 \end{align}
-If ${\CurrentRL \in \argmin_\RL \Obj(\RL, \x, \y)}$, then any longer rule list~$\RL$
-would have objective~${\Obj(\RL, \x, \y) \ge \Reg (K+1)}$,
-and thus could not be optimal.
+and thus ${K^* \leq K}$.
 %
-If ${\CurrentRL \notin \argmin_\RL \Obj(\RL, \x, \y)}$, then any $K'$-rule list~$\RL'$
-with~${K' \ge K}$ would have objective~${\Obj(\RL', \x, \y) \ge \Reg K}$,
-and thus could not be optimal.
+If the current best rule list is suboptimal,
+\ie ${\CurrentRL \notin \argmin_\RL \Obj(\RL, \x, \y)}$, then
+%
+\begin{align}
+\Reg K^* \leq \Loss(\OptimalRL, \x, \y) + \Reg K^* = \Obj(\OptimalRL, \x, \y)
+< \CurrentObj = \Obj(\CurrentRL, \x, \y) = \Reg K,
+\end{align}
+in which case ${K^* < K}$, \ie ${K^* \leq K-1}$, since $K$ is an integer.
 \end{proof}
 
 The latter part of Theorem~\ref{thm:ub-prefix-length} tells us that
@@ -970,7 +978,7 @@ gives an upper bound on the length of any optimal rule list.
 The algorithm begins by evaluating the empty prefix,
 followed by~$M$ prefixes of length~${k=1}$,
 then~${P(M, 2)}$ prefixes of length~${k=2}$,
-where~${P(M, 2)}$ is the number of size-2 subsets of~$\{1, \dots, \M\}$.
+where~${P(M, 2)}$ is the number of size-2 subsets of~$\{1, \dots, M \}$.
 %
 Before proceeding to length~${k=3}$, we keep only~${C(M, 2)}$
 prefixes of length~${k=2}$, where~${C(M, k)}$ denotes the
