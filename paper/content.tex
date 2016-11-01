@@ -1231,6 +1231,18 @@ should include standard deviations
 \item Most figures will be generated with one particular big dataset
 \end{itemize}
 
+Probably want to integrate some measurements of the permutation map's effects:
+\begin{itemize}
+\item How many times do we look up an item in the hash map that is not in the tree?
+
+\item When we do look up an item, how many times do we end up discarding
+      something we would have been unable to discard had we not done his.
+
+\item How is the hash map growing over time?
+
+\item How is the tree growing over time?
+\end{itemize}
+
 Figures:
 \begin{itemize}
 
