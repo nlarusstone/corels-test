@@ -305,6 +305,7 @@ that starts with~$\Prefix$, because ${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y)
 \dots
 
 \subsection{Rule mining}
+\label{sec:rule-mining}
 
 Thus far, we haven't addressed how to generate rules.
 %
@@ -835,6 +836,20 @@ While the lower bound in Theorem~\ref{thm:min-capture} is a sub-condition
 of the lower bound in Theorem~\ref{thm:min-capture-correct},
 we can still leverage both -- since the sub-condition is easier to check,
 checking it first can accelerate pruning.
+%
+In addition to applying Theorem~\ref{thm:min-capture} in the context of
+constructing rule lists, we can furthermore apply it in the context of
+rule mining~(\S\ref{sec:rule-mining}).
+%
+Specifically, it implies that we should only mine rules with
+normalized support greater than~$\Reg$;
+we need not mine rules with a smaller fraction of observations.
+%
+In contrast, we can only apply Theorem~\ref{thm:min-capture-correct}
+in the context of constructing rule lists;
+it depends on the misclassification error associated with each
+rule in a rule list, thus it provides a lower bound on the number of
+observations that each such rule must correctly classify.
 
 \subsection{Permutation bound for permutation-aware garbage collection}
 \label{sec:permutation}
