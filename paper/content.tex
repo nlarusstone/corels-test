@@ -758,8 +758,13 @@ on the support of an antecedent~$p_i$ in an optimal rule list~$\OptimalRL$.
 Thus, we can prune a prefix~$\Prefix$ if any of its antecedents do not capture
 more than a fraction~$\Reg$ of data, even if~${b(\Prefix, \x, \y) < \OptimalObj}$.
 %
-We can tighten the previous bound~\eqref{eq:min-capture}
-by tightening the upper bound on~$\Obj(\RL, \x, \y)$ in~\eqref{eq:ub-i}.
+Notice that the bound in Theorem~\ref{thm:min-capture}
+depends on the antecedents, but not the label predictions,
+and thus doesn't account for misclassification error.
+%
+Theorem~\ref{thm:min-capture-correct} gives a tighter bound
+by leveraging this additional information, which specifically
+tightens the upper bound on~$\Obj(\RL, \x, \y)$ in~\eqref{eq:ub-i}.
 
 \begin{theorem}[Lower bound on per-rule accurate support]
 \label{thm:min-capture-correct}
