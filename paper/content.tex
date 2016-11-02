@@ -584,10 +584,12 @@ prefixes that are currently in or will be inserted into the queue.
 %
 Our next upper bound is strictly tighter than the bound in
 Corollary~\ref{thm:ub-total-eval}, because it uses the current
-best objective and information about prefixes in the queue to
-constrain the lengths of all prefixes in the remaining search space.
+best objective and information about the lengths of prefixes
+in the queue to constrain the lengths of prefixes in the
+remaining search space.
 
 \begin{corollary}[Upper bound on the number of remaining prefix evaluations]
+\label{thm:remaining-eval-coarse}
 Consider a state space of all rule lists formed from a set of~$M$ rules,
 and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
 during execution.
@@ -639,8 +641,15 @@ This gives an upper bound on the number of remaining prefix evaluations:
 
 We can use more fine-grained information about prefixes in the queue
 to obtain a tighter upper bound on the number of remaining prefix evaluations.
+%
+Our next upper bound is strictly tighter than the bound in
+Corollary~\ref{thm:remaining-eval-coarse}, because it additionally
+incorporates prefix-specific objective lower bound information from
+prefixes in the queue, which further constrains the lengths of
+prefixes in the remaining search space.
 
 \begin{corollary}[Fine-grain upper bound on the number of remaining prefix evaluations]
+\label{thm:remaining-eval-fine}
 Consider a state space of all rule lists formed from a set of~$M$ rules,
 and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
 during execution.
