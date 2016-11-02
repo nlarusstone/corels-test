@@ -528,25 +528,82 @@ this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix, \x, \y) = 0}$.
 \subsection{Upper bounds on the number of prefix evaluations}
 \label{sec:ub-size}
 
-In this section, we use our three upper bounds on prefix length
+In this section, we use our upper bounds on prefix length
 from~\S\ref{sec:ub-prefix-length} to derive corresponding
 upper bounds on the number of prefix evaluations made by
 Algorithm~\ref{alg:branch-and-bound}.
 %
-Our first corollary below is a na\"ive upper bound on
-the total number of prefix evaluations.
+First, we present Theorem~\ref{thm:remaining-eval-fine},
+in which we use information about the state of
+Algorithm~\ref{alg:branch-and-bound}'s execution
+to calculate, for any given execution state,
+upper bounds on the number of prefix evaluations that might
+be required during the remaining course of algorithm execution.
 %
-In the following two corollaries, we observe that at any point during
-branch-and-bound execution, we can calculate tighter upper bounds
-on the number of remaining prefix evaluations.
+This number of remaining evaluations is equal to the number of
+prefixes that are currently in or will be inserted into the queue.
 %
-These require the current best objective~$\CurrentObj$
-and information about prefixes we are planning to evaluate,
-\ie prefixes in the queue~$\Queue$ of Algorithm~\ref{alg:branch-and-bound}.
+The relevant execution state depends on the current
+best objective~$\CurrentObj$ and information about
+prefixes we are planning to evaluate, \ie prefixes in the
+queue~$\Queue$ of Algorithm~\ref{alg:branch-and-bound}.
+%
+After~Theorem~\ref{thm:remaining-eval-fine}, we present two
+weaker propositions that provide useful intuition.
 
-\begin{corollary}[Upper bound on the total number of prefix evaluations]
-\label{thm:ub-total-eval}
+\begin{theorem}[Fine-grain upper bound on the number of remaining prefix evaluations]
+\label{thm:remaining-eval-fine}
+Consider a state space of all rule lists formed from a set of~$M$ rules,
+and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
+during execution.
 %
+Let~$\CurrentObj$ be the current best objective, let~$\Queue$ be the queue,
+and let~$L(\Prefix)$ be the length of prefix~$\Prefix$.
+%
+Define~${\Remaining(\CurrentObj, \Queue)}$ to be the number of remaining
+prefix evaluations, then
+\begin{align}
+\Remaining(\CurrentObj, \Queue)
+\le \sum_{\Prefix \in Q} \sum_{k=0}^{f(\Prefix)} \frac{(M - L(\Prefix))!}{(M - L(\Prefix) - k)!},
+\end{align}
+where
+\begin{align}
+f(\Prefix) = \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor.
+\label{eq:f}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+The number of remaining prefix evaluations is equal to the number of
+prefixes that are currently in or will be inserted into queue~$\Queue$.
+%
+For any such prefix~$\Prefix$, Theorem~\ref{thm:ub-prefix-specific}
+gives an upper bound on the length of any prefix~$\Prefix'$
+that starts with~$\Prefix$:
+\begin{align}
+L(\Prefix') \le L(\Prefix) + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor
+\equiv U(\Prefix).
+\end{align}
+This gives an upper bound on the number of remaining prefix evaluations:
+\begin{align}
+\Remaining(\CurrentObj, \Queue)
+\le \sum_{\Prefix \in Q} \sum_{k=0}^{U(\Prefix) - L(\Prefix)} P(M - L(\Prefix), k)
+= \sum_{\Prefix \in Q} \sum_{k=0}^{f(\Prefix)} \frac{(M - L(\Prefix))!}{(M - L(\Prefix) - k)!}.
+\end{align}
+\end{proof}
+
+Our first proposition below is a na\"ive upper bound on
+the total number of prefix evaluations over the course of
+Algorithm~\ref{alg:branch-and-bound}'s execution.
+%
+It only depends on the number of rules and
+the regularization parameter~$\Reg$;
+\ie unlike Theorem~\ref{thm:remaining-eval-fine},
+it does not utilize algorithm execution state to
+bound the size of the search space.
+
+\begin{proposition}[Upper bound on the total number of prefix evaluations]
+\label{thm:ub-total-eval}
 Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes
 evaluated by Algorithm~\ref{alg:branch-and-bound}, given the state space of
 all rule lists formed from a set~$\RuleSet$ of~$M$ rules.
@@ -557,7 +614,7 @@ For any set~$\RuleSet$ of $M$ rules,
 \label{eq:size-naive}
 \end{align}
 where ${K = \lfloor 1/2 \Reg \rfloor}$.
-\end{corollary}
+\end{proposition}
 
 \begin{proof}
 By Corollary~\ref{cor:ub-prefix-length},
@@ -573,22 +630,25 @@ over all~${k \le K}$,
 \end{align}
 \end{proof}
 
-In the following two corollaries, we use information about
-the state of Algorithm~\ref{alg:branch-and-bound}'s execution
-to calculate, for any given algorithm state,
-upper bounds on the number of prefix evaluations that might
-be required during the remaining course of algorithm execution.
-%
-This number of remaining evaluations is equal to the number of
-prefixes that are currently in or will be inserted into the queue.
-%
 Our next upper bound is strictly tighter than the bound in
-Corollary~\ref{thm:ub-total-eval}, because it uses the current
-best objective and information about the lengths of prefixes
-in the queue to constrain the lengths of prefixes in the
-remaining search space.
+Proposition~\ref{thm:ub-total-eval}.
+%
+Like Theorem~\ref{thm:remaining-eval-fine}, it uses the
+current best objective and information about
+the lengths of prefixes in the queue to constrain
+the lengths of prefixes in the remaining search space.
+%
+However, Proposition~\ref{thm:remaining-eval-coarse}
+is weaker than Theorem~\ref{thm:remaining-eval-fine} because
+it leverages only coarse-grain information from the queue.
+%
+Specifically, Theorem~\ref{thm:remaining-eval-fine} is
+strictly tighter because it additionally incorporates
+prefix-specific objective lower bound information from
+prefixes in the queue, which further constrains
+the lengths of prefixes in the remaining search space.
 
-\begin{corollary}[Upper bound on the number of remaining prefix evaluations]
+\begin{proposition}[Coarse-grain upper bound on the number of remaining prefix evaluations]
 \label{thm:remaining-eval-coarse}
 Consider a state space of all rule lists formed from a set of~$M$ rules,
 and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
@@ -611,7 +671,7 @@ prefix evaluations, then
 \le \sum_{j=1}^J \Queue_j \left( \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!} \right),
 \end{align}
 where~${K = \lfloor \CurrentObj / \Reg \rfloor}$.
-\end{corollary}
+\end{proposition}
 
 \begin{proof}
 The number of remaining prefix evaluations is equal to the number of
@@ -636,53 +696,6 @@ This gives an upper bound on the number of remaining prefix evaluations:
 \Remaining(\CurrentObj, \Queue)
 \le \sum_{j=0}^J \Queue_j \left( \sum_{k=0}^{K-j} P(M-j, k) \right)
 = \sum_{j=0}^J \Queue_j \left( \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!} \right).
-\end{align}
-\end{proof}
-
-We can use more fine-grained information about prefixes in the queue
-to obtain a tighter upper bound on the number of remaining prefix evaluations.
-%
-Our next upper bound is strictly tighter than the bound in
-Corollary~\ref{thm:remaining-eval-coarse}, because it additionally
-incorporates prefix-specific objective lower bound information from
-prefixes in the queue, which further constrains the lengths of
-prefixes in the remaining search space.
-
-\begin{corollary}[Fine-grain upper bound on the number of remaining prefix evaluations]
-\label{thm:remaining-eval-fine}
-Consider a state space of all rule lists formed from a set of~$M$ rules,
-and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
-during execution.
-%
-Let~$\CurrentObj$ be the current best objective, let~$\Queue$ be the queue,
-and let~$L(\Prefix)$ be the length of prefix~$\Prefix$.
-%
-Define~${\Remaining(\CurrentObj, \Queue)}$ to be the number of remaining
-prefix evaluations, then
-\begin{align}
-\Remaining(\CurrentObj, \Queue)
-\le \sum_{\Prefix \in Q} \sum_{k=0}^{f(\Prefix)} \frac{(M - L(\Prefix))!}{(M - L(\Prefix) - k)!},
-\end{align}
-where
-\begin{align}
-f(\Prefix) = \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor.
-\label{eq:f}
-\end{align}
-\end{corollary}
-
-\begin{proof}
-For any prefix~$\Prefix$, Theorem~\ref{thm:ub-prefix-specific}
-gives an upper bound on the length of any prefix~$\Prefix'$
-that starts with~$\Prefix$:
-\begin{align}
-L(\Prefix') \le L(\Prefix) + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor
-\equiv U(\Prefix).
-\end{align}
-This gives an upper bound on the number of remaining prefix evaluations:
-\begin{align}
-\Remaining(\CurrentObj, \Queue)
-\le \sum_{\Prefix \in Q} \sum_{k=0}^{U(\Prefix) - L(\Prefix)} P(M - L(\Prefix), k)
-= \sum_{\Prefix \in Q} \sum_{k=0}^{f(\Prefix)} \frac{(M - L(\Prefix))!}{(M - L(\Prefix) - k)!}.
 \end{align}
 \end{proof}
 
