@@ -212,17 +212,18 @@ $b(\Prefix, \x, \y)$ gives a lower bound on the objective of
 \begin{theorem}[Hierarchical objective lower bound]
 Define~${b(\Prefix, \x, \y) = \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K}$.
 %
-Let ${\RL = (\Prefix, \Labels, \Default, K)}$
-and let ${\RL' = (\Prefix', \Labels', \Default', K')}$,
-such that~${K' \ge K}$ and $\Prefix'$ starts with~$\Prefix$.
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$ and
+${\RL' = (\Prefix', \Labels', \Default', K')}$ be rule lists
+such that~${K' \ge K}$ and prefix~$\Prefix'$ starts with
+prefix~$\Prefix$.
 %
-Then, ${b(\Prefix, \x, \y) \le \Obj(\RL', \x, \y)}$.
+It follows that ${b(\Prefix, \x, \y) \le \Obj(\RL', \x, \y)}$.
 \label{thm:bound}
 \end{theorem}
 
 \begin{proof}
-%More explicitly, let ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
-Let ${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
+Let ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
+let ${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
 and ${\Labels' = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$.
 %
 Notice that~$\Prefix'$ yields the same mistakes as~$\Prefix$,
@@ -328,8 +329,8 @@ throughout the execution of our branch-and-bound algorithm.
 We additionally quantify the computational consequences of many
 of these observations.
 %
-Below, we begin with an immediate consequence of Theorem~\ref{thm:bound},
-followed by a more general version of Theorem~\ref{thm:bound}.
+Below, we begin with an immediate consequence of Theorem~\ref{thm:bound}.
+%followed by a more general version of Theorem~\ref{thm:bound}.
 
 \begin{lemma}[Objective lower bound with one-step lookahead]
 Let~$\Prefix$ be a $K$-prefix
@@ -361,23 +362,69 @@ if ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$,
 then we can prune any prefix~$\Prefix'$ longer than~$\Prefix$. \\
 %and it follows that we can also prune~$\Prefix$. \\
 
+\begin{comment}
 The next result extends Theorem~\ref{thm:bound} to a more
 general notion of hierarchical structure.
 
 \begin{lemma}[Generalized hierarchical objective lower bound]
-\dots
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list
+and let ${\RL' = (\Prefix', \Labels', \Default', K')}$ be
+another rule list, such that~${K' \ge K}$ and prefix~$\Prefix'$
+contains prefix~$\Prefix$.
+%
+It follows that ${b(\Prefix, \x, \y) \le \Obj(\RL', \x, \y)}$.
+\label{thm:bound}
 \end{lemma}
 
 \begin{proof}
-\dots
+Since prefix~$\Prefix'$ contains prefix~$\Prefix$,
+the antecedents in~$\Prefix$ correspond to a contiguous
+subsequence of antecedents anywhere in~$\Prefix'$.
+%
+Let ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$.
+%
+Let ${K' = K_1 + K + K_2}$, such that
+${\Prefix' = (p_{-(K_1 - 1)}, \dots, p_{-1}, p_0, p_1, \dots, p_K, p_{K+1}, \dots, p_{K + K_2})}$,
+and similarly,
+${\Labels' = (q_{-(K_1 - 1)}, \dots, q_{-1}, q_0, q_1, \dots, q_K, q_{K+1}, \dots, q_{K + K_2})}$.
+%
+Notice that \dots
+%~$\Prefix'$ yields the same mistakes as~$\Prefix$,
+%and possibly additional mistakes:
+\begin{align}
+\Loss_p(\Prefix', \Labels', \x, \y)
+&= \frac{1}{N} \sum_{n=1}^N \sum_{k=-(K_1 - 1)}^{K + K_2}
+  \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \\
+&\equiv \Loss_p^- + \Loss_p' + \Loss_p^+,
+%+ \sum_{k=K+1}^{K'} \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \right) \nn \\
+%&\ge \Loss_p(\Prefix, \Labels, \x, \y),
+\end{align}
+where
+\begin{align}
+\Loss_p^- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=-(K_1 - 1)}^0
+  \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \\
+\Loss_p' &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K
+  \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \\
+\Loss_p^+ &= \frac{1}{N} \sum_{n=1}^N \sum_{k=-(K + 1)}^{K + K_2}
+  \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ]
+\end{align}
+where we have used the fact that
+${\Cap(x_n, p_k \given \Prefix') = \Cap(x_n, p_k \given \Prefix)}$
+for~${1 \le k \le K}$.
+%
+It follows that
+\begin{align}
+b(\Prefix, \x, \y) &= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K \nn \\
+&\le  \Loss_p(\Prefix', \Labels', \x, \y) + \Reg K' = b(\Prefix', \x, \y)
+\le \Obj(\RL', \x, \y).
+\end{align}
 \end{proof}
 
 Thus, if~${b(\Prefix, \x, \y) \le \CurrentObj}$, in addition to
 hierarchically pruning any~$\Prefix'$ that starts with~$\Prefix$,
 we can more generally hierarchically prune any prefix~$\Prefix''$
-that contains~$\Prefix$, \ie if the antecedents in~$\Prefix$
-correspond to a contiguous subsequents of antecedents
-anywhere in~$\Prefix''$. \\
+that contains~$\Prefix$. \\
+\end{comment}
 
 Before proceeding, let us summarize the remainder of this section.
 %
