@@ -903,7 +903,7 @@ starts with~$\PrefixB$ and ends with the same~${K'-K}$
 antecedents as~$\Prefix'$, and labels
 ${\LabelsB' = (Q_1, \dots, Q_K, Q_{K+1}, \dots, Q_{K'})}$.
 
-Next, we will show that the difference in the objectives
+Next, we claim that the difference in the objectives
 of rule lists~$\RL'$ and~$\RL$ is the same as the difference
 in the objectives of rule lists~$\RLB'$ and~$\RLB$.
 %
@@ -912,13 +912,14 @@ Let us expand the first difference as
 \Obj(\RL', \x, \y) - \Obj(\RL, \x, \y)
 &= \Loss(\RL', \x, \y) + \Reg K - \Loss(\RL, \x, \y) - \Reg K \nn \\
 &= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y)
-  - \Loss_p(\Prefix, \Labels, \x, \y) - \Loss_0(\Prefix, \Default, \x, \y) \nn.
+  - \Loss_p(\Prefix, \Labels, \x, \y) - \Loss_0(\Prefix, \Default, \x, \y).
 \end{align}
 Similarly, let us expand the second difference as
 \begin{align}
 \Obj(\RLB', \x, \y) - \Obj(\RLB, \x, \y)
-= \Loss_p(\PrefixB', \LabelsB', \x, \y) + \Loss_0(\PrefixB', \DefaultB', \x, \y)
-  - \Loss_p(\PrefixB, \LabelsB, \x, \y) - \Loss_0(\PrefixB, \DefaultB, \x, \y) \nn.
+&= \Loss(\RLB', \x, \y) + \Reg K - \Loss(\RLB, \x, \y) - \Reg K \nn \\
+&= \Loss_p(\PrefixB', \LabelsB', \x, \y) + \Loss_0(\PrefixB', \DefaultB', \x, \y)
+  - \Loss_p(\PrefixB, \LabelsB, \x, \y) - \Loss_0(\PrefixB, \DefaultB, \x, \y).
 \end{align}
 
 Since the prefixes~$\Prefix$ and~$\PrefixB$ contain
@@ -967,7 +968,7 @@ Similarly, we can expand the second difference as
 &= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
 \one [ \Cap(x_n, p_k \given \PrefixB') \wedge (Q_k \neq y_n) ] \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-\one [ \Cap(x_n, p_k \given \Prefix') \wedge (Q_k \neq y_n) ] \nn \\
+\one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \nn \\
 &= \Loss_p(\Prefix', \Labels', \x, \y) - \Loss_p(\Prefix, \Labels, \x, \y).
 \end{align}
 For the second equality, we observe that prefixes~$\PrefixB'$
@@ -976,7 +977,13 @@ and end with exactly the same ordered list of~${K' - K}$ antecedents,
 therefore for any~${k > K}$, antecedent~$p_k$ captures the same
 data in~$\PrefixB'$ as it captures in~$\Prefix'$.
 %
-This implies that the difference between the objectives
+It follows that the corresponding labels are all equivalent,
+\ie for all~${k > K}$, ${q_k = Q_k}$, and consequently,
+the prefix misclassification error associated with the
+last~${K' - K}$ antecedents of~$\Prefix'$ is the same
+as that of~$\PrefixB'$.
+%
+We have therefore shown that the difference between the objectives
 of~$\RL'$ and~$\RL$ is the same as that between~$\RLB'$ and~$\RLB$, \ie
 \begin{align}
 \Obj(\RL', \x, \y) - \Obj(\RL, \x, \y)
@@ -994,21 +1001,32 @@ obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$, thus
 = b(\PrefixB, \x, \y) + \Loss_0(\PrefixB, \DefaultB, \x, \y)
 = \Obj(\RLB, \x, \y).
 \end{align}
-Now let~$\RL^*$ be an optimal rule list constrained to have
-a prefix that starts with~$\Prefix$,
+Now let~$\RL^*$ be an optimal rule list with prefix
+constrained to start with~$\Prefix$,
 \begin{align}
-\RL^* \in \argmin_{\RL'' \in \StartsWith(\Prefix)} \Obj(\RL'', \x, \y),
+\RL^* \in \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y),
 \end{align}
 and let~$K^*$ be the length of~$\RL^*$.
 %
 Let~$\RLB^*$ be the analogous $K^*$-rule list whose prefix starts
 with~$\PrefixB$ and ends with the same~${K^* - K}$ antecedents as~$\RL^*$.
 %
-It follows by~\eqref{eq:analogous} that
+By~\eqref{eq:analogous},
 \begin{align}
-\RLB^* \in \argmin_{\RLB'' \in \StartsWith(\PrefixB)} \Obj(\RLB'', \x, \y),
+\Obj(\RL^*, \x, \y) - \Obj(\RL, \x, \y)
+= \Obj(\RLB^*, \x, \y) - \Obj(\RLB, \x, \y),
 \end{align}
-and furthermore that~${\Obj(\RL^*, \x, \y) \le \Obj(\RLB^*, \x, \y)}$.
+and furthermore, $\RLB^*$ is an optimal rule list
+with prefix constrained to start with~$\PrefixB$,
+\begin{align}
+\RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
+\end{align}
+Since ${\Obj(\RL, \x, \y) \le \Obj(\RLB, \x, \y)}$, we have that
+\begin{align}
+\min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
+= \Obj(\RL^*, \x, \y) \le \Obj(\RLB^*, \x, \y)
+= \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y).
+\end{align}
 \end{proof}
 
 Thus if prefixes~$\Prefix$ and~$\PrefixB$ have the same antecedents,
