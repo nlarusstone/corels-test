@@ -877,38 +877,7 @@ lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$
 \end{theorem}
 
 \begin{proof}
-Let us begin by writing the rule list~$\RL$'s objective as
-\begin{align}
-\Obj(\RL, \x, \y) &= \Loss_p(\Prefix, \Labels, \x, \y)
-  + \Loss_0(\Prefix, \Default, \x, \y) + \Reg K \\
-&= b(\Prefix, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y),
-\end{align}
-using our derivation of the lower bound~\eqref{eq:lower-bound},
-and similarly, the rule list~$\RLB$'s objective as
-\begin{align}
-\Obj(\RLB, \x, \y) &= \Loss_p(\PrefixB, \LabelsB, \x, \y)
-  + \Loss_0(\PrefixB, \DefaultB, \x, \y) + \Reg K \\
-&= b(\PrefixB, \x, \y) + \Loss_0(\PrefixB, \DefaultB, \x, \y).
-\end{align}
-Since the prefixes~$\Prefix$ and~$\PrefixB$ contain
-the same antecedents, they both capture the same data,
-\begin{align}
-\{x_n : \Cap(x_n, \Prefix)\} = \{x_n : \Cap(x_n, \PrefixB)\}.
-\end{align}
-Equivalently, the set of data that is not captured by~$\Prefix$
-is the same as the set of data that is not captured by~$\PrefixB$,
-and thus the corresponding rule lists~$\RL$ and~$\RLB$
-share the same default rule ${\Default = \DefaultB}$,
-yielding the same misclassification error:
-\begin{align}
-\Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
-\label{eq:same-default}
-\end{align}
-Note that in general, ${\Obj(\RL, \x, \y) \neq \Obj(\RLB, \x, \y)}$,
-since the objective function depends on rule order,
-\ie ${b(\Prefix, \x, \y) \neq b(\PrefixB, \x, \y)}$.
-
-Now let ${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
+Let ${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
 be any prefix that starts with~$\Prefix$, where~${K' \ge K}$,
 and define the analogous prefix in~$\StartsWith(\PrefixB)$ to be
 ${\PrefixB' = (p_{\pi(1)}, \dots, p_{\pi(K)}, p_{K+1}, \dots, p_{K'})}$,
@@ -917,7 +886,62 @@ and ends with the same~${K'-K}$ antecedents as~$\Prefix'$.
 %
 Also let~$\RL'$ and~$\RLB'$ be the rule lists that
 start with~$\Prefix'$ and~$\PrefixB'$, respectively.
+
+Next, we will show that the difference in the objectives
+of rule lists~$\RL'$ and~$\RL$ is the same as the difference
+in the objectives of rule lists~$\RLB'$ and~$\RLB$.
 %
+We expand the first difference as
+\begin{align}
+\Obj(\RL', \x, \y) - \Obj(\RL, \x, \y)
+&= \Loss(\RL', \x, \y) + \Reg K - \Loss(\RL, \x, \y) - \Reg K \nn \\
+&= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, y)
+  - \Loss_p(\Prefix, \Labels, \x, \y) - \Loss_0(\Prefix, \Default, \x, \y) \nn.
+\end{align}
+Similarly, we expand the second difference as
+\begin{align}
+\Obj(\RLB', \x, \y) - \Obj(\RLB, \x, \y)
+= \Loss_p(\PrefixB', \LabelsB', \x, \y) + \Loss_0(\PrefixB', \DefaultB', \x, y)
+  - \Loss_p(\PrefixB, \LabelsB, \x, \y) - \Loss_0(\PrefixB, \DefaultB, \x, \y) \nn.
+\end{align}
+
+Since the prefixes~$\Prefix$ and~$\PrefixB$ contain
+the same antecedents, they both capture the same data.
+%
+Equivalently, the set of data that is not captured by~$\Prefix$
+is the same as the set of data that is not captured by~$\PrefixB$:
+\begin{align}
+\{x_n : \neg\, \Cap(x_n, \Prefix)\} = \{x_n : \neg\, \Cap(x_n, \PrefixB)\}.
+\end{align}
+Thus, the corresponding rule lists~$\RL$ and~$\RLB$
+share the same default rule, \ie ${\Default = \DefaultB}$,
+yielding the same default rule misclassification error:
+\begin{align}
+\Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
+\end{align}
+Similarly, the rule lists~$\RL'$ and~$\RLB'$ have the same
+default rule misclassification error:
+\begin{align}
+\Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
+\end{align}
+
+To prove our claim relating the objectives of~$\RL$, $\RL'$,
+$\RLB$, and~$\RLB'$, we show that the difference in the
+misclassification errors of prefixes~$\Prefix'$ and~$\Prefix$
+is the same as that between~$\PrefixB'$ and~$\PrefixB$.
+%
+We can expand the first difference as
+\begin{align}
+\Loss_p(\Prefix', \Labels', \x, \y) - \Loss_p(\Prefix, \Labels, \x, \y)
+%&= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K'}
+%  \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ]
+%  - \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K
+%  \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \\
+&= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
+\one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ],
+\end{align}
+where we have used the fact that
+
 Let us explicitly write the misclassification error for~$\RL$,
 \begin{align}
 \Loss(\RL, \x, \y) = \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K
