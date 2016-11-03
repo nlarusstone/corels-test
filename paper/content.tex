@@ -294,15 +294,16 @@ enables us to prune the state space hierarchically.
 While executing branch-and-bound, we keep track of the current best (smallest)
 objective~$\CurrentObj$, thus it is a dynamic, monotonically decreasing quantity.
 %
-If we encounter a prefix~$\Prefix$ such that its lower bound
-obeys ${b(\Prefix, \x, \y) \ge \CurrentObj}$,
+If we encounter a prefix~$\Prefix$ with lower bound
+${b(\Prefix, \x, \y) \ge \CurrentObj}$,
 then by~\eqref{eq:prefix-lb}, we needn't consider \emph{any}
 rule list~$\RL'$ whose prefix~$\Prefix'$ starts with~$\Prefix$.
 %because ${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y)}$. \\
 %
-For such a rule list~$\RL'$, we can upper bound its objective:
-${\Obj(\RL', \x, \y) \ge b(\Prefix, \x, \y) \ge \CurrentObj}$,
-therefore~$\RL'$ cannot be optimal. \\
+For the objective of such a rule list, the current best objective
+provides a lower bound, \ie
+${\Obj(\RL', \x, \y) \ge b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y) \ge \CurrentObj}$,
+and thus~$\RL'$ cannot be optimal. \\
 
 \subsection{Incremental branch-and-bound computation}
 
