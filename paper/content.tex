@@ -863,9 +863,11 @@ whose prefixes start with~$\Prefix$:
 Let ${\RL = (\Prefix, \Labels, \Default, K)}$
 and ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K)}$
 be rule lists with prefixes ${\Prefix = (p_1, \dots, p_K)}$
-and ${\PrefixB = (p_{\pi(1)}, \dots, p_{\pi(K)})}$, respectively.
+and ${\PrefixB = (p_{\pi(1)}, \dots, p_{\pi(K)})}$,
+respectively, \ie the antecedents in~$\PrefixB$
+correspond to a permutation of the antecedents in~$\Prefix$.
 %
-If the lower bounds of~$\Prefix$ and~$\PrefixB$
+If the objective lower bounds of~$\RL$ and~$\RLB$
 obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
 then the objective of the optimal rule list in~$\StartsWith(\Prefix)$ gives a
 lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$:
@@ -877,31 +879,45 @@ lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$
 \end{theorem}
 
 \begin{proof}
-Let ${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
-be any prefix that starts with~$\Prefix$, where~${K' \ge K}$,
-and define the analogous prefix in~$\StartsWith(\PrefixB)$ to be
-${\PrefixB' = (p_{\pi(1)}, \dots, p_{\pi(K)}, p_{K+1}, \dots, p_{K'})}$,
-\ie the prefix that starts with~$\PrefixB$
-and ends with the same~${K'-K}$ antecedents as~$\Prefix'$.
+We begin by defining four related rule lists.
 %
-Also let~$\RL'$ and~$\RLB'$ be the rule lists that
-start with~$\Prefix'$ and~$\PrefixB'$, respectively.
+First, let ${\RL = (\Prefix, \Labels, \Default, K)}$
+be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
+and labels ${\Labels = (q_1, \dots, q_K)}$.
+%
+Second, let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K)}$
+be a rule list with prefix
+${\PrefixB = (p_{\pi(1)}, \dots, p_{\pi(K)})}$
+and labels  ${\LabelsB = (Q_1, \dots, Q_K)}$.
+%
+Third, let ${\RL' = (\Prefix', \Labels', \Default', K')}$
+be any rule list such that~${K' \ge K}$, prefix
+${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'}) \in \StartsWith(\Prefix)}$
+starts with~$\Prefix$, and labels
+${\Labels = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$.
+%
+Finally, define ${\RLB' = (\PrefixB', \LabelsB', \DefaultB', K')}$
+to be the rule list with the `analogous' prefix in~$\StartsWith(\PrefixB)$,
+\ie ${\PrefixB' = (p_{\pi(1)}, \dots, p_{\pi(K)}, p_{K+1}, \dots, p_{K'})}$
+starts with~$\PrefixB$ and ends with the same~${K'-K}$
+antecedents as~$\Prefix'$, and labels
+${\LabelsB' = (Q_1, \dots, Q_K, Q_{K+1}, \dots, Q_{K'})}$.
 
 Next, we will show that the difference in the objectives
 of rule lists~$\RL'$ and~$\RL$ is the same as the difference
 in the objectives of rule lists~$\RLB'$ and~$\RLB$.
 %
-We expand the first difference as
+Let us expand the first difference as
 \begin{align}
 \Obj(\RL', \x, \y) - \Obj(\RL, \x, \y)
 &= \Loss(\RL', \x, \y) + \Reg K - \Loss(\RL, \x, \y) - \Reg K \nn \\
-&= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, y)
+&= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y)
   - \Loss_p(\Prefix, \Labels, \x, \y) - \Loss_0(\Prefix, \Default, \x, \y) \nn.
 \end{align}
-Similarly, we expand the second difference as
+Similarly, let us expand the second difference as
 \begin{align}
 \Obj(\RLB', \x, \y) - \Obj(\RLB, \x, \y)
-= \Loss_p(\PrefixB', \LabelsB', \x, \y) + \Loss_0(\PrefixB', \DefaultB', \x, y)
+= \Loss_p(\PrefixB', \LabelsB', \x, \y) + \Loss_0(\PrefixB', \DefaultB', \x, \y)
   - \Loss_p(\PrefixB, \LabelsB, \x, \y) - \Loss_0(\PrefixB, \DefaultB, \x, \y) \nn.
 \end{align}
 
@@ -909,7 +925,7 @@ Since the prefixes~$\Prefix$ and~$\PrefixB$ contain
 the same antecedents, they both capture the same data.
 %
 Equivalently, the set of data that is not captured by~$\Prefix$
-is the same as the set of data that is not captured by~$\PrefixB$:
+is the same as the set of data that is not captured by~$\PrefixB$, \ie
 \begin{align}
 \{x_n : \neg\, \Cap(x_n, \Prefix)\} = \{x_n : \neg\, \Cap(x_n, \PrefixB)\}.
 \end{align}
@@ -925,10 +941,11 @@ default rule misclassification error:
 \Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
 \end{align}
 
-To prove our claim relating the objectives of~$\RL$, $\RL'$,
-$\RLB$, and~$\RLB'$, we show that the difference in the
-misclassification errors of prefixes~$\Prefix'$ and~$\Prefix$
-is the same as that between~$\PrefixB'$ and~$\PrefixB$.
+At this point, to demonstrate our claim relating the objectives
+of~$\RL$, $\RL'$, $\RLB$, and~$\RLB'$, what remains is to
+show that the difference in the misclassification errors
+of prefixes~$\Prefix'$ and~$\Prefix$ is the same as that
+between~$\PrefixB'$ and~$\PrefixB$.
 %
 We can expand the first difference as
 \begin{align}
@@ -940,68 +957,68 @@ We can expand the first difference as
 &= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
 \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ],
 \end{align}
-where we have used the fact that
-
-Let us explicitly write the misclassification error for~$\RL$,
-\begin{align}
-\Loss(\RL, \x, \y) = \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K
-\one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
-+ \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ],
-\end{align}
-and for~$\Prefix'$,
-\begin{align}
-\Loss(\RL', \x, \y) = \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K'}
-\one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ]
-+ \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix') \wedge (\Default' \neq y_n) ],
-\end{align}
-therefore
-\begin{align}
-\Loss(\RL', \x, \y) - \Loss(\RL, \x, \y)
-= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-\one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ]
-+ \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix') \wedge (\Default' \neq y_n) ]
-- \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ].
-\label{eq:loss-a}
-\end{align}
-Similarly,
+where we have used the fact that since~$\Prefix'$
+starts with~$\Prefix$, the first~$K$ rules in~$\Prefix'$
+make the same mistakes as those in~$\Prefix$.
+%
+Similarly, we can expand the second difference as
 \begin{align}
 \Loss_p(\PrefixB', \LabelsB', \x, \y) - \Loss_p(\PrefixB, \LabelsB, \x, \y)
 &= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-\one [ \Cap(x_n, p_{\pi(k)} \given \PrefixB') \wedge (q_k \neq y_n) ].
-\label{eq:loss-b}
+\one [ \Cap(x_n, p_k \given \PrefixB') \wedge (Q_k \neq y_n) ] \nn \\
+&= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
+\one [ \Cap(x_n, p_k \given \Prefix') \wedge (Q_k \neq y_n) ] \nn \\
+&= \Loss_p(\Prefix', \Labels', \x, \y) - \Loss_p(\Prefix, \Labels, \x, \y).
 \end{align}
-
+For the second equality, we observe that prefixes~$\PrefixB'$
+and~$\Prefix'$ both start with the same set of~$K$ antecedents
+and end with exactly the same ordered list of~${K' - K}$ antecedents,
+therefore for any~${k > K}$, antecedent~$p_k$ captures the same
+data in~$\PrefixB'$ as it captures in~$\Prefix'$.
 %
-Combining this with~\eqref{eq:same-default} implies that
-the difference between the objectives of~$\RL'$ and~$\RL$
-is the same as that between~$\RLB'$ and~$\RLB$, \ie
+This implies that the difference between the objectives
+of~$\RL'$ and~$\RL$ is the same as that between~$\RLB'$ and~$\RLB$, \ie
 \begin{align}
 \Obj(\RL', \x, \y) - \Obj(\RL, \x, \y)
 = \Obj(\RLB', \x, \y) - \Obj(\RLB, \x, \y).
 \label{eq:analogous}
 \end{align}
 
-Without loss of generality, suppose that
-${\Obj(\RL, \x, \y) \le \Obj(\RLB, \x, \y)}$,
-and let~$\RL^*$ be an optimal rule list whose prefix starts with~$\Prefix$,
+Finally, suppose that the objective lower bounds of~$\RL$ and~$\RLB$
+obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$, thus
 \begin{align}
-\RL^* \in \argmin_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y).
+\Obj(\RL, \x, \y)
+&= \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) + \Reg K \nn \\
+&= b(\Prefix, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) \nn \\
+&\le b(\PrefixB, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y)
+= b(\PrefixB, \x, \y) + \Loss_0(\PrefixB, \DefaultB, \x, \y)
+= \Obj(\RLB, \x, \y).
 \end{align}
-Let~$\RLB^*$ be the analogous rule list whose prefix starts with~$\PrefixB$.
+Now let~$\RL^*$ be an optimal rule list constrained to have
+a prefix that starts with~$\Prefix$,
+\begin{align}
+\RL^* \in \argmin_{\RL'' \in \StartsWith(\Prefix)} \Obj(\RL'', \x, \y),
+\end{align}
+and let~$K^*$ be the length of~$\RL^*$.
+%
+Let~$\RLB^*$ be the analogous $K^*$-rule list whose prefix starts
+with~$\PrefixB$ and ends with the same~${K^* - K}$ antecedents as~$\RL^*$.
 %
 It follows by~\eqref{eq:analogous} that
 \begin{align}
-\RLB^* \in \argmin_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y),
+\RLB^* \in \argmin_{\RLB'' \in \StartsWith(\PrefixB)} \Obj(\RLB'', \x, \y),
 \end{align}
-and furthermore that~${\RL^* \le \RLB^*}$.
+and furthermore that~${\Obj(\RL^*, \x, \y) \le \Obj(\RLB^*, \x, \y)}$.
 \end{proof}
 
-Thus if~${b(\Prefix, \x, \y) \le b(\Prefix', \x, \y)}$,
-Theorem~\ref{thm:permutation} implies that we can prune~$\Prefix'$; 
-in our implementation, we call this permutation-aware garbage collection.
+Thus if prefixes~$\Prefix$ and~$\PrefixB$ have the same antecedents,
+up to a permutation, and their objective lower bounds
+obey~${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
+Theorem~\ref{thm:permutation} implies that we can prune~$\PrefixB$.
 %
-We illustrate the subsequent computational savings next
-in~\S\ref{sec:permutation-counting}.
+In our implementation, we call this permutation-aware
+garbage collection, and we illustrate the subsequent
+computational savings next in~\S\ref{sec:permutation-counting}.
 
 \subsection{Upper bound on prefix evaluations with permutation-aware garbage collection}
 \label{sec:permutation-counting}
@@ -1035,7 +1052,6 @@ For any set~$\RuleSet$ of $M$ rules,
 \begin{align}
 \TotalRemaining(\RuleSet)
 \le  1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!},
-\label{eq:size-naive}
 \end{align}
 where ${K = \lfloor 1 / 2 \Reg \rfloor}$.
 \end{theorem}
