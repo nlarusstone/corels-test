@@ -294,12 +294,15 @@ enables us to prune the state space hierarchically.
 While executing branch-and-bound, we keep track of the current best (smallest)
 objective~$\CurrentObj$, thus it is a dynamic, monotonically decreasing quantity.
 %
-If we encounter a prefix~$\Prefix$ such that
-\begin{align}
-b(\Prefix, \x, \y) \ge \CurrentObj,
-\end{align}
-then by~\eqref{eq:prefix-lb}, we needn't consider \emph{any} prefix~$\Prefix'$
-that starts with~$\Prefix$, because ${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y)}$.
+If we encounter a prefix~$\Prefix$ such that its lower bound
+obeys ${b(\Prefix, \x, \y) \ge \CurrentObj}$,
+then by~\eqref{eq:prefix-lb}, we needn't consider \emph{any}
+rule list~$\RL'$ whose prefix~$\Prefix'$ starts with~$\Prefix$.
+%because ${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y)}$. \\
+%
+For such a rule list~$\RL'$, we can upper bound its objective:
+${\Obj(\RL', \x, \y) \ge b(\Prefix, \x, \y) \ge \CurrentObj}$,
+therefore~$\RL'$ cannot be optimal. \\
 
 \subsection{Incremental branch-and-bound computation}
 
@@ -358,73 +361,8 @@ which includes the penalty for longer prefixes,
 
 Thus, even if we encounter a prefix~$\Prefix$
 with lower bound~${b(\Prefix, \x, \y) \le \CurrentObj}$,
-if ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$,
-then we can prune any prefix~$\Prefix'$ longer than~$\Prefix$. \\
-%and it follows that we can also prune~$\Prefix$. \\
-
-\begin{comment}
-The next result extends Theorem~\ref{thm:bound} to a more
-general notion of hierarchical structure.
-
-\begin{lemma}[Generalized hierarchical objective lower bound]
-Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list
-and let ${\RL' = (\Prefix', \Labels', \Default', K')}$ be
-another rule list, such that~${K' \ge K}$ and prefix~$\Prefix'$
-contains prefix~$\Prefix$.
-%
-It follows that ${b(\Prefix, \x, \y) \le \Obj(\RL', \x, \y)}$.
-\label{thm:bound}
-\end{lemma}
-
-\begin{proof}
-Since prefix~$\Prefix'$ contains prefix~$\Prefix$,
-the antecedents in~$\Prefix$ correspond to a contiguous
-subsequence of antecedents anywhere in~$\Prefix'$.
-%
-Let ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$.
-%
-Let ${K' = K_1 + K + K_2}$, such that
-${\Prefix' = (p_{-(K_1 - 1)}, \dots, p_{-1}, p_0, p_1, \dots, p_K, p_{K+1}, \dots, p_{K + K_2})}$,
-and similarly,
-${\Labels' = (q_{-(K_1 - 1)}, \dots, q_{-1}, q_0, q_1, \dots, q_K, q_{K+1}, \dots, q_{K + K_2})}$.
-%
-Notice that \dots
-%~$\Prefix'$ yields the same mistakes as~$\Prefix$,
-%and possibly additional mistakes:
-\begin{align}
-\Loss_p(\Prefix', \Labels', \x, \y)
-&= \frac{1}{N} \sum_{n=1}^N \sum_{k=-(K_1 - 1)}^{K + K_2}
-  \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \\
-&\equiv \Loss_p^- + \Loss_p' + \Loss_p^+,
-%+ \sum_{k=K+1}^{K'} \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \right) \nn \\
-%&\ge \Loss_p(\Prefix, \Labels, \x, \y),
-\end{align}
-where
-\begin{align}
-\Loss_p^- &= \frac{1}{N} \sum_{n=1}^N \sum_{k=-(K_1 - 1)}^0
-  \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \\
-\Loss_p' &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K
-  \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \\
-\Loss_p^+ &= \frac{1}{N} \sum_{n=1}^N \sum_{k=-(K + 1)}^{K + K_2}
-  \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ]
-\end{align}
-where we have used the fact that
-${\Cap(x_n, p_k \given \Prefix') = \Cap(x_n, p_k \given \Prefix)}$
-for~${1 \le k \le K}$.
-%
-It follows that
-\begin{align}
-b(\Prefix, \x, \y) &= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K \nn \\
-&\le  \Loss_p(\Prefix', \Labels', \x, \y) + \Reg K' = b(\Prefix', \x, \y)
-\le \Obj(\RL', \x, \y).
-\end{align}
-\end{proof}
-
-Thus, if~${b(\Prefix, \x, \y) \le \CurrentObj}$, in addition to
-hierarchically pruning any~$\Prefix'$ that starts with~$\Prefix$,
-we can more generally hierarchically prune any prefix~$\Prefix''$
-that contains~$\Prefix$. \\
-\end{comment}
+if ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$, then we can prune
+any prefix~$\Prefix'$ that starts with and is longer than~$\Prefix$. \\
 
 Before proceeding, let us summarize the remainder of this section.
 %
