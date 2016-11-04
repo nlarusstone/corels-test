@@ -1000,6 +1000,7 @@ obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$, thus
 &\le b(\PrefixB, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y)
 = b(\PrefixB, \x, \y) + \Loss_0(\PrefixB, \DefaultB, \x, \y)
 = \Obj(\RLB, \x, \y).
+\label{eqref:perm-ineq}
 \end{align}
 Now let~$\RL^*$ be an optimal rule list with prefix
 constrained to start with~$\Prefix$,
@@ -1015,13 +1016,14 @@ By~\eqref{eq:analogous},
 \begin{align}
 \Obj(\RL^*, \x, \y) - \Obj(\RL, \x, \y)
 = \Obj(\RLB^*, \x, \y) - \Obj(\RLB, \x, \y),
+\label{eq:analogous-optimal}
 \end{align}
 and furthermore, $\RLB^*$ is an optimal rule list
 with prefix constrained to start with~$\PrefixB$,
 \begin{align}
 \RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
 \end{align}
-Since ${\Obj(\RL, \x, \y) \le \Obj(\RLB, \x, \y)}$, we have that
+Combining~\eqref{eqref:perm-ineq} and~\eqref{eq:analogous-optimal} gives
 \begin{align}
 \min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
 = \Obj(\RL^*, \x, \y) \le \Obj(\RLB^*, \x, \y)
