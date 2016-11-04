@@ -83,7 +83,7 @@ src/tags
 
 # Specific to bbcache
 *.txt
-figs/
+figs/*png
 logs/
 cache/
 bbcache
@@ -93,4 +93,5 @@ profiles/
 *.aux
 *.bbl
 *.blg
+*.toc
 paper/arxiv.pdf
