@@ -1133,6 +1133,24 @@ which is smaller by a factor of about~360,000.
 %
 % ELA : someone please double-check these numbers :)
 
+While a number like~$10^{24}$ seems infeasibly enormous,
+it does not represent the number of rule lists we actually evaluate.
+%
+As we demonstrate in our experiments~(\S\ref{sec:experiments}),
+our permutation bound in Theorem~\ref{thm:permutation}
+and our other bounds together conspire to reduce the search space
+to a size manageable on a single computer.
+%
+The choice of ${M=1000}$ and ${K=10}$ in our example above
+corresponds to the state space size our efforts target.
+%
+${K=10}$ rules represents a (heuristic) upper limit on
+the size of an interpretable rule list,
+and ${M=1000}$ represents the approximate number of rules
+with sufficiently high support (Theorem~\ref{thm:min-capture})
+we expect to obtain via rule mining~(\S\ref{sec:rule-mining}),
+for many datasets that might be used for constructing interpretable models.
+
 \subsection{Equivalent support bound for symmetry-aware garbage collection}
 
 Here, we present a bound that generalizes our permutation bound~\eqref{eq:permutation},
@@ -1349,6 +1367,7 @@ Our cache is a trie.
 \subsection{System}
 
 \section{Experiments}
+\label{sec:experiments}
 
 Notes:
 \begin{itemize}
