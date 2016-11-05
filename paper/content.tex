@@ -354,12 +354,9 @@ Let~$\Prefix$ be a $K$-prefix
 and let~$\CurrentObj$ be the current best objective.
 %
 If ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$,
-then for any $K'$-prefix~$\Prefix'$ such that~${K' > K}$
-and~$\Prefix'$ starts with~$\Prefix$,
-\begin{align}
- b(\Prefix', \x, \y) \ge \CurrentObj.
-\label{eq:lookahead}
-\end{align}
+then for any $K'$-rule list ${\RL' \in \StartsWith(\Prefix)}$
+whose prefix~$\Prefix'$ starts with~$\Prefix$ and~${K' > K}$,
+it follows that ${\Obj(\RL', \x, \y) \ge \CurrentObj}$.
 \end{lemma}
 
 \begin{proof}
@@ -370,13 +367,14 @@ which includes the penalty for longer prefixes,
 &= \Loss_p(\Prefix', \x, \y) + \Reg K + \Reg (K' - K) \nn \\
 &= b(\Prefix, \x, \y) + \Reg (K' - K)
 \ge b(\Prefix, \x, \y) + \Reg \ge \CurrentObj.
+\label{eq:lookahead}
 \end{align}
 \end{proof}
 
 Thus, even if we encounter a prefix~$\Prefix$
 with lower bound~${b(\Prefix, \x, \y) \le \CurrentObj}$,
 if ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$, then we can prune
-any prefix~$\Prefix'$ that starts with and is longer than~$\Prefix$. \\
+all prefixes~$\Prefix'$ that start with and are longer than~$\Prefix$. \\
 
 Before proceeding, let us summarize the remainder of this section.
 %
@@ -482,9 +480,9 @@ prefix length for the family of all prefixes that start with~$\Prefix$.
 
 \begin{theorem}[Prefix-specific upper bound on prefix length]
 \label{thm:ub-prefix-specific}
-Let ${\RL = (\Prefix, \Labels, \Default, K)}$
-and let ${\RL' = (\Prefix', \Labels', \Default', K')}$,
-such that~$\Prefix'$ starts with~$\Prefix$,
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list, let
+${\RL' = (\Prefix', \Labels', \Default', K') \in \StartsWith(\Prefix)}$
+be any rule list such that~$\Prefix'$ starts with~$\Prefix$,
 and let~$\CurrentObj$ be the current best objective.
 %
 If~$\Prefix'$ has lower bound~${b(\Prefix', \x, \y) < \CurrentObj}$, then
@@ -867,15 +865,13 @@ starting with any prefix in~$P$.
 \begin{theorem}[Permutation bound]
 \label{thm:permutation}
 Let~$\pi$ be any permutation of ${\{1, \dots, K\}}$,
-and define~$\StartsWith(\Prefix)$ to be the set of all rule lists
-whose prefixes start with~$\Prefix$:
-\begin{align}
-\StartsWith(\Prefix) =
-\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}.
-\end{align}
+and define ${\StartsWith(\Prefix) = }$
+${\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
+to be the set of all rule lists whose prefixes start with~$\Prefix$.
+%
 Let ${\RL = (\Prefix, \Labels, \Default, K)}$
 and ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K)}$
-be rule lists with prefixes ${\Prefix = (p_1, \dots, p_K)}$
+denote rule lists with prefixes ${\Prefix = (p_1, \dots, p_K)}$
 and ${\PrefixB = (p_{\pi(1)}, \dots, p_{\pi(K)})}$,
 respectively, \ie the antecedents in~$\PrefixB$
 correspond to a permutation of the antecedents in~$\Prefix$.
