@@ -79,13 +79,23 @@ ${\Labels = (q_1, \dots, q_K) \in \{0, 1\}^K}$~gives
 the label predictions associated with~$\Prefix$,
 and we call ${\Default \in \{0, 1\}}$ the default label prediction.
 
-For an antecedent list~$\Prefix$, we define~$\Prefix^k$
-to be the $k$-prefix of~$\Prefix$, and for any $k$-prefix~$\Prefix^k$,
+For an antecedent list ${\Prefix = (p_1, \dots, p_k, \dots, p_K)}$,
+we define the list of~$\Prefix$'s first~$k$ antecedents,
+${\Prefix^k = (p_1, \dots, p_k)}$, to be~$\Prefix$'s $k$-prefix.
+%
+For any $k$-prefix~$\Prefix^k$,
 we say that~$\Prefix$ starts with~$\Prefix^k$.
 %
-We also say that an antecedent list~$\Prefix$ contains another
-antecedent list~$\Prefix'$ if the antecedents in~$\Prefix'$ correspond to
-a contiguous subsequence of antecedents anywhere in~$\Prefix$.
+For any given space of rule lists,
+we define~$\StartsWith(\Prefix)$ to be the set of
+all rule lists whose prefixes start with~$\Prefix$:
+\begin{align}
+\StartsWith(\Prefix) =
+\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}.
+\end{align}
+%We also say that an antecedent list~$\Prefix$ contains another
+%antecedent list~$\Prefix'$ if the antecedents in~$\Prefix'$ correspond to
+% a contiguous subsequence of antecedents anywhere in~$\Prefix$.
 
 A rule list~$\RL$ classifies datum~$x_n$ by providing the label prediction~$q_k$
 of the first rule~$r_k$ whose antecedent~$p_k$ is true for~$x_n$.
@@ -212,12 +222,15 @@ $b(\Prefix, \x, \y)$ gives a lower bound on the objective of
 \begin{theorem}[Hierarchical objective lower bound]
 Define~${b(\Prefix, \x, \y) = \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K}$.
 %
-Let ${\RL = (\Prefix, \Labels, \Default, K)}$ and
-${\RL' = (\Prefix', \Labels', \Default', K')}$ be rule lists
-such that~${K' \ge K}$ and prefix~$\Prefix'$ starts with
-prefix~$\Prefix$.
+Also, define
+${\StartsWith(\Prefix) = \{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
+to be the set of all rule lists whose prefix starts with~$\Prefix$.
 %
-It follows that ${b(\Prefix, \x, \y) \le \Obj(\RL', \x, \y)}$.
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list
+with prefix~$\Prefix$, and let
+${\RL' = (\Prefix', \Labels', \Default', K') \in \StartsWith(\Prefix)}$
+be any rule list such that its prefix~$\Prefix'$ starts with~$\Prefix$
+and ${K' \ge K}$, then ${b(\Prefix, \x, \y) \le \Obj(\RL', \x, \y)}$.
 \label{thm:bound}
 \end{theorem}
 
@@ -297,7 +310,7 @@ objective~$\CurrentObj$, thus it is a dynamic, monotonically decreasing quantity
 If we encounter a prefix~$\Prefix$ with lower bound
 ${b(\Prefix, \x, \y) \ge \CurrentObj}$,
 then by~\eqref{eq:prefix-lb}, we needn't consider \emph{any}
-rule list~$\RL'$ whose prefix~$\Prefix'$ starts with~$\Prefix$.
+rule list~${\RL' \in \StartsWith(\Prefix)}$ whose prefix~$\Prefix'$ starts with~$\Prefix$.
 %because ${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y)}$. \\
 %
 For the objective of such a rule list, the current best objective
@@ -712,7 +725,7 @@ Let ${\OptimalRL = (\Prefix, \Labels, \Default, K)}$ be an optimal
 rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
 and labels ${\Labels = (q_1, \dots, q_K)}$.
 %
-Consider the rule list ${\RL =  (\Prefix', \Labels', \Default', K-1)}$
+Consider the rule list ${\RL = (\Prefix', \Labels', \Default', K-1)}$
 derived from~$\OptimalRL$ by deleting a rule ${p_i \rightarrow q_i}$,
 therefore ${\Prefix' = (p_1, \dots, p_{i-1}, p_{i+1}, \dots, p_K)}$
 and ${\Labels' = (q_1, \dots, q_{i-1}, q'_{i+1}, \dots, q'_K)}$,
@@ -853,7 +866,7 @@ starting with any prefix in~$P$.
 
 \begin{theorem}[Permutation bound]
 \label{thm:permutation}
-Let~$\pi$ define a permutation of ${\{1, \dots, K\}}$,
+Let~$\pi$ be any permutation of ${\{1, \dots, K\}}$,
 and define~$\StartsWith(\Prefix)$ to be the set of all rule lists
 whose prefixes start with~$\Prefix$:
 \begin{align}
@@ -888,20 +901,26 @@ and labels ${\Labels = (q_1, \dots, q_K)}$.
 Second, let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K)}$
 be a rule list with prefix
 ${\PrefixB = (p_{\pi(1)}, \dots, p_{\pi(K)})}$
-and labels  ${\LabelsB = (Q_1, \dots, Q_K)}$.
+and labels ${\LabelsB = (Q_1, \dots, Q_K)}$.
 %
-Third, let ${\RL' = (\Prefix', \Labels', \Default', K')}$
-be any rule list such that~${K' \ge K}$, prefix
-${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'}) \in \StartsWith(\Prefix)}$
-starts with~$\Prefix$, and labels
-${\Labels = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$.
+Third, let ${\RL' = (\Prefix', \Labels', \Default', K') \in}$
+${\StartsWith(\Prefix)}$ be any rule list
+whose prefix starts with~$\Prefix$, such that~${K' \ge K}$.
 %
-Finally, define ${\RLB' = (\PrefixB', \LabelsB', \DefaultB', K')}$
-to be the rule list with the `analogous' prefix in~$\StartsWith(\PrefixB)$,
-\ie ${\PrefixB' = (p_{\pi(1)}, \dots, p_{\pi(K)}, p_{K+1}, \dots, p_{K'})}$
+Denote the prefix and labels of~$\RL'$ by
+${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
+and ${\Labels = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$,
+respectively.
+%
+Finally, define
+${\RLB' = (\PrefixB', \LabelsB', \DefaultB', K') \in \StartsWith(\PrefixB)}$
+to be the `analogous' rule list, \ie whose prefix
+${\PrefixB' = (p_{\pi(1)}, \dots, p_{\pi(K)}, p_{K+1}, \dots, p_{K'})}$
 starts with~$\PrefixB$ and ends with the same~${K'-K}$
-antecedents as~$\Prefix'$, and labels
-${\LabelsB' = (Q_1, \dots, Q_K, Q_{K+1}, \dots, Q_{K'})}$.
+antecedents as~$\Prefix'$.
+%
+Let ${\LabelsB' = (Q_1, \dots, Q_K, Q_{K+1}, \dots, Q_{K'})}$
+denote the labels of~$\RLB'$.
 
 Next, we claim that the difference in the objectives
 of rule lists~$\RL'$ and~$\RL$ is the same as the difference
@@ -1105,7 +1124,7 @@ Pruning based on permutation symmetries thus yields significant
 computational savings.
 %
 Let us compare, for example, to the na\"ive number of prefix evaluations
-given by the upper bound in~\eqref{eq:size-naive}.
+given by the upper bound in Proposition~\ref{thm:ub-total-eval}.
 %
 If~${M = 100}$ and~${K = 5}$, then the na\"ive number is about
 ${9.1 \times 10^9}$, while the reduced number due to permutation-aware
@@ -1134,6 +1153,19 @@ compared to the analogous extension of~$\cal Q$.
 %
 By reasoning analogous to the special case of permutations~(\S\ref{sec:permutation}),
 we only ever have to keep the prefix with the better objective.
+
+\subsection{Propagating rejected rules}
+\begin{corollary}[Propagation of insufficient per-rule support]
+Let ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ be a prefix, such that
+its last antecedent~$p_K$ has insufficient per-rule support,
+\ie ${\Supp(p_k, \x \given \Prefix) \le \Reg}$.
+%
+It follows that any rule list ${\RL' \in \StartsWith(\Prefix)}$
+
+Let ${\RL^* = (\Prefix', \Labels', \Default, K') \in \argmin_\RL \Obj(\RL, \x, \y)}$ be any optimal
+rule list
+
+\end{corollary}
 
 \subsection{Bound on differences between similar prefixes}
 
