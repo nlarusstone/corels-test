@@ -889,7 +889,7 @@ makes the last of the above conditions precise,
 and Theorem~\ref{thm:reject} describes large classes of
 related rule lists whose prefixes all reject the same antecedent.
 
-\begin{theorem}[Lower bound on rule similarity to the default rule]
+\begin{theorem}[Lower bound on similarity to inverse prefix support]
 \label{thm:default-similar}
 \dots
 \end{theorem}
@@ -936,9 +936,13 @@ and~$c$ is the regularization parameter.
 For any prefix ${\Prefix = (p_1, \dots, p_K)}$,
 let~$\StartContains(\Prefix)$ denote the set of all rule lists
 ${\RL' = (\Prefix', \Labels', \Default', K')}$ such that
-a subset of~$K$ antecedents in~$\Prefix'$ correspond to
-the set of all antecedents in~$\Prefix$, in any order,
-for all ${K' \ge K}$.
+the set of all antecedents in~$\Prefix$ is a subset of
+the set of all antecedents in~$\Prefix'$, \ie
+\begin{align}
+\StartContains(\Prefix) = \{(\Prefix', \Labels', \Default', K')
+~s.t.~ \{p_k : p_k \in \Prefix \} \subseteq
+\{p'_\kappa : p'_\kappa \in \Prefix' \} \}.
+\end{align}
 %
 Let ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ be a prefix
 that rejects its last antecedent~$p_K$,
@@ -957,7 +961,7 @@ be optimal, \ie ${\RL' \notin \argmin_\RL \Obj(\RL, \x, \y)}$.
 \dots
 \end{proof}
 
-\begin{corollary}[Propagation of insufficient rule support]
+\begin{corollary}[Propagation of insufficient antecedent support]
 Let ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ be a prefix, such that
 its last antecedent~$p_K$ has insufficient support,
 \ie ${\Supp(p_k, \x \given \Prefix) \le \Reg}$.
