@@ -383,7 +383,7 @@ length~(\S\ref{sec:ub-prefix-length}),
 and corresponding upper bounds on the number of
 prefix evaluations~(\S\ref{sec:ub-size}).
 %
-Next, we prove lower bounds on per-rule support~(\S\ref{sec:lb-support}),
+Next, we prove lower bounds on antecedent support~(\S\ref{sec:lb-support}),
 followed by several bounds arising from problem symmetries.
 %
 We then analyze rule lists whose prefixes are equivalent up to
@@ -697,14 +697,14 @@ This gives an upper bound on the number of remaining prefix evaluations:
 \end{align}
 \end{proof}
 
-\subsection{Lower bounds on per-rule support}
+\subsection{Lower bounds on antecedent support}
 \label{sec:lb-support}
 
 In this section, we give two lower bounds on the normalized support
-of each rule in any optimal rule list;
+of each antecedent in any optimal rule list;
 both are related to the regularization parameter~$\Reg$.
 
-\begin{theorem}[Lower bound on per-rule support]
+\begin{theorem}[Lower bound on antecedent support]
 \label{thm:min-capture}
 Let ${\OptimalRL = (\Prefix, \Labels, \Default, K) \in \argmin_\RL \Obj(\RL, \x, \y)}$
 be any optimal rule list, with objective~$\OptimalObj$.
@@ -764,7 +764,7 @@ Theorem~\ref{thm:min-capture-correct} gives a tighter bound
 by leveraging this additional information, which specifically
 tightens the upper bound on~$\Obj(\RL, \x, \y)$ in~\eqref{eq:ub-i}.
 
-\begin{theorem}[Lower bound on per-rule accurate support]
+\begin{theorem}[Lower bound on accurate antecedent support]
 \label{thm:min-capture-correct}
 Let ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$
 be any optimal rule list, with objective~$\OptimalObj$;
@@ -847,6 +847,167 @@ in the context of constructing rule lists;
 it depends on the misclassification error associated with each
 rule in a rule list, thus it provides a lower bound on the number of
 observations that each such rule must correctly classify.
+
+\subsubsection{Some antecedent relationships that imply insufficient antecedent support}
+
+\dots
+
+\begin{comment}
+Let us say that rule~$A$ dominates rule~$B$ if the data captured by~$B$ is a subset of the data captured by~$A$.
+%
+Rule~$B$ should never follow rule~$A$ in a rule list because it will never capture additional data;
+this scenario is a special case where~\eqref{eq:min-capture} immediately applies.
+%
+More precisely, if~$\RL$ is a rule list that contains rule~$A$ and doesn't contain rule~$B$,
+and~$\RL'$ is derived from~$\RL$ by inserting rule~$B$ anywhere after~$A$, then
+\begin{align}
+\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c \ge \Obj(\RL, \x, \y).
+\end{align}
+By considering rule semantics, it is easy to think of common situations
+leading to dominance relationships between rules.
+%
+For example, if rule~$A$'s antecedent is~${(x_1 = 0)}$ and rule~$B$'s
+antecedent is~${(x_1 = 0) \wedge (x_2 = 1)}$, then rule~$A$ dominates rule~$B$.
+%
+%Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
+\end{comment}
+
+\subsection{Antecedent rejection and its propagation}
+
+Let ${\Prefix = (p_1, \dots, p_K)}$ be a prefix,
+and let~$p_k$ be an antecedent in~$\Prefix$.
+%
+If~$p_k$ in the context of~$\Prefix$ has
+insufficient support (Theorem~\ref{thm:min-capture}),
+insufficient accurate support (Theorem~\ref{thm:min-capture-correct}),
+or whose support almost equals the set of data
+not captured by~$\Prefix$ (Theorem~\ref{thm:default-similar}),
+let us say that prefix~$\Prefix$ rejects antecedent~$p_K$.
+%
+Below, Theorem~\ref{thm:default-similar}
+explains the last of the above conditions,
+and Theorem~\ref{thm:reject} describes large classes of
+related rule lists whose prefixes all reject the same antecedent.
+
+\begin{theorem}[Lower bound on rule similarity to the default rule]
+\label{thm:default-similar}
+\dots
+\end{theorem}
+
+\begin{proof}
+\dots
+\end{proof}
+
+\begin{comment}
+Let~$\RL$ be a rule list with prefix~$\Prefix$, default rule~$d$, and objective~$\Obj(\RL)$.
+%
+Let~$\RL'$ be a rule list with prefix~$\Prefix'$ that starts with~$\Prefix$ and adds one rule~$A$.
+%
+If, in the context of~$\RL'$, rule~$A$ captures all remaining data not captured by~$\Prefix$,
+then rule~$A$ behaves like~$\RL$'s default rule~$d$ while incurring a penalty of~$c$,
+\ie ~${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c}$.
+
+More generally, suppose rule~$A$ captures all data in the support of~$d$
+except for a fraction~${f < c}$.
+%
+Then, the best outcome for~$\RL'$ would be if it could correctly classify
+the entire majority class with respect to the support of~$d$,
+plus a fraction~$f$ of data belonging to the minority class.
+%
+This would yield a reduction in misclassification of a fraction~${f < c}$
+of data while incurring a penalty of~$c$, yielding
+${\Obj(\RL', \x, \y) \ge \Obj(\RL, \x, \y)}$.
+%
+Furthermore, we would never extend~$\RL'$ with additional rules,
+since insufficient data remain to be captured~\eqref{eq:min-capture}.
+%
+Thus, we require
+\begin{align}
+s(\RL'_A) \le s(\RL_d) - c,
+\label{eq:max-capture}
+\end{align}
+where~$s(\RL'_A)$ is the normalized support of~$A$ in~$\RL'$,
+$s(\RL_d)$ is the normalized support of~$d$ in~$\RL$,
+and~$c$ is the regularization parameter.
+\end{comment}
+
+\begin{theorem}[Antecedent rejection propagates]
+\label{thm:reject}
+For any prefix ${\Prefix = (p_1, \dots, p_K)}$,
+let~$\StartContains(\Prefix)$ denote the set of all rule lists
+${\RL' = (\Prefix', \Labels', \Default', K')}$ such that
+a subset of~$K$ antecedents in~$\Prefix'$ correspond to
+the set of all antecedents in~$\Prefix$, in any order,
+for all ${K' \ge K}$.
+%
+Let ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ be a prefix
+that rejects its last antecedent~$p_K$,
+either because~$p_K$ in the context of~$\Prefix$ has
+insufficient support, insufficient accurate support,
+or is too similar to the default rule.
+%
+It follows that for any rule list
+${\RL' = (\Prefix', \Labels', \Default', K') \in \StartContains(\Prefix)}$,
+its prefix~$\Prefix'$ rejects~$p_K$ for the same reason
+that~$\Prefix$ rejects~$p_K$, and furthermore~$\RL'$ cannot
+be optimal, \ie ${\RL' \notin \argmin_\RL \Obj(\RL, \x, \y)}$.
+\end{theorem}
+
+\begin{proof}
+\dots
+\end{proof}
+
+\begin{corollary}[Propagation of insufficient rule support]
+Let ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ be a prefix, such that
+its last antecedent~$p_K$ has insufficient support,
+\ie ${\Supp(p_k, \x \given \Prefix) \le \Reg}$.
+%
+\dots
+\end{corollary}
+
+\begin{proof}
+\dots
+\end{proof}
+
+\begin{comment}
+Suppose we grow a rule list~$\RL$ by appending rule~$A$ not already in the rule list,
+\ie by adding an antecedent to its prefix~$\Prefix$; call this new rule list~$\RL'$.
+%
+If in the context of~$\RL'$ rule~$A$ has insufficient accurate support~\eqref{eq:min-capture-correct},
+insufficient support~\eqref{eq:min-capture},
+or captures too many data compared to the original default rule~\eqref{eq:max-capture},
+then we say that rule list~$\RL$~\emph{rejects} rule~$A$.
+
+We now describe a large class of rule lists related to~$\RL$ that also reject rule~$A$:
+if~$\RL'$ is \emph{any} rule list containing rules whose antecedents include,
+in any order, the antecedents in~$\Prefix$, then~$\RL'$ also rejects rule~$A$.
+%
+Furthermore,~$\RL'$ rejects~$A$ for the same reason that~$\RL$ rejects~$A$.
+%
+For example, suppose that when we add rule~$A$ to rule list~$\RL$,
+it has insufficient support~\eqref{eq:min-capture}: ${s(\RL_A) \le c}$,
+where~$s(\RL_A)$ is the normalized support of~$A$ in the context of~$\RL$.
+%
+In the context of~$\RL'$, the prefix preceding~$A$ captures at least
+as much data as the prefix of~$\RL$, thus
+\begin{align}
+s(\RL'_A) \le s(\RL_A) \le c,
+\end{align}
+where~$s(\RL'_A)$ is the normalized support of rule~$A$ in~$\RL'$.
+
+As another example, consider a rule list~$\RL'$ derived from~$\RL$ that holds rule~$A$ fixed
+but permutes any of the other (earlier) antecedents given by those in~$\Prefix$.
+%
+The permutation of~$\Prefix$ captures the same data as~$\Prefix$,
+therefore rule~$A$ behaves the same in both contexts,
+and in particular captures and correctly classifies the same data.
+%
+Another rule list~$\RL''$, derived from~$\RL'$ by inserting additional rules anywhere,
+maintains the invariant that rule~$A$ appears after rules with antecedents in~$\Prefix$;
+it can capture and correctly classify at most as much data as rule~$A$ in rule list~$\RL'$.
+%
+%A rule is rejected by a prefix if it doesn't correctly capture enough data (it must correctly capture >= c * ndata). Let Q be P's parent. If Q rejects a rule, then P will also reject that rule. This 'inheritance' of rejected rules only depends on which data are captured by Q, and doesn't actually depend on the order of rules in Q. Let S be the set of rules formed from (K-1) rules of P, in any order. P inherits rejected rules from any elements of S. Because of our symmetry-based garbage collection of prefixes equivalent up to a permutation, there are at most K elements of S in the cache; we can identify these via the inverse canonical map (ICM) that maps an ordered prefix to its permutation in the cache. We thus lazily initialize the list of P's reject list of rejected rules.
+\end{comment}
 
 \subsection{Permutation bound for permutation-aware garbage collection}
 \label{sec:permutation}
@@ -1153,9 +1314,18 @@ for many datasets that might be used for constructing interpretable models.
 
 \subsection{Equivalent support bound for symmetry-aware garbage collection}
 
-Here, we present a bound that generalizes our permutation bound~\eqref{eq:permutation},
-which can be viewed as special case.
-%
+Here, we present a bound that generalizes our permutation bound in
+Theorem~\ref{thm:permutation}, which can be viewed as special case.
+
+\begin{theorem}[Equivalent support bound]
+\dots
+\end{theorem}
+
+\begin{proof}
+\dots
+\end{proof}
+
+\begin{comment}
 Consider two prefixes~$\cal P$ and~$\cal Q$ that capture exactly the same data.
 %
 Note that~$\cal P$ rejects each of the rules in~$\cal Q$, and vice versa;
@@ -1167,24 +1337,21 @@ compared to the analogous extension of~$\cal Q$.
 %
 By reasoning analogous to the special case of permutations~(\S\ref{sec:permutation}),
 we only ever have to keep the prefix with the better objective.
-
-\subsection{Propagating rejected rules}
-\begin{corollary}[Propagation of insufficient per-rule support]
-Let ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ be a prefix, such that
-its last antecedent~$p_K$ has insufficient per-rule support,
-\ie ${\Supp(p_k, \x \given \Prefix) \le \Reg}$.
-%
-It follows that any rule list ${\RL' \in \StartsWith(\Prefix)}$
-
-Let ${\RL^* = (\Prefix', \Labels', \Default, K') \in \argmin_\RL \Obj(\RL, \x, \y)}$ be any optimal
-rule list
-
-\end{corollary}
+\end{comment}
 
 \subsection{Bound on differences between similar prefixes}
 
 We now present a slight relaxation of our equivalent support bound.
-%
+
+\begin{theorem}[Similar prefixes bound]
+\dots
+\end{theorem}
+
+\begin{proof}
+\dots
+\end{proof}
+
+\begin{comment}
 Suppose prefixes~$\cal P$ and~$\cal Q$ capture the same data,
 and now derive~$\cal P'$ from~$\cal P$ by appending antecedent~$p$
 and derive~$\cal Q'$ from~$\cal Q$ by appending antecedent~$q$.
@@ -1216,105 +1383,19 @@ If we know~$\cal P^*$, then we can avoid evaluating \emph{any} extensions of~$\c
 \end{align}
 where~$\Obj^*$ is the best known objective, since the left had expression
 provides a lower bound on~$\Obj(\cal{Q}^*)$.
+\end{comment}
 
 % ELA would like to generalize this to any two prefixes that capture similar data
 
-
-\subsection{Lower bound on rule similarity to a default rule}
-
-Let~$\RL$ be a rule list with prefix~$\Prefix$, default rule~$d$, and objective~$\Obj(\RL)$.
-%
-Let~$\RL'$ be a rule list with prefix~$\Prefix'$ that starts with~$\Prefix$ and adds one rule~$A$.
-%
-If, in the context of~$\RL'$, rule~$A$ captures all remaining data not captured by~$\Prefix$,
-then rule~$A$ behaves like~$\RL$'s default rule~$d$ while incurring a penalty of~$c$,
-\ie ~${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c}$.
-
-More generally, suppose rule~$A$ captures all data in the support of~$d$
-except for a fraction~${f < c}$.
-%
-Then, the best outcome for~$\RL'$ would be if it could correctly classify
-the entire majority class with respect to the support of~$d$,
-plus a fraction~$f$ of data belonging to the minority class.
-%
-This would yield a reduction in misclassification of a fraction~${f < c}$
-of data while incurring a penalty of~$c$, yielding
-${\Obj(\RL', \x, \y) \ge \Obj(\RL, \x, \y)}$.
-%
-Furthermore, we would never extend~$\RL'$ with additional rules,
-since insufficient data remain to be captured~\eqref{eq:min-capture}.
-%
-Thus, we require
-\begin{align}
-s(\RL'_A) \le s(\RL_d) - c,
-\label{eq:max-capture}
-\end{align}
-where~$s(\RL'_A)$ is the normalized support of~$A$ in~$\RL'$,
-$s(\RL_d)$ is the normalized support of~$d$ in~$\RL$,
-and~$c$ is the regularization parameter.
-
-\subsection{Insufficient per-rule support due to rule dominance}
-
-Let us say that rule~$A$ dominates rule~$B$ if the data captured by~$B$ is a subset of the data captured by~$A$.
-%
-Rule~$B$ should never follow rule~$A$ in a rule list because it will never capture additional data;
-this scenario is a special case where~\eqref{eq:min-capture} immediately applies.
-%
-More precisely, if~$\RL$ is a rule list that contains rule~$A$ and doesn't contain rule~$B$,
-and~$\RL'$ is derived from~$\RL$ by inserting rule~$B$ anywhere after~$A$, then
-\begin{align}
-\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c \ge \Obj(\RL, \x, \y).
-\end{align}
-By considering rule semantics, it is easy to think of common situations
-leading to dominance relationships between rules.
-%
-For example, if rule~$A$'s antecedent is~${(x_1 = 0)}$ and rule~$B$'s
-antecedent is~${(x_1 = 0) \wedge (x_2 = 1)}$, then rule~$A$ dominates rule~$B$.
-%
-%Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
-
-\subsection{Propagation of rejected rules}
-
-Suppose we grow a rule list~$\RL$ by appending rule~$A$ not already in the rule list,
-\ie by adding an antecedent to its prefix~$\Prefix$; call this new rule list~$\RL'$.
-%
-If in the context of~$\RL'$ rule~$A$ has insufficient accurate support~\eqref{eq:min-capture-correct},
-insufficient support~\eqref{eq:min-capture},
-or captures too many data compared to the original default rule~\eqref{eq:max-capture},
-then we say that rule list~$\RL$~\emph{rejects} rule~$A$.
-
-We now describe a large class of rule lists related to~$\RL$ that also reject rule~$A$:
-if~$\RL'$ is \emph{any} rule list containing rules whose antecedents include,
-in any order, the antecedents in~$\Prefix$, then~$\RL'$ also rejects rule~$A$.
-%
-Furthermore,~$\RL'$ rejects~$A$ for the same reason that~$\RL$ rejects~$A$.
-%
-For example, suppose that when we add rule~$A$ to rule list~$\RL$,
-it has insufficient support~\eqref{eq:min-capture}: ${s(\RL_A) \le c}$,
-where~$s(\RL_A)$ is the normalized support of~$A$ in the context of~$\RL$.
-%
-In the context of~$\RL'$, the prefix preceding~$A$ captures at least
-as much data as the prefix of~$\RL$, thus
-\begin{align}
-s(\RL'_A) \le s(\RL_A) \le c,
-\end{align}
-where~$s(\RL'_A)$ is the normalized support of rule~$A$ in~$\RL'$.
-
-As another example, consider a rule list~$\RL'$ derived from~$\RL$ that holds rule~$A$ fixed
-but permutes any of the other (earlier) antecedents given by those in~$\Prefix$.
-%
-The permutation of~$\Prefix$ captures the same data as~$\Prefix$,
-therefore rule~$A$ behaves the same in both contexts,
-and in particular captures and correctly classifies the same data.
-%
-Another rule list~$\RL''$, derived from~$\RL'$ by inserting additional rules anywhere,
-maintains the invariant that rule~$A$ appears after rules with antecedents in~$\Prefix$;
-it can capture and correctly classify at most as much data as rule~$A$ in rule list~$\RL'$.
-%
-%A rule is rejected by a prefix if it doesn't correctly capture enough data (it must correctly capture >= c * ndata). Let Q be P's parent. If Q rejects a rule, then P will also reject that rule. This 'inheritance' of rejected rules only depends on which data are captured by Q, and doesn't actually depend on the order of rules in Q. Let S be the set of rules formed from (K-1) rules of P, in any order. P inherits rejected rules from any elements of S. Because of our symmetry-based garbage collection of prefixes equivalent up to a permutation, there are at most K elements of S in the cache; we can identify these via the inverse canonical map (ICM) that maps an ordered prefix to its permutation in the cache. We thus lazily initialize the list of P's reject list of rejected rules.
-
 \subsection{Equivalence of rule lists when rules commute}
 
+\begin{theorem}
+\end{theorem}
+
+\begin{proof}
+\end{proof}
+
+\begin{comment}
 If two rules~$A$ and~$B$ capture disjoint subsets of data,
 then they commute globally in the sense that any rule list where~$A$ and~$B$ are
 adjacent is equivalent to another rule list where~$A$ and~$B$ swap positions.
@@ -1326,6 +1407,7 @@ by swapping one or more such pairs of rules.
 We can avoid evaluating multiple such equivalent rule lists by eliminating all but one.
 %
 %We achieve this by restricting how we grow a prefix (by appending a rule), as informed by a hash map cdict that maps each rule R_i to a set of rules S_i = {R_j} such that R_i commutes with every R_j in S_i and j > i. When growing a prefix that ends with rule R_i, we only append a rule R_j if it is not in S_i.
+\end{comment}
 
 \begin{itemize}
 \item other permutation bounds
