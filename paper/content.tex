@@ -880,18 +880,35 @@ and let~$p_k$ be an antecedent in~$\Prefix$.
 If~$p_k$ in the context of~$\Prefix$ has
 insufficient support (Theorem~\ref{thm:min-capture}),
 insufficient accurate support (Theorem~\ref{thm:min-capture-correct}),
-or whose support is too similar to the set of data not captured by
+or support too similar to the set of data not captured by
 preceding antecedents (Theorem~\ref{thm:default-similar}),
 let us say that prefix~$\Prefix$ rejects antecedent~$p_K$.
 %
-Below, Theorem~\ref{thm:default-similar}
-makes the last of the above conditions precise,
-and Theorem~\ref{thm:reject} describes large classes of
+Next, in Theorem~\ref{thm:default-similar}, we
+make the last of the above conditions precise,
+and then in Theorem~\ref{thm:reject}, we describe large classes of
 related rule lists whose prefixes all reject the same antecedent.
 
-\begin{theorem}[Lower bound on similarity to inverse prefix support]
+\begin{theorem}[Lower bound on rule similarity to a default rule]
 \label{thm:default-similar}
-\dots
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list with prefix
+${\Prefix = (p_1, \dots, p_K)}$.
+%
+Let ${\RL' = (\Prefix', \Labels', \Default', K + 1)}$ be a similar
+rule list whose prefix ${\Prefix' = (p_1, \dots, p_K, p_{K+1})}$
+starts with~$\Prefix$ and ends with a new antecedent~$p_{K+1}$.
+%
+If~$p_{K+1}$, in the context of~$\Prefix'$,
+captures nearly all data not captured by~$\Prefix$,
+except for a fraction~$\epsilon$ upper bounded by the regularization parameter~$\Reg$,
+\begin{align}
+1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x, \given \Prefix') \equiv \epsilon \le \Reg,
+\end{align}
+then the objective of any rule list~$\RL''$ whose prefix starts with~$\Prefix'$
+is at least as great as that of~$\RL$:
+\begin{align}
+\Obj(\RL'', \x, \y) \ge \Obj(\RL, \x, \y).
+\end{align}
 \end{theorem}
 
 \begin{proof}
@@ -899,20 +916,74 @@ related rule lists whose prefixes all reject the same antecedent.
 \end{proof}
 
 \begin{comment}
-Let~$\RL$ be a rule list with prefix~$\Prefix$, default rule~$d$, and objective~$\Obj(\RL)$.
+\begin{proof}
+The data not captured by~$\Prefix'$ has normalized support~${\epsilon \le \Reg}$,
+\begin{align}
+1 - \Supp(\Prefix', \x) = \epsilon = 1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x, \given \Prefix') \le \Reg.
+\end{align}
 %
-Let~$\RL'$ be a rule list with prefix~$\Prefix'$ that starts with~$\Prefix$ and adds one rule~$A$.
+Consider the majority and minority class labels, with respect to the
+set of data not captured by~$\Prefix$;
+let~$\rho$ be the fraction of data not captured by~$\Prefix$
+that have this minority label.
 %
+It follows that the default rule misclassification error for~$\RL$
+is given by~$\rho$, \ie ${\Loss_0(\Prefix, \Default, \x, \y) = \rho}$.
+%
+It is clear that if~${\rho \le \Reg}$, then any longer rule list
+${\RL' = (\Prefix', \Labels', \Default', K')}$, whose prefix~$\Prefix'$
+starts with~$\Prefix$ cannot achieve a smaller objective,
+because of the penalty for longer prefixes:
+\begin{align}
+\Obj(\RL', \x, \y) = \Loss(\RL', \x, \y) + \Reg K'
+= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y) + \Reg K'
+\end{align}
+%
+The rule lists~$\RL$ and~$\RL'$ are very similar:
+their first~$K$ rules are exactly the same,
+last rule of~$\RL'$ is similar to the default rule of~$\RL$,
+and the default rule of~$\RL'$ has a small effect.
+%
+The best outcome for~$\RL'$ would occur if its misclassification error
+were smaller than that of~$\RL$ by~$\epsilon$:
+\begin{align}
+\Obj(\RL', \x, \y) = \Loss(\RL', \x, \y) + \Reg (K+1)
+= \Loss(\RL, \x, \y) + \Reg(K+1)
+= 
+\end{align}
+\eg this could happen if all data not captured by~$\Prefix'$
+had the same class label, in which case the default rule of~$\RL'$
+would incur zero misclassification error.
+
+
+it correctly classified
+all data not captured by~$\Prefix$, \ie if both its last rule,
+with antecedent~$p_{K+1}$, and its default rule, incurred zero
+misclassification error.
+%
+This would happen if all data captured by~$p_K$ had the same class label,
+while all data not captured by~$\Prefix'$ had the same, and thus opposite,
+class label.
+%
+It follows that the objective of~$\RL'$ is
+\begin{align}
+\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K
+&= \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, y) + \Reg K \nn \\
+&\le \Loss_p(\Prefix, \Labels, \x, \y) + \frac{1}{2} \left(1 - \Supp(\Prefix, \x)\right) + \Reg K 
+\end{align}
+\begin{align}
+\Obj(\RL', \x, \y) = \Loss(\RL', \x, \y) + \Reg (K + 1)
+&= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y) + \Reg (K + 1) \nn \\
+&\ge \Loss_p(\Prefix, \Labels, \x, \y) + \Reg (K + 1)
+\end{align}
+\end{proof}
+
 If, in the context of~$\RL'$, rule~$A$ captures all remaining data not captured by~$\Prefix$,
 then rule~$A$ behaves like~$\RL$'s default rule~$d$ while incurring a penalty of~$c$,
 \ie ~${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c}$.
 
-More generally, suppose rule~$A$ captures all data in the support of~$d$
-except for a fraction~${f < c}$.
 %
-Then, the best outcome for~$\RL'$ would be if it could correctly classify
-the entire majority class with respect to the support of~$d$,
-plus a fraction~$f$ of data belonging to the minority class.
+Then,
 %
 This would yield a reduction in misclassification of a fraction~${f < c}$
 of data while incurring a penalty of~$c$, yielding
@@ -961,13 +1032,13 @@ be optimal, \ie ${\RL' \notin \argmin_\RL \Obj(\RL, \x, \y)}$.
 \dots
 \end{proof}
 
-\begin{corollary}[Propagation of insufficient antecedent support]
+\begin{proposition}[Propagation of insufficient antecedent support]
 Let ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ be a prefix, such that
 its last antecedent~$p_K$ has insufficient support,
 \ie ${\Supp(p_k, \x \given \Prefix) \le \Reg}$.
 %
 \dots
-\end{corollary}
+\end{proposition}
 
 \begin{proof}
 \dots
