@@ -872,8 +872,153 @@ antecedent is~${(x_1 = 0) \wedge (x_2 = 1)}$, then rule~$A$ dominates rule~$B$.
 %Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
 \end{comment}
 
+\subsection{Upper bound on antecedent support}
+\label{sec:ub-support}
+
+In the previous section~(\S\ref{sec:lb-support}), we proved lower bounds
+on antecedent support; in this section, we give an upper bound on
+antecedent support.
+%
+Specifically, Theorem~\ref{thm:ub-support} shows that an antecedent's
+support in a rule list cannot be too similar to the set of data not
+captured by preceding antecedents in the rule list.
+
+\begin{theorem}[Upper bound on antecedent support]
+\label{thm:ub-support}
+Let ${\RL^* = (\Prefix, \Labels, \Default, K) \in \argmin_\RL \Obj(\RL, \x, \y)}$
+be any optimal rule list, and let
+${\Prefix = (p_1, \dots, p_{j-1}, p_j, \dots, p_{K-1}, p_K)}$ be its prefix.
+%
+The last antecedent~$p_K$ in~$\Prefix$ has support
+\begin{align}
+\Supp(p_K, \x, \given \Prefix) \le 1 - \Supp(\Prefix^{K-1}, \x \given \Prefix) - \Reg,
+\label{eq:ub-support-last}
+\end{align}
+where ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
+with equality implying that there also exists a shorter optimal rule list
+${\RL' = (\Prefix^{K-1}, \Labels', \Default', K - 1) \in}$ ${\argmin_\RL \Obj(\RL, \x, \y)}$
+with prefix~$\Prefix^{K-1}$.
+%
+For all ${j \le K - 1}$, every antecedent~$p_j$ in~$\Prefix$ has support
+less than the fraction of all data not captured by preceding antecedents,
+by an amount greater than the regularization parameter~$\Reg$:
+\begin{align}
+\Supp(p_j, \x, \given \Prefix) < 1 - \Supp(\Prefix^{j-1}, \x \given \Prefix) - \Reg,
+\label{eq:ub-support}
+\end{align}
+where ${\Prefix^{j-1} = (p_1, \dots, p_{j-1})}$.
+\end{theorem}
+
+\begin{proof}
+We begin by focusing on the last antecedent in a rule list.
+%
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$
+be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
+and objective ${\Obj(\RL, \x, \y) \le \OptimalObj}$, where
+${\OptimalObj \equiv \min_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$
+is the optimal objective.
+%
+Also let ${\RL' = (\Prefix', \Labels', \Default', K + 1)}$
+be a rule list whose prefix ${\Prefix' = (p_1, \dots, p_K, p_{K+1})}$
+starts with~$\Prefix$ and ends with a new antecedent~$p_{K+1}$.
+%
+Suppose~$p_{K+1}$ in the context of~$\Prefix'$ captures nearly all
+data not captured by~$\Prefix$, except for a fraction~$\epsilon$
+upper bounded by the regularization parameter~$\Reg$:
+\begin{align}
+1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x, \given \Prefix') \equiv \epsilon \le \Reg.
+\end{align}
+%
+Since~$\Prefix'$ starts with~$\Prefix$,
+its prefix misclassification error is at least as great;
+the only discrepancy between the misclassification errors
+of~$\RL$ and~$\RL'$ can come from the difference between the support of
+the set of data not captured by~$\Prefix$ and the support of~$p_{K+1}$:
+\begin{align}
+| \Loss(\RL', \x, \y) - \Loss(\RL, \x, \y) | \le
+1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x \given \Prefix') = \epsilon.
+\end{align}
+The best outcome for~$\RL'$ would occur if its misclassification
+error were smaller than that of~$\RL$ by~$\epsilon$,
+%\eg this could happen if all data not captured by~$\Prefix'$
+%had the same class label, in which case the default rule of~$\RL'$
+%would incur zero misclassification error.
+% --> it's more complicated, would need to discuss minority class label, etc.
+%
+therefore
+\begin{align}
+\Obj(\RL', \x, \y) &= \Loss(\RL', \x, \y) + \Reg (K+1) \nn \\
+&\ge \Loss(\RL, \x, \y) - \epsilon + \Reg(K+1)
+= \Obj(\RL, \x, \y) - \epsilon + \Reg \ge \Obj(\RL, \x, \y) \ge \OptimalObj.
+\end{align}
+$\RL'$ is an optimal rule list,
+\ie ${\RL' \in \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, y)}$,
+if and only if ${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) = \OptimalObj}$,
+which requires ${\epsilon = \Reg}$.
+%
+Otherwise, ${\epsilon < \Reg}$, in which case
+\begin{align}
+\Obj(\RL', \x, \y) \ge \Obj(\RL, \x, \y) - \epsilon + \Reg
+> \Obj(\RL, \x, \y) \ge \OptimalObj,
+\end{align}
+\ie $\RL'$ is not optimal.
+%
+This proves the first half of Theorem~\ref{thm:ub-support}.
+
+To finish, we prove the bound in~\eqref{eq:ub-support} by contradiction.
+%
+First, note that the data not captured by~$\Prefix'$
+has normalized support~${\epsilon \le \Reg}$, \ie:
+\begin{align}
+1 - \Supp(\Prefix', \x) = 1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x, \given \Prefix') = \epsilon \le \Reg.
+\end{align}
+Thus for any rule list~$\RL''$ whose prefix
+$\Prefix'' = (p_1, \dots, p_{K+1}, \dots, p_{K'})$ starts
+with~$\Prefix'$ and ends with one or more additional rules,
+each additional rule~$p_k$ has support
+${\Supp(p_k, \x \given \Prefix'') \le \epsilon \le \Reg}$,
+for all~${k > K+1}$.
+%
+By Theorem~\ref{thm:min-capture},
+all of the additional rules have insufficient support,
+therefore~$\Prefix''$ cannot be optimal,
+\ie ${\RL'' \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
+\end{proof}
+
+Similar to Theorem~\ref{thm:min-capture}, our lower bound on
+antecedent support, we can apply Theorem~\ref{thm:ub-support}
+in the contexts of both constructing rule lists and
+rule mining~(\S\ref{sec:rule-mining}).
+%
+Theorem~\ref{thm:ub-support} implies that if we only seek a single
+optimal rule list, then during branch-and-bound execution,
+we can prune a prefix if we ever add an antecedent with support
+too similar to the support of set of data not captured by the
+preceding antecedents.
+%
+One way to view this result is that if
+${\RL = (\Prefix, \Labels, \Default, K)}$
+and ${\RL' = (\Prefix', \Labels', \Default', K + 1)}$
+are rule lists such that~$\Prefix'$ starts with~$\Prefix$
+and ends with an antecedent that captures all or nearly all
+data not captured by~$\Prefix$, then the new rule in~$\RL'$
+behaves similar to the default rule of~$\RL$.
+%
+As a result, the misclassification error of~$\RL'$ must be
+similar to that of~$\RL$, and any reduction may not be
+sufficient to offset the penalty for longer prefixes.
+%
+Furthermore, Theorem~\ref{thm:ub-support} implies that we should
+only mine rules with normalized support less than ${1 - \Reg}$;
+we need not mine rules with a larger fraction of observations.
+
 \subsection{Antecedent rejection and its propagation}
 
+In this section, we demonstrate further consequences of
+our lower~(\S\ref{sec:lb-support}) and upper
+bounds~(\S\ref{sec:ub-support}) on antecedent support,
+under a unified framework we refer to as antecedent rejection.
+%
 Let ${\Prefix = (p_1, \dots, p_K)}$ be a prefix,
 and let~$p_k$ be an antecedent in~$\Prefix$.
 %
@@ -881,126 +1026,11 @@ If~$p_k$ in the context of~$\Prefix$ has
 insufficient support (Theorem~\ref{thm:min-capture}),
 insufficient accurate support (Theorem~\ref{thm:min-capture-correct}),
 or support too similar to the set of data not captured by
-preceding antecedents (Theorem~\ref{thm:default-similar}),
+preceding antecedents (Theorem~\ref{thm:ub-support}),
 let us say that prefix~$\Prefix$ rejects antecedent~$p_K$.
 %
-Next, in Theorem~\ref{thm:default-similar}, we
-make the last of the above conditions precise,
-and then in Theorem~\ref{thm:reject}, we describe large classes of
+Next, in Theorem~\ref{thm:reject}, we describe large classes of
 related rule lists whose prefixes all reject the same antecedent.
-
-\begin{theorem}[Lower bound on rule similarity to a default rule]
-\label{thm:default-similar}
-Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list with prefix
-${\Prefix = (p_1, \dots, p_K)}$.
-%
-Let ${\RL' = (\Prefix', \Labels', \Default', K + 1)}$ be a similar
-rule list whose prefix ${\Prefix' = (p_1, \dots, p_K, p_{K+1})}$
-starts with~$\Prefix$ and ends with a new antecedent~$p_{K+1}$.
-%
-If~$p_{K+1}$, in the context of~$\Prefix'$,
-captures nearly all data not captured by~$\Prefix$,
-except for a fraction~$\epsilon$ upper bounded by the regularization parameter~$\Reg$,
-\begin{align}
-1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x, \given \Prefix') \equiv \epsilon \le \Reg,
-\end{align}
-then the objective of any rule list~$\RL''$ whose prefix starts with~$\Prefix'$
-is at least as great as that of~$\RL$:
-\begin{align}
-\Obj(\RL'', \x, \y) \ge \Obj(\RL, \x, \y).
-\end{align}
-\end{theorem}
-
-\begin{proof}
-\dots
-\end{proof}
-
-\begin{comment}
-\begin{proof}
-The data not captured by~$\Prefix'$ has normalized support~${\epsilon \le \Reg}$,
-\begin{align}
-1 - \Supp(\Prefix', \x) = \epsilon = 1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x, \given \Prefix') \le \Reg.
-\end{align}
-%
-Consider the majority and minority class labels, with respect to the
-set of data not captured by~$\Prefix$;
-let~$\rho$ be the fraction of data not captured by~$\Prefix$
-that have this minority label.
-%
-It follows that the default rule misclassification error for~$\RL$
-is given by~$\rho$, \ie ${\Loss_0(\Prefix, \Default, \x, \y) = \rho}$.
-%
-It is clear that if~${\rho \le \Reg}$, then any longer rule list
-${\RL' = (\Prefix', \Labels', \Default', K')}$, whose prefix~$\Prefix'$
-starts with~$\Prefix$ cannot achieve a smaller objective,
-because of the penalty for longer prefixes:
-\begin{align}
-\Obj(\RL', \x, \y) = \Loss(\RL', \x, \y) + \Reg K'
-= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y) + \Reg K'
-\end{align}
-%
-The rule lists~$\RL$ and~$\RL'$ are very similar:
-their first~$K$ rules are exactly the same,
-last rule of~$\RL'$ is similar to the default rule of~$\RL$,
-and the default rule of~$\RL'$ has a small effect.
-%
-The best outcome for~$\RL'$ would occur if its misclassification error
-were smaller than that of~$\RL$ by~$\epsilon$:
-\begin{align}
-\Obj(\RL', \x, \y) = \Loss(\RL', \x, \y) + \Reg (K+1)
-= \Loss(\RL, \x, \y) + \Reg(K+1)
-= 
-\end{align}
-\eg this could happen if all data not captured by~$\Prefix'$
-had the same class label, in which case the default rule of~$\RL'$
-would incur zero misclassification error.
-
-
-it correctly classified
-all data not captured by~$\Prefix$, \ie if both its last rule,
-with antecedent~$p_{K+1}$, and its default rule, incurred zero
-misclassification error.
-%
-This would happen if all data captured by~$p_K$ had the same class label,
-while all data not captured by~$\Prefix'$ had the same, and thus opposite,
-class label.
-%
-It follows that the objective of~$\RL'$ is
-\begin{align}
-\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K
-&= \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, y) + \Reg K \nn \\
-&\le \Loss_p(\Prefix, \Labels, \x, \y) + \frac{1}{2} \left(1 - \Supp(\Prefix, \x)\right) + \Reg K 
-\end{align}
-\begin{align}
-\Obj(\RL', \x, \y) = \Loss(\RL', \x, \y) + \Reg (K + 1)
-&= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y) + \Reg (K + 1) \nn \\
-&\ge \Loss_p(\Prefix, \Labels, \x, \y) + \Reg (K + 1)
-\end{align}
-\end{proof}
-
-If, in the context of~$\RL'$, rule~$A$ captures all remaining data not captured by~$\Prefix$,
-then rule~$A$ behaves like~$\RL$'s default rule~$d$ while incurring a penalty of~$c$,
-\ie ~${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c}$.
-
-%
-Then,
-%
-This would yield a reduction in misclassification of a fraction~${f < c}$
-of data while incurring a penalty of~$c$, yielding
-${\Obj(\RL', \x, \y) \ge \Obj(\RL, \x, \y)}$.
-%
-Furthermore, we would never extend~$\RL'$ with additional rules,
-since insufficient data remain to be captured~\eqref{eq:min-capture}.
-%
-Thus, we require
-\begin{align}
-s(\RL'_A) \le s(\RL_d) - c,
-\label{eq:max-capture}
-\end{align}
-where~$s(\RL'_A)$ is the normalized support of~$A$ in~$\RL'$,
-$s(\RL_d)$ is the normalized support of~$d$ in~$\RL$,
-and~$c$ is the regularization parameter.
-\end{comment}
 
 \begin{theorem}[Antecedent rejection propagates]
 \label{thm:reject}
