@@ -1064,7 +1064,7 @@ and ends with antecedent~${P_{K'} = p_{K}}$.
 It follows that prefix~$\PrefixB$ rejects~$P_{K'}$
 for the same reason that~$\Prefix$ rejects~$p_{K}$,
 and furthermore, $\RLB$ cannot be optimal,
-\ie ${\RLB \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
+\ie ${\RLB \notin \argmin_{\RL} \Obj(\RL, \x, \y)}$.
 \end{theorem}
 
 \begin{proof}
@@ -1073,24 +1073,90 @@ and furthermore, $\RLB$ cannot be optimal,
 
 \begin{proposition}[Propagation of insufficient antecedent support]
 Define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
-and let ${\Prefix = (p_1, \dots, p_K, p_{K+1})}$ be a prefix,
-such that its last antecedent~$p_{K+1}$ has insufficient support,
+and let ${\Prefix = (p_1, \dots, p_{K-1}, p_{K})}$ be a prefix,
+such that its last antecedent~$p_{K}$ has insufficient support,
 \ie ${\Supp(p_K, \x \given \Prefix) \le \Reg}$,
 where~$\Reg$ is the regularization parameter.
 %
-Let ${\RL' = (\Prefix', \Labels', \Default', K')}$
-be any rule list in~$\StartContains(\Prefix)$,
-and let~$p'_k$ be the antecedent in prefix
-${\Prefix' = (p'_1, \dots, p'_k, \dots, p'_{K'})}$
-such that ${p'_k = p_K}$.
+Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
+and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
+be any rule list with prefix
+${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'})}$
+such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
+${(P_1, \dots, P_{K'-1}) \in \StartContains(\Prefix^{K-1})}$
+and ends with~${P_{K'} = p_{K}}$.
 %
-It follows that prefix~$\Prefix'$ rejects~$p'_k$,
-and furthermore, $\RL'$ cannot be optimal,
-\ie ${\RL' \notin \argmin_\RL \Obj(\RL, \x, \y)}$.
+It follows that~$P_{K'}$ has insufficient support in
+prefix~$\PrefixB$, and furthermore, $\RLB$ cannot be optimal,
+\ie ${\RLB \notin \argmin_{\RL} \Obj(\RL, \x, \y)}$.
 \end{proposition}
 
 \begin{proof}
+The support of~$p_K$ in~$\Prefix$ depends only
+on the set of antecedents in~$\Prefix^{K-1}$:
+\begin{align}
+\Supp(p_K, \x \given \Prefix)
+= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_K \given \Prefix)
+&= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap \left(x_n, \Prefix^{K-1} \right) \right)
+  \wedge \Cap(x_n, p_K) \nn \\
+&= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
+  \wedge \Cap(x_n, p_K)
+\le \Reg,
+\end{align}
+\ie it does not depend on their order.
+%
+Similarly, the support of~$P_{K'}$ in~$\PrefixB$ depends only
+on the set of antecedents in~$\PrefixB^{K'-1}$:
+\begin{align}
+\Supp(P_{K'}, \x \given \PrefixB)
+= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, P_{K'} \given \PrefixB)
+&= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap \left(x_n, \PrefixB^{K'-1} \right) \right)
+  \wedge \Cap(x_n, P_{K'}) \nn \\
+&= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K'-1} \neg\, \Cap(x_n, P_k) \right)
+   \wedge \Cap(x_n, P_{K'}) \nn \\
+&\le \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
+  \wedge \Cap(x_n, P_{K'}) \nn \\
+&= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
+  \wedge \Cap(x_n, p_{K}) \nn \\
+&= \Supp(p_K, \x \given \Prefix) \le \Reg.
+\end{align}
+where the first inequality reflects the condition that
+${\PrefixB^{K'-1} \in \StartContains(\Prefix^{K-1})}$,
+which implies that the set of antecedents in~$\PrefixB^{K'-1}$
+contains the set of antecedents in~$\Prefix^{K-1}$, and the equality
+that immediately follows reflects the fact that~${P_{K'} = p_K}$.
+%
+Thus,~$P_K'$ has insufficient support in prefix~$\PrefixB$,
+therefore by Theorem~\ref{thm:min-capture}, $\RLB$ cannot be optimal,
+\ie ${\RLB \notin \argmin_{\RL} \Obj(\RL, \x, \y)}$.
+\end{proof}
 
+\begin{proposition}[Propagation of insufficient accurate antecedent support]
+Define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
+and let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list with
+prefix ${\Prefix = (p_1, \dots, p_{K-1}, p_{K})}$,
+and labels ${\Labels = (q_1, \dots, q_{K-1}, q_{K})}$, such that
+the last antecedent~$p_{K}$ has insufficient accurate support, \ie
+\begin{align}
+\frac{1}{N} \sum_{n=1}^N \one [ \Cap(x_n, p_K \given \Prefix) \wedge (q_K = y_n) ]
+\le \Reg.
+\end{align}
+where~$\Reg$ is the regularization parameter.
+%
+Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
+and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
+be any rule list with prefix
+${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'})}$
+such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
+${(P_1, \dots, P_{K'-1}) \in \StartContains(\Prefix^{K-1})}$
+and ends with~${P_{K'} = p_{K}}$.
+%
+It follows that~$P_{K'}$ has insufficient support in
+prefix~$\PrefixB$, and furthermore, $\RLB$ cannot be optimal,
+\ie ${\RLB \notin \argmin_{\RL} \Obj(\RL, \x, \y)}$.
+\end{proposition}
+
+\begin{proof}
 \end{proof}
 
 \begin{comment}
