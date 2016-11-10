@@ -1053,7 +1053,7 @@ with prefix ${\Prefix = (p_1, \dots, p_{K-1}, p_{K})}$,
 such that~$\Prefix$ rejects its last antecedent~$p_{K}$,
 either because~$p_{K}$ in the context of~$\Prefix$ has
 insufficient support, insufficient accurate support,
-or is too similar to the default rule.
+or excessive support.
 %
 Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$ be the
 first~${K - 1}$ antecedents of~$\Prefix$.
@@ -1076,7 +1076,7 @@ Combine Propositions~\ref{prop:min-capture},
 \ref{prop:min-capture-correct}, and~\ref{prop:ub-support}.
 \end{proof}
 
-\begin{proposition}[Propagation of insufficient antecedent support]
+\begin{proposition}[Insufficient antecedent support propagates]
 \label{prop:min-capture}
 Define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
 and let ${\Prefix = (p_1, \dots, p_{K-1}, p_{K})}$ be a prefix,
@@ -1138,12 +1138,12 @@ therefore by Theorem~\ref{thm:min-capture}, $\RLB$~cannot be optimal,
 \ie ${\RLB \notin \argmin_{\RL} \Obj(\RL, \x, \y)}$.
 \end{proof}
 
-\begin{proposition}[Propagation of insufficient accurate antecedent support]
+\begin{proposition}[Insufficient accurate antecedent support propagates]
 \label{prop:min-capture-correct}
 Define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
 and let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list
 with prefix ${\Prefix = (p_1, \dots, p_{K-1}, p_{K})}$
-and labels ${\Labels = (q_1, \dots, q_{K-1}, q_{K})}$, such that
+and labels ${\Labels = (q_1, \dots, q_{K})}$, such that
 the last antecedent~$p_{K}$ has insufficient accurate support, \ie
 \begin{align}
 \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_K \given \Prefix) \wedge \one [ q_K = y_n ]
@@ -1155,7 +1155,7 @@ Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
 and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
 be any rule list with prefix
 ${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'})}$
-and labels ${\LabelsB = (Q_1, \dots, Q_{K'-1}, Q_{K'})}$
+and labels ${\LabelsB = (Q_1, \dots, Q_{K'})}$
 such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
 ${(P_1, \dots, P_{K'-1})}$ ${\in \StartContains(\Prefix^{K-1})}$
 and ends with~${P_{K'} = p_{K}}$.
@@ -1193,7 +1193,7 @@ By Theorem~\ref{thm:min-capture-correct}, $\RLB$~cannot be optimal,
 \ie ${\RLB \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
 \end{proof}
 
-\begin{proposition}[Propagation of excessive antecedent support]
+\begin{proposition}[Excessive antecedent support propagates]
 \label{prop:ub-support}
 \end{proposition}
 
