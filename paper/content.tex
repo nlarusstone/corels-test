@@ -891,7 +891,7 @@ ${\Prefix = (p_1, \dots, p_{j-1}, p_j, \dots, p_{K-1}, p_K)}$ be its prefix.
 %
 The last antecedent~$p_K$ in~$\Prefix$ has support
 \begin{align}
-\Supp(p_K, \x, \given \Prefix) \le 1 - \Supp(\Prefix^{K-1}, \x \given \Prefix) - \Reg,
+\Supp(p_K, \x \given \Prefix) \le 1 - \Supp(\Prefix^{K-1}, \x) - \Reg,
 \label{eq:ub-support-last}
 \end{align}
 where ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
@@ -903,7 +903,7 @@ For all ${k \le K - 1}$, every antecedent~$p_k$ in~$\Prefix$ has support
 less than the fraction of all data not captured by preceding antecedents,
 by an amount greater than the regularization parameter~$\Reg$:
 \begin{align}
-\Supp(p_k, \x, \given \Prefix) < 1 - \Supp(\Prefix^{k-1}, \x \given \Prefix) - \Reg,
+\Supp(p_k, \x \given \Prefix) < 1 - \Supp(\Prefix^{k-1}, \x) - \Reg,
 \label{eq:ub-support}
 \end{align}
 where ${\Prefix^{k-1} = (p_1, \dots, p_{k-1})}$.
@@ -926,7 +926,7 @@ Suppose~$p_{K+1}$ in the context of~$\Prefix'$ captures nearly all
 data not captured by~$\Prefix$, except for a fraction~$\epsilon$
 upper bounded by the regularization parameter~$\Reg$:
 \begin{align}
-1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x, \given \Prefix') \equiv \epsilon \le \Reg.
+1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x \given \Prefix') \equiv \epsilon \le \Reg.
 \end{align}
 %
 Since~$\Prefix'$ starts with~$\Prefix$,
@@ -970,7 +970,7 @@ To finish, we prove the bound in~\eqref{eq:ub-support} by contradiction.
 First, note that the data not captured by~$\Prefix'$
 has normalized support~${\epsilon \le \Reg}$, \ie:
 \begin{align}
-1 - \Supp(\Prefix', \x) = 1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x, \given \Prefix') = \epsilon \le \Reg.
+1 - \Supp(\Prefix', \x) = 1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x \given \Prefix') = \epsilon \le \Reg.
 \end{align}
 Thus for any rule list~$\RL''$ whose prefix
 $\Prefix'' = (p_1, \dots, p_{K+1}, \dots, p_{K'})$ starts
@@ -1031,7 +1031,7 @@ if it does not obey the bound in~\eqref{eq:min-capture-correct}
 of Theorem~\ref{thm:min-capture-correct}.
 %
 Define~$p_k$ to have excessive support in~$\Prefix$ if it
-does not obey the appropriate bound in Theorem~\ref{thm:ub-suppor},
+does not obey the appropriate bound in Theorem~\ref{thm:ub-support},
 \ie either it's the last antecedent and doesn't obey~\eqref{eq:ub-support},
 or it's any other antecedent and doesn't obey~\eqref{eq:ub-support-last}.
 %
@@ -1098,7 +1098,7 @@ ${\Supp(p_K, \x \given \Prefix) \le \Reg}$.
 Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
 and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
 be any rule list with prefix
-${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'})}$
+${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'})}$,
 such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
 ${(P_1, \dots, P_{K'-1}) \in \StartContains(\Prefix^{K-1})}$
 and ends with~${P_{K'} = p_{K}}$.
@@ -1114,7 +1114,7 @@ on the set of antecedents in~$\Prefix^{K-1}$:
 \begin{align}
 \Supp(p_K, \x \given \Prefix)
 = \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_K \given \Prefix)
-&= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap \left(x_n, \Prefix^{K-1} \right) \right)
+&= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix^{K-1}) \right)
   \wedge \Cap(x_n, p_K) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
   \wedge \Cap(x_n, p_K)
@@ -1127,7 +1127,7 @@ on the set of antecedents in~$\PrefixB^{K'-1}$:
 \begin{align}
 \Supp(P_{K'}, \x \given \PrefixB)
 = \frac{1}{N} \sum_{n=1}^N \Cap(x_n, P_{K'} \given \PrefixB)
-&= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap \left(x_n, \PrefixB^{K'-1} \right) \right)
+&= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap(x_n, \PrefixB^{K'-1}) \right)
   \wedge \Cap(x_n, P_{K'}) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K'-1} \neg\, \Cap(x_n, P_k) \right)
    \wedge \Cap(x_n, P_{K'}) \nn \\
@@ -1162,11 +1162,11 @@ the last antecedent~$p_{K}$ has insufficient accurate support,
 \le \Reg.
 \end{align}
 %
-Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
-and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
+Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$;
+let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
 be any rule list with prefix
-${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'})}$
-and labels ${\LabelsB = (Q_1, \dots, Q_{K'})}$
+${\PrefixB = (P_1, \dots, P_{K'})}$
+and labels ${\LabelsB = (Q_1, \dots, Q_{K'})}$,
 such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
 ${(P_1, \dots, P_{K'-1})}$ ${\in \StartContains(\Prefix^{K-1})}$
 and ends with~${P_{K'} = p_{K}}$.
@@ -1211,23 +1211,41 @@ and let ${\Prefix = (p_1, \dots, p_{K})}$ be a prefix,
 such that its last antecedent~$p_{K}$ has excessive support,
 \ie the opposite of the bound in~\eqref{eq:ub-support-last}:
 \begin{align}
-\Supp(p_K, \x, \given \Prefix) \ge 1 - \Supp(\Prefix^{K-1}, \x \given \Prefix) - \Reg.
+\Supp(p_K, \x \given \Prefix) \ge 1 - \Supp(\Prefix^{K-1}, \x) - \Reg.
 \end{align}
-Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
-and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
+Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$;
+let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
 be any rule list with prefix
-${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'})}$
+${\PrefixB = (P_1, \dots, P_{K'})}$
 such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
 ${(P_1, \dots, P_{K'-1}) \in \StartContains(\Prefix^{K-1})}$
 and ends with~${P_{K'} = p_{K}}$.
 %
-It follows that~$P_{K'}$ has insufficient support in
-prefix~$\PrefixB$, and furthermore, $\RLB$~cannot be optimal,
-\ie ${\RLB \notin \argmin_{\RL} \Obj(\RL, \x, \y)}$.
+It follows that~$P_{K'}$ has excessive support in prefix~$\PrefixB$,
+and furthermore, ${\RLB \notin \argmin_{\RL} \Obj(\RL, \x, \y)}$.
 \end{proposition}
 
 \begin{proof}
-\dots
+Since~$\PrefixB$ contains all the antecedents in~$\Prefix$,
+we have that ${\Supp(\PrefixB, \x) \ge \Supp(\Prefix, \x)}$.
+%
+Expanding these two terms gives
+\begin{align}
+\Supp(\PrefixB^{K'-1}, \x) + \Supp(P_{K'}, \x \given \PrefixB)
+= \Supp(\PrefixB, \x)
+&\ge \Supp(\Prefix, \x) \nn \\
+&= \Supp(\Prefix^{K+1}, \x) + \Supp(p_K, \x \given \Prefix)
+\ge 1 - \Reg.
+\end{align}
+Rearranging gives
+\begin{align}
+\Supp(P_{K'}, \x \given \PrefixB)
+\ge 1 - \Supp(\PrefixB^{K'-1}, \x) - \Reg,
+\end{align}
+thus~$P_{K'}$ has excessive support in~$\PrefixB$.
+%
+By Theorem~\ref{thm:ub-support},
+${\RLB \notin \argmin_{\RL} \Obj(\RL, \x, \y)}$.
 \end{proof}
 
 \begin{comment}
