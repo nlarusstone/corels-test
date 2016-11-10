@@ -1022,10 +1022,21 @@ under a unified framework we refer to as antecedent rejection.
 Let ${\Prefix = (p_1, \dots, p_K)}$ be a prefix,
 and let~$p_k$ be an antecedent in~$\Prefix$.
 %
-If~$p_k$ in the context of~$\Prefix$ has
-insufficient support (Theorem~\ref{thm:min-capture}),
-insufficient accurate support (Theorem~\ref{thm:min-capture-correct}),
-or excessive support (Theorem~\ref{thm:ub-support}),
+Define~$p_k$ to have insufficient support in~$\Prefix$
+if does not obey the bound in~\eqref{eq:min-capture}
+of Theorem~\ref{thm:min-capture}.
+%
+Define~$p_k$ to have insufficient accurate support in~$\Prefix$
+if it does not obey the bound in~\eqref{eq:min-capture-correct}
+of Theorem~\ref{thm:min-capture-correct}.
+%
+Define~$p_k$ to have excessive support in~$\Prefix$ if it
+does not obey the appropriate bound in Theorem~\ref{thm:ub-suppor},
+\ie either it's the last antecedent and doesn't obey~\eqref{eq:ub-support},
+or it's any other antecedent and doesn't obey~\eqref{eq:ub-support-last}.
+%
+If~$p_k$ in the context of~$\Prefix$ has insufficient support,
+insufficient accurate support, or excessive support,
 %or support too similar to the set of data not captured by
 %preceding antecedents (Theorem~\ref{thm:ub-support}),
 let us say that prefix~$\Prefix$ rejects antecedent~$p_K$.
@@ -1081,8 +1092,8 @@ Combine Propositions~\ref{prop:min-capture},
 Define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
 and let ${\Prefix = (p_1, \dots, p_{K-1}, p_{K})}$ be a prefix,
 such that its last antecedent~$p_{K}$ has insufficient support,
-\ie ${\Supp(p_K, \x \given \Prefix) \le \Reg}$,
-where~$\Reg$ is the regularization parameter.
+\ie the opposite of the bound in~\eqref{eq:min-capture},
+${\Supp(p_K, \x \given \Prefix) \le \Reg}$.
 %
 Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
 and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
@@ -1142,14 +1153,14 @@ therefore by Theorem~\ref{thm:min-capture}, $\RLB$~cannot be optimal,
 \label{prop:min-capture-correct}
 Define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
 and let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list
-with prefix ${\Prefix = (p_1, \dots, p_{K-1}, p_{K})}$
+with prefix ${\Prefix = (p_1, \dots, p_{K})}$
 and labels ${\Labels = (q_1, \dots, q_{K})}$, such that
-the last antecedent~$p_{K}$ has insufficient accurate support, \ie
+the last antecedent~$p_{K}$ has insufficient accurate support,
+\ie the opposite of the bound in~\eqref{eq:min-capture-correct}:
 \begin{align}
 \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_K \given \Prefix) \wedge \one [ q_K = y_n ]
 \le \Reg.
 \end{align}
-where~$\Reg$ is the regularization parameter.
 %
 Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
 and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
@@ -1161,7 +1172,7 @@ ${(P_1, \dots, P_{K'-1})}$ ${\in \StartContains(\Prefix^{K-1})}$
 and ends with~${P_{K'} = p_{K}}$.
 %
 It follows that~$P_{K'}$ has insufficient accurate support in
-prefix~$\PrefixB$, and furthermore, $\RLB$~cannot be optimal, \ie
+prefix~$\PrefixB$, and furthermore,
 ${\RLB \notin}$ ${\argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
 \end{proposition}
 
@@ -1189,12 +1200,30 @@ the majority class label of data captured by~$P_K$ in~$\Prefix$,
 and recall from~\eqref{ineq:supp} that
 ${\Supp(P_{K'}, \x \given \PrefixB) \le \Supp(p_{K}, \x \given \Prefix)}$.
 %
-By Theorem~\ref{thm:min-capture-correct}, $\RLB$~cannot be optimal,
-\ie ${\RLB \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
+By Theorem~\ref{thm:min-capture-correct},
+${\RLB \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
 \end{proof}
 
 \begin{proposition}[Excessive antecedent support propagates]
 \label{prop:ub-support}
+Define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
+and let ${\Prefix = (p_1, \dots, p_{K})}$ be a prefix,
+such that its last antecedent~$p_{K}$ has excessive support,
+\ie the opposite of the bound in~\eqref{eq:ub-support-last}:
+\begin{align}
+\Supp(p_K, \x, \given \Prefix) \ge 1 - \Supp(\Prefix^{K-1}, \x \given \Prefix) - \Reg.
+\end{align}
+Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
+and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
+be any rule list with prefix
+${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'})}$
+such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
+${(P_1, \dots, P_{K'-1}) \in \StartContains(\Prefix^{K-1})}$
+and ends with~${P_{K'} = p_{K}}$.
+%
+It follows that~$P_{K'}$ has insufficient support in
+prefix~$\PrefixB$, and furthermore, $\RLB$~cannot be optimal,
+\ie ${\RLB \notin \argmin_{\RL} \Obj(\RL, \x, \y)}$.
 \end{proposition}
 
 \begin{proof}
