@@ -899,14 +899,14 @@ with equality implying that there also exists a shorter optimal rule list
 ${\RL' = (\Prefix^{K-1}, \Labels', \Default', K - 1) \in}$ ${\argmin_\RL \Obj(\RL, \x, \y)}$
 with prefix~$\Prefix^{K-1}$.
 %
-For all ${j \le K - 1}$, every antecedent~$p_j$ in~$\Prefix$ has support
+For all ${k \le K - 1}$, every antecedent~$p_k$ in~$\Prefix$ has support
 less than the fraction of all data not captured by preceding antecedents,
 by an amount greater than the regularization parameter~$\Reg$:
 \begin{align}
-\Supp(p_j, \x, \given \Prefix) < 1 - \Supp(\Prefix^{j-1}, \x \given \Prefix) - \Reg,
+\Supp(p_k, \x, \given \Prefix) < 1 - \Supp(\Prefix^{k-1}, \x \given \Prefix) - \Reg,
 \label{eq:ub-support}
 \end{align}
-where ${\Prefix^{j-1} = (p_1, \dots, p_{j-1})}$.
+where ${\Prefix^{k-1} = (p_1, \dots, p_{k-1})}$.
 \end{theorem}
 
 \begin{proof}
@@ -915,7 +915,7 @@ We begin by focusing on the last antecedent in a rule list.
 Let ${\RL = (\Prefix, \Labels, \Default, K)}$
 be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
 and objective ${\Obj(\RL, \x, \y) \le \OptimalObj}$, where
-${\OptimalObj \equiv \min_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$
+${\OptimalObj \equiv \min_{\RLB} \Obj(\RLB, \x, \y)}$
 is the optimal objective.
 %
 Also let ${\RL' = (\Prefix', \Labels', \Default', K + 1)}$
@@ -952,7 +952,7 @@ therefore
 = \Obj(\RL, \x, \y) - \epsilon + \Reg \ge \Obj(\RL, \x, \y) \ge \OptimalObj.
 \end{align}
 $\RL'$ is an optimal rule list,
-\ie ${\RL' \in \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, y)}$,
+\ie ${\RL' \in \argmin_{\RLB} \Obj(\RLB, \x, y)}$,
 if and only if ${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) = \OptimalObj}$,
 which requires ${\epsilon = \Reg}$.
 %
@@ -982,7 +982,7 @@ for all~${k > K+1}$.
 By Theorem~\ref{thm:min-capture},
 all of the additional rules have insufficient support,
 therefore~$\Prefix''$ cannot be optimal,
-\ie ${\RL'' \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
+\ie ${\RL'' \notin \argmin_{\RLB} \Obj(\RLB, \x, \y)}$.
 \end{proof}
 
 Similar to Theorem~\ref{thm:min-capture}, our lower bound on
@@ -1035,27 +1035,36 @@ related rule lists whose prefixes all reject the same antecedent.
 \begin{theorem}[Antecedent rejection propagates]
 \label{thm:reject}
 For any prefix ${\Prefix = (p_1, \dots, p_K)}$,
-let~$\StartContains(\Prefix)$ denote the set of all rule lists
-${\RL' = (\Prefix', \Labels', \Default', K')}$ such that
+let~$\StartContains(\Prefix)$ denote the set of all
+prefixes~$\Prefix'$ such that
 the set of all antecedents in~$\Prefix$ is a subset of
 the set of all antecedents in~$\Prefix'$, \ie
 \begin{align}
-\StartContains(\Prefix) = \{(\Prefix', \Labels', \Default', K')
+\StartContains(\Prefix) =
+\{\Prefix' = (p'_1, \dots, p'_{K'})
 ~s.t.~ \{p_k : p_k \in \Prefix \} \subseteq
-\{p'_\kappa : p'_\kappa \in \Prefix' \} \}.
+\{p'_\kappa : p'_\kappa \in \Prefix'\}, K' \ge K \}.
+\label{eq:start-contains}
 \end{align}
 %
-Let ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ be a prefix
-that rejects its last antecedent~$p_K$,
-either because~$p_K$ in the context of~$\Prefix$ has
+Let ${\Prefix = (p_1, \dots, p_{K-1}, p_{K})}$ be a prefix
+that rejects its last antecedent~$p_{K}$,
+either because~$p_{K}$ in the context of~$\Prefix$ has
 insufficient support, insufficient accurate support,
 or is too similar to the default rule.
 %
-It follows that for any rule list
-${\RL' = (\Prefix', \Labels', \Default', K') \in \StartContains(\Prefix)}$,
-its prefix~$\Prefix'$ rejects~$p_K$ for the same reason
-that~$\Prefix$ rejects~$p_K$, and furthermore~$\RL'$ cannot
-be optimal, \ie ${\RL' \notin \argmin_\RL \Obj(\RL, \x, \y)}$.
+Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
+and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
+be any rule list with prefix
+${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'})}$
+such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
+${(P_1, \dots, P_{K'-1}) \in \StartContains(\Prefix^{K-1})}$
+and ends with antecedent~${P_{K'} = p_{K}}$.
+%
+It follows that prefix~$\PrefixB$ rejects~$P_{K'}$
+for the same reason that~$\Prefix$ rejects~$p_{K}$,
+and furthermore, $\RLB$ cannot be optimal,
+\ie ${\RLB \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
 \end{theorem}
 
 \begin{proof}
@@ -1063,15 +1072,25 @@ be optimal, \ie ${\RL' \notin \argmin_\RL \Obj(\RL, \x, \y)}$.
 \end{proof}
 
 \begin{proposition}[Propagation of insufficient antecedent support]
-Let ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ be a prefix, such that
-its last antecedent~$p_K$ has insufficient support,
-\ie ${\Supp(p_k, \x \given \Prefix) \le \Reg}$.
+Define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
+and let ${\Prefix = (p_1, \dots, p_K, p_{K+1})}$ be a prefix,
+such that its last antecedent~$p_{K+1}$ has insufficient support,
+\ie ${\Supp(p_K, \x \given \Prefix) \le \Reg}$,
+where~$\Reg$ is the regularization parameter.
 %
-\dots
+Let ${\RL' = (\Prefix', \Labels', \Default', K')}$
+be any rule list in~$\StartContains(\Prefix)$,
+and let~$p'_k$ be the antecedent in prefix
+${\Prefix' = (p'_1, \dots, p'_k, \dots, p'_{K'})}$
+such that ${p'_k = p_K}$.
+%
+It follows that prefix~$\Prefix'$ rejects~$p'_k$,
+and furthermore, $\RL'$ cannot be optimal,
+\ie ${\RL' \notin \argmin_\RL \Obj(\RL, \x, \y)}$.
 \end{proposition}
 
 \begin{proof}
-\dots
+
 \end{proof}
 
 \begin{comment}
