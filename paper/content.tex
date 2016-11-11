@@ -1264,16 +1264,21 @@ in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
 \subsection{Permutation bound for permutation-aware garbage collection}
 \label{sec:permutation}
 
-Let~$A$ be a set of~$K$ antecedents, and let~$P$ be the set of all
-$K$-prefixes corresponding to permutations of antecedents in~$A$.
+Let~${P = \{p_k\}_{k=1}^K}$ be a set of~$K$ antecedents,
+and let~$\Pi$ be the set of all $K$-prefixes corresponding to
+permutations of antecedents in~$P$.
 %
-Let ${\RL = (\Prefix, \Labels, q_0, K)}$ be an optimal rule list
-with prefix~$\Prefix$ in~$P$.
+Let~$\RL$ be a rule list with prefix~${\Prefix \in \Pi}$,
+such that~$\RL$ has the minimum objective over all rule lists
+with prefixes in~$\Pi$.
 %
-Theorem~\ref{thm:permutation} below implies that
-an optimal rule list constrained to start with~$\Prefix$
-is also optimal with respect to the looser constraint of
-starting with any prefix in~$P$.
+Let~$\RL'$ be rule list whose prefix~$\Prefix'$ starts with~$\Prefix$,
+such that~$\RL'$ has the minimum objective over all rule lists
+whose prefixes start with~$\Prefix$.
+%
+Theorem~\ref{thm:permutation} below implies that~$\RL'$
+also has the minimum objective over all rule lists whose
+prefixes start with \emph{any} prefix in~$\Pi$.
 
 \begin{theorem}[Permutation bound]
 \label{thm:permutation}
