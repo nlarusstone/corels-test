@@ -1069,12 +1069,12 @@ or excessive support.
 Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$ be the
 first~${K - 1}$ antecedents of~$\Prefix$.
 %
-Let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
+Let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
 be any rule list with prefix
-${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'})}$
+${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'}, \dots, P_{\kappa})}$
 such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
 ${(P_1, \dots, P_{K'-1}) \in}$ ${\StartContains(\Prefix^{K-1})}$
-and ends with antecedent~${P_{K'} = p_{K}}$.
+and antecedent~${P_{K'} = p_{K}}$.
 %
 It follows that prefix~$\PrefixB$ rejects~$P_{K'}$
 for the same reason that~$\Prefix$ rejects~$p_{K}$,
@@ -1096,12 +1096,12 @@ such that its last antecedent~$p_{K}$ has insufficient support,
 ${\Supp(p_K, \x \given \Prefix) \le \Reg}$.
 %
 Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
-and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
+and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
 be any rule list with prefix
-${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'})}$,
+${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'}, \dots, P_{\kappa})}$,
 such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
 ${(P_1, \dots, P_{K'-1}) \in \StartContains(\Prefix^{K-1})}$
-and ends with~${P_{K'} = p_{K}}$.
+and~${P_{K'} = p_{K}}$.
 %
 It follows that~$P_{K'}$ has insufficient support in
 prefix~$\PrefixB$, and furthermore, $\RLB$~cannot be optimal,
@@ -1109,8 +1109,8 @@ prefix~$\PrefixB$, and furthermore, $\RLB$~cannot be optimal,
 \end{proposition}
 
 \begin{proof}
-The support of~$p_K$ in~$\Prefix$ depends only
-on the set of antecedents in~$\Prefix^{K-1}$:
+The support of~$p_K$ in~$\Prefix$ depends only on the
+set of antecedents in ${\Prefix^{K} = (p_1, \dots, p_{K})}$:
 \begin{align}
 \Supp(p_K, \x \given \Prefix)
 = \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_K \given \Prefix)
@@ -1118,12 +1118,10 @@ on the set of antecedents in~$\Prefix^{K-1}$:
   \wedge \Cap(x_n, p_K) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
   \wedge \Cap(x_n, p_K)
-\le \Reg,
+\le \Reg.
 \end{align}
-\ie it does not depend on their order.
-%
-Similarly, the support of~$P_{K'}$ in~$\PrefixB$ depends only
-on the set of antecedents in~$\PrefixB^{K'-1}$:
+Similarly, the support of~$P_{K'}$ in~$\PrefixB$ depends only on
+the set of antecedents in ${\PrefixB^{K'} = (P_1, \dots, P_{K'})}$:
 \begin{align}
 \Supp(P_{K'}, \x \given \PrefixB)
 = \frac{1}{N} \sum_{n=1}^N \Cap(x_n, P_{K'} \given \PrefixB)
@@ -1162,18 +1160,17 @@ the last antecedent~$p_{K}$ has insufficient accurate support,
 \le \Reg.
 \end{align}
 %
-Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$;
-let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
-be any rule list with prefix
-${\PrefixB = (P_1, \dots, P_{K'})}$
-and labels ${\LabelsB = (Q_1, \dots, Q_{K'})}$,
+Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$
+and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
+be any rule list with prefix ${\PrefixB = (P_1, \dots, P_{\kappa})}$
+and labels ${\LabelsB = (Q_1, \dots, Q_{\kappa})}$,
 such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
 ${(P_1, \dots, P_{K'-1})}$ ${\in \StartContains(\Prefix^{K-1})}$
-and ends with~${P_{K'} = p_{K}}$.
+and ${P_{K'} = p_{K}}$.
 %
 It follows that~$P_{K'}$ has insufficient accurate support in
 prefix~$\PrefixB$, and furthermore,
-${\RLB \notin}$ ${\argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
+${\RLB \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
 \end{proposition}
 
 \begin{proof}
@@ -1194,9 +1191,9 @@ The first inequality reflects the condition that
 ${\PrefixB^{K'-1} \in \StartContains(\Prefix^{K-1})}$,
 the next equality reflects the fact that~${P_{K'} = p_K}$.
 %
-For the next equality, notice that~$Q_{K'}$ is the majority class
-label of data captured by~$P_{K'}$ in~$\PrefixB$, and~$q_K$ is
-the majority class label of data captured by~$P_K$ in~$\Prefix$,
+For the following equality, notice that~$Q_{K'}$ is the majority
+class label of data captured by~$P_{K'}$ in~$\PrefixB$, and~$q_K$
+is the majority class label of data captured by~$P_K$ in~$\Prefix$,
 and recall from~\eqref{ineq:supp} that
 ${\Supp(P_{K'}, \x \given \PrefixB) \le \Supp(p_{K}, \x \given \Prefix)}$.
 %
@@ -1214,27 +1211,29 @@ such that its last antecedent~$p_{K}$ has excessive support,
 \Supp(p_K, \x \given \Prefix) \ge 1 - \Supp(\Prefix^{K-1}, \x) - \Reg.
 \end{align}
 Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$;
-let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K')}$
+let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
 be any rule list with prefix
-${\PrefixB = (P_1, \dots, P_{K'})}$
+${\PrefixB = (P_1, \dots, P_{\kappa})}$
 such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
 ${(P_1, \dots, P_{K'-1}) \in \StartContains(\Prefix^{K-1})}$
-and ends with~${P_{K'} = p_{K}}$.
+and~${P_{K'} = p_{K}}$.
 %
 It follows that~$P_{K'}$ has excessive support in prefix~$\PrefixB$,
 and furthermore, ${\RLB \notin \argmin_{\RL} \Obj(\RL, \x, \y)}$.
 \end{proposition}
 
 \begin{proof}
-Since~$\PrefixB$ contains all the antecedents in~$\Prefix$,
-we have that ${\Supp(\PrefixB, \x) \ge \Supp(\Prefix, \x)}$.
-%
+Since ${\PrefixB^{K'} = (P_1, \dots, P_{K'})}$
+contains all the antecedents in~$\Prefix$, we have that
+\begin{align}
+\Supp(\PrefixB^{K'}, \x) \ge \Supp(\Prefix, \x).
+\end{align}
 Expanding these two terms gives
 \begin{align}
-\Supp(\PrefixB^{K'-1}, \x) + \Supp(P_{K'}, \x \given \PrefixB)
-= \Supp(\PrefixB, \x)
-&\ge \Supp(\Prefix, \x) \nn \\
-&= \Supp(\Prefix^{K+1}, \x) + \Supp(p_K, \x \given \Prefix)
+\Supp(\PrefixB^{K'}, \x)
+&= \Supp(\PrefixB^{K'-1}, \x) + \Supp(P_{K'}, \x \given \PrefixB) \nn \\
+&\ge \Supp(\Prefix, \x)
+= \Supp(\Prefix^{K-1}, \x) + \Supp(p_K, \x \given \Prefix)
 \ge 1 - \Reg.
 \end{align}
 Rearranging gives
@@ -1248,32 +1247,19 @@ By Theorem~\ref{thm:ub-support},
 ${\RLB \notin \argmin_{\RL} \Obj(\RL, \x, \y)}$.
 \end{proof}
 
+Theorem~\ref{thm:reject} implies potentially significant
+computational savings.
+%
+During branch-and-bound execution, if we ever encounter a
+prefix ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ that rejects its
+last antecedent~$p_K$, then we can prune~$\Prefix$.
+%
+Furthermore, we can also prune \emph{any} prefix~$\Prefix'$
+whose antecedents contains the set of antecedents in~$\Prefix$,
+in almost any order, with the constraint that all antecedent
+in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
+
 \begin{comment}
-Suppose we grow a rule list~$\RL$ by appending rule~$A$ not already in the rule list,
-\ie by adding an antecedent to its prefix~$\Prefix$; call this new rule list~$\RL'$.
-%
-If in the context of~$\RL'$ rule~$A$ has insufficient accurate support~\eqref{eq:min-capture-correct},
-insufficient support~\eqref{eq:min-capture},
-or captures too many data compared to the original default rule~\eqref{eq:max-capture},
-then we say that rule list~$\RL$~\emph{rejects} rule~$A$.
-
-We now describe a large class of rule lists related to~$\RL$ that also reject rule~$A$:
-if~$\RL'$ is \emph{any} rule list containing rules whose antecedents include,
-in any order, the antecedents in~$\Prefix$, then~$\RL'$ also rejects rule~$A$.
-%
-Furthermore,~$\RL'$ rejects~$A$ for the same reason that~$\RL$ rejects~$A$.
-%
-For example, suppose that when we add rule~$A$ to rule list~$\RL$,
-it has insufficient support~\eqref{eq:min-capture}: ${s(\RL_A) \le c}$,
-where~$s(\RL_A)$ is the normalized support of~$A$ in the context of~$\RL$.
-%
-In the context of~$\RL'$, the prefix preceding~$A$ captures at least
-as much data as the prefix of~$\RL$, thus
-\begin{align}
-s(\RL'_A) \le s(\RL_A) \le c,
-\end{align}
-where~$s(\RL'_A)$ is the normalized support of rule~$A$ in~$\RL'$.
-
 As another example, consider a rule list~$\RL'$ derived from~$\RL$ that holds rule~$A$ fixed
 but permutes any of the other (earlier) antecedents given by those in~$\Prefix$.
 %
