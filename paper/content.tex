@@ -197,13 +197,13 @@ corresponding to the prefix and default:
 where ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
 \begin{align}
 \Loss_p(\Prefix, \Labels, \x, \y) =
-\frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
+\frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [ q_k \neq y_n ]
 \label{eq:loss}
 \end{align}
 is the fraction of data captured and misclassified by the prefix, and
 \begin{align}
 \Loss_0(\Prefix, \Default, \x, \y) =
-\frac{1}{N} \sum_{n=1}^N \one [ \neg\, \Cap(x_n, \Prefix) \wedge (\Default \neq y_n) ]
+\frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [ \Default \neq y_n ]
 \end{align}
 is the fraction of data not captured by the prefix and misclassified by the default.
 %
@@ -243,8 +243,8 @@ Notice that~$\Prefix'$ yields the same mistakes as~$\Prefix$,
 and possibly additional mistakes:
 \begin{align}
 \Loss_p(\Prefix', \Labels', \x, \y)
-&= \frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ]
-+ \sum_{k=K+1}^{K'} \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \right) \nn \\
+&= \frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [ q_k \neq y_n ]
++ \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] \right) \nn \\
 &\ge \Loss_p(\Prefix, \Labels, \x, \y),
 \label{eq:prefix-loss}
 \end{align}
@@ -777,7 +777,7 @@ define~$a_k$ to be the fraction of data that are captured by~$p_k$
 and correctly classified:
 \begin{align}
 a_k \equiv \frac{1}{N} \sum_{n=1}^N
-  \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k = y_n) ].
+  \Cap(x_n, p_k \given \Prefix) \wedge \one [ q_k = y_n ].
 \label{eq:rule-correct}
 \end{align}
 The regularization parameter~$\Reg$ provides a lower bound on~$a_k$:
@@ -796,7 +796,7 @@ Now, let us define~$\Loss_i$ to be the portion of~$\OptimalObj$
 due to this rule's misclassification error,
 \begin{align}
 \Loss_i \equiv \frac{1}{N} \sum_{n=1}^N
-  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_i \neq y_n) ].
+  \Cap(x_n, p_i \given \Prefix) \wedge \one [ q_i \neq y_n ].
 \end{align}
 The largest discrepancy between~$\OptimalRL$ and~$\RL$ would
 occur if~$\RL$ misclassified all the data captured by~$p_i$.
@@ -808,9 +808,9 @@ the misclassification error of~$\RL$ and~$\OptimalRL$:
 &\le \Supp(p_i, \x \given \Prefix) - \Loss_i \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_i \given \Prefix)
   - \frac{1}{N} \sum_{n=1}^N
-  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_i \neq y_n) ] \nn \\
+  \Cap(x_n, p_i \given \Prefix) \wedge \one [ q_i \neq y_n ] \nn \\
 &= \frac{1}{N} \sum_{n=1}^N
-  \one [ \Cap(x_n, p_i \given \Prefix) \wedge (q_i = y_n) ] = a_i,
+  \Cap(x_n, p_i \given \Prefix) \wedge \one [ q_i = y_n ] = a_i,
 \end{align}
 where we defined~$a_i$ in~\eqref{eq:rule-correct}.
 %
@@ -1259,20 +1259,7 @@ whose antecedents contains the set of antecedents in~$\Prefix$,
 in almost any order, with the constraint that all antecedent
 in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
 
-\begin{comment}
-As another example, consider a rule list~$\RL'$ derived from~$\RL$ that holds rule~$A$ fixed
-but permutes any of the other (earlier) antecedents given by those in~$\Prefix$.
-%
-The permutation of~$\Prefix$ captures the same data as~$\Prefix$,
-therefore rule~$A$ behaves the same in both contexts,
-and in particular captures and correctly classifies the same data.
-%
-Another rule list~$\RL''$, derived from~$\RL'$ by inserting additional rules anywhere,
-maintains the invariant that rule~$A$ appears after rules with antecedents in~$\Prefix$;
-it can capture and correctly classify at most as much data as rule~$A$ in rule list~$\RL'$.
-%
-%A rule is rejected by a prefix if it doesn't correctly capture enough data (it must correctly capture >= c * ndata). Let Q be P's parent. If Q rejects a rule, then P will also reject that rule. This 'inheritance' of rejected rules only depends on which data are captured by Q, and doesn't actually depend on the order of rules in Q. Let S be the set of rules formed from (K-1) rules of P, in any order. P inherits rejected rules from any elements of S. Because of our symmetry-based garbage collection of prefixes equivalent up to a permutation, there are at most K elements of S in the cache; we can identify these via the inverse canonical map (ICM) that maps an ordered prefix to its permutation in the cache. We thus lazily initialize the list of P's reject list of rejected rules.
-\end{comment}
+%Let Q be P's parent. If Q rejects a rule, then P will also reject that rule. This 'inheritance' of rejected rules only depends on which data are captured by Q, and doesn't actually depend on the order of rules in Q. Let S be the set of rules formed from (K-1) rules of P, in any order. P inherits rejected rules from any elements of S. Because of our symmetry-based garbage collection of prefixes equivalent up to a permutation, there are at most K elements of S in the cache; we can identify these via the inverse canonical map (ICM) that maps an ordered prefix to its permutation in the cache. We thus lazily initialize the list of P's reject list of rejected rules.
 
 \subsection{Permutation bound for permutation-aware garbage collection}
 \label{sec:permutation}
@@ -1397,7 +1384,7 @@ We can expand the first difference as
 %  - \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K
 %  \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \\
 &= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-\one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ],
+  \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ],
 \end{align}
 where we have used the fact that since~$\Prefix'$
 starts with~$\Prefix$, the first~$K$ rules in~$\Prefix'$
@@ -1407,9 +1394,9 @@ Similarly, we can expand the second difference as
 \begin{align}
 \Loss_p(\PrefixB', \LabelsB', \x, \y) - \Loss_p(\PrefixB, \LabelsB, \x, \y)
 &= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-\one [ \Cap(x_n, p_k \given \PrefixB') \wedge (Q_k \neq y_n) ] \nn \\
+  \Cap(x_n, p_k \given \PrefixB') \wedge \one [ Q_k \neq y_n ] \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-\one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ] \nn \\
+  \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] \nn \\
 &= \Loss_p(\Prefix', \Labels', \x, \y) - \Loss_p(\Prefix, \Labels, \x, \y).
 \end{align}
 For the second equality, we observe that prefixes~$\PrefixB'$
