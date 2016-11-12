@@ -94,4 +94,5 @@ profiles/
 *.bbl
 *.blg
 *.toc
+*.lof
 paper/arxiv.pdf
