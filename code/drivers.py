@@ -19,7 +19,7 @@ def tdata_x(min_objective=1., method='curiosity', max_cache_size=1500000):
            garbage_collect=True, do_pruning=False)
     return (metadata, metrics, cache, priority_queue, best, rule_list)
 
-def tdata_1(min_objective=1., method='curiosity', max_cache_size=360000):
+def tdata_1(min_objective=1., method='curiosity', max_cache_size=2000000):
     (metadata, metrics, cache, priority_queue, best, rule_list) = \
     bbound(din=os.path.join('..', 'data'), dout=os.path.join('..', 'cache'),
            dlog=os.path.join('..', 'logs'), dfigs=os.path.join('..', 'figs'),
