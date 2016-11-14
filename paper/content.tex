@@ -383,8 +383,10 @@ length~(\S\ref{sec:ub-prefix-length}),
 and corresponding upper bounds on the number of
 prefix evaluations~(\S\ref{sec:ub-size}).
 %
-Next, we prove lower bounds on antecedent support~(\S\ref{sec:lb-support}),
-followed by several bounds arising from problem symmetries.
+Next, we prove lower~(\S\ref{sec:lb-support}) and
+upper~(\S\ref{sec:ub-support}) bounds on antecedent support,
+and provide a unified analysis of consequences of
+these antecedent support bounds~(\S\ref{sec:reject}).
 %
 We then analyze rule lists whose prefixes are equivalent up to
 a permutation of their antecedents~(\S\ref{sec:permutation});
@@ -1013,6 +1015,7 @@ only mine rules with normalized support less than ${1 - \Reg}$;
 we need not mine rules with a larger fraction of observations.
 
 \subsection{Antecedent rejection and its propagation}
+\label{sec:reject}
 
 In this section, we demonstrate further consequences of
 our lower~(\S\ref{sec:lb-support}) and upper
