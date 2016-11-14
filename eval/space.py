@@ -64,11 +64,11 @@ def test_state_space():
     pylab.clf()
     pylab.semilogy(min_objective_vec, remaining, 'b-', marker='o', markerfacecolor='r')
     pylab.xlabel('current best objective')
-    pylab.ylabel('log(size of remaining search space)')
+    pylab.ylabel('size of remaining search space')
     
     pylab.figure(2)
     pylab.clf()
     pylab.semilogy(min_objective_vec[1:], fraction_remaining[1:], 'b-', marker='o', markerfacecolor='r')
     pylab.xlabel('current best objective')
-    pylab.ylabel('log(fraction of search space remaining)')
+    pylab.ylabel('fraction of search space remaining')
     return
