@@ -45,7 +45,7 @@ and ${\Labels = (q_1, \dots, q_K)}$.}
 \end{figure}
 
 A rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$ of length~${K \ge 0}$
-is a ${(K+1)}$-tuple consisting of~$K$ association rules,
+is a ${(K+1)}$-tuple consisting of~$K$ distinct association rules,
 ${r_k = p_k \rightarrow q_k}$, for ${k = 1, \dots, K}$,
 followed by a default rule~$r_0$.
 %
@@ -403,24 +403,32 @@ implies an upper bound on the maximum prefix length we might still have to consi
 
 \begin{theorem}[Upper bound on prefix length]
 \label{thm:ub-prefix-length}
+Consider a state space of all rule lists formed from a set of~$M$ rules.
+%
 Let~$L(\RL)$ be the length of rule list~$\RL$
 and let~$\CurrentObj$ be the current best objective.
+%
 For all optimal rule lists ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$
 \begin{align}
-L(\OptimalRL) \le \left\lfloor \frac{\CurrentObj}{\Reg} \right\rfloor.
+L(\OptimalRL) \le \min \left(\left\lfloor \frac{\CurrentObj}{\Reg} \right\rfloor, M \right),
 \label{eq:max-length}
 \end{align}
+where~$\Reg$ is the regularization parameter.
+%
 Furthermore, if the current best rule list~$\CurrentRL$
 has length~$K$ and zero misclassification error,
 then for every optimal rule list
 ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
-if ${\CurrentRL \in \argmin_d \Obj(\RL, \x, \y)}$,
+if ${\CurrentRL \in}$ ${\argmin_d \Obj(\RL, \x, \y)}$,
 then ${L(\OptimalRL) \le K}$,
 or otherwise if ${\CurrentRL \notin \argmin_d \Obj(\RL, \x, \y)}$,
 then ${L(\OptimalRL) \le K - 1}$.
 \end{theorem}
 
 \begin{proof}
+First note that since rule lists consist of distinct rules,
+$M$~gives the maximum rule list length.
+%
 For an optimal rule list~$\OptimalRL$ with objective~$\OptimalObj$,
 \begin{align}
 \Reg L(\OptimalRL) \le \OptimalObj = \Obj(\OptimalRL, \x, \y)
@@ -464,12 +472,15 @@ Let~$L(\RL)$ be the length of rule list~$\RL$.
 %
 For all optimal rule lists ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
 \begin{align}
-L(\OptimalRL) \le \left\lfloor \frac{1}{2\Reg} \right\rfloor.
+L(\OptimalRL) \le \min \left( \left\lfloor \frac{1}{2\Reg} \right\rfloor, M \right).
 \label{eq:max-length-trivial}
 \end{align}
 \end{corollary}
 
 \begin{proof}
+First note that since rule lists consist of distinct rules,
+$M$~gives the maximum rule list length.
+%
 Let ${d = ((), (), q_0, 0)}$ be the empty rule list;
 it has objective ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) \le 1/2}$,
 which gives an upper bound on~$\CurrentObj$.
@@ -489,13 +500,14 @@ and let~$\CurrentObj$ be the current best objective.
 %
 If~$\Prefix'$ has lower bound~${b(\Prefix', \x, \y) < \CurrentObj}$, then
 \begin{align}
-K' < K + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor.
+K' < \min \left( K + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor, M \right).
 \label{eq:max-length-prefix}
 \end{align}
 \end{theorem}
 
 \begin{proof}
-First note that~${K' \ge K}$, since~$\Prefix'$ starts with~$\Prefix$.
+First note that $M$~gives the maximum rule list length;
+also, note that~${K' \ge K}$, since~$\Prefix'$ starts with~$\Prefix$.
 %
 Now recall from~\eqref{eq:prefix-lb} that
 %
@@ -522,7 +534,7 @@ rearranging to obtain a bound on~${K' - K}$
 gives an upper bound on the number of remaining `steps' corresponding
 to an iterative sequence of single-rule extensions of a prefix~$\Prefix$.
 %
-Note also that when~${\RL = ((), (), q_0, 0)}$ is the empty rule list,
+Notice that when~${\RL = ((), (), q_0, 0)}$ is the empty rule list,
 this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix, \x, \y) = 0}$.
 
 \subsection{Upper bounds on the number of prefix evaluations}
@@ -613,12 +625,12 @@ For any set~$\RuleSet$ of $M$ rules,
 \TotalRemaining(\RuleSet) \le \sum_{k=0}^K \frac{M!}{(M - k)!},
 \label{eq:size-naive}
 \end{align}
-where ${K = \lfloor 1/2 \Reg \rfloor}$.
+where ${K = \min(\lfloor 1/2 \Reg \rfloor, M)}$.
 \end{proposition}
 
 \begin{proof}
 By Corollary~\ref{cor:ub-prefix-length},
-${K \equiv \lfloor 1 / 2 \Reg \rfloor}$
+${K \equiv \min(\lfloor 1 / 2 \Reg \rfloor, M)}$
 gives an upper bound on the length of any optimal rule list.
 %
 Since we can think of our problem as finding the optimal
@@ -670,7 +682,7 @@ prefix evaluations, then
 \Remaining(\CurrentObj, \Queue)
 \le \sum_{j=1}^J \Queue_j \left( \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!} \right),
 \end{align}
-where~${K = \lfloor \CurrentObj / \Reg \rfloor}$.
+where~${K = \min(\lfloor \CurrentObj / \Reg \rfloor, M)}$.
 \end{proposition}
 
 \begin{proof}
@@ -678,10 +690,9 @@ The number of remaining prefix evaluations is equal to the number of
 prefixes that are currently in or will be inserted into queue~$\Queue$.
 %
 For any such remaining prefix~$\Prefix$,
-Theorem~\ref{thm:ub-prefix-length} gives an upper bound on its length,
-${L(\Prefix) \le \lfloor \CurrentObj / \Reg \rfloor}$.
-%
-Define~${K = \lfloor \CurrentObj / \Reg \rfloor}$.
+Theorem~\ref{thm:ub-prefix-length} gives an upper bound on its length;
+define~$K$ to be this bound:
+${L(\Prefix) \le \min(\lfloor \CurrentObj / \Reg \rfloor, M) \equiv K}$.
 %
 For any prefix~$\Prefix$ in queue~$\Queue$ with length~${L(\Prefix) = j}$,
 the maximum number of prefixes that start with~$\Prefix$
@@ -1509,12 +1520,12 @@ For any set~$\RuleSet$ of $M$ rules,
 \TotalRemaining(\RuleSet)
 \le  1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!},
 \end{align}
-where ${K = \lfloor 1 / 2 \Reg \rfloor}$.
+where ${K = \min(\lfloor 1 / 2 \Reg \rfloor, M)}$.
 \end{theorem}
 
 \begin{proof}
 By Corollary~\ref{cor:ub-prefix-length},
-${K \equiv \lfloor 1 / 2 \Reg \rfloor}$
+${K \equiv \min(\lfloor 1 / 2 \Reg \rfloor, M)}$
 gives an upper bound on the length of any optimal rule list.
 %
 The algorithm begins by evaluating the empty prefix,
