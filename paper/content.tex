@@ -1356,17 +1356,19 @@ in the objectives of rule lists~$\RLB'$ and~$\RLB$.
 %
 Let us expand the first difference as
 \begin{align}
-\Obj(\RL', \x, \y) - \Obj(\RL, \x, \y)
-&= \Loss(\RL', \x, \y) + \Reg K - \Loss(\RL, \x, \y) - \Reg K \nn \\
+\Obj(\RL',& \x, \y) - \Obj(\RL, \x, \y)
+  = \Loss(\RL', \x, \y) + \Reg K' - \Loss(\RL, \x, \y) - \Reg K \nn \\
 &= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y)
-  - \Loss_p(\Prefix, \Labels, \x, \y) - \Loss_0(\Prefix, \Default, \x, \y).
+  - \Loss_p(\Prefix, \Labels, \x, \y) - \Loss_0(\Prefix, \Default, \x, \y)
+  + \Reg (K' - K).
 \end{align}
 Similarly, let us expand the second difference as
 \begin{align}
-\Obj(\RLB', \x, \y) - \Obj(\RLB, \x, \y)
-&= \Loss(\RLB', \x, \y) + \Reg K - \Loss(\RLB, \x, \y) - \Reg K \nn \\
+\Obj(\RLB',& \x, \y) - \Obj(\RLB, \x, \y)
+  = \Loss(\RLB', \x, \y) + \Reg K' - \Loss(\RLB, \x, \y) - \Reg K \nn \\
 &= \Loss_p(\PrefixB', \LabelsB', \x, \y) + \Loss_0(\PrefixB', \DefaultB', \x, \y)
-  - \Loss_p(\PrefixB, \LabelsB, \x, \y) - \Loss_0(\PrefixB, \DefaultB, \x, \y).
+  - \Loss_p(\PrefixB, \LabelsB, \x, \y) - \Loss_0(\PrefixB, \DefaultB, \x, \y)
+  + \Reg (K' - K).
 \end{align}
 
 Since the prefixes~$\Prefix$ and~$\PrefixB$ contain
@@ -1463,12 +1465,12 @@ By~\eqref{eq:analogous},
 \begin{align}
 \Obj(\RL^*, \x, \y) - \Obj(\RL, \x, \y)
 = \Obj(\RLB^*, \x, \y) - \Obj(\RLB, \x, \y),
-\label{eq:analogous-optimal}
 \end{align}
 and furthermore, $\RLB^*$ is an optimal rule list
 with prefix constrained to start with~$\PrefixB$,
 \begin{align}
 \RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
+\label{eq:analogous-optimal}
 \end{align}
 Combining~\eqref{eqref:perm-ineq} and~\eqref{eq:analogous-optimal} gives
 \begin{align}
@@ -1589,11 +1591,198 @@ Here, we present a bound that generalizes our permutation bound in
 Theorem~\ref{thm:permutation}, which can be viewed as special case.
 
 \begin{theorem}[Equivalent support bound]
-\dots
+\label{thm:equivalent}
+Define ${\StartsWith(\Prefix) = }$
+${\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
+to be the set of all rule lists whose prefixes start with~$\Prefix$.
+%
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$
+be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$,
+and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
+be a rule list with prefix ${\PrefixB = (P_1, \dots, P_{\kappa})}$,
+such that~$\Prefix$ and~$\PrefixB$ capture the same data, \ie
+\begin{align}
+\{x_n : \Cap(x_n, \Prefix)\} = \{x_n : \Cap(x_n, \PrefixB)\}.
+\end{align}
+%
+If the objective lower bounds of~$\RL$ and~$\RLB$
+obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
+then the objective of the optimal rule list in~$\StartsWith(\Prefix)$ gives a
+lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$:
+\begin{align}
+\min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
+\le \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y).
+\label{eq:permutation}
+\end{align}
 \end{theorem}
 
 \begin{proof}
-\dots
+We begin by defining four related rule lists.
+%
+First, let ${\RL = (\Prefix, \Labels, \Default, K)}$
+be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
+and labels ${\Labels = (q_1, \dots, q_K)}$.
+%
+Second, let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
+be a rule list with prefix
+${\PrefixB = (P_1, \dots, P_\kappa)}$
+and labels ${\LabelsB = (Q_1, \dots, Q_\kappa)}$.
+%
+Third, let ${\RL' = (\Prefix', \Labels', \Default', K') \in}$
+${\StartsWith(\Prefix)}$ be any rule list
+whose prefix starts with~$\Prefix$, such that~${K' \ge K}$.
+%
+Denote the prefix and labels of~$\RL'$ by
+${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
+and ${\Labels = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$,
+respectively.
+%
+Finally, define
+${\RLB' = (\PrefixB', \LabelsB', \DefaultB', \kappa') \in \StartsWith(\PrefixB)}$
+to be the `analogous' rule list, \ie whose prefix
+${\PrefixB' = (P_1, \dots, P_\kappa, P_{\kappa+1}, \dots, P_{\kappa'})
+= (P_1, \dots, P_\kappa, p_{K+1}, \dots, p_{K'})}$
+starts with~$\PrefixB$ and ends with the same ${K'-K}$
+antecedents as~$\Prefix'$.
+%
+Let ${\LabelsB' = (Q_1, \dots, Q_\kappa, Q_{\kappa + 1}, \dots, Q_{\kappa'})}$
+denote the labels of~$\RLB'$.
+
+Next, we claim that the difference in the objectives
+of rule lists~$\RL'$ and~$\RL$ is the same as the difference
+in the objectives of rule lists~$\RLB'$ and~$\RLB$.
+%
+Let us expand the first difference as
+\begin{align}
+\Obj(\RL',& \x, \y) - \Obj(\RL, \x, \y)
+  = \Loss(\RL', \x, \y) + \Reg K' - \Loss(\RL, \x, \y) - \Reg K \nn \\
+&= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y)
+  - \Loss_p(\Prefix, \Labels, \x, \y) - \Loss_0(\Prefix, \Default, \x, \y)
+  + \Reg (K' - K).
+\end{align}
+Similarly, let us expand the second difference as
+\begin{align}
+\Obj(\RLB',& \x, \y) - \Obj(\RLB, \x, \y)
+  = \Loss(\RLB', \x, \y) + \Reg \kappa' - \Loss(\RLB, \x, \y) - \Reg \kappa \nn \\
+&= \Loss_p(\PrefixB', \LabelsB', \x, \y) + \Loss_0(\PrefixB', \DefaultB', \x, \y)
+  - \Loss_p(\PrefixB, \LabelsB, \x, \y) - \Loss_0(\PrefixB, \DefaultB, \x, \y)
+  + \Reg (K' - K),
+\end{align}
+where we have used the fact that ${\kappa' - \kappa = K' - K}$.
+
+The prefixes~$\Prefix$ and~$\PrefixB$ both capture the same data.
+%
+Equivalently, the set of data that is not captured by~$\Prefix$
+is the same as the set of data that is not captured by~$\PrefixB$, \ie
+\begin{align}
+\{x_n : \neg\, \Cap(x_n, \Prefix)\} = \{x_n : \neg\, \Cap(x_n, \PrefixB)\}.
+\end{align}
+Thus, the corresponding rule lists~$\RL$ and~$\RLB$
+share the same default rule, \ie ${\Default = \DefaultB}$,
+yielding the same default rule misclassification error:
+\begin{align}
+\Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
+\end{align}
+Similarly, the rule lists~$\RL'$ and~$\RLB'$ have the same
+default rule misclassification error:
+\begin{align}
+\Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
+\end{align}
+
+At this point, to demonstrate our claim relating the objectives
+of~$\RL$, $\RL'$, $\RLB$, and~$\RLB'$, what remains is to
+show that the difference in the misclassification errors
+of prefixes~$\Prefix'$ and~$\Prefix$ is the same as that
+between~$\PrefixB'$ and~$\PrefixB$.
+%
+We can expand the first difference as
+\begin{align}
+\Loss_p(\Prefix', \Labels', \x, \y) - \Loss_p(\Prefix, \Labels, \x, \y)
+%&= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K'}
+%  \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ]
+%  - \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K
+%  \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \\
+&= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
+  \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ],
+\end{align}
+where we have used the fact that since~$\Prefix'$
+starts with~$\Prefix$, the first~$K$ rules in~$\Prefix'$
+make the same mistakes as those in~$\Prefix$.
+%
+Similarly, we can expand the second difference as
+\begin{align}
+\Loss_p(\PrefixB', \LabelsB', \x, \y) - \Loss_p(\PrefixB, \LabelsB, \x, \y)
+&= \frac{1}{N} \sum_{n=1}^N \sum_{k=\kappa+1}^{\kappa'}
+  \Cap(x_n, P_k \given \PrefixB') \wedge \one [ Q_k \neq y_n ] \nn \\
+&= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
+  \Cap(x_n, p_k \given \PrefixB') \wedge \one [ Q_k \neq y_n ] \nn \\
+&= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
+  \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] \nn \\
+&= \Loss_p(\Prefix', \Labels', \x, \y) - \Loss_p(\Prefix, \Labels, \x, \y).
+\end{align}
+For the second equality, we observe first that
+prefixes~$\PrefixB'$ and~$\Prefix'$ start with~$\kappa$ and~$K$
+antecedents, respectively, that capture the same data.
+%
+Second, prefixes~$\PrefixB'$ and~$\Prefix'$ end with exactly
+the same ordered list of~${K' - K}$ antecedents,
+therefore for any~${k = 1, \dots, K' - K}$,
+antecedent ${P_{\kappa + k} = p_{K + k}}$ in~$\PrefixB'$
+captures the same data as~$p_{K + k}$ captures in~$\Prefix'$.
+%
+It follows that the corresponding labels are all equivalent, \ie
+for all~${k = 1, \dots, K' - K}$, ${Q_{\kappa + k} = q_{K + k}}$,
+and consequently, the prefix misclassification error associated
+with the last~${K' - K}$ antecedents of~$\Prefix'$ is the same
+as that of~$\PrefixB'$.
+%
+We have therefore shown that the difference between the objectives
+of~$\RL'$ and~$\RL$ is the same as that between~$\RLB'$ and~$\RLB$, \ie
+\begin{align}
+\Obj(\RL', \x, \y) - \Obj(\RL, \x, \y)
+= \Obj(\RLB', \x, \y) - \Obj(\RLB, \x, \y).
+\label{eq:equiv-analogous}
+\end{align}
+
+Finally, suppose that the objective lower bounds of~$\RL$ and~$\RLB$
+obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$, thus
+\begin{align}
+\Obj(\RL, \x, \y)
+&= \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) + \Reg K \nn \\
+&= b(\Prefix, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) \nn \\
+&\le b(\PrefixB, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y)
+= b(\PrefixB, \x, \y) + \Loss_0(\PrefixB, \DefaultB, \x, \y)
+= \Obj(\RLB, \x, \y).
+\label{eqref:equiv-ineq}
+\end{align}
+Now let~$\RL^*$ be an optimal rule list with prefix
+constrained to start with~$\Prefix$,
+\begin{align}
+\RL^* \in \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y),
+\end{align}
+and let~$K^*$ be the length of~$\RL^*$.
+%
+Let~$\RLB^*$ be the analogous $\kappa^*$-rule list whose prefix starts
+with~$\PrefixB$ and ends with the same~${K^* - K}$ antecedents as~$\RL^*$,
+where~${\kappa^* = \kappa + K^* - K}$.
+%
+By~\eqref{eq:equiv-analogous},
+\begin{align}
+\Obj(\RL^*, \x, \y) - \Obj(\RL, \x, \y)
+= \Obj(\RLB^*, \x, \y) - \Obj(\RLB, \x, \y),
+\end{align}
+and furthermore, $\RLB^*$ is an optimal rule list
+with prefix constrained to start with~$\PrefixB$,
+\begin{align}
+\RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
+\label{eq:equiv-analogous-optimal}
+\end{align}
+Combining~\eqref{eqref:equiv-ineq} and~\eqref{eq:equiv-analogous-optimal} gives
+\begin{align}
+\min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
+= \Obj(\RL^*, \x, \y) \le \Obj(\RLB^*, \x, \y)
+= \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y).
+\end{align}
 \end{proof}
 
 \begin{comment}
