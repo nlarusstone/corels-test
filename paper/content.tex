@@ -45,7 +45,7 @@ and ${\Labels = (q_1, \dots, q_K)}$.}
 \end{figure}
 
 A rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$ of length~${K \ge 0}$
-is a ${(K+1)}$-tuple consisting of~$K$ distinct association rules,
+is a ${(K+1)}$-tuple consisting of~$K$ association rules,
 ${r_k = p_k \rightarrow q_k}$, for ${k = 1, \dots, K}$,
 followed by a default rule~$r_0$.
 %
@@ -398,12 +398,69 @@ characterize via another upper bound on the number of prefix evaluations~(\S\ref
 \subsection{Upper bounds on prefix length}
 \label{sec:ub-prefix-length}
 
+The simplest upper bound on prefix length is given by the total
+number of available antecedents.
+
+\begin{proposition}[Trivial upper bound on prefix length]
+\label{prop:trivial-length}
+Consider a state space of all rule lists formed from
+a set of~$M$ antecedents,
+and let~$L(\RL)$ be the length of rule list~$\RL$.
+%
+For any optimal rule list
+${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$
+there exists an optimal rule list
+${\RL' \in \argmin_\RL \Obj(\RL, \x, \y)}$
+such that ${L(\RL') \le M}$.
+\end{proposition}
+
+\begin{proof}
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be any rule list
+whose prefix contains at least one repeated antecedent, \ie
+${\Prefix = (p_1, \dots, p_k, \dots, p_{k'}, \dots, p_K)}$,
+where ${p_{k'} = p_k}$, for any ${k < k' \le K}$.
+%
+It follows that~$p_{k'}$ doesn't capture any data in~$\Prefix$,
+thus ${\Supp(p_{k'}, \x \given \Prefix) = 0}$.
+%
+Let ${\RL' = (\Prefix', \Labels', \Default', K - 1)}$ be the
+rule list derived from~$\RL$ by deleting~$p_{k'}$, \ie
+${\Prefix' = (p_1, \dots, p_k, \dots, p_{k'-1},}$ ${p_{k' + 1}, \dots, p_K)}$.
+%
+Since~$p_{k'}$ didn't capture any data in~$\Prefix$,
+all the rules in~$\RL'$ behave the same as their analogues in~$\RL$, thus
+${\Labels' = (q_1, \dots, q_k, \dots, q_{k'-1}, q_{k' + 1}, \dots, q_K)}$
+and~${\Default' = \Default}$.
+%
+Consequently, $\RL$ and $\RL'$ have the same misclassification error,
+\ie ${\Loss(\RL, \x, \y) = \Loss(\RL', \x, \y)}$.
+%
+Since~$\RL'$ is shorter than~$\RL$,
+\begin{align}
+\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K
+&= \Loss(\RL', \x, \y) + \Reg K \nn \\
+&\ge \Loss(RL', \x, \y) + \Reg (K - 1) = \Obj(\RL', \x, \y) \ge \OptimalObj,
+\end{align}
+where~$\Reg$ is the regularization parameter.
+%
+If~${\Reg > 0}$, then~$\RL$ can never be optimal
+which implies that every optimal rule list
+must be composed of distinct antecedents,
+of which there can be a maximum of~$M$.
+%
+Otherwise, if~${\Reg = 0}$, then~$\RL$ can only be optimal
+if~$\RL'$ is also optimal, which implies that
+every optimal rule list is either composed of distinct antecedents
+or can be used to generate an equivalent rule list composed of
+distinct antecedents.
+\end{proof}
+
 At any point during branch-and-bound execution, the current best objective~$\CurrentObj$
 implies an upper bound on the maximum prefix length we might still have to consider.
 
 \begin{theorem}[Upper bound on prefix length]
 \label{thm:ub-prefix-length}
-Consider a state space of all rule lists formed from a set of~$M$ rules.
+Consider a state space of all rule lists formed from a set of~$M$ antecedents.
 %
 Let~$L(\RL)$ be the length of rule list~$\RL$
 and let~$\CurrentObj$ be the current best objective.
@@ -426,9 +483,6 @@ then ${L(\OptimalRL) \le K - 1}$.
 \end{theorem}
 
 \begin{proof}
-First note that since rule lists consist of distinct rules,
-$M$~gives the maximum rule list length.
-%
 For an optimal rule list~$\OptimalRL$ with objective~$\OptimalObj$,
 \begin{align}
 \Reg L(\OptimalRL) \le \OptimalObj = \Obj(\OptimalRL, \x, \y)
@@ -437,7 +491,8 @@ For an optimal rule list~$\OptimalRL$ with objective~$\OptimalObj$,
 \end{align}
 The maximum possible length for~$\OptimalRL$ occurs
 when~$\Loss(\OptimalRL, \x, \y)$ is minimized;
-this gives bound~\eqref{eq:max-length}.
+combining with Proposition~\ref{prop:trivial-length}
+gives bound~\eqref{eq:max-length}.
 
 For the rest of the proof,
 let~${K^* = L(\OptimalRL)}$ be the length of~$\OptimalRL$.
@@ -466,7 +521,7 @@ ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$, and we encounter a perfect
 $K$-prefix with zero misclassification error, then we can prune all
 prefixes of length~$K$ or greater.
 
-\begin{corollary}[Trivial upper bound on prefix length]
+\begin{corollary}[Simple upper bound on prefix length]
 \label{cor:ub-prefix-length}
 Let~$L(\RL)$ be the length of rule list~$\RL$.
 %
@@ -478,14 +533,13 @@ L(\OptimalRL) \le \min \left( \left\lfloor \frac{1}{2\Reg} \right\rfloor, M \rig
 \end{corollary}
 
 \begin{proof}
-First note that since rule lists consist of distinct rules,
-$M$~gives the maximum rule list length.
-%
 Let ${d = ((), (), q_0, 0)}$ be the empty rule list;
 it has objective ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) \le 1/2}$,
 which gives an upper bound on~$\CurrentObj$.
 %
-Combining with~\eqref{eq:max-length} gives~\eqref{eq:max-length-trivial}.
+Combining with~\eqref{eq:max-length}
+and Proposition~\ref{prop:trivial-length}
+gives~\eqref{eq:max-length-trivial}.
 \end{proof}
 
 For any particular prefix~$\Prefix$, we can obtain potentially tighter bounds on
@@ -506,8 +560,7 @@ K' < \min \left( K + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} 
 \end{theorem}
 
 \begin{proof}
-First note that $M$~gives the maximum rule list length;
-also, note that~${K' \ge K}$, since~$\Prefix'$ starts with~$\Prefix$.
+First, note that~${K' \ge K}$, since~$\Prefix'$ starts with~$\Prefix$.
 %
 Now recall from~\eqref{eq:prefix-lb} that
 %
@@ -525,7 +578,7 @@ b(\Prefix, \x, \y) + \Reg (K' - K) \le b(\Prefix', \x, \y).
 \label{eq:length-diff}
 \end{align}
 Combining~\eqref{eq:length-diff} with~${b(\Prefix', \x, \y) < \CurrentObj}$
-gives~\eqref{eq:max-length-prefix}.
+and Proposition~\ref{prop:trivial-length} gives~\eqref{eq:max-length-prefix}.
 \end{proof}
 
 Theorem~\ref{thm:ub-prefix-specific} can be viewed as a generalization
@@ -565,7 +618,7 @@ weaker propositions that provide useful intuition.
 
 \begin{theorem}[Fine-grain upper bound on the number of remaining prefix evaluations]
 \label{thm:remaining-eval-fine}
-Consider a state space of all rule lists formed from a set of~$M$ rules,
+Consider a state space of all rule lists formed from a set of~$M$ antecedents,
 and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
 during execution.
 %
@@ -662,7 +715,7 @@ the lengths of prefixes in the remaining search space.
 
 \begin{proposition}[Coarse-grain upper bound on the number of remaining prefix evaluations]
 \label{thm:remaining-eval-coarse}
-Consider a state space of all rule lists formed from a set of~$M$ rules,
+Consider a state space of all rule lists formed from a set of~$M$ antecedents,
 and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
 during execution.
 %
@@ -1512,7 +1565,7 @@ from each set of prefixes equivalent up to a permutation.
 permutation-aware garbage collection]
 %
 Consider a state space of all rule lists formed from a set~$\RuleSet$
-of~$M$ rules, and consider the branch-and-bound algorithm with
+of~$M$ antecedents, and consider the branch-and-bound algorithm with
 permutation-aware garbage collection.
 %
 Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes evaluated.
