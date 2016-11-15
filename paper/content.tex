@@ -1291,317 +1291,8 @@ in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
 
 %Let Q be P's parent. If Q rejects a rule, then P will also reject that rule. This 'inheritance' of rejected rules only depends on which data are captured by Q, and doesn't actually depend on the order of rules in Q. Let S be the set of rules formed from (K-1) rules of P, in any order. P inherits rejected rules from any elements of S. Because of our symmetry-based garbage collection of prefixes equivalent up to a permutation, there are at most K elements of S in the cache; we can identify these via the inverse canonical map (ICM) that maps an ordered prefix to its permutation in the cache. We thus lazily initialize the list of P's reject list of rejected rules.
 
-\subsection{Permutation bound for permutation-aware garbage collection}
-\label{sec:permutation}
-
-Let~${P = \{p_k\}_{k=1}^K}$ be a set of~$K$ antecedents,
-and let~$\Pi$ be the set of all $K$-prefixes corresponding to
-permutations of antecedents in~$P$.
-%
-Now, let~$\RL$ be a rule list with prefix~$\Prefix$ in~$\Pi$,
-such that~$\RL$ has the minimum objective over all rule lists
-with prefixes in~$\Pi$.
-%
-Finally, let~$\RL'$ be a rule list whose prefix~$\Prefix'$
-starts with~$\Prefix$, such that~$\RL'$ has the minimum objective
-over all rule lists whose prefixes start with~$\Prefix$.
-%
-Theorem~\ref{thm:permutation} below implies that~$\RL'$
-also has the minimum objective over all rule lists whose
-prefixes start with \emph{any} prefix in~$\Pi$.
-
-\begin{theorem}[Permutation bound]
-\label{thm:permutation}
-Let~$\pi$ be any permutation of ${\{1, \dots, K\}}$,
-and define ${\StartsWith(\Prefix) = }$
-${\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
-to be the set of all rule lists whose prefixes start with~$\Prefix$.
-%
-Let ${\RL = (\Prefix, \Labels, \Default, K)}$
-and ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K)}$
-denote rule lists with prefixes ${\Prefix = (p_1, \dots, p_K)}$
-and ${\PrefixB = (p_{\pi(1)}, \dots, p_{\pi(K)})}$,
-respectively, \ie the antecedents in~$\PrefixB$
-correspond to a permutation of the antecedents in~$\Prefix$.
-%
-If the objective lower bounds of~$\RL$ and~$\RLB$
-obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
-then the objective of the optimal rule list in~$\StartsWith(\Prefix)$ gives a
-lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$:
-\begin{align}
-\min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
-\le \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y).
-\label{eq:permutation}
-\end{align}
-\end{theorem}
-
-\begin{proof}
-We begin by defining four related rule lists.
-%
-First, let ${\RL = (\Prefix, \Labels, \Default, K)}$
-be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
-and labels ${\Labels = (q_1, \dots, q_K)}$.
-%
-Second, let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K)}$
-be a rule list with prefix
-${\PrefixB = (p_{\pi(1)}, \dots, p_{\pi(K)})}$
-and labels ${\LabelsB = (Q_1, \dots, Q_K)}$.
-%
-Third, let ${\RL' = (\Prefix', \Labels', \Default', K') \in}$
-${\StartsWith(\Prefix)}$ be any rule list
-whose prefix starts with~$\Prefix$, such that~${K' \ge K}$.
-%
-Denote the prefix and labels of~$\RL'$ by
-${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
-and ${\Labels = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$,
-respectively.
-%
-Finally, define
-${\RLB' = (\PrefixB', \LabelsB', \DefaultB', K') \in \StartsWith(\PrefixB)}$
-to be the `analogous' rule list, \ie whose prefix
-${\PrefixB' = (p_{\pi(1)}, \dots, p_{\pi(K)}, p_{K+1}, \dots, p_{K'})}$
-starts with~$\PrefixB$ and ends with the same~${K'-K}$
-antecedents as~$\Prefix'$.
-%
-Let ${\LabelsB' = (Q_1, \dots, Q_K, Q_{K+1}, \dots, Q_{K'})}$
-denote the labels of~$\RLB'$.
-
-Next, we claim that the difference in the objectives
-of rule lists~$\RL'$ and~$\RL$ is the same as the difference
-in the objectives of rule lists~$\RLB'$ and~$\RLB$.
-%
-Let us expand the first difference as
-\begin{align}
-\Obj(\RL',& \x, \y) - \Obj(\RL, \x, \y)
-  = \Loss(\RL', \x, \y) + \Reg K' - \Loss(\RL, \x, \y) - \Reg K \nn \\
-&= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y)
-  - \Loss_p(\Prefix, \Labels, \x, \y) - \Loss_0(\Prefix, \Default, \x, \y)
-  + \Reg (K' - K).
-\end{align}
-Similarly, let us expand the second difference as
-\begin{align}
-\Obj(\RLB',& \x, \y) - \Obj(\RLB, \x, \y)
-  = \Loss(\RLB', \x, \y) + \Reg K' - \Loss(\RLB, \x, \y) - \Reg K \nn \\
-&= \Loss_p(\PrefixB', \LabelsB', \x, \y) + \Loss_0(\PrefixB', \DefaultB', \x, \y)
-  - \Loss_p(\PrefixB, \LabelsB, \x, \y) - \Loss_0(\PrefixB, \DefaultB, \x, \y)
-  + \Reg (K' - K).
-\end{align}
-
-Since the prefixes~$\Prefix$ and~$\PrefixB$ contain
-the same antecedents, they both capture the same data.
-%
-Equivalently, the set of data that is not captured by~$\Prefix$
-is the same as the set of data that is not captured by~$\PrefixB$, \ie
-\begin{align}
-\{x_n : \neg\, \Cap(x_n, \Prefix)\} = \{x_n : \neg\, \Cap(x_n, \PrefixB)\}.
-\end{align}
-Thus, the corresponding rule lists~$\RL$ and~$\RLB$
-share the same default rule, \ie ${\Default = \DefaultB}$,
-yielding the same default rule misclassification error:
-\begin{align}
-\Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
-\end{align}
-Similarly, the rule lists~$\RL'$ and~$\RLB'$ have the same
-default rule misclassification error:
-\begin{align}
-\Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
-\end{align}
-
-At this point, to demonstrate our claim relating the objectives
-of~$\RL$, $\RL'$, $\RLB$, and~$\RLB'$, what remains is to
-show that the difference in the misclassification errors
-of prefixes~$\Prefix'$ and~$\Prefix$ is the same as that
-between~$\PrefixB'$ and~$\PrefixB$.
-%
-We can expand the first difference as
-\begin{align}
-\Loss_p(\Prefix', \Labels', \x, \y) - \Loss_p(\Prefix, \Labels, \x, \y)
-%&= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K'}
-%  \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ]
-%  - \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K
-%  \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \\
-&= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-  \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ],
-\end{align}
-where we have used the fact that since~$\Prefix'$
-starts with~$\Prefix$, the first~$K$ rules in~$\Prefix'$
-make the same mistakes as those in~$\Prefix$.
-%
-Similarly, we can expand the second difference as
-\begin{align}
-\Loss_p(\PrefixB', \LabelsB', \x, \y) - \Loss_p(\PrefixB, \LabelsB, \x, \y)
-&= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-  \Cap(x_n, p_k \given \PrefixB') \wedge \one [ Q_k \neq y_n ] \nn \\
-&= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-  \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] \nn \\
-&= \Loss_p(\Prefix', \Labels', \x, \y) - \Loss_p(\Prefix, \Labels, \x, \y).
-\end{align}
-For the second equality, we observe that prefixes~$\PrefixB'$
-and~$\Prefix'$ both start with the same set of~$K$ antecedents
-and end with exactly the same ordered list of~${K' - K}$ antecedents,
-therefore for any~${k > K}$, antecedent~$p_k$ captures the same
-data in~$\PrefixB'$ as it captures in~$\Prefix'$.
-%
-It follows that the corresponding labels are all equivalent,
-\ie for all~${k > K}$, ${q_k = Q_k}$, and consequently,
-the prefix misclassification error associated with the
-last~${K' - K}$ antecedents of~$\Prefix'$ is the same
-as that of~$\PrefixB'$.
-%
-We have therefore shown that the difference between the objectives
-of~$\RL'$ and~$\RL$ is the same as that between~$\RLB'$ and~$\RLB$, \ie
-\begin{align}
-\Obj(\RL', \x, \y) - \Obj(\RL, \x, \y)
-= \Obj(\RLB', \x, \y) - \Obj(\RLB, \x, \y).
-\label{eq:analogous}
-\end{align}
-
-Finally, suppose that the objective lower bounds of~$\RL$ and~$\RLB$
-obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$, thus
-\begin{align}
-\Obj(\RL, \x, \y)
-&= \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) + \Reg K \nn \\
-&= b(\Prefix, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) \nn \\
-&\le b(\PrefixB, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y)
-= b(\PrefixB, \x, \y) + \Loss_0(\PrefixB, \DefaultB, \x, \y)
-= \Obj(\RLB, \x, \y).
-\label{eqref:perm-ineq}
-\end{align}
-Now let~$\RL^*$ be an optimal rule list with prefix
-constrained to start with~$\Prefix$,
-\begin{align}
-\RL^* \in \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y),
-\end{align}
-and let~$K^*$ be the length of~$\RL^*$.
-%
-Let~$\RLB^*$ be the analogous $K^*$-rule list whose prefix starts
-with~$\PrefixB$ and ends with the same~${K^* - K}$ antecedents as~$\RL^*$.
-%
-By~\eqref{eq:analogous},
-\begin{align}
-\Obj(\RL^*, \x, \y) - \Obj(\RL, \x, \y)
-= \Obj(\RLB^*, \x, \y) - \Obj(\RLB, \x, \y),
-\end{align}
-and furthermore, $\RLB^*$ is an optimal rule list
-with prefix constrained to start with~$\PrefixB$,
-\begin{align}
-\RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
-\label{eq:analogous-optimal}
-\end{align}
-Combining~\eqref{eqref:perm-ineq} and~\eqref{eq:analogous-optimal} gives
-\begin{align}
-\min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
-= \Obj(\RL^*, \x, \y) \le \Obj(\RLB^*, \x, \y)
-= \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y).
-\end{align}
-\end{proof}
-
-Thus if prefixes~$\Prefix$ and~$\PrefixB$ have the same antecedents,
-up to a permutation, and their objective lower bounds
-obey~${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
-Theorem~\ref{thm:permutation} implies that we can prune~$\PrefixB$.
-%
-In our implementation, we call this permutation-aware
-garbage collection, and we illustrate the subsequent
-computational savings next in~\S\ref{sec:permutation-counting}.
-
-\subsection{Upper bound on prefix evaluations with permutation-aware garbage collection}
-\label{sec:permutation-counting}
-
-Here, we present an upper bound on the total number of prefix
-evaluations that accounts for the effect of permutation-aware
-garbage collection~(\S\ref{sec:permutation}).
-%
-Since every subset of~$K$ antecedents generates an equivalence
-class of~$K!$ prefixes equivalent up to permutation, permutation-aware
-garbage collection dramatically prunes the search space.
-
-First, notice that Algorithm~\ref{alg:branch-and-bound} describes a
-breadth-first exploration of the state space of rule lists.
-%
-Now suppose we integrate permutation-aware garbage collection into
-our execution of branch-and-bound, so that after evaluating
-prefixes of length~$k$, we only keep a single best prefix
-from each set of prefixes equivalent up to a permutation.
-
-\begin{theorem}[Upper bound on the total number of prefix evaluations with
-permutation-aware garbage collection]
-%
-Consider a state space of all rule lists formed from a set~$\RuleSet$
-of~$M$ antecedents, and consider the branch-and-bound algorithm with
-permutation-aware garbage collection.
-%
-Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes evaluated.
-%
-For any set~$\RuleSet$ of $M$ rules,
-\begin{align}
-\TotalRemaining(\RuleSet)
-\le  1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!},
-\end{align}
-where ${K = \min(\lfloor 1 / 2 \Reg \rfloor, M)}$.
-\end{theorem}
-
-\begin{proof}
-By Corollary~\ref{cor:ub-prefix-length},
-${K \equiv \min(\lfloor 1 / 2 \Reg \rfloor, M)}$
-gives an upper bound on the length of any optimal rule list.
-%
-The algorithm begins by evaluating the empty prefix,
-followed by~$M$ prefixes of length~${k=1}$,
-then~${P(M, 2)}$ prefixes of length~${k=2}$,
-where~${P(M, 2)}$ is the number of size-2 subsets of~$\{1, \dots, M \}$.
-%
-Before proceeding to length~${k=3}$, we keep only~${C(M, 2)}$
-prefixes of length~${k=2}$, where~${C(M, k)}$ denotes the
-number of $k$-combinations of~$M$.
-%
-Now, the number of length~${k=3}$ prefixes we evaluate is~${C(M, 2) (M - 2)}$.
-%
-Propagating this forward gives
-\begin{align}
-\TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K C(M, k-1) (M - k + 1)
-%= 1 + \sum_{k=1}^K {M \choose k-1}(M - k + 1)
-%= 1 + \sum_{k=1}^K \frac{M! (M - k + 1)}{(k - 1)! (M - k + 1)!}
-= 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}.
-\end{align}
-\end{proof}
-
-Pruning based on permutation symmetries thus yields significant
-computational savings.
-%
-Let us compare, for example, to the na\"ive number of prefix evaluations
-given by the upper bound in Proposition~\ref{thm:ub-total-eval}.
-%
-If~${M = 100}$ and~${K = 5}$, then the na\"ive number is about
-${9.1 \times 10^9}$, while the reduced number due to permutation-aware
-garbage collection is about ${3.9 \times 10^8}$,
-which is smaller by a factor of about~23.
-%
-If~${M=1000}$ and~${K = 10}$, the number of evaluations falls from
-about~${9.6 \times 10^{29}}$ to about~${2.7 \times 10^{24}}$,
-which is smaller by a factor of about~360,000.
-%
-% ELA : someone please double-check these numbers :)
-
-While a number like~$10^{24}$ seems infeasibly enormous,
-it does not represent the number of rule lists we actually evaluate.
-%
-As we demonstrate in our experiments~(\S\ref{sec:experiments}),
-our permutation bound in Theorem~\ref{thm:permutation}
-and our other bounds together conspire to reduce the search space
-to a size manageable on a single computer.
-%
-The choice of ${M=1000}$ and ${K=10}$ in our example above
-corresponds to the state space size our efforts target.
-%
-${K=10}$ rules represents a (heuristic) upper limit on
-the size of an interpretable rule list,
-and ${M=1000}$ represents the approximate number of rules
-with sufficiently high support (Theorem~\ref{thm:min-capture})
-we expect to obtain via rule mining~(\S\ref{sec:rule-mining}),
-for many datasets that might be used for constructing interpretable models.
-
 \subsection{Equivalent support bound for symmetry-aware garbage collection}
+\label{sec:equivalent}
 
 Here, we present a bound that generalizes our permutation bound in
 Theorem~\ref{thm:permutation}, which can be viewed as special case.
@@ -1814,6 +1505,159 @@ compared to the analogous extension of~$\cal Q$.
 By reasoning analogous to the special case of permutations~(\S\ref{sec:permutation}),
 we only ever have to keep the prefix with the better objective.
 \end{comment}
+
+\subsection{Permutation bound for permutation-aware garbage collection}
+\label{sec:permutation}
+
+Let~${P = \{p_k\}_{k=1}^K}$ be a set of~$K$ antecedents,
+and let~$\Pi$ be the set of all $K$-prefixes corresponding to
+permutations of antecedents in~$P$.
+%
+Now, let~$\RL$ be a rule list with prefix~$\Prefix$ in~$\Pi$,
+such that~$\RL$ has the minimum objective over all rule lists
+with prefixes in~$\Pi$.
+%
+Finally, let~$\RL'$ be a rule list whose prefix~$\Prefix'$
+starts with~$\Prefix$, such that~$\RL'$ has the minimum objective
+over all rule lists whose prefixes start with~$\Prefix$.
+%
+Corollary~\ref{thm:permutation} below implies that~$\RL'$
+also has the minimum objective over all rule lists whose
+prefixes start with \emph{any} prefix in~$\Pi$.
+
+\begin{corollary}[Permutation bound]
+\label{thm:permutation}
+Let~$\pi$ be any permutation of ${\{1, \dots, K\}}$,
+and define ${\StartsWith(\Prefix) = }$
+${\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
+to be the set of all rule lists whose prefixes start with~$\Prefix$.
+%
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$
+and ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K)}$
+denote rule lists with prefixes ${\Prefix = (p_1, \dots, p_K)}$
+and ${\PrefixB = (p_{\pi(1)}, \dots, p_{\pi(K)})}$,
+respectively, \ie the antecedents in~$\PrefixB$
+correspond to a permutation of the antecedents in~$\Prefix$.
+%
+If the objective lower bounds of~$\RL$ and~$\RLB$
+obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
+then the objective of the optimal rule list in~$\StartsWith(\Prefix)$ gives a
+lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$:
+\begin{align}
+\min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
+\le \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y).
+\label{eq:permutation}
+\end{align}
+\end{corollary}
+
+\begin{proof}
+By Theorem~\ref{thm:equivalent} \dots
+\end{proof}
+
+Thus if prefixes~$\Prefix$ and~$\PrefixB$ have the same antecedents,
+up to a permutation, and their objective lower bounds
+obey~${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
+Theorem~\ref{thm:permutation} implies that we can prune~$\PrefixB$.
+%
+In our implementation, we call this permutation-aware
+garbage collection, and we illustrate the subsequent
+computational savings next in~\S\ref{sec:permutation-counting}.
+
+\subsection{Upper bound on prefix evaluations with permutation-aware garbage collection}
+\label{sec:permutation-counting}
+
+Here, we present an upper bound on the total number of prefix
+evaluations that accounts for the effect of permutation-aware
+garbage collection~(\S\ref{sec:permutation}).
+%
+Since every subset of~$K$ antecedents generates an equivalence
+class of~$K!$ prefixes equivalent up to permutation, permutation-aware
+garbage collection dramatically prunes the search space.
+
+First, notice that Algorithm~\ref{alg:branch-and-bound} describes a
+breadth-first exploration of the state space of rule lists.
+%
+Now suppose we integrate permutation-aware garbage collection into
+our execution of branch-and-bound, so that after evaluating
+prefixes of length~$k$, we only keep a single best prefix
+from each set of prefixes equivalent up to a permutation.
+
+\begin{theorem}[Upper bound on the total number of prefix evaluations with
+permutation-aware garbage collection]
+%
+Consider a state space of all rule lists formed from a set~$\RuleSet$
+of~$M$ antecedents, and consider the branch-and-bound algorithm with
+permutation-aware garbage collection.
+%
+Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes evaluated.
+%
+For any set~$\RuleSet$ of $M$ rules,
+\begin{align}
+\TotalRemaining(\RuleSet)
+\le  1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!},
+\end{align}
+where ${K = \min(\lfloor 1 / 2 \Reg \rfloor, M)}$.
+\end{theorem}
+
+\begin{proof}
+By Corollary~\ref{cor:ub-prefix-length},
+${K \equiv \min(\lfloor 1 / 2 \Reg \rfloor, M)}$
+gives an upper bound on the length of any optimal rule list.
+%
+The algorithm begins by evaluating the empty prefix,
+followed by~$M$ prefixes of length~${k=1}$,
+then~${P(M, 2)}$ prefixes of length~${k=2}$,
+where~${P(M, 2)}$ is the number of size-2 subsets of~$\{1, \dots, M \}$.
+%
+Before proceeding to length~${k=3}$, we keep only~${C(M, 2)}$
+prefixes of length~${k=2}$, where~${C(M, k)}$ denotes the
+number of $k$-combinations of~$M$.
+%
+Now, the number of length~${k=3}$ prefixes we evaluate is~${C(M, 2) (M - 2)}$.
+%
+Propagating this forward gives
+\begin{align}
+\TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K C(M, k-1) (M - k + 1)
+%= 1 + \sum_{k=1}^K {M \choose k-1}(M - k + 1)
+%= 1 + \sum_{k=1}^K \frac{M! (M - k + 1)}{(k - 1)! (M - k + 1)!}
+= 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}.
+\end{align}
+\end{proof}
+
+Pruning based on permutation symmetries thus yields significant
+computational savings.
+%
+Let us compare, for example, to the na\"ive number of prefix evaluations
+given by the upper bound in Proposition~\ref{thm:ub-total-eval}.
+%
+If~${M = 100}$ and~${K = 5}$, then the na\"ive number is about
+${9.1 \times 10^9}$, while the reduced number due to permutation-aware
+garbage collection is about ${3.9 \times 10^8}$,
+which is smaller by a factor of about~23.
+%
+If~${M=1000}$ and~${K = 10}$, the number of evaluations falls from
+about~${9.6 \times 10^{29}}$ to about~${2.7 \times 10^{24}}$,
+which is smaller by a factor of about~360,000.
+%
+% ELA : someone please double-check these numbers :)
+
+While a number like~$10^{24}$ seems infeasibly enormous,
+it does not represent the number of rule lists we actually evaluate.
+%
+As we demonstrate in our experiments~(\S\ref{sec:experiments}),
+our permutation bound in Theorem~\ref{thm:permutation}
+and our other bounds together conspire to reduce the search space
+to a size manageable on a single computer.
+%
+The choice of ${M=1000}$ and ${K=10}$ in our example above
+corresponds to the state space size our efforts target.
+%
+${K=10}$ rules represents a (heuristic) upper limit on
+the size of an interpretable rule list,
+and ${M=1000}$ represents the approximate number of rules
+with sufficiently high support (Theorem~\ref{thm:min-capture})
+we expect to obtain via rule mining~(\S\ref{sec:rule-mining}),
+for many datasets that might be used for constructing interpretable models.
 
 \subsection{Bound on differences between similar prefixes}
 
