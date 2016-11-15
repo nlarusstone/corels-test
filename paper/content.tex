@@ -1294,8 +1294,7 @@ in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
 \subsection{Equivalent support bound for symmetry-aware garbage collection}
 \label{sec:equivalent}
 
-Here, we present a bound that generalizes our permutation bound in
-Theorem~\ref{thm:permutation}, which can be viewed as special case.
+Here, we present \dots
 
 \begin{theorem}[Equivalent support bound]
 \label{thm:equivalent}
@@ -1521,9 +1520,10 @@ Finally, let~$\RL'$ be a rule list whose prefix~$\Prefix'$
 starts with~$\Prefix$, such that~$\RL'$ has the minimum objective
 over all rule lists whose prefixes start with~$\Prefix$.
 %
-Corollary~\ref{thm:permutation} below implies that~$\RL'$
-also has the minimum objective over all rule lists whose
-prefixes start with \emph{any} prefix in~$\Pi$.
+Corollary~\ref{thm:permutation} below,
+which can be viewed as special case of Theorem~\ref{thm:equivalent},
+implies that~$\RL'$ also has the minimum objective over all
+rule lists whose prefixes start with \emph{any} prefix in~$\Pi$.
 
 \begin{corollary}[Permutation bound]
 \label{thm:permutation}
@@ -1551,13 +1551,16 @@ lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$
 \end{corollary}
 
 \begin{proof}
-By Theorem~\ref{thm:equivalent} \dots
+Since the prefixes~$\Prefix$ and~$\PrefixB$ contain
+the same antecedents, they both capture the same data.
+%
+The remainder of the proof follows from Theorem~\ref{thm:equivalent}.
 \end{proof}
 
 Thus if prefixes~$\Prefix$ and~$\PrefixB$ have the same antecedents,
 up to a permutation, and their objective lower bounds
 obey~${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
-Theorem~\ref{thm:permutation} implies that we can prune~$\PrefixB$.
+Corollary~\ref{thm:permutation} implies that we can prune~$\PrefixB$.
 %
 In our implementation, we call this permutation-aware
 garbage collection, and we illustrate the subsequent
@@ -1645,7 +1648,7 @@ While a number like~$10^{24}$ seems infeasibly enormous,
 it does not represent the number of rule lists we actually evaluate.
 %
 As we demonstrate in our experiments~(\S\ref{sec:experiments}),
-our permutation bound in Theorem~\ref{thm:permutation}
+our permutation bound in Corollary~\ref{thm:permutation}
 and our other bounds together conspire to reduce the search space
 to a size manageable on a single computer.
 %
