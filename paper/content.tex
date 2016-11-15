@@ -45,7 +45,7 @@ and ${\Labels = (q_1, \dots, q_K)}$.}
 \end{figure}
 
 A rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$ of length~${K \ge 0}$
-is a ${(K+1)}$-tuple consisting of~$K$ association rules,
+is a ${(K+1)}$-tuple consisting of~$K$ distinct association rules,
 ${r_k = p_k \rightarrow q_k}$, for ${k = 1, \dots, K}$,
 followed by a default rule~$r_0$.
 %
@@ -407,52 +407,14 @@ Consider a state space of all rule lists formed from
 a set of~$M$ antecedents,
 and let~$L(\RL)$ be the length of rule list~$\RL$.
 %
-For any optimal rule list
-${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$
-there exists an optimal rule list
-${\RL' \in \argmin_\RL \Obj(\RL, \x, \y)}$
-such that ${L(\RL') \le M}$.
+$M$ provides an upper bound on the length of
+any optimal rule list
+${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
+\ie ${L(\RL) \le M}$.
 \end{proposition}
 
 \begin{proof}
-Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be any rule list
-whose prefix contains at least one repeated antecedent, \ie
-${\Prefix = (p_1, \dots, p_k, \dots, p_{k'}, \dots, p_K)}$,
-where ${p_{k'} = p_k}$, for any ${k < k' \le K}$.
-%
-It follows that~$p_{k'}$ doesn't capture any data in~$\Prefix$,
-thus ${\Supp(p_{k'}, \x \given \Prefix) = 0}$.
-%
-Let ${\RL' = (\Prefix', \Labels', \Default', K - 1)}$ be the
-rule list derived from~$\RL$ by deleting~$p_{k'}$, \ie
-${\Prefix' = (p_1, \dots, p_k, \dots, p_{k'-1},}$ ${p_{k' + 1}, \dots, p_K)}$.
-%
-Since~$p_{k'}$ didn't capture any data in~$\Prefix$,
-all the rules in~$\RL'$ behave the same as their analogues in~$\RL$, thus
-${\Labels' = (q_1, \dots, q_k, \dots, q_{k'-1}, q_{k' + 1}, \dots, q_K)}$
-and~${\Default' = \Default}$.
-%
-Consequently, $\RL$ and $\RL'$ have the same misclassification error,
-\ie ${\Loss(\RL, \x, \y) = \Loss(\RL', \x, \y)}$.
-%
-Since~$\RL'$ is shorter than~$\RL$,
-\begin{align}
-\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K
-&= \Loss(\RL', \x, \y) + \Reg K \nn \\
-&\ge \Loss(RL', \x, \y) + \Reg (K - 1) = \Obj(\RL', \x, \y) \ge \OptimalObj,
-\end{align}
-where~$\Reg$ is the regularization parameter.
-%
-If~${\Reg > 0}$, then~$\RL$ can never be optimal
-which implies that every optimal rule list
-must be composed of distinct antecedents,
-of which there can be a maximum of~$M$.
-%
-Otherwise, if~${\Reg = 0}$, then~$\RL$ can only be optimal
-if~$\RL'$ is also optimal, which implies that
-every optimal rule list is either composed of distinct antecedents
-or can be used to generate an equivalent rule list composed of
-distinct antecedents.
+Rule lists consist of distinct rules by definition.
 \end{proof}
 
 At any point during branch-and-bound execution, the current best objective~$\CurrentObj$
@@ -633,7 +595,8 @@ prefix evaluations, then
 \end{align}
 where
 \begin{align}
-f(\Prefix) = \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor.
+f(\Prefix) = \min \left( \left\lfloor
+  \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor, M \right).
 \label{eq:f}
 \end{align}
 \end{theorem}
@@ -1034,7 +997,7 @@ This proves the first half of Theorem~\ref{thm:ub-support}.
 To finish, we prove the bound in~\eqref{eq:ub-support} by contradiction.
 %
 First, note that the data not captured by~$\Prefix'$
-has normalized support~${\epsilon \le \Reg}$, \ie:
+has normalized support~${\epsilon \le \Reg}$, \ie
 \begin{align}
 1 - \Supp(\Prefix', \x) = 1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x \given \Prefix') = \epsilon \le \Reg.
 \end{align}
