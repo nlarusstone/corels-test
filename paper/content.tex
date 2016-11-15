@@ -1550,14 +1550,15 @@ it follows that~$p$ doesn't capture any data in~$\PrefixB''$, \ie
 \begin{align}
 \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p \given \PrefixB'') = 0 \le \Reg.
 \end{align}
-Thus by Theorem~\ref{thm:min-capture}, $\RLB''$ cannot be optimal, \ie
-${\RLB'' \notin \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)}$.
+By Theorem~\ref{thm:min-capture}, antecedent~$p$ has insufficient
+support in~$\RLB''$, and thus~$\RLB''$ cannot be optimal, \ie
+${\RLB'' \notin}$ ${\argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)}$.
 %
 By a similar argument, if~${\Phi \neq \emptyset}$
 and~${P \in \Phi}$, and~${\RL'' \in \StartsWith(\Prefix)}$
 is any rule list whose prefix starts with~$\Prefix$
-and contains~$P$, then~$\RL''$ cannot be optimal, \ie
-${\RL^* \notin \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)}$.
+and contains antecedent~$P$, then~$\RL''$ cannot be optimal, \ie
+${\RL'' \notin \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)}$.
 
 To finish our examination of the second scenario, first define
 \begin{align}
