@@ -1472,7 +1472,7 @@ of~$\RL'$ and~$\RL$ is the same as that between~$\RLB'$ and~$\RLB$, \ie
 \label{eq:equiv-analogous}
 \end{align}
 
-Finally, suppose that the objective lower bounds of~$\RL$ and~$\RLB$
+Next, suppose that the objective lower bounds of~$\RL$ and~$\RLB$
 obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$, thus
 \begin{align}
 \Obj(\RL, \x, \y)
@@ -1506,56 +1506,84 @@ with prefix constrained to start with~$\PrefixB$,
 \RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
 \label{eq:equiv-analogous-optimal}
 \end{align}
-If~$\Prefix$ and~$\PrefixB$ are composed of the same antecedents,
-\ie the two prefixes are equivalent up to a permutation of
-their antecedents, then~${\kappa = K}$ and~${\kappa^* = K}$.
+
+To demonstrate~\eqref{eq:equiv-analogous-optimal},
+we consider two separate scenarios.
 %
-In this case, every~${\RL'' \in \StartsWith(\Prefix)}$
-has an analogue~${\RLB'' \in \StartsWith(\PrefixB)}$,
+In the first scenario, prefixes~$\Prefix$ and~$\PrefixB$
+are composed of the same antecedents,
+\ie the two prefixes are equivalent up to a permutation of
+their antecedents, and as a consequence,
+${\kappa = K}$ and~${\kappa^* = K^*}$.
+%
+Here, every rule list~${\RL'' \in \StartsWith(\Prefix)}$
+that starts with~$\Prefix$
+has an analogue~${\RLB'' \in \StartsWith(\PrefixB)}$
+that starts with~$\PrefixB$,
 such that~$\RL''$ and~$\RLB''$ obey~\eqref{eq:equiv-analogous},
 and vice versa, and thus~\eqref{eq:equiv-analogous-optimal}
 is a direct consequence of~\eqref{eq:equiv-diff}.
 
-Otherwise, $\Prefix$ and~$\PrefixB$ are not composed of the
-same antecedents.
+In the second scenario, prefixes~$\Prefix$ and~$\PrefixB$
+are not composed of the same antecedents.
 %
-Define ${\phi = \{p_k : (p_k \in \Prefix) \wedge (p_k \notin \PrefixB)\}}$
-to be the set of antecedents in~$\Prefix$ but not in~$\PrefixB$,
-and define ${\Phi = \{P_k : (P_k \in \PrefixB) \wedge (P_k \notin \Prefix)\}}$
-to be the set of antecedents in~$\PrefixB$ but not in~$\Prefix$.
+Define~${\phi = \{p_k : (p_k \in \Prefix) \wedge (p_k \notin \PrefixB)\}}$
+to be the set of antecedents in~$\Prefix$ that are not in~$\PrefixB$,
+and define~${\Phi = \{P_k : (P_k \in \PrefixB) \wedge (P_k \notin \Prefix)\}}$
+to be the set of antecedents in~$\PrefixB$ that are not in~$\Prefix$;
+either~${\phi \neq \emptyset}$, or~${\Phi \neq \emptyset}$, or both.
 %
-In this case, ${\phi \neq \emptyset}$ or ${\Phi \neq \emptyset}$, or both.
+Suppose~${\phi \neq \emptyset}$, and let~${p \in \phi}$
+be an antecedent in~$\phi$.
 %
-Suppose~${\phi \neq \emptyset}$, and let~${p \in \phi}$ be an
-antecedent in~$\phi$, then there exists a set of rule lists
-in~$\StartsWith(\PrefixB)$ that do not have analogues in~$\StartsWith(\Prefix)$.
+It follows that there exists a subset of rule lists
+in~$\StartsWith(\PrefixB)$ that do not have analogues
+in~$\StartsWith(\Prefix)$.
 %
 Let~${\RLB'' \in \StartsWith(\PrefixB)}$ be such a rule list,
-\ie its prefix ${\PrefixB'' = (P_1, \dots, P_\kappa, \dots, p, \dots)}$
-starts with~$\PrefixB$, and among its remaining antecedents
-contains at least one antecedent~${p \in \phi}$.
+such that its prefix ${\PrefixB'' = (P_1, \dots, P_\kappa, \dots, p, \dots)}$
+starts with~$\PrefixB$ and contains~$p$ among its remaining antecedents.
 %
-Since $\rho$ captures a subset of the data that~$\Prefix$ captures,
+Since~$p$ captures a subset of the data that~$\Prefix$ captures,
 and~$\PrefixB$ captures the same data as~$\Prefix$,
-it follows that~$p$ doesn't capture any data in~$\PrefixB''$:
+it follows that~$p$ doesn't capture any data in~$\PrefixB''$, \ie
 \begin{align}
 \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p \given \PrefixB'') = 0 \le \Reg.
 \end{align}
 Thus by Theorem~\ref{thm:min-capture}, $\RLB''$ cannot be optimal, \ie
 ${\RLB'' \notin \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)}$.
 %
-By a similar argument, if~${\Phi \neq \emptyset}$,
-then any rule list~${\RL'' \in \StartsWith(\Prefix)}$,
-such that~$\RL''$ contains an antecedent~${P \in \Phi}$,
-cannot be optimal, \ie
+By a similar argument, if~${\Phi \neq \emptyset}$
+and~${P \in \Phi}$, and~${\RL'' \in \StartsWith(\Prefix)}$
+is any rule list whose prefix starts with~$\Prefix$
+and contains~$P$, then~$\RL''$ cannot be optimal, \ie
 ${\RL^* \notin \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)}$.
-%
-It thus holds that every~${\RL'' \in \StartsWith(\Prefix)}$
-has a direct analogue~${\RLB'' \in \StartsWith(\PrefixB)}$,
+
+To finish our examination of the second scenario, first define
+\begin{align}
+\tau(\Prefix, \Phi) \equiv
+  \{\RL' = (\Prefix', \Labels', \Default', K') :
+    \RL' \in \StartsWith(\Prefix) \textnormal{ and }
+    p_k \notin \Phi, \forall p_k \in \Prefix'\} \subset \StartsWith(\Prefix),
+\end{align}
+and now recognize that
+\begin{align}
+\argmin_{\RL^\dagger \in \tau(\Prefix, \Phi)} \Obj(\RL^\dagger, \x, \y)
+= \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y),
+\end{align}
+and similarly, that
+\begin{align}
+\argmin_{\RLB^\dagger \in \tau(\PrefixB, \phi)} \Obj(\RLB^\dagger, \x, \y)
+= \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
+\end{align}
+Since we have shown that every~${\RL'' \in \tau(\Prefix, \Phi)}$
+has a direct analogue~${\RLB'' \in \tau(\PrefixB, \phi)}$,
 such that~$\RL''$ and~$\RLB''$ obey~\eqref{eq:equiv-analogous},
-and vice versa, and thus~\eqref{eq:equiv-analogous-optimal}.
-%
-Combining~\eqref{eqref:equiv-ineq} and~\eqref{eq:equiv-analogous-optimal} gives
+and vice versa, we again have~\eqref{eq:equiv-analogous-optimal}
+as a consequence of~\eqref{eq:equiv-diff}.
+
+We can now finally combine~\eqref{eqref:equiv-ineq}
+and~\eqref{eq:equiv-analogous-optimal} to obtain
 \begin{align}
 \min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
 = \Obj(\RL^*, \x, \y) \le \Obj(\RLB^*, \x, \y)
@@ -1563,7 +1591,7 @@ Combining~\eqref{eqref:equiv-ineq} and~\eqref{eq:equiv-analogous-optimal} gives
 \end{align}
 \end{proof}
 
-Thus if prefixes~$\Prefix$ and~$\PrefixB$ capture the same data,
+Thus, if prefixes~$\Prefix$ and~$\PrefixB$ capture the same data,
 and their objective lower bounds obey
 ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
 Theorem~\ref{thm:equivalent} implies that we can prune~$\PrefixB$.
