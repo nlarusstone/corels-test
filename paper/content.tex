@@ -1459,7 +1459,7 @@ antecedent ${P_{\kappa + k} = p_{K + k}}$ in~$\PrefixB'$
 captures the same data as~$p_{K + k}$ captures in~$\Prefix'$.
 %
 It follows that the corresponding labels are all equivalent, \ie
-for all~${k = 1, \dots, K' - K}$, ${Q_{\kappa + k} = q_{K + k}}$,
+${Q_{\kappa + k} = q_{K + k}}$, for all~${k = 1, \dots, K' - K}$,
 and consequently, the prefix misclassification error associated
 with the last~${K' - K}$ antecedents of~$\Prefix'$ is the same
 as that of~$\PrefixB'$.
@@ -1497,14 +1497,64 @@ where~${\kappa^* = \kappa + K^* - K}$.
 By~\eqref{eq:equiv-analogous},
 \begin{align}
 \Obj(\RL^*, \x, \y) - \Obj(\RL, \x, \y)
-= \Obj(\RLB^*, \x, \y) - \Obj(\RLB, \x, \y),
+= \Obj(\RLB^*, \x, \y) - \Obj(\RLB, \x, \y).
+\label{eq:equiv-diff}
 \end{align}
-and furthermore, $\RLB^*$ is an optimal rule list
+Furthermore, we claim that~$\RLB^*$ is an optimal rule list
 with prefix constrained to start with~$\PrefixB$,
 \begin{align}
 \RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
 \label{eq:equiv-analogous-optimal}
 \end{align}
+If~$\Prefix$ and~$\PrefixB$ are composed of the same antecedents,
+\ie the two prefixes are equivalent up to a permutation of
+their antecedents, then~${\kappa = K}$ and~${\kappa^* = K}$.
+%
+In this case, every~${\RL'' \in \StartsWith(\Prefix)}$
+has an analogue~${\RLB'' \in \StartsWith(\PrefixB)}$,
+such that~$\RL''$ and~$\RLB''$ obey~\eqref{eq:equiv-analogous},
+and vice versa, and thus~\eqref{eq:equiv-analogous-optimal}
+is a direct consequence of~\eqref{eq:equiv-diff}.
+
+Otherwise, $\Prefix$ and~$\PrefixB$ are not composed of the
+same antecedents.
+%
+Define ${\phi = \{p_k : (p_k \in \Prefix) \wedge (p_k \notin \PrefixB)\}}$
+to be the set of antecedents in~$\Prefix$ but not in~$\PrefixB$,
+and define ${\Phi = \{P_k : (P_k \in \PrefixB) \wedge (P_k \notin \Prefix)\}}$
+to be the set of antecedents in~$\PrefixB$ but not in~$\Prefix$.
+%
+In this case, ${\phi \neq \emptyset}$ or ${\Phi \neq \emptyset}$, or both.
+%
+Suppose~${\phi \neq \emptyset}$, and let~${p \in \phi}$ be an
+antecedent in~$\phi$, then there exists a set of rule lists
+in~$\StartsWith(\PrefixB)$ that do not have analogues in~$\StartsWith(\Prefix)$.
+%
+Let~${\RLB'' \in \StartsWith(\PrefixB)}$ be such a rule list,
+\ie its prefix ${\PrefixB'' = (P_1, \dots, P_\kappa, \dots, p, \dots)}$
+starts with~$\PrefixB$, and among its remaining antecedents
+contains at least one antecedent~${p \in \phi}$.
+%
+Since $\rho$ captures a subset of the data that~$\Prefix$ captures,
+and~$\PrefixB$ captures the same data as~$\Prefix$,
+it follows that~$p$ doesn't capture any data in~$\PrefixB''$:
+\begin{align}
+\frac{1}{N} \sum_{n=1}^N \Cap(x_n, p \given \PrefixB'') = 0 \le \Reg.
+\end{align}
+Thus by Theorem~\ref{thm:min-capture}, $\RLB''$ cannot be optimal, \ie
+${\RLB'' \notin \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)}$.
+%
+By a similar argument, if~${\Phi \neq \emptyset}$,
+then any rule list~${\RL'' \in \StartsWith(\Prefix)}$,
+such that~$\RL''$ contains an antecedent~${P \in \Phi}$,
+cannot be optimal, \ie
+${\RL^* \notin \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)}$.
+%
+It thus holds that every~${\RL'' \in \StartsWith(\Prefix)}$
+has a direct analogue~${\RLB'' \in \StartsWith(\PrefixB)}$,
+such that~$\RL''$ and~$\RLB''$ obey~\eqref{eq:equiv-analogous},
+and vice versa, and thus~\eqref{eq:equiv-analogous-optimal}.
+%
 Combining~\eqref{eqref:equiv-ineq} and~\eqref{eq:equiv-analogous-optimal} gives
 \begin{align}
 \min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
