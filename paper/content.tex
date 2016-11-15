@@ -388,10 +388,19 @@ upper~(\S\ref{sec:ub-support}) bounds on antecedent support,
 and provide a unified analysis of consequences of
 these antecedent support bounds~(\S\ref{sec:reject}).
 %
-We then analyze rule lists whose prefixes are equivalent up to
-a permutation of their antecedents~(\S\ref{sec:permutation});
+We then analyze rule lists whose prefixes
+capture the same data~(\S\ref{sec:equivalent}),
+which enables symmetry-aware garbage collection.
+%
+In particular, we highlight the special case of prefixes
+that are equivalent up to a permutation of their
+antecedents~(\S\ref{sec:permutation});
 this enables permutation-aware garbage collection, which we
 characterize via another upper bound on the number of prefix evaluations~(\S\ref{sec:permutation-counting}).
+%
+Next, in~\S\ref{sec:similar}, we slightly generalize the
+result from~\S\ref{sec:equivalent} to rule lists whose
+prefixes capture nearly the same data.
 %
 \dots
 
@@ -1294,7 +1303,20 @@ in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
 \subsection{Equivalent support bound for symmetry-aware garbage collection}
 \label{sec:equivalent}
 
-Here, we present \dots
+Let~$\PrefixB$ be a prefix, and let~$\xi(\PrefixB)$ be the set
+of all prefixes that capture exactly the same data as~$\PrefixB$.
+%
+Now, let~$\RL$ be a rule list with prefix~$\Prefix$
+in~$\xi(\PrefixB)$, such that~$\RL$ has the minimum objective
+over all rule lists with prefixes in~$\xi(\PrefixB)$.
+%
+Finally, let~$\RL'$ be a rule list whose prefix~$\Prefix'$
+starts with~$\Prefix$, such that~$\RL'$ has the minimum objective
+over all rule lists whose prefixes start with~$\Prefix$.
+%
+Theorem~\ref{thm:equivalent} below implies that~$\RL'$ also has
+the minimum objective over all rule lists whose prefixes start with
+\emph{any} prefix in~$\xi(\PrefixB)$.
 
 \begin{theorem}[Equivalent support bound]
 \label{thm:equivalent}
@@ -1491,21 +1513,18 @@ Combining~\eqref{eqref:equiv-ineq} and~\eqref{eq:equiv-analogous-optimal} gives
 \end{align}
 \end{proof}
 
-\begin{comment}
-Consider two prefixes~$\cal P$ and~$\cal Q$ that capture exactly the same data.
+Thus if prefixes~$\Prefix$ and~$\PrefixB$ capture the same data,
+and their objective lower bounds obey
+${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
+Theorem~\ref{thm:equivalent} implies that we can prune~$\PrefixB$.
 %
-Note that~$\cal P$ rejects each of the rules in~$\cal Q$, and vice versa;
-any other rules rejected by~$\cal P$ are also rejected by~$\cal Q$, and vice versa.
+In our implementation, we call this symmetry-aware garbage collection.
 %
-More importantly, any possible extension of~$\cal P$ yields the same additive effect,
-with respect to lower bound~$b(\Prefix)$ and corresponding objective~$\Obj(\Prefix)$,
-compared to the analogous extension of~$\cal Q$.
-%
-By reasoning analogous to the special case of permutations~(\S\ref{sec:permutation}),
-we only ever have to keep the prefix with the better objective.
-\end{comment}
+Next, in Sections~\ref{sec:permutation} and~\ref{sec:permutation-counting},
+we highlight and analyze the special case of prefixes that capture
+the same data because they contain the same antecedents.
 
-\subsection{Permutation bound for permutation-aware garbage collection}
+\subsubsection{Permutation bound for permutation-aware garbage collection}
 \label{sec:permutation}
 
 Let~${P = \{p_k\}_{k=1}^K}$ be a set of~$K$ antecedents,
@@ -1566,7 +1585,7 @@ In our implementation, we call this permutation-aware
 garbage collection, and we illustrate the subsequent
 computational savings next in~\S\ref{sec:permutation-counting}.
 
-\subsection{Upper bound on prefix evaluations with permutation-aware garbage collection}
+\subsubsection{Upper bound on prefix evaluations with permutation-aware garbage collection}
 \label{sec:permutation-counting}
 
 Here, we present an upper bound on the total number of prefix
@@ -1592,7 +1611,7 @@ Consider a state space of all rule lists formed from a set~$\RuleSet$
 of~$M$ antecedents, and consider the branch-and-bound algorithm with
 permutation-aware garbage collection.
 %
-Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes evaluated.
+Define $\TotalRemaining(\RuleSet)$ to be the total number of prefixes evaluated.
 %
 For any set~$\RuleSet$ of $M$ rules,
 \begin{align}
@@ -1662,16 +1681,64 @@ with sufficiently high support (Theorem~\ref{thm:min-capture})
 we expect to obtain via rule mining~(\S\ref{sec:rule-mining}),
 for many datasets that might be used for constructing interpretable models.
 
-\subsection{Bound on differences between similar prefixes}
+\subsection{Similar support bound}
 
-We now present a slight relaxation of our equivalent support bound.
+We now present a slight relaxation of our equivalent support bound
+from Theorem~\ref{thm:equivalent}.
 
-\begin{theorem}[Similar prefixes bound]
-\dots
+\begin{theorem}[Similar support bound]
+\label{thm:similar}
+Define ${\StartsWith(\Prefix) = }$
+${\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
+to be the set of all rule lists whose prefixes start with~$\Prefix$.
+%
+Let ${\Prefix = (p_1, \dots, p_K)}$ and
+${\PrefixB = (P_1, \dots, P_{\kappa})}$ be prefixes
+that capture the same data, \ie
+\begin{align}
+\{x_n : \Cap(x_n, \Prefix)\} = \{x_n : \Cap(x_n, \PrefixB)\}.
+\end{align}
+Now let ${\Prefix' = (p_1, \dots, p_K, p_{K+1})}$ be a prefix
+that starts with~$\Prefix$ and ends with antecedent~$p_{K+1}$,
+and let ${\PrefixB' = (P_1, \dots, P_{\kappa}, P_{\kappa + 1})}$
+be a prefix that starts with~$\PrefixB$ and ends with
+antecedent~$P_{\kappa + 1}$, such that~$p_{K+1}$
+and~$P_{\kappa + 1}$ have nearly the same support in~$\Prefix'$
+and~$\PrefixB'$, respectively.
+%
+Specifically, define~$\omega$ to be the normalized support
+of data captured by~$p_{K + 1}$ in~$\Prefix'$ and not
+captured by~$P_{\kappa + 1}$ in~$\PrefixB'$,
+and require that~${\omega < \Reg}$:
+\begin{align}
+\omega \equiv \frac{1}{N} \sum_{n=1}^N
+  \neg\, \Cap(x_n, P_{\kappa+1} \given \PrefixB')
+  \wedge \Cap(x_n, p_{K+1} \given \Prefix') < \Reg,
+\end{align}
+where~$\Reg$ is the regularization parameter.
+%
+Similarly, define~$\Omega$ to be the normalized support
+of data captured by~$P_{\kappa + 1}$ in~$\PrefixB'$ and not
+captured by~$p_{K + 1}$ in~$\Prefix'$,
+and require that~${\Omega < \Reg}$:
+\begin{align}
+\Omega \equiv \frac{1}{N} \sum_{n=1}^N
+  \neg\, \Cap(x_n, p_{K+1} \given \Prefix')
+  \wedge \Cap(x_n, P_{\kappa+1} \given \PrefixB') < \Reg.
+\end{align}
+The difference between the objective of the optimal rule list
+in~$\StartsWith(\Prefix')$ and that in~$\StartsWith(\PrefixB')$
+is less than~$2\Reg$:
+\begin{align}
+\left | \min_{\RL^\dagger \in \StartsWith(\Prefix')} \Obj(\RL^\dagger, \x, \y)
+  - \min_{\RLB^\dagger \in \StartsWith(\PrefixB')} \Obj(\RLB^\dagger, \x, \y)
+  \right | < 2 \Reg.
+\label{eq:similar}
+\end{align}
 \end{theorem}
 
 \begin{proof}
-\dots
+First, note that by Proposition~\ref{prop:min-capture} \dots
 \end{proof}
 
 \begin{comment}
