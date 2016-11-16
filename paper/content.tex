@@ -1352,8 +1352,8 @@ be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
 and labels ${\Labels = (q_1, \dots, q_K)}$.
 %
 Second, let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
-be a rule list with prefix
-${\PrefixB = (P_1, \dots, P_\kappa)}$
+be a rule list with prefix ${\PrefixB = (P_1, \dots, P_\kappa)}$
+that captures the same data as~$\Prefix$,
 and labels ${\LabelsB = (Q_1, \dots, Q_\kappa)}$.
 %
 Third, let ${\RL' = (\Prefix', \Labels', \Default', K') \in}$
@@ -1362,8 +1362,7 @@ whose prefix starts with~$\Prefix$, such that~${K' \ge K}$.
 %
 Denote the prefix and labels of~$\RL'$ by
 ${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
-and ${\Labels = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$,
-respectively.
+and ${\Labels = (q_1, \dots, q_{K'})}$, respectively.
 %
 Finally, define
 ${\RLB' = (\PrefixB', \LabelsB', \DefaultB', \kappa') \in \StartsWith(\PrefixB)}$
@@ -1373,7 +1372,7 @@ ${\PrefixB' = (P_1, \dots, P_\kappa, P_{\kappa+1}, \dots, P_{\kappa'})
 starts with~$\PrefixB$ and ends with the same ${K'-K}$
 antecedents as~$\Prefix'$.
 %
-Let ${\LabelsB' = (Q_1, \dots, Q_\kappa, Q_{\kappa + 1}, \dots, Q_{\kappa'})}$
+Let ${\LabelsB' = (Q_1, \dots, Q_{\kappa'})}$
 denote the labels of~$\RLB'$.
 
 Next, we claim that the difference in the objectives
@@ -1398,7 +1397,7 @@ Similarly, let us expand the second difference as
 \end{align}
 where we have used the fact that ${\kappa' - \kappa = K' - K}$.
 
-The prefixes~$\Prefix$ and~$\PrefixB$ both capture the same data.
+The prefixes~$\Prefix$ and~$\PrefixB$ capture the same data.
 %
 Equivalently, the set of data that is not captured by~$\Prefix$
 is the same as the set of data that is not captured by~$\PrefixB$, \ie
@@ -1411,8 +1410,9 @@ yielding the same default rule misclassification error:
 \begin{align}
 \Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
 \end{align}
-Similarly, the rule lists~$\RL'$ and~$\RLB'$ have the same
-default rule misclassification error:
+Similarly, prefixes~$\Prefix'$ and~$\PrefixB'$ capture
+the same data, and thus rule lists~$\RL'$ and~$\RLB'$
+have the same default rule misclassification error:
 \begin{align}
 \Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
 \end{align}
@@ -1445,10 +1445,10 @@ Similarly, we can expand the second difference as
 &= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
   \Cap(x_n, p_k \given \PrefixB') \wedge \one [ Q_k \neq y_n ] \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-  \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] \nn \\
-&= \Loss_p(\Prefix', \Labels', \x, \y) - \Loss_p(\Prefix, \Labels, \x, \y).
+  \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] \label{eq:third} \\
+&= \Loss_p(\Prefix', \Labels', \x, \y) - \Loss_p(\Prefix, \Labels, \x, \y) \nn.
 \end{align}
-For the second equality, we observe first that
+To justify the equality in~\eqref{eq:third}, we observe first that
 prefixes~$\PrefixB'$ and~$\Prefix'$ start with~$\kappa$ and~$K$
 antecedents, respectively, that capture the same data.
 %
@@ -1563,16 +1563,21 @@ ${\RL'' \notin \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, 
 To finish our examination of the second scenario, first define
 \begin{align}
 \tau(\Prefix, \Phi) \equiv
-  \{\RL' = (\Prefix', \Labels', \Default', K') :
-    \RL' \in \StartsWith(\Prefix) \textnormal{ and }
-    p_k \notin \Phi, \forall p_k \in \Prefix'\} \subset \StartsWith(\Prefix),
+  \{\RL'' = (\Prefix'', \Labels'', \Default'', K'') :
+    \RL'' \in \StartsWith(\Prefix) \textnormal{ and }
+    p_k \notin \Phi, \forall p_k \in \Prefix''\} \subset \StartsWith(\Prefix)
 \end{align}
-and now recognize that
+to be the set of all rule lists whose prefixes start with~$\Prefix$
+and don't contain any antecedents in~$\Phi$.
+%
+Now, recognize that the optimal prefixes in~$\tau(\Prefix, \Phi)$
+and~$\StartsWith(\Prefix)$ are the same, \ie
 \begin{align}
 \argmin_{\RL^\dagger \in \tau(\Prefix, \Phi)} \Obj(\RL^\dagger, \x, \y)
 = \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y),
 \end{align}
-and similarly, that
+and similarly, the optimal prefixes in~$\tau(\PrefixB, \phi)$
+and~$\StartsWith(\PrefixB)$ are the same, \ie
 \begin{align}
 \argmin_{\RLB^\dagger \in \tau(\PrefixB, \phi)} \Obj(\RLB^\dagger, \x, \y)
 = \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
@@ -1772,6 +1777,118 @@ to be the set of all rule lists whose prefixes start with~$\Prefix$.
 %
 Let ${\Prefix = (p_1, \dots, p_K)}$ and
 ${\PrefixB = (P_1, \dots, P_{\kappa})}$ be prefixes
+that capture nearly the same data.
+%
+Specifically, define~$\omega$ to be the normalized support
+of data captured by~$\Prefix$ and not captured by~$\PrefixB$,
+and let us require that~${\omega \le \Reg}$, \ie
+\begin{align}
+\omega \equiv \frac{1}{N} \sum_{n=1}^N
+  \neg\, \Cap(x_n, \PrefixB)
+  \wedge \Cap(x_n, \Prefix) \le \Reg,
+\label{eq:omega}
+\end{align}
+where~$\Reg$ is the regularization parameter.
+%
+Similarly, define~$\Omega$ to be the normalized support
+of data captured by~$\PrefixB$ and not captured by~$\Prefix$,
+and let us require that~${\Omega \le \Reg}$, \ie
+\begin{align}
+\Omega \equiv \frac{1}{N} \sum_{n=1}^N
+  \neg\, \Cap(x_n, \Prefix)
+  \wedge \Cap(x_n, \PrefixB) \le \Reg.
+\label{eq:big-omega}
+\end{align}
+The difference between the objective of the optimal rule list
+in~$\StartsWith(\Prefix)$ and that in~$\StartsWith(\PrefixB)$
+is at most~$2\Reg$:
+\begin{align}
+\left | \min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
+  - \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y)
+  \right | \le 2 \Reg.
+\label{eq:similar}
+\end{align}
+\end{theorem}
+
+\begin{proof}
+We begin by defining four related rule lists.
+%
+First, let ${\RL = (\Prefix, \Labels, \Default, K)}$
+be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
+and labels ${\Labels = (q_1, \dots, q_K)}$.
+%
+Second, let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
+be a rule list with prefix ${\PrefixB = (P_1, \dots, P_\kappa)}$
+and labels ${\LabelsB = (Q_1, \dots, Q_\kappa)}$.
+%
+Define~$\omega$ as in~\eqref{eq:omega}
+and~$\Omega$ as in~\eqref{eq:big-omega},
+and require that~${\omega, \Omega \le \Reg}$.
+%
+Third, let ${\RL' = (\Prefix', \Labels', \Default', K') \in}$
+${\StartsWith(\Prefix)}$ be any rule list
+whose prefix starts with~$\Prefix$, such that~${K' \ge K}$.
+%
+Denote the prefix and labels of~$\RL'$ by
+${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
+and ${\Labels = (q_1, \dots, q_{K'})}$,
+respectively.
+%
+Finally, define
+${\RLB' = (\PrefixB', \LabelsB', \DefaultB', \kappa') \in \StartsWith(\PrefixB)}$
+to be the `analogous' rule list, \ie whose prefix
+${\PrefixB' = (P_1, \dots, P_\kappa, P_{\kappa+1}, \dots, P_{\kappa'})
+= (P_1, \dots, P_\kappa, p_{K+1}, \dots, p_{K'})}$
+starts with~$\PrefixB$ and ends with the same ${K'-K}$
+antecedents as~$\Prefix'$.
+%
+Let ${\LabelsB' = (Q_1, \dots, Q_{\kappa'})}$
+denote the labels of~$\RLB'$.
+
+Next, we compare the difference in the objectives
+of rule lists~$\RL'$ and~$\RL$ to the difference
+in the objectives of rule lists~$\RLB'$ and~$\RLB$.
+%
+Let us expand the first difference as
+\begin{align}
+\Obj(\RL',& \x, \y) - \Obj(\RL, \x, \y)
+  = \Loss(\RL', \x, \y) + \Reg K' - \Loss(\RL, \x, \y) - \Reg K \nn \\
+&= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y)
+  - \Loss_p(\Prefix, \Labels, \x, \y) - \Loss_0(\Prefix, \Default, \x, \y)
+  + \Reg (K' - K).
+\end{align}
+Similarly, let us expand the second difference as
+\begin{align}
+\Obj(\RLB',& \x, \y) - \Obj(\RLB, \x, \y)
+  = \Loss(\RLB', \x, \y) + \Reg \kappa' - \Loss(\RLB, \x, \y) - \Reg \kappa \nn \\
+&= \Loss_p(\PrefixB', \LabelsB', \x, \y) + \Loss_0(\PrefixB', \DefaultB', \x, \y)
+  - \Loss_p(\PrefixB, \LabelsB, \x, \y) - \Loss_0(\PrefixB, \DefaultB, \x, \y)
+  + \Reg (K' - K),
+\end{align}
+where we have used the fact that ${\kappa' - \kappa = K' - K}$.
+
+The prefixes~$\Prefix$ and~$\PrefixB$ capture similar sets of data.
+%
+Equivalently, the set of data that is not captured by~$\Prefix$
+is similar to the set of data that is not captured by~$\PrefixB$.
+%
+In precise terms,
+\begin{align}
+\frac{1}{N} \sum_{n=1}^N \Cap(x_n, \Prefix) \oplus \Cap(x_n, \PrefixB) =
+\frac{1}{N} \sum_{n=1}^N (\neg\, \Cap(x_n, \Prefix)) \oplus (\neg\, \Cap(x_n, \PrefixB))
+= \omega + \Omega \le 2 \Reg,
+\end{align}
+where~$\oplus$ denotes ``exclusive or'' (XOR).
+\end{proof}
+
+\begin{theorem}[Very similar support bound]
+\label{thm:very-similar}
+Define ${\StartsWith(\Prefix) = }$
+${\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
+to be the set of all rule lists whose prefixes start with~$\Prefix$.
+%
+Let ${\Prefix = (p_1, \dots, p_K)}$ and
+${\PrefixB = (P_1, \dots, P_{\kappa})}$ be prefixes
 that capture the same data, \ie
 \begin{align}
 \{x_n : \Cap(x_n, \Prefix)\} = \{x_n : \Cap(x_n, \PrefixB)\}.
@@ -1787,36 +1904,36 @@ and~$\PrefixB'$, respectively.
 Specifically, define~$\omega$ to be the normalized support
 of data captured by~$p_{K + 1}$ in~$\Prefix'$ and not
 captured by~$P_{\kappa + 1}$ in~$\PrefixB'$,
-and require that~${\omega < \Reg}$:
+and let us require that~${\omega \le \Reg}$, \ie
 \begin{align}
 \omega \equiv \frac{1}{N} \sum_{n=1}^N
   \neg\, \Cap(x_n, P_{\kappa+1} \given \PrefixB')
-  \wedge \Cap(x_n, p_{K+1} \given \Prefix') < \Reg,
+  \wedge \Cap(x_n, p_{K+1} \given \Prefix') \le \Reg,
 \end{align}
 where~$\Reg$ is the regularization parameter.
 %
 Similarly, define~$\Omega$ to be the normalized support
 of data captured by~$P_{\kappa + 1}$ in~$\PrefixB'$ and not
 captured by~$p_{K + 1}$ in~$\Prefix'$,
-and require that~${\Omega < \Reg}$:
+and let us require that~${\Omega \le \Reg}$, \ie
 \begin{align}
 \Omega \equiv \frac{1}{N} \sum_{n=1}^N
   \neg\, \Cap(x_n, p_{K+1} \given \Prefix')
-  \wedge \Cap(x_n, P_{\kappa+1} \given \PrefixB') < \Reg.
+  \wedge \Cap(x_n, P_{\kappa+1} \given \PrefixB') \le \Reg.
 \end{align}
 The difference between the objective of the optimal rule list
 in~$\StartsWith(\Prefix')$ and that in~$\StartsWith(\PrefixB')$
-is less than~$2\Reg$:
+is at most~$2\Reg$:
 \begin{align}
 \left | \min_{\RL^\dagger \in \StartsWith(\Prefix')} \Obj(\RL^\dagger, \x, \y)
   - \min_{\RLB^\dagger \in \StartsWith(\PrefixB')} \Obj(\RLB^\dagger, \x, \y)
-  \right | < 2 \Reg.
+  \right | \le 2 \Reg.
 \label{eq:similar}
 \end{align}
 \end{theorem}
 
 \begin{proof}
-First, note that by Proposition~\ref{prop:min-capture} \dots
+\dots
 \end{proof}
 
 \begin{comment}
