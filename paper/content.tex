@@ -1769,7 +1769,7 @@ for many datasets that might be used for constructing interpretable models.
 
 \subsection{Similar support bound}
 
-We now present a slight relaxation of our equivalent support bound
+We now present a relaxation of our equivalent support bound
 from Theorem~\ref{thm:equivalent}.
 
 \begin{theorem}[Similar support bound]
@@ -1783,34 +1783,36 @@ ${\PrefixB = (P_1, \dots, P_{\kappa})}$ be prefixes
 that capture nearly the same data.
 %
 Specifically, define~$\omega$ to be the normalized support
-of data captured by~$\Prefix$ and not captured by~$\PrefixB$,
-and let us require that~${\omega \le \Reg}$, \ie
+of data captured by~$\Prefix$ and not captured by~$\PrefixB$, \ie
+%and let us require that~${\omega \le \Reg}$, \ie
 \begin{align}
 \omega \equiv \frac{1}{N} \sum_{n=1}^N
   \neg\, \Cap(x_n, \PrefixB)
-  \wedge \Cap(x_n, \Prefix) \le \Reg,
+  \wedge \Cap(x_n, \Prefix). % \le \Reg,
 \label{eq:omega}
 \end{align}
-where~$\Reg$ is the regularization parameter.
+%where~$\Reg$ is the regularization parameter.
 %
 Similarly, define~$\Omega$ to be the normalized support
-of data captured by~$\PrefixB$ and not captured by~$\Prefix$,
-and let us require that~${\Omega \le \Reg}$, \ie
+of data captured by~$\PrefixB$ and not captured by~$\Prefix$, \ie
+%and let us require that~${\Omega \le \Reg}$, \ie
 \begin{align}
 \Omega \equiv \frac{1}{N} \sum_{n=1}^N
   \neg\, \Cap(x_n, \Prefix)
-  \wedge \Cap(x_n, \PrefixB) \le \Reg.
+  \wedge \Cap(x_n, \PrefixB). %\le \Reg.
 \label{eq:big-omega}
 \end{align}
-The difference between the objective of the optimal rule list
-in~$\StartsWith(\Prefix)$ and that in~$\StartsWith(\PrefixB)$
-is at most~$2\Reg$:
+We can bound the difference between the objectives of the
+optimal rule lists in~$\StartsWith(\PrefixB)$
+and~$\StartsWith(\PrefixB)$ as follows:
 \begin{align}
-\left | \min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
-  - \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y)
-  \right | \le 2 \Reg.
+\min_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)
+- \min_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)
+&\ge b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \omega - \Omega,
 \label{eq:similar}
 \end{align}
+where~$b(\Prefix, \x, \y)$ and~$b(\PrefixB, \x, \y)$ are the
+objective lower bounds of~$\RL$ and~$\RLB$, respectively.
 \end{theorem}
 
 \begin{proof}
@@ -1848,42 +1850,66 @@ antecedents as~$\Prefix'$.
 Let ${\LabelsB' = (Q_1, \dots, Q_{\kappa'})}$
 denote the labels of~$\RLB'$.
 
-The largest discrepancy between the objectives of~$\RL'$ and~$\RLB'$
-would occur if one misclassified all the data corresponding to
-both~$\phi$ and~$\Phi$ while the other correctly classified this
-same data, thus
+[Expand on this.]
+%Suppose that the lower bounds of~$\Prefix$ and~$\PrefixB$
+%obey ${b(\Prefix, \x, \y) < b(\PrefixB, \x, \y)}$.
+%
+The smallest possible objective for~$\RLB'$, in relation
+to the objective of~$\RL'$, reflects both the difference
+between the objective lower bounds of~$\RLB$ and~$\RL$
+and the largest possible discrepancy between the
+objectives of~$\RL'$ and~$\RLB'$.
+%
+The latter would occur if~$\RL'$ misclassified all the data
+corresponding to both~$\omega$ and~$\Omega$ while~$\RLB'$
+correctly classified this same data, thus
 \begin{align}
 \Obj(\RLB', \x, \y) \ge \Obj(\RL', \x, \y)
   + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \omega - \Omega.
 \label{eq:similar-analogous}
 \end{align}
+%
 
-Now let~$\RL^*$ be an optimal rule list with prefix
-constrained to start with~$\Prefix$,
+Now let~$\RLB^*$ be an optimal rule list with prefix
+constrained to start with~$\PrefixB$,
 \begin{align}
-\RL^* \in \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y),
+\RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y),
 \end{align}
-and let~$K^*$ be the length of~$\RL^*$.
+and let~$\kappa^*$ be the length of~$\RLB^*$.
 %
-Let~$\RLB^*$ be the analogous $\kappa^*$-rule list whose prefix starts
-with~$\PrefixB$ and ends with the same~${K^* - K}$ antecedents as~$\RL^*$,
-where~${\kappa^* = \kappa + K^* - K}$.
+Also let~$\RL^*$ be the analogous $K^*$-rule list whose prefix
+starts with~$\Prefix$ and ends with the same~${\kappa^* - \kappa}$
+antecedents as~$\RLB^*$, where~${K^* = K + \kappa^* - \kappa}$.
 %
-We claim that~$\RLB^*$ is an optimal rule list
-with prefix constrained to start with~$\PrefixB$,
+By~\eqref{eq:similar-analogous},
 \begin{align}
-\RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
-\label{eq:similar-analogous-optimal}
+\min_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)
+= \Obj(\RLB^*, \x, \y) &\ge \Obj(\RL^*, \x, \y)
+  + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \omega - \Omega \nn \\
+&\ge \min_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)
+  + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \omega - \Omega.
 \end{align}
+
+\end{proof}
+
+\begin{comment}
 
 To demonstrate~\eqref{eq:similar-analogous-optimal},
 we consider two separate scenarios.
 %
 In the first scenario, prefixes~$\Prefix$ and~$\PrefixB$
-capture the same data, therefore ${\omega = \Omega = 0}$,
-and claim~\ref{eq:similar-analogous-optimal}
-reduces to claim~\ref{eq:equiv-analogous-optimal},
-which we justify in the proof of Theorem~\ref{thm:equivalent}.
+capture the same data, therefore ${\omega = \Omega = 0}$.
+%
+By claim~\eqref{eq:equiv-analogous-optimal},
+which we justify in the proof of Theorem~\ref{thm:equivalent},
+${\RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)}$,
+thus
+\begin{align}
+\Obj(\RLB^*, \x, \y)
+  = \min_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)
+\le \min_{\RLB^\dagger \in \StartsWith(\PrefixB)}
+  \Obj(\RLB^\dagger, \x, \y) + \omega + \Omega.
+\end{align}
 
 In the second scenario, prefixes~$\Prefix$ and~$\PrefixB$
 do not capture the same data, thus either~${\omega \neq 0}$,
@@ -1961,11 +1987,21 @@ and~$\StartsWith(\PrefixB)$ are the same, \ie
 \argmin_{\RLB^\dagger \in \tau(\PrefixB, \phi)} \Obj(\RLB^\dagger, \x, \y)
 = \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
 \end{align}
-Since we have shown that every~${\RL'' \in \tau(\Prefix, \Phi)}$
+We have shown that every~${\RL'' \in \tau(\Prefix, \Phi)}$
 has a direct analogue~${\RLB'' \in \tau(\PrefixB, \phi)}$,
 such that~$\RL''$ and~$\RLB''$ obey~\eqref{eq:similar-analogous},
-and vice versa, we again have~\eqref{eq:similar-analogous-optimal}.
+and vice versa.
 
+By~\eqref{eq:similar-analogous},
+\begin{align}
+\Obj(\RLB^*, \x, \y) &\ge \Obj(\RL^*, \x, \y)
+  - \left( b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) \right) - \omega - \Omega \nn \\
+&= \min_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)
+  - \left( b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) \right) - \omega - \Omega.
+\label{eq:sa-1}
+\end{align}
+
+[Explain this.] Combining~\eqref{eq:sa-1} and~\eqref{eq:sa-2} gives~\eqref{eq:similar-analogous-optimal}.
 
 \end{proof}
 
@@ -2024,7 +2060,6 @@ is at most~$2\Reg$:
 \dots
 \end{proof}
 
-\begin{comment}
 Suppose prefixes~$\cal P$ and~$\cal Q$ capture the same data,
 and now derive~$\cal P'$ from~$\cal P$ by appending antecedent~$p$
 and derive~$\cal Q'$ from~$\cal Q$ by appending antecedent~$q$.
