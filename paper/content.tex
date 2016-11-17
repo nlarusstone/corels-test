@@ -1532,7 +1532,7 @@ to be the set of antecedents in~$\Prefix$ that are not in~$\PrefixB$,
 and define~${\Phi = \{P_k : (P_k \in \PrefixB) \wedge (P_k \notin \Prefix)\}}$
 to be the set of antecedents in~$\PrefixB$ that are not in~$\Prefix$;
 either~${\phi \neq \emptyset}$, or~${\Phi \neq \emptyset}$, or both.
-%
+
 Suppose~${\phi \neq \emptyset}$, and let~${p \in \phi}$
 be an antecedent in~$\phi$.
 %
@@ -1560,7 +1560,8 @@ is any rule list whose prefix starts with~$\Prefix$
 and contains antecedent~$P$, then~$\RL''$ cannot be optimal, \ie
 ${\RL'' \notin \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)}$.
 
-To finish our examination of the second scenario, first define
+To finish justifying claim~\eqref{eq:equiv-analogous-optimal}
+for the second scenario, first define
 \begin{align}
 \tau(\Prefix, \Phi) \equiv
   \{\RL'' = (\Prefix'', \Labels'', \Default'', K'') :
@@ -1595,6 +1596,8 @@ and~\eqref{eq:equiv-analogous-optimal} to obtain
 = \Obj(\RL^*, \x, \y) \le \Obj(\RLB^*, \x, \y)
 = \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y).
 \end{align}
+
+We can now finally combine
 \end{proof}
 
 Thus, if prefixes~$\Prefix$ and~$\PrefixB$ capture the same data,
@@ -1845,40 +1848,125 @@ antecedents as~$\Prefix'$.
 Let ${\LabelsB' = (Q_1, \dots, Q_{\kappa'})}$
 denote the labels of~$\RLB'$.
 
-Next, we compare the difference in the objectives
-of rule lists~$\RL'$ and~$\RL$ to the difference
-in the objectives of rule lists~$\RLB'$ and~$\RLB$.
-%
-Let us expand the first difference as
+The largest discrepancy between the objectives of~$\RL'$ and~$\RLB'$
+would occur if one misclassified all the data corresponding to
+both~$\phi$ and~$\Phi$ while the other correctly classified this
+same data, thus
 \begin{align}
-\Obj(\RL',& \x, \y) - \Obj(\RL, \x, \y)
-  = \Loss(\RL', \x, \y) + \Reg K' - \Loss(\RL, \x, \y) - \Reg K \nn \\
-&= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y)
-  - \Loss_p(\Prefix, \Labels, \x, \y) - \Loss_0(\Prefix, \Default, \x, \y)
-  + \Reg (K' - K).
+\Obj(\RLB', \x, \y) \ge \Obj(\RL', \x, \y)
+  + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \omega - \Omega.
+\label{eq:similar-analogous}
 \end{align}
-Similarly, let us expand the second difference as
-\begin{align}
-\Obj(\RLB',& \x, \y) - \Obj(\RLB, \x, \y)
-  = \Loss(\RLB', \x, \y) + \Reg \kappa' - \Loss(\RLB, \x, \y) - \Reg \kappa \nn \\
-&= \Loss_p(\PrefixB', \LabelsB', \x, \y) + \Loss_0(\PrefixB', \DefaultB', \x, \y)
-  - \Loss_p(\PrefixB, \LabelsB, \x, \y) - \Loss_0(\PrefixB, \DefaultB, \x, \y)
-  + \Reg (K' - K),
-\end{align}
-where we have used the fact that ${\kappa' - \kappa = K' - K}$.
 
-The prefixes~$\Prefix$ and~$\PrefixB$ capture similar sets of data.
-%
-Equivalently, the set of data that is not captured by~$\Prefix$
-is similar to the set of data that is not captured by~$\PrefixB$.
-%
-In precise terms,
+Now let~$\RL^*$ be an optimal rule list with prefix
+constrained to start with~$\Prefix$,
 \begin{align}
-\frac{1}{N} \sum_{n=1}^N \Cap(x_n, \Prefix) \oplus \Cap(x_n, \PrefixB) =
-\frac{1}{N} \sum_{n=1}^N (\neg\, \Cap(x_n, \Prefix)) \oplus (\neg\, \Cap(x_n, \PrefixB))
-= \omega + \Omega \le 2 \Reg,
+\RL^* \in \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y),
 \end{align}
-where~$\oplus$ denotes ``exclusive or'' (XOR).
+and let~$K^*$ be the length of~$\RL^*$.
+%
+Let~$\RLB^*$ be the analogous $\kappa^*$-rule list whose prefix starts
+with~$\PrefixB$ and ends with the same~${K^* - K}$ antecedents as~$\RL^*$,
+where~${\kappa^* = \kappa + K^* - K}$.
+%
+We claim that~$\RLB^*$ is an optimal rule list
+with prefix constrained to start with~$\PrefixB$,
+\begin{align}
+\RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
+\label{eq:similar-analogous-optimal}
+\end{align}
+
+To demonstrate~\eqref{eq:similar-analogous-optimal},
+we consider two separate scenarios.
+%
+In the first scenario, prefixes~$\Prefix$ and~$\PrefixB$
+capture the same data, therefore ${\omega = \Omega = 0}$,
+and claim~\ref{eq:similar-analogous-optimal}
+reduces to claim~\ref{eq:equiv-analogous-optimal},
+which we justify in the proof of Theorem~\ref{thm:equivalent}.
+
+In the second scenario, prefixes~$\Prefix$ and~$\PrefixB$
+do not capture the same data, thus either~${\omega \neq 0}$,
+or~${\omega \neq 0}$, or both.
+%
+Consequently, prefixes~$\Prefix$ and~$\PrefixB$
+are not composed of the same antecedents.
+%
+Define~${\phi = \{p_k : (p_k \in \Prefix) \wedge (p_k \notin \PrefixB)\}}$
+to be the set of antecedents in~$\Prefix$ that are not in~$\PrefixB$,
+and define~${\Phi = \{P_k : (P_k \in \PrefixB) \wedge (P_k \notin \Prefix)\}}$
+to be the set of antecedents in~$\PrefixB$ that are not in~$\Prefix$;
+either~${\phi \neq \emptyset}$, or~${\Phi \neq \emptyset}$, or both.
+
+Suppose~${\phi \neq \emptyset}$, and let~${p \in \phi}$
+be an antecedent in~$\phi$.
+%
+It follows that there exists a subset of rule lists
+in~$\StartsWith(\PrefixB)$ that do not have analogues
+in~$\StartsWith(\Prefix)$.
+%
+Let~${\RLB'' \in \StartsWith(\PrefixB)}$ be such a rule list,
+such that its prefix ${\PrefixB'' = (P_1, \dots, P_\kappa, \dots, p, \dots)}$
+starts with~$\PrefixB$ and contains~$p$ among its remaining antecedents.
+%
+Since~$p$ captures a subset of the data that~$\Prefix$ captures,
+and~$\PrefixB$ captures a similar set of data as~$\Prefix$, it follows
+that~$p$ in~$\PrefixB''$ can capture at most a small set of data
+no larger than~$\omega$:
+\begin{align}
+\frac{1}{N} \sum_{n=1}^N \Cap(x_n, p \given \PrefixB'')
+&\le \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \PrefixB) \wedge \Cap(x_n, p) \nn \\
+&\le \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \PrefixB) \wedge \Cap(x_n, \Prefix)
+= \omega \le \Reg.
+\end{align}
+By Theorem~\ref{thm:min-capture}, antecedent~$p$ has insufficient
+support in~$\RLB''$, and thus~$\RLB''$ cannot be optimal, \ie
+${\RLB'' \notin}$ ${\argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)}$.
+%
+Similarly, if~${\Phi \neq \emptyset}$
+and~${P \in \Phi}$, and~${\RL'' \in \StartsWith(\Prefix)}$
+is any rule list whose prefix starts with~$\Prefix$
+and contains antecedent~$P$, then~$P$ in~$\Prefix''$
+only has normalized support
+\begin{align}
+\frac{1}{N} \sum_{n=1}^N \Cap(x_n, P \given \Prefix'')
+&\le \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \Cap(x_n, P) \nn \\
+&\le \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \Cap(x_n, \PrefixB)
+= \Omega \le \Reg.
+\end{align}
+By Theorem~\ref{thm:min-capture}, antecedent~$P$ has insufficient
+support in~$\RL''$, and thus~$\RL''$ can't be optimal, \ie ${\RL'' \notin}$
+${\argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)}$.
+
+To finish justifying claim~\eqref{eq:similar-analogous-optimal}
+for the second scenario, first define
+\begin{align}
+\tau(\Prefix, \Phi) \equiv
+  \{\RL'' = (\Prefix'', \Labels'', \Default'', K'') :
+    \RL'' \in \StartsWith(\Prefix) \textnormal{ and }
+    p_k \notin \Phi, \forall p_k \in \Prefix''\} \subset \StartsWith(\Prefix)
+\end{align}
+to be the set of all rule lists whose prefixes start with~$\Prefix$
+and don't contain any antecedents in~$\Phi$.
+%
+Now, recognize that the optimal prefixes in~$\tau(\Prefix, \Phi)$
+and~$\StartsWith(\Prefix)$ are the same, \ie
+\begin{align}
+\argmin_{\RL^\dagger \in \tau(\Prefix, \Phi)} \Obj(\RL^\dagger, \x, \y)
+= \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y),
+\end{align}
+and similarly, the optimal prefixes in~$\tau(\PrefixB, \phi)$
+and~$\StartsWith(\PrefixB)$ are the same, \ie
+\begin{align}
+\argmin_{\RLB^\dagger \in \tau(\PrefixB, \phi)} \Obj(\RLB^\dagger, \x, \y)
+= \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
+\end{align}
+Since we have shown that every~${\RL'' \in \tau(\Prefix, \Phi)}$
+has a direct analogue~${\RLB'' \in \tau(\PrefixB, \phi)}$,
+such that~$\RL''$ and~$\RLB''$ obey~\eqref{eq:similar-analogous},
+and vice versa, we again have~\eqref{eq:similar-analogous-optimal}.
+
+
 \end{proof}
 
 \begin{theorem}[Very similar support bound]
