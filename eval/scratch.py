@@ -82,7 +82,7 @@ pylab.savefig('../figs/ela-objective.png')
 pylab.figure(2)
 pylab.clf()
 pylab.plot(x['total_time'], x['tree_num_nodes'], 'k-', linewidth=lw)
-pylab.plot(x['total_time'], x['queue_size'], 'g:', color='gray', linewidth=lw)
+pylab.plot(x['total_time'], x['queue_size'], ':', color='gray', linewidth=lw)
 pylab.plot(x['total_time'], prefix_sums, 'b-', linewidth=lw)
 pylab.xlabel('time (s)', fontsize=fs)
 pylab.ylabel('data structure size', fontsize=fs)
@@ -95,6 +95,9 @@ total_space_size = space.state_space_size(nrules=nrules, min_objective=default_o
 remaining_space_size = [space.remaining_search_space(nrules=nrules, min_objective=current_objective, c=c, prefix_lengths=parse_prefix_lengths(pl)) for (current_objective, pl) in x[['tree_min_objective', 'prefix_lengths']]]
 log10_total = float(gmpy2.log10(total_space_size))
 log10_remaining = [float(gmpy2.log10(r)) for r in remaining_space_size]
+
+# need to handle entries where remaining state space = 0
+
 pylab.figure(3)
 pylab.clf()
 pylab.subplot(2, 1, 1)
@@ -112,3 +115,25 @@ pylab.ylabel('log10(remaining', fontsize=fs)
 pylab.xticks(fontsize=(fs-2))
 pylab.yticks(fontsize=(fs-2))
 pylab.savefig('../figs/ela-remaining-space.png')
+
+evaluate_time = x['evaluate_children_time'] - x['tree_insertion_time'] - x['permutation_map_insertion_time']
+
+y = np.array([evaluate_time, x['permutation_map_insertion_time'], x['tree_insertion_time'], x['node_select_time']][::-1]).cumsum(axis=0)[::-1]
+
+pylab.figure(4)
+pylab.clf()
+pylab.plot(x['total_time'], x['total_time'], 'm--', linewidth=lw)
+#pylab.plot(x['total_time'], x['node_select_time'] + x['evaluate_children_time'], 'r--', linewidth=lw)
+#pylab.plot(x['total_time'], x['node_select_time'], 'b-', linewidth=lw)
+pylab.plot(x['total_time'], y[0], 'k:', linewidth=lw) # prefix + rule list evaluation
+pylab.plot(x['total_time'], y[1], 'b-', linewidth=lw) # permutation map
+pylab.plot(x['total_time'], y[2], 'c--', linewidth=lw) # cache insertion
+pylab.plot(x['total_time'], y[3], ':', color='gray', linewidth=lw) # node selection
+pylab.legend(['total', 'prefix + rule list evaluation', 'permutation map', 'cache insertion', 'node selection'], loc='upper left')
+pylab.savefig('../figs/ela-time.png')
+
+print 'total time:', x['total_time'][-1]
+print 'prefix + rule list evaluation time:', y[0][-1]
+print 'permutation operations time:', y[1][-1]
+print 'cache insertion time:', y[2][-1]
+print 'node selection time:', y[3][-1]
