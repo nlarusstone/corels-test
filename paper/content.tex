@@ -1893,14 +1893,14 @@ By~\eqref{eq:similar-analogous},
 
 \end{proof}
 
-Theorem~\ref{thm:similar} tells us that if prefix~$\Prefix$
-and~$\PrefixB$ are similar, and we know the objective of the optimal
-rule list that starts with~$\Prefix$, then
+Theorem~\ref{thm:similar} implies that if prefix~$\Prefix$
+and~$\PrefixB$ are similar, and we know the optimal objective
+of rule lists starting with~$\Prefix$, then
 \begin{align}
-\min_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)
-&\ge \min_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)
+\min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y)
+&\ge \min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
 + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \chi \nn \\
-&\ge \CurrentObj + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \chi
+&\ge \CurrentObj + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \chi,
 \end{align}
 where~$\CurrentObj$ is the current best objective,
 and~$\chi$ is the normalized support of the set of data captured
@@ -1908,7 +1908,7 @@ either exclusively by~$\Prefix$ or exclusively by~$\PrefixB$.
 %
 It follows that
 \begin{align}
-\min_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)
+\min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y)
 \ge \CurrentObj + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \chi \ge \CurrentObj
 \end{align}
 if ${b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) \ge \chi}$.
@@ -1916,8 +1916,8 @@ if ${b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) \ge \chi}$.
 To conclude, we summarize this result and combine it with
 our notion of lookahead from Lemma~\ref{lemma:lookahead}.
 %
-During our rule list optimization procedure, if we demonstrate that
-${\min_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y) \ge \CurrentObj}$,
+During branch-and-bound execution, if we demonstrate that
+${\min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y) \ge \CurrentObj}$,
 then we can prune all prefixes that start with any
 prefix~$\PrefixB'$ in the following set:
 \begin{align}
