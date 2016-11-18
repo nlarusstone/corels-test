@@ -350,6 +350,7 @@ Below, we begin with an immediate consequence of Theorem~\ref{thm:bound}.
 %followed by a more general version of Theorem~\ref{thm:bound}.
 
 \begin{lemma}[Objective lower bound with one-step lookahead]
+\label{lemma:lookahead}
 Let~$\Prefix$ be a $K$-prefix
 and let~$\CurrentObj$ be the current best objective.
 %
@@ -1892,8 +1893,39 @@ By~\eqref{eq:similar-analogous},
 
 \end{proof}
 
-\begin{comment}
+Theorem~\ref{thm:similar} tells us that if prefix~$\Prefix$
+and~$\PrefixB$ are similar, and we know the objective of the optimal
+rule list that starts with~$\Prefix$, then
+\begin{align}
+\min_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)
+&\ge \min_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)
++ b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \chi \nn \\
+&\ge \CurrentObj + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \chi
+\end{align}
+where~$\CurrentObj$ is the current best objective,
+and~$\chi$ is the normalized support of the set of data captured
+either exclusively by~$\Prefix$ or exclusively by~$\PrefixB$.
+%
+It follows that
+\begin{align}
+\min_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)
+\ge \CurrentObj + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \chi \ge \CurrentObj
+\end{align}
+if ${b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) \ge \chi}$.
+%
+To conclude, we summarize this result and combine it with
+our notion of lookahead from Lemma~\ref{lemma:lookahead}.
+%
+During our rule list optimization procedure, if we demonstrate that
+${\min_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y) \ge \CurrentObj}$,
+then we can prune all prefixes that start with any
+prefix~$\PrefixB'$ in the following set:
+\begin{align}
+\left\{ \PrefixB' : b(\PrefixB', \x, \y) + \Reg - b(\Prefix, \x, \y) \ge
+\frac{1}{N} \sum_{n=1}^N \Cap(x_n, \Prefix) \oplus \Cap(x_n, \PrefixB') \right\}.
+\end{align}
 
+\begin{comment}
 To demonstrate~\eqref{eq:similar-analogous-optimal},
 we consider two separate scenarios.
 %
