@@ -24,20 +24,19 @@ def state_space_size(nrules, min_objective=0.50, c=0.01):
     Mf = math.factorial(nrules)
     return sum([Mf / math.factorial(nrules - k) for k in range(max_prefix_length + 1)])
 
-def remaining_search_space(nrules, min_objective, c=0.01, prefix_lengths=[1]):
+def remaining_search_space(nrules, min_objective, c=0.01, prefix_lengths=[[0, 1]]):
     """
     min_objective = current best objective
 
     prefix_lengths[i] = the number of prefixes of length i in the queue
 
     """
-    P = len(prefix_lengths)
-    max_prefix_length = compute_max_prefix_length(nrules, min_objective, c)
+    M = compute_max_prefix_length(nrules, min_objective, c)
 
     # sum_{j=0}^M Q_j sum_{k=1}^{K-j} (M - j)! / (M - j - k)!
-    Mj = [math.factorial(M - j) for j in range(P)]
-    return sum([prefix_lengths[j] * sum([Mj[j] / math.factorial(M - j - k)
-                for k in range(1, max_prefix_length - j + 1)]) for j in range(P)])
+    j_Qj_Mj = [(j, Qj, math.factorial(M - j)) for (j, Qj) in prefix_lengths]
+    return sum([Qj * sum([Mj / math.factorial(M - j - k)
+                for k in range(1, M - j + 1)]) for (j, Qj, Mj) in j_Qj_Mj])
 
 def test_state_space():
     nrules = 100
