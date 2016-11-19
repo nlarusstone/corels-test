@@ -676,7 +676,7 @@ current best objective and information about
 the lengths of prefixes in the queue to constrain
 the lengths of prefixes in the remaining search space.
 %
-However, Proposition~\ref{thm:remaining-eval-coarse}
+However, Proposition~\ref{prop:remaining-eval-coarse}
 is weaker than Theorem~\ref{thm:remaining-eval-fine} because
 it leverages only coarse-grain information from the queue.
 %
@@ -687,7 +687,7 @@ prefixes in the queue, which further constrains
 the lengths of prefixes in the remaining search space.
 
 \begin{proposition}[Coarse-grain upper bound on the number of remaining prefix evaluations]
-\label{thm:remaining-eval-coarse}
+\label{prop:remaining-eval-coarse}
 Consider a state space of all rule lists formed from a set of~$M$ antecedents,
 and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
 during execution.
@@ -2230,10 +2230,8 @@ where X is a specific implementation
 \item Figure~\ref{fig:scheduling-policy}
 Missing:  Some sort of comparison of different scheduling policies
 
-\item Figure~\ref{fig:search-space},
-Fraction of search space we've proven we've handled
-
-\item Figure~\ref{fig:queue-size}, Size of queue over time
+\item Figure~\ref{fig:queue-cache-size},
+Size of cache and queue data structures as a function of wall clock time
 
 \item Figure~\ref{fig:queue-cumulative},
 Cumulative number of things placed in queue over time
@@ -2242,6 +2240,9 @@ Cumulative number of things placed in queue over time
 with horizontal lines and x-ticks for CART and C4.5
 %-- this also gives an upper bound on the remaining search space --
 %and also, possibly, the minimum lower bound in the queue over time
+
+\item Figure~\ref{fig:search-space},
+Fraction of search space we've proven we've handled
 
 \item Figure~\ref{fig:max-length},
 Max prefix length over time (computed from objective value);
@@ -2302,20 +2303,32 @@ where X is a specific implementation
 
 \begin{figure}[t!]
 \begin{center}
-\includegraphics[width=0.65\textwidth]{figs/sketch-search-space.png}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-queue-size.png}
+\includegraphics[width=0.65\textwidth]{figs/ela-queue-cache-size-insertions.png}
 \end{center}
-\caption{Fraction of search space we've proven we've handled}
-\label{fig:search-space}
+\caption{Cache and queue data structure sizes and insertions.
+%
+The top plot shows the sizes of the cache and queue data structures,
+as a function of wall clock time.
+%
+The number of nodes in the cache (solid black line) is an
+upper bound on the number of elements in the physical queue
+(dotted gray line), since the physical queue elements only
+correspond to the cache trie data structure's leaf nodes
+plus disconnected cache nodes that have been marked for deletion.
+%
+The queue's physical size is an upper bound on its
+logical size (solid blue line), which doesn't include nodes
+that have been marked for deletion.
+%
+The bottom plot shows the cumulative number of cache insertions,
+which is equivalent to the cumulative number of queue insertions,
+as a function of wall clock time.
+}
+\label{fig:queue-cache-size}
 \end{figure}
 
-\begin{figure}[t!]
-\begin{center}
-\includegraphics[width=0.65\textwidth]{figs/sketch-queue-size.png}
-\end{center}
-\caption{Size of queue over time}
-\label{fig:queue-size}
-\end{figure}
-
+\begin{comment}
 \begin{figure}[t!]
 \begin{center}
 \includegraphics[width=0.65\textwidth]{figs/sketch-queue-cumulative.png}
@@ -2323,14 +2336,48 @@ where X is a specific implementation
 \caption{Cumulative number of things placed in queue over time}
 \label{fig:queue-cumulative}
 \end{figure}
+\end{comment}
 
 \begin{figure}[t!]
 \begin{center}
-\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
+\includegraphics[width=0.65\textwidth]{figs/ela-objective.png}
 \end{center}
-\caption{Objective value over time,
-with horizontal lines and x-ticks for CART and C4.5}
+\caption{Objective value as a function of wall clock time.
+%
+The top plot shows the entire execution, and the bottom plot
+highlights the optimization phase, from the start of execution
+to the time at which the optimal value is achieved.
+%
+The cyan circle indicates the objective value after a single iteration,
+and the magenta square indicates the time at which the optimum
+is achieved, as well as its value.
+%
+Missing: horizontal lines and x-ticks for CART and C4.5.}
 \label{fig:objective}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-search-space.png}
+\includegraphics[width=0.65\textwidth]{figs/ela-remaining-space.png}
+\end{center}
+\caption{The logarithm (base 10) of an upper bound
+on the size of the remaining search space,
+as a function of wall clock time.
+%
+These plots show the upper bound in
+Proposition~\ref{prop:remaining-eval-coarse},
+which depends on the total number of available rules,
+as well as two dynamic quantities:
+the current best objective value,
+and the histogram of logical queue elements,
+partitioned by prefix length.
+%
+The top plot shows the entire execution,
+the middle plot highlights the optimization phase,
+and the bottom plot highlights the verification phase.}
+\label{fig:search-space}
 \end{figure}
 
 \begin{figure}[t!]
