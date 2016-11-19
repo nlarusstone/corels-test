@@ -2,9 +2,10 @@ TARGETS = arxiv
 
 TEXFILES = $(wildcard *.tex)
 BIBFILES = $(wildcard *.bib)
+FIGFILES = $(wildcard figs/*.png)
 PDFS = $(addsuffix .pdf,$(TARGETS))
 
-%.pdf: %.tex $(TEXFILES) $(BIBFILES)
+%.pdf: %.tex $(TEXFILES) $(BIBFILES) $(FIGFILES)
 	pdflatex $*
 	bibtex $*
 	pdflatex $*
