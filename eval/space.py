@@ -31,12 +31,14 @@ def remaining_search_space(nrules, min_objective, c=0.01, prefix_lengths=[[0, 1]
     prefix_lengths[i] = the number of prefixes of length i in the queue
 
     """
-    M = compute_max_prefix_length(nrules, min_objective, c)
+    K = compute_max_prefix_length(nrules, min_objective, c)
 
     # sum_{j=0}^M Q_j sum_{k=1}^{K-j} (M - j)! / (M - j - k)!
-    j_Qj_Mj = [(j, Qj, math.factorial(M - j)) for (j, Qj) in prefix_lengths]
-    return sum([Qj * sum([Mj / math.factorial(M - j - k)
-                for k in range(1, M - j + 1)]) for (j, Qj, Mj) in j_Qj_Mj])
+    j_Qj_Mj = [(j, Qj, math.factorial(nrules - j)) for (j, Qj) in prefix_lengths]
+
+    # n.b. right multiply by Qj to prevent overflow
+    return sum([sum([Mj / math.factorial(nrules - j - k)
+                for k in range(1, K - j + 1)]) * Qj for (j, Qj, Mj) in j_Qj_Mj])
 
 def test_state_space():
     nrules = 100
