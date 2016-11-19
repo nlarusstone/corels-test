@@ -172,9 +172,31 @@ pylab.plot(x['total_time'], y[0], 'k:', linewidth=lw) # prefix + rule list evalu
 pylab.plot(x['total_time'], y[1], 'b-', linewidth=lw) # permutation map
 pylab.plot(x['total_time'], y[2], 'c--', linewidth=lw) # cache insertion
 pylab.plot(x['total_time'], y[3], ':', color='gray', linewidth=lw) # node selection
+pylab.xlabel('time (s)', fontsize=fs)
+pylab.ylabel('time (s)', fontsize=fs)
 pylab.legend(['total', 'prefix + rule list evaluation', 'permutation map', 'cache insertion', 'node selection'], loc='upper left')
 pylab.savefig('../figs/ela-time.png')
 pylab.draw()
+
+"""
+Notes on timing measurements:
+Nicholas's timing measurements, as function of wall clock time.
+We wouldn't include it in the paper, but it's useful for us to look at.
+The lines are different timing measurements corresponding to different
+pieces of our algorithm, stacked on top of each other.
+They add up to the (separately measured) total time, which verifies that
+we're properly measuring things.
+That the lines are straight means that, at least for this experiment,
+the proportional time spent in different parts of the algorithm stays constant.
+If I'm interpreting the timing measurements correctly then our computation time
+is dominated by prefix and rule list evaluation (rather than other stuff,
+like scheduling, cache insertions, or permutation map operations).
+
+What about other stuff, like deleting from the cache?
+Note that the permutation map insertion function can trigger
+cache deletions.
+
+"""
 
 print 'total time:', x['total_time'][-1]
 print 'prefix + rule list evaluation time:', y[0][-1]
