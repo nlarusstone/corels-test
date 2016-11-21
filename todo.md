@@ -2,12 +2,12 @@ Misc.
 =====
 
 - [ ] Find a cool dataset (Cynthia?)
-- [ ] Change the default regularization parameter to c = 0.01
-- [ ] Write out wall clock timestamps, including final total time, to stdout messages
+- [x] Change the default regularization parameter to c = 0.01
+- [x] Write out wall clock timestamps, including final total time, to stdout messages
 - [ ] Write out rule list accuracy (in addition to objective value)
 - [ ] Write out human-readable representation of optimal rule list
 - [ ] Bonus: Write out tex representation of optimal rule list (see Fig. 1 in paper)
-- [ ] Add a parameter to control the frequency of writing log records
+- [x] Add a parameter to control the frequency of writing log records
 - [ ] Measure our logging overhead and determine a useful heuristic threshold
       (e.g., "writing a log entry every 50 iterations incurs about 1% overhead on tdata")
 - [ ] Bonus: In addition to the machine-readable log file, write out a human-readable
