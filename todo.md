@@ -1,5 +1,9 @@
-Misc.
-=====
+# To do
+
+Feel free to edit and please add any items or even sections that come to mind.
+Claim items by adding your name, and check them off when complete :)
+
+## Misc.
 
 - [ ] Find a cool dataset (Cynthia?)
 - [ ] Change the default regularization parameter to c = 0.01
@@ -16,8 +20,7 @@ Misc.
       run the experiment)
 - [ ] Implement a way to downsample an input dataset and add a parameter for this
 
-Rule mining
-===========
+## Rule mining
 
 - [ ] Investigate whether there's a problem with how we're using Ben's rule mining code.
       Elaine wrote `code/ben.py`, which modifies `BRL_code.py` from Cynthia's website.
@@ -26,31 +29,43 @@ Rule mining
       `A AND B` as well as `B AND A`) -- e.g., I think that `data/bcancer.out` has this
       problem.  Figure out what the issue is and/or filter the rules to remove duplicates,
       before the output file is created.
-
 - [ ] Next, fix the small dataset files (x.out, x = bcancer, cars, haberman, monks1, monks2, monks3, votes)
       by running `small(din='../data/small', dout='../data', maxlhs=2, minsupport=1)`.
       Check these new files into the repo.  Below, note the number of mined rules for each dataset.
-
 - [ ] Also fix the telco file.  Make sure to use `maxlhs=2` and `minsupport=1`.
 
-Framework for experiments and analysis
-======================================
+## Framework for experiments and analysis
 
-Note that Elaine made some drafts of figures in `eval/scratch.py` 
+Note that Elaine made some drafts of figures in `eval/scratch.py` -- she used
+`tabular` where you might prefer to use `pandas`, and `matplotlib` where you
+might prefer to use `seaborn` (which is built on top of `matplotlib`).  Feel
+free to use whatever data analysis and visualization tools you prefer, including
+Jupyter notebooks!
 
-- [ ] Set up scripts to help run and manage experiments (probably bash and/or Python), and automatically analyze logs
+- [ ] Set up a framework for doing 10-fold cross-validation -- keep in mind that
+      we'll want to run the same, randomly generated 10 folds on both our algorithms
+      and competing algorithms.
+- [ ] Set up scripts to help run and manage experiments (probably bash and/or Python),
+      and automatically analyze logs
+- [ ] Extend the analysis and visualization framework to report results across
+      all 10 folds of cross-validation -- see Cynthia's sketches in `paper/figs/`.
+      For many of the figures, we want to plot something like three trend lines
+      corresponding to a mean and standard error.
 - [ ] Map out what you think belongs in the ablation experiment
-- [ ] Bonus: Write a framework (script?) for running an ablation experiment, and try it out on tdata
+- [ ] Bonus: Write a framework (script?) for running an ablation experiment,
+      and try it out on tdata
+- [ ] Add analysis of timing measurements -- where does our algorithm spend its time?
+      Does this change during execution?  See `eval/scratch.py` for preliminary analysis.
 
-bbound experiments
-==================
+## bbound experiments
 
 In our work in Python over the summer, we found that we could complete
-some experiments in a reasonable amount of time but not others.
-It would be valuable to try rerunning these experiments to see what happens.
+some experiments in a reasonable amount of time but not others.  Now that
+we have a C++ implementation that is more than an order of magnitude faster,
+it would be valuable to try rerunning these experiments to see what happens.
 Note the command run, approximate total time and machine used to run each experiment.
 
-* tdata_R
+### tdata_R
 
 - [x] tdata_R with c = 0.001, curiosity, permutation map (< 10 s on Elaine's home MacBook Pro)
 
@@ -64,7 +79,7 @@ Note the command run, approximate total time and machine used to run each experi
 - [ ] tdata_R with c = 0.001, curiosity (might be unreasonable or need lots of memory)
 - [ ] tdata_R with c = 0.001, breadth-first (might be unreasonable)
 
-* small datasets:  bcancer, cars, haberman, monks1, monks2, monks3, votes
+### small datasets:  bcancer, cars, haberman, monks1, monks2, monks3, votes
 
 **See the rule mining section above first!**
 
@@ -72,50 +87,80 @@ Note the command run, approximate total time and machine used to run each experi
 - [ ] c = 0.01, curiosity, permutation map (monks1, monks3, votes should all complete,
       but we haven't seen any of bcancer, cars, haberman, monks2 complete)
 
-* adult
+### adult
 
 - [ ] Downsample to ~10% of the data, and try c = 0.01, curiosity, permutation map.
       If that looks like it's taking forever, try c = 0.02 (I think that will work)
       and then 0.019, 0.018, etc.
 
-* telco
+### telco
 
 **See the rule mining section above first!**
 
 - [ ] Try c = 0.01, curiosity, permutation map.
 
-Other experiments
-=================
+## Other experiments
 
-- [ ] Figure out how to use competing algorithms (see notes in paper)
+- [ ] Identify software packages for competing algorithms (see notes in paper):
+      I think Daniel has done some work on this front?  Please take some notes
+      here about what looks promising.
+- [ ] Figure out how to use these algorithms and write useful scripts for
+      running experiments.  If I understand correctly, we want to use datasets
+      from before we do rule mining, e.g., see the files in `data/small/`.
+- [ ] Generate Figure 2, which compares objective values and runtimes of different methods.
+      Can do this as a draft on a small dataset, like tdata.
+- [ ] If we haven't yet handled 10-fold cross-validation, implement a framework for this!
 
-Writing
-=======
+## Writing
 
-- [ ] Abstract
-- [ ] Intro
-- [ ] Related work: everyone should conduct a Google search on related work -- we might
+### Related work
+
+- [ ] Everyone should conduct a Google search on related work -- we might
       uncover new things we didn't know about. The related work sections in Ben's and Hongyu's
       papers provide good starting points.  If you find anything new that you think is
       important, add the bibtex info as well as a couple sentences describing the work.
-- [ ] Related work: summarize Ben's and Hongyu's papers and describe how our work
+- [ ] Summarize Ben's and Hongyu's papers and describe how our work
       relates, builds on, and differs from their recent work (1 paragraph) -- remember
       that we're using the same rule mining approach as both as well as the rule library
-- [ ] Related work: summarize the Garofalakis papers (1 paragraph)
-- [ ] Related work: everything else (Cynthia?)
+- [ ] Summarize the Garofalakis papers (1 paragraph)
+- [ ] Everything else (Cynthia?)
+
+### Our approach
+
 - [ ] Incremental branch-and-bound computation (Elaine)
 - [ ] Rule mining: see Ben's paper (1 paragraph)
 - [ ] Bit vector operations and rule library: see Hongyu's paper (1 paragraph,
       a new section before or after rule mining section?) -- we use a handful of
       operations, which ones and why?  (Why not others?)
-- [ ] 
 - [ ] Pseudocode closer to the algorithms we actually implement (Elaine)
+
+### Implementation architecture
+
 - [ ] Elaine will flesh out the outline of Section 5 better so everyone can help fill it in
 
-Algorithms
-==========
+### Evaluation
+
+- [ ] Describe the physical computing environment used to conduct experiments (tbd)
+- [ ] Describe and motivate the experiments we conduct
+- [ ] Describe and interpret our results
+
+### Other sections
+
+- [ ] Abstract
+- [ ] Intro
+- [ ] Conclusions and future work
+- [ ] Acknowledgements -- everyone should ensure we're not missing anything or anyone here!
+
+## Algorithms and data structures
 
 A place to note things we haven't implemented, but might
 
 - [ ] Framework to remember rejected antecedents
-- [ ] 
+- [ ] Framework aware of rules that commute
+- [ ] Framework aware of dominates relationships
+- [ ] Ability to switch between scheduling policies
+- [ ] Depth-first scheduling policy
+- [ ] Something like Thompson sampling using curiosity
+- [ ] Different priority metrics: lower bound, objective
+- [ ] Priority metric that blends between breadth-first and curiosity (non-stochastic)
+- [ ] Enforce that the output optimal rule list is the simplest
