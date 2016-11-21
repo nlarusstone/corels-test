@@ -3,7 +3,7 @@
 Feel free to edit and please add any items or even sections that come to mind.
 Claim items by adding your name, and check them off when complete :)
 
-## Misc.
+## bbound improvements
 
 - [x] Change the default regularization parameter to c = 0.01
 
@@ -26,6 +26,14 @@ Claim items by adding your name, and check them off when complete :)
       run the experiment) (Daniel)
 
 - [ ] Implement a way to downsample an input dataset and add a parameter for this
+
+- [ ] Can we answer Margo's questions about the effects of the permutation map?
+      See the bulleted list at the start of the experiments section of the paper,
+      and Margo and Elaine's emails from Nov 1.
+
+- [ ] What else should we measure?  E.g., think about time spent deleting nodes
+      from the cache, garbage collection triggered by a new best objective value,
+      etc.
 
 ## ProPublica COMPAS dataset
 
@@ -114,6 +122,7 @@ Note the command run, approximate total time and machine used to run each experi
 **See the rule mining section above first!**
 
 - [ ] c = 0.02, curiosity, permutation map (all should finish in a reasonable amount of time)
+
 - [ ] c = 0.01, curiosity, permutation map (monks1, monks3, votes should all complete,
       but we haven't seen any of bcancer, cars, haberman, monks2 complete)
 
