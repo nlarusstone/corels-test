@@ -2214,9 +2214,15 @@ Figures:
 \begin{itemize}
 
 \item Figure~\ref{fig:comparison}, Comparison with other methods:
-Value of the objective for us and a few other algorithms
-(CART, C4.5, CBA, CMAR/CPAR, C5.0, Ripper, \dots), and algorithm runtimes,
-over ten folds (box plots)
+Test error for us and a few other algorithms
+(CART, C4.5, CBA, CMAR/CPAR, C5.0, Ripper, \dots),
+as a function of sparsity (number of rules) over 10 folds, for one big dataset (box plots).
+Also report algorithm runtimes (mean $\pm$ standard deviation over 10 folds).
+
+\item Figure~\ref{fig:regularization}
+Missing:  Test error as a function of regularization and sparsity
+(number of rules) as a function of regularization, over 10 folds,
+for one big dataset.
 
 \item Figure~\ref{fig:ablation},  Ablation experiment:
 Show the effect of each ``piece'' at a time,
@@ -2266,17 +2272,25 @@ University of California, Berkeley.
 \bibliography{refs}
 \bibliographystyle{abbrvnat}
 
-\newpage
-
 \begin{figure}[t!]
 \begin{center}
 \includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 \end{center}
 \caption{Comparison with other methods:
-Value of the objective for us and a few other algorithms
-(CART, C4.5, CBA, CMAR/CPAR, C5.0, Ripper, \dots), and algorithm runtimes,
-over ten folds, for one big dataset (box plots)}
+Test error for us and a few other algorithms
+(CART, C4.5, CBA, CMAR/CPAR, C5.0, Ripper, \dots),
+as a function of sparsity over 10 folds, for one big dataset (box plots).
+Also report algorithm runtimes (mean $\pm$ standard deviation over 10 folds).}
 \label{fig:comparison}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+\end{center}
+\caption{Missing:  Test error as a function of regularization and sparsity
+(number of rules) as a function of regularization, over 10 folds,
+for one big dataset.}
+\label{fig:regularization}
 \end{figure}
 
 \begin{figure}[t!]
@@ -2302,7 +2316,7 @@ where X is a specific implementation
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.65\textwidth]{figs/sketch-queue-size.png}
-\includegraphics[width=0.65\textwidth]{figs/ela-queue-cache-size-insertions.png}
+\includegraphics[width=0.8\textwidth]{figs/ela-queue-cache-size-insertions.png}
 \end{center}
 \caption{Cache and queue data structure sizes and insertions.
 %
@@ -2339,7 +2353,7 @@ as a function of wall clock time.
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
-\includegraphics[width=0.65\textwidth]{figs/ela-objective.png}
+\includegraphics[width=0.8\textwidth]{figs/ela-objective.png}
 \end{center}
 \caption{Objective value as a function of wall clock time.
 %
@@ -2358,7 +2372,7 @@ Missing: horizontal lines and x-ticks for CART and C4.5.}
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.65\textwidth]{figs/sketch-search-space.png}
-\includegraphics[width=0.65\textwidth]{figs/ela-remaining-space.png}
+\includegraphics[width=0.8\textwidth]{figs/ela-remaining-space.png}
 \end{center}
 \caption{The logarithm (base 10) of an upper bound
 on the size of the remaining search space,
