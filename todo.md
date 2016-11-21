@@ -17,7 +17,7 @@ Claim items by adding your name, and check them off when complete :)
 - [ ] Bonus: In addition to the machine-readable log file, write out a human-readable
       report file (e.g., more or less what we're writing to stdout, potentially
       with some additional metadata, such as information about the machine used to
-      run the experiment)
+      run the experiment) (Daniel)
 - [ ] Implement a way to downsample an input dataset and add a parameter for this
 
 ## Rule mining
