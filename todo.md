@@ -9,7 +9,7 @@ Claim items by adding your name, and check them off when complete :)
 - [x] Change the default regularization parameter to c = 0.01
 - [x] Write out wall clock timestamps, including final total time, to stdout messages
 - [ ] Write out rule list accuracy (in addition to objective value)
-- [ ] Write out human-readable representation of optimal rule list
+- [ ] Write out human-readable representation of optimal rule list (Daniel)
 - [ ] Bonus: Write out tex representation of optimal rule list (see Fig. 1 in paper)
 - [x] Add a parameter to control the frequency of writing log records
 - [ ] Measure our logging overhead and determine a useful heuristic threshold
