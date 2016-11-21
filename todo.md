@@ -94,6 +94,10 @@ Writing
 
 - [ ] Abstract
 - [ ] Intro
+- [ ] Related work: everyone should conduct a Google search on related work -- we might
+      uncover new things we didn't know about. The related work sections in Ben's and Hongyu's
+      papers provide good starting points.  If you find anything new that you think is
+      important, add the bibtex info as well as a couple sentences describing the work.
 - [ ] Related work: summarize Ben's and Hongyu's papers and describe how our work
       relates, builds on, and differs from their recent work (1 paragraph) -- remember
       that we're using the same rule mining approach as both as well as the rule library
