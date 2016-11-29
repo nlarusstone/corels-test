@@ -11,9 +11,9 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Write out rule list accuracy (in addition to objective value)
 
-- [ ] Write out human-readable representation of optimal rule list (Daniel)
+- [x] Write out human-readable representation of optimal rule list
 
-- [ ] Bonus: Write out tex representation of optimal rule list (see Fig. 1 in paper)
+- [ ] Bonus: Write out tex representation of optimal rule list (see Fig. 1 in paper) (Daniel)
 
 - [x] Add a parameter to control the frequency of writing log records
 
