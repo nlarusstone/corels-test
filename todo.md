@@ -37,12 +37,12 @@ Claim items by adding your name, and check them off when complete :)
 
 ## ProPublica COMPAS dataset
 
-- [ ] Summarize the [ProPublica COMPAS dataset](https://github.com/propublica/compas-analysis).
+- [x] Summarize the [ProPublica COMPAS dataset](https://github.com/propublica/compas-analysis).
       How many rows and columns?  Describe each column and report basic stats -- are the column
       values binary, categorical, integer, real, other?  Report mean, standard deviation,
       and ranges of numerical columns; categorical values, etc. (Nicholas)
 
-- [ ] Propose binary features and labels to extract, e.g., map categorical values to binary,
+- [x] Propose binary features and labels to extract, e.g., map categorical values to binary,
       identify meaningful ranges or threshold values for numerical columns, etc.
       (Nicholas will develop a preliminary design?
       We'll hopefully discuss this at our next meeting with Cynthia.)
