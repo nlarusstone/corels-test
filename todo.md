@@ -20,10 +20,10 @@ Claim items by adding your name, and check them off when complete :)
 - [ ] Measure our logging overhead and determine a useful heuristic threshold
       (e.g., "writing a log entry every 50 iterations incurs about 1% overhead on tdata")
 
-- [ ] Bonus: In addition to the machine-readable log file, write out a human-readable
+- [x] Bonus: In addition to the machine-readable log file, write out a human-readable
       report file (e.g., more or less what we're writing to stdout, potentially
       with some additional metadata, such as information about the machine used to
-      run the experiment) (Daniel)
+      run the experiment)
 
 - [ ] Implement a way to downsample an input dataset and add a parameter for this
 
