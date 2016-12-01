@@ -111,11 +111,19 @@ Note the command run, approximate total time and machine used to run each experi
 
     `./bbcache -c -p 1 -r 0.01 -n 1000000 ../data/tdata_R.out ../data/tdata_R.label`
 
-- [ ] tdata_R with c = 0.001, breadth-first, permutation map (might need lots of memory)
+- [ ] tdata_R with c = 0.001, breadth-first, permutation map (needs lots of memory)
+
+    Incomplete result: best has length 3 after ~ 4 min
+
+    `./bbcache -b -p 1 -r 0.001 -n 50000000 ../data/tdata_R.out ../data/tdata_R.label`
 
 - [ ] tdata_R with c = 0.001, curiosity (might be unreasonable or need lots of memory)
 
+    XXX Is this possible to do?
+
 - [ ] tdata_R with c = 0.001, breadth-first (might be unreasonable)
+
+    XXX Is this possible to do?
 
 ### small datasets:  bcancer, cars, haberman, monks1, monks2, monks3, votes
 
