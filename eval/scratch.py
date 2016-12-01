@@ -21,7 +21,7 @@ def parse_prefix_lengths(p):
 def parse_prefix_sums(p):
     return np.sum([int(q.split(':')[1]) for q in p.split(';') if q])
 
-# Command run:  ./bbcache -c -p 1 ../data/tdata_R.out ../data/tdata_R.label
+# Command run:  ./bbcache -c -p 1 -r 0.001 ../data/tdata_R.out ../data/tdata_R.label
 
 log_dir = '../logs/'
 log_fname = 'for-tdata_R.out-curiosity-with_prefix_perm_map-max_num_nodes=100000-c=0.0010000-v=1.txt'
