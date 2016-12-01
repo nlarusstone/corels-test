@@ -9,7 +9,7 @@ Claim items by adding your name, and check them off when complete :)
 
 - [x] Write out wall clock timestamps, including final total time, to stdout messages
 
-- [ ] Write out rule list accuracy (in addition to objective value)
+- [ ] Write out rule list accuracy (in addition to objective value) (Daniel)
 
 - [x] Write out human-readable representation of optimal rule list
 
@@ -47,7 +47,7 @@ Claim items by adding your name, and check them off when complete :)
       (Nicholas will develop a preliminary design?
       We'll hopefully discuss this at our next meeting with Cynthia.)
 
-- [ ] Extract binary features and produce files for input into our algorithm.
+- [ ] Extract binary features and produce files for input into our algorithm. (Nicholas)
 
 ## Rule mining
 
@@ -57,7 +57,7 @@ Claim items by adding your name, and check them off when complete :)
       The issue is that we seem to get some duplicate rules (e.g., a rule of the form
       `A AND B` as well as `B AND A`) -- e.g., I think that `data/bcancer.out` has this
       problem.  Figure out what the issue is and/or filter the rules to remove duplicates,
-      before the output file is created.
+      before the output file is created. (Nicholas)
 
 - [ ] Next, fix the small dataset files (x.out, x = bcancer, cars, haberman, monks1, monks2, monks3, votes)
       by running `small(din='../data/small', dout='../data', maxlhs=2, minsupport=1)`.
