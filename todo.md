@@ -101,11 +101,14 @@ we have a C++ implementation that is more than an order of magnitude faster,
 it would be valuable to try rerunning these experiments to see what happens.
 Note the command run, approximate total time and machine used to run each experiment.
 
-### tdata_R
+### tdata_R (Elaine)
+
+On the tic-tac-toe dataset with `c = 0.001`, going from curiosity without the permutation
+map to curiosity with the permutation map yields a speedup of >100x :)
 
 - [x] tdata_R with c = 0.001, curiosity, permutation map (< 10 s on Elaine's home MacBook Pro)
 
-    `./bbcache -c -p 1 -r 0.001 ../data/tdata_R.out ../data/tdata_R.label`
+    `./bbcache -c -p 1 -r 0.001 -n 100000 ../data/tdata_R.out ../data/tdata_R.label`
 
 - [x] tdata_R with c = 0.01, curiosity, permutation map (~ 10 min on Elaine's home MacBook Pro)
 
@@ -117,13 +120,13 @@ Note the command run, approximate total time and machine used to run each experi
 
     `./bbcache -b -p 1 -r 0.001 -n 50000000 ../data/tdata_R.out ../data/tdata_R.label`
 
-- [ ] tdata_R with c = 0.001, curiosity (might be unreasonable or need lots of memory)
+- [x] tdata_R with c = 0.001, curiosity (~ 1050 s on Elaine's home MacBook Pro; quickly finds optimal)
 
-    XXX Is this possible to do?
+    `./bbcache -c -p 0 -r 0.001 -n 100000 ../data/tdata_R.out ../data/tdata_R.label`
 
 - [ ] tdata_R with c = 0.001, breadth-first (might be unreasonable)
 
-    XXX Is this possible to do?
+    `./bbcache -b -p 0 -r 0.001 ../data/tdata_R.out ../data/tdata_R.label`
 
 ### small datasets:  bcancer, cars, haberman, monks1, monks2, monks3, votes
 
