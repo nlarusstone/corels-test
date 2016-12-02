@@ -153,6 +153,7 @@ def driver(din, dout, froot, train_suffix='', y_suffix=None, delimiter=' ',
     #print zip(colnames, features)
     out = []
     rule_name_list = []
+    reps = []
     for i in range(1, nrules + 1):
         ind = list(Xtrain[i])
         ind.sort()
@@ -165,7 +166,29 @@ def driver(din, dout, froot, train_suffix='', y_suffix=None, delimiter=' ',
                                            for j in itemsets[i]])
         rule_repr = array_to_string(row)
         out += [' '.join([rule_name, rule_repr])]
+        reps += [rule_repr]
         rule_name_list += [rule_name]
+
+    delete_set = set()
+    for i in range(nrules - 1): 
+        for j in range(i + 1, nrules):
+            if (reps[i] == reps[j]):
+                ri = len(rule_name_list[i].split(','))
+                rj = len(rule_name_list[j].split(','))
+                if (ri < rj):
+                    delete_set.add(j)
+                elif (rj < ri):
+                    delete_set.add(i)
+                elif (rule_name_list[i] < rule_name_list[j]):
+                    delete_set.add(j)
+                else:
+                    delete_set.add(i)
+    #print delete_set
+    print 'Deleting redunant rules'
+    out = [out[i] for i in range(nrules) if i not in delete_set]
+    rule_name_list = [rule_name_list[i] for i in range(nrules) if i not in delete_set]
+    nrules = len(out)
+    print 'final nrules:', nrules
 
     label = [' '.join(('{label=0}', array_to_string(np.cast[int](Ytrain[:,0]))))]
     label += [' '.join(('{label=1}', array_to_string(1 - np.cast[int](Ytrain[:,0]))))]

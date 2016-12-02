@@ -47,11 +47,11 @@ Claim items by adding your name, and check them off when complete :)
       (Nicholas will develop a preliminary design?
       We'll hopefully discuss this at our next meeting with Cynthia.)
 
-- [ ] Extract binary features and produce files for input into our algorithm. (Nicholas)
+- [x] Extract binary features and produce files for input into our algorithm. (Nicholas)
 
 ## Rule mining
 
-- [ ] Investigate whether there's a problem with how we're using Ben's rule mining code.
+- [x] Investigate whether there's a problem with how we're using Ben's rule mining code.
       Elaine wrote `code/ben.py`, which modifies `BRL_code.py` from Cynthia's website.
       The `small()` function at the end of `ben.py` is used to generate the small datasets.
       The issue is that we seem to get some duplicate rules (e.g., a rule of the form
