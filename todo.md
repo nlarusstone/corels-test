@@ -114,7 +114,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -c -p 1 -r 0.01 -n 1000000 ../data/tdata_R.out ../data/tdata_R.label`
 
-- [ ] tdata_R with c = 0.001, breadth-first, permutation map
+- [x] tdata_R with c = 0.001, breadth-first, permutation map
 
     Incomplete result: best has length 4 after ~ 9060 s (~ 150 min), ~ 375GB memory on beepbooop
 
@@ -124,7 +124,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -c -p 0 -r 0.001 -n 100000 ../data/tdata_R.out ../data/tdata_R.label`
 
-- [ ] tdata_R with c = 0.001, breadth-first (probably unreasonable)
+- [x] tdata_R with c = 0.001, breadth-first (Elaine is declaring this unreasonable)
 
     `./bbcache -b -p 0 -r 0.001 ../data/tdata_R.out ../data/tdata_R.label`
 
