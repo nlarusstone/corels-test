@@ -348,12 +348,18 @@ Since its prefix contains zero rules, it has zero prefix
 misclassification error and also has length zero.
 %
 Thus, the empty rule list's objective lower bound is
-${b((), \x, \y) = \Loss_p((), (), \x, \y) + \Reg \cdot 0 = 0}$.
+\begin{align}
+  b((), \x, \y) = \Loss_p((), (), \x, \y) + \Reg \cdot 0 = 0.
+\end{align}
 %
 Since none of the data are captured by the empty prefix, the default rule
 corresponds to the majority class, and the objective corresponds to the
 default rule misclassification error, \ie
-${\Obj(\RL, \x, \y) = b((), \x, \y) + \Loss_0((), \Default, \x, \y) = \Loss_0((), \Default, \x, \y)}$.
+\begin{align}
+  \Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg \cdot 0
+  &= \Loss_p((), (), \x, \y) + \Loss_0((), \Default, \x, \y) \nn \\
+  &= b((), \x, \y) + \Loss_0((), \Default, \x, \y) = \Loss_0((), \Default, \x, \y).
+\end{align}
 
 Here, we derive our incremental expressions for the objective function and its lower bound.
 %
