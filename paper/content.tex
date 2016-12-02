@@ -321,9 +321,9 @@ and thus~$\RL'$ cannot be optimal. \\
 \subsection{Incremental branch-and-bound computation}
 \label{sec:incremental}
 
-For every prefix~$\Prefix$ evaluated during the execution of
-Algorithm~\ref{alg:branch-and-bound}, we compute the objective
-lower bound~${b(\Prefix, \x, \y)}$ and, sometimes,
+For every prefix~$\Prefix$ evaluated during
+Algorithm~\ref{alg:branch-and-bound}'s execution, we compute
+the objective lower bound~${b(\Prefix, \x, \y)}$ and, sometimes,
 the objective~${\Obj(\RL, \x, \y)}$ of the corresponding rule list~$\RL$.
 %
 These calculations are the dominant computations with respect to execution time.
@@ -338,6 +338,9 @@ incrementally throughout branch-and-bound execution.
 %
 In this section, we provide explicit expressions for
 the incremental computations that are central to our approach.
+%
+Later, in~\S\ref{sec:cache}, we describe a cache data structure
+for supporting our incremental framework in practice.
 
 For completeness, before presenting our incremental expressions,
 let us begin by writing down the objective lower bound and objective
@@ -347,7 +350,7 @@ the first rule list evaluated in Algorithm~\ref{alg:branch-and-bound}.
 Since its prefix contains zero rules, it has zero prefix
 misclassification error and also has length zero.
 %
-Thus, the empty rule list's objective lower bound is
+Thus, the empty rule list's objective lower bound is zero:
 \begin{align}
   b((), \x, \y) = \Loss_p((), (), \x, \y) + \Reg \cdot 0 = 0.
 \end{align}
@@ -361,7 +364,7 @@ default rule misclassification error, \ie
   &= b((), \x, \y) + \Loss_0((), \Default, \x, \y) = \Loss_0((), \Default, \x, \y).
 \end{align}
 
-Here, we derive our incremental expressions for the objective function and its lower bound.
+Now, we derive our incremental expressions for the objective function and its lower bound.
 %
 Let ${\RL = (\Prefix, \Labels, \Default, K)}$ and
 ${\RL' = (\Prefix', \Labels', \Default', K + 1)}$
@@ -369,32 +372,32 @@ be rule lists such that ${\Prefix = (p_1, \dots, p_K)}$,
 and prefix ${\Prefix' = (p_1, \dots, p_K, p_{K+1})}$ starts with~$\Prefix$.
 %
 Let ${\Labels = (q_1, \dots, q_K)}$ and
-${\Labels' = (q_1, \dots, q_K, q_{K+1}}$ be the corresponding labels.
+${\Labels' = (q_1, \dots, q_K, q_{K+1})}$ be the corresponding labels.
 %
 The hierarchical structure of Algorithm~\ref{alg:branch-and-bound}
-enforces that if we ever evaluate~$\RL'$, we will have already evaluated
-both~$\RL$'s objective and objective lower bound.
+enforces that if we ever evaluate~$\RL'$, then we will have already
+evaluated both~$\RL$'s objective and objective lower bound.
 %
 We would like to reuse as much of these computations as possible
 in our evaluation of~$\RL$.
 %
 We can write the objective lower bound of~$\RL'$ incrementally,
-with respect to the the objective lower bound of~$\RL$:
+with respect to the objective lower bound of~$\RL$:
 \begin{align}
 b(\Prefix', \Labels', \x, \y)
   &= \Loss_p(\Prefix', \Labels', \x, \y) + \Reg (K + 1) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K+1} \Cap(x_n, p_k \given \Prefix')
   \wedge \one [ q_k \neq y_n ] + \Reg (K+1) \nn \\
 &= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K + \Reg
-  + \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_k \given \Prefix') \wedge \one [q_k \neq y_n ] \nn \\
+  + \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_{K+1} \given \Prefix') \wedge \one [q_{K+1} \neq y_n ] \nn \\
 &= b(\Prefix, \Labels, \x, \y) + \Reg
-  + \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_{K+1} \given \Prefix') \wedge \one [q_{K+1} \neq y_n ] + \nn \\
+  + \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_{K+1} \given \Prefix') \wedge \one [q_{K+1} \neq y_n ] \nn \\
 &= b(\Prefix, \Labels, \x, \y) + \Reg  + \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge
   \Cap(x_n, p_{K+1}) \wedge \one [q_{K+1} \neq y_n].
 \label{eq:inc-lb}
 \end{align}
 Notice that the term~${\neg\, \Cap(x_n, \Prefix)}$ in~\eqref{eq:inc-lb}
-only depends on~$\Prefix$, \ie it does not depend on~$\Prefix'$; furthermore,
+depends only on~$\Prefix$, \ie it does not depend on~$\Prefix'$; furthermore,
 it is computed in the evaluation of~$\RL$'s default rule misclassification error,
 \begin{align}
 \Loss_0(\Prefix, \Default, \x, \y) = \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [q_0 \neq y_n].
@@ -419,9 +422,6 @@ Now, given the objective lower bound of~$\RL'$, we can compute its objective as:
 The expression in~\eqref{eq:inc-obj} is a simple function of
 $b(\Prefix', \Labels', \x, \y)$, which we computed in~\eqref{eq:inc-lb},
 as well as the last antecedent~$p_{K+1}$ and default rule of~$\RL'$.
-
-Later, we describe our cache data structure for supporting
-these incremental computations~(\S\ref{sec:cache}).
 
 \subsection{Rule mining}
 \label{sec:rule-mining}
