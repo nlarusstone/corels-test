@@ -13,7 +13,7 @@ Claim items by adding your name, and check them off when complete :)
 
 - [x] Write out human-readable representation of optimal rule list
 
-- [ ] Bonus: Write out tex representation of optimal rule list (see Fig. 1 in paper) (Daniel)
+- [x] Bonus: Write out tex representation of optimal rule list (see Fig. 1 in paper)
 
 - [x] Add a parameter to control the frequency of writing log records
 
