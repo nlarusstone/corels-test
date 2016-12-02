@@ -319,6 +319,7 @@ ${\Obj(\RL', \x, \y) \ge b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y) \ge \Current
 and thus~$\RL'$ cannot be optimal. \\
 
 \subsection{Incremental branch-and-bound computation}
+\label{sec:incremental}
 
 \dots
 
@@ -396,12 +397,12 @@ which enables symmetry-aware garbage collection.
 In particular, we highlight the special case of prefixes
 that are equivalent up to a permutation of their
 antecedents~(\S\ref{sec:permutation});
-this enables permutation-aware garbage collection, which we
-characterize via another upper bound on the number of prefix evaluations~(\S\ref{sec:permutation-counting}).
+this enables permutation-aware garbage collection,
+which we characterize via another upper bound on
+the number of prefix evaluations~(\S\ref{sec:permutation-counting}).
 %
-Next, in~\S\ref{sec:similar}, we slightly generalize the
-result from~\S\ref{sec:equivalent} to rule lists whose
-prefixes capture nearly the same data.
+Next, we slightly generalize the result from~\S\ref{sec:equivalent}
+to rule lists whose prefixes capture nearly the same data~(\S\ref{sec:similar}).
 %
 \dots
 
@@ -1767,6 +1768,7 @@ we expect to obtain via rule mining~(\S\ref{sec:rule-mining}),
 for many datasets that might be used for constructing interpretable models.
 
 \subsection{Similar support bound}
+\label{sec:similar}
 
 We now present a relaxation of our equivalent support bound
 from Theorem~\ref{thm:equivalent}.
@@ -2165,14 +2167,47 @@ We can avoid evaluating multiple such equivalent rule lists by eliminating all b
 
 \section{Implementation architecture}
 
-\subsection{Cache data structure}
+We present an architecture for executing our branch-and-bound algorithm,
+consisting of a cache, a queue that is associated with a search policy,
+and, optionally, a symmetry-aware map.
+%
+First, we describe the cache, our primary data structure~(\S\ref{sec:cache});
+it is organized as a prefix tree and supports the incremental computations,
+detailed in~\S\ref{sec:incremental}, that are central to our approach.
+%
+Second, we describe the queue and search policy~(\S\ref{sec:queue}).
+%
+Like the queue in Algorithm~\ref{alg:branch-and-bound},
+our queue keeps track of which prefixes to evaluate during execution.
+%
+The policy for selecting a prefix from the queue to evaluate next,
+and thus also the natural queue data structure, depend on
+the search policy employed for exploring the space of rule lists
+%
+Next, we describe the symmetry-aware map~(\S\ref{sec:map}),
+which enables garbage collection of prefixes eliminated by the
+equivalent support bound in Theorem~\ref{sec:equivalent}.
+%
+While we present the map as an optional component of our architecture,
+our calculations in~\S\ref{sec:permutation-counting}
+and experiments in~\S\ref{sec:experiments} demonstrate that
+it is critical for efficient and practical algorithm performance.
+%
+Finally, we summarize an artifact we implemented~(\S\ref{sec:system}),
+which we evaluate in~\S\ref{sec:experiments}.
+
+\subsection{Prefix tree cache for incremental computation}
 \label{sec:cache}
 
-Our cache is a trie.
+We maintain a cache to support incremental computation.
+%
+Our cache is organized as a prefix tree, which is also known as a trie.
+%
 
-\subsection{Symmetry-aware data structure}
+\subsection{Queue and search policies}
+\label{sec:queue}
 
-\subsection{Scheduling policies}
+Different search policies suggest different natural queue data structures.
 
 \begin{itemize}
 \item breadth-first
@@ -2182,11 +2217,15 @@ Our cache is a trie.
 \item optimistic
 \end{itemize}
 
-\subsection{Large-scale optimization}
+\subsection{Map data structure for symmetry-aware garbage collection}
+\label{sec:map}
+
+%\subsection{Large-scale optimization}
 
 \subsection{System}
+\label{sec:system}
 
-\section{Experiments}
+\section{Preliminary experiments}
 \label{sec:experiments}
 
 Notes:
