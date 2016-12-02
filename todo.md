@@ -9,7 +9,7 @@ Claim items by adding your name, and check them off when complete :)
 
 - [x] Write out wall clock timestamps, including final total time, to stdout messages
 
-- [ ] Write out rule list accuracy (in addition to objective value) (Daniel)
+- [x] Write out rule list accuracy (in addition to objective value)
 
 - [x] Write out human-readable representation of optimal rule list
 
