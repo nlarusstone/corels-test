@@ -295,7 +295,8 @@ objective lower bound~${b(\Prefix, \x, \y)}$,
 set of antecedents ${\RuleSet = \{s_m\}_{m=1}^M}$,
 training data~$(\x, \y) = {\{(x_n, y_n)\}_{n=1}^N}$,
 initial best known rule list~$\InitialRL$ with objective~${\InitialObj = \Obj(\InitialRL, \x, \y)}$
-\State \textbf{Output:} Provably optimal rule list~$\OptimalRL$ with minimum objective~$\OptimalObj$
+\State \textbf{Output:} Provably optimal rule list~$\OptimalRL$ with minimum objective~$\OptimalObj$ \\
+
 \State $(\CurrentRL, \CurrentObj) \gets (\InitialRL, \InitialObj)$ \Comment{Initialize current best rule list and objective}
 \State $Q \gets $ queue$(\,[\,(\,)\,]\,)$ \Comment{Initialize queue with empty prefix}
 \While {$Q$ not empty} \Comment{Optimization complete when the queue is empty}
@@ -455,12 +456,88 @@ with respect to that of~$\RL$, doing so would in practice require
 that we also store~$\Obj(\RL, \x, \y)$; we prefer the approach suggested
 by~\eqref{eq:inc-obj} since it avoids this additional storage overhead.
 
+\begin{algorithm}[t!]
+  \caption{Incremental branch-and-bound for learning rule lists, for simplicity, from a cold start.
+  We explicitly show the incremental objective lower bound and objective functions in Algorithm~\ref{alg:incremental-functions}.}
+\label{alg:incremental}
+\begin{algorithmic}
+\normalsize
+\State \textbf{Input:} Objective function~$\Obj(\RL, \x, \y)$,
+objective lower bound~${b(\Prefix, \x, \y)}$,
+set of antecedents ${\RuleSet = \{s_m\}_{m=1}^M}$,
+training data~$(\x, \y) = {\{(x_n, y_n)\}_{n=1}^N}$,
+regularization parameter~$\Reg$
+\State \textbf{Output:} Provably optimal rule list~$\OptimalRL$ with minimum objective~$\OptimalObj$ \\
+
+\State $\CurrentRL \gets ((), (), \Default, 0)$ \Comment{Initialize current best rule list with empty rule list}
+\State $\CurrentObj \gets \Obj(\CurrentRL, \x, \y)$ \Comment{Initialize current best objective}
+\State $Q \gets $ queue$(\,[\,(\,)\,]\,)$ \Comment{Initialize queue with empty prefix}
+\State $C \gets $ cache$(\,[\,(\,(\,)\,, 0\,)\,]\,)$ \Comment{Initialize cache with empty prefix and its objective lower bound}
+\While {$Q$ not empty} \Comment{Optimization complete when the queue is empty}
+	\State $\Prefix \gets Q$.pop(\,) \Comment{Remove a prefix~$\Prefix$ from the queue}
+        \State $b(\Prefix, \x, \y) \gets C$.find$(\Prefix)$ \Comment{Look up $\Prefix$'s lower bound in the cache}
+        \State $\mathbf{u} \gets \neg\,\Cap(\x, \Prefix)$ \Comment{Bit vector indicating data not captured by $\Prefix$}
+        \For {$s$ in $\RuleSet$} \Comment{Evaluate all of $\Prefix$'s children}
+            \If {$s$ not in $\Prefix$}
+                \State $\PrefixB \gets (\Prefix, s)$ \Comment{\textbf{Branch}: Generate child $\PrefixB$}
+                \State $\mathbf{v} \gets \mathbf{u} \wedge \Cap(\x, s)$ \Comment{Bit vector indicating data captured by $s$ in $\PrefixB$}
+                \State $b(\PrefixB, \x, \y) \gets b(\Prefix, \x, \y) + \Reg +$ \Call{IncrementalLowerBound}{$\mathbf{v}, \y, N$} \Comment{Eq.~\eqref{eq:inc-lb}}
+                \If {$b(\PrefixB, \x, \y) < \CurrentObj$} \Comment{\textbf{Bound}: Apply bound from Theorem~\ref{thm:bound}}
+                    \State $\Obj(\RLB, \x, \y) \gets b(\PrefixB, \x, \y) +$ \Call{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$} \Comment{Eq.~\eqref{eq:inc-obj}}
+                    \If {$\Obj(\RLB, \x, \y) < \CurrentObj$}
+                        \State $(\CurrentRL, \CurrentObj) \gets (\RLB, \Obj(\RLB, \x, \y))$ \Comment{Update current best rule list and objective}
+                    \EndIf
+                    \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
+                    \State $C$.insert$(\PrefixB, b(\PrefixB, \x, \y))$ \Comment{Add $\PrefixB$ and its lower bound to the cache}
+                \EndIf
+            \EndIf
+        \EndFor
+\EndWhile
+\State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Identify provably optimal rule list and objective}
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t!]
+  \caption{Incremental objective lower bound~\eqref{eq:inc-lb} and objective functions~\eqref{eq:inc-obj}
+    used in Algorithm~\ref{alg:incremental}, our incremental branch-and-bound procedure.}
+\label{alg:incremental-functions}
+\begin{algorithmic}
+\normalsize
+\Function{IncrementalLowerBound}{$\mathbf{v}, \y, N$}
+    \State $n_v = \Count(\mathbf{v})$ \Comment{Number of data captured by $s$, the last antecedent in $\PrefixB$}
+    \State $\mathbf{w} \gets \mathbf{v} \wedge \y$ \Comment{Bit vector indicating data captured by $s$ with label $1$}
+    \State $n_w = \Count(\mathbf{w})$ \Comment{Number of data captured by $s$ with label $1$}
+    \If {$n_w / n_v > 0.5$}
+        \State \Return $(n_v - n_w) / N$ \Comment{Misclassification error of the rule $s \rightarrow 1$}
+    \Else
+        \State \Return $n_w / N$ \Comment{Misclassification error of the rule $s \rightarrow 0$}
+    \EndIf
+ \EndFunction \\
+
+ \Function{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$}
+    \State $\mathbf{f} \gets \mathbf{u} \wedge \neg\,\mathbf{v} $ \Comment{Bit vector indicating data not captured by $\PrefixB$}
+    \State $n_f = \Count(\mathbf{f})$ \Comment{Number of data not captured by $\PrefixB$}
+    \State $\mathbf{g} \gets \mathbf{f} \wedge \y$ \Comment{Bit vector indicating data not captured by $\PrefixB$ with label $1$}
+    \State $n_g = \Count(\mathbf{w})$ \Comment{Number of data not captued by $\PrefixB$ with label $1$}
+    \If {$n_f / n_g > 0.5$}
+        \State \Return $(n_a - n_b) / N$ \Comment{Default rule misclassification error with label $1$}
+    \Else
+        \State \Return $n_b / N$ \Comment{Default rule misclassification error with label $0$}
+    \EndIf
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
 Algorithm~\ref{alg:incremental} integrates incremental computation
 into our branch-and-bound optimization procedure, and introduces
 a cache for storing prefixes and their objective lower bounds.
 %
-It additionally reorganizes the structure of Algorithm~\ref{alg:branch-and-bound}
-to group together the computations associated with all children of a particular prefix.
+We write these incremental computations with respect to two functions
+that we provide explicitly in Algorithm~\ref{alg:incremental-functions}.
+
+Algorithm~\ref{alg:incremental} additionally reorganizes the structure
+of Algorithm~\ref{alg:branch-and-bound} to group together the computations
+associated with all children of a particular prefix.
 %
 This has two advantages.
 %
@@ -481,43 +558,6 @@ For example, if we are trying to optimize over rule lists formed
 from a set of 1000 antecedents, then the maximum queue size in
 Algorithm~\ref{alg:incremental} will be smaller than that in
 Algorithm~\ref{alg:branch-and-bound} by a factor of nearly 1000.
-
-\begin{algorithm}[t!]
-\caption{Incremental branch-and-bound for learning rule lists, for simplicity, from a cold start.}
-\label{alg:incremental}
-\begin{algorithmic}
-\normalsize
-\State \textbf{Input:} Objective function~$\Obj(\RL, \x, \y)$,
-objective lower bound~${b(\Prefix, \x, \y)}$,
-set of antecedents ${\RuleSet = \{s_m\}_{m=1}^M}$,
-training data~$(\x, \y) = {\{(x_n, y_n)\}_{n=1}^N}$,
-regularization parameter~$\Reg$
-\State \textbf{Output:} Provably optimal rule list~$\OptimalRL$ with minimum objective~$\OptimalObj$
-\State $\CurrentRL \gets ((), (), \Default, 0)$ \Comment{Initialize current best rule list with empty rule list}
-\State $\CurrentObj \gets \Obj(\CurrentRL, \x, \y)$ \Comment{Initialize current best objective}
-\State $Q \gets $ queue$(\,[\,(\,)\,]\,)$ \Comment{Initialize queue with empty prefix}
-\State $C \gets $ cache$(\,[\,(\,(\,)\,, 0\,)\,]\,)$ \Comment{Initialize cache with empty prefix and its objective lower bound}
-\While {$Q$ not empty} \Comment{Optimization complete when the queue is empty}
-	\State $\Prefix \gets Q$.pop(\,) \Comment{Remove a prefix~$\Prefix$ from the queue}
-        \State $b(\Prefix, \x, \y) \gets C$.find$(\Prefix)$ \Comment{Look up $\Prefix$'s lower bound in the cache}
-        \For {$s$ in $\RuleSet$} \Comment{Evaluate all of $\Prefix$'s children}
-            \If {$s$ not in $\Prefix$}
-                \State $\PrefixB \gets (\Prefix, s)$ \Comment{\textbf{Branch}: Generate child $\PrefixB$}
-                \State $b(\PrefixB, \x, \y) \gets $ \Call{IncObjectiveLowerBound}{$b(\Prefix, \x, \y), s, \x, \y, \Reg$} \Comment{See~\eqref{eq:inc-lb}}
-                \If {$b(\PrefixB, \x, \y) < \CurrentObj$} \Comment{\textbf{Bound}: Apply bound from Theorem~\ref{thm:bound}}
-                    \State $\Obj(\RLB, \x, \y) \gets $ \Call{IncObjective}{$b(\PrefixB, \x, \y), s, \x, \y$} \Comment{See~\eqref{eq:inc-obj}}
-                    \If {$\Obj(\RLB, \x, \y) < \CurrentObj$}
-                        \State $(\CurrentRL, \CurrentObj) \gets (\RLB, \Obj(\RLB, \x, \y))$ \Comment{Update current best rule list and objective}
-                    \EndIf
-                    \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
-                    \State $C$.insert$(\PrefixB, b(\PrefixB, \x, \y))$ \Comment{Add $\PrefixB$ and its lower bound to the cache}
-                \EndIf
-            \EndIf
-        \EndFor
-\EndWhile
-\State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Identify provably optimal rule list and objective}
-\end{algorithmic}
-\end{algorithm}
 
 \subsection{Rule mining}
 \label{sec:rule-mining}
