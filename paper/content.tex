@@ -528,13 +528,14 @@ regularization parameter~$\Reg$
 \end{algorithmic}
 \end{algorithm}
 
-Algorithm~\ref{alg:incremental} integrates incremental computation
-into our branch-and-bound optimization procedure, and introduces
-a cache for storing prefixes and their objective lower bounds.
+We present an incremental branch-and-bound procedure in
+Algorithm~\ref{alg:incremental}, and show the incremental computations
+of the objective lower bound~\eqref{eq:inc-lb} and objective~\eqref{eq:inc-obj}
+as two separate functions in Algorithm~\ref{alg:incremental-functions}.
 %
-We write these incremental computations with respect to two functions
-that we provide explicitly in Algorithm~\ref{alg:incremental-functions}.
-
+In Algorithm~\ref{alg:incremental}, we use a cache to store
+prefixes and their objective lower bounds.
+%
 Algorithm~\ref{alg:incremental} additionally reorganizes the structure
 of Algorithm~\ref{alg:branch-and-bound} to group together the computations
 associated with all children of a particular prefix.
