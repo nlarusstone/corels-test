@@ -225,6 +225,11 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 - [ ] Conclusions and future work
 - [ ] Acknowledgements -- everyone should ensure we're not missing anything or anyone here!
 
+### Definitions (Elaine)
+
+- [ ] Stop overloading the notation for misclassification error (takes 3 arguments always)
+- [ ] Swap the arguments in the notation for captures
+
 ## Algorithms and data structures
 
 A place to note things we haven't implemented, but might
