@@ -25,7 +25,7 @@ Claim items by adding your name, and check them off when complete :)
       with some additional metadata, such as information about the machine used to
       run the experiment)
 
-- [ ] Implement a way to downsample an input dataset and add a parameter for this
+- [ ] Make R/Python binding so it is easier to run experiments. (Daniel)
 
 - [ ] Can we answer Margo's questions about the effects of the permutation map?
       See the bulleted list at the start of the experiments section of the paper,
