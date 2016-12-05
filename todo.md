@@ -230,6 +230,10 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 - [ ] Stop overloading the notation for misclassification error (takes 3 arguments always)
 - [ ] Swap the arguments in the notation for captures
 
+### Annoying tex things
+
+- [ ] Figure out how to change the label of Algorithm 3 to something like Listing 3
+
 ## Algorithms and data structures
 
 A place to note things we haven't implemented, but might
