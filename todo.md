@@ -83,6 +83,8 @@ Jupyter notebooks!
       we'll want to run the same, randomly generated 10 folds on both our algorithms
       and competing algorithms. (Nicholas)
 
+- [ ] Consider setting up a script that will run the 10 folds in parallel.
+
 - [ ] Set up scripts to help run and manage experiments (probably bash and/or Python),
       and automatically analyze logs
 
