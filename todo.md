@@ -50,6 +50,7 @@ Claim items by adding your name, and check them off when complete :)
       We'll hopefully discuss this at our next meeting with Cynthia.)
 
 - [x] Extract binary features and produce files for input into our algorithm. (Nicholas)
+      Note: Elaine re-ran this with `minsupport=1`
 
 ## Rule mining
 
@@ -61,9 +62,10 @@ Claim items by adding your name, and check them off when complete :)
       problem.  Figure out what the issue is and/or filter the rules to remove duplicates,
       before the output file is created. (Nicholas)
 
-- [ ] Next, fix the small dataset files (x.out, x = bcancer, cars, haberman, monks1, monks2, monks3, votes)
+- [x] Next, fix the small dataset files (x.out, x = bcancer, cars, haberman, monks1, monks2, monks3, votes)
       by running `small(din='../data/small', dout='../data', maxlhs=2, minsupport=1)`.
-      Check these new files into the repo.  Below, note the number of mined rules for each dataset.
+      Check these new files into the repo.  Below, note the number of mined rules for each dataset. (Nicholas)
+      Note: Elaine re-ran this with `minsupport=1`
 
 - [ ] Also fix the telco file.  Make sure to use `maxlhs=2` and `minsupport=1`.
 
@@ -116,7 +118,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -c -p 1 -r 0.01 -n 1000000 ../data/tdata_R.out ../data/tdata_R.label`
 
-- [x] tdata_R with c = 0.001, breadth-first, permutation map
+- [x] tdata_R with c = 0.001, breadth-first, permutation map, 10^9
 
     Incomplete result: best has length 4 after ~ 9060 s (~ 150 min), ~ 375GB memory on beepbooop
 
@@ -132,12 +134,74 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 ### small datasets:  bcancer, cars, haberman, monks1, monks2, monks3, votes (Elaine)
 
-**See the rule mining section above first!**
-
 - [ ] c = 0.02, curiosity, permutation map (all should finish in a reasonable amount of time)
+
+* Best known for c = 0.01, bcancer, has length 2, 0.05514 (n = 683)
+* Best known for c = 0.01, cars, has length 7, 0.10125 (via curiosity) (n = 1728)
+* Best known for c = 0.01, haberman, has length 3, 0.24242 (via bfs) (n = 306)
+* Verified best for c = 0.01, monks1, has length 4, 0.04 (n = 432)
+* Best known for c = 0.01, monks2, has length 18, 0.24944 (via curiosity) (n = 432)
+* Verified best for c = 0.01, monks3, has length 2, 0.02 (n = 432)
+* Verified best for c = 0.01, votes, has length 1, 0.05368 (n = 435)
 
 - [ ] c = 0.01, curiosity, permutation map (monks1, monks3, votes should all complete,
       but we haven't seen any of bcancer, cars, haberman, monks2 complete)
+
+- [x] c = 0.01, bcancer, permutation map, 10^8 (~ 1120 s, working on length 4, ~ 42 GB on beepboop)
+
+    `./bbcache -b -p 1 -r 0.01 -n 100000000 ../data/bcancer.out ../data/bcancer.label`
+
+- [ ] c = 0.01, bcancer, permutation map, 10^9
+
+    `./bbcache -b -p 1 -r 0.01 -n 100000000 ../data/bcancer.out ../data/bcancer.label`
+
+- [x] c = 0.01, cars, permutation map, 10^8 (~ 2400 s, working on length 4, ~ 44 GB on beepboop)
+
+    `./bbcache -b -p 1 -r 0.01 -n 100000000 ../data/cars.out ../data/cars.label`
+
+- [x] c = 0.01, cars, curiosity, permutation map, 10^8 (~ 12540 s, ~ 40 GB on beepboop)
+
+    `./bbcache -c -p 1 -r 0.01 -n 100000000 ../data/cars.out ../data/cars.label`
+
+- [x] c = 0.01, haberman, permutation map, 10^8 (~ 630 s, working on length 4, ~ 42.1 GB on beepboop)
+
+    `./bbcache -b -p 1 -r 0.01 -n 100000000 ../data/haberman.out ../data/haberman.label`
+
+- [x] c = 0.01, haberman, curiosity, permutation map, 10^8 (~ 850 s, ~ 90.4 GB on beepboop)
+
+    `./bbcache -c -p 1 -r 0.01 -n 100000000 ../data/haberman.out ../data/haberman.label`
+
+- [x] c = 0.01, monks1, permutation map, 10^6 (~ 8 s) **completed**
+
+    `./bbcache -b -p 1 -r 0.01 -n 1000000 ../data/monks1.out ../data/monks1.label`
+
+- [x] c = 0.01, monks1, curiosity, permutation map, 10^4 (~ 0.1 s) **completed**
+
+    `./bbcache -c -p 1 -r 0.01 -n 10000 ../data/monks1.out ../data/monks1.label`
+
+- [x] c = 0.01, monks2, permutation map, 10^8 (~ 550 s, working on length 4, ~ 42.4 GB on beepboop)
+
+    `./bbcache -b -p 1 -r 0.01 -n 100000000 ../data/monks2.out ../data/monks2.label`
+
+- [ ] c = 0.01, monks2, curiosity, permutation map, 10^7
+
+    `./bbcache -c -p 1 -r 0.01 -n 10000000 ../data/monks2.out ../data/monks2.label`
+
+- [x] c = 0.01, monks3, permutation map, 10^3 (< 0.01 s) **completed**
+
+    `./bbcache -b -p 1 -r 0.01 -n 1000 ../data/monks3.out ../data/monks3.label`
+
+- [x] c = 0.01, monks3, curiosity, permutation map, 10^3 (< 0.01 s) **completed**
+
+    `./bbcache -c -p 1 -r 0.01 -n 1000 ../data/monks3.out ../data/monks3.label`
+
+- [x] c = 0.01, votes, permutation map, 10^6 (~ 24 s) **completed**
+
+    `./bbcache -b -p 1 -r 0.01 -n 1000000 ../data/votes.out ../data/votes.label`
+
+- [x] c = 0.01, votes, curiosity, permutation map, 10^5 (~ 26 s) **completed**
+
+    `./bbcache -c -p 1 -r 0.01 -n 100000 ../data/votes.out ../data/votes.label`
 
 ### adult (Elaine)
 
@@ -145,17 +209,41 @@ Downsample to ~10% of the data, and try c = 0.01, curiosity, permutation map.
 If that looks like it's taking forever, try c = 0.02 (I think that will work)
 and then 0.019, 0.018, etc.
 
-- [x] adult with c = 0.01, permutation map, 10^7 (375 s, working on length 3, ~ 4 GB on beepboop)
+* Best known for c = 0.01 has length 3, 0.203166
+* Best known for c = 0.02 has length 2, 0.229189
+* Best known for c = 0.03 has length 1, 0.241662
+
+- [x] adult with c = 0.01, permutation map, 10^7 (375 s, working on length 4, ~ 4 GB on beepboop)
 
     `./bbcache -b -p 1 -r 0.01 -n 10000000 ../data/adult_R.out ../data/adult_R.label`
 
-- [ ] adult with c = 0.01, permutation map, 10^8 (~ 45 GB on beepboop)
+- [x] adult with c = 0.01, permutation map, 10^8 (3917 s, working on length 4, ~ 41 GB on beepboop)
 
     `./bbcache -b -p 1 -r 0.01 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
 
-- [ ] adult with c = 0.02, curiosity, permutation map, 10^8
+- [ ] adult with c = 0.01, curiosity, permutation map, 10^8
+
+    `./bbcache -c -p 1 -r 0.01 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
+
+- [ ] adult with c = 0.01, permutation map, 10^9 (Estimate ~ 8 hrs, ~ 400 GB on beepboop)
+
+    `./bbcache -b -p 1 -r 0.01 -n 1000000000 ../data/adult_R.out ../data/adult_R.label`
+
+- [x] adult with c = 0.02, permutation map, 10^8 (5002 s, working on length 4, ~ 40 GB on beepboop)
 
     `./bbcache -b -p 1 -r 0.02 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
+
+- [ ] adult with c = 0.02, permutation map, 10^9 (Estimate ~ 8 hrs, ~ 400 GB on beepboop)
+
+    `./bbcache -b -p 1 -r 0.02 -n 1000000000 ../data/adult_R.out ../data/adult_R.label`
+
+- [x] adult with c = 0.03, permutation map, 10^7 (~ 900 s, working on length 4, ~ 4.3 GB on beepboop)
+
+    `./bbcache -b -p 1 -r 0.03 -n 10000000 ../data/adult_R.out ../data/adult_R.label`
+
+- [x] adult with c = 0.03, permutation map, 10^8 (~ 18340 s, working on length 5, ~ 40 GB on beepboop)
+
+    `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
 
 ### telco
 
