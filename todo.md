@@ -146,7 +146,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/cars.out ../data/cars.label`
 
-- [x] c = 0.03, haberman, permutation map, 10^8 (checks up to length 8) **completed**
+- [x] c = 0.03, haberman, permutation map, 10^8 (~ 2082 s, checks up to length 8) **completed**
 
     `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/haberman.out ../data/haberman.label`
 
@@ -302,7 +302,7 @@ and then 0.019, 0.018, etc.
 
     `./bbcache -b -p 1 -r 0.03 -n 1000000000 ../data/adult_R.out ../data/adult_R.label`
 
-- [ ] adult with c = 0.04, permutation map, 10^8
+- [ ] adult with c = 0.04, permutation map, 10^8 (checks up to length 5 ?)
 
     `./bbcache -b -p 1 -r 0.04 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
 
