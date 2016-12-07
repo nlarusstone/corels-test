@@ -5,6 +5,8 @@ Claim items by adding your name, and check them off when complete :)
 
 ## bbound improvements
 
+- [ ] Customize Makefile for Darwin (fix library dependencies)
+
 - [x] Change the default regularization parameter to c = 0.01
 
 - [x] Write out wall clock timestamps, including final total time, to stdout messages
@@ -128,7 +130,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -b -p 0 -r 0.001 ../data/tdata_R.out ../data/tdata_R.label`
 
-### small datasets:  bcancer, cars, haberman, monks1, monks2, monks3, votes
+### small datasets:  bcancer, cars, haberman, monks1, monks2, monks3, votes (Elaine)
 
 **See the rule mining section above first!**
 
@@ -137,11 +139,23 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 - [ ] c = 0.01, curiosity, permutation map (monks1, monks3, votes should all complete,
       but we haven't seen any of bcancer, cars, haberman, monks2 complete)
 
-### adult
+### adult (Elaine)
 
-- [ ] Downsample to ~10% of the data, and try c = 0.01, curiosity, permutation map.
-      If that looks like it's taking forever, try c = 0.02 (I think that will work)
-      and then 0.019, 0.018, etc.
+Downsample to ~10% of the data, and try c = 0.01, curiosity, permutation map.
+If that looks like it's taking forever, try c = 0.02 (I think that will work)
+and then 0.019, 0.018, etc.
+
+- [x] adult with c = 0.01, permutation map, 10^7 (375 s, working on length 3, ~ 4 GB on beepboop)
+
+    `./bbcache -b -p 1 -r 0.01 -n 10000000 ../data/adult_R.out ../data/adult_R.label`
+
+- [ ] adult with c = 0.01, permutation map, 10^8 (~ 45 GB on beepboop)
+
+    `./bbcache -b -p 1 -r 0.01 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
+
+- [ ] adult with c = 0.02, curiosity, permutation map, 10^8
+
+    `./bbcache -b -p 1 -r 0.02 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
 
 ### telco
 
