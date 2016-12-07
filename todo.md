@@ -5,6 +5,9 @@ Claim items by adding your name, and check them off when complete :)
 
 ## bbound improvements
 
+- [ ] If garbage collecting the cache and queue would reduce the size of the queue
+      by at least some factor (e.g., 10%) then do so
+
 - [x] Change the default regularization parameter to c = 0.01
 
 - [x] Write out wall clock timestamps, including final total time, to stdout messages
@@ -175,7 +178,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -c -p 1 -r 0.02 -n 100000000 ../data/cars.out ../data/cars.label`
 
-- [ ] c = 0.02, cars, permutation map, 10^9
+- [ ] c = 0.02, cars, permutation map, 10^9 (checks up to length 6 ?, ~ 300 GB on beepboop?)
 
     `./bbcache -b -p 1 -r 0.02 -n 1000000000 ../data/cars.out ../data/cars.label`
 
@@ -302,7 +305,7 @@ and then 0.019, 0.018, etc.
 
     `./bbcache -b -p 1 -r 0.03 -n 1000000000 ../data/adult_R.out ../data/adult_R.label`
 
-- [ ] adult with c = 0.04, permutation map, 10^8 (checks up to length 5 ?)
+- [ ] adult with c = 0.04, permutation map, 10^8 (checks up to length 6 ?)
 
     `./bbcache -b -p 1 -r 0.04 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
 
