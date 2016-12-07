@@ -5,8 +5,6 @@ Claim items by adding your name, and check them off when complete :)
 
 ## bbound improvements
 
-- [ ] Customize Makefile for Darwin (fix library dependencies)
-
 - [ ] Seems like the code doesn't initialize the current best prefix to the empty prefix
 
 - [x] Change the default regularization parameter to c = 0.01
@@ -38,6 +36,8 @@ Claim items by adding your name, and check them off when complete :)
 - [ ] What else should we measure?  E.g., think about time spent deleting nodes
       from the cache, garbage collection triggered by a new best objective value,
       etc.
+
+- [x] Customize Makefile for Darwin (fix library dependencies)
 
 ## ProPublica COMPAS dataset
 
