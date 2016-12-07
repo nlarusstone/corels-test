@@ -7,6 +7,8 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Customize Makefile for Darwin (fix library dependencies)
 
+- [ ] Seems like the code doesn't initialize the current best prefix to the empty prefix
+
 - [x] Change the default regularization parameter to c = 0.01
 
 - [x] Write out wall clock timestamps, including final total time, to stdout messages
@@ -134,7 +136,58 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 ### small datasets:  bcancer, cars, haberman, monks1, monks2, monks3, votes (Elaine)
 
-- [ ] c = 0.02, curiosity, permutation map (all should finish in a reasonable amount of time)
+* Verified best for c = 0.03, cars, has length 2, 0.16301 (n = 1728)
+* Verified best for c = 0.03, haberman, has length 0, 0.26471 (n = 306)
+* Best known for c = 0.03, monks2, has length 0, 0.32870 (n = 432)
+
+- [x] c = 0.03, cars, permutation map 10^8 (~ 3500 s, checks up to length 5) **completed**
+
+    `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/cars.out ../data/cars.label`
+
+- [x] c = 0.03, haberman, permutation map, 10^8 (checks up to length 8) **completed**
+
+    `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/haberman.out ../data/haberman.label`
+
+- [x] c = 0.03, monks2, permutation map, 10^8 (~ 830 s, working on length 4)
+
+    `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/monks2.out ../data/monks2.label`
+
+- [ ] c = 0.03, monks2, curiosity, permutation map, 10^8
+
+    `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/monks2.out ../data/monks2.label`
+
+* Verified best for c = 0.02, bcancer, has length 1, 0.06832 (n = 683)
+* Best known for c = 0.02, cars, has length 3, 0.13523 (via bfs) (n = 1728)
+* Best known for c = 0.02, haberman, has length 1, 0.25856 (n = 306)
+* Best known for c = 0.02, monks2, has length 0, 0.32870 (n = 432)
+
+- [x] c = 0.02, bcancer, permutation map, 10^8 (~ 82 s, checks up to length 3) **completed**
+
+    `./bbcache -b -p 1 -r 0.02 -n 100000000 ../data/bcancer.out ../data/bcancer.label`
+
+- [x] c = 0.02, cars, permutation map, 10^8 (~ 11110 s, working on length 5)
+
+    `./bbcache -b -p 1 -r 0.02 -n 100000000 ../data/cars.out ../data/cars.label`
+
+- [ ] c = 0.02, cars, curiosity, permutation map, 10^8
+
+    `./bbcache -c -p 1 -r 0.02 -n 100000000 ../data/cars.out ../data/cars.label`
+
+- [ ] c = 0.02, cars, permutation map, 10^9
+
+    `./bbcache -b -p 1 -r 0.02 -n 1000000000 ../data/cars.out ../data/cars.label`
+
+- [x] c = 0.02, haberman, permutation map, 10^8 (~ 1000 s, working on length 5)
+
+    `./bbcache -b -p 1 -r 0.02 -n 100000000 ../data/haberman.out ../data/haberman.label`
+
+- [ ] c = 0.02, haberman, permutation map, 10^9
+
+    `./bbcache -b -p 1 -r 0.02 -n 1000000000 ../data/haberman.out ../data/haberman.label`
+
+- [x] c = 0.02, monks2, permutation map, 10^8 (~ 610 s, working on length 4)
+
+    `./bbcache -b -p 1 -r 0.02 -n 100000000 ../data/monks2.out ../data/monks2.label`
 
 * Best known for c = 0.01, bcancer, has length 2, 0.05514 (n = 683)
 * Best known for c = 0.01, cars, has length 7, 0.10125 (via curiosity) (n = 1728)
@@ -143,9 +196,6 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 * Best known for c = 0.01, monks2, has length 18, 0.24944 (via curiosity) (n = 432)
 * Verified best for c = 0.01, monks3, has length 2, 0.02 (n = 432)
 * Verified best for c = 0.01, votes, has length 1, 0.05368 (n = 435)
-
-- [ ] c = 0.01, curiosity, permutation map (monks1, monks3, votes should all complete,
-      but we haven't seen any of bcancer, cars, haberman, monks2 complete)
 
 - [x] c = 0.01, bcancer, permutation map, 10^8 (~ 1120 s, working on length 4, ~ 42 GB on beepboop)
 
@@ -183,7 +233,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -b -p 1 -r 0.01 -n 100000000 ../data/monks2.out ../data/monks2.label`
 
-- [ ] c = 0.01, monks2, curiosity, permutation map, 10^7
+- [x] c = 0.01, monks2, curiosity, permutation map, 10^7 (~ 5305 s)
 
     `./bbcache -c -p 1 -r 0.01 -n 10000000 ../data/monks2.out ../data/monks2.label`
 
@@ -212,6 +262,7 @@ and then 0.019, 0.018, etc.
 * Best known for c = 0.01 has length 3, 0.203166
 * Best known for c = 0.02 has length 2, 0.229189
 * Best known for c = 0.03 has length 1, 0.241662
+* Best known for c = 0.04 has length 0, 0.247199
 
 - [x] adult with c = 0.01, permutation map, 10^7 (375 s, working on length 4, ~ 4 GB on beepboop)
 
@@ -221,7 +272,7 @@ and then 0.019, 0.018, etc.
 
     `./bbcache -b -p 1 -r 0.01 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
 
-- [ ] adult with c = 0.01, curiosity, permutation map, 10^8
+- [x] adult with c = 0.01, curiosity, permutation map, 10^8 (~ 2900 s)
 
     `./bbcache -c -p 1 -r 0.01 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
 
@@ -244,6 +295,14 @@ and then 0.019, 0.018, etc.
 - [x] adult with c = 0.03, permutation map, 10^8 (~ 18340 s, working on length 5, ~ 40 GB on beepboop)
 
     `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
+
+- [ ] adult with c = 0.03, permutation map, 10^9
+
+    `./bbcache -b -p 1 -r 0.03 -n 1000000000 ../data/adult_R.out ../data/adult_R.label`
+
+- [ ] adult with c = 0.04, permutation map, 10^8
+
+    `./bbcache -b -p 1 -r 0.04 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
 
 ### telco
 
