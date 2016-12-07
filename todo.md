@@ -5,10 +5,6 @@ Claim items by adding your name, and check them off when complete :)
 
 ## bbound improvements
 
-- [ ] Customize Makefile for Darwin (fix library dependencies)
-
-- [ ] Seems like the code doesn't initialize the current best prefix to the empty prefix
-
 - [x] Change the default regularization parameter to c = 0.01
 
 - [x] Write out wall clock timestamps, including final total time, to stdout messages
@@ -38,6 +34,10 @@ Claim items by adding your name, and check them off when complete :)
 - [ ] What else should we measure?  E.g., think about time spent deleting nodes
       from the cache, garbage collection triggered by a new best objective value,
       etc.
+
+- [x] Customize Makefile for Darwin (fix library dependencies)
+
+- [x] Handle case where (current best) rule list is the empty rule list
 
 ## ProPublica COMPAS dataset
 
