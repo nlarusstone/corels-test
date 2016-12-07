@@ -211,7 +211,7 @@ def titanic_cols(din='../data/titanic', dout='../data', froot='titanic_cols'):
 def telco(din='../data/telco', dout='../data', froot='telco.shuffled'):
     driver(din=din, dout=dout, froot=froot, train_suffix='.txt', delimiter=',')
 
-def small(din='../data/small', dout='../data', maxlhs=2, minsupport=10):
+def small(din='../data/small', dout='../data', maxlhs=2, minsupport=1):
     flist = [f for f in os.listdir(din) if f.endswith('_binary.csv')]
     for f in flist:
         print '\n', f
