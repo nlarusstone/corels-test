@@ -287,6 +287,21 @@ not captured by~$\Prefix$.
 In the remainder of our presentation, whenever we refer to a rule list with a
 particular prefix, we implicitly assume these empirically determined label predictions.
 
+\subsection{Rule mining}
+\label{sec:rule-mining}
+
+Before proceeding, we describe our approach to rule mining,
+which follows the methodology taken by~\citet{LethamRuMcMa15}
+and~\citet{YangRuSe16} \dots
+
+One the results we prove later implies a constraint on the rules
+we need to generate -- they must have at least some minimum support
+given by the lower bound in Theorem~\ref{thm:min-capture}.
+
+\subsection{Rule list representation and bit vector operations}
+
+Something along these lines... look at~\citet{YangRuSe16}
+
 \subsection{Branch-and-bound optimization framework}
 
 We define a simple objective function for a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$:
@@ -589,9 +604,9 @@ regularization parameter~$\Reg$
             \If {$s$ not in $\Prefix$}
                 \State $\PrefixB \gets (\Prefix, s)$ \Comment{\textbf{Branch}: Generate child $\PrefixB$}
                 \State $\mathbf{v} \gets \mathbf{u} \wedge \Cap(\x, s)$ \Comment{Bit vector indicating data captured by $s$ in $\PrefixB$}
-                \State $b(\PrefixB, \x, \y) \gets b(\Prefix, \x, \y) + \Reg +$ \Call{IncrementalLowerBound}{$\mathbf{v}, \y, N$} \Comment{Eq.~\eqref{eq:inc-lb}}
+                \State $b(\PrefixB, \x, \y) \gets b(\Prefix, \x, \y) + \Reg~ + $ \Call{IncrementalLowerBound}{$\mathbf{v}, \y, N$} \Comment{Eq.~\eqref{eq:inc-lb}}
                 \If {$b(\PrefixB, \x, \y) < \CurrentObj$} \Comment{\textbf{Bound}: Apply bound from Theorem~\ref{thm:bound}}
-                    \State $\Obj(\RLB, \x, \y) \gets b(\PrefixB, \x, \y) +$ \Call{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$} \Comment{Eq.~\eqref{eq:inc-obj}}
+                    \State $\Obj(\RLB, \x, \y) \gets b(\PrefixB, \x, \y)~ + $ \Call{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$} \Comment{Eq.~\eqref{eq:inc-obj}}
                     \If {$\Obj(\RLB, \x, \y) < \CurrentObj$}
                         \State $(\CurrentRL, \CurrentObj) \gets (\RLB, \Obj(\RLB, \x, \y))$ \Comment{Update current best rule list and objective}
                     \EndIf
@@ -606,11 +621,16 @@ regularization parameter~$\Reg$
 \end{algorithm}
 
 \begin{algorithm}[t!]
-  \caption{Incremental objective lower bound~\eqref{eq:inc-lb} and objective functions~\eqref{eq:inc-obj}
-    used in Algorithm~\ref{alg:incremental}, our incremental branch-and-bound procedure.}
-\label{alg:incremental-functions}
+  \caption{Incremental objective lower bound~\eqref{eq:inc-lb} used in Algorithm~\ref{alg:incremental}.}
+\label{alg:incremental-lb}
 \begin{algorithmic}
 \normalsize
+\State \textbf{Input:}
+Bit vector~${\mathbf{v} \in \{0, 1\}^N}$ indicating data captured by $s$, the last antecedent in~$\PrefixB$,
+bit vector of class labels~${\y \in \{0, 1\}^N}$,
+number of observations~$N$
+\State \textbf{Output:} Component of~$\RLB$'s misclassification error due to data captured by~$s$ \\
+
 \Function{IncrementalLowerBound}{$\mathbf{v}, \y, N$}
     \State $n_v = \Count(\mathbf{v})$ \Comment{Number of data captured by $s$, the last antecedent in $\PrefixB$}
     \State $\mathbf{w} \gets \mathbf{v} \wedge \y$ \Comment{Bit vector indicating data captured by $s$ with label $1$}
@@ -620,7 +640,21 @@ regularization parameter~$\Reg$
     \Else
         \State \Return $n_w / N$ \Comment{Misclassification error of the rule $s \rightarrow 0$}
     \EndIf
- \EndFunction \\
+    \EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[t!]
+  \caption{Incremental objective function~\eqref{eq:inc-obj} used in Algorithm~\ref{alg:incremental}.}
+\label{alg:incremental-obj}
+\begin{algorithmic}
+\normalsize
+\State \textbf{Input:}
+Bit vector~${\mathbf{u} \in \{0, 1\}^N}$ indicating data not captured by~$\PrefixB$'s parent prefix,
+bit vector~${\mathbf{v} \in \{0, 1\}^N}$ indicating data not captured by $s$, the last antecedent in~$\PrefixB$,
+bit vector of class labels~${\y \in \{0, 1\}^N}$,
+number of observations~$N$
+\State \textbf{Output:} Component of~$\RLB$'s misclassification error due to its default rule \\
 
  \Function{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$}
     \State $\mathbf{f} \gets \mathbf{u} \wedge \neg\,\mathbf{v} $ \Comment{Bit vector indicating data not captured by $\PrefixB$}
@@ -628,9 +662,9 @@ regularization parameter~$\Reg$
     \State $\mathbf{g} \gets \mathbf{f} \wedge \y$ \Comment{Bit vector indicating data not captured by $\PrefixB$ with label $1$}
     \State $n_g = \Count(\mathbf{w})$ \Comment{Number of data not captued by $\PrefixB$ with label $1$}
     \If {$n_f / n_g > 0.5$}
-        \State \Return $(n_a - n_b) / N$ \Comment{Default rule misclassification error with label $1$}
+        \State \Return $(n_f - n_g) / N$ \Comment{Default rule misclassification error with label $1$}
     \Else
-        \State \Return $n_b / N$ \Comment{Default rule misclassification error with label $0$}
+        \State \Return $n_g / N$ \Comment{Default rule misclassification error with label $0$}
     \EndIf
 \EndFunction
 \end{algorithmic}
@@ -639,7 +673,8 @@ regularization parameter~$\Reg$
 We present an incremental branch-and-bound procedure in
 Algorithm~\ref{alg:incremental}, and show the incremental computations
 of the objective lower bound~\eqref{eq:inc-lb} and objective~\eqref{eq:inc-obj}
-as two separate functions in Algorithm~\ref{alg:incremental-functions}.
+as two separate functions in Algorithms~\ref{alg:incremental-lb}
+and~\ref{alg:incremental-obj}, respectively.
 %
 In Algorithm~\ref{alg:incremental}, we use a cache to store
 prefixes and their objective lower bounds.
@@ -667,18 +702,6 @@ For example, if we are trying to optimize over rule lists formed
 from a set of 1000 antecedents, then the maximum queue size in
 Algorithm~\ref{alg:incremental} will be smaller than that in
 Algorithm~\ref{alg:branch-and-bound} by a factor of nearly 1000.
-
-\subsection{Rule mining}
-\label{sec:rule-mining}
-
-Thus far, we haven't addressed how to generate rules.
-%
-We follow the rule mining approach taken by~\citet{LethamRuMcMa15}
-and~\citet{YangRuSe16} \dots
-
-One the results we prove later implies a constraint on the rules
-we need to generate -- they must have at least some minimum support
-given by the lower bound in Theorem~\ref{thm:min-capture}.
 
 \section{Additional problem structure and computational consequences}
 
