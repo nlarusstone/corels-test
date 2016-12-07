@@ -208,8 +208,9 @@ def titanic_cols(din='../data/titanic', dout='../data', froot='titanic_cols'):
     rule_name_list = driver(din=din, dout=dout, froot=froot, train_suffix='_train.tab', y_suffix='_train.Y')
     return rule_name_list
 
-def telco(din='../data/telco', dout='../data', froot='telco.shuffled'):
-    driver(din=din, dout=dout, froot=froot, train_suffix='.txt', delimiter=',')
+def telco(din='../data/telco', dout='../data', froot='telco.shuffled', maxlhs=2, minsupport=1):
+    driver(din=din, dout=dout, froot=froot, train_suffix='.txt', delimiter=',',
+           maxlhs=maxlhs, minsupport=minsupport)
 
 def small(din='../data/small', dout='../data', maxlhs=2, minsupport=1):
     flist = [f for f in os.listdir(din) if f.endswith('_binary.csv')]
