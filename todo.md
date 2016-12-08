@@ -10,6 +10,8 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Garbage collect the permutation map when a level is complete (Elaine)
 
+- [ ] Add permutation map size to logger (Elaine)
+
 - [x] Change the default regularization parameter to c = 0.01
 
 - [x] Write out wall clock timestamps, including final total time, to stdout messages
@@ -43,9 +45,13 @@ Claim items by adding your name, and check them off when complete :)
 - [ ] Estimate size (in memory) of the permutation map compared to the cache --
       should we consider an alphabetical tree?
 
+- [ ] Consolidate algorithm state in the logger object
+
 - [x] Customize Makefile for Darwin (fix library dependencies)
 
 - [x] Handle case where (current best) rule list is the empty rule list
+
+- [x] Track current lower bound and enable curiosity based on lower bound
 
 ## ProPublica COMPAS dataset
 
@@ -124,11 +130,11 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 - [x] tdata_R with c = 0.001, curiosity, permutation map (< 10 s on Elaine's home MacBook Pro)
 
-    `./bbcache -c -p 1 -r 0.001 -n 100000 ../data/tdata_R.out ../data/tdata_R.label`
+    `./bbcache -c 1 -p 1 -r 0.001 -n 100000 ../data/tdata_R.out ../data/tdata_R.label`
 
 - [x] tdata_R with c = 0.01, curiosity, permutation map (~ 10 min on Elaine's home MacBook Pro)
 
-    `./bbcache -c -p 1 -r 0.01 -n 1000000 ../data/tdata_R.out ../data/tdata_R.label`
+    `./bbcache -c 1 -p 1 -r 0.01 -n 1000000 ../data/tdata_R.out ../data/tdata_R.label`
 
 - [x] tdata_R with c = 0.001, breadth-first, permutation map, 10^9
 
@@ -138,7 +144,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 - [x] tdata_R with c = 0.001, curiosity (~ 1050 s on Elaine's home MacBook Pro; quickly finds optimal)
 
-    `./bbcache -c -p 0 -r 0.001 -n 100000 ../data/tdata_R.out ../data/tdata_R.label`
+    `./bbcache -c 1 -p 0 -r 0.001 -n 100000 ../data/tdata_R.out ../data/tdata_R.label`
 
 - [x] tdata_R with c = 0.001, breadth-first (Elaine is declaring this unreasonable)
 
@@ -146,7 +152,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 - [ ] tdata_R with c = 0.001, curious lower bound, permutation map
 
-    `./bbcache -b -c 2 -p 1 -r 0.001 ../data/tdata_R.out ../data/tdata_R.label`
+    `./bbcache -c 2 -p 1 -r 0.001 ../data/tdata_R.out ../data/tdata_R.label`
 
 ### small datasets:  bcancer, cars, haberman, monks1, monks2, monks3, votes (Elaine)
 
@@ -189,7 +195,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 - [ ] c = 0.02, cars, curiosity, permutation map, 10^8
 
-    `./bbcache -c -p 1 -r 0.02 -n 100000000 ../data/cars.out ../data/cars.label`
+    `./bbcache -c 1, -p 1 -r 0.02 -n 100000000 ../data/cars.out ../data/cars.label`
 
 - [ ] c = 0.02, cars, permutation map, 10^9 (checks up to length 6, ~ 105 GB on beepboop?)
 
@@ -237,7 +243,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 - [x] c = 0.01, cars, curiosity, permutation map, 10^8 (~ 12540 s, ~ 40 GB on beepboop)
 
-    `./bbcache -c -p 1 -r 0.01 -n 100000000 ../data/cars.out ../data/cars.label`
+    `./bbcache -c 1 -p 1 -r 0.01 -n 100000000 ../data/cars.out ../data/cars.label`
 
 - [x] c = 0.01, haberman, permutation map, 10^8 (~ 630 s, working on length 4, ~ 42.1 GB on beepboop)
 
@@ -245,7 +251,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 - [x] c = 0.01, haberman, curiosity, permutation map, 10^8 (~ 850 s, ~ 90.4 GB on beepboop)
 
-    `./bbcache -c -p 1 -r 0.01 -n 100000000 ../data/haberman.out ../data/haberman.label`
+    `./bbcache -c 1 -p 1 -r 0.01 -n 100000000 ../data/haberman.out ../data/haberman.label`
 
 - [x] c = 0.01, monks1, permutation map, 10^6 (~ 8 s) **completed**
 
@@ -253,7 +259,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 - [x] c = 0.01, monks1, curiosity, permutation map, 10^4 (~ 0.1 s) **completed**
 
-    `./bbcache -c -p 1 -r 0.01 -n 10000 ../data/monks1.out ../data/monks1.label`
+    `./bbcache -c 1 -p 1 -r 0.01 -n 10000 ../data/monks1.out ../data/monks1.label`
 
 - [x] c = 0.01, monks2, permutation map, 10^8 (~ 550 s, working on length 4, ~ 42.4 GB on beepboop)
 
@@ -261,7 +267,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 - [x] c = 0.01, monks2, curiosity, permutation map, 10^7 (~ 5305 s)
 
-    `./bbcache -c -p 1 -r 0.01 -n 10000000 ../data/monks2.out ../data/monks2.label`
+    `./bbcache -c 1 -p 1 -r 0.01 -n 10000000 ../data/monks2.out ../data/monks2.label`
 
 - [x] c = 0.01, monks3, permutation map, 10^3 (< 0.01 s) **completed**
 
@@ -269,7 +275,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 - [x] c = 0.01, monks3, curiosity, permutation map, 10^3 (< 0.01 s) **completed**
 
-    `./bbcache -c -p 1 -r 0.01 -n 1000 ../data/monks3.out ../data/monks3.label`
+    `./bbcache -c 1 -p 1 -r 0.01 -n 1000 ../data/monks3.out ../data/monks3.label`
 
 - [x] c = 0.01, votes, permutation map, 10^6 (~ 24 s) **completed**
 
@@ -277,7 +283,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 - [x] c = 0.01, votes, curiosity, permutation map, 10^5 (~ 26 s) **completed**
 
-    `./bbcache -c -p 1 -r 0.01 -n 100000 ../data/votes.out ../data/votes.label`
+    `./bbcache -c 1 -p 1 -r 0.01 -n 100000 ../data/votes.out ../data/votes.label`
 
 ### adult (Elaine)
 
@@ -303,7 +309,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 - [x] adult with c = 0.01, curiosity, permutation map, 10^8 (~ 2900 s)
 
-    `./bbcache -c -p 1 -r 0.01 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
+    `./bbcache -c 1 -p 1 -r 0.01 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
 
 - [ ] adult with c = 0.01, permutation map, 10^9 (Estimate ~ 8 hrs, ~ 400 GB on beepboop)
 
