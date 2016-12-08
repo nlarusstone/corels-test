@@ -268,10 +268,15 @@ Downsample to ~10% of the data, and try c = 0.01, curiosity, permutation map.
 If that looks like it's taking forever, try c = 0.02 (I think that will work)
 and then 0.019, 0.018, etc.
 
+* Best known for c = 0.001 has length 4, 0.172146
 * Best known for c = 0.01 has length 3, 0.203166
 * Best known for c = 0.02 has length 2, 0.229189
 * Best known for c = 0.03 has length 1, 0.241662
 * Verified best for c = 0.04 has length 0, 0.247199
+
+- [x] adult with c = 0.001, permutation map, 10^8 (3572 s, working on length 4, ~ 30 GB on beepboop)
+
+    `./bbcache -b -p 1 -r 0.001 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
 
 - [x] adult with c = 0.01, permutation map, 10^7 (375 s, working on length 4, ~ 4 GB on beepboop)
 
@@ -321,7 +326,9 @@ and then 0.019, 0.018, etc.
 
 ## Other experiments
 
-- [ ] Find out if we can reuse code from any of Cynthia's students (Cynthia)
+- [x] Find code from Cynthia's students (Cynthia)
+
+- [ ] Figure out how to use code from Cynthia's students (Daniel?)
 
 - [ ] Identify software packages for competing algorithms (see notes in paper):
       I think Daniel has done some work on this front?  Please take some notes
