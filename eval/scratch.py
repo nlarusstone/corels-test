@@ -21,17 +21,18 @@ def parse_prefix_lengths(p):
 def parse_prefix_sums(p):
     return np.sum([int(q.split(':')[1]) for q in p.split(';') if q])
 
-# Command run:  ./bbcache -c -p 1 -r 0.001 ../data/tdata_R.out ../data/tdata_R.label
+# Command run:  ./bbcache -c -p 1 -r 0.001 -f 100 ../data/tdata_R.out ../data/tdata_R.label
+# Yields log file with 739 records
 
 log_dir = '../logs/'
-log_fname = 'for-tdata_R.out-curiosity-with_prefix_perm_map-max_num_nodes=100000-c=0.0010000-v=1.txt'
+log_fname = 'for-tdata_R.out-curiosity-with_prefix_perm_map-max_num_nodes=100000-c=0.0010000-v=1-f=100.txt'
 
 lw = 2  # linewidth
 ms = 9  # markersize
 fs = 16 # fontsize
 
 c = float(log_fname.split('c=')[1].split('-')[0])
-nrules = 377    # should have a way to get this automatically
+nrules = 377    # should have a way to get this automatically, e.g., via `wc -l ../data/tdata_R.out`
 
 log_fname = os.path.join(log_dir, log_fname)
 x = tb.tabarray(SVfile=log_fname)
@@ -119,7 +120,7 @@ assert ([int(name) for name in z.dtype.names] == range(max_length + 1))
 zc = z.extract()[:, ::-1].cumsum(axis=1)[:, ::-1]
 color_vec = ['r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'violet', 'm', 'gray', 'k']
 
-pylab.figure(4)
+pylab.figure(6)
 pylab.clf()
 for length in range(max_length + 1):
     pylab.plot(x['total_time'], zc[:, length], color=color_vec[length])
@@ -131,6 +132,61 @@ pylab.xticks(fontsize=(fs-2))
 pylab.yticks(fontsize=(fs-2))
 pylab.draw()
 pylab.savefig('../figs/ela-queue.png')
+
+pylab.figure(7)
+pylab.clf()
+pylab.subplot(2, 1, 1)
+pylab.plot(x['total_time'], x['tree_prefix_length'], 'b-', linewidth=lw)
+#pylab.xlabel('time (s)', fontsize=fs)
+pylab.ylabel('length', fontsize=fs)
+pylab.title('length of rule list with current best objective', fontsize=fs)
+pylab.xticks(fontsize=(fs-2))
+pylab.yticks(fontsize=(fs-2))
+ax = list(pylab.axis())
+ax[3] = ax[3] + 0.2
+pylab.axis(ax)
+pylab.legend(['complete execution'], loc='lower right')
+
+pylab.subplot(2, 1, 2)
+pylab.plot(x['total_time'][:(imin+1)], x['tree_prefix_length'][:(imin+1)], 'b-', linewidth=lw)
+pylab.xlabel('time (s)', fontsize=fs)
+pylab.ylabel('length', fontsize=fs)
+#pylab.title('length of rule list with current best objective', fontsize=fs)
+pylab.xticks(fontsize=(fs-2))
+pylab.yticks(fontsize=(fs-2))
+ax = list(pylab.axis())
+ax[3] = ax[3] + 0.2
+pylab.axis(ax)
+pylab.legend(['optimization phase'], loc='lower right')
+pylab.draw()
+pylab.savefig('../figs/ela-prefix-length.png')
+
+max_len_check = x['tree_min_objective'] / c
+max_len_check[max_len_check > nrules] = nrules
+max_len_check[x['tree_min_objective'] % c == 0] -= 1
+max_len_check = np.cast[int](max_len_check)
+
+pylab.figure(8)
+pylab.clf()
+pylab.subplot(2, 1, 1)
+pylab.plot(x['total_time'], max_len_check, 'b-', linewidth=lw)
+#pylab.xlabel('time (s)', fontsize=fs)
+pylab.ylabel('length', fontsize=fs)
+pylab.title('upper bound on prefix length in remaining search space', fontsize=fs)
+pylab.xticks(fontsize=(fs-2))
+pylab.yticks(fontsize=(fs-2))
+pylab.legend(['complete execution'])
+
+pylab.subplot(2, 1, 2)
+pylab.plot(x['total_time'][:(imin+1)], max_len_check[:(imin+1)], 'b-', linewidth=lw)
+pylab.xlabel('time (s)', fontsize=fs)
+pylab.ylabel('length', fontsize=fs)
+#pylab.title('length of rule list with current best objective', fontsize=fs)
+pylab.xticks(fontsize=(fs-2))
+pylab.yticks(fontsize=(fs-2))
+pylab.legend(['optimization phase'])
+pylab.draw()
+pylab.savefig('../figs/ela-max-length-check.png')
 
 total_space_size = space.state_space_size(nrules=nrules, min_objective=default_objective, c=c)
 remaining_space_size = [space.remaining_search_space(nrules=nrules, min_objective=current_objective, c=c, prefix_lengths=parse_prefix_lengths(pl)) for (current_objective, pl) in x[['tree_min_objective', 'prefix_lengths']]]
