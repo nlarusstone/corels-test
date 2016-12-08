@@ -153,13 +153,17 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/haberman.out ../data/haberman.label`
 
-- [x] c = 0.03, monks2, permutation map, 10^8 (~ 830 s, working on length 4)
+- [x] c = 0.03, monks2, permutation map, 10^8 (~ 860 s, working on length 4, ~ 40 GB on beepboop)
 
     `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/monks2.out ../data/monks2.label`
 
 - [ ] c = 0.03, monks2, curiosity, permutation map, 10^8
 
     `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/monks2.out ../data/monks2.label`
+
+- [ ] c = 0.03, monks2, permutation map, 10^9 (checks up to length 6?)
+
+    `./bbcache -b -p 1 -r 0.03 -n 1000000000 ../data/monks2.out ../data/monks2.label`
 
 * Verified best for c = 0.02, bcancer, has length 1, 0.06832 (n = 683)
 * Best known for c = 0.02, cars, has length 3, 0.13523 (via bfs) (n = 1728)
@@ -178,7 +182,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -c -p 1 -r 0.02 -n 100000000 ../data/cars.out ../data/cars.label`
 
-- [ ] c = 0.02, cars, permutation map, 10^9 (checks up to length 6 ?, ~ 300 GB on beepboop?)
+- [ ] c = 0.02, cars, permutation map, 10^9 (checks up to length 6 ?, ~ 56 GB on beepboop?)
 
     `./bbcache -b -p 1 -r 0.02 -n 1000000000 ../data/cars.out ../data/cars.label`
 
@@ -267,7 +271,7 @@ and then 0.019, 0.018, etc.
 * Best known for c = 0.01 has length 3, 0.203166
 * Best known for c = 0.02 has length 2, 0.229189
 * Best known for c = 0.03 has length 1, 0.241662
-* Best known for c = 0.04 has length 0, 0.247199
+* Verified best for c = 0.04 has length 0, 0.247199
 
 - [x] adult with c = 0.01, permutation map, 10^7 (375 s, working on length 4, ~ 4 GB on beepboop)
 
@@ -293,11 +297,11 @@ and then 0.019, 0.018, etc.
 
     `./bbcache -b -p 1 -r 0.02 -n 1000000000 ../data/adult_R.out ../data/adult_R.label`
 
-- [x] adult with c = 0.03, permutation map, 10^7 (~ 900 s, working on length 4, ~ 4.3 GB on beepboop)
+- [x] adult with c = 0.03, permutation map, 10^7 (~ 15 min, working on length 4, ~ 4.3 GB on beepboop)
 
     `./bbcache -b -p 1 -r 0.03 -n 10000000 ../data/adult_R.out ../data/adult_R.label`
 
-- [x] adult with c = 0.03, permutation map, 10^8 (~ 18340 s, working on length 5, ~ 40 GB on beepboop)
+- [x] adult with c = 0.03, permutation map, 10^8 (~ 5 hrs, working on length 5, ~ 40 GB on beepboop)
 
     `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
 
@@ -305,7 +309,7 @@ and then 0.019, 0.018, etc.
 
     `./bbcache -b -p 1 -r 0.03 -n 1000000000 ../data/adult_R.out ../data/adult_R.label`
 
-- [ ] adult with c = 0.04, permutation map, 10^8 (checks up to length 6 ?)
+- [x] adult with c = 0.04, permutation map, 10^8 (~ 5 hrs, checks up to length 6, ~ 5 GB on beepboop) **completed**
 
     `./bbcache -b -p 1 -r 0.04 -n 100000000 ../data/adult_R.out ../data/adult_R.label`
 
@@ -375,6 +379,10 @@ and then 0.019, 0.018, etc.
       operations, which ones and why?  (Why not others?)
 
 - [ ] Pseudocode closer to the algorithms we actually implement (Elaine)
+
+### Bounds
+
+- [ ] Rewrite counting bounds with respect to Algorithm 2
 
 ### Implementation architecture
 
