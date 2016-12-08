@@ -2657,7 +2657,9 @@ Fraction of search space we've proven we've handled
 
 \item Figure~\ref{fig:max-length},
 Max prefix length over time (computed from objective value);
-maybe also add the best prefix length over time
+
+\item Figure~\ref{fig:prefix-length},
+Best prefix length over time
 
 \item Some characterization of the number of solutions close to optimal
 (plot number of suboptimal solutions vs amount of suboptimality,
@@ -2800,9 +2802,17 @@ and the bottom plot highlights the verification phase.}
 
 \begin{figure}[t!]
 \begin{center}
-\includegraphics[width=0.65\textwidth]{figs/sketch-max-length.png}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-max-length.png}
+\includegraphics[width=0.8\textwidth]{figs/ela-max-length-check.png}
 \end{center}
-\caption{Max prefix length over time (computed from objective value);
-maybe also add the best prefix length over time}
+\caption{Max prefix length over time (computed from objective value)}
 \label{fig:max-length}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+\includegraphics[width=0.8\textwidth]{figs/ela-prefix-length.png}
+\end{center}
+\caption{Best prefix length over time}
+\label{fig:prefix-length}
 \end{figure}
