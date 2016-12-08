@@ -6,7 +6,9 @@ Claim items by adding your name, and check them off when complete :)
 ## bbound improvements
 
 - [ ] If garbage collecting the cache and queue would reduce the size of the queue
-      by at least some factor (e.g., 10%) then do so
+      by at least some factor (e.g., 10%) then do so (Elaine)
+
+- [ ] Garbage collect the permutation map when a level is complete (Elaine)
 
 - [x] Change the default regularization parameter to c = 0.01
 
@@ -143,7 +145,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 * Verified best for c = 0.03, cars, has length 2, 0.16301 (n = 1728)
 * Verified best for c = 0.03, haberman, has length 0, 0.26471 (n = 306)
-* Best known for c = 0.03, monks2, has length 0, 0.32870 (n = 432)
+* Verified best for c = 0.03, monks2, has length 0, 0.32870 (n = 432)
 
 - [x] c = 0.03, cars, permutation map 10^8 (~ 3500 s, checks up to length 5) **completed**
 
@@ -161,14 +163,14 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/monks2.out ../data/monks2.label`
 
-- [ ] c = 0.03, monks2, permutation map, 10^9 (checks up to length 6?)
+- [x] c = 0.03, monks2, permutation map, 10^9 (~ 56775 s, checks up to length 8, ~ 230 GB on beepboop?) **completed**
 
     `./bbcache -b -p 1 -r 0.03 -n 1000000000 ../data/monks2.out ../data/monks2.label`
 
 * Verified best for c = 0.02, bcancer, has length 1, 0.06832 (n = 683)
 * Best known for c = 0.02, cars, has length 3, 0.13523 (via bfs) (n = 1728)
 * Best known for c = 0.02, haberman, has length 1, 0.25856 (n = 306)
-* Best known for c = 0.02, monks2, has length 0, 0.32870 (n = 432)
+* Best known for c = 0.02, monks2, has length 7, 0.315926 (via curiosity) (n = 432)
 
 - [x] c = 0.02, bcancer, permutation map, 10^8 (~ 82 s, checks up to length 3) **completed**
 
@@ -182,7 +184,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -c -p 1 -r 0.02 -n 100000000 ../data/cars.out ../data/cars.label`
 
-- [ ] c = 0.02, cars, permutation map, 10^9 (checks up to length 6 ?, ~ 56 GB on beepboop?)
+- [ ] c = 0.02, cars, permutation map, 10^9 (checks up to length 6, ~ 105 GB on beepboop?)
 
     `./bbcache -b -p 1 -r 0.02 -n 1000000000 ../data/cars.out ../data/cars.label`
 
@@ -197,6 +199,14 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 - [x] c = 0.02, monks2, permutation map, 10^8 (~ 610 s, working on length 4)
 
     `./bbcache -b -p 1 -r 0.02 -n 100000000 ../data/monks2.out ../data/monks2.label`
+
+- [x] c = 0.02, monks2, curiosity, permutation map, 10^8 (~ 12625 s, ~ 50 GB ? on beepboop)
+
+    `./bbcache -b -p 1 -r 0.02 -n 100000000 ../data/monks2.out ../data/monks2.label`
+
+- [ ] c = 0.02, monks2, permutation map, 10^9
+
+    `./bbcache -b -p 1 -r 0.02 -n 1000000000 ../data/monks2.out ../data/monks2.label`
 
 * Best known for c = 0.01, bcancer, has length 2, 0.05514 (n = 683)
 * Best known for c = 0.01, cars, has length 7, 0.10125 (via curiosity) (n = 1728)
