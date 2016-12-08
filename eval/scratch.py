@@ -21,7 +21,7 @@ def parse_prefix_lengths(p):
 def parse_prefix_sums(p):
     return np.sum([int(q.split(':')[1]) for q in p.split(';') if q])
 
-# Command run:  ./bbcache -c -p 1 -r 0.001 -f 100 ../data/tdata_R.out ../data/tdata_R.label
+# Command run:  ./bbcache -c 1 -p 1 -r 0.001 -f 100 ../data/tdata_R.out ../data/tdata_R.label
 # Yields log file with 739 records
 
 log_dir = '../logs/'

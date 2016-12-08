@@ -40,6 +40,9 @@ Claim items by adding your name, and check them off when complete :)
       from the cache, garbage collection triggered by a new best objective value,
       etc.
 
+- [ ] Estimate size (in memory) of the permutation map compared to the cache --
+      should we consider an alphabetical tree?
+
 - [x] Customize Makefile for Darwin (fix library dependencies)
 
 - [x] Handle case where (current best) rule list is the empty rule list
@@ -140,6 +143,10 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 - [x] tdata_R with c = 0.001, breadth-first (Elaine is declaring this unreasonable)
 
     `./bbcache -b -p 0 -r 0.001 ../data/tdata_R.out ../data/tdata_R.label`
+
+- [ ] tdata_R with c = 0.001, curious lower bound, permutation map
+
+    `./bbcache -b -c 2 -p 1 -r 0.001 ../data/tdata_R.out ../data/tdata_R.label`
 
 ### small datasets:  bcancer, cars, haberman, monks1, monks2, monks3, votes (Elaine)
 
@@ -435,6 +442,7 @@ A place to note things we haven't implemented, but might
 - [ ] Ability to switch between scheduling policies
 - [ ] Depth-first scheduling policy
 - [ ] Something like Thompson sampling using curiosity
-- [ ] Different priority metrics: lower bound, objective
+- [x] Different priority metrics: lower bound
+- [ ] Different priority metrics: objective
 - [ ] Priority metric that blends between breadth-first and curiosity (non-stochastic)
 - [ ] Enforce that the output optimal rule list is the simplest
