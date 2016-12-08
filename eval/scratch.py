@@ -111,6 +111,27 @@ pylab.yticks(fontsize=(fs-2))
 pylab.draw()
 pylab.savefig('../figs/ela-queue-cache-size-insertions.png')
 
+max_length = max(set([int(lc.split(':')[0]) for lc in ''.join(x['prefix_lengths']).split(';') if lc]))
+split_hist = [[lc.split(':') for lc in lh.strip(';').split(';')] for lh in x['prefix_lengths']]
+kvp = [[(lc[0], int(lc[1])) for lc in lh if (len(lc) == 2)] for lh in split_hist]
+z = tb.tabarray(kvpairs=kvp)
+assert ([int(name) for name in z.dtype.names] == range(max_length + 1))
+zc = z.extract()[:, ::-1].cumsum(axis=1)[:, ::-1]
+color_vec = ['r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'violet', 'm', 'gray', 'k']
+
+pylab.figure(4)
+pylab.clf()
+for length in range(max_length + 1):
+    pylab.plot(x['total_time'], zc[:, length], color=color_vec[length])
+pylab.legend([str(length) for length in range(max_length + 1)])
+pylab.xlabel('time (s)', fontsize=fs)
+pylab.ylabel('count', fontsize=fs)
+pylab.title('logical queue size broken down by prefix length')
+pylab.xticks(fontsize=(fs-2))
+pylab.yticks(fontsize=(fs-2))
+pylab.draw()
+pylab.savefig('../figs/ela-queue.png')
+
 total_space_size = space.state_space_size(nrules=nrules, min_objective=default_objective, c=c)
 remaining_space_size = [space.remaining_search_space(nrules=nrules, min_objective=current_objective, c=c, prefix_lengths=parse_prefix_lengths(pl)) for (current_objective, pl) in x[['tree_min_objective', 'prefix_lengths']]]
 remaining_space_size[0] = total_space_size
