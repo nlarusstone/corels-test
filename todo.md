@@ -6,9 +6,11 @@ Claim items by adding your name, and check them off when complete :)
 ## bbound improvements
 
 - [ ] If garbage collecting the cache and queue would reduce the size of the queue
-      by at least some factor (e.g., 10%) then do so (Elaine)
+      by at least some factor (e.g., 10%) then do so -- can't iterate over
+      `std::priority_queue` so this would require a different data structure (Elaine)
 
-- [ ] Garbage collect the permutation map when a level is complete (Elaine)
+- [ ] Garbage collect the permutation map when a level is complete (almost finished) --
+      make this dead simple for BFS (no need to iterate), make this optional (Elaine)
 
 - [ ] Add permutation map size to logger (Elaine)
 
