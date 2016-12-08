@@ -281,9 +281,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
 ### adult (Elaine)
 
-Downsample to ~10% of the data, and try c = 0.01, curiosity, permutation map.
-If that looks like it's taking forever, try c = 0.02 (I think that will work)
-and then 0.019, 0.018, etc.
+- [ ] Check the support of rules in the adult dataset and consider re-mining
 
 * Best known for c = 0.001 has length 4, 0.172146
 * Best known for c = 0.01 has length 3, 0.203166
