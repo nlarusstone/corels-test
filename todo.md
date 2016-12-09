@@ -55,10 +55,12 @@ Claim items by adding your name, and check them off when complete :)
 - [x] Add permutation map size to logger at `_state.pmap_size`
 
 - [x] How many times do we look up an item in the hash map that is not in the tree --
-      add to logger at `_state.pmap_null_lookup`
+      added to logger at `_state.pmap_null_num`
 
 - [ ] When we do look up an item, how many times do we end up discarding
-      something we would have been unable to discard had we not done this
+      something we would have been unable to discard had we not done this --
+      added to logger at `_state.pmap_discard_num`, counts number of lookups
+      that trigger a discard operation, not the total number of deleted nodes
 
 - [ ] If garbage collecting the cache and queue would reduce the size of the queue
       by at least some factor (e.g., 10%) then do so -- can't iterate over
