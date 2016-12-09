@@ -56,14 +56,17 @@ Claim items by adding your name, and check them off when complete :)
 
 - [x] Garbage collect entries in permutation map smaller than `_state.queue_min_length`
 
-- [ ] Garbage collect the permutation map of prefixes longer than the maximum prefix length
+- [x] Simplify permutation map garbage collection in the case of BFS --
+      use `std::map::clear` instead of iterating
 
 - [x] Add permutation map size to logger at `_state.pmap_size`
+
+- [ ] Garbage collect the permutation map of prefixes longer than the maximum prefix length
 
 - [x] How many times do we look up an item in the hash map that is not in the tree --
       added to logger at `_state.pmap_null_num`
 
-- [ ] When we do look up an item, how many times do we end up discarding
+- [x] When we do look up an item, how many times do we end up discarding
       something we would have been unable to discard had we not done this --
       added to logger at `_state.pmap_discard_num`, counts number of lookups
       that trigger a discard operation, not the total number of deleted nodes
@@ -72,8 +75,6 @@ Claim items by adding your name, and check them off when complete :)
       by at least some factor (e.g., 10%) then do so -- can't iterate over
       `std::priority_queue` so this would require a different data structure,
       e.g., a custom subclass
-
-- [ ] Simplify permutation map garbage collection in the case of BFS -- no need to iterate
 
 - [ ] Make permutation map garbage collection optional
 
