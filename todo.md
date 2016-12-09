@@ -78,6 +78,9 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Make permutation map garbage collection optional
 
+- [ ] Should we skip symmetry-based garbage collection when
+      `len(prefix) == max_prefix_len_check`?
+
 ## ProPublica COMPAS dataset
 
 - [x] Summarize the [ProPublica COMPAS dataset](https://github.com/propublica/compas-analysis).
