@@ -34,10 +34,6 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Make R/Python binding so it is easier to run experiments. (Daniel)
 
-- [ ] Can we answer Margo's questions about the effects of the permutation map?
-      See the bulleted list at the start of the experiments section of the paper,
-      and Margo and Elaine's emails from Nov 1. (probably Elaine)
-
 - [ ] What else should we measure?  E.g., think about time spent deleting nodes
       from the cache, garbage collection triggered by a new best objective value,
       etc.
@@ -56,15 +52,17 @@ Claim items by adding your name, and check them off when complete :)
 
 - [x] Garbage collect entries in permutation map smaller than `_state.queue_min_length`
 
-- [ ] Garbage collect the permutation map when a level is complete --
-      trigger on flag set when `logger.decPrefixLen(n)` yields `_state.prefix_lens[n] == 0`
+- [x] Simplify permutation map garbage collection in the case of BFS --
+      use `std::map::clear` instead of iterating
 
 - [x] Add permutation map size to logger at `_state.pmap_size`
+
+- [ ] Garbage collect the permutation map of prefixes longer than the maximum prefix length
 
 - [x] How many times do we look up an item in the hash map that is not in the tree --
       added to logger at `_state.pmap_null_num`
 
-- [ ] When we do look up an item, how many times do we end up discarding
+- [x] When we do look up an item, how many times do we end up discarding
       something we would have been unable to discard had we not done this --
       added to logger at `_state.pmap_discard_num`, counts number of lookups
       that trigger a discard operation, not the total number of deleted nodes
@@ -74,9 +72,35 @@ Claim items by adding your name, and check them off when complete :)
       `std::priority_queue` so this would require a different data structure,
       e.g., a custom subclass
 
-- [ ] Simplify permutation map garbage collection in the case of BFS -- no need to iterate
-
 - [ ] Make permutation map garbage collection optional
+
+- [ ] Should we skip symmetry-based garbage collection when
+      `len(prefix) == max_prefix_len_check`?
+
+- [ ] Estimate the size (in memory) of the permutation map compared to the cache --
+      compare experiments for a fixed `max_num_nodes` with and without the
+      permutation map.  Should we consider an alphabetical tree?
+
+- [ ] Estimate the size (in memory) of the queue -- should we try to eliminate it?
+      The queue is especially annoying if it retains many prefixes marked as deleted
+      and is difficult to garbage collect.  However, it seems small compared to the cache,
+      e.g., consider the following policies (curious lower bound queue with permutation map
+      vs. stochastic with no queue or permutation map vs. bfs queue without pmap) --
+      not truly a fair comparison because the distributions of prefix lengths differ
+
+      `./bbcache -c 2 -p 1 -r 0.001 -n 100000000 ../data/tdata_R.out ../data/tdata_R.label` (15 GB)
+
+      `./bbcache -s -r 0.001 -n 22460425 ../data/tdata_R.out ../data/tdata_R.label` (4 GB)
+
+      `./bbcache -b -p 0 -r 0.001 -n 22460425 ../data/tdata_R.out ../data/tdata_R.label` (4.2 GB)
+
+- [ ] Eliminate curious lower bound queue by propagating lower bounds up the tree;
+      select next prefix by traversing path to node with smallest lower bound
+      (implement as a separate algorithm)
+
+- [ ] Can we eliminate the BFS queue by implementing BFS via tree traversal?
+
+- [ ] Add permutation map to `bbound_stochastic`
 
 ## ProPublica COMPAS dataset
 
@@ -147,10 +171,6 @@ some experiments in a reasonable amount of time but not others.  Now that
 we have a C++ implementation that is more than an order of magnitude faster,
 it would be valuable to try rerunning these experiments to see what happens.
 Note the command run, approximate total time and machine used to run each experiment.
-
-- [ ] Estimate the size (in memory) of the permutation map compared to the cache --
-      compare experiments for a fixed `max_num_nodes` with and without the
-      permutation map.  Should we consider an alphabetical tree?
 
 ### tdata_R (Elaine)
 
