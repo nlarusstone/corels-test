@@ -83,13 +83,16 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Estimate the size (in memory) of the queue -- should we try to eliminate it?
       The queue is especially annoying if it retains many prefixes marked as deleted
-      and is difficult to garbage collect.  However, it seems small compared to
-      the cache, e.g., the following policies seem to use similar amounts of memory
-      (stochastic with no queue or permutation map vs. bfs queue without pmap)
+      and is difficult to garbage collect.  However, it seems small compared to the cache,
+      e.g., consider the following policies (curious lower bound queue with permutation map
+      vs. stochastic with no queue or permutation map vs. bfs queue without pmap) --
+      not truly a fair comparison because the distributions of prefix lengths differ
 
-      `./bbcache -s -r 0.001 -n 100000000 ../data/tdata_R.out ../data/tdata_R.label`
+      `./bbcache -c 2 -p 1 -r 0.001 -n 100000000 ../data/tdata_R.out ../data/tdata_R.label` (15 GB)
 
-      `./bbcache -b -p 0 -r 0.001 -n 100000000 ../data/tdata_R.out ../data/tdata_R.label`
+      `./bbcache -s -r 0.001 -n 22460425 ../data/tdata_R.out ../data/tdata_R.label` (4 GB)
+
+      `./bbcache -b -p 0 -r 0.001 -n 22460425 ../data/tdata_R.out ../data/tdata_R.label` (4.2 GB)
 
 - [ ] Eliminate curious lower bound queue by propagating lower bounds up the tree;
       select next prefix by traversing path to node with smallest lower bound
