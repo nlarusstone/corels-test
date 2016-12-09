@@ -82,6 +82,8 @@ Claim items by adding your name, and check them off when complete :)
       permutation map.  Should we consider an alphabetical tree?
 
 - [ ] Estimate the size (in memory) of the queue -- should we try to eliminate it?
+      The queue is especially annoying if it retains many prefixes marked as deleted
+      and is difficult to garbage collect
 
 - [ ] Eliminate curious lower bound queue by propagating lower bounds up the tree;
       select next prefix by traversing path to node with smallest lower bound
