@@ -83,13 +83,21 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Estimate the size (in memory) of the queue -- should we try to eliminate it?
       The queue is especially annoying if it retains many prefixes marked as deleted
-      and is difficult to garbage collect
+      and is difficult to garbage collect.  However, it seems small compared to
+      the cache, e.g., the following policies seem to use similar amounts of memory
+      (stochastic with no queue or permutation map vs. bfs queue without pmap)
+
+      `./bbcache -s -r 0.001 -n 100000000 ../data/tdata_R.out ../data/tdata_R.label`
+
+      `./bbcache -b -p 0 -r 0.001 -n 100000000 ../data/tdata_R.out ../data/tdata_R.label`
 
 - [ ] Eliminate curious lower bound queue by propagating lower bounds up the tree;
       select next prefix by traversing path to node with smallest lower bound
       (implement as a separate algorithm)
 
 - [ ] Can we eliminate the BFS queue by implementing BFS via tree traversal?
+
+- [ ] Add permutation map to `bbound_stochastic`
 
 ## ProPublica COMPAS dataset
 
