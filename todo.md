@@ -47,9 +47,18 @@ Claim items by adding your name, and check them off when complete :)
       a trie lookup in the special case of a curious queue ordered by lower bound,
       in which case it could be considerably faster -- maybe want to specialize `queue_select`?
 
-- [x] Garbage collect the permutation map when a level is complete
+- [x] Garbage collect entries in permutation map smaller than `_state.queue_min_length`
 
-- [x] Add permutation map size to logger
+- [ ] Garbage collect the permutation map when a level is complete --
+      trigger on flag set when `logger.decPrefixLen(n)` yields `_state.prefix_lens[n] == 0`
+
+- [x] Add permutation map size to logger at `_state.pmap_size`
+
+- [x] How many times do we look up an item in the hash map that is not in the tree --
+      add to logger at `_state.pmap_null_lookup`
+
+- [ ] When we do look up an item, how many times do we end up discarding
+      something we would have been unable to discard had we not done this
 
 - [ ] If garbage collecting the cache and queue would reduce the size of the queue
       by at least some factor (e.g., 10%) then do so -- can't iterate over
