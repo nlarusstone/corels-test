@@ -5,13 +5,6 @@ Claim items by adding your name, and check them off when complete :)
 
 ## bbound improvements
 
-- [ ] If garbage collecting the cache and queue would reduce the size of the queue
-      by at least some factor (e.g., 10%) then do so -- can't iterate over
-      `std::priority_queue` so this would require a different data structure (Elaine)
-
-- [ ] Garbage collect the permutation map when a level is complete (almost finished) --
-      make this dead simple for BFS (no need to iterate), make this optional (Elaine)
-
 - [ ] Add permutation map size to logger (Elaine)
 
 - [x] Change the default regularization parameter to c = 0.01
@@ -38,14 +31,11 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Can we answer Margo's questions about the effects of the permutation map?
       See the bulleted list at the start of the experiments section of the paper,
-      and Margo and Elaine's emails from Nov 1.
+      and Margo and Elaine's emails from Nov 1. (probably Elaine)
 
 - [ ] What else should we measure?  E.g., think about time spent deleting nodes
       from the cache, garbage collection triggered by a new best objective value,
       etc.
-
-- [ ] Estimate size (in memory) of the permutation map compared to the cache --
-      should we consider an alphabetical tree?
 
 - [ ] Consolidate algorithm state in the logger object
 
@@ -54,6 +44,21 @@ Claim items by adding your name, and check them off when complete :)
 - [x] Handle case where (current best) rule list is the empty rule list
 
 - [x] Track current lower bound and enable curiosity based on lower bound
+
+- [ ] The lower bound check before the call to `evaluate_children` does NOT require
+      a trie lookup in the special case of a curious queue ordered by lower bound,
+      in which case it could be considerably faster -- maybe want to specialize `queue_select`?
+
+- [x] Garbage collect the permutation map when a level is complete
+
+- [ ] If garbage collecting the cache and queue would reduce the size of the queue
+      by at least some factor (e.g., 10%) then do so -- can't iterate over
+      `std::priority_queue` so this would require a different data structure,
+      e.g., a custom subclass
+
+- [ ] Simplify permutation map garbage collection in the case of BFS -- no need to iterate
+
+- [ ] Make permutation map garbage collection optional
 
 ## ProPublica COMPAS dataset
 
@@ -125,26 +130,30 @@ we have a C++ implementation that is more than an order of magnitude faster,
 it would be valuable to try rerunning these experiments to see what happens.
 Note the command run, approximate total time and machine used to run each experiment.
 
+- [ ] Estimate the size (in memory) of the permutation map compared to the cache --
+      compare experiments for a fixed `max_num_nodes` with and without the
+      permutation map.  Should we consider an alphabetical tree?
+
 ### tdata_R (Elaine)
 
 On the tic-tac-toe dataset with `c = 0.001`, going from curiosity without the permutation
 map to curiosity with the permutation map yields a speedup of > 100x :)
 
-- [x] tdata_R with c = 0.001, curiosity, permutation map (< 10 s on Elaine's home MacBook Pro)
+- [x] tdata_R with c = 0.001, curiosity, permutation map (< 10 s on Elaine's home MacBook Pro) **completed**
 
     `./bbcache -c 1 -p 1 -r 0.001 -n 100000 ../data/tdata_R.out ../data/tdata_R.label`
 
-- [x] tdata_R with c = 0.01, curiosity, permutation map (~ 10 min on Elaine's home MacBook Pro)
+- [x] tdata_R with c = 0.01, curiosity, permutation map (~ 10 min on Elaine's home MacBook Pro) **completed**
 
     `./bbcache -c 1 -p 1 -r 0.01 -n 1000000 ../data/tdata_R.out ../data/tdata_R.label`
 
 - [x] tdata_R with c = 0.001, breadth-first, permutation map, 10^9
 
-    Incomplete result: best has length 4 after ~ 9060 s (~ 150 min), ~ 375GB memory on beepbooop
+    Incomplete result: best has length 4 after ~ 9060 s (~ 150 min), ~ 375 GB on beepbooop
 
     `./bbcache -b -p 1 -r 0.001 -n 1000000000 ../data/tdata_R.out ../data/tdata_R.label`
 
-- [x] tdata_R with c = 0.001, curiosity (~ 1050 s on Elaine's home MacBook Pro; quickly finds optimal)
+- [x] tdata_R with c = 0.001, curiosity (~ 1050 s on Elaine's home MacBook Pro; quickly finds optimal) **completed**
 
     `./bbcache -c 1 -p 0 -r 0.001 -n 100000 ../data/tdata_R.out ../data/tdata_R.label`
 
@@ -152,9 +161,9 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -b -p 0 -r 0.001 ../data/tdata_R.out ../data/tdata_R.label`
 
-- [ ] tdata_R with c = 0.001, curious lower bound, permutation map
+- [x] tdata_R with c = 0.001, curious lb, permutation map, 10^8 (~ 110 s for best, ~145 s to clear queue, ~ 15 GB on beepboop) **completed**
 
-    `./bbcache -c 2 -p 1 -r 0.001 ../data/tdata_R.out ../data/tdata_R.label`
+    `./bbcache -c 2 -p 1 -r 0.001 -n 100000000 ../data/tdata_R.out ../data/tdata_R.label`
 
 ### small datasets:  bcancer, cars, haberman, monks1, monks2, monks3, votes (Elaine)
 
@@ -162,7 +171,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 * Verified best for c = 0.03, haberman, has length 0, 0.26471 (n = 306)
 * Verified best for c = 0.03, monks2, has length 0, 0.32870 (n = 432)
 
-- [x] c = 0.03, cars, permutation map 10^8 (~ 3500 s, checks up to length 5) **completed**
+- [x] c = 0.03, cars, permutation map, 10^8 (~ 3500 s, checks up to length 5) **completed**
 
     `./bbcache -b -p 1 -r 0.03 -n 100000000 ../data/cars.out ../data/cars.label`
 
