@@ -95,11 +95,11 @@ might prefer to use `seaborn` (which is built on top of `matplotlib`).  Feel
 free to use whatever data analysis and visualization tools you prefer, including
 Jupyter notebooks!
 
-- [ ] Set up a framework for doing 10-fold cross-validation -- keep in mind that
+- [X] Set up a framework for doing 10-fold cross-validation -- keep in mind that
       we'll want to run the same, randomly generated 10 folds on both our algorithms
       and competing algorithms. (Nicholas)
 
-- [ ] Consider setting up a script that will run the 10 folds in parallel.
+- [ ] Consider setting up a script that will run the 10 folds in parallel. (Nicholas)
 
 - [ ] Set up scripts to help run and manage experiments (probably bash and/or Python),
       and automatically analyze logs
