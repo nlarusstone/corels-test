@@ -56,8 +56,7 @@ Claim items by adding your name, and check them off when complete :)
 
 - [x] Garbage collect entries in permutation map smaller than `_state.queue_min_length`
 
-- [ ] Garbage collect the permutation map when a level is complete --
-      trigger on flag set when `logger.decPrefixLen(n)` yields `_state.prefix_lens[n] == 0`
+- [ ] Garbage collect the permutation map of prefixes longer than the maximum prefix length
 
 - [x] Add permutation map size to logger at `_state.pmap_size`
 
