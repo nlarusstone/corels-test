@@ -3,6 +3,13 @@
 Feel free to edit and please add any items or even sections that come to mind.
 Claim items by adding your name, and check them off when complete :)
 
+## datasets
+
+- [ ] Look for a large (classification) dataset at [Kaggle](https://www.kaggle.com/datasets)
+
+- [ ] Look for a large (classification) dataset at the
+      [UCI repository](https://archive.ics.uci.edu/ml/datasets.html?format=&task=cla&att=&area=&numAtt=&numIns=&type=&sort=nameUp&view=table)
+
 ## bbound improvements
 
 - [x] Change the default regularization parameter to c = 0.01
