@@ -34,10 +34,6 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Make R/Python binding so it is easier to run experiments. (Daniel)
 
-- [ ] Can we answer Margo's questions about the effects of the permutation map?
-      See the bulleted list at the start of the experiments section of the paper,
-      and Margo and Elaine's emails from Nov 1. (probably Elaine)
-
 - [ ] What else should we measure?  E.g., think about time spent deleting nodes
       from the cache, garbage collection triggered by a new best objective value,
       etc.
@@ -80,6 +76,18 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Should we skip symmetry-based garbage collection when
       `len(prefix) == max_prefix_len_check`?
+
+- [ ] Estimate the size (in memory) of the permutation map compared to the cache --
+      compare experiments for a fixed `max_num_nodes` with and without the
+      permutation map.  Should we consider an alphabetical tree?
+
+- [ ] Estimate the size (in memory) of the queue -- should we try to eliminate it?
+
+- [ ] Eliminate curious lower bound queue by propagating lower bounds up the tree;
+      select next prefix by traversing path to node with smallest lower bound
+      (implement as a separate algorithm)
+
+- [ ] Can we eliminate the BFS queue by implementing BFS via tree traversal?
 
 ## ProPublica COMPAS dataset
 
@@ -150,10 +158,6 @@ some experiments in a reasonable amount of time but not others.  Now that
 we have a C++ implementation that is more than an order of magnitude faster,
 it would be valuable to try rerunning these experiments to see what happens.
 Note the command run, approximate total time and machine used to run each experiment.
-
-- [ ] Estimate the size (in memory) of the permutation map compared to the cache --
-      compare experiments for a fixed `max_num_nodes` with and without the
-      permutation map.  Should we consider an alphabetical tree?
 
 ### tdata_R (Elaine)
 
