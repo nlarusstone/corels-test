@@ -5,8 +5,6 @@ Claim items by adding your name, and check them off when complete :)
 
 ## bbound improvements
 
-- [ ] Add permutation map size to logger (Elaine)
-
 - [x] Change the default regularization parameter to c = 0.01
 
 - [x] Write out wall clock timestamps, including final total time, to stdout messages
@@ -50,6 +48,8 @@ Claim items by adding your name, and check them off when complete :)
       in which case it could be considerably faster -- maybe want to specialize `queue_select`?
 
 - [x] Garbage collect the permutation map when a level is complete
+
+- [x] Add permutation map size to logger
 
 - [ ] If garbage collecting the cache and queue would reduce the size of the queue
       by at least some factor (e.g., 10%) then do so -- can't iterate over
