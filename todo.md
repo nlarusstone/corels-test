@@ -10,6 +10,8 @@ Claim items by adding your name, and check them off when complete :)
 - [ ] Look for a large (classification) dataset at the
       [UCI repository](https://archive.ics.uci.edu/ml/datasets.html?format=&task=cla&att=&area=&numAtt=&numIns=&type=&sort=nameUp&view=table)
 
+- [ ] Look at the datasets from Stat 220 (Elaine)
+
 ## bbound improvements
 
 - [x] Change the default regularization parameter to c = 0.01
@@ -74,9 +76,6 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Make permutation map garbage collection optional
 
-- [ ] Should we skip symmetry-based garbage collection when
-      `len(prefix) == max_prefix_len_check`?
-
 - [ ] Estimate the size (in memory) of the permutation map compared to the cache --
       compare experiments for a fixed `max_num_nodes` with and without the
       permutation map.  Should we consider an alphabetical tree?
@@ -100,7 +99,13 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Can we eliminate the BFS queue by implementing BFS via tree traversal?
 
-- [ ] Add permutation map to `bbound_stochastic`
+- [x] Add permutation map to `bbound_stochastic`
+
+- [ ] Implement back-off and test on adult dataset (Elaine)
+
+- [ ] Implement calculation for tighter bound on size of remaining search space (Elaine)
+
+- [ ] Calculate above bound in a separate process
 
 ## ProPublica COMPAS dataset
 
@@ -230,7 +235,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
     `./bbcache -b -p 1 -r 0.03 -n 1000000000 ../data/monks2.out ../data/monks2.label`
 
 * Verified best for c = 0.02, bcancer, has length 1, 0.06832 (n = 683)
-* Best known for c = 0.02, cars, has length 3, 0.13523 (via bfs) (n = 1728)
+* Verified best for c = 0.02, cars, has length 3, 0.13523 (via bfs) (n = 1728)
 * Best known for c = 0.02, haberman, has length 1, 0.25856 (n = 306)
 * Best known for c = 0.02, monks2, has length 7, 0.315926 (via curiosity) (n = 432)
 
@@ -246,7 +251,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -c 1, -p 1 -r 0.02 -n 100000000 ../data/cars.out ../data/cars.label`
 
-- [x] c = 0.02, cars, permutation map, 10^9 (~ 143280 s, checks up to length 6, ~ 105 GB on beepboop)
+- [x] c = 0.02, cars, permutation map, 10^9 (~ 143280 s, checks up to length 6, ~ 105 GB on beepboop) **completed**
 
     `./bbcache -b -p 1 -r 0.02 -n 1000000000 ../data/cars.out ../data/cars.label`
 
