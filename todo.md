@@ -246,7 +246,7 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -c 1, -p 1 -r 0.02 -n 100000000 ../data/cars.out ../data/cars.label`
 
-- [ ] c = 0.02, cars, permutation map, 10^9 (checks up to length 6, ~ 105 GB on beepboop?)
+- [x] c = 0.02, cars, permutation map, 10^9 (~ 143280 s, checks up to length 6, ~ 105 GB on beepboop)
 
     `./bbcache -b -p 1 -r 0.02 -n 1000000000 ../data/cars.out ../data/cars.label`
 
