@@ -1,6 +1,6 @@
 #!/usr/bin/env Rscript
 # https://en.wikibooks.org/wiki/Data_Mining_Algorithms_In_R/Classification/JRip
-install.packages("caret", dependencies = TRUE)
+install.packages("caret", dependencies = TRUE, repos="http://cran.rstudio.com/")
 
 library(caret)
 library(RWeka)
