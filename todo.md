@@ -151,7 +151,7 @@ Jupyter notebooks!
       we'll want to run the same, randomly generated 10 folds on both our algorithms
       and competing algorithms. (Nicholas)
 
-- [ ] Consider setting up a script that will run the 10 folds in parallel. (Nicholas)
+- [X] Consider setting up a script that will run the 10 folds in parallel. (Nicholas)
 
 - [ ] Set up scripts to help run and manage experiments (probably bash and/or Python),
       and automatically analyze logs
@@ -442,11 +442,13 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
       papers provide good starting points.  If you find anything new that you think is
       important, add the bibtex info as well as a couple sentences describing the work.
 
-- [ ] Summarize Ben's and Hongyu's papers and describe how our work
+- [X] Summarize Ben's and Hongyu's papers and describe how our work
       relates, builds on, and differs from their recent work (1 paragraph) -- remember
       that we're using the same rule mining approach as both as well as the rule library (Nicholas)
 
-- [ ] Summarize the Garofalakis papers (1 paragraph) (Nicholas)
+- [X] Summarize the Garofalakis papers (1 paragraph) (Nicholas)
+
+- [ ] Summarize the ProPublica paper (1 paragraph) (Nicholas)
 
 - [ ] Everything else (Cynthia)
 
