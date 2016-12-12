@@ -1,0 +1,37 @@
+\documentclass[aoas,preprint]{imsart}
+\usepackage{fullpage}
+\setattribute{journal}{name}{}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+
+\usepackage{graphicx,verbatim}
+\usepackage[round]{natbib}
+\usepackage{url}
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{todonotes}
+\usepackage{subfig}
+\usepackage{dsfont}
+\usepackage{listings}
+\usepackage{comment}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+
+\input{latex_macros}
+\frenchspacing
+\hyphenation{speed-up}
+
+\begin{document}
+
+\section{Related Work}
+
+BRL and SBRL
+	Recent work in the field of decision lists has focused on the creation of probabilistic decision lists that generate a posterior distribution over the space of potential decision lists\citep{LethamRuMcMa15,YangRuSe16}. These methods achieve good accuracy while maintaining a small execution time. In addition, these methods improve on existing methods such as CART or C5.0 by optimizing over the global space of decision lists as opposed to searching for rules greedily and getting stuck at local optima. We take the same approach towards optimizing over the global search space, though we don’t use probabilistic techniques. In addition, we use the rule mining framework from \citep{LethamRuMcMa15} to generate the rules for our data sets. \citep{YangRuSe16} builds on \citep{LethamRuMcMa15} by placing bounds on the search space and creating a high performance bit vector manipulation library. We use that bit vector manipulation library to perform our computations, and add additional bounds to further prune the search space.Garofalakis
+Efficient Algorithms for Constructing Decision Trees with Constraints, Scalable Data Mining with Model Constraints, Building Decision Trees with Constraints	Our use of a branch and bound technique has also been applied to decision tree generation methods. \citep{garofalakis:2000-kdd} created an algorithm to generate more interpretable decision trees by allowing one to constrain the size of the decision tree. \citep{garofalakis:2000-kdd} uses branch-and-bound to constrain the size of the search space and limit the eventual size of the decision tree. During tree construction, \citep{garofalakis:2000-kdd} bounds the possible MDL cost of every different split at a given node. If every split at that node is more expensive than the actual cost of the current subtree, then that node can be pruned. In this way, they were able to prune the tree while constructing it instead of just constructing the tree and then pruning at the end.ProPublica
+	Certain problems require that the model used to solve that problem be interpretable as well as accurate. \citep{LarsonMaKiAn16} examines the problem of predicting recidivism and shows that a black box model, specifically the COMPAS score from the company Northpointe, has racially biased prediction. Black defendants are misclassified at a higher risk for recidivism than in actuality, while white defendants are misclassified at a lower risk. The model which produces the COMPAS scores is a black box algorithm which is not interpretable, and therefore the model does not provide a way for human input to correct for these racial biases. Our model produces similar accuracies to the logistic regression and COMPAS scores from \citep{LarsonMaKiAn16} while maintaining its interpretability.
+
+\bibliographystyle{abbrvnat}
+\bibliography{refs}
+
+\end{document}
