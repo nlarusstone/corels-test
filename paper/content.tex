@@ -903,7 +903,7 @@ For any such prefix~$\Prefix$, Theorem~\ref{thm:ub-prefix-specific}
 gives an upper bound on the length of any prefix~$\Prefix'$
 that starts with~$\Prefix$:
 \begin{align}
-L(\Prefix') \le \min \left( L(\Prefix) + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor \right)
+L(\Prefix') \le \min \left( L(\Prefix) + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor, M \right)
 \equiv U(\Prefix).
 \end{align}
 This gives an upper bound on the number of remaining prefix evaluations:
