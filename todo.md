@@ -103,7 +103,7 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Implement back-off and test on adult dataset (Elaine)
 
-- [ ] Implement calculation for tighter bound on size of remaining search space (Elaine)
+- [ ] Implement (during execution) calculation for tighter bound on size of remaining search space (Elaine)
 
 - [ ] Calculate above bound in a separate process
 
