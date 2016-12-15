@@ -103,9 +103,16 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Implement back-off and test on adult dataset (Elaine)
 
-- [ ] Implement calculation for tighter bound on size of remaining search space (Elaine)
+- [x] Implement (during execution) calculation for tighter bound on size of remaining search space (Elaine)
+
+- [ ] The above bound seems to incur about a 10% overhead (in time),
+      so add an option to switch this off and instead use the coarse-grain bound (Elaine)
 
 - [ ] Calculate above bound in a separate process
+
+- [ ] Properly calculate log10 of the remaining search space --
+      see `getLogRemainingSpaceSize()` in `utils.hh` --
+      you'll probably need to either write your own function or switch from `mpz` to `mpfr`
 
 ## ProPublica COMPAS dataset
 
