@@ -19,10 +19,22 @@ def parse_prefix_lengths(p):
 def parse_prefix_sums(p):
     return np.sum([int(q.split(':')[1]) for q in p.split(';') if q])
 
-# Command run:  ./bbcache -c 2 -p 1 -r 0.01 -n 5000000 ../data/adult_R.out ../data/adult_R.label
+# Command run:  ./bbcache -c 2 -p 1 -r 0.01 -n 100000000 ../data/adult_R.out ../data/adult_R.label
+# Yields log file with 737 records, 36 min, 55.1 GB, log10(remaining)=41, 1:79;2:22575;3:1256910;4:17501189;5:66508648;6:9902191;
+log_fname = 'for-adult_R.out-curious_lb-with_prefix_perm_map-max_num_nodes=100000000-c=0.0100000-v=1-f=1000.txt'
+ftag = 'ela_adult_lb'
+
+# Command run:  ./bbcache -c 1 -p 1 -r 0.01 -n 10000000 ../data/adult_R.out ../data/adult_R.label
+# Yields log file with 75 records
+#log_fname = 'for-adult_R.out-curiosity-with_prefix_perm_map-max_num_nodes=10000000-c=0.0100000-v=1-f=1000.txt'
+#ftag = 'ela_adult_curious'
+
+# Command run:  ./bbcache -b -p 1 -r 0.01 -n 100000000 ../data/adult_R.out ../data/adult_R.label
+# Yields log file with 1679 records, 51 min, 39.6 GB, down to log10(remaining)=45, 3:1769406;4:66303578;
+#log_fname = 'for-adult_R.out-bfs-with_prefix_perm_map-max_num_nodes=100000000-c=0.0100000-v=1-f=1000.txt'
+#ftag = 'ela_adult_bfs'
 
 log_dir = '../logs/'
-log_fname = 'for-adult_R.out-curious_lb-with_prefix_perm_map-max_num_nodes=5000000-c=0.0100000-v=1-f=1000.txt'
 
 lw = 2  # linewidth
 ms = 9  # markersize
@@ -45,28 +57,34 @@ print "num records:", len(x)
 print "time to achieve optimum:", tmin
 print "time to verify optimum:", x['total_time'][-1]
 
-pylab.ion()
+pylab.ioff()
 pylab.figure(1)
 pylab.clf()
 pylab.subplot(2, 1, 1)
 pylab.plot(x['total_time'], x['tree_min_objective'], 'b-', linewidth=lw)
+if ('curious_lb' in log_fname):
+    pylab.plot(x['total_time'], x['current_lower_bound'], ':', color='gray', linewidth=lw)
+
 pylab.plot(x['total_time'][1], default_objective, 'co', markersize=ms)
 pylab.plot(x['total_time'][imin], x['tree_min_objective'][imin], 'ms', markersize=ms)
 ax = list(pylab.axis())
 ax[0] = -0.04
-#ax[2] = -0.01
+ax[2] = 0.0
 #ax[3] = 0.51
 pylab.axis(ax)
 #pylab.xlabel('time (s)', fontsize=fs)
-pylab.ylabel('objective', fontsize=fs)
-pylab.title('current best objective during execution', fontsize=fs)
+pylab.ylabel('value', fontsize=fs)
+pylab.title('progress during execution', fontsize=fs)
 pylab.xticks(fontsize=(fs-2))
 pylab.yticks(fontsize=(fs-2))
-pylab.legend(['complete execution'])
+if ('curious_lb' in log_fname):
+    pylab.legend(['current best objective', 'lower bound'])
+else:
+    pylab.legend(['current best objective'])
 
+"""
 pylab.subplot(2, 1, 2)
 pylab.plot(x['total_time'][:(imin+1)], x['tree_min_objective'][:(imin+1)], 'b-', linewidth=lw)
-
 if ('curious_lb' in log_fname):
     pylab.plot(x['total_time'][:(imin+1)], x['current_lower_bound'][:(imin+1)], ':', color='gray', linewidth=lw)
 
@@ -84,7 +102,8 @@ pylab.ylabel('objective', fontsize=fs)
 pylab.xticks(fontsize=(fs-2))
 pylab.yticks(fontsize=(fs-2))
 pylab.legend(['optimization phase'])
-pylab.savefig('../figs/ela_adult_lb-objective.png')
+"""
+pylab.savefig('../figs/%s-objective.png' % ftag)
 pylab.draw()
 
 pylab.figure(2)
@@ -98,10 +117,10 @@ pylab.ylabel('size', fontsize=fs)
 pylab.title('data structure size', fontsize=fs)
 pylab.xticks(fontsize=(fs-2))
 pylab.yticks(fontsize=(fs-2))
-ax = list(pylab.axis())
-ax[3] = 7100
-pylab.axis(ax)
-pylab.legend(['cache', 'physical queue', 'logical queue'], fontsize=(fs-1))
+#ax = list(pylab.axis())
+#ax[3] = 7100
+#pylab.axis(ax)
+pylab.legend(['cache', 'physical queue', 'logical queue'], fontsize=(fs-1), loc='lower right')
 
 pylab.subplot2grid((10, 1), (7, 0), rowspan=3)
 pylab.plot(x['total_time'], x['tree_insertion_num'], 'b-', linewidth=lw)
@@ -111,7 +130,7 @@ pylab.title('cumulative number of cache (= queue) insertions', fontsize=fs)
 pylab.xticks(fontsize=(fs-2))
 pylab.yticks(fontsize=(fs-2))
 pylab.draw()
-pylab.savefig('../figs/ela_adult_lb-queue-cache-size-insertions.png')
+pylab.savefig('../figs/%s-queue-cache-size-insertions.png' % ftag)
 
 max_length = max(set([int(lc.split(':')[0]) for lc in ''.join(x['prefix_lengths']).split(';') if lc]))
 split_hist = [[lc.split(':') for lc in lh.strip(';').split(';')] for lh in x['prefix_lengths']]
@@ -124,15 +143,15 @@ color_vec = ['r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'violet', 'm', 'gray',
 pylab.figure(6)
 pylab.clf()
 for length in range(max_length + 1):
-    pylab.plot(x['total_time'], zc[:, length], color=color_vec[length])
-pylab.legend([str(length) for length in range(max_length + 1)])
+    pylab.plot(x['total_time'], zc[:, length], color=color_vec[length % len(color_vec)])
+pylab.legend([str(length) for length in range(max_length + 1)], loc='upper left')
 pylab.xlabel('time (s)', fontsize=fs)
 pylab.ylabel('count', fontsize=fs)
 pylab.title('logical queue size broken down by prefix length')
 pylab.xticks(fontsize=(fs-2))
 pylab.yticks(fontsize=(fs-2))
 pylab.draw()
-pylab.savefig('../figs/ela_adult_lb-queue.png')
+pylab.savefig('../figs/%s-queue.png' % ftag)
 
 pylab.figure(7)
 pylab.clf()
@@ -146,8 +165,9 @@ pylab.yticks(fontsize=(fs-2))
 ax = list(pylab.axis())
 ax[3] = ax[3] + 0.2
 pylab.axis(ax)
-pylab.legend(['complete execution'], loc='lower right')
+pylab.legend(['incomplete execution'], loc='lower right')
 
+"""
 pylab.subplot(2, 1, 2)
 pylab.plot(x['total_time'][:(imin+1)], x['tree_prefix_length'][:(imin+1)], 'b-', linewidth=lw)
 pylab.xlabel('time (s)', fontsize=fs)
@@ -159,8 +179,9 @@ ax = list(pylab.axis())
 ax[3] = ax[3] + 0.2
 pylab.axis(ax)
 pylab.legend(['optimization phase'], loc='lower right')
+"""
 pylab.draw()
-pylab.savefig('../figs/ela_adult_lb-prefix-length.png')
+pylab.savefig('../figs/%s-prefix-length.png' % ftag)
 
 max_len_check = x['tree_min_objective'] / c
 max_len_check[max_len_check > nrules] = nrules
@@ -187,7 +208,7 @@ pylab.xticks(fontsize=(fs-2))
 pylab.yticks(fontsize=(fs-2))
 pylab.legend(['optimization phase'])
 pylab.draw()
-pylab.savefig('../figs/ela_adult_lb-max-length-check.png')
+pylab.savefig('../figs/%s-max-length-check.png' % ftag)
 
 # need to handle entries where remaining state space = 0
 
@@ -200,8 +221,9 @@ pylab.ylabel('log10(size)', fontsize=fs)
 pylab.title('log10(size of remaining search space)', fontsize=fs)
 pylab.xticks(fontsize=(fs-2))
 pylab.yticks(fontsize=(fs-2))
-pylab.legend(['complete execution'])
+pylab.legend(['incomplete execution'])
 
+"""
 pylab.subplot(3, 1, 2)
 pylab.plot(x['total_time'][:(imin+1)], x['log_remaining_space_size'][:(imin+1)], 'b-', linewidth=lw)
 pylab.xlabel('time (s)', fontsize=fs)
@@ -217,7 +239,9 @@ pylab.ylabel('log10(size)', fontsize=fs)
 pylab.xticks(fontsize=(fs-2))
 pylab.yticks(fontsize=(fs-2))
 pylab.legend(['verification phase'], loc='lower left')
-pylab.savefig('../figs/ela_adult_lb-remaining-space.png')
+"""
+
+pylab.savefig('../figs/%s-remaining-space.png' % ftag)
 pylab.draw()
 
 evaluate_time = x['evaluate_children_time'] - x['tree_insertion_time'] - x['permutation_map_insertion_time']
@@ -232,7 +256,7 @@ pylab.ylabel('count', fontsize=fs)
 pylab.title('cumulative number of cache (= queue) insertions', fontsize=fs)
 pylab.xticks(fontsize=(fs-2))
 pylab.yticks(fontsize=(fs-2))
-pylab.savefig('../figs/ela_adult_lb-cumulative-insertions.png')
+pylab.savefig('../figs/%s-cumulative-insertions.png' % ftag)
 pylab.draw()
 
 pylab.figure(5)
@@ -247,7 +271,7 @@ pylab.plot(x['total_time'], y[3], ':', color='gray', linewidth=lw) # node select
 pylab.xlabel('time (s)', fontsize=fs)
 pylab.ylabel('time (s)', fontsize=fs)
 pylab.legend(['total', 'prefix + rule list evaluation', 'permutation map', 'cache insertion', 'node selection'], loc='upper left')
-pylab.savefig('../figs/ela_adult_lb-time.png')
+pylab.savefig('../figs/%s-time.png' % ftag)
 pylab.draw()
 
 """
