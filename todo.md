@@ -101,7 +101,7 @@ Claim items by adding your name, and check them off when complete :)
 
 - [x] Add permutation map to `bbound_stochastic`
 
-- [ ] Implement back-off and test on adult dataset (Elaine)
+- [ ] Implement back-off and test on adult dataset (Nicholas)
 
 - [x] Implement (during execution) calculation for tighter bound on size of remaining search space (Elaine)
 
