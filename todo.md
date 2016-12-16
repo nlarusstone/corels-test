@@ -247,3 +247,8 @@ A place to note things we haven't implemented, but might
 - [ ] Different priority metrics: objective
 - [ ] Priority metric that blends between breadth-first and curiosity (non-stochastic)
 - [ ] Enforce that the output optimal rule list is the simplest
+
+## README, GNUmakefile, and dependencies
+
+- [ ] Remove unnecessary dependencies from GNUmakefile (e.g., profiling tools)
+- [ ] Update `readme.md` to explain all dependencies
