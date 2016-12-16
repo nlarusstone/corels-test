@@ -14,12 +14,6 @@ Claim items by adding your name, and check them off when complete :)
 
 ## bbound improvements
 
-- [x] Change the default regularization parameter to c = 0.01
-
-- [x] Write out wall clock timestamps, including final total time, to stdout messages
-
-- [x] Write out rule list accuracy (in addition to objective value)
-
 - [x] Write out human-readable representation of optimal rule list
 
 - [x] Bonus: Write out tex representation of optimal rule list (see Fig. 1 in paper)
@@ -42,22 +36,9 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Consolidate algorithm state in the logger object
 
-- [x] Customize Makefile for Darwin (fix library dependencies)
-
-- [x] Handle case where (current best) rule list is the empty rule list
-
-- [x] Track current lower bound and enable curiosity based on lower bound
-
 - [ ] The lower bound check before the call to `evaluate_children` does NOT require
       a trie lookup in the special case of a curious queue ordered by lower bound,
       in which case it could be considerably faster -- maybe want to specialize `queue_select`?
-
-- [x] Garbage collect entries in permutation map smaller than `_state.queue_min_length`
-
-- [x] Simplify permutation map garbage collection in the case of BFS --
-      use `std::map::clear` instead of iterating
-
-- [x] Add permutation map size to logger at `_state.pmap_size`
 
 - [ ] Garbage collect the permutation map of prefixes longer than the maximum prefix length
 
@@ -99,8 +80,6 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Can we eliminate the BFS queue by implementing BFS via tree traversal?
 
-- [x] Add permutation map to `bbound_stochastic`
-
 - [ ] Implement back-off and test on adult dataset (Nicholas)
 
 - [x] Implement (during execution) calculation for tighter bound on size of remaining search space (Elaine)
@@ -131,20 +110,7 @@ Claim items by adding your name, and check them off when complete :)
 
 ## Rule mining
 
-- [x] Investigate whether there's a problem with how we're using Ben's rule mining code.
-      Elaine wrote `code/ben.py`, which modifies `BRL_code.py` from Cynthia's website.
-      The `small()` function at the end of `ben.py` is used to generate the small datasets.
-      The issue is that we seem to get some duplicate rules (e.g., a rule of the form
-      `A AND B` as well as `B AND A`) -- e.g., I think that `data/bcancer.out` has this
-      problem.  Figure out what the issue is and/or filter the rules to remove duplicates,
-      before the output file is created. (Nicholas)
-
-- [x] Next, fix the small dataset files (x.out, x = bcancer, cars, haberman, monks1, monks2, monks3, votes)
-      by running `small(din='../data/small', dout='../data', maxlhs=2, minsupport=1)`.
-      Check these new files into the repo.  Below, note the number of mined rules for each dataset. (Nicholas)
-      Note: Elaine re-ran this with `minsupport=1`
-
-- [ ] Also fix the telco file.  Make sure to use `maxlhs=2` and `minsupport=1`.
+- [ ] Fix the telco file.  Make sure to use `maxlhs=2` and `minsupport=1`.
 
 ## Framework for experiments and analysis
 
@@ -177,8 +143,6 @@ Jupyter notebooks!
       Does this change during execution?  See `eval/scratch.py` for preliminary analysis.
 
 ## Experiments
-
-- [x] Find code from Cynthia's students (Cynthia)
 
 - [ ] Figure out how to use code from Cynthia's students (Daniel?)
 
