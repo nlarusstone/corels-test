@@ -14,7 +14,10 @@ Claim items by adding your name, and check them off when complete :)
 
 ## bbound improvements
 
-- [ ] `bbound_queue` currently exits at 20,000 iterations -- make this optional
+- [ ] Queue elements are printed to `queue.txt` -- make this optional,
+      consider an input file name and threshold for number of printed entries
+
+- [x] `bbound_queue` currently exits at 20,000 iterations -- make this optional
       and take an input argument for this threshold (this is used in the preliminary
       implementation of a policy that switches from curiosity to curious lower bound)
 
@@ -245,10 +248,10 @@ A place to note things we haven't implemented, but might
 - [ ] Framework aware of rules that commute
 - [ ] Framework aware of dominates relationships
 - [ ] Ability to switch between scheduling policies
-- [ ] Depth-first scheduling policy
+- [x] Depth-first scheduling policy
 - [ ] Something like Thompson sampling using curiosity
 - [x] Different priority metrics: lower bound
-- [ ] Different priority metrics: objective
+- [x] Different priority metrics: objective
 - [ ] Priority metric that blends between breadth-first and curiosity (non-stochastic)
 - [ ] Enforce that the output optimal rule list is the simplest
 
