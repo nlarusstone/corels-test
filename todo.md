@@ -151,20 +151,20 @@ Jupyter notebooks!
 
 ## Experiments
 
-- [ ] Figure out how to use code from Cynthia's students (Daniel?)
+- [x] Figure out how to use code from Cynthia's students
 
-- [ ] Identify software packages for competing algorithms (see notes in paper):
+- [x] Identify software packages for competing algorithms (see notes in paper):
       I think Daniel has done some work on this front?  Please take some notes
       here about what looks promising.
 
 - [ ] Figure out how to use these algorithms and write useful scripts for
       running experiments.  If I understand correctly, we want to use datasets
-      from before we do rule mining, e.g., see the files in `data/small/`.
+      from before we do rule mining, e.g., see the files in `data/small/`. (Daniel)
 
 - [ ] Generate Figure 2, which compares objective values and runtimes of different methods.
-      Can do this as a draft on a small dataset, like tdata.
+      Can do this as a draft on a small dataset, like tdata. (Daniel)
 
-- [ ] If we haven't yet handled 10-fold cross-validation, implement a framework for this!
+- [x] If we haven't yet handled 10-fold cross-validation, implement a framework for this!
 
 ## Writing
 
