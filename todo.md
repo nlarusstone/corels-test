@@ -14,6 +14,10 @@ Claim items by adding your name, and check them off when complete :)
 
 ## bbound improvements
 
+- [ ] `bbound_queue` currently exits at 20,000 iterations -- make this optional
+      and take an input argument for this threshold (this is used in the preliminary
+      implementation of a policy that switches from curiosity to curious lower bound)
+
 - [x] Write out human-readable representation of optimal rule list
 
 - [x] Bonus: Write out tex representation of optimal rule list (see Fig. 1 in paper)
