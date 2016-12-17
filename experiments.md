@@ -116,6 +116,10 @@ map to curiosity with the permutation map yields a speedup of > 100x :)
 
     `./bbcache -b -p 1 -r 0.01 -n 100000000 ../data/bcancer.out ../data/bcancer.label`
 
+- [x] c = 0.01, bcancer, curious lb, permutation map, 10^8 (~ 655 s, lb 0.04, ~ 48 GB on beepboop)
+
+    `./bbcache -c 2 -p 1 -r 0.01 -n 100000000 ../data/bcancer.out ../data/bcancer.label`
+
 - [ ] c = 0.01, bcancer, permutation map, 10^9
 
     `./bbcache -b -p 1 -r 0.01 -n 100000000 ../data/bcancer.out ../data/bcancer.label`
