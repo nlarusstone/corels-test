@@ -224,7 +224,7 @@ def compas3(din='../data/small', dout='../data', froot='compas', maxlhs=3, minsu
     driver(din=din, dout=dout, froot=froot, train_suffix='_binary.csv',
            delimiter=',', is_binary=True, maxlhs=maxlhs, minsupport=minsupport, out_suffix='-3')
 
-def monks3(din='../data/small', dout='../data', froot='monks3', maxlhs=3, minsupport=1):
+def monks23(din='../data/small', dout='../data', froot='monks2', maxlhs=3, minsupport=1):
     driver(din=din, dout=dout, froot=froot, train_suffix='_binary.csv',
            delimiter=',', is_binary=True, maxlhs=maxlhs, minsupport=minsupport, out_suffix='-3')
 
