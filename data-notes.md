@@ -4,16 +4,22 @@ The last column reports the number of rules mined for (max cardinality, min supp
 
 | dataset | # data | # 0 | # 1 | f. 0 | f. 1 | # dim | (2, 0.01) | done |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| bcancer | 683 | 444 | 239 | 0.65 | 0.35 | 28 | 1,336 | yes |
+| bcancer | 683 | 444 | 239 | 0.65 | 0.35 | 28 | 1,336 | **check** |
 | cars | 1,728 | 1,210 | 518 | 0.70 | 0.30 | 22 | 792 | **no** |
 | haberman | 306 | 81 | 225 | 0.26 | 0.74 | 16 | 334 | yes |
 | monks1 | 432 | 216 | 216 | 0.5 | 0.5 | 18 | 396 | yes |
-| monks2 | 432 | 290 | 142 | 0.67 | 0.33 | 18 | 396 | **skip** |
+| monks2 | 432 | 290 | 142 | 0.67 | 0.33 | 18 | 396 | **no** |
 | monks3 | 432 | 204 | 228 | 0.47 | 0.53 | 18 | 396 | yes |
 | votes | 435 | 168 | 267 | 0.39 | 0.61 | 17 | 512 | yes |
 | adult | 30,081 | 7,436 | 22,645 | 0.25 | 0.75 | ? | 283 | **no** |
 | compas | 7,214 | 3,743 | 3,471 | 0.52 | 0.48 | 30 | 1,037 | yes |
 | telco | 7,043 | 5,174 | 1,869 | 0.73 | 0.27 | 19 | 957 | **no** |
+
+## [tdata](https://archive.ics.uci.edu/ml/datasets/Tic-Tac-Toe+Endgame)
+
+**n = 958 -> 639**
+
+**Redo rule mining for tdata if we're including it**
 
 ## [adult](https://archive.ics.uci.edu/ml/datasets/Adult)
 
@@ -22,6 +28,7 @@ The last column reports the number of rules mined for (max cardinality, min supp
 **Redo rule mining for adult from original dataset**
 
 | Probability for the label '>50K'  : 23.93% / 24.78% (without unknowns)
+
 | Probability for the label '<=50K' : 76.07% / 75.22% (without unknowns)
 
 1. age: continuous. 
@@ -77,7 +84,7 @@ The last column reports the number of rules mined for (max cardinality, min supp
 
 **n = 432**
 
-**See below: monks2 doesn't look like a good problem for us**
+**See below: monks2 looks like it needs at least 3 clauses**
 
 Attribute information:
     1. class: 0, 1 
@@ -133,3 +140,17 @@ Attribute information:
 ## [bank marketing](https://archive.ics.uci.edu/ml/datasets/Bank+Marketing)
 
 **n = 45211**
+
+## [diabetes-130](https://archive.ics.uci.edu/ml/datasets/Diabetes+130-US+hospitals+for+years+1999-2008)
+
+**n = 100000**
+
+Hospital readmission for diabetes patients (contains missing data but good)
+
+Predict readmission within 30 days (or alternatively, readmission anytime)
+
+## [census-income (kdd)](https://archive.ics.uci.edu/ml/datasets/Census-Income+%28KDD%29)
+
+**n = 299285**
+
+**Weighted** census data with missing values
