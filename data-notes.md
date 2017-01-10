@@ -53,6 +53,18 @@ The last column reports the number of rules mined for (max cardinality, min supp
 14. native-country: United-States, Cambodia, England, Puerto-Rico, Canada, Germany, Outlying-US(Guam-USVI-etc), India, Japan, Greece, South, China, Cuba, Iran, Honduras, Philippines, Italy, Poland, Jamaica, Vietnam, Mexico, Portugal, Ireland, France, Dominican-Republic, Laos, Ecuador, Taiwan, Haiti, Columbia, Hungary, Guatemala, Nicaragua, Scotland, Thailand, Yugoslavia, El-Salvador, Trinadad&Tobago, Peru, Hong, Holand-Netherlands.
 15. >50K, <=50K
 
+age=Middle-aged, age=Senior, age=Young
+capital.gain=7298LessThancapital-gain, capital.gain=capital-gainEQ0, capital.loss=capital-lossEQ0
+education=Assoc-degree, education=Bachelors, education=Grad-school, education=HS-grad, education=Some-college, education=Some-high-school
+hours.per.week=Full-time, hours.per.week=Over-time, hours.per.week=Part-time
+marital.status=Married, marital.status=Never-married, marital.status=Not-married-anymore
+native.country=N-America
+occupation=Adm-clerical, occupation=Craft-repair, occupation=Exec-managerial, occupation=Other-service, occupation=Prof-specialty, occupation=Sales
+race=Black, race=White
+relationship=Husband, relationship=Not-in-family, relationship=Own-child, relationship=Unmarried
+sex=Female, sex=Male
+workclass=Gov, workclass=Private, workclass=Self-emp
+
 ## compas
 
 **Why are we excluding the following?**
