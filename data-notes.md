@@ -2,7 +2,7 @@
 
 The last column reports the number of rules mined for (max cardinality, min support)
 
-| dataset | # data | # 0 | # 1 | f. 0 | f. 1 | # dim | (2, 0.01) | success | (3, 0.01) | success |
+| name | # data | # 0 | # 1 | f. 0 | f. 1 | d | 2, .01 | note | 3, .01 | note |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | bcancer | 683 | 444 | 239 | 0.65 | 0.35 | 28 | 1,336 | **check** | 16,365 | - |
 | cars | 1,728 | 1,210 | 518 | 0.70 | 0.30 | 22 | 792 | **no** | - | - |
