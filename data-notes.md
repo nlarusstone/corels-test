@@ -2,18 +2,18 @@
 
 The last column reports the number of rules mined for (max cardinality, min support)
 
-| dataset | # data | # 0 | # 1 | f. 0 | f. 1 | # dim | (2, 0.01) | done |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| bcancer | 683 | 444 | 239 | 0.65 | 0.35 | 28 | 1,336 | **check** |
-| cars | 1,728 | 1,210 | 518 | 0.70 | 0.30 | 22 | 792 | **no** |
-| haberman | 306 | 81 | 225 | 0.26 | 0.74 | 16 | 334 | yes |
-| monks1 | 432 | 216 | 216 | 0.5 | 0.5 | 18 | 396 | yes |
-| monks2 | 432 | 290 | 142 | 0.67 | 0.33 | 18 | 396 | **no** |
-| monks3 | 432 | 204 | 228 | 0.47 | 0.53 | 18 | 396 | yes |
-| votes | 435 | 168 | 267 | 0.39 | 0.61 | 17 | 512 | yes |
-| adult | 30,081 | 7,436 | 22,645 | 0.25 | 0.75 | ? | 283 | **no** |
-| compas | 7,214 | 3,743 | 3,471 | 0.52 | 0.48 | 30 | 1,037 | yes |
-| telco | 7,043 | 5,174 | 1,869 | 0.73 | 0.27 | 19 | 957 | **no** |
+| dataset | # data | # 0 | # 1 | f. 0 | f. 1 | # dim | (2, 0.01) | success | (3, 0.01) | success |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| bcancer | 683 | 444 | 239 | 0.65 | 0.35 | 28 | 1,336 | **check** | 16,365 | - |
+| cars | 1,728 | 1,210 | 518 | 0.70 | 0.30 | 22 | 792 | **no** | - | - |
+| haberman | 306 | 81 | 225 | 0.26 | 0.74 | 16 | 334 | yes | - | - |
+| monks1 | 432 | 216 | 216 | 0.5 | 0.5 | 18 | 396 | yes | n/a | n/a |
+| monks2 | 432 | 290 | 142 | 0.67 | 0.33 | 18 | 396 | n/a | 2,720 | **semi** |
+| monks3 | 432 | 204 | 228 | 0.47 | 0.53 | 18 | 396 | yes | n/a | n/a |
+| votes | 435 | 168 | 267 | 0.39 | 0.61 | 17 | 512 | yes | - | - |
+| adult | 30,081 | 7,436 | 22,645 | 0.25 | 0.75 | ? | 283 | **no** | - | - |
+| compas | 7,214 | 3,743 | 3,471 | 0.52 | 0.48 | 30 | 1,037 | yes | 10,209 | - |
+| telco | 7,043 | 5,174 | 1,869 | 0.73 | 0.27 | 19 | 957 | **no** | - | - |
 
 ## [tdata](https://archive.ics.uci.edu/ml/datasets/Tic-Tac-Toe+Endgame)
 
@@ -84,7 +84,12 @@ The last column reports the number of rules mined for (max cardinality, min supp
 
 **n = 432**
 
-**See below: monks2 looks like it needs at least 3 clauses**
+**See below:** monks2 looks like it needs at least 3 clauses and also should use
+small regularization because there are many specific conditions
+
+e.g., using c = 0.001 quickly finds a perfect rule list of length 30
+
+    ./bbcache -c 1 -p 1 -r 0.001 -n 1000000 ../data/monks2-3.out ../data/monks2-3.label
 
 Attribute information:
     1. class: 0, 1 

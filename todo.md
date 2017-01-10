@@ -14,6 +14,10 @@ Claim items by adding your name, and check them off when complete :)
 
 ## bbound improvements
 
+- [ ] Add stopping condition based on the number of iterations
+
+- [ ] Add policy that switches from curiosity to BFS
+
 - [ ] Queue elements are printed to `queue.txt` -- make this optional,
       consider an input file name and threshold for number of printed entries
 
