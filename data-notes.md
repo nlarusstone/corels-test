@@ -24,9 +24,14 @@ The last column reports the number of rules mined for (max cardinality, min supp
 
 ## [adult](https://archive.ics.uci.edu/ml/datasets/Adult)
 
-**n = 48842 -> 30081 (Due to missing values?)**
+**n = 30162 -> 30081 (Due to missing values?)**
 
-**Redo rule mining for adult from original dataset**
+* `adult.data` n = 30162 after excluding records containing `?`
+
+**Redo rule mining for adult from original dataset?**
+
+`fnlweight` represents "the # of people the census takers believe that observation represents"
+(see http://scg.sdsu.edu/dataset-adult_r/) -- is this safe to ignore?
 
 | Probability for the label '>50K'  : 23.93% / 24.78% (without unknowns)
 
