@@ -117,7 +117,7 @@ def titanic(din='../data/titanic', dout='../data/titanic'):
     return
 
 def driver(din, dout, froot, train_suffix='', y_suffix=None, delimiter=' ',
-           is_binary=False, maxlhs=2, minsupport=10):
+           is_binary=False, maxlhs=2, minsupport=10, out_suffix=''):
 
     #rule mining parameters
     #maxlhs : maximum cardinality of an itemset
@@ -193,12 +193,12 @@ def driver(din, dout, froot, train_suffix='', y_suffix=None, delimiter=' ',
     label = [' '.join(('{label=0}', array_to_string(np.cast[int](Ytrain[:,0]))))]
     label += [' '.join(('{label=1}', array_to_string(1 - np.cast[int](Ytrain[:,0]))))]
 
-    fout = os.path.join(dout, '%s.out' % (froot))
+    fout = os.path.join(dout, '%s%s.out' % (froot, out_suffix))
     f = open(fout, 'w')
     f.write('\n'.join(out) + '\n')
     f.close()
 
-    flabel = os.path.join(dout, '%s.label' % (froot))
+    flabel = os.path.join(dout, '%s%s.label' % (froot, out_suffix))
     f = open(flabel, 'w')
     f.write('\n'.join(label) + '\n')
     f.close()
@@ -219,3 +219,15 @@ def small(din='../data/small', dout='../data', maxlhs=2, minsupport=1):
         froot = f.split('_binary.csv')[0]
         driver(din=din, dout=dout, froot=froot, train_suffix='_binary.csv',
                delimiter=',', is_binary=True, maxlhs=maxlhs, minsupport=minsupport)
+
+def compas3(din='../data/small', dout='../data', froot='compas', maxlhs=3, minsupport=1):
+    driver(din=din, dout=dout, froot=froot, train_suffix='_binary.csv',
+           delimiter=',', is_binary=True, maxlhs=maxlhs, minsupport=minsupport, out_suffix='-3')
+
+def monks23(din='../data/small', dout='../data', froot='monks2', maxlhs=3, minsupport=1):
+    driver(din=din, dout=dout, froot=froot, train_suffix='_binary.csv',
+           delimiter=',', is_binary=True, maxlhs=maxlhs, minsupport=minsupport, out_suffix='-3')
+
+def telco3(din='../data/telco', dout='../data', froot='telco.shuffled', maxlhs=3, minsupport=1):
+    driver(din=din, dout=dout, froot=froot, train_suffix='.txt', delimiter=',',
+           is_binary=False, maxlhs=maxlhs, minsupport=minsupport, out_suffix='-3')
