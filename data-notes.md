@@ -5,7 +5,7 @@ The last column reports the number of rules mined for (max cardinality, min supp
 | name | # data | # 0 | # 1 | f. 0 | f. 1 | d | 2, .01 | note | 3, .01 | note |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | bcancer | 683 | 444 | 239 | 0.65 | 0.35 | 27 | 1,336 | done | 16,365 | - |
-| cars | 1,728 | 1,210 | 518 | 0.70 | 0.30 | 21 | 792 | **no** | - | - |
+| cars | 1,728 | 1,210 | 518 | 0.70 | 0.30 | 21 | 792 | n/a | 8,180 | **semi** |
 | haberman | 306 | 81 | 225 | 0.26 | 0.74 | 15 | 334 | done | - | - |
 | monks1 | 432 | 216 | 216 | 0.5 | 0.5 | 17 | 396 | yes | n/a | n/a |
 | monks2 | 432 | 290 | 142 | 0.67 | 0.33 | 17 | 396 | n/a | 2,720 | **semi** |
@@ -129,6 +129,13 @@ a9<5, a9.5-7, a9>7
 **n = 1728**
 
 **How were the class values binarized?**
+
+**See below:** cars does well when given at least 3 clauses
+
+e.g., using c = 0.001 quickly finds a perfect rule list of length 17,
+and easily reduces this to a perfect rule list of length 16
+
+    ./bbcache -c 1 -p 1 -r 0.001 -n 10000000 ../data/cars-3.out  ../data/cars-3.label
 
 [cars description](https://archive.ics.uci.edu/ml/machine-learning-databases/car/car.names)
 
