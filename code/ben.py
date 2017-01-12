@@ -220,6 +220,10 @@ def small(din='../data/small', dout='../data', maxlhs=2, minsupport=1):
         driver(din=din, dout=dout, froot=froot, train_suffix='_binary.csv',
                delimiter=',', is_binary=True, maxlhs=maxlhs, minsupport=minsupport)
 
+def cars3(din='../data/small', dout='../data', froot='cars', maxlhs=3, minsupport=1):
+    driver(din=din, dout=dout, froot=froot, train_suffix='_binary.csv',
+           delimiter=',', is_binary=True, maxlhs=maxlhs, minsupport=minsupport, out_suffix='-3')
+
 def compas3(din='../data/small', dout='../data', froot='compas', maxlhs=3, minsupport=1):
     driver(din=din, dout=dout, froot=froot, train_suffix='_binary.csv',
            delimiter=',', is_binary=True, maxlhs=maxlhs, minsupport=minsupport, out_suffix='-3')
