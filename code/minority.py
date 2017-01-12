@@ -8,14 +8,11 @@ def compute_minority(froot, dir='../data/'):
     flabel = os.path.join(dir, '%s.label' % froot)
     fminor = os.path.join(dir, '%s.minor' % froot)
 
-    x = tb.tabarray(SVfile=fout, namesinheader=False)
-    rules = x['f0']
-
-    y = tb.tabarray(SVfile=flabel)
-    y = y[list(y.dtype.names[1:])].extract()
-
-    z = x[list(x.dtype.names)[1:]].extract().T
+    z = [line.strip().split() for line in open(fout, 'rU').read().strip().split('\n')]
+    z = tb.utils.listarraytranspose(z)
     s = np.array([str(tuple(i)) for i in z])
+    
+    y = np.array(open(flabel, 'rU').read().strip().split('\n')[0].strip().split()[1:], int)
 
     r = tb.tabarray(columns=[s, y, np.ones(len(s), int)], names=['obs', 'label', 'count'])
 

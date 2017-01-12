@@ -24,6 +24,8 @@ native-country: United-States, Cambodia, England, Puerto-Rico, Canada, Germany, 
 income: >50K, <=50K.
 """
 
+import os
+
 import numpy as np
 import tabular as tb
 
@@ -55,22 +57,38 @@ def hours_func(h):
     else:
         return '>40'
 
+din = os.path.join('..', 'data', 'adult')
+dout = os.path.join('..', 'data', 'adult')
+fdata = os.path.join(din, 'adult.data')
+ftest = os.path.join(din, 'adult.test')
+fnames = os.path.join(din, 'adult.names')
+fcomplete = os.path.join(din, 'adult-filtered.csv')
+fout = os.path.join(din, 'adult.csv')
+
+if not os.path.exists(din):
+    os.mkdir(din)
+if not os.path.exists(fdata):
+    uroot = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/'
+    os.system('wget %sadult.data -O fdata' % uroot)
+    os.system('wget %sadult.test -O ftest' % uroot)
+    os.system('wget %sadult.names -O fnames' % uroot)
+
 names = ['age', 'workclass', 'fnlwgt', 'education', 'education-num',
          'marital-status', 'occupation', 'relationship', 'race', 'sex',
          'capital-gain', 'capital-loss', 'hours-per-week', 'native-country',
          'income']
 
-x = open('../data/adult/adult.data', 'rU').read().strip().split('\n')
+x = open(fdata, 'rU').read().strip().split('\n')
 x = [','.join(line.split(', ')) for line in x if '?' not in line]
-
 assert (len(x) == 30162)
+print 'filtered out records with missing data'
 
-f = open('../data/adult/adult-filtered.csv', 'w')
+f = open(fcomplete, 'w')
 f.write(','.join(names) + '\n')
 f.write('\n'.join(x))
 f.close()
 
-x = tb.tabarray(SVfile='../data/adult/adult-filtered.csv')
+x = tb.tabarray(SVfile=fcomplete)
 
 age = np.array([age_func(a) for a in x['age']])
 
@@ -90,8 +108,9 @@ names = ['age', 'workclass', 'education', 'marital-status', 'occupation',
          'relationship', 'race', 'sex', 'capital-gain', 'capital-loss',
          'hours-per-week', 'native-country', 'income']
 
+print 'lightly processed data'
 y = tb.tabarray(columns=columns, names=names)
-y.saveSV('../data/adult/adult.csv')
+y.saveSV(fout)
 
 ben.driver(din='../data/adult', dout='../data/adult', froot='adult', train_suffix='.csv',
            delimiter=',', is_binary=False, maxlhs=2, minsupport=2.5, out_suffix='')
