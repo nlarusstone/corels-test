@@ -8,9 +8,9 @@ def compute_minority(froot, dir='../data/'):
     flabel = os.path.join(dir, '%s.label' % froot)
     fminor = os.path.join(dir, '%s.minor' % froot)
 
-    z = [line.strip().split() for line in open(fout, 'rU').read().strip().split('\n')]
+    z = [line.strip().split()[1:] for line in open(fout, 'rU').read().strip().split('\n')]
     z = tb.utils.listarraytranspose(z)
-    s = np.array([str(tuple(i)) for i in z])
+    s = np.array([str(''.join(i)) for i in z])
     
     y = np.array(open(flabel, 'rU').read().strip().split('\n')[0].strip().split()[1:], int)
 
