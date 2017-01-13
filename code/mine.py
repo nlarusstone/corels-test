@@ -11,7 +11,7 @@ din = '../data/adult'
 froot = 'adult'
 labels = ['<=50K', '>50K']
 max_cardinality = 2
-min_support = 0.01
+min_support = 0.025
 
 fin = os.path.join(din, '%s.csv' % froot)
 fout = os.path.join(din, '%s_e.out' % froot)
@@ -35,9 +35,12 @@ for n in features:
         bvec = (x[n] == u)
         supp = bvec.sum()
         if ((supp > min_threshold) and (supp < max_threshold)):
-            names += ['{%s:%s}' % (n, u)]
-            udict[n] += [u]
-            records += [bvec]
+            n1 = x[label_name][bvec].sum()
+            max_correct = max(n1, supp - n1)
+            if ((max_correct > min_threshold) and (max_correct < max_threshold)):
+                names += ['{%s:%s}' % (n, u)]
+                udict[n] += [u]
+                records += [bvec]
 
 for cardinality in range(2, max_cardinality + 1):
     for dlist in list(itertools.combinations(features, cardinality)):
@@ -45,10 +48,13 @@ for cardinality in range(2, max_cardinality + 1):
             bvec = np.array([(x[d] == v) for (d, v) in zip(dlist, values)]).all(axis=0)
             supp = bvec.sum()
             if ((supp > min_threshold) and (supp < max_threshold)):
-                descr = '{%s}' % ','.join(['%s:%s' % (d, v) for (d, v) in zip(dlist, values)])
-                names.append(descr)
-                records.append(bvec)
-                print descr
+                n1 = x[label_name][bvec].sum()
+                max_correct = max(n1, supp - n1)
+                if ((max_correct > min_threshold) and (max_correct < max_threshold)):
+                    descr = '{%s}' % ','.join(['%s:%s' % (d, v) for (d, v) in zip(dlist, values)])
+                    names.append(descr)
+                    records.append(bvec)
+                    print descr
 
 print len(names), 'rules mined'
 print 'writing', fout
