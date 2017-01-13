@@ -93,7 +93,7 @@ names = ['age', 'workclass', 'education', 'marital-status', 'occupation',
 y = tb.tabarray(columns=columns, names=names)
 y.saveSV('../data/adult/adult.csv')
 
-ben.driver(din='../data/adult', dout='../data/adult', froot='adult', train_suffix='.csv',
-           delimiter=',', is_binary=False, maxlhs=2, minsupport=2.5, out_suffix='')
+#ben.driver(din='../data/adult', dout='../data/adult', froot='adult', train_suffix='.csv',
+#           delimiter=',', is_binary=False, maxlhs=2, minsupport=2.5, out_suffix='')
 
-minority.compute_minority(froot='adult', dir='../data/adult')
+#minority.compute_minority(froot='adult', dir='../data/adult')
