@@ -142,7 +142,7 @@ columns = [age, x['worker-class'], x['education'], x['enrolled-last-wk'],
            x['unemployment-reason'], x['employment-stat'],
            capital_gains, capital_losses, stock_dividends,
            x['tax-filer-stat'], x['household-summary'],
-           x['live-same-house-1ya'], x['family-under-18'], x['birth-country'],
+           x['live-same-house-1ya'], x['family-under-18'],
            x['citizenship'], x['own-business-self-employed'],
            x['veterans-questionnaire'], x['veterans-benefits'], x['year'], income]
 
@@ -152,7 +152,7 @@ names = ['age', 'worker-class', 'education', 'enrolled-last-wk',
          'unemployment-reason', 'employment-stat',
          'capital-gains', 'capital-losses', 'stock-dividends',
          'tax-filer-stat', 'household-summary',
-         'live-same-house-1ya', 'family-under-18', 'birth-country',
+         'live-same-house-1ya', 'family-under-18',
          'citizenship', 'own-business-self-employed',
          'veterans-questionnaire', 'veterans-benefits', 'year', 'income']
 
