@@ -50,9 +50,9 @@ def capital_gain_func(c):
         return '<7298'
 
 def hours_func(h):
-    if (c < 40):
+    if (h < 40):
         return '<40'
-    elif (c == 40):
+    elif (h == 40):
         return '40'
     else:
         return '>40'
@@ -94,7 +94,7 @@ age = np.array([age_func(a) for a in x['age']])
 
 capital_gain  = np.array([capital_gain_func(c) for c in x['capital-gain']])
 
-capital_loss = np.array(['>0' if (c > 0) else '=0' for c in x['capital-loss']])
+capital_loss = np.array(['>0' if (c > 0) else '0' for c in x['capital-loss']])
 
 hours_per_week = np.array([hours_func(h) for h in x['hours-per-week']])
 

@@ -130,9 +130,9 @@ age = np.array([age_func(a) for a in x['age']])
 
 capital_gains  = np.array([capital_gain_func(c) for c in x['capital-gains']])
 
-capital_losses = np.array(['>0' if (c > 0) else '=0' for c in x['capital-losses']])
+capital_losses = np.array(['>0' if (c > 0) else '0' for c in x['capital-losses']])
 
-stock_dividends = np.array(['>0' if (c > 0) else '=0' for c in x['stock-dividends']])
+stock_dividends = np.array(['>0' if (c > 0) else '0' for c in x['stock-dividends']])
 
 income = np.cast[int](x['income'] == '50000+.')
 
@@ -160,7 +160,6 @@ print 'lightly processed data'
 y = tb.tabarray(columns=columns, names=names)
 y.saveSV(fout)
 
-ben.driver(din='../data/income', dout='../data/income', froot='income', train_suffix='.csv',
-           delimiter=',', is_binary=False, maxlhs=2, minsupport=2.5, out_suffix='')
-
-minority.compute_minority(froot='income', dir='../data/income')
+#ben.driver(din='../data/income', dout='../data/income', froot='income', train_suffix='.csv',
+#           delimiter=',', is_binary=False, maxlhs=2, minsupport=2.5, out_suffix='')
+#minority.compute_minority(froot='income', dir='../data/income')
