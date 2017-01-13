@@ -7,8 +7,8 @@ import tabular as tb
 import minority
 
 
-din = '../data/income'
-froot = 'income'
+din = '../data/adult'
+froot = 'adult'
 labels = ['<=50K', '>50K']
 max_cardinality = 2
 min_support = 0.01
@@ -22,7 +22,8 @@ x = tb.tabarray(SVfile=fin)
 features = list(x.dtype.names)[:-1]
 label_name = x.dtype.names[-1]
 ndata = len(x)
-threshold = ndata * min_support
+min_threshold = ndata * min_support
+max_threshold = ndata * (1. - min_support)
 
 records = []
 names = []
@@ -32,7 +33,8 @@ for n in features:
     udict[n] = []
     for u in ulist:
         bvec = (x[n] == u)
-        if (bvec.sum() > threshold):
+        supp = bvec.sum()
+        if ((supp > min_threshold) and (supp < max_threshold)):
             names += ['{%s:%s}' % (n, u)]
             udict[n] += [u]
             records += [bvec]
@@ -41,7 +43,8 @@ for cardinality in range(2, max_cardinality + 1):
     for dlist in list(itertools.combinations(features, cardinality)):
         for values in list(itertools.product(*[udict[d] for d in dlist])):
             bvec = np.array([(x[d] == v) for (d, v) in zip(dlist, values)]).all(axis=0)
-            if (bvec.sum() > threshold):
+            supp = bvec.sum()
+            if ((supp > min_threshold) and (supp < max_threshold)):
                 descr = '{%s}' % ','.join(['%s:%s' % (d, v) for (d, v) in zip(dlist, values)])
                 names.append(descr)
                 records.append(bvec)
