@@ -40,6 +40,7 @@ Claim items by adding your name, and check them off when complete :)
       run the experiment)
 
 - [ ] Make R/Python binding so it is easier to run experiments. (Daniel)
+      Link to SBRL cran repo: https://github.com/cran/sbrl. We can follow this format.
 
 - [ ] What else should we measure?  E.g., think about time spent deleting nodes
       from the cache, garbage collection triggered by a new best objective value,
