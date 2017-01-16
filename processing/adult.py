@@ -23,12 +23,12 @@ hours-per-week: continuous.
 native-country: United-States, Cambodia, England, Puerto-Rico, Canada, Germany, Outlying-US(Guam-USVI-etc), India, Japan, Greece, South, China, Cuba, Iran, Honduras, Philippines, Italy, Poland, Jamaica, Vietnam, Mexico, Portugal, Ireland, France, Dominican-Republic, Laos, Ecuador, Taiwan, Haiti, Columbia, Hungary, Guatemala, Nicaragua, Scotland, Thailand, Yugoslavia, El-Salvador, Trinadad&Tobago, Peru, Hong, Holand-Netherlands.
 income: >50K, <=50K.
 """
+import os
 
 import numpy as np
 import tabular as tb
 
-import ben
-import minority
+import mine
 
 
 def age_func(a):
@@ -55,22 +55,58 @@ def hours_func(h):
     else:
         return '>40'
 
+
+din = os.path.join('..', 'data', 'adult')
+dout = os.path.join('..', 'data', 'adult')
+fdata = os.path.join(din, 'adult.data')
+ftest = os.path.join(din, 'adult.test')
+fnames = os.path.join(din, 'adult.names')
+fcomplete = os.path.join(din, 'adult-filtered.csv')
+fout = os.path.join(din, 'adult.csv')
+
+seed = sum([1, 4, 21, 12, 20]) # a:1, d:4, u:21, l:12, t:20
+num_folds = 10
+max_cardinality = 2
+min_support = 0.01
+labels = ['<=50K', '>50K']
+minor = False
+
+
+np.random.seed(seed)
+
+if not os.path.exists(din):
+    os.mkdir(din)
+
+if not os.path.exists(fdata):
+    print 'downloading data'
+    uroot = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/'
+    os.system('wget %sadult.data -O %s' % (uroot, fdata))
+    os.system('wget %sadult.test -O %s' % (uroot, ftest))
+    os.system('wget %sadult.names -O %s' % (uroot, fnames))
+
 names = ['age', 'workclass', 'fnlwgt', 'education', 'education-num',
          'marital-status', 'occupation', 'relationship', 'race', 'sex',
          'capital-gain', 'capital-loss', 'hours-per-week', 'native-country',
          'income']
 
-x = open('../data/adult/adult.data', 'rU').read().strip().split('\n')
+print 'read original train data:', fdata
+x = open(fdata, 'rU').read().strip().split('\n')
 x = [','.join(line.split(', ')) for line in x if '?' not in line]
-
 assert (len(x) == 30162)
 
-f = open('../data/adult/adult-filtered.csv', 'w')
+print 'read original test data:', ftest
+z = open(ftest, 'rU').read().strip().split('\n')[1:]
+z = [','.join(line.split(', ')).strip('.') for line in z if '?' not in line]
+assert (len(z) == 15060)
+
+print 'concatenate train and test:', fcomplete
+f = open(fcomplete, 'w')
 f.write(','.join(names) + '\n')
-f.write('\n'.join(x))
+f.write('\n'.join(x + z))
 f.close()
 
-x = tb.tabarray(SVfile='../data/adult/adult-filtered.csv')
+print 'lightly process data (e.g., to make binary features)'
+x = tb.tabarray(SVfile=fcomplete)
 
 age = np.array([age_func(a) for a in x['age']])
 
@@ -90,10 +126,37 @@ names = ['age', 'workclass', 'education', 'marital-status', 'occupation',
          'relationship', 'race', 'sex', 'capital-gain', 'capital-loss',
          'hours-per-week', 'native-country', 'income']
 
+print 'write binary dataset', fout
 y = tb.tabarray(columns=columns, names=names)
-y.saveSV('../data/adult/adult.csv')
+y.saveSV(fout)
+
+print 'permute and partition dataset'
+split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_folds)
+print 'number of folds:', num_folds
+print 'train size:', len(split_ind[0]) * (num_folds - 1)
+print 'test size:', len(split_ind[0])
+
+num_rules = np.zeros(num_folds, int)
+for i in range(num_folds):
+    print 'generate cross-validation split', i
+    test_root = 'adult-%d-test' % i
+    train_root = 'adult-%d-train' % i
+    ftest = os.path.join(din, '%s.csv' % test_root)
+    ftrain = os.path.join(din, '%s.csv' % train_root)
+    y[split_ind[i]].saveSV(ftest)
+    y[np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])].saveSV(ftrain)
+
+    print 'mine rules from', ftrain
+    num_rules[i] = mine.mine_rules(din=din, froot=train_root,
+                                   max_cardinality=max_cardinality,
+                                   min_support=min_support, labels=labels,
+                                   minor=minor)
+    break
 
 #ben.driver(din='../data/adult', dout='../data/adult', froot='adult', train_suffix='.csv',
 #           delimiter=',', is_binary=False, maxlhs=2, minsupport=2.5, out_suffix='')
-
 #minority.compute_minority(froot='adult', dir='../data/adult')
+
+#mine.mine_rules(din=din, froot=root, max_cardinality=max_cardinality,
+#                min_support=min_support, labels=labels, suffix='_e', minor=minor)
+
