@@ -139,6 +139,7 @@ print 'test size:', len(split_ind[0])
 num_rules = np.zeros(num_folds, int)
 for i in range(num_folds):
     print 'generate cross-validation split', i
+    cv_root = 'adult-%d' % i
     test_root = 'adult-%d-test' % i
     train_root = 'adult-%d-train' % i
     ftest = os.path.join(din, '%s.csv' % test_root)
@@ -151,7 +152,10 @@ for i in range(num_folds):
                                    max_cardinality=max_cardinality,
                                    min_support=min_support, labels=labels,
                                    minor=minor)
-    break
+    mine.apply_rules(din=din, froot=cv_root, max_cardinality=max_cardinality,
+                     min_support=min_support, labels=labels, minor=minor)
+
+print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
 
 #ben.driver(din='../data/adult', dout='../data/adult', froot='adult', train_suffix='.csv',
 #           delimiter=',', is_binary=False, maxlhs=2, minsupport=2.5, out_suffix='')
@@ -159,4 +163,3 @@ for i in range(num_folds):
 
 #mine.mine_rules(din=din, froot=root, max_cardinality=max_cardinality,
 #                min_support=min_support, labels=labels, suffix='_e', minor=minor)
-
