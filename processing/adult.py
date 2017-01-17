@@ -69,7 +69,7 @@ num_folds = 10
 max_cardinality = 2
 min_support = 0.01
 labels = ['<=50K', '>50K']
-minor = False
+minor = True
 
 
 np.random.seed(seed)
