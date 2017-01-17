@@ -48,9 +48,9 @@ def capital_gain_func(c):
         return '<7298'
 
 def hours_func(h):
-    if (c < 40):
+    if (h < 40):
         return '<40'
-    elif (c == 40):
+    elif (h == 40):
         return '40'
     else:
         return '>40'
