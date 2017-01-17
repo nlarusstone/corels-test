@@ -67,3 +67,41 @@ def mine_rules(din='../data/adult', froot='adult', max_cardinality=2,
         minority.compute_minority(froot='%s%s' % (froot, suffix), dir=din)
 
     return len(names)
+
+def apply_rules(din='../data/adult', froot='adult', max_cardinality=2,
+                min_support=0.01, labels=['<=50K', '>50K'], minor=True,
+                verbose=False):
+
+    ftrain = os.path.join(din, '%s-train.out' % froot)
+    ftest = os.path.join(din, '%s-test.csv' % froot)
+    fout = os.path.join(din, '%s-test.out' % froot)
+    flabel = os.path.join(din, '%s-test.label' % froot)
+
+    x = tb.tabarray(SVfile=ftest)
+    names = x.dtype.names
+    label_name = names[-1]
+    y = x[label_name]
+    x = x.extract()
+    d = dict(zip(names, [x[:,i] for i in range(len(names))]))
+
+    print 'reading rules from', ftrain
+    rule_descr = [line.strip().split()[0] for line in open(ftrain, 'rU').read().strip().split('\n')]
+
+    print 'extracting these rules from', ftest
+    out = []
+    for descr in rule_descr:
+        rule = [clause.split(':') for clause in descr.strip('{}').split(',')]
+        bv = np.cast[str](np.cast[int](np.array([(d[name] == value) for (name, value) in rule]).all(axis=0)))
+        out.append('%s %s' % (descr, ' '.join(bv)))
+
+    print 'writing', fout
+    f = open(fout, 'w')
+    f.write('\n'.join(out))
+    f.close()
+
+    print 'writing', flabel
+    recs = [(y == 0), (y == 1)]
+    f = open(flabel, 'w')
+    f.write('\n'.join(['{%s:%s} %s' % (label_name, l, ' '.join(np.cast[str](np.cast[int](r))))
+                       for (l, r) in zip(labels, recs)]) + '\n')
+    f.close()
