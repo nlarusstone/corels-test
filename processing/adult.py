@@ -25,8 +25,6 @@ income: >50K, <=50K.
 """
 import os
 
-import os
-
 import numpy as np
 import tabular as tb
 
@@ -57,10 +55,7 @@ def hours_func(h):
     else:
         return '>40'
 
-<<<<<<< HEAD:code/adult.py
-=======
 
->>>>>>> origin/heapq:processing/adult.py
 din = os.path.join('..', 'data', 'adult')
 dout = os.path.join('..', 'data', 'adult')
 fdata = os.path.join(din, 'adult.data')
@@ -69,15 +64,6 @@ fnames = os.path.join(din, 'adult.names')
 fcomplete = os.path.join(din, 'adult-filtered.csv')
 fout = os.path.join(din, 'adult.csv')
 
-<<<<<<< HEAD:code/adult.py
-if not os.path.exists(din):
-    os.mkdir(din)
-if not os.path.exists(fdata):
-    uroot = 'https://archive.ics.uci.edu/ml/machine-learning-databases/adult/'
-    os.system('wget %sadult.data -O fdata' % uroot)
-    os.system('wget %sadult.test -O ftest' % uroot)
-    os.system('wget %sadult.names -O fnames' % uroot)
-=======
 seed = sum([1, 4, 21, 12, 20]) # a:1, d:4, u:21, l:12, t:20
 num_folds = 10
 max_cardinality = 2
@@ -97,47 +83,36 @@ if not os.path.exists(fdata):
     os.system('wget %sadult.data -O %s' % (uroot, fdata))
     os.system('wget %sadult.test -O %s' % (uroot, ftest))
     os.system('wget %sadult.names -O %s' % (uroot, fnames))
->>>>>>> origin/heapq:processing/adult.py
 
 names = ['age', 'workclass', 'fnlwgt', 'education', 'education-num',
          'marital-status', 'occupation', 'relationship', 'race', 'sex',
          'capital-gain', 'capital-loss', 'hours-per-week', 'native-country',
          'income']
 
-<<<<<<< HEAD:code/adult.py
-=======
 print 'read original train data:', fdata
->>>>>>> origin/heapq:processing/adult.py
 x = open(fdata, 'rU').read().strip().split('\n')
 x = [','.join(line.split(', ')) for line in x if '?' not in line]
 assert (len(x) == 30162)
-print 'filtered out records with missing data'
 
-<<<<<<< HEAD:code/adult.py
-=======
 print 'read original test data:', ftest
 z = open(ftest, 'rU').read().strip().split('\n')[1:]
 z = [','.join(line.split(', ')).strip('.') for line in z if '?' not in line]
 assert (len(z) == 15060)
 
 print 'concatenate train and test:', fcomplete
->>>>>>> origin/heapq:processing/adult.py
 f = open(fcomplete, 'w')
 f.write(','.join(names) + '\n')
 f.write('\n'.join(x + z))
 f.close()
 
-<<<<<<< HEAD:code/adult.py
-=======
 print 'lightly process data (e.g., to make binary features)'
->>>>>>> origin/heapq:processing/adult.py
 x = tb.tabarray(SVfile=fcomplete)
 
 age = np.array([age_func(a) for a in x['age']])
 
 capital_gain  = np.array([capital_gain_func(c) for c in x['capital-gain']])
 
-capital_loss = np.array(['>0' if (c > 0) else '0' for c in x['capital-loss']])
+capital_loss = np.array(['>0' if (c > 0) else '=0' for c in x['capital-loss']])
 
 hours_per_week = np.array([hours_func(h) for h in x['hours-per-week']])
 
@@ -151,11 +126,6 @@ names = ['age', 'workclass', 'education', 'marital-status', 'occupation',
          'relationship', 'race', 'sex', 'capital-gain', 'capital-loss',
          'hours-per-week', 'native-country', 'income']
 
-<<<<<<< HEAD:code/adult.py
-print 'lightly processed data'
-y = tb.tabarray(columns=columns, names=names)
-y.saveSV(fout)
-=======
 print 'write binary dataset', fout
 y = tb.tabarray(columns=columns, names=names)
 y.saveSV(fout)
@@ -186,7 +156,6 @@ for i in range(num_folds):
                      min_support=min_support, labels=labels, minor=minor)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
->>>>>>> origin/heapq:processing/adult.py
 
 #ben.driver(din='../data/adult', dout='../data/adult', froot='adult', train_suffix='.csv',
 #           delimiter=',', is_binary=False, maxlhs=2, minsupport=2.5, out_suffix='')
