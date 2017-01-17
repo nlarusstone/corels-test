@@ -152,8 +152,7 @@ for i in range(num_folds):
                                    max_cardinality=max_cardinality,
                                    min_support=min_support, labels=labels,
                                    minor=minor)
-    mine.apply_rules(din=din, froot=cv_root, max_cardinality=max_cardinality,
-                     min_support=min_support, labels=labels, minor=minor)
+    mine.apply_rules(din=din, froot=cv_root, labels=labels)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
 
