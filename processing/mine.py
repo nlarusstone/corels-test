@@ -68,9 +68,7 @@ def mine_rules(din='../data/adult', froot='adult', max_cardinality=2,
 
     return len(names)
 
-def apply_rules(din='../data/adult', froot='adult', max_cardinality=2,
-                min_support=0.01, labels=['<=50K', '>50K'], minor=True,
-                verbose=False):
+def apply_rules(din='../data/adult', froot='adult', labels=['<=50K', '>50K']):
 
     ftrain = os.path.join(din, '%s-train.out' % froot)
     ftest = os.path.join(din, '%s-test.csv' % froot)
