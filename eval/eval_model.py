@@ -7,6 +7,10 @@ or
 
 $ python eval_model.py adult --parallel -n 100000 -r 0.01 -c 1 -p 1
 
+or
+
+$ python eval_model.py adult --parallel --minor -n 1000 -r 0.01 -c 1 -p 1
+
 """
 import pandas as pd
 import argparse
@@ -23,6 +27,7 @@ parser.add_argument('-p', type=str, metavar='(0|1|2)')
 parser.add_argument('-f', type=str, metavar='logging_frequency', default='1000')
 parser.add_argument('fname')
 parser.add_argument('--parallel', action='store_true')
+parser.add_argument('--minor', action='store_true')
 #parser.add_argument('label')
 
 def run_model(fname, log_fname):
@@ -98,6 +103,10 @@ if __name__ == '__main__':
         if args.p:
             fxn.append('-p ' + args.p)
             log_fname += ('with_prefix_perm_map-' if args.p == '1' else 'with_captured_symmetry_map-') if args.p != '0' else 'no_pmap-'
+        if args.minor:
+            log_fname += 'minor-'
+        else:
+            log_fname += 'no_minor-'
         if args.n:
             fxn.append('-n ' + args.n)
             log_fname += 'max_num_nodes={0}-'.format(args.n)
@@ -114,6 +123,9 @@ if __name__ == '__main__':
         log_list.append(log_fname)
         fxn.append(out)
         fxn.append(label)
+        if args.minor:
+            minor = '../data/CrossValidation/' + fname + '.minor'
+            fxn.append(minor)
         if (not args.parallel):
             exit_code = subprocess.call(fxn)
             print
