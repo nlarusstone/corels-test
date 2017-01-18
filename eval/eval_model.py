@@ -1,3 +1,13 @@
+"""
+E.g., first run the script `adult.py` in the directory `processing`, then do
+
+$ python eval_model.py adult -n 1000 -r 0.01 -b -p 1
+
+or
+
+$ python eval_model.py adult --parallel -n 100000 -r 0.01 -c 1 -p 1
+
+"""
 import pandas as pd
 import argparse
 import re
