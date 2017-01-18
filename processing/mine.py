@@ -62,7 +62,7 @@ def mine_rules(din='../data/adult', froot='adult', max_cardinality=2,
 
     if (minor):
         import minority
-        fminor = os.path.join(dout, '%s%s.minor' % (froot, suffix))
+        fminor = os.path.join(din, '%s%s.minor' % (froot, suffix))
         print 'computing', fminor
         minority.compute_minority(froot='%s%s' % (froot, suffix), dir=din)
 
