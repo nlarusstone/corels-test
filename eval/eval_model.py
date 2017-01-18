@@ -23,6 +23,7 @@ parser.add_argument('-p', type=str, metavar='(0|1|2)')
 parser.add_argument('-f', type=str, metavar='logging_frequency', default='1000')
 parser.add_argument('fname')
 parser.add_argument('--parallel', action='store_true')
+parser.add_argument('-k', type=int, default=10)
 #parser.add_argument('label')
 
 def run_model(fname, log_fname):
@@ -71,7 +72,7 @@ def run_model(fname, log_fname):
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    num_folds = 10
+    num_folds = args.k
     accuracies = []
     test_accuracies = []
     plist = []
@@ -98,6 +99,8 @@ if __name__ == '__main__':
         if args.p:
             fxn.append('-p ' + args.p)
             log_fname += ('with_prefix_perm_map-' if args.p == '1' else 'with_captured_symmetry_map-') if args.p != '0' else 'no_pmap-'
+        else:
+            log_fname += 'no_pmap-'
         if args.n:
             fxn.append('-n ' + args.n)
             log_fname += 'max_num_nodes={0}-'.format(args.n)
