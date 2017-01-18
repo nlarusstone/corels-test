@@ -80,7 +80,6 @@ if __name__ == '__main__':
         print args
         fxn = ['../src/bbcache']
         fname = args.fname + '_' + str(i) + '_train'
-        test_name = args.fname + '_' + str(i) + '_test'
         out = '../data/CrossValidation/' + fname + '.out'
         label = '../data/CrossValidation/' + fname + '.label'
         print fname
@@ -120,9 +119,9 @@ if __name__ == '__main__':
             print '---- Calculating Validation Accuracy For Fold {0} -----'.format(i)
             print
             #accuracies.append(run_model(fname, log_fname))
+            test_name = args.fname + '_' + str(i) + '_test'
             test_accuracies.append(run_model(test_name, log_list[i]))
         else:
-            print 'Popen', fxn
             plist.append(subprocess.Popen(fxn))
 
     if (args.parallel):
