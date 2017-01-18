@@ -94,7 +94,12 @@ if __name__ == '__main__':
             log_fname += 'bfs-'
         if args.c:
             fxn.append('-c ' + args.c)
-            log_fname += 'curiosity-' if args.c == '1' else 'curious_lb-'
+            if (args.c == '1'):
+                log_fname += 'curiosity-'
+            elif (args.c == '2'):
+                log_fname += 'curious_lb-'
+            else:
+                log_fname += 'curious_obj-'
         if args.p:
             fxn.append('-p ' + args.p)
             log_fname += ('with_prefix_perm_map-' if args.p == '1' else 'with_captured_symmetry_map-') if args.p != '0' else 'no_pmap-'
