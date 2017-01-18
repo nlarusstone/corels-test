@@ -19,14 +19,14 @@ def parse_prefix_lengths(p):
 def parse_prefix_sums(p):
     return np.sum([int(q.split(':')[1]) for q in p.split(';') if q])
 
-# python eval_model.py adult --parallel --minor  -n 1000000 -r 0.01 -b -p 1
-# for-adult_0_train.out-bfs-with_prefix_perm_map-minor-max_num_nodes=1000000-c=0.0100000-v=1-f=1000.txt
+# python eval_model.py adult --parallel --minor -k 2 -n 2000000 -r 0.01 -b -p 1
+# ../logs/for-adult_0_train.out-bfs-with_prefix_perm_map-minor-max_num_nodes=2000000-c=0.0100000-v=1-f=1000.txt
 
 froot = 'adult'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
 ftag = 'ela_adult'
-num_folds = 10
+num_folds = 2
 lw = 1  # linewidth
 ms = 9  # markersize
 fs = 16 # fontsize
@@ -39,7 +39,7 @@ for i in range(1, 9):
 for fold in range(0, num_folds):
 
     fname = 'adult_%d_train.out' % fold
-    log_fname = 'for-%s-bfs-with_prefix_perm_map-minor-max_num_nodes=1000000-c=0.0100000-v=1-f=1000.txt' % fname
+    log_fname = 'for-%s-bfs-with_prefix_perm_map-minor-max_num_nodes=2000000-c=0.0400000-v=1-f=1000.txt' % fname
     fname = os.path.join(data_dir, fname)
 
     print 'cross-validation fold:', fold
@@ -112,9 +112,9 @@ for fold in range(0, num_folds):
 
     pylab.figure(2)
     #pylab.clf()
-    pylab.subplot2grid((10, 1), (0, 0), rowspan=6)
-    pylab.plot(x['total_time'], x['tree_num_nodes'], 'k-', linewidth=lw)
-    pylab.plot(x['total_time'], x['queue_size'], ':', color='gray', linewidth=lw)
+    #pylab.subplot2grid((10, 1), (0, 0), rowspan=6)
+    pylab.plot(x['total_time'], x['tree_num_nodes'], 'k:', linewidth=lw)
+    pylab.plot(x['total_time'], x['queue_size'], 'r-', linewidth=lw)
     pylab.plot(x['total_time'], prefix_sums, 'b-', linewidth=lw)
     #pylab.xlabel('time (s)', fontsize=fs)
     pylab.ylabel('size', fontsize=fs)
@@ -126,13 +126,15 @@ for fold in range(0, num_folds):
     #pylab.axis(ax)
     pylab.legend(['cache', 'physical queue', 'logical queue'], fontsize=(fs-1), loc='lower right')
 
-    pylab.subplot2grid((10, 1), (7, 0), rowspan=3)
-    pylab.plot(x['total_time'], x['tree_insertion_num'], 'b-', linewidth=lw)
-    pylab.xlabel('time (s)', fontsize=fs)
-    pylab.ylabel('count', fontsize=fs)
-    pylab.title('cumulative number of cache (= queue) insertions', fontsize=fs)
-    pylab.xticks(fontsize=(fs-2))
-    pylab.yticks(fontsize=(fs-2))
+    if (0):
+        pylab.subplot2grid((10, 1), (7, 0), rowspan=3)
+        pylab.plot(x['total_time'], x['tree_insertion_num'], 'b-', linewidth=lw)
+        pylab.xlabel('time (s)', fontsize=fs)
+        pylab.ylabel('count', fontsize=fs)
+        pylab.title('cumulative number of cache (= queue) insertions', fontsize=fs)
+        pylab.xticks(fontsize=(fs-2))
+        pylab.yticks(fontsize=(fs-2))
+
     pylab.draw()
     pylab.savefig('../figs/%s-queue-cache-size-insertions.png' % ftag)
 
