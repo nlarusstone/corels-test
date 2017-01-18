@@ -57,7 +57,7 @@ def hours_func(h):
 
 
 din = os.path.join('..', 'data', 'adult')
-dout = os.path.join('..', 'data', 'adult')
+dout = os.path.join('..', 'data', 'CrossValidation')
 fdata = os.path.join(din, 'adult.data')
 ftest = os.path.join(din, 'adult.test')
 fnames = os.path.join(din, 'adult.names')
@@ -76,6 +76,9 @@ np.random.seed(seed)
 
 if not os.path.exists(din):
     os.mkdir(din)
+
+if not os.path.exists(dout):
+    os.mkdir(dout)
 
 if not os.path.exists(fdata):
     print 'downloading data'
@@ -139,20 +142,20 @@ print 'test size:', len(split_ind[0])
 num_rules = np.zeros(num_folds, int)
 for i in range(num_folds):
     print 'generate cross-validation split', i
-    cv_root = 'adult-%d' % i
-    test_root = 'adult-%d-test' % i
-    train_root = 'adult-%d-train' % i
-    ftest = os.path.join(din, '%s.csv' % test_root)
-    ftrain = os.path.join(din, '%s.csv' % train_root)
+    cv_root = 'adult_%d' % i
+    test_root = '%s_test' % cv_root
+    train_root = '%s_train' % cv_root
+    ftest = os.path.join(dout, '%s.csv' % test_root)
+    ftrain = os.path.join(dout, '%s.csv' % train_root)
     y[split_ind[i]].saveSV(ftest)
     y[np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])].saveSV(ftrain)
 
     print 'mine rules from', ftrain
-    num_rules[i] = mine.mine_rules(din=din, froot=train_root,
+    num_rules[i] = mine.mine_rules(din=dout, froot=train_root,
                                    max_cardinality=max_cardinality,
                                    min_support=min_support, labels=labels,
                                    minor=minor)
-    mine.apply_rules(din=din, froot=cv_root, labels=labels)
+    mine.apply_rules(din=dout, froot=cv_root, labels=labels)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
 
