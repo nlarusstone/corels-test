@@ -1,7 +1,7 @@
 import pandas as pd
 import argparse
 import re
-from subprocess import call
+import subprocess
 
 parser = argparse.ArgumentParser(description='Find rulelist and evaluate on model')
 parser.add_argument('-s', action='store_true')
@@ -13,6 +13,7 @@ parser.add_argument('-c', type=str, metavar='(1|2|3)')
 parser.add_argument('-p', type=str, metavar='(0|1|2)')
 parser.add_argument('-f', type=str, metavar='logging_frequency', default='1000')
 parser.add_argument('fname')
+parser.add_argument('--parallel', action='store_true')
 #parser.add_argument('label')
 
 def run_model(fname, log_fname):
@@ -62,8 +63,10 @@ def run_model(fname, log_fname):
 
 if __name__ == '__main__':
     args = parser.parse_args()
+    num_folds = 10
     accuracies = []
-    for i in range(10):
+    plist = []
+    for i in range(num_folds):
         print args
         fxn = ['../src/bbcache']
         fname = args.fname + '_' + str(i) + '_train'
@@ -99,13 +102,22 @@ if __name__ == '__main__':
         log_fname += '-opt.txt'
         fxn.append(out)
         fxn.append(label)
-        exit_code = call(fxn)
+        if (not args.parallel):
+            exit_code = subprocess.call(fxn)
+            print
+            print '---- Calculating Validation Accuracy For Fold {0} -----'.format(i)
+            print
+            accuracies.append(run_model(fname, log_fname))
+        else:
+            print 'Popen', fxn
+            plist.append(subprocess.Popen(fxn))
 
-        print
-        print '---- Calculating Validation Accuracy For Fold {0} -----'.format(i)
-        print
+    if (args.parallel):
+        for i in range(num_folds):
+            plist[i].wait()
+            fname = args.fname + '_' + str(i) + '_train'
+            accuracies.append(run_model(fname, log_fname))
 
-        accuracies.append(run_model(fname, log_fname))
     print
     print 'Accuracies'
     print accuracies
