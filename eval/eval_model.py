@@ -1,7 +1,16 @@
+"""
+E.g., first run the script `adult.py` in the directory `processing`, then do
+
+$ python eval_model.py adult -n 1000 -r 0.01 -b -p 1
+
+or
+
+$ python eval_model.py adult --parallel -n 100000 -r 0.01 -c 1 -p 1
+
+"""
 import pandas as pd
 import argparse
-import re
-from subprocess import call
+import subprocess
 
 parser = argparse.ArgumentParser(description='Find rulelist and evaluate on model')
 parser.add_argument('-s', action='store_true')
@@ -9,10 +18,11 @@ parser.add_argument('-b', action='store_true')
 parser.add_argument('-n', type=str, metavar='max_num_nodes', default='100000')
 parser.add_argument('-r', type=str, metavar='regularization', default='0.01')
 parser.add_argument('-v', type=str, metavar='verbosity', default='1')
-parser.add_argument('-c', type=str, metavar='(1|2)')
-parser.add_argument('-p', type=str, metavar='(0|1|2')
+parser.add_argument('-c', type=str, metavar='(1|2|3)')
+parser.add_argument('-p', type=str, metavar='(0|1|2)')
 parser.add_argument('-f', type=str, metavar='logging_frequency', default='1000')
 parser.add_argument('fname')
+parser.add_argument('--parallel', action='store_true')
 #parser.add_argument('label')
 
 def run_model(fname, log_fname):
@@ -22,7 +32,6 @@ def run_model(fname, log_fname):
         opt = map(lambda x: (x[0], int(x[1])), opt)
         #print opt
 
-    fname = re.sub('train', 'test', fname)
     nrules = 0
     try:
         with open('../data/{0}.out'.format(fname)) as f:
@@ -57,16 +66,21 @@ def run_model(fname, log_fname):
     for (ind, pred) in preds:
         corr += label.iloc[pred, ind]
     acc = float(corr) / float(nrules)
-    print 'Validation accuracy: ', acc
+    print 'Accuracy: ', acc
     return acc
 
 if __name__ == '__main__':
     args = parser.parse_args()
+    num_folds = 10
     accuracies = []
-    for i in range(10):
+    test_accuracies = []
+    plist = []
+    log_list = []
+    for i in range(num_folds):
         print args
         fxn = ['../src/bbcache']
         fname = args.fname + '_' + str(i) + '_train'
+        test_name = args.fname + '_' + str(i) + '_test'
         out = '../data/CrossValidation/' + fname + '.out'
         label = '../data/CrossValidation/' + fname + '.label'
         print fname
@@ -97,15 +111,33 @@ if __name__ == '__main__':
             fxn.append('-f ' + args.f)
             log_fname += 'f={0}'.format(args.f)
         log_fname += '-opt.txt'
+        log_list.append(log_fname)
         fxn.append(out)
         fxn.append(label)
-        exit_code = call(fxn)
+        if (not args.parallel):
+            exit_code = subprocess.call(fxn)
+            print
+            print '---- Calculating Validation Accuracy For Fold {0} -----'.format(i)
+            print
+            #accuracies.append(run_model(fname, log_fname))
+            test_accuracies.append(run_model(test_name, log_list[i]))
+        else:
+            print 'Popen', fxn
+            plist.append(subprocess.Popen(fxn))
 
-        print
-        print '---- Calculating Validation Accuracy For Fold {0} -----'.format(i)
-        print
+    if (args.parallel):
+        for i in range(num_folds):
+            plist[i].wait()
+            train_name = args.fname + '_' + str(i) + '_train'
+            test_name = args.fname + '_' + str(i) + '_test'
+            #accuracies.append(run_model(train_name, log_list[i]))
+            test_accuracies.append(run_model(test_name, log_list[i]))
 
-        accuracies.append(run_model(fname, log_fname))
+    if (len(accuracies) > 0):
+        print
+        print 'Train accuracies'
+        print accuracies
+
     print
-    print 'Accuracies'
-    print accuracies
+    print 'Test accuracies'
+    print test_accuracies
