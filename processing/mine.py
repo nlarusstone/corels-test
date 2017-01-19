@@ -50,7 +50,7 @@ def mine_rules(din='../data/adult', froot='adult', max_cardinality=2,
     print 'writing', fout
     f = open(fout, 'w')
     f.write('\n'.join(['%s %s' % (n, ' '.join(np.cast[str](np.cast[int](r))))
-                       for (n, r) in zip(names, records)]) + '\n')
+                        for (n, r) in zip(names, records)]) + '\n')
     f.close()
 
     print 'writing', flabel
@@ -94,7 +94,7 @@ def apply_rules(din='../data/adult', froot='adult', labels=['<=50K', '>50K']):
 
     print 'writing', fout
     f = open(fout, 'w')
-    f.write('\n'.join(out))
+    f.write('\n'.join(out) + '\n')
     f.close()
 
     print 'writing', flabel
