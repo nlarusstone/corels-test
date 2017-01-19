@@ -69,10 +69,27 @@ def run_model(fname, log_fname):
     preds += [(x, def_pred) for x in set(range(nrules)).difference(captured)]
 
     corr = 0
+    true_positive = 0
+    false_positive = 0
+    false_negative = 0
+    true_negative = 0
     for (ind, pred) in preds:
-        corr += label.iloc[pred, ind]
+        correct = label.iloc[pred, ind]
+        corr += correct
+        if (pred == 1):
+            if (correct == 1):
+                true_positive += 1
+            else:
+                false_positive += 1
+        else:
+            if (correct == 1):
+                true_negative += 1
+            else:
+                false_negative += 1
     acc = float(corr) / float(nrules)
     print 'Accuracy: ', acc
+    print 'True Positive  | False Negative || %d | %d' % (true_positive, false_negative)
+    print 'False Positive | True Negative  || %d | %d' % (false_positive, true_negative)
     return acc
 
 if __name__ == '__main__':
