@@ -65,7 +65,7 @@ fcomplete = os.path.join(din, 'adult-filtered.csv')
 fout = os.path.join(din, 'adult.csv')
 
 seed = sum([1, 4, 21, 12, 20]) # a:1, d:4, u:21, l:12, t:20
-num_folds = 10
+num_folds = 3
 max_cardinality = 2
 min_support = 0.045 # target 300 mined rules
 labels = ['<=50K', '>50K']
