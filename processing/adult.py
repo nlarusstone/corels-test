@@ -32,14 +32,45 @@ import mine
 
 
 def age_func(a):
-    if (a < 30):
-        return '<30'
-    elif (a < 50):
-        return '30-50'
-    elif (a < 65):
-        return '51-65'
+    if (a <=25):
+        return '<=25'
+    elif (a <= 45):
+        return '26-45'
+    elif (a <=75):
+        return '46-75'
     else:
-        return '>65'
+        return '>75'
+
+def workclass_func(w):
+    if ('gov' in w):
+        return 'Government'
+    elif w.startswith('Self'):
+        return 'Self-employed'
+    else:
+        assert (w in ['Private', 'Without-pay']), w
+        return w
+
+def education_func(s):
+    if (s in ['Preschool', '1st-4th', '5th-6th', '7th-8th']):   # education-num = 1-4
+        return 'At-most-middle-school'
+    elif (s in ['9th', '10th', '11th', '12th']):                # education-num = 5-8
+        return 'Some-high-school'
+    elif ('Assoc' in s):                                        # education-num = 11-12
+        return 'Assoc-degree'
+    elif (s in ['Prof-school', 'Masters', 'Doctorate']):        # education-num = 14-16
+        return 'Grad-school'
+    else:
+        assert (s in ['HS-grad', 'Some-college', 'Bachelors'])  # education-num = 9-10, 13
+        return s
+
+def marital_status_func(m):
+    if (m in ['Married-AF-spouse', 'Married-civ-spouse']):
+        return 'Married'
+    elif (m == 'Never-married'):
+        return m
+    else:
+        assert (m in ['Divorced', 'Widowed', 'Separated', 'Married-spouse-absent']), m
+        return 'No-longer-with-spouse'
 
 def capital_gain_func(c):
     if (c >= 7298):
@@ -48,13 +79,31 @@ def capital_gain_func(c):
         return '<7298'
 
 def hours_func(h):
-    if (h < 40):
-        return '<40'
-    elif (h == 40):
-        return '40'
+    if (h <= 25):
+        return '<=25'
+    elif (h <= 40):
+        return '26-40'
+    elif (h < 60):
+        return '41-60'
     else:
-        return '>40'
+        return '>60'
 
+def native_country_func(c):
+    if (c in ['United-States', 'Canada', 'Outlying-US(Guam-USVI-etc)', 'Puerto-Rico']):
+        return 'US-or-Canada'
+    elif (c in ['Columbia', 'Cuba', 'Dominican-Republic', 'Ecuador',
+                'El-Salvador', 'Guatemala', 'Haiti', 'Honduras', 'Jamaica',
+                'Mexico', 'Nicaragua', 'Peru']):
+        return 'Central-or-South-America'
+    elif (c in ['England', 'France', 'Germany', 'Greece', 'Holand-Netherlands', 'Hungary',
+                'Ireland', 'Italy', 'Poland', 'Portugal', 'Scotland', 'Yugoslavia']):
+        return 'Europe'
+    elif (c in ['Cambodia', 'China', 'Hong', 'India', 'Japan', 'Laos',
+                'Philippines', 'Taiwan', 'Thailand', 'Vietnam']):
+        return 'Asia'
+    else:
+        assert (c in ['Iran', 'South', 'Trinadad&Tobago'])
+        return 'Other'
 
 din = os.path.join('..', 'data', 'adult')
 dout = os.path.join('..', 'data', 'CrossValidation')
@@ -67,7 +116,7 @@ fout = os.path.join(din, 'adult.csv')
 seed = sum([1, 4, 21, 12, 20]) # a:1, d:4, u:21, l:12, t:20
 num_folds = 3
 max_cardinality = 2
-min_support = 0.045 # target 300 mined rules
+min_support = 0.025
 labels = ['<=50K', '>50K']
 minor = True
 
@@ -113,17 +162,25 @@ x = tb.tabarray(SVfile=fcomplete)
 
 age = np.array([age_func(a) for a in x['age']])
 
+workclass = np.array([workclass_func(w) for w in x['workclass']])
+
+education = np.array([education_func(s) for s in x['education']])
+
+marital_status = np.array([marital_status_func(m) for m in x['marital-status']])
+
 capital_gain  = np.array([capital_gain_func(c) for c in x['capital-gain']])
 
 capital_loss = np.array(['>0' if (c > 0) else '=0' for c in x['capital-loss']])
 
 hours_per_week = np.array([hours_func(h) for h in x['hours-per-week']])
 
+native_country = np.array([native_country_func(c) for c in x['native-country']])
+
 income = np.cast[int](x['income'] == '>50K')
 
-columns = [age, x['workclass'], x['education'], x['marital-status'], x['occupation'],
+columns = [age, workclass, education, marital_status, x['occupation'],
            x['relationship'], x['race'], x['sex'], capital_gain, capital_loss,
-           hours_per_week, x['native-country'], income]
+           hours_per_week, native_country, income]
 
 names = ['age', 'workclass', 'education', 'marital-status', 'occupation',
          'relationship', 'race', 'sex', 'capital-gain', 'capital-loss',
