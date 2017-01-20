@@ -64,7 +64,7 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Make permutation map garbage collection optional
 
-- [ ] Estimate the size (in memory) of the permutation map compared to the cache --
+- [x] Estimate the size (in memory) of the permutation map compared to the cache --
       compare experiments for a fixed `max_num_nodes` with and without the
       permutation map.  Should we consider an alphabetical tree?
 
@@ -170,7 +170,7 @@ Jupyter notebooks!
 
 - [ ] Abstract
 
-- [ ] Intro -- look at Ben's and Hongyu's papers as examples.  Perhaps start by
+- [x] Intro -- look at Ben's and Hongyu's papers as examples.  Perhaps start by
       trying to tell a high-level story in approximately 10 sentences.
       (This might make a good abstract!)  When you flesh things out, the intro
       will probably be approximately one page.  Remember that our approach is
@@ -196,7 +196,7 @@ Jupyter notebooks!
 
 - [X] Summarize the Garofalakis papers (1 paragraph) (Nicholas)
 
-- [ ] Summarize the ProPublica paper (1 paragraph) (Nicholas)
+- [x] Summarize the ProPublica paper (1 paragraph) (Nicholas)
 
 - [ ] Everything else (Cynthia)
 
