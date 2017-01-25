@@ -43,7 +43,7 @@ num_folds = 10
 max_cardinality = 2
 min_support = 0.005
 labels = ['Does-not-recidivate', 'Recidivate']
-minor = False
+minor = True
 
 x = tb.tabarray(SVfile=fin)
 
