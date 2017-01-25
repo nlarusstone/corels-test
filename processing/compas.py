@@ -6,6 +6,7 @@ import tabular as tb
 import mine
 
 
+"""
 def age_func(a):
     if (a <= 20):       # minimum age is 18
         return '18-20'  # support = 220
@@ -33,9 +34,11 @@ def priors_count_func(p):
         return '4-9'    # support = 1523
     else:
         return '>=10'   # support = 736
+"""
 
 fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
 fout = os.path.join('..', 'data', 'compas.csv')
+din = os.path.join('..', 'data')
 dout = os.path.join('..', 'data', 'CrossValidation')
 
 seed = sum([3, 15, 13, 16, 1, 19]) # c:3, o:15, m:13, p:16, a:1, s:19
@@ -44,6 +47,8 @@ max_cardinality = 2
 min_support = 0.005
 labels = ['No', 'Yes']
 minor = True
+
+np.random.seed(seed)
 
 x = tb.tabarray(SVfile=fin)
 
@@ -124,10 +129,10 @@ for i in range(num_folds):
     y[np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])].saveSV(ftrain)
 
     print 'mine rules from', ftrain
-    num_rules[i] = mine.mine_rules(din=dout, froot=train_root,
-                                   max_cardinality=max_cardinality,
-                                   min_support=min_support, labels=labels,
-                                   minor=minor)
+    num_rules[i] = mine.mine_binary(din=dout, froot=train_root,
+                                    max_cardinality=max_cardinality,
+                                    min_support=min_support, labels=labels,
+                                    minor=minor)
     mine.apply_rules(din=dout, froot=cv_root, labels=labels)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
