@@ -6,7 +6,6 @@ import tabular as tb
 import mine
 
 
-"""
 def age_func(a):
     if (a <= 20):       # minimum age is 18
         return '18-20'  # support = 220
@@ -30,11 +29,9 @@ def priors_count_func(p):
         return '=1'     # support = 1397
     elif (p <= 3):
         return '2-3'    # support = 1408
-    elif (p <= 9):
-        return '4-9'    # support = 1523
     else:
-        return '>=10'   # support = 736
-"""
+        return '>=4'    # support = 736+1523
+
 
 fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
 fout = os.path.join('..', 'data', 'compas.csv')
@@ -129,7 +126,7 @@ for i in range(num_folds):
     y[np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])].saveSV(ftrain)
 
     print 'mine rules from', ftrain
-    num_rules[i] = mine.mine_binary(din=dout, froot=train_root,
+    num_rules[i] = mine.mine_rules(din=dout, froot=train_root,
                                     max_cardinality=max_cardinality,
                                     min_support=min_support, labels=labels,
                                     minor=minor)
