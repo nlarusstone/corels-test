@@ -186,7 +186,7 @@ names = ['age', 'workclass', 'education', 'marital-status', 'occupation',
          'relationship', 'race', 'sex', 'capital-gain', 'capital-loss',
          'hours-per-week', 'native-country', 'income']
 
-print 'write binary dataset', fout
+print 'write categorical dataset', fout
 y = tb.tabarray(columns=columns, names=names)
 y.saveSV(fout)
 
