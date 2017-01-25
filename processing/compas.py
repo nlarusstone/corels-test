@@ -1,8 +1,10 @@
-"""
-Age<=18,Age=18-22,Age<=20,Age<=22,Age<=25,Age=24-30,Age=24-40,Age>=30,Age<=40,Age<=45,Gender=Male,Race=African-American,Race=Caucasian,Race=Asian,Race=Hispanic,Race=Native_American,Race=Other,Juvenile_Felonies=0,Juvenile_Felonies=1-3,Juvenile_Felonies>=3,Juvenile_Felonies>=5,Juvenile_Crimes=0,Juvenile_Crimes=1-3,Juvenile_Crimes>=3,Juvenile_Crimes>=5,Prior_Crimes=0,Prior_Crimes=1-3,Prior_Crimes>=3,Prior_Crimes>=5,y
+import os
 
-"""
+import numpy as np
 import tabular as tb
+
+import mine
+
 
 def age_func(a):
     if (a <= 20):       # minimum age is 18
@@ -32,7 +34,16 @@ def priors_count_func(p):
     else:
         return '>=10'   # support = 736
 
-fin = '../compas/compas-scores-two-years.csv'
+fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
+fout = os.path.join('..', 'data', 'compas.csv')
+dout = os.path.join('..', 'data', 'CrossValidation')
+
+seed = sum([3, 15, 13, 16, 1, 19]) # c:3, o:15, m:13, p:16, a:1, s:19
+num_folds = 10
+max_cardinality = 2
+min_support = 0.005
+labels = ['Does-not-recidivate', 'Recidivate']
+minor = False
 
 x = tb.tabarray(SVfile=fin)
 
@@ -65,11 +76,19 @@ juvenile_felonies = np.array(['>0' if (i > 0) else '=0' for i in x['juv_fel_coun
 
 juvenile_misdemeanors = np.array(['>0' if (i > 0) else '=0' for i in x['juv_misd_count']])  # support = 415
 
-priors_count = np.array([priors_count_func(i) for i in x['priors']])
+priors_count = np.array([priors_count_func(i) for i in x['priors_count']])
 
-columns = [x['sex'], age, juvenile_felonies, juvenile_misdemeanors]
+assert (set(x['c_charge_degree']) == set(['F', 'M']))
 
-cnames = ['age', 'sex', 'juvenile-felonies', 'juvenile_misdemeanors', 'priors']
+c_charge_degree = np.array(['Misdemeanor' if (i == 'M') else 'Felony' for i in x['c_charge_degree']])
+
+# see `c_jail_in` and `c_jail_out` for time in jail?
+
+columns = [x['sex'], age, juvenile_felonies, juvenile_misdemeanors,
+           priors_count, c_charge_degree, x['two_year_recid']]
+
+cnames = ['age', 'sex', 'juvenile-felonies', 'juvenile-misdemeanors',
+          'priors', 'current-charge-degree', 'two-year-recidivism']
 
 """
 race_list = list(set(x['race']))
@@ -82,5 +101,33 @@ cnames = ['Gender=Male', 'Age=18-20', 'Age=18-22', 'Age=18-25',
 cnames += ['Race=%s' % r for r in race_list]
 """
 
-y = tb.tabarray(columns=columns, names=cnames)
 
+print 'write categorical dataset', fout
+y = tb.tabarray(columns=columns, names=cnames)
+y.saveSV(fout)
+
+print 'permute and partition dataset'
+split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_folds)
+print 'number of folds:', num_folds
+print 'train size:', len(split_ind[0]) * (num_folds - 1)
+print 'test size:', len(split_ind[0])
+
+num_rules = np.zeros(num_folds, int)
+for i in range(num_folds):
+    print 'generate cross-validation split', i
+    cv_root = 'compas_%d' % i
+    test_root = '%s_test' % cv_root
+    train_root = '%s_train' % cv_root
+    ftest = os.path.join(dout, '%s.csv' % test_root)
+    ftrain = os.path.join(dout, '%s.csv' % train_root)
+    y[split_ind[i]].saveSV(ftest)
+    y[np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])].saveSV(ftrain)
+
+    print 'mine rules from', ftrain
+    num_rules[i] = mine.mine_rules(din=dout, froot=train_root,
+                                   max_cardinality=max_cardinality,
+                                   min_support=min_support, labels=labels,
+                                   minor=minor)
+    mine.apply_rules(din=dout, froot=cv_root, labels=labels)
+
+print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
