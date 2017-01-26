@@ -36,6 +36,9 @@ fout = os.path.join('..', 'data', 'compas.csv')
 din = os.path.join('..', 'data')
 dout = os.path.join('..', 'data', 'CrossValidation')
 
+if not os.path.exists(dout):
+    os.mkdir(dout)
+
 seed = sum([3, 15, 13, 16, 1, 19]) # c:3, o:15, m:13, p:16, a:1, s:19
 num_folds = 10
 max_cardinality = 2
