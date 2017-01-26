@@ -17,10 +17,8 @@ def age_func(a):
         return '31-40'  # support = 1818
     elif (a <= 50):
         return '41-50'  # support = 1045
-    elif (a <= 60):
-        return '51-60'  # support = 748
     else:
-        return '>60'    # support = 230
+        return '>50'    # support = 978
 
 def priors_count_func(p):
     if (p == 0):
@@ -30,7 +28,7 @@ def priors_count_func(p):
     elif (p <= 3):
         return '2-3'    # support = 1408
     else:
-        return '>=4'    # support = 736+1523
+        return '>3'    # support = 2259
 
 
 fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
@@ -41,7 +39,7 @@ dout = os.path.join('..', 'data', 'CrossValidation')
 seed = sum([3, 15, 13, 16, 1, 19]) # c:3, o:15, m:13, p:16, a:1, s:19
 num_folds = 10
 max_cardinality = 2
-min_support = 0.005
+min_support = 0.01
 labels = ['No', 'Yes']
 minor = True
 
@@ -78,6 +76,8 @@ juvenile_felonies = np.array(['>0' if (i > 0) else '=0' for i in x['juv_fel_coun
 
 juvenile_misdemeanors = np.array(['>0' if (i > 0) else '=0' for i in x['juv_misd_count']])  # support = 415
 
+juvenile_crimes = np.array(['>0' if (i > 0) else '=0' for i in x['juv_fel_count'] + x['juv_misd_count'] + x['juv_other_count']]) # support = 973
+
 priors_count = np.array([priors_count_func(i) for i in x['priors_count']])
 
 assert (set(x['c_charge_degree']) == set(['F', 'M']))
@@ -86,10 +86,10 @@ c_charge_degree = np.array(['Misdemeanor' if (i == 'M') else 'Felony' for i in x
 
 # see `c_jail_in` and `c_jail_out` for time in jail?
 
-columns = [x['sex'], age, juvenile_felonies, juvenile_misdemeanors,
+columns = [x['sex'], age, juvenile_felonies, juvenile_misdemeanors, juvenile_crimes,
            priors_count, c_charge_degree, x['two_year_recid']]
 
-cnames = ['sex', 'age', 'juvenile-felonies', 'juvenile-misdemeanors',
+cnames = ['sex', 'age', 'juvenile-felonies', 'juvenile-misdemeanors', 'juvenile_crimes',
           'priors', 'current-charge-degree', 'recidivate-within-two-years']
 
 """
