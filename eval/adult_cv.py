@@ -25,7 +25,10 @@ def parse_prefix_sums(p):
 froot = 'adult'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
+log_froot = 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0100000-v=1-f=1000.txt'
 ftag = 'ela_adult'
+log_froot = 'for-%s-bfs-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0100000-v=1-f=1000.txt'
+ftag = 'ela_adult-bfs'
 num_folds = 1
 lw = 2  # linewidth
 ms = 9  # markersize
@@ -39,7 +42,7 @@ for i in range(1, 9):
 for fold in range(0, num_folds):
 
     fname = 'adult_%d_train.out' % fold
-    log_fname = 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0100000-v=1-f=1000.txt' % fname
+    log_fname = log_froot % fname
     fname = os.path.join(data_dir, fname)
 
     print 'cross-validation fold:', fold
@@ -78,11 +81,13 @@ for fold in range(0, num_folds):
     #pylab.plot(x['total_time'][1], default_objective, 'co', markersize=ms)
     #pylab.plot(x['total_time'][imin], x['tree_min_objective'][imin], 'ms', markersize=ms)
     ax = list(pylab.axis())
-    ax[0] = -0.04
-    ax[2] = 0.0
+    ax[0] = x['total_time'][1]
+    ax[1] = 10**3
+    ax[2] = 0
+    ax[3] = 0.25
     #ax[3] = 0.51
     pylab.axis(ax)
-    pylab.axis('tight')
+    #pylab.axis('tight')
     pylab.xlabel('time (s)', fontsize=fs)
     pylab.ylabel('value', fontsize=fs)
     pylab.title('progress during execution', fontsize=fs)
@@ -91,7 +96,7 @@ for fold in range(0, num_folds):
     if ('curious_lb' in log_fname):
         pylab.legend(['objective', 'lower bound', 'training error'], loc='lower right')
     else:
-        pylab.legend(['objective', 'training error'])
+        pylab.legend(['objective', 'training error'], loc='lower left')
 
     """
     pylab.subplot(2, 1, 2)
@@ -153,7 +158,7 @@ for fold in range(0, num_folds):
     #zc = z.extract()[:, ::-1].cumsum(axis=1)[:, ::-1]
     zc = z.extract()
     color_vec = ['r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'violet', 'm', 'gray', 'k'][:(max_length + 1)][::-1]
-    color_vec = ['b', 'c', 'm', 'gray', 'k'][::-1]
+    #color_vec = ['b', 'c', 'm', 'gray', 'k'][::-1]
 
     if (fold == 0):
         pylab.figure(6)
@@ -162,8 +167,8 @@ for fold in range(0, num_folds):
             jj = zc[:, length].nonzero()[0]
             tt = x['total_time'][jj]
             yy = zc[jj, length]
-            yy = np.array([1] + list(yy))# + [1])
-            tt = np.array([tt[0]] + list(tt))# + [tt[-1]])
+            yy = np.array([1] + list(yy) + [1])
+            tt = np.array([tt[0]] + list(tt) + [tt[-1]])
             pylab.loglog(tt, yy, color=color_vec[length % len(color_vec)], linewidth=lw*2)
         pylab.legend(['length %d' % length for length in range(0, max_length + 1)[::-1]], loc='upper left')
         pylab.xlabel('time (s)', fontsize=fs)
@@ -171,7 +176,10 @@ for fold in range(0, num_folds):
         pylab.title('lengths of prefixes in the logical queue', fontsize=fs)
         pylab.xticks(fontsize=(fs-2))
         pylab.yticks(fontsize=(fs-2))
-        ax = [10**-5, 10**3, 10**-0.1, 10**7.5]
+        if 'curious_lb' in fname:
+            ax = [x['total_time'][1], 10**3, 10**-0.1, 10**6]
+        else:
+            ax = [x['total_time'][1], 10**3.5, 10**-0.1, 10**7]
         pylab.axis(ax)
         pylab.draw()
         pylab.savefig('../figs/%s-queue.png' % ftag)

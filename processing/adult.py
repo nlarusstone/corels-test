@@ -88,6 +88,7 @@ def hours_func(h):
     else:
         return '>60'
 
+"""
 def native_country_func(c):
     if (c in ['United-States', 'Canada', 'Outlying-US(Guam-USVI-etc)', 'Puerto-Rico']):
         return 'US-or-Canada'
@@ -104,6 +105,12 @@ def native_country_func(c):
     else:
         assert (c in ['Iran', 'South', 'Trinadad&Tobago'])
         return 'Other'
+"""
+def native_country_func(c):
+    if (c == 'United-States'):
+        return c
+    else:
+        return 'Not-United-States'
 
 din = os.path.join('..', 'data', 'adult')
 dout = os.path.join('..', 'data', 'CrossValidation')
@@ -115,8 +122,8 @@ fout = os.path.join(din, 'adult.csv')
 
 seed = sum([1, 4, 21, 12, 20]) # a:1, d:4, u:21, l:12, t:20
 num_folds = 10
-max_cardinality = 2
-min_support = 0.01
+max_cardinality = 1
+min_support = 0.001
 labels = ['<=50K', '>50K']
 minor = True
 

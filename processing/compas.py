@@ -42,7 +42,7 @@ if not os.path.exists(dout):
 seed = sum([3, 15, 13, 16, 1, 19]) # c:3, o:15, m:13, p:16, a:1, s:19
 num_folds = 10
 max_cardinality = 2
-min_support = 0.01
+min_support = 0.005
 labels = ['No', 'Yes']
 minor = True
 

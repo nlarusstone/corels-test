@@ -25,7 +25,9 @@ def parse_prefix_sums(p):
 froot = 'compas'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
+log_root = 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=3000000-c=0.0050000-v=1-f=1000.txt'
 ftag = 'ela_compas'
+#ftag = 'ela_compas1'
 num_folds = 1
 lw = 2  # linewidth
 ms = 9  # markersize
@@ -39,7 +41,7 @@ for i in range(1, 9):
 for fold in range(0, num_folds):
 
     fname = 'compas_%d_train.out' % fold
-    log_fname = 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=3000000-c=0.0050000-v=1-f=1000.txt' % fname
+    log_fname = log_root % fname
     fname = os.path.join(data_dir, fname)
 
     print 'cross-validation fold:', fold
@@ -78,11 +80,11 @@ for fold in range(0, num_folds):
     #pylab.plot(x['total_time'][1], default_objective, 'co', markersize=ms)
     #pylab.plot(x['total_time'][imin], x['tree_min_objective'][imin], 'ms', markersize=ms)
     ax = list(pylab.axis())
-    ax[0] = -0.04
-    ax[2] = 0.0
-    #ax[3] = 0.51
+    ax[0] = x['total_time'][1]
+    ax[1] = 10**3
+    ax[2] = 0.
+    ax[3] = 0.45
     pylab.axis(ax)
-    pylab.axis('tight')
     pylab.xlabel('time (s)', fontsize=fs)
     pylab.ylabel('value', fontsize=fs)
     pylab.title('progress during execution', fontsize=fs)
