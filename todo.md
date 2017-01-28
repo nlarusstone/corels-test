@@ -219,6 +219,7 @@ Jupyter notebooks!
 
 ### Bounds
 
+- [ ] Add theorem and proof for the identical points bound
 - [ ] Rewrite counting bounds with respect to Algorithm 2
 
 ### Implementation architecture
@@ -230,6 +231,9 @@ Jupyter notebooks!
 - [ ] Describe the physical computing environment used to conduct experiments (tbd)
 - [ ] Describe and motivate the experiments we conduct
 - [ ] Describe and interpret our results
+- [ ] Output our confusion matrix
+- [ ] Comparisons to other algorithms:  accuracy, maybe runtime
+- [ ] Comparisons to decision trees:  also number of nodes
 
 ### Other sections
 
