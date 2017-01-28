@@ -45,6 +45,8 @@ def mine_binary(din='../data/compas', froot='compas', max_cardinality=2,
 
     for cardinality in range(2, max_cardinality + 1):
         for dlist in list(itertools.combinations(features, cardinality)):
+            if (dlist[0][:3] == dlist[1][:3]):  # this is a hack
+                continue
             bvec = np.array([(x[d] == 1) for d in dlist]).all(axis=0)
             supp = bvec.sum()
             if ((supp > min_threshold) and (supp < max_threshold)):
