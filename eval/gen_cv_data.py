@@ -25,8 +25,8 @@ for fname in f_names:
         train = train[train > 0]
         test = test[test > 0]
         for seg, split in [('train', train), ('test', test)]:
-            out_train = '../data/{0}_{1}_{2}.out'.format(fname, i, seg)
-            label_train = '../data/{0}_{1}_{2}.label'.format(fname, i, seg)
+            out_train = '../data/CrossValidation/{0}_{1}_{2}.out'.format(fname, i, seg)
+            label_train = '../data/CrossValidation/{0}_{1}_{2}.label'.format(fname, i, seg)
             with open(out_train, 'w') as out_f:
                 out_concat = pd.concat([out.iloc[:, 0], out.iloc[:, split]], axis=1)
                 out_concat.to_csv(out_f, sep=' ', index=False, header=False)
