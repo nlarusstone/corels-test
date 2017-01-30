@@ -12,10 +12,10 @@ __pycache__/
 *.swo
 *~
 *.dSYM/
-data/*_train.label
-data/*_test.label
-data/*_train.out
-data/*_test.out
+data/CrossValidation/*_train.label
+data/CrossValidation/*_test.label
+data/CrossValidation/*_train.out
+data/CrossValidation/*_test.out
 
 # GNUmakefile deps
 src/.deps/*
