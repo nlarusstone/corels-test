@@ -1,4 +1,4 @@
-TARGETS = sample-sigconf
+TARGETS = kdd17
 
 TEXFILES = $(wildcard *.tex)
 BIBFILES = $(wildcard *.bib)
@@ -13,7 +13,7 @@ PDFS = $(addsuffix .pdf,$(TARGETS))
 
 all: $(PDFS)
 
-a: sample-sigconf.pdf
+a: kdd17.pdf
 
 spell:
 	$(shell for i in $(TEXFILES); do ispell $(i); done)
