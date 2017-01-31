@@ -98,4 +98,7 @@ eval/tdata_R.out
 *.blg
 *.toc
 *.lof
+*.out
+*.cut
 paper/arxiv.pdf
+kdd/kdd17.pdf
