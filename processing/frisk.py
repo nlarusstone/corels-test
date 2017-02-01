@@ -10,81 +10,41 @@ import tabular as tb
 import mine
 
 
+city_dict = {1: 'Manhattan', 2: 'Brooklyn', 3: 'Bronx', 4: 'Queens', 5: 'Staten Island'}
+
+sex_dict = {0: 'female', 1: 'male'}
+
+race_dict = {1: 'black', 2: 'black Hispanic', 3: 'white Hispanic', 4: 'white',
+             5: 'Asian/Pacific Islander', 6: 'Am. Indian/Native'}
+
+build_dict = {1: 'heavy', 2: 'musuclar', 3: 'medium', 4: 'thin'}
+
 def age_func(a):
-    if (a <=25):
-        return '<=25'
-    elif (a <= 45):
-        return '26-45'
-    elif (a <=75):
-        return '46-75'
+    if (a <= 20):       # minimum age is 18
+        return '18-20'  # support = 220
+    elif (a <= 22):
+        return '21-25'  # support = 1641
+    elif (a <= 25):
+        return '26-30'  # support = 1512
+    elif (a <= 40):
+        return '31-40'  # support = 1818
+    elif (a <= 50):
+        return '41-50'  # support = 1045
     else:
-        return '>75'
+        return '>50'    # support = 978
 
-def workclass_func(w):
-    if ('gov' in w):
-        return 'Government'
-    elif w.startswith('Self'):
-        return 'Self-employed'
-    else:
-        assert (w in ['Private', 'Without-pay']), w
-        return w
-
-def education_func(s):
-    if (s in ['Preschool', '1st-4th', '5th-6th', '7th-8th']):   # education-num = 1-4
-        return 'At-most-middle-school'
-    elif (s in ['9th', '10th', '11th', '12th']):                # education-num = 5-8
-        return 'Some-high-school'
-    elif ('Assoc' in s):                                        # education-num = 11-12
-        return 'Assoc-degree'
-    elif (s in ['Prof-school', 'Masters', 'Doctorate']):        # education-num = 14-16
-        return 'Grad-school'
-    else:
-        assert (s in ['HS-grad', 'Some-college', 'Bachelors'])  # education-num = 9-10, 13
-        return s
-
-def marital_status_func(m):
-    if (m in ['Married-AF-spouse', 'Married-civ-spouse']):
-        return 'Married'
-    elif (m == 'Never-married'):
-        return m
-    else:
-        assert (m in ['Divorced', 'Widowed', 'Separated', 'Married-spouse-absent']), m
-        return 'No-longer-with-spouse'
-
-def capital_gain_func(c):
-    if (c >= 7298):
-        return '>=7298'
-    else:
-        return '<7298'
-
-def hours_func(h):
-    if (h <= 25):
-        return '<=25'
-    elif (h <= 40):
-        return '26-40'
-    elif (h < 60):
-        return '41-60'
-    else:
-        return '>60'
-
-def native_country_func(c):
-    if (c == 'United-States'):
-        return c
-    else:
-        return 'Not-United-States'
 
 din = os.path.join('..', 'data', 'frisk')
 dout = os.path.join('..', 'data', 'CrossValidation')
 zdata = os.path.join('..', 'data', '2014-20SQF.zip')
 fdata = os.path.join(din, '2014-SQF-web.csv')
-fcomplete = os.path.join(din, 'frisk-filtered.csv')
 fout = os.path.join(din, 'frisk.csv')
 
 seed = sum([1, 4, 21, 12, 20]) # f:6, r:18, i:09, s:19, k:11
 num_folds = 10
-max_cardinality = 1
+max_cardinality = 2
 min_support = 0.01
-labels = ['<=50K', '>50K']
+labels = ['no', 'yes']
 minor = True
 
 
@@ -110,59 +70,78 @@ if not os.path.exists(fdata):
         f1 = f1.replace(' ', '\\ ')
         os.system('mv %s %s' % (f1, f2))
 
-print 'read downloaded data:', fdata
-x = open(fdata, 'rU').read().strip().split('\n')
-x = [','.join(line.split(', ')) for line in x if '?' not in line]
+print 'lightly process data (e.g., to make binary features)'
+x = tb.tabarray(SVfile=fdata)
 assert (len(x) == 45787)
 
-"""
-names = ['age', 'workclass', 'fnlwgt', 'education', 'education-num',
-         'marital-status', 'occupation', 'relationship', 'race', 'sex',
-         'capital-gain', 'capital-loss', 'hours-per-week', 'native-country',
-         'income']
+assert not np.isnan(x['frisked']).any()
+assert x['frisked'].sum() == 30345  # 66% frisked
 
-print 'read original test data:', ftest
-z = open(ftest, 'rU').read().strip().split('\n')[1:]
-z = [','.join(line.split(', ')).strip('.') for line in z if '?' not in line]
-assert (len(z) == 15060)
+assert not np.isnan(x['searched']).any()
+assert x['searched'].sum() == 7283  # 16% searched
 
-print 'concatenate train and test:', fcomplete
-f = open(fcomplete, 'w')
-f.write(','.join(names) + '\n')
-f.write('\n'.join(x + z))
-f.close()
+assert (x['frisked'] & x['searched']).sum() == 6667
 
-print 'lightly process data (e.g., to make binary features)'
-x = tb.tabarray(SVfile=fcomplete)
+assert (x['searched'] & np.invert(x['frisked'])).sum() == 616
 
-age = np.array([age_func(a) for a in x['age']])
+weapon = x['pistol'] + x['riflshot'] + x['asltweap'] + x['knifcuti'] + x['machgun'] + x['othrweap']
 
-workclass = np.array([workclass_func(w) for w in x['workclass']])
+assert np.isnan(weapon).sum() == 10860
 
-education = np.array([education_func(s) for s in x['education']])
+assert not np.isnan(x['arstmade']).any()
+assert x['arstmade'].sum() == 6898  # 15% arrested
 
-marital_status = np.array([marital_status_func(m) for m in x['marital-status']])
+assert len(set(x['year'])) == 1     # year of stop
 
-capital_gain  = np.array([capital_gain_func(c) for c in x['capital-gain']])
+assert len(set(x['pct'])) == 77     # precinct of stop
+assert (x['pct'].min() >= 1) and (x['pct'].max() <= 123)
 
-capital_loss = np.array(['>0' if (c > 0) else '=0' for c in x['capital-loss']])
+assert len(set(x['ser_num'])) == 2281   # UF-250 serial number
 
-hours_per_week = np.array([hours_func(h) for h in x['hours-per-week']])
+# datestop, timestop
 
-native_country = np.array([native_country_func(c) for c in x['native-country']])
+assert set(x['city']) == set(range(1, 6))
 
-income = np.cast[int](x['income'] == '>50K')
+assert np.isnan(x['sex']).sum() == 394
 
-columns = [age, workclass, education, marital_status, x['occupation'],
-           x['relationship'], x['race'], x['sex'], capital_gain, capital_loss,
-           hours_per_week, native_country, income]
+assert np.isnan(x['race']).sum() == 1039
 
-names = ['age', 'workclass', 'education', 'marital-status', 'occupation',
-         'relationship', 'race', 'sex', 'capital-gain', 'capital-loss',
-         'hours-per-week', 'native-country', 'income']
+# dob
+
+assert np.isnan(x['age']).sum() == 107
+assert (x['age'] >= 100).sum() == 27
+assert x[x['age']==366]['dob']==6161978
+x[x['age']==366]['age'] = 36
+assert (x['age'] >= 90).sum() == 29     # the two entries in the 90s are ambiguous (see dob)
+assert (x['age'] < 12).sum() == 99      # the single digit / younger ages seem like typos (see height, weight)
+
+assert not np.isnan(x['height']).any()
+
+assert not np.isnan(x['weight']).any()
+
+assert np.isnan(x['haircolr']).sum() == 492
+
+assert np.isnan(x['eyecolor']).sum() == 286
+
+assert np.isnan(x['build']).sum() == 721
+
+assert len(set(x['othfeatr'])) == 220
+
+names = ['city', 'sex', 'race', 'age', 'build', 'frisked']
+
+keep = np.invert(np.isnan(x[names].extract()).any(axis=1))
+x = x[keep]
+assert len(x) == 43858  # throw out 1929 records with missing data
+x = x[(x['age'] > 11) & (x['age'] < 90)]     # throw out age extremes
+
+age = [age_func(i) for i in x['age']]
+
+columns = [x['city'], x['sex'], x['race'], age, x['build'], x['frisked']]
+
+cnames = names
 
 print 'write categorical dataset', fout
-y = tb.tabarray(columns=columns, names=names)
+y = tb.tabarray(columns=columns, names=cnames)
 y.saveSV(fout)
 
 print 'permute and partition dataset'
@@ -174,7 +153,7 @@ print 'test size:', len(split_ind[0])
 num_rules = np.zeros(num_folds, int)
 for i in range(num_folds):
     print 'generate cross-validation split', i
-    cv_root = 'adult_%d' % i
+    cv_root = 'frisk_%d' % i
     test_root = '%s_test' % cv_root
     train_root = '%s_train' % cv_root
     ftest = os.path.join(dout, '%s.csv' % test_root)
@@ -184,18 +163,9 @@ for i in range(num_folds):
 
     print 'mine rules from', ftrain
     num_rules[i] = mine.mine_rules(din=dout, froot=train_root,
-                                   max_cardinality=max_cardinality,
-                                   min_support=min_support, labels=labels,
-                                   minor=minor)
+                                    max_cardinality=max_cardinality,
+                                    min_support=min_support, labels=labels,
+                                    minor=minor)
     mine.apply_rules(din=dout, froot=cv_root, labels=labels)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
-
-#ben.driver(din='../data/adult', dout='../data/adult', froot='adult', train_suffix='.csv',
-#           delimiter=',', is_binary=False, maxlhs=2, minsupport=2.5, out_suffix='')
-#minority.compute_minority(froot='adult', dir='../data/adult')
-
-#mine.mine_rules(din=din, froot=root, max_cardinality=max_cardinality,
-#                min_support=min_support, labels=labels, suffix='_e', minor=minor)
-
-"""
