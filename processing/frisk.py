@@ -1,6 +1,27 @@
 """
 http://www.nyclu.org/content/stop-and-frisk-data
 
+
+https://5harad.com/papers/frisky.pdf
+
+"This time, however, we use only the 18 stop circumstances officers already
+consider (listed in Table 1, excluding the two 'other' categories), indicator
+variables for each of the 77 precincts and indicator variables for the three
+location types (public housing, transit and 'neither'); we do not include interactions."
+
+Table 1, primary stop circumstance(s):
+
+    Suspicious object, fits description, casing, acting as lookout,
+    suspicious clothing, drug transaction, furtive movements, actions
+    of violent crime, suspicious bulge and/or other
+
+Table 1, additional stop circumstance(s):
+
+    Witness report, ongoing investigation, proximity to crime
+    scene, evasive response, associating with criminals, changed
+    direction, high crime area, time of day, sights and sounds of
+    criminal activity and/or other
+
 """
 import os
 
@@ -19,19 +40,47 @@ race_dict = {1: 'black', 2: 'black Hispanic', 3: 'white Hispanic', 4: 'white',
 
 build_dict = {1: 'heavy', 2: 'musuclar', 3: 'medium', 4: 'thin'}
 
+stop_dict = {'cs_objcs': 'reason for stop - suspicious object',
+             'cs_descr': 'reason for stop - fits description',
+             'cs_casng': 'reason for stop - casing',
+             'cs_lkout': 'reason for stop - acting as lookout',
+             'cs_cloth': 'reason for stop - suspicious clothing',
+             'cs_drgtr': 'reason for stop - drug transaction',
+             'cs_furtv': 'reason for stop - furtive movements'
+             'cs_vcrim': 'reason for stop - actions of violent crime'
+             'cs_bulge': 'reason for stop - suspicious bulge',
+             'cs_other': 'reason for stop - other'}
+
+additional_dict = {'ac_proxm': 'additional circumstances - proximity to crime scene',
+                   'ac_evasv': 'additional circumstances - evasive response',
+                   'ac_assoc': 'additional circumstances - associating with criminals',
+                   'ac_cgdir': 'additional circumstances - changed direction',
+                   'ac_incid': 'additional circumstances - high crime area',
+                   'ac_time' : 'additional circumstances - time of day',
+                   'ac_stsnd': 'additional circumstances - sights and sounds of criminal activity'
+                   'ac_rept' : 'additional circumstances - witness report'
+                   'ac_inves': 'additional circumstances - ongoing investigation'
+                   'ac_other': 'additional circumstances - other'}
+
+def rename_pos(s):
+    return s.replace(' - ', '=').replace(' ', '-')
+
+def rename_neg(s):
+    return s.replace(' - ', '=not-').replace(' ', '-')
+
 def age_func(a):
-    if (a <= 20):       # minimum age is 18
-        return '18-20'  # support = 220
-    elif (a <= 22):
-        return '21-25'  # support = 1641
+    if (a < 18):
+        return '<18'    # support = 5630
+    elif (a <= 21):
+        return '18-21'  # support = 9960
     elif (a <= 25):
-        return '26-30'  # support = 1512
+        return '22-25'  # support = 8044
+    elif (a <= 30):
+        return '26-30'  # support = 6222
     elif (a <= 40):
-        return '31-40'  # support = 1818
-    elif (a <= 50):
-        return '41-50'  # support = 1045
+        return '31-40'  # support = 7115
     else:
-        return '>50'    # support = 978
+        return '>40'    # support = 6776
 
 
 din = os.path.join('..', 'data', 'frisk')
@@ -126,6 +175,18 @@ assert np.isnan(x['eyecolor']).sum() == 286
 assert np.isnan(x['build']).sum() == 721
 
 assert len(set(x['othfeatr'])) == 220
+
+stop_reasons = [n for n in x.dtype.names if n.startswith('cs')]
+isr = np.isnan(x[stop_reasons].extract())
+assert not isr.all(axis=1).any()
+(ii, jj) = isr.nonzero()
+x[stop_reasons][ii, jj] = 0
+
+additional_reasons = [n for n in x.dtype.names if n.startswith('ac')]
+iar = np.isnan(x[additional_reasons].extract())
+assert not iar.all(axis=1).any()
+(ii, jj) = iar.nonzero()
+x[additional_reasons[ii, jj] = 0
 
 names = ['city', 'sex', 'race', 'age', 'build', 'frisked']
 
