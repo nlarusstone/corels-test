@@ -5,7 +5,7 @@ import tabular as tb
 
 import mine
 
-
+### FIX THIS ##########################
 def age_func(a):
     if (a <= 20):       # minimum age is 18
         return '18-20'  # support = 220
