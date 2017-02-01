@@ -48,19 +48,18 @@ minor = True
 
 np.random.seed(seed)
 
-x = tb.tabarray(SVfile=fin)
-
 # duplicate names in header:  decile_score, priors_count
 names = open(fin, 'rU').read().strip().split('\n')[0].split(',')
 
 nlist = []
-for (d, n) in zip(x.dtype.names, names):
+for n in names:
     if n in nlist:
         print 'duplicate name', n, '->', n + '_'
-        x.renamecol(d, '%s_' % n)
+        nlist.append('%s_' % n)
     else:
-        x.renamecol(d, n)
         nlist.append(n)
+
+x = tb.tabarray(SVfile=fin, names=nlist)
 
 assert (x['priors_count'] == x['priors_count_']).all()
 assert (x['decile_score'] == x['decile_score_']).all()
