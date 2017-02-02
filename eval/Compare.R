@@ -13,6 +13,14 @@
 ## 6) RF (Random Forests)
 ## 7) RIPPER (Repeated Incremental Pruning to Produce Error Reduction)
 
+## Others:
+## 1. Test against SBRL:
+## ./sbrlmod -t 3 -d 1 [trainout] [trainlabel] [testout] [testlabel]
+##
+## 2. Test against BBRL:
+## python eval_model.py [fname] --parallel -n 100000 -r 0.01 -c 1 -p 1 -k 1
+
+
 printf <- function(...) cat(sprintf(...))
 
 args = commandArgs(TRUE)
@@ -28,17 +36,9 @@ printf("Assumes data is in data/CrossValidation\n")
 printf("Running %s_{train|test}.csv ", fname)
 printf("against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER\n\n");
 
-
-
 datadir <- "../data/CrossValidation"
-traincsv <- paste(datadir, sprintf("%s_train.csv", fname), sep = "/")
-testcsv <- paste(datadir, sprintf("%s_test.csv", fname), sep = "/")
-
-## 1. Test against SBRL:
-## ./sbrlmod -t 3 -d 1 [trainout] [trainlabel] [testout] [testlabel]
-##
-## 2. Test against BBRL:
-## python eval_model.py [fname] --parallel -n 100000 -r 0.01 -c 1 -p 1 -k 1
+traincsv <- paste(datadir, sprintf("%s_train-binary.csv", fname), sep = "/")
+testcsv <- paste(datadir, sprintf("%s_test-binary.csv", fname), sep = "/")
 
 list.of.packages <- c("caret", "RWeka", "AER", "pROC",
                       "ggplot2", "gbm", "C50", "repeatedcv",
