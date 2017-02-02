@@ -2,18 +2,17 @@
 
 ## Prints out Cross-Validation results for particular dataset (e.g. compas)
 ## Assumes that data files are in 'data/CrossValidation'
-if [ "$#" -ne 4 ]; then
+if [ "$#" -ne 3 ]; then
     printf "Usage: ./Compare.sh [dataset]"
-    printf " [path to bbrl binary] [path to sbrlmod binary] [path to CV folder]\n"
-    printf "e.g. ./Compare.sh compas ./bbcache ./sbrlmod ../data/CrossValidation\n"
+    printf " [path to sbrlmod binary] [path to CV folder]\n"
+    printf "e.g. ./Compare.sh compas ./sbrlmod ../data/CrossValidation\n"
     exit
 fi
 
 args=("$@")
 dataset=${args[0]}
-bbrl=${args[1]}
-sbrl=${args[2]}
-cv_dir=${args[3]}
+sbrl=${args[1]}
+cv_dir=${args[2]}
 printf 'Running Cross Validation folds for %s\n' "$dataset"
 
 temp_f="random_file.txt"
@@ -33,7 +32,7 @@ done
 
 echo "\nRUNNING BBRL for all 10 folds of $dataset"
 rm $temp_f
-python eval_model.py $dataset --parallel -n 100000 -r 0.01 -c 1 -p 1 >> $temp_f 2>&1
+python eval_model.py $dataset --parallel -n 1000000 -r 0.01 -c 1 -p 1 >> $temp_f 2>&1
 echo $(tail -n 1 $temp_f)
 
 rm $temp_f
