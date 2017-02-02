@@ -4,6 +4,8 @@ import numpy as np
 import tabular as tb
 
 import mine
+import utils
+
 
 def age_func(a):
     if (a <= 22):       # minimum age is 18
@@ -32,6 +34,7 @@ def priors_count_func(p):
 
 fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
 fout = os.path.join('..', 'data', 'compas.csv')
+bout = os.path.join('..', 'data', 'compas-binary.csv')
 din = os.path.join('..', 'data')
 dout = os.path.join('..', 'data', 'CrossValidation')
 
@@ -109,6 +112,10 @@ print 'write categorical dataset', fout
 y = tb.tabarray(columns=columns, names=cnames)
 y.saveSV(fout)
 
+print 'write binary dataset', bout
+b = utils.to_binary(y)
+b.saveSV(bout)
+
 print 'permute and partition dataset'
 split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_folds)
 print 'number of folds:', num_folds
@@ -123,8 +130,13 @@ for i in range(num_folds):
     train_root = '%s_train' % cv_root
     ftest = os.path.join(dout, '%s.csv' % test_root)
     ftrain = os.path.join(dout, '%s.csv' % train_root)
+    btest = os.path.join(dout, '%s-binary.csv' % test_root)
+    btrain = os.path.join(dout, '%s-binary.csv' % train_root)
+    train_ind = np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])
     y[split_ind[i]].saveSV(ftest)
-    y[np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])].saveSV(ftrain)
+    y[train_ind].saveSV(ftrain)
+    b[split_ind[i]].saveSV(btest)
+    b[train_ind].saveSV(btrain)
 
     print 'mine rules from', ftrain
     num_rules[i] = mine.mine_rules(din=dout, froot=train_root,
