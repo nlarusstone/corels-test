@@ -12,20 +12,31 @@
 ## 5) C5.0
 ## 6) RF (Random Forests)
 ## 7) RIPPER (Repeated Incremental Pruning to Produce Error Reduction)
-## 8) SBRL (Scalable Bayesian Rule Lists)
-## Code for 1-6 based on "ExperimentalCode" folder sent to us by Cynthia
 
-#args = commandArgs()
-#if (length(args)  <= 1) {
-#    stop(sprintf("Usage: %s [dataset path]", args[1]))
-#}
-#df <- read.csv(args[2], header = TRUE)
+printf <- function(...) cat(sprintf(...))
+
+args = commandArgs(TRUE)
+if (length(args)  == 0) {
+    stop(sprintf("Usage: Compare.R [dataset] e.g. Compare.R bcancer_binary.csv",
+                 args[1]))
+}
+
+# 'dataset' used to represent dataset
+fname <- args[1]
+datadir <- "../data/CrossValidation"
+traincsv <- paste(datadir, sprintf("%s_train.csv", fname), sep = "/")
+testcsv <- paste(datadir, sprintf("%s_test.csv", fname), sep = "/")
+
+## 1. Test against SBRL:
+## ./sbrlmod -t 3 -d 1 [trainout] [trainlabel] [testout] [testlabel]
+##
+## 2. Test against BBRL:
+## python eval_model.py [fname] --parallel -n 100000 -r 0.01 -c 1 -p 1 -k 1
 
 list.of.packages <- c("caret", "RWeka", "AER", "pROC",
                       "ggplot2", "gbm", "C50", "repeatedcv",
                       "svmRadial", "rpart", "randomForest",
-                      "RColorBrewer", "party", "partykit", "rpart.plot",
-                      "sbrl")
+                      "RColorBrewer", "party", "partykit", "rpart.plot")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if (length(new.packages) > 0)
     install.packages(new.packages,
@@ -41,7 +52,6 @@ library(rpart.plot)
 library(RColorBrewer)
 library(party)
 library(partykit)
-library(sbrl)
 
 data(tictactoe)
 
@@ -50,6 +60,8 @@ for (name in names(tictactoe)) {
     colnames <- make.names(unique(column))
     tictactoe[name] <- factor(column, labels=colnames)
 }
+printf(names(tictactoe))
+printf(head(tictactoe))
 
 tictactoe$Class <- tictactoe$label
 sorted_names <- sort(make.names(factor(tictactoe$Class)))
@@ -117,18 +129,8 @@ pred.ripModel <- as.vector(predict(ripModel, newdata=testData, type="prob")[,pos
 roc.ripModel <- pROC::roc(testData$Class, pred.ripModel)
 auc.ripModel <- pROC::auc(roc.ripModel)
 
-## sbrl
-trainData$label <- trainData$Class
-sbrlModel <- sbrl(trainData, pos_sign=poslabel, neg_sign=neglabel)
-temp <- predict(sbrlModel, testData, type="prob")
-# sbrl has $V2 for pos label
-pred.sbrlModel <- as.vector(temp$V2)
-# Calculate the AUC for the test data set.
-roc.sbrlModel <- pROC::roc(testData$Class, pred.sbrlModel)
-auc.sbrlModel <- pROC::auc(roc.sbrlModel)
-
 ## Plot AUC, on the test data set, for each model.
-test.auc <- data.frame(model=c("glm", "svm", "gbm", "cart", "c50", "rForest", "RIPPER", "sbrl"),auc=c(auc.glmModel, auc.svmModel, auc.gbmModel, auc.cartModel, auc.c50Model, auc.rfModel, auc.ripModel, auc.sbrlModel))
+test.auc <- data.frame(model=c("glm", "svm", "gbm", "cart", "c50", "rForest", "RIPPER"),auc=c(auc.glmModel, auc.svmModel, auc.gbmModel, auc.cartModel, auc.c50Model, auc.rfModel, auc.ripModel))
 test.auc <- test.auc[order(test.auc$auc, decreasing=TRUE),]
 test.auc$model <- factor(test.auc$model, levels=test.auc$model)
 test.auc
@@ -152,9 +154,7 @@ plot(roc.c50Model, print.auc=TRUE, print.auc.x=0.7, print.auc.y=0.20, print.auc.
 plot(roc.rfModel, print.auc=TRUE, print.auc.x=0.7, print.auc.y=0.15, print.auc.col="yellow", type="l", add=TRUE, col='yellow', lwd=1, lty=1)
 # RIPPER
 plot(roc.ripModel, print.auc=TRUE, print.auc.x=0.7, print.auc.y=0.10, print.auc.col="orange", type="l", add=TRUE, col='orange', lwd=1, lty=1)
-# SBRL
-plot(roc.sbrlModel, print.auc=TRUE, print.auc.x=0.7, print.auc.y=0.05, print.auc.col="pink", type="l", add=TRUE, col='pink', lwd=1, lty=1)
 
 legend("bottomright",
-       legend=c("logistic regression", "SVM", "Boosted Trees", "CART", "C50", "rForest", "RIPPER", "sbrl"),
-       col=c("blue", "purple", "red", "green", "navy","yellow", "orange", "pink"), lwd=1)
+       legend=c("logistic regression", "SVM", "Boosted Trees", "CART", "C50", "rForest", "RIPPER"),
+       col=c("blue", "purple", "red", "green", "navy","yellow", "orange"), lwd=1)
