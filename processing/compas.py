@@ -5,13 +5,12 @@ import tabular as tb
 
 import mine
 
-### FIX THIS ##########################
 def age_func(a):
-    if (a <= 20):       # minimum age is 18
-        return '18-20'  # support = 220
-    elif (a <= 22):
-        return '21-25'  # support = 1641
+    if (a <= 22):       # minimum age is 18
+        return '18-22'  # support = 843
     elif (a <= 25):
+        return '23-25'  # support = 1018
+    elif (a <= 30):
         return '26-30'  # support = 1512
     elif (a <= 40):
         return '31-40'  # support = 1818

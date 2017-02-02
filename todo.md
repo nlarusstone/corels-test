@@ -96,7 +96,7 @@ Claim items by adding your name, and check them off when complete :)
 
 ## datasets (Elaine -- but I'll take help here!)
 
-- [ ] Stop-and-frisk dataset
+- [ ] Stop-and-frisk dataset: whether frisked; if frisked, weapon?
 
 - [ ] Maybe something about hospital readmissions
 
