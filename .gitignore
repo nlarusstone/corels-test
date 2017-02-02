@@ -16,6 +16,11 @@ data/CrossValidation/*_train.label
 data/CrossValidation/*_test.label
 data/CrossValidation/*_train.out
 data/CrossValidation/*_test.out
+data/CrossValidation/*train*.csv
+data/CrossValidation/*test*.csv
+data/CrossValidation/*train*.minor
+data/compas.csv
+data/compas-binary.csv
 
 # GNUmakefile deps
 src/.deps/*
