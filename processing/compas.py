@@ -93,7 +93,7 @@ c_charge_degree = np.array(['Misdemeanor' if (i == 'M') else 'Felony' for i in x
 columns = [x['sex'], age, juvenile_felonies, juvenile_misdemeanors, juvenile_crimes,
            priors_count, c_charge_degree, x['two_year_recid']]
 
-cnames = ['sex', 'age', 'juvenile-felonies', 'juvenile-misdemeanors', 'juvenile_crimes',
+cnames = ['sex', 'age', 'juvenile-felonies', 'juvenile-misdemeanors', 'juvenile-crimes',
           'priors', 'current-charge-degree', 'recidivate-within-two-years']
 
 """
