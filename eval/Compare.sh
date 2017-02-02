@@ -1,7 +1,6 @@
 #!/bin/bash
 
 ## Prints out Cross-Validation results for particular dataset (e.g. compas)
-## Assumes that data files are in 'data/CrossValidation'
 if [ "$#" -ne 3 ]; then
     printf "Usage: ./Compare.sh [dataset]"
     printf " [path to sbrlmod binary] [path to CV folder]\n"
