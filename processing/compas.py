@@ -1,4 +1,5 @@
 import os
+import time
 
 import numpy as np
 import tabular as tb
@@ -123,6 +124,7 @@ print 'train size:', len(split_ind[0]) * (num_folds - 1)
 print 'test size:', len(split_ind[0])
 
 num_rules = np.zeros(num_folds, int)
+mine_time = np.zeros(num_folds)
 for i in range(num_folds):
     print 'generate cross-validation split', i
     cv_root = 'compas_%d' % i
@@ -138,11 +140,17 @@ for i in range(num_folds):
     b[split_ind[i]].saveSV(btest)
     b[train_ind].saveSV(btrain)
 
+    t0 = time.time()
     print 'mine rules from', ftrain
     num_rules[i] = mine.mine_rules(din=dout, froot=train_root,
                                     max_cardinality=max_cardinality,
                                     min_support=min_support, labels=labels,
                                     minor=minor)
+    mine_time[i] = time.time() - t0
     mine.apply_rules(din=dout, froot=cv_root, labels=labels)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
+print 'mining times:', mine_time
+print 'average, std:', mine_time.mean(), mine_time.std()
+
+# rule mining is fast, about 0.51 seconds
