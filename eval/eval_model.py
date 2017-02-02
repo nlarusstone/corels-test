@@ -12,9 +12,12 @@ or
 $ python eval_model.py adult --parallel --minor -n 1000 -r 0.01 -c 1 -p 1
 
 """
-import pandas as pd
 import argparse
 import subprocess
+
+import numpy as np
+import pandas as pd
+
 
 parser = argparse.ArgumentParser(description='Find rulelist and evaluate on model')
 parser.add_argument('-s', action='store_true')
@@ -171,9 +174,9 @@ if __name__ == '__main__':
 
     if (len(accuracies) > 0):
         print
-        print 'Train accuracies'
-        print accuracies
+        print 'Train accuracies', accuracies
+        print 'Train accuracies mean, std', np.mean(accuracies), np.std(accuracies)
 
     print
-    print 'Test accuracies'
-    print test_accuracies
+    print 'Test accuracies', test_accuracies
+    print 'Test accuracies mean, std', np.mean(test_accuracies), np.std(test_accuracies)
