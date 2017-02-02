@@ -111,7 +111,7 @@ results <- c(results, rfAcc)
 
 ## RIPPER
 ripModel <- JRip(Class ~ . , data=as.data.frame(trainData))
-pred.ripModel <- predict(rfModel, newdata=as.data.frame(testDataWOClass), type="class")
+pred.ripModel <- predict(ripModel, newdata=as.data.frame(testDataWOClass), type="class")
 ripAcc <- sum(testData$Class == pred.ripModel)/length(testData$Class)
 printf("RIPPER result: %.4f\n", ripAcc)
 results <- c(results, ripAcc)
