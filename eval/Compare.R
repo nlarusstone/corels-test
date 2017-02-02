@@ -17,12 +17,19 @@ printf <- function(...) cat(sprintf(...))
 
 args = commandArgs(TRUE)
 if (length(args)  == 0) {
-    stop(sprintf("Usage: Compare.R [dataset] e.g. Compare.R bcancer_binary.csv",
+    stop(sprintf("Usage: Compare.R [dataset] e.g. Compare.R compas_0",
                  args[1]))
 }
 
 # 'dataset' used to represent dataset
 fname <- args[1]
+
+printf("Assumes data is in data/CrossValidation\n")
+printf("Running %s_{train|test}.csv ", fname)
+printf("against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER\n\n");
+
+
+
 datadir <- "../data/CrossValidation"
 traincsv <- paste(datadir, sprintf("%s_train.csv", fname), sep = "/")
 testcsv <- paste(datadir, sprintf("%s_test.csv", fname), sep = "/")
