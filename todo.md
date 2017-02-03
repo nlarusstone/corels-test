@@ -104,6 +104,10 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Look at the datasets from Stat 220
 
+## Aesthetic things
+
+- [ ] Use `identical` in names instead of `minority` or `minor`
+
 ## bbound improvements
 
 - [ ] Add stopping condition based on the number of iterations
