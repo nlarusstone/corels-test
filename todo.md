@@ -9,8 +9,7 @@ Claim items by adding your name, and check them off when complete :)
       running experiments.  If I understand correctly, we want to use datasets
       from before we do rule mining, e.g., see the files in `data/small/`. (Daniel)
 
-- [ ] Generate Figure 2, which compares objective values and runtimes of different methods.
-      Can do this as a draft on a small dataset, like tdata. (Daniel)
+- [ ] We should do measurements with and without our (beautiful and temporarily forgotten) cached bit vectors
 
 ## Writing
 
