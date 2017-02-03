@@ -145,6 +145,18 @@ ACM SIG Proceedings\footnote{This is an abstract footnote}.
 
 \citet{YangRuSe16}.
 
+\section{Implementation}
+
+Our algorithm is implemented with the help of a trie, a symmetry-aware map, and a queue. We use the trie as a cache to keep track of rule lists we have already evaluated. Each node in the trie contains the metadata associated with that corresponding rule list. This metadata includes bookkeeping information such as what child rule lists are feasible as well as information such as the lower bound and prediction for that rule list. 
+
+We implement the symmetry-aware map as an STL unordered\_map. We have two different versions of the map that both allow identical permutations to map to the same key. In both cases, the values contain the actual ordering of the rules that represents the current best prefix for that permutation. In the first version, keys to the map are the canonical order of rule lists: i.e. the lists 3-2-1 and 2-3-1 both map to 1-2-3. The second version has keys that represent the captured data points. These are equivalent for the rule lists 3-2-1 and 2-3-1, so both will map to the same key. Most data sets have a large amount of data, so the keys representing the canonical ordering are usually more efficient. In general, for long runs of our algorithm, the permutation map dominates our memory usage.
+
+We use a queue to hold all of the leaves of the trie that still need to be explored. We implement a number of different scheduling schemes including BFS, DFS, and a priority queue. We also have a stochastic exploration process that bypasses the use of a queue by walking down the trie, randomly choosing a child each time, until a leaf is chosen to be explored. The priority queue allows us to order our exploration by different metrics such as the lower bound, the objective, or the curiosity of the leaves. We find that ordering by curiosity will often, but not always, lead to a faster runtime than using BFS.
+
+Our program executes as follows. While there are still leaves of the trie to be explored, we use our scheduling policy to select the next rule list to evaluate. Then, for every rule that is not already in this rule list, we calculate its lower bound, objective, and other metrics that would occur if the rule were added to the end of the rule list. If the lower bound is greater than the minimum objective, meaning this new rule list could never be better than one we have already seen, we don't insert the new rule list into the tree or queue. We next check if there is a better permutation of this rule list in the permutation map and discard the new rule list if it is not better than the rule list we already have in the permutation map. If our new rule list is better, then we insert it into the permutation map, the tree, and the queue and update the minimum objective if necessary.
+
+Every time we update the minimum objective, we garbage collect on the trie. We do this by traversing from the root the all of the leaves, deleting any subtrees of nodes with a lower bound that is larger than the minimum objective. In addition, if we encounter a node with no children, we prune upwards--deleting that node and recursively traversing the tree towards the root, deleting any childless nodes. This garbage collection allows us to limit the memory usage of the trie, though garbage collection is not triggered too often.
+
 %\input{samplebody-conf}
 
 \bibliographystyle{ACM-Reference-Format}
