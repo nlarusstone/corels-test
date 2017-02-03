@@ -9,18 +9,16 @@ import utils
 
 
 def age_func(a):
-    if (a <= 22):       # minimum age is 18
-        return '18-22'  # support = 843
+    if (a <= 20):       # minimum age is 18
+        return '18-20'  # support = 220
+    elif (a <= 22):
+        return '21-22'  # support = 623
     elif (a <= 25):
         return '23-25'  # support = 1018
-    elif (a <= 30):
-        return '26-30'  # support = 1512
-    elif (a <= 40):
-        return '31-40'  # support = 1818
-    elif (a <= 50):
-        return '41-50'  # support = 1045
+    elif (a <= 45):
+        return '26-45'  # support = 3890
     else:
-        return '>50'    # support = 978
+        return '>45'    # support = 1463
 
 def priors_count_func(p):
     if (p == 0):
