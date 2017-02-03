@@ -20,7 +20,7 @@ def parse_prefix_sums(p):
     return np.sum([int(q.split(':')[1]) for q in p.split(';') if q])
 
 # python eval_model.py compas --parallel --minor -k 10 -n 2000000 -r 0.01 -b -p 1
-# ../logs/for-compas_0_train.out-curious_lb-with_prefix_perm_map-minor-max_num_nodes=3000000-c=0.0050000-v=1-f=1000.txt
+# ../logs/for-compas_0_train.out-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt
 
 froot = 'compas'
 data_dir = '../data/CrossValidation/'
