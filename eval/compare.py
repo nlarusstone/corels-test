@@ -2,7 +2,7 @@ import numpy as np
 import pylab
 
 
-names = 'GLM, SVM, AdaBoost, CART, C4.5, RF, RIPPER'.split(', ') + ['SBRL', 'BBRL']
+names = ['GLM', 'SVM', 'AdaBoost\n\n', 'CART', 'C4.5', 'RF', 'RIPPER\n', 'SBRL', 'BBRL']
 
 x = open('../compare/compas.txt', 'rU').read().strip().split('\n')
 
@@ -22,6 +22,8 @@ pylab.figure(1, figsize=(7, 5))
 pylab.clf()
 pylab.subplot2grid((10, 20), (0, 1), colspan=19, rowspan=9)
 
+fs=16
+
 (nfolds, nmethods) = y.shape
 
 color_vec = ['r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'violet', 'm', 'gray']
@@ -34,13 +36,13 @@ for (i, color) in zip(ii, color_vec):
 
 pylab.plot(range(nmethods), y.mean(axis=0), 's', color='white', markeredgewidth=2, markersize=8)
 
-pylab.xticks(range(n), names, fontsize=15, rotation=40)
-pylab.yticks(fontsize=16)
-pylab.ylabel('accuracy\n', fontsize=16)
+pylab.xticks(range(nmethods), names, fontsize=fs, rotation=40)
+pylab.yticks(fontsize=fs)
+pylab.ylabel('accuracy\n', fontsize=fs)
 
 a = list(pylab.axis())
 a[0] -= 1
 a[1] += 1
 pylab.axis(a)
 
-pylab.savefig('../figs/compare-compas.pdf')
+pylab.savefig('../paper/figs/compare-compas.pdf')
