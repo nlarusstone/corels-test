@@ -66,7 +66,7 @@ the label predictions associated with~$\Prefix$,
 and we call ${\Default \in \{0, 1\}}$ the default label prediction.
 
 Let ${\Prefix = (p_1, \dots, p_k, \dots, p_K)}$ be an antecedent list,
-then for any~${k \le K}$, we define ${\Prefix^k = (p_1, \dots, p_k)}$
+then for any ${k \le K}$, we define ${\Prefix^k = (p_1, \dots, p_k)}$
 to be the $k$-prefix of~$\Prefix$.
 %
 For any such $k$-prefix~$\Prefix^k$,
@@ -78,6 +78,7 @@ all rule lists whose prefixes start with~$\Prefix$:
 \begin{align}
 \StartsWith(\Prefix) =
 \{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}.
+\label{eq:starts-with}
 \end{align}
 %We also say that an antecedent list~$\Prefix$ contains another
 %antecedent list~$\Prefix'$ if the antecedents in~$\Prefix'$ correspond to
@@ -238,18 +239,26 @@ $b(\Prefix, \x, \y)$ gives a lower bound on the objective of
 \begin{theorem}[Hierarchical objective lower bound]
 Define~${b(\Prefix, \x, \y) = \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K}$.
 %
+\begin{arxiv}
 Also, define
 ${\StartsWith(\Prefix) = \{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
 to be the set of all rule lists whose prefix starts with~$\Prefix$.
+\end{arxiv}
+\begin{kdd}
+Also, define $\StartsWith(\Prefix)$
+to be the set of all rule lists whose prefix starts with~$\Prefix$,
+as in~\eqref{eq:starts-with}.
+\end{kdd}
 %
-Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list
+Let ${\RL = }$ ${(\Prefix, \Labels, \Default, K)}$ be a rule list
 with prefix~$\Prefix$, and let
-${\RL' = (\Prefix', \Labels', \Default', K') \in \StartsWith(\Prefix)}$
+${\RL' = (\Prefix', \Labels', \Default', K')}$ $\in \StartsWith(\Prefix)$
 be any rule list such that its prefix~$\Prefix'$ starts with~$\Prefix$
 and ${K' \ge K}$, then ${b(\Prefix, \x, \y) \le \Obj(\RL', \x, \y)}$.
 \label{thm:bound}
 \end{theorem}
 
+\begin{arxiv}
 \begin{proof}
 Let ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
 let ${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
@@ -276,6 +285,7 @@ b(\Prefix, \x, \y) &= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K \nn \\
 \label{eq:prefix-lb}
 \end{align}
 \end{proof}
+\end{arxiv}
 
 To generalize, consider a sequence of prefixes such that each prefix
 starts with all previous prefixes in the sequence.
@@ -291,30 +301,31 @@ illustrated in Algorithm~\ref{alg:branch-and-bound}.
 \label{alg:branch-and-bound}
 \begin{algorithmic}
 \normalsize
-\State \textbf{Input:} Objective function~$\Obj(\RL, \x, \y)$,
-objective lower bound~${b(\Prefix, \x, \y)}$,
+\State \textbf{Input:} Objective function $\Obj(\RL, \x, \y)$,
+objective lower bound ${b(\Prefix, \x, \y)}$,
 set of antecedents ${\RuleSet = \{s_m\}_{m=1}^M}$,
-training data~$(\x, \y) = {\{(x_n, y_n)\}_{n=1}^N}$,
-initial best known rule list~$\InitialRL$ with objective~${\InitialObj = \Obj(\InitialRL, \x, \y)}$
+training data $(\x, \y) = {\{(x_n, y_n)\}_{n=1}^N}$,
+initial best known rule list~$\InitialRL$ with objective
+${\InitialObj = \Obj(\InitialRL, \x, \y)}$
 \State \textbf{Output:} Provably optimal rule list~$\OptimalRL$ with minimum objective~$\OptimalObj$ \\
 
-\State $(\CurrentRL, \CurrentObj) \gets (\InitialRL, \InitialObj)$ \Comment{Initialize current best rule list and objective}
+\State $(\CurrentRL, \CurrentObj) \gets (\InitialRL, \InitialObj)$ \Comment{Initialize best known RL \& objective}
 \State $Q \gets $ queue$(\,[\,(\,)\,]\,)$ \Comment{Initialize queue with empty prefix}
-\While {$Q$ not empty} \Comment{Optimization complete when the queue is empty}
-	\State $\Prefix \gets Q$.pop(\,) \Comment{Remove a prefix~$\Prefix$ from the queue}
-	\If {$b(\Prefix, \x, \y) < \CurrentObj$} \Comment{\textbf{Bound}: Apply bound from Theorem~\ref{thm:bound}}
-        \State $\Obj \gets \Obj(\RL, \x, \y)$ \Comment{Compute objective of~$\RL$, the rule list with prefix~$\Prefix$}
-        \If {$\Obj < \CurrentObj$}
-            \State $(\CurrentRL, \CurrentObj) \gets (\RL, \Obj)$ \Comment{Update current best rule list and objective}
+\While {$Q$ not empty} \Comment{Stop when queue is empty}
+	\State $\Prefix \gets Q$.pop(\,) \Comment{Remove prefix~$\Prefix$ from the queue}
+	\If {$b(\Prefix, \x, \y) < \CurrentObj$} \Comment{\textbf{Bound}: Apply Theorem~\ref{thm:bound}}
+        \State $\Obj \gets \Obj(\RL, \x, \y)$ \Comment{Compute objective of rule list~$\RL$}
+        \If {$\Obj < \CurrentObj$} \Comment{Update best known RL \& objective}
+            \State $(\CurrentRL, \CurrentObj) \gets (\RL, \Obj)$
         \EndIf
-        \For {$s$ in $\RuleSet$}
+        \For {$s$ in $\RuleSet$} \Comment{\textbf{Branch}: Enqueue~$\Prefix$'s children}
             \If {$s$ not in $\Prefix$}
-                \State $Q$.push$(\,(\Prefix, s)\,)$ \Comment{\textbf{Branch}: Add~$\Prefix$'s children to the queue}
+                \State $Q$.push$(\,(\Prefix, s)\,)$
             \EndIf
         \EndFor
     \EndIf
 \EndWhile
-\State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Identify provably optimal rule list and objective}
+\State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Identify provably optimal RL \& objective}
 \end{algorithmic}
 \end{algorithm}
 
@@ -332,9 +343,10 @@ rule list~${\RL' \in \StartsWith(\Prefix)}$ whose prefix~$\Prefix'$ starts with~
 %
 For the objective of such a rule list, the current best objective
 provides a lower bound, \ie
-${\Obj(\RL', \x, \y) \ge b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y) \ge \CurrentObj}$,
+${\Obj(\RL', \x, \y) \ge b(\Prefix', \x, \y) \ge}$ ${b(\Prefix, \x, \y) \ge \CurrentObj}$,
 and thus~$\RL'$ cannot be optimal. \\
 
+\begin{arxiv}
 \subsection{Incremental branch-and-bound computation}
 \label{sec:incremental}
 
@@ -580,3 +592,5 @@ For example, if we are trying to optimize over rule lists formed
 from a set of 1000 antecedents, then the maximum queue size in
 Algorithm~\ref{alg:incremental} will be smaller than that in
 Algorithm~\ref{alg:branch-and-bound} by a factor of nearly 1000.
+
+\end{arxiv}

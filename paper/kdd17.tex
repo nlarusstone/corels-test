@@ -27,7 +27,28 @@
 
 \acmPrice{15.00}
 
+%\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+
+\usepackage{graphicx,verbatim}
+%\usepackage[round]{natbib}
+%\usepackage{url}
+%\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{todonotes}
+\usepackage{subfig}
+\usepackage{dsfont}
+\usepackage{listings}
+%\usepackage{comment}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows}
+
 \includecomment{kdd}\excludecomment{arxiv}
+
+\input{latex_macros}
+\frenchspacing
+\hyphenation{speed-up}
 
 \begin{document}
 \title{Learning rule lists with branch and bound}
@@ -146,6 +167,8 @@ ACM SIG Proceedings\footnote{This is an abstract footnote}.
 \input{sections/introduction}
 
 \input{sections/related_work}
+
+\input{sections/framework}
 
 \input{sections/implementation}
 
