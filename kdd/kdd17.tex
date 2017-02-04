@@ -144,6 +144,8 @@ ACM SIG Proceedings\footnote{This is an abstract footnote}.
 
 \input{../paper/introduction}
 
+\input{../paper/related_work}
+
 \section{Implementation}
 
 Our algorithm is implemented with the use of a trie, a symmetry-aware map, and a queue as our core data structures. We use the trie as a cache to keep track of rule lists we have already evaluated. Each node in the trie contains the metadata associated with that corresponding rule list. This metadata includes bookkeeping information such as what child rule lists are feasible as well as information such as the lower bound and prediction for that rule list. Our trie also tracks the best observed rule list by keeping track of the minimum objective found and its associated rule list.
