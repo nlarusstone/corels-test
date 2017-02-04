@@ -1,6 +1,6 @@
-TARGETS = arxiv
+TARGETS = arxiv kdd17
 
-TEXFILES = $(wildcard *.tex)
+TEXFILES = $(wildcard *.tex sections/*.tex)
 BIBFILES = $(wildcard *.bib)
 FIGFILES = $(wildcard figs/*.png)
 PDFS = $(addsuffix .pdf,$(TARGETS))
@@ -14,6 +14,8 @@ PDFS = $(addsuffix .pdf,$(TARGETS))
 all: $(PDFS)
 
 a: arxiv.pdf
+
+k: kdd17.pdf
 
 spell:
 	$(shell for i in $(TEXFILES); do ispell $(i); done)
