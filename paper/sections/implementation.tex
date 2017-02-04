@@ -1,0 +1,71 @@
+\section{Implementation}
+
+Our algorithm is implemented with the use of a trie, a symmetry-aware map, and a queue as our core data structures. We use the trie as a cache to keep track of rule lists we have already evaluated. Each node in the trie contains the metadata associated with that corresponding rule list. This metadata includes bookkeeping information such as what child rule lists are feasible as well as information such as the lower bound and prediction for that rule list. Our trie also tracks the best observed rule list by keeping track of the minimum objective found and its associated rule list.
+
+We implement the symmetry-aware map as an STL unordered\_map. We have two different versions of the map that both allow identical permutations to map to the same key. In both cases, the values contain the actual ordering of the rules that represents the current best prefix for that permutation. In the first version, keys to the map are the canonical order of rule lists: i.e. the lists 3-2-1 and 2-3-1 both map to 1-2-3. The second version has keys that represent the captured data points. These are equivalent for the rule lists 3-2-1 and 2-3-1, so both will map to the same key. Most data sets have a large amount of data, so the keys representing the canonical ordering are usually more efficient. In general, for long runs of our algorithm, the symmetry-aware map dominates our memory usage. When inserting into the symmetry-aware map, we check if there is a permutation P1 of this rule list P0 already in the map. If the objective of P0 is better than the objective of P1, we update the map and remove P1 and its subtree from the trie. Otherwise we don't insert P0 into the symmetry-aware map or the trie.
+
+We use a queue to index all of the leaves of the trie that still need to be explored. We implement a number of different scheduling schemes including BFS, DFS, and a priority queue. We also have a stochastic exploration process that bypasses the use of a queue by walking down the trie, randomly choosing a child each time, until a leaf is chosen to be explored. The priority queue allows us to order our exploration by different metrics such as the lower bound, the objective, or the curiosity of the leaves. We find that ordering by curiosity will often, but not always, lead to a faster runtime than using BFS.
+
+Our program executes as follows. While there are still leaves of the trie to be explored, we use our scheduling policy to select the next rule list to evaluate. Then, for every rule that is not already in this rule list, we calculate its lower bound, objective, and other metrics that would occur if the rule were added to the end of the rule list. If our new rule list has a lower bound that is below the minimum objective, then we insert it into the symmetry-aware map, the tree, and the queue and update the minimum objective if necessary. If the lower bound is greater than the minimum objective, meaning this new rule list could never be better than one we have already seen, we don't insert the new rule list into the tree or queue. 
+
+Every time we update the minimum objective, we garbage collect the trie. We do this by traversing from the root the all of the leaves, deleting any subtrees of nodes with a lower bound that is larger than the minimum objective. In addition, if we encounter a node with no children, we prune upwards--deleting that node and recursively traversing the tree towards the root, deleting any childless nodes. This garbage collection allows us to limit the memory usage of the trie, though in our experiments we observe the minimum objective to decrease only a small number of times.
+
+%\section{Implementation architecture}
+%
+%We present an architecture for executing our branch-and-bound algorithm,
+%consisting of a cache, a queue that is associated with a search policy,
+%and, optionally, a symmetry-aware map.
+%%
+%First, we describe the cache, our primary data structure~(\S\ref{sec:cache});
+%it is organized as a prefix tree and supports the incremental computations,
+%detailed in~\S\ref{sec:incremental}, that are central to our approach.
+%%
+%Second, we describe the queue and search policy~(\S\ref{sec:queue}).
+%%
+%Like the queue in Algorithm~\ref{alg:branch-and-bound},
+%our queue keeps track of which prefixes to evaluate during execution.
+%%
+%The policy for selecting a prefix from the queue to evaluate next,
+%and thus also the natural queue data structure, depend on
+%the search policy employed for exploring the space of rule lists
+%%
+%Next, we describe the symmetry-aware map~(\S\ref{sec:map}),
+%which enables garbage collection of prefixes eliminated by the
+%equivalent support bound in Theorem~\ref{sec:equivalent}.
+%%
+%While we present the map as an optional component of our architecture,
+%our calculations in~\S\ref{sec:permutation-counting}
+%and experiments in~\S\ref{sec:experiments} demonstrate that
+%it is critical for efficient and practical algorithm performance.
+%%
+%Finally, we summarize an artifact we implemented~(\S\ref{sec:system}),
+%which we evaluate in~\S\ref{sec:experiments}.
+%
+%\subsection{Prefix tree cache for incremental computation}
+%\label{sec:cache}
+%
+%We maintain a cache to support incremental computation.
+%%
+%Our cache is organized as a prefix tree, which is also known as a trie.
+%%
+%
+%\subsection{Queue and search policies}
+%\label{sec:queue}
+%
+%Different search policies suggest different natural queue data structures.
+%
+%\begin{itemize}
+%\item breadth-first
+%\item depth-first
+%\item something based on greedy
+%\item (curiosity, lower bound, optimization) $\times$ (priority queue, something like Thompson sampling)
+%\item optimistic
+%\end{itemize}
+%
+%\subsection{Map data structure for symmetry-aware garbage collection}
+%\label{sec:map}
+%
+%%\subsection{Large-scale optimization}
+%
+%\subsection{System}
+%\label{sec:system}

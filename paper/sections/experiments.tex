@@ -1,0 +1,165 @@
+\section{Preliminary experiments}
+\label{sec:experiments}
+
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
+\begin{arxiv}
+\includegraphics[width=0.75\textwidth]{figs/compare-compas.pdf}
+\end{arxiv}
+\begin{kdd}
+\includegraphics[width=0.5\textwidth]{figs/compare-compas.pdf}
+\end{kdd}
+\end{center}
+\caption{Comparison with other methods:
+Test error for us and a few other algorithms
+(CART, C4.5, CBA, CMAR/CPAR, C5.0, Ripper, \dots),
+as a function of sparsity over 10 folds, for one big dataset (box plots).
+Also report algorithm runtimes (mean $\pm$ standard deviation over 10 folds).}
+\label{fig:comparison}
+\end{figure}
+
+\begin{arxiv}
+\begin{figure}[t!]
+\begin{center}
+\end{center}
+\caption{Missing:  Test error as a function of regularization and sparsity
+(number of rules) as a function of regularization, over 10 folds,
+for one big dataset.}
+\label{fig:regularization}
+\end{figure}
+\end{arxiv}
+
+\begin{arxiv}
+\begin{figure}[t!]
+\begin{center}
+\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
+\end{center}
+\caption{Ablation experiment:
+Show the effect of each ``piece'' at a time,
+run X without each in turn and show the difference in either
+quality of solution or runtime or amount of memory, size of cache or queue,
+where X is a specific implementation
+(meaning a specific scheduling policy and node type)}
+\label{fig:ablation}
+\end{figure}
+\end{arxiv}
+
+\begin{arxiv}
+\begin{figure}[t!]
+\begin{center}
+\end{center}
+\caption{Missing:  Some sort of comparison of different scheduling policies}
+\label{fig:scheduling-policy}
+\end{figure}
+\end{arxiv}
+
+\begin{arxiv}
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-queue-size.png}
+\includegraphics[width=0.8\textwidth]{figs/ela_compas-queue-cache-size-insertions.pdf}
+\end{center}
+\caption{Cache and queue data structure sizes and insertions.
+%
+The top plot shows the sizes of the cache and queue data structures,
+as a function of wall clock time.
+%
+The number of nodes in the cache (solid black line) is an
+upper bound on the number of elements in the physical queue
+(dotted gray line), since the physical queue elements only
+correspond to the cache trie data structure's leaf nodes
+plus disconnected cache nodes that have been marked for deletion.
+%
+The queue's physical size is an upper bound on its
+logical size (solid blue line), which doesn't include nodes
+that have been marked for deletion.
+%
+The bottom plot shows the cumulative number of cache insertions,
+which is equivalent to the cumulative number of queue insertions,
+as a function of wall clock time.
+}
+\label{fig:queue-cache-size-insertions}
+\end{figure}
+\end{arxiv}
+
+\begin{figure}[t!]
+\begin{center}
+\begin{arxiv}
+\includegraphics[width=0.8\textwidth]{figs/ela_compas-queue.pdf}
+\end{arxiv}
+\begin{kdd}
+\includegraphics[width=0.5\textwidth]{figs/ela_compas-queue.pdf}
+\end{kdd}
+\end{center}
+\caption{Logical queue composition.
+}
+\label{fig:queue}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
+\begin{arxiv}
+\includegraphics[width=0.8\textwidth]{figs/ela_compas-objective.pdf}
+\end{arxiv}
+\begin{kdd}
+\includegraphics[width=0.5\textwidth]{figs/ela_compas-objective.pdf}
+\end{kdd}
+\end{center}
+\caption{Objective value as a function of wall clock time.
+%
+The top plot shows the entire execution, and the bottom plot
+highlights the optimization phase, from the start of execution
+to the time at which the optimal value is achieved.
+%
+The cyan circle indicates the objective value after a single iteration,
+and the magenta square indicates the time at which the optimum
+is achieved, as well as its value.
+%
+Missing: horizontal lines and x-ticks for CART and C4.5.}
+\label{fig:objective}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-search-space.png}
+\begin{arxiv}
+\includegraphics[width=0.8\textwidth]{figs/ela_compas-remaining-space.pdf}
+\end{arxiv}
+\begin{kdd}
+\includegraphics[width=0.5\textwidth]{figs/ela_compas-remaining-space.pdf}
+\end{kdd}
+\end{center}
+\caption{The logarithm (base 10) of the upper bound
+from Proposition~\ref{prop:remaining-eval-coarse}
+on the size of the remaining search space,
+as a function of wall clock time.
+%
+This bound depends on the total number of available rules,
+as well as two dynamic quantities:
+the current best objective value,
+and the histogram of logical queue elements,
+partitioned by prefix length.
+}
+\label{fig:search-space}
+\end{figure}
+
+\begin{arxiv}
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-max-length.png}
+\includegraphics[width=0.8\textwidth]{figs/ela-max-length-check.png}
+\end{center}
+\caption{Max prefix length over time (computed from objective value)}
+\label{fig:max-length}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+\includegraphics[width=0.8\textwidth]{figs/ela_compas-prefix-length.pdf}
+\end{center}
+\caption{Best prefix length over time}
+\label{fig:prefix-length}
+\end{figure}
+\end{arxiv}
