@@ -63,35 +63,35 @@ for fold in range(0, num_folds):
 
     pylab.figure(1, figsize=(7, 5))
     pylab.clf()
-    pylab.subplot2grid((10, 20), (0, 1), colspan=19, rowspan=9)
+    pylab.subplot2grid((12, 20), (0, 1), colspan=19, rowspan=5)
     #pylab.subplot(2, 1, 1)
     if ('curious_lb' in log_fname):
         ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
     else:
         ii = len(x)
-    pylab.semilogx(x['total_time'][1:ii], x['tree_min_objective'][1:ii], 'b-', linewidth=lw*2)
+    pylab.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='b', linewidth=lw*2)
     if ('curious_lb' in log_fname):
-        pylab.semilogx(x['total_time'][1:ii], x['current_lower_bound'][1:ii], 'c--', linewidth=lw*2)
-    training_error = x['tree_min_objective'] - c * x['tree_prefix_length']
-    pylab.semilogx(x['total_time'][1:ii], training_error[1:ii], 'm', linewidth=lw)
+        pylab.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '-', color='r', linewidth=lw)
+    #training_error = x['tree_min_objective'] - c * x['tree_prefix_length']
+    #pylab.semilogx(x['total_time'][1:ii], training_error[1:ii], 'm', linewidth=lw)
 
     #pylab.plot(x['total_time'][1], default_objective, 'co', markersize=ms)
     #pylab.plot(x['total_time'][imin], x['tree_min_objective'][imin], 'ms', markersize=ms)
     ax = list(pylab.axis())
-    ax[0] = x['total_time'][1]
-    ax[1] = 10**3
-    ax[2] = 0.
+    ax[0] = x['total_time'][2]
+    ax[1] = 10**2.7
+    ax[2] = 0.3
     ax[3] = 0.45
     pylab.axis(ax)
     pylab.xticks(fontsize=fs)
-    pylab.yticks(fontsize=fs)
-    pylab.xlabel('time (s)', fontsize=fs)
+    pylab.yticks(np.arange(0.3, 0.5, 0.05), fontsize=fs)
+    #pylab.xlabel('time (s)', fontsize=fs)
     pylab.ylabel('value\n', fontsize=fs)
-    pylab.title('progress during execution', fontsize=fs)
+    pylab.title('execution progress', fontsize=fs)
     pylab.xticks(fontsize=fs)
     pylab.yticks(fontsize=fs)
     if ('curious_lb' in log_fname):
-        pylab.legend(['objective', 'lower bound', 'training error'], loc='lower right', fontsize=fs)
+        pylab.legend(['objective', 'lower bound'], loc='upper right', fontsize=fs)
     else:
         pylab.legend(['objective', 'training error'], fontsize=fs)
 
@@ -116,8 +116,8 @@ for fold in range(0, num_folds):
     pylab.yticks(fontsize=(fs-2))
     pylab.legend(['optimization phase'])
     """
-    pylab.savefig('../figs/%s-objective.pdf' % ftag)
-    pylab.draw()
+    #pylab.savefig('../figs/%s-objective.pdf' % ftag)
+    #pylab.draw()
 
     pylab.figure(2, figsize=(7, 5))
     pylab.clf()
@@ -251,17 +251,18 @@ for fold in range(0, num_folds):
 
     # need to handle entries where remaining state space = 0
 
-    pylab.figure(3, figsize=(7, 5))
-    pylab.clf()
-    pylab.subplot2grid((10, 20), (0, 1), colspan=19, rowspan=9)
-    #pylab.subplot(3, 1, 1)
+    pylab.figure(1, figsize=(7, 5))
+    #pylab.clf()
+    pylab.subplot2grid((12, 20), (6, 1), colspan=19, rowspan=5)
+    #pylab.subplot(2, 1, 2)
     pylab.semilogx(x['total_time'], x['log_remaining_space_size'], 'b-', linewidth=lw*2)
-    #pylab.xlabel('time (s)', fontsize=fs)
+    pylab.xlabel('time (s)', fontsize=fs)
     pylab.ylabel('log10(size)', fontsize=fs)
-    pylab.title('log10(size of remaining search space)', fontsize=fs)
+    pylab.legend(['remaining search space'], fontsize=fs, loc='upper right')
     #pylab.legend(['incomplete execution'])
     ax = list(pylab.axis())
-    ax[0] = 10**-3.5
+    ax[0] = x['total_time'][2]
+    ax[1] = 10**2.7
     ax[3] = 30
     pylab.axis(ax)
     pylab.xticks(fontsize=fs)

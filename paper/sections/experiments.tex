@@ -85,6 +85,34 @@ as a function of wall clock time.
 
 \begin{figure}[t!]
 \begin{center}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
+\begin{arxiv}
+\includegraphics[width=0.8\textwidth]{figs/ela_compas-remaining-space.pdf}
+\end{arxiv}
+\begin{kdd}
+\includegraphics[width=0.5\textwidth]{figs/ela_compas-remaining-space.pdf}
+\end{kdd}
+\end{center}
+\caption{Top: Objective value and lower bound as a function of wall clock time.
+%
+Missing: horizontal lines and x-ticks for CART and C4.5.
+%
+Bottom:
+The logarithm (base 10) of the upper bound
+from Proposition~\ref{prop:remaining-eval-coarse}
+on the size of the remaining search space,
+as a function of wall clock time.
+%
+This bound depends on the total number of available rules,
+as well as two dynamic quantities:
+the current best objective value,
+and the histogram of logical queue elements,
+partitioned by prefix length.}
+\label{fig:objective}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
 \begin{arxiv}
 \includegraphics[width=0.8\textwidth]{figs/ela_compas-queue.pdf}
 \end{arxiv}
@@ -97,53 +125,29 @@ as a function of wall clock time.
 \label{fig:queue}
 \end{figure}
 
-\begin{figure}[t!]
-\begin{center}
-%\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
-\begin{arxiv}
-\includegraphics[width=0.8\textwidth]{figs/ela_compas-objective.pdf}
-\end{arxiv}
-\begin{kdd}
-\includegraphics[width=0.5\textwidth]{figs/ela_compas-objective.pdf}
-\end{kdd}
-\end{center}
-\caption{Objective value as a function of wall clock time.
-%
-The top plot shows the entire execution, and the bottom plot
-highlights the optimization phase, from the start of execution
-to the time at which the optimal value is achieved.
-%
-The cyan circle indicates the objective value after a single iteration,
-and the magenta square indicates the time at which the optimum
-is achieved, as well as its value.
-%
-Missing: horizontal lines and x-ticks for CART and C4.5.}
-\label{fig:objective}
-\end{figure}
-
-\begin{figure}[t!]
-\begin{center}
-%\includegraphics[width=0.65\textwidth]{figs/sketch-search-space.png}
-\begin{arxiv}
-\includegraphics[width=0.8\textwidth]{figs/ela_compas-remaining-space.pdf}
-\end{arxiv}
-\begin{kdd}
-\includegraphics[width=0.5\textwidth]{figs/ela_compas-remaining-space.pdf}
-\end{kdd}
-\end{center}
-\caption{The logarithm (base 10) of the upper bound
-from Proposition~\ref{prop:remaining-eval-coarse}
-on the size of the remaining search space,
-as a function of wall clock time.
-%
-This bound depends on the total number of available rules,
-as well as two dynamic quantities:
-the current best objective value,
-and the histogram of logical queue elements,
-partitioned by prefix length.
-}
-\label{fig:search-space}
-\end{figure}
+%\begin{figure}[t!]
+%\begin{center}
+%%\includegraphics[width=0.65\textwidth]{figs/sketch-search-space.png}
+%\begin{arxiv}
+%\includegraphics[width=0.8\textwidth]{figs/ela_compas-remaining-space.pdf}
+%\end{arxiv}
+%\begin{kdd}
+%\includegraphics[width=0.5\textwidth]{figs/ela_compas-remaining-space.pdf}
+%\end{kdd}
+%\end{center}
+%\caption{The logarithm (base 10) of the upper bound
+%from Proposition~\ref{prop:remaining-eval-coarse}
+%on the size of the remaining search space,
+%as a function of wall clock time.
+%%
+%This bound depends on the total number of available rules,
+%as well as two dynamic quantities:
+%the current best objective value,
+%and the histogram of logical queue elements,
+%partitioned by prefix length.
+%}
+%\label{fig:search-space}
+%\end{figure}
 
 \begin{arxiv}
 \begin{figure}[t!]
