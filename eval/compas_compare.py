@@ -4,36 +4,48 @@ num rules: 155
 num records: 1652
 time to achieve optimum: 7.2291680791
 time to verify optimum: 336.063088079
+num insertions (millions):  1.613157
+max queue size (millions):  1.366114
 
 for-compas_0_train.out-bfs-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt
 num rules: 155
 num records: 1971
 time to achieve optimum: 3.6754978271
 time to verify optimum: 452.650077827
+num insertions (millions):  1.932823
+max queue size (millions):  1.581327
 
 for-compas_0_train.out-curious_lb-no_pmap-minor-max_num_nodes=100000000-c=0.0050000-v=1-f=1000.txt
 num rules: 155
 num records: 15023
 time to achieve optimum: 18.6063890327
 time to verify optimum: 3633.52008903
+num insertions (millions):  14.98403
+max queue size (millions):  14.073082
 
 for-compas_0_train.out-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000001-c=0.0050000-v=1-f=1000.txt
 num rules: 155
 num records: 2426
 time to achieve optimum: 10.7684899864
 time to verify optimum: 580.760089986
+num insertions (millions):  2.384375
+max queue size (millions):  2.063079
 
 for-compas_0_train.out-curious_lb-with_prefix_perm_map-minor-max_num_nodes=100000001-c=0.0050000-v=1-f=1000.txt
 num rules: 155
 num records: 19578
 time to achieve optimum: 7.560236887
 time to verify optimum: 4401.11008689
+num insertions (millions):  19.536725
+max queue size (millions):  17.743217
 
 for-compas_0_train.out-curious_lb-with_prefix_perm_map-no_minor-max_num_nodes=700000000-c=0.0050000-v=1-f=1000.txt
 num rules: 155
 num records: 4174
 time to achieve optimum: 48.0518921322
 time to verify optimum: 1893.80009213
+num insertions (millions):  286.238147
+max queue size (millions):  281.882488
 
 """
 import os
@@ -74,8 +86,8 @@ data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-bfs-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-no_pmap-minor-max_num_nodes=100000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000001-c=0.0050000-v=1-f=1000.txt',
+'for-%s-curious_lb-no_pmap-minor-max_num_nodes=100000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=100000001-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-max_num_nodes=700000000-c=0.0050000-v=1-f=1000.txt']
 ftag = 'ela_compas_compare'
@@ -85,7 +97,7 @@ ms = 9  # markersize
 fs = 16 # fontsize
 ntot = len(log_root_list)
 
-labels = ['priority queue', 'BFS', 'no permutation map', 'no support bounds', 'no lookahead bound', 'no identical points bound']
+labels = ['none', 'no priority queue', 'no support bounds', 'no permutation map', 'no lookahead bound', 'no identical points bound']
 
 pylab.ion()
 
@@ -121,6 +133,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
     print "num records:", len(x)
     print "time to achieve optimum:", tmin
     print "time to verify optimum:", x['total_time'][-1]
+    print "num insertions (millions): ", x['tree_insertion_num'][-1] / 10**6.
 
     pylab.figure(1, figsize=(7, 5))
     if (ncomp == 0):
@@ -203,6 +216,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
     assert ([int(name) for name in z.dtype.names] == range(max_length + 1))
     #zc = z.extract()[:, ::-1].cumsum(axis=1)[:, ::-1]
     zc = z.extract()
+    print "max queue size (millions): ", zc.sum(axis=1).max() / 10**6.
     color_vec = ['r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'm', 'violet', 'pink', 'gray', 'k']#[:(max_length + 1)][::-1]
     #color_vec = ['purple', 'b', 'c', 'm', 'gray', 'k'][::-1]
 

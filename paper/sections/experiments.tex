@@ -111,6 +111,24 @@ partitioned by prefix length.}
 \label{fig:objective}
 \end{figure}
 
+\begin{table}[t]
+\centering
+\begin{tabular}{l | c | c | c | c | c}
+Ablated & $t_\text{total}$ & $t_\text{opt}$ & $K_\text{max}$ & $i_\text{total}$ & $\max | Q |$ \\
+component & (s) & (s) & & (millions) & (millions) \\
+\hline
+none & 336 & 7 & 6 & 1.61 & 1.37 \\
+priority queue & 453 & 4 & 6 & 1.93 & 1.58 \\
+support bounds & 580 & 11 & 6 & 2.38 & 2.06 \\
+permutation map & 3634 & 19 & 6 & 15.0 & 14.1 \\
+lookahead bound & 4401 & 8 & 7 & 19.5 & 17.7 \\
+identical pts. bound & - & 48 & $\ge 10$ & $>286$ & $>282$ \\
+\end{tabular}
+\caption{Ablation experiment.
+Total time, time to optimum, maximum evaluated prefix length,
+number of queue insertions, maximum queue size.}
+\end{table}
+
 \begin{figure}[t!]
 \begin{center}
 \begin{arxiv}
