@@ -206,7 +206,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
     color_vec = ['r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'm', 'violet', 'pink', 'gray', 'k']#[:(max_length + 1)][::-1]
     #color_vec = ['purple', 'b', 'c', 'm', 'gray', 'k'][::-1]
 
-    pylab.figure(6, figsize=(16, 8))
+    pylab.figure(6, figsize=(14, 9))
     if (ncomp == 0):
         pylab.clf()
         #pylab.subplot2grid((10, 20), (0, 1), colspan=19, rowspan=9)
@@ -240,13 +240,14 @@ for (ncomp, log_root) in enumerate(log_root_list):
             yy = np.array([1] + list(yy))
             tt = np.array([tt[0]] + list(tt))
         pylab.loglog(tt, yy, color=color_vec[length % len(color_vec)], linewidth=lw*2)
-    pylab.legend(['%d' % length for length in range(0, max_length + 1)[::-1]], loc='upper left', fontsize=fs-3)
+    if (ncomp + 1 == ntot):
+        pylab.legend(['%d' % length for length in range(0, max_length + 1)[::-1]], loc='upper left', fontsize=fs-3)
     if (ncomp > 2):
-        pylab.xlabel('time (s)', fontsize=fs)
+        pylab.xlabel('time (s)', fontsize=fs+2)
     if (ncomp in [0, 3]):
-        pylab.ylabel('count\n', fontsize=fs)
+        pylab.ylabel('count', fontsize=fs+2)
     #pylab.suptitle('lengths of prefixes in the logical queue\n', fontsize=fs)
-    pylab.title(labels[ncomp], fontsize=fs)
+    pylab.title(labels[ncomp], fontsize=fs+2)
     pylab.xticks(fontsize=fs-2)
     pylab.yticks(fontsize=fs-2)
     ax = [10**-4, 10**4, 10**-0.1, 10**8]
