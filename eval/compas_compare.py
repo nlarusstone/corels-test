@@ -84,20 +84,31 @@ def parse_prefix_sums(p):
 froot = 'compas'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
+num_folds = 1
+lw = 2  # linewidth
+ms = 9  # markersize
+fs = 16 # fontsize
+
+"""
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-bfs-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000001-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-no_pmap-minor-max_num_nodes=100000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=100000001-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-max_num_nodes=700000000-c=0.0050000-v=1-f=1000.txt']
-ftag = 'ela_compas_compare'
-num_folds = 1
-lw = 2  # linewidth
-ms = 9  # markersize
-fs = 16 # fontsize
-ntot = len(log_root_list)
-
 labels = ['none', 'no priority queue', 'no support bounds', 'no permutation map', 'no lookahead bound', 'no identical points bound']
+ftag = 'ela_compas_compare'
+
+"""
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
+'for-%s-curious_lb-no_pmap-minor-max_num_nodes=100000000-c=0.0050000-v=1-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=100000001-c=0.0050000-v=1-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-no_minor-max_num_nodes=700000000-c=0.0050000-v=1-f=1000.txt']
+labels = ['none', 'no permutation map', 'no lookahead bound', 'no identical points bound']
+ftag = 'ela_compas_compare_small'
+
+
+ntot = len(log_root_list)
 
 pylab.ion()
 
@@ -216,15 +227,29 @@ for (ncomp, log_root) in enumerate(log_root_list):
     assert ([int(name) for name in z.dtype.names] == range(max_length + 1))
     #zc = z.extract()[:, ::-1].cumsum(axis=1)[:, ::-1]
     zc = z.extract()
+    if (ncomp == 0):
+        queue_comp = zc.sum(axis=1)
+        ii = queue_comp.nonzero()[0]
+        queue_comp = queue_comp[ii]
+        t_comp = x['total_time'][ii]
+        
     print "max queue size (millions): ", zc.sum(axis=1).max() / 10**6.
     color_vec = ['r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'm', 'violet', 'pink', 'gray', 'k']#[:(max_length + 1)][::-1]
     #color_vec = ['purple', 'b', 'c', 'm', 'gray', 'k'][::-1]
 
-    pylab.figure(6, figsize=(14, 9))
+    if (len(log_root_list) == 1):
+        pylab.figure(6, figsize=(14, 9))
+    else:
+        pylab.figure(5, figsize=(12, 8))
+
     if (ncomp == 0):
         pylab.clf()
         #pylab.subplot2grid((10, 20), (0, 1), colspan=19, rowspan=9)
-    pylab.subplot(2, 3, ncomp+1)
+
+    if (len(log_root_list) == 6):
+        pylab.subplot(2, 3, ncomp+1)
+    else:
+        pylab.subplot(2, 2, ncomp+1)
 
     for length in range(0, max_length + 1)[::-1]:
         jj = zc[:, length].nonzero()[0]
@@ -238,33 +263,40 @@ for (ncomp, log_root) in enumerate(log_root_list):
             tt = np.array([tt[0]] + list(tt))
         pylab.loglog(tt, yy, color=color_vec[length % len(color_vec)], linewidth=lw*2)
 
+    """
     if (ncomp + 1 < ntot):  
-        pylab.fill_between([tmin, x['total_time'][-1]], [10**-0.1, 10**-0.1], [10**8, 10**8],  color='gray', alpha=0.3)
+        pylab.fill_between([tmin, x['total_time'][-1]], [10**-0.1, 10**-0.1], [10**8.3, 10**8.3],  color='gray', alpha=0.3)
     else:
-        pylab.fill_between([tmin, 10**4], [10**-0.1, 10**-0.1], [10**8, 10**8],  color='gray', alpha=0.3)
+        pylab.fill_between([tmin, 10**4], [10**-0.1, 10**-0.1], [10**8.3, 10**8.3],  color='gray', alpha=0.3)
+    """
+    pylab.fill_between(t_comp, 10**-0.1 * np.ones(len(t_comp)), queue_comp, color='gray', alpha=0.3)
 
     for length in range(0, max_length + 1):
         jj = zc[:, length].nonzero()[0]
         tt = x['total_time'][jj]
         yy = zc[jj, length]
-        if (ncomp < 5):
+        if (ncomp + 1 < ntot):
             yy = np.array([1] + list(yy) + [1])
             tt = np.array([tt[0]] + list(tt) + [tt[-1]])
         else:
             yy = np.array([1] + list(yy))
             tt = np.array([tt[0]] + list(tt))
         pylab.loglog(tt, yy, color=color_vec[length % len(color_vec)], linewidth=lw*2)
-    if (ncomp + 1 == ntot):
+    if (ntot == 6):
+        if (ncomp + 1 == ntot):
+            pylab.legend(['%d' % length for length in range(0, max_length + 1)[::-1]], loc='upper left', fontsize=fs-3)
+    else:
         pylab.legend(['%d' % length for length in range(0, max_length + 1)[::-1]], loc='upper left', fontsize=fs-3)
-    if (ncomp > 2):
+    if (ncomp > ntot/2 - 1):
         pylab.xlabel('time (s)', fontsize=fs+2)
-    if (ncomp in [0, 3]):
+    if (ncomp in [0, ntot/2]):
         pylab.ylabel('count', fontsize=fs+2)
     #pylab.suptitle('lengths of prefixes in the logical queue\n', fontsize=fs)
     pylab.title(labels[ncomp], fontsize=fs+2)
     pylab.xticks(fontsize=fs-2)
     pylab.yticks(fontsize=fs-2)
-    ax = [10**-4, 10**4, 10**-0.1, 10**8]
+    #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
+    ax = [10**-4, 10**4, 10**-0.1, 10**8.3]
     pylab.axis(ax)
     pylab.draw()
     if (ncomp + 1 == ntot):

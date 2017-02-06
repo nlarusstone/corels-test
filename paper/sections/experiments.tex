@@ -115,15 +115,16 @@ partitioned by prefix length.}
 \centering
 \begin{tabular}{l | c | c | c | c | c}
 Ablated & $t_\text{total}$ & $t_\text{opt}$ & $K_\text{max}$ & $i_\text{total}$ & $\max | Q |$ \\
-component & (s) & (s) & & (millions) & (millions) \\
+component & (s) & (s) & & ($\times 10^6$) & ($\times 10^6$) \\
 \hline
 none & 336 & 7 & 6 & 1.61 & 1.37 \\
 priority queue & 453 & 4 & 6 & 1.93 & 1.58 \\
 support bounds & 580 & 11 & 6 & 2.38 & 2.06 \\
 permutation map & 3634 & 19 & 6 & 15.0 & 14.1 \\
 lookahead bound & 4401 & 8 & 7 & 19.5 & 17.7 \\
-identical pts. bound & - & 48 & $\ge 10$ & $>286$ & $>282$ \\
+identical pts. bound & --- & 48 & $\ge 10$ & $>286$ & $>282$ \\
 \end{tabular}
+\vspace{2mm}
 \caption{Ablation experiment.
 Total time, time to optimum, maximum evaluated prefix length,
 number of queue insertions, maximum queue size.}
@@ -133,11 +134,11 @@ number of queue insertions, maximum queue size.}
 \begin{center}
 \begin{arxiv}
 %\includegraphics[width=0.8\textwidth]{figs/ela_compas-queue.pdf}
-\includegraphics[width=0.8\textwidth]{figs/ela_compas_compare-queue.pdf}
+\includegraphics[width=\textwidth]{figs/ela_compas_compare-queue.pdf}
 \end{arxiv}
 \begin{kdd}
 %\includegraphics[width=0.5\textwidth]{figs/ela_compas-queue.pdf}
-\includegraphics[trim={30mm 10mm 20mm 10mm}, width=0.5\textwidth]{figs/ela_compas_compare-queue.pdf}
+\includegraphics[trim={30mm 10mm 20mm 10mm}, width=0.5\textwidth]{figs/ela_compas_compare_small-queue.pdf}
 \end{kdd}
 \end{center}
 \caption{Ablation experiment and logical queue composition.
