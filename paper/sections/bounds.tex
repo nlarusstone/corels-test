@@ -24,6 +24,7 @@ whose prefix~$\Prefix'$ starts with~$\Prefix$ and~${K' > K}$,
 it follows that ${\Obj(\RL', \x, \y) \ge \CurrentObj}$.
 \end{lemma}
 
+\begin{arxiv}
 \begin{proof}
 By the definition of the lower bound~\eqref{eq:lower-bound},
 which includes the penalty for longer prefixes,
@@ -35,9 +36,10 @@ which includes the penalty for longer prefixes,
 \label{eq:lookahead}
 \end{align}
 \end{proof}
+\end{arxiv}
 
 Thus, even if we encounter a prefix~$\Prefix$
-with lower bound~${b(\Prefix, \x, \y) \le \CurrentObj}$,
+with lower bound ${b(\Prefix, \x, \y)}$ ${\le \CurrentObj}$,
 if ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$, then we can prune
 all prefixes~$\Prefix'$ that start with and are longer than~$\Prefix$. \\
 
@@ -87,9 +89,11 @@ ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
 \ie ${L(\RL) \le M}$.
 \end{proposition}
 
+\begin{arxiv}
 \begin{proof}
 Rule lists consist of distinct rules by definition.
 \end{proof}
+\end{arxiv}
 
 At any point during branch-and-bound execution, the current best objective~$\CurrentObj$
 implies an upper bound on the maximum prefix length we might still have to consider.
@@ -118,6 +122,7 @@ or otherwise if ${\CurrentRL \notin \argmin_d \Obj(\RL, \x, \y)}$,
 then ${L(\OptimalRL) \le K - 1}$.
 \end{theorem}
 
+\begin{arxiv}
 \begin{proof}
 For an optimal rule list~$\OptimalRL$ with objective~$\OptimalObj$,
 \begin{align}
@@ -150,6 +155,7 @@ If the current best rule list is suboptimal,
 \end{align}
 in which case ${K^* < K}$, \ie ${K^* \leq K-1}$, since $K$ is an integer.
 \end{proof}
+\end{arxiv}
 
 The latter part of Theorem~\ref{thm:ub-prefix-length} tells us that
 if we only need to identify a single instance of an optimal rule list
@@ -168,6 +174,7 @@ L(\OptimalRL) \le \min \left( \left\lfloor \frac{1}{2\Reg} \right\rfloor, M \rig
 \end{align}
 \end{corollary}
 
+\begin{arxiv}
 \begin{proof}
 Let ${d = ((), (), q_0, 0)}$ be the empty rule list;
 it has objective ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) \le 1/2}$,
@@ -177,6 +184,7 @@ Combining with~\eqref{eq:max-length}
 and Proposition~\ref{prop:trivial-length}
 gives~\eqref{eq:max-length-trivial}.
 \end{proof}
+\end{arxiv}
 
 For any particular prefix~$\Prefix$, we can obtain potentially tighter bounds on
 prefix length for the family of all prefixes that start with~$\Prefix$.
@@ -195,6 +203,7 @@ K' < \min \left( K + \left\lfloor \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} 
 \end{align}
 \end{theorem}
 
+\begin{arxiv}
 \begin{proof}
 First, note that~${K' \ge K}$, since~$\Prefix'$ starts with~$\Prefix$.
 %
@@ -216,6 +225,7 @@ b(\Prefix, \x, \y) + \Reg (K' - K) \le b(\Prefix', \x, \y).
 Combining~\eqref{eq:length-diff} with~${b(\Prefix', \x, \y) < \CurrentObj}$
 and Proposition~\ref{prop:trivial-length} gives~\eqref{eq:max-length-prefix}.
 \end{proof}
+\end{arxiv}
 
 Theorem~\ref{thm:ub-prefix-specific} can be viewed as a generalization
 of our one-step lookahead bound~\eqref{eq:lookahead};
@@ -249,8 +259,10 @@ best objective~$\CurrentObj$ and information about
 prefixes we are planning to evaluate, \ie prefixes in the
 queue~$\Queue$ of Algorithm~\ref{alg:branch-and-bound}.
 %
+\begin{arxiv}
 After~Theorem~\ref{thm:remaining-eval-fine}, we present two
 weaker propositions that provide useful intuition.
+\end{arxiv}
 
 \begin{theorem}[Fine-grain upper bound on the number of remaining prefix evaluations]
 \label{thm:remaining-eval-fine}
@@ -287,12 +299,22 @@ L(\Prefix') \le \min \left( L(\Prefix) + \left\lfloor \frac{\CurrentObj - b(\Pre
 \equiv U(\Prefix).
 \end{align}
 This gives an upper bound on the number of remaining prefix evaluations:
+\begin{arxiv}
 \begin{align}
 \Remaining(\CurrentObj, \Queue)
 \le \sum_{\Prefix \in Q} \sum_{k=0}^{U(\Prefix) - L(\Prefix)} P(M - L(\Prefix), k)
 = \sum_{\Prefix \in Q} \sum_{k=0}^{f(\Prefix)} \frac{(M - L(\Prefix))!}{(M - L(\Prefix) - k)!}.
 \end{align}
+\end{arxiv}
+\begin{kdd}
+\begin{align}
+\Remaining(\CurrentObj, \Queue)
+\le \sum_{\Prefix \in Q} \sum_{k=0}^{U(\Prefix) - L(\Prefix)} P(M - L(\Prefix), k).
+\end{align}
+\end{kdd}
 \end{proof}
+
+\begin{arxiv}
 
 Our first proposition below is a na\"ive upper bound on
 the total number of prefix evaluations over the course of
@@ -399,6 +421,7 @@ This gives an upper bound on the number of remaining prefix evaluations:
 = \sum_{j=0}^J \Queue_j \left( \sum_{k=0}^{K-j} \frac{(M-j)!}{(M-j - k)!} \right).
 \end{align}
 \end{proof}
+\end{arxiv}
 
 \subsection{Lower bounds on antecedent support}
 \label{sec:lb-support}
@@ -421,6 +444,7 @@ on the normalized support of~$p_k$,
 \end{align}
 \end{theorem}
 
+\begin{arxiv}
 \begin{proof}
 Let ${\OptimalRL = (\Prefix, \Labels, \Default, K)}$ be an optimal
 rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
@@ -455,6 +479,7 @@ Combining this with~\eqref{eq:ub-i} and rearranging gives~\eqref{eq:min-capture}
 therefore the regularization parameter~$\Reg$ provides a lower bound
 on the support of an antecedent~$p_i$ in an optimal rule list~$\OptimalRL$.
 \end{proof}
+\end{arxiv}
 
 Thus, we can prune a prefix~$\Prefix$ if any of its antecedents do not capture
 more than a fraction~$\Reg$ of data, even if~${b(\Prefix, \x, \y) < \OptimalObj}$.
@@ -490,6 +515,7 @@ The regularization parameter~$\Reg$ provides a lower bound on~$a_k$:
 \end{align}
 \end{theorem}
 
+\begin{arxiv}
 \begin{proof}
 As in Theorem~\ref{thm:min-capture},
 let ${\RL =  (\Prefix', \Labels', \Default', K-1)}$ be the rule list
@@ -528,6 +554,7 @@ Relating this bound to the objectives of~$\RL$ and~$\OptimalRL$ gives
 Combining~\eqref{eq:ub-ii} with the requirement
 ${\OptimalObj < \Obj(\RL, \x, \y)}$ gives the bound~${\Reg < a_i}$.
 \end{proof}
+\end{arxiv}
 
 Thus, we can prune a prefix if any of its rules do not capture
 and correctly classify at least a fraction~$\Reg$ of data.
@@ -551,6 +578,7 @@ it depends on the misclassification error associated with each
 rule in a rule list, thus it provides a lower bound on the number of
 observations that each such rule must correctly classify.
 
+\begin{arxiv}
 \subsubsection{Some antecedent relationships that imply insufficient antecedent support}
 
 \dots
@@ -574,7 +602,9 @@ antecedent is~${(x_1 = 0) \wedge (x_2 = 1)}$, then rule~$A$ dominates rule~$B$.
 %
 %Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
 \end{comment}
+\end{arxiv}
 
+\begin{arxiv}
 \subsection{Upper bound on antecedent support}
 \label{sec:ub-support}
 
@@ -714,7 +744,9 @@ sufficient to offset the penalty for longer prefixes.
 Furthermore, Theorem~\ref{thm:ub-support} implies that we should
 only mine rules with normalized support less than ${1 - \Reg}$;
 we need not mine rules with a larger fraction of observations.
+\end{arxiv}
 
+\begin{arxiv}
 \subsection{Antecedent rejection and its propagation}
 \label{sec:reject}
 
@@ -965,6 +997,8 @@ in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
 
 %Let Q be P's parent. If Q rejects a rule, then P will also reject that rule. This 'inheritance' of rejected rules only depends on which data are captured by Q, and doesn't actually depend on the order of rules in Q. Let S be the set of rules formed from (K-1) rules of P, in any order. P inherits rejected rules from any elements of S. Because of our symmetry-based garbage collection of prefixes equivalent up to a permutation, there are at most K elements of S in the cache; we can identify these via the inverse canonical map (ICM) that maps an ordered prefix to its permutation in the cache. We thus lazily initialize the list of P's reject list of rejected rules.
 
+\end{arxiv}
+
 \subsection{Equivalent support bound for symmetry-aware garbage collection}
 \label{sec:equivalent}
 
@@ -1009,6 +1043,7 @@ lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$
 \end{align}
 \end{theorem}
 
+\begin{arxiv}
 \begin{proof}
 We begin by defining four related rule lists.
 %
@@ -1262,6 +1297,7 @@ and~\eqref{eq:equiv-analogous-optimal} to obtain
 = \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y).
 \end{align}
 \end{proof}
+\end{arxiv}
 
 Thus, if prefixes~$\Prefix$ and~$\PrefixB$ capture the same data,
 and their objective lower bounds obey
@@ -1327,7 +1363,7 @@ and thus we can apply Theorem~\ref{thm:equivalent}.
 
 Thus if prefixes~$\Prefix$ and~$\PrefixB$ have the same antecedents,
 up to a permutation, and their objective lower bounds
-obey~${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
+obey~${b(\Prefix, \x, \y) \le}$ ${b(\PrefixB, \x, \y)}$,
 Corollary~\ref{thm:permutation} implies that we can prune~$\PrefixB$.
 %
 In our implementation, we call this permutation-aware
@@ -1387,11 +1423,16 @@ number of $k$-combinations of~$M$.
 Now, the number of length~${k=3}$ prefixes we evaluate is~${C(M, 2) (M - 2)}$.
 %
 Propagating this forward gives
+\begin{arxiv}
 \begin{align}
 \TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K C(M, k-1) (M - k + 1)
 %= 1 + \sum_{k=1}^K {M \choose k-1}(M - k + 1)
 %= 1 + \sum_{k=1}^K \frac{M! (M - k + 1)}{(k - 1)! (M - k + 1)!}
 = 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}.
+\end{align}
+\end{arxiv}
+\begin{align}
+\TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K C(M, k-1) (M - k + 1).
 \end{align}
 \end{proof}
 
@@ -1430,6 +1471,7 @@ with sufficiently high support (Theorem~\ref{thm:min-capture})
 we expect to obtain via rule mining~(\S\ref{sec:rule-mining}),
 for many datasets that might be used for constructing interpretable models.
 
+\begin{arxiv}
 \subsection{Similar support bound}
 \label{sec:similar}
 
@@ -1798,6 +1840,8 @@ provides a lower bound on~$\Obj(\cal{Q}^*)$.
 \begin{proof}
 \end{proof}
 
+\end{arxiv}
+
 \begin{comment}
 If two rules~$A$ and~$B$ capture disjoint subsets of data,
 then they commute globally in the sense that any rule list where~$A$ and~$B$ are
@@ -1810,12 +1854,11 @@ by swapping one or more such pairs of rules.
 We can avoid evaluating multiple such equivalent rule lists by eliminating all but one.
 %
 %We achieve this by restricting how we grow a prefix (by appending a rule), as informed by a hash map cdict that maps each rule R_i to a set of rules S_i = {R_j} such that R_i commutes with every R_j in S_i and j > i. When growing a prefix that ends with rule R_i, we only append a rule R_j if it is not in S_i.
-\end{comment}
 
 \begin{itemize}
 \item other permutation bounds
-\item not-too-many incorrect bound:  ELA doesn't remember this one
 \end{itemize}
+\end{comment}
 
 %For any prefix P, we can write down a lower bound on its permutations' objectives.  (I'm not talking about longer prefixes, just permutations of the same length, call it L.)   An easy bound comes from assuming that there is a permutation that makes no mistakes on captured data, so the only contributions to the objective come from the mistakes of the default rule (call this m) and c*L.  All the permutations capture the same data, so m is constant and this gives
 
