@@ -26,8 +26,7 @@ froot = 'compas'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
 log_root = 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt'
-ftag = 'ela_compas'
-#ftag = 'ela_compas1'
+ftag = 'ela_compas_cv'
 num_folds = 1
 lw = 2  # linewidth
 ms = 9  # markersize
