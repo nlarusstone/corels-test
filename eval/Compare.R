@@ -26,7 +26,7 @@ if (length(args)  == 0) {
 fname <- args[1]
 
 printf("Assumes data is in data/CrossValidation\n")
- printf("Running %s_{train|test}-binary.csv ", fname)
+printf("Running %s_{train|test}-binary.csv ", fname)
 printf("against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER\n\n");
 
 datadir <- "../data/CrossValidation"
@@ -55,7 +55,6 @@ colnames(testData)[ncol(trainData)] <- "Class"
 
 
 sortednames <- sort(make.names(unique(trainData$Class)))
-printf(sortednames)
 trainData$Class <-factor(trainData$Class, labels=sortednames)
 testData$Class <-factor(testData$Class, labels=sortednames)
 
