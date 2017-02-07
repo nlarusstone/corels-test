@@ -119,10 +119,11 @@ ftest = os.path.join(din, 'adult.test')
 fnames = os.path.join(din, 'adult.names')
 fcomplete = os.path.join(din, 'adult-filtered.csv')
 fout = os.path.join(din, 'adult.csv')
+bout = os.path.join('..', 'data', 'adult-binary.csv')
 
 seed = sum([1, 4, 21, 12, 20]) # a:1, d:4, u:21, l:12, t:20
 num_folds = 10
-max_cardinality = 1
+max_cardinality = 2
 min_support = 0.001
 labels = ['<=50K', '>50K']
 minor = True
@@ -197,6 +198,10 @@ print 'write categorical dataset', fout
 y = tb.tabarray(columns=columns, names=names)
 y.saveSV(fout)
 
+print 'write binary dataset', bout
+b = utils.to_binary(y)
+b.saveSV(bout)
+
 print 'permute and partition dataset'
 split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_folds)
 print 'number of folds:', num_folds
@@ -211,8 +216,13 @@ for i in range(num_folds):
     train_root = '%s_train' % cv_root
     ftest = os.path.join(dout, '%s.csv' % test_root)
     ftrain = os.path.join(dout, '%s.csv' % train_root)
+    btest = os.path.join(dout, '%s-binary.csv' % test_root)
+    btrain = os.path.join(dout, '%s-binary.csv' % train_root)
+    train_ind = np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])
     y[split_ind[i]].saveSV(ftest)
-    y[np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])].saveSV(ftrain)
+    y[train_ind].saveSV(ftrain)
+    b[split_ind[i]].saveSV(btest)
+    b[train_ind].saveSV(btrain)
 
     print 'mine rules from', ftrain
     num_rules[i] = mine.mine_rules(din=dout, froot=train_root,

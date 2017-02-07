@@ -1,31 +1,7 @@
 """
-From https://archive.ics.uci.edu/ml/datasets/Nursery
+https://archive.ics.uci.edu/ml/datasets/Tic-Tac-Toe+Endgame
 
-    12960 instances, 8 attributes, no missing values
-
-From https://archive.ics.uci.edu/ml/machine-learning-databases/nursery/nursery.names
-
-   parents        usual, pretentious, great_pret
-   has_nurs       proper, less_proper, improper, critical, very_crit
-   form           complete, completed, incomplete, foster
-   children       1, 2, 3, more
-   housing        convenient, less_conv, critical
-   finance        convenient, inconv
-   social         non-prob, slightly_prob, problematic
-   health         recommended, priority, not_recom
-
-   class        N         N[%]
-   ------------------------------
-   not_recom    4320   (33.333 %)
-   recommend       2   ( 0.015 %)
-   very_recom    328   ( 2.531 %)
-   priority     4266   (32.917 %)
-   spec_prior   4044   (31.204 %)
-
-From https://arxiv.org/pdf/1602.08610v1.pdf
-
-    "the goal is to predict whether a child's application to nursey school will
-    be in either the 'very recommended' or 'special priority' categories,"
+https://archive.ics.uci.edu/ml/machine-learning-databases/tic-tac-toe/tic-tac-toe.names
 
 """
 import os
@@ -37,19 +13,19 @@ import mine
 import utils
 
 
-din = os.path.join('..', 'data', 'nursery')
+din = os.path.join('..', 'data', 'tictactoe')
 dout = os.path.join('..', 'data', 'CrossValidation')
-fdata = os.path.join(din, 'nursery.data')
-ftest = os.path.join(din, 'nursery.test')
-fnames = os.path.join(din, 'nursery.names')
-fcomplete = os.path.join(din, 'nursery-filtered.csv')
-bout = os.path.join('..', 'data', 'nursery-binary.csv')
-fout = os.path.join(din, 'nursery.csv')
+fdata = os.path.join(din, 'tictactoe.data')
+ftest = os.path.join(din, 'tictactoe.test')
+fnames = os.path.join(din, 'tictactoe.names')
+fcomplete = os.path.join(din, 'tictactoe-filtered.csv')
+bout = os.path.join('..', 'data', 'tictactoe-binary.csv')
+fout = os.path.join(din, 'tictactoe.csv')
 
-seed = sum([14, 21, 18, 19, 5, 18, 25]) # n:14, u:21, r:18, s:19, e:5, r:18, y:25
+seed = sum([20, 9, 3, 20, 1, 3, 20, 15, 5]) # t:20 i:9 c:3 t:20 a:1 c:3 t:20 o:15 e:5
 num_folds = 10
-max_cardinality = 2
-min_support = 0.001
+max_cardinality = 3
+min_support = 0.05
 labels = ['No', 'Yes']
 minor = False
 
@@ -63,17 +39,16 @@ if not os.path.exists(dout):
 
 if not os.path.exists(fdata):
     print 'downloading data'
-    uroot = 'https://archive.ics.uci.edu/ml/machine-learning-databases/nursery/'
-    os.system('wget %snursery.data -O %s' % (uroot, fdata))
-    os.system('wget %snursery.names -O %s' % (uroot, fnames))
+    uroot = 'https://archive.ics.uci.edu/ml/machine-learning-databases/tic-tac-toe/'
+    os.system('wget %stic-tac-toe.data -O %s' % (uroot, fdata))
+    os.system('wget %stic-tac-toe.names -O %s' % (uroot, fnames))
 
-names = ['parents', 'has_nurs', 'form', 'children', 'housing', 'finance',
-         'social', 'health', 'recommend']
+names = ['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8', 'c9', 'x_wins']
 
 print 'read original train data:', fdata
 x = open(fdata, 'rU').read().strip().split('\n')
 x = [','.join(line.split(', ')) for line in x if '?' not in line]
-assert (len(x) == 12960)
+assert (len(x) == 958)
 
 f = open(fcomplete, 'w')
 f.write(','.join(names) + '\n')
@@ -83,9 +58,9 @@ f.close()
 print 'lightly process data (e.g., to make binary features)'
 x = tb.tabarray(SVfile=fcomplete)
 
-recommend = np.cast[int]((x['recommend'] == 'spec_prior') | (x['recommend'] == 'very_recom'))
+x_wins = np.cast[int](x['x_wins'] == 'positive')
 
-y = x[names[:-1]].colstack(tb.tabarray(columns=[recommend], names=names[-1:]))
+y = x[names[:-1]].colstack(tb.tabarray(columns=[x_wins], names=names[-1:]))
 
 print 'write categorical dataset', fout
 y.saveSV(fout)
@@ -103,7 +78,7 @@ print 'test size:', len(split_ind[0])
 num_rules = np.zeros(num_folds, int)
 for i in range(num_folds):
     print 'generate cross-validation split', i
-    cv_root = 'nursery_%d' % i
+    cv_root = 'tictactoe_%d' % i
     test_root = '%s_test' % cv_root
     train_root = '%s_train' % cv_root
     ftest = os.path.join(dout, '%s.csv' % test_root)
@@ -133,9 +108,9 @@ for i in range(num_folds):
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
 
-#ben.driver(din='../data/nursery', dout='../data/nursery', froot='nursery', train_suffix='.csv',
+#ben.driver(din='../data/tictactoe', dout='../data/tictactoe', froot='tictactoe', train_suffix='.csv',
 #           delimiter=',', is_binary=False, maxlhs=2, minsupport=2.5, out_suffix='')
-#minority.compute_minority(froot='nursery', dir='../data/nursery')
+#minority.compute_minority(froot='tictactoe', dir='../data/tictactoe')
 
 #mine.mine_rules(din=din, froot=root, max_cardinality=max_cardinality,
 #                min_support=min_support, labels=labels, suffix='_e', minor=minor)

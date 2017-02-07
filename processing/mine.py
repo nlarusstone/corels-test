@@ -60,6 +60,9 @@ def mine_binary(din='../data/compas', froot='compas', max_cardinality=2,
                 if (verbose):
                     print descr
 
+    rr = [' '.join(np.cast[str](np.cast[int](r))) for r in records]
+    print len(rr), len(set(rr))
+
     print len(names), 'rules mined'
     print 'writing', fout
     f = open(fout, 'w')
@@ -126,6 +129,9 @@ def mine_rules(din='../data/adult', froot='adult', max_cardinality=2,
                     records.append(bvec)
                     if (verbose):
                         print descr
+
+    rr = [' '.join(np.cast[str](np.cast[int](r))) for r in records]
+    print len(rr), len(set(rr))
 
     print len(names), 'rules mined'
     print 'writing', fout
