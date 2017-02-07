@@ -38,8 +38,8 @@ which includes the penalty for longer prefixes,
 \end{proof}
 \end{arxiv}
 
-Thus, even if we encounter a prefix~$\Prefix$
-with lower bound ${b(\Prefix, \x, \y)}$ ${\le \CurrentObj}$,
+Therefore, even if we encounter a prefix~$\Prefix$
+with lower bound ${b(\Prefix, \x, \y) \le \CurrentObj}$,
 if ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$, then we can prune
 all prefixes~$\Prefix'$ that start with and are longer than~$\Prefix$. \\
 
@@ -1437,7 +1437,7 @@ lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$
 \end{corollary}
 
 \begin{proof}
-Since the prefixes~$\Prefix$ and~$\PrefixB$ contain
+Since prefixes~$\Prefix$ and~$\PrefixB$ contain
 the same antecedents, they both capture the same data.
 Thus, we can apply Theorem~\ref{thm:equivalent}.
 \end{proof}
