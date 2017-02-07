@@ -50,10 +50,16 @@ length~(\S\ref{sec:ub-prefix-length}),
 and corresponding upper bounds on the number of
 prefix evaluations~(\S\ref{sec:ub-size}).
 %
-Next, we prove lower~(\S\ref{sec:lb-support}) and
-upper~(\S\ref{sec:ub-support}) bounds on antecedent support,
+\begin{arxiv}
+Next, we prove lower~(\S\ref{sec:lb-support})
+and upper~(\S\ref{sec:ub-support}) bounds on antecedent support,
 and provide a unified analysis of consequences of
 these antecedent support bounds~(\S\ref{sec:reject}).
+\end{arxiv}
+\begin{kdd}
+Next, we prove lower~(\S\ref{sec:lb-support}) bounds on
+antecedent support, and describe algorithmic consequences.
+\end{kdd}
 %
 We then analyze rule lists whose prefixes
 capture the same data~(\S\ref{sec:equivalent}),
@@ -66,10 +72,16 @@ this enables permutation-aware garbage collection,
 which we characterize via another upper bound on
 the number of prefix evaluations~(\S\ref{sec:permutation-counting}).
 %
+\begin{arxiv}
 Next, we slightly generalize the result from~\S\ref{sec:equivalent}
 to rule lists whose prefixes capture nearly the same data~(\S\ref{sec:similar}).
 %
 \dots
+\end{arxiv}
+%
+Finally, we show how to tighten the objective lower bound,
+sometimes dramatically, when the data of interest partitions
+into non-singleton equivalence classes~(\S\ref{sec:identical}).
 
 \subsection{Upper bounds on prefix length}
 \label{sec:ub-prefix-length}
@@ -97,7 +109,7 @@ Rule lists consist of distinct rules by definition.
 
 At any point during branch-and-bound execution, the current best objective~$\CurrentObj$
 implies an upper bound on the maximum prefix length we might still have to consider.
-
+%
 \begin{theorem}[Upper bound on prefix length]
 \label{thm:ub-prefix-length}
 Consider a state space of all rule lists formed from a set of~$M$ antecedents.
@@ -112,14 +124,16 @@ L(\OptimalRL) \le \min \left(\left\lfloor \frac{\CurrentObj}{\Reg} \right\rfloor
 \end{align}
 where~$\Reg$ is the regularization parameter.
 %
+\begin{arxiv}
 Furthermore, if the current best rule list~$\CurrentRL$
 has length~$K$ and zero misclassification error,
 then for every optimal rule list
 ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
 if ${\CurrentRL \in}$ ${\argmin_d \Obj(\RL, \x, \y)}$,
 then ${L(\OptimalRL) \le K}$,
-or otherwise if ${\CurrentRL \notin \argmin_d \Obj(\RL, \x, \y)}$,
+or otherwise if ${\CurrentRL \notin}$ ${\argmin_d \Obj(\RL, \x, \y)}$,
 then ${L(\OptimalRL) \le K - 1}$.
+\end{arxiv}
 \end{theorem}
 
 \begin{arxiv}
@@ -155,7 +169,6 @@ If the current best rule list is suboptimal,
 \end{align}
 in which case ${K^* < K}$, \ie ${K^* \leq K-1}$, since $K$ is an integer.
 \end{proof}
-\end{arxiv}
 
 The latter part of Theorem~\ref{thm:ub-prefix-length} tells us that
 if we only need to identify a single instance of an optimal rule list
@@ -163,9 +176,13 @@ ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$, and we encounter a perfect
 $K$-prefix with zero misclassification error, then we can prune all
 prefixes of length~$K$ or greater.
 
+\end{arxiv}
+
 \begin{corollary}[Simple upper bound on prefix length]
 \label{cor:ub-prefix-length}
+\begin{arxiv}
 Let~$L(\RL)$ be the length of rule list~$\RL$.
+\end{arxiv}
 %
 For all optimal rule lists ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
 \begin{align}
@@ -186,8 +203,15 @@ gives~\eqref{eq:max-length-trivial}.
 \end{proof}
 \end{arxiv}
 
-For any particular prefix~$\Prefix$, we can obtain potentially tighter bounds on
+For any particular prefix~$\Prefix$, we can obtain potentially tighter upper bounds on
 prefix length for the family of all prefixes that start with~$\Prefix$.
+
+%
+%\begin{kdd}
+%By considering this constraint in the context of a specific
+%prefix~$\Prefix$, we can obtain potentially tighter upper bounds on
+%prefix length for the family of all prefixes that start with~$\Prefix$.
+%\end{kdd}
 
 \begin{theorem}[Prefix-specific upper bound on prefix length]
 \label{thm:ub-prefix-specific}
@@ -228,23 +252,41 @@ and Proposition~\ref{prop:trivial-length} gives~\eqref{eq:max-length-prefix}.
 \end{arxiv}
 
 Theorem~\ref{thm:ub-prefix-specific} can be viewed as a generalization
-of our one-step lookahead bound~\eqref{eq:lookahead};
+of our one-step lookahead bound in Lemma~\ref{lemma:lookahead};
 rearranging to obtain a bound on~${K' - K}$
 gives an upper bound on the number of remaining `steps' corresponding
 to an iterative sequence of single-rule extensions of a prefix~$\Prefix$.
 %
+\begin{arxiv}
 Notice that when~${\RL = ((), (), q_0, 0)}$ is the empty rule list,
 this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix, \x, \y) = 0}$.
+\end{arxiv}
 
+\begin{arxiv}
 \subsection{Upper bounds on the number of prefix evaluations}
+\end{arxiv}
+\begin{kdd}
+\subsection{Upper bounds on prefix evaluations}
+\end{kdd}
 \label{sec:ub-size}
 
+\begin{arxiv}
 In this section, we use our upper bounds on prefix length
 from~\S\ref{sec:ub-prefix-length} to derive corresponding
 upper bounds on the number of prefix evaluations made by
 Algorithm~\ref{alg:branch-and-bound}.
 %
-First, we present Theorem~\ref{thm:remaining-eval-fine},
+First, we
+\end{arxiv}
+\begin{kdd}
+In this section, we use Theorem~\ref{thm:ub-prefix-specific}'s
+upper bound on prefix length to derive a corresponding
+upper bound on the number of prefix evaluations made by
+Algorithm~\ref{alg:branch-and-bound}.
+%
+We
+\end{kdd}
+present Theorem~\ref{thm:remaining-eval-fine},
 in which we use information about the state of
 Algorithm~\ref{alg:branch-and-bound}'s execution
 to calculate, for any given execution state,
@@ -264,7 +306,12 @@ After~Theorem~\ref{thm:remaining-eval-fine}, we present two
 weaker propositions that provide useful intuition.
 \end{arxiv}
 
+\begin{arxiv}
 \begin{theorem}[Fine-grain upper bound on the number of remaining prefix evaluations]
+\end{arxiv}
+\begin{kdd}
+\begin{theorem}[Upper bound on the number of remaining prefix evaluations]
+\end{kdd}
 \label{thm:remaining-eval-fine}
 Consider a state space of all rule lists formed from a set of~$M$ antecedents,
 and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
@@ -315,8 +362,12 @@ This gives an upper bound on the number of remaining prefix evaluations:
 \end{proof}
 
 \begin{arxiv}
-
-Our first proposition below is a na\"ive upper bound on
+Our first
+\end{arxiv}
+\begin{kdd}
+The
+\end{kdd}
+proposition below is a na\"ive upper bound on
 the total number of prefix evaluations over the course of
 Algorithm~\ref{alg:branch-and-bound}'s execution.
 %
@@ -345,6 +396,7 @@ By Corollary~\ref{cor:ub-prefix-length},
 ${K \equiv \min(\lfloor 1 / 2 \Reg \rfloor, M)}$
 gives an upper bound on the length of any optimal rule list.
 %
+\begin{arxiv}
 Since we can think of our problem as finding the optimal
 selection and permutation of~$k$ out of~$M$ rules,
 over all~${k \le K}$,
@@ -352,7 +404,16 @@ over all~${k \le K}$,
 \TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K P(M, k)
 = \sum_{k=0}^K \frac{M!}{(M - k)!}.
 \end{align}
+\end{arxiv}
+\begin{kdd}
+We obtain~\eqref{eq:size-naive} by viewing
+our problem as finding the optimal
+selection and permutation of~$k$ out of~$M$ rules,
+over all~${k \le K}$.
+\end{kdd}
 \end{proof}
+
+\begin{arxiv}
 
 Our next upper bound is strictly tighter than the bound in
 Proposition~\ref{thm:ub-total-eval}.
@@ -488,9 +549,15 @@ Notice that the bound in Theorem~\ref{thm:min-capture}
 depends on the antecedents, but not the label predictions,
 and thus doesn't account for misclassification error.
 %
+\begin{arxiv}
 Theorem~\ref{thm:min-capture-correct} gives a tighter bound
 by leveraging this additional information, which specifically
 tightens the upper bound on~$\Obj(\RL, \x, \y)$ in~\eqref{eq:ub-i}.
+\end{arxiv}
+\begin{kdd}
+Theorem~\ref{thm:min-capture-correct} gives a tighter bound
+by leveraging this additional information.
+\end{kdd}
 
 \begin{theorem}[Lower bound on accurate antecedent support]
 \label{thm:min-capture-correct}
@@ -1019,15 +1086,22 @@ the minimum objective over all rule lists whose prefixes start with
 
 \begin{theorem}[Equivalent support bound]
 \label{thm:equivalent}
+\begin{arxiv}
 Define ${\StartsWith(\Prefix) = }$
 ${\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
 to be the set of all rule lists whose prefixes start with~$\Prefix$.
+\end{arxiv}
+\begin{kdd}
+Define $\StartsWith(\Prefix)$
+to be the set of all rule lists whose prefix starts with~$\Prefix$,
+as in~\eqref{eq:starts-with}.
+\end{kdd}
 %
 Let ${\RL = (\Prefix, \Labels, \Default, K)}$
 be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$,
 and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
 be a rule list with prefix ${\PrefixB = (P_1, \dots, P_{\kappa})}$,
-such that~$\Prefix$ and~$\PrefixB$ capture the same data, \ie
+such that~$\Prefix$ and~$\PrefixB$ capture the same data,~\ie
 \begin{align}
 \{x_n : \Cap(x_n, \Prefix)\} = \{x_n : \Cap(x_n, \PrefixB)\}.
 \end{align}
@@ -1333,9 +1407,16 @@ rule lists whose prefixes start with \emph{any} prefix in~$\Pi$.
 \begin{corollary}[Permutation bound]
 \label{thm:permutation}
 Let~$\pi$ be any permutation of ${\{1, \dots, K\}}$,
+\begin{arxiv}
 and define ${\StartsWith(\Prefix) = }$
 ${\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
 to be the set of all rule lists whose prefixes start with~$\Prefix$.
+\end{arxiv}
+\begin{kdd}
+and define $\StartsWith(\Prefix)$
+to be the set of all rule lists whose prefix starts with~$\Prefix$,
+as in~\eqref{eq:starts-with}.
+\end{kdd}
 %
 Let ${\RL = (\Prefix, \Labels, \Default, K)}$
 and ${\RLB = (\PrefixB, \LabelsB, \DefaultB, K)}$
@@ -1357,8 +1438,8 @@ lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$
 
 \begin{proof}
 Since the prefixes~$\Prefix$ and~$\PrefixB$ contain
-the same antecedents, they both capture the same data,
-and thus we can apply Theorem~\ref{thm:equivalent}.
+the same antecedents, they both capture the same data.
+Thus, we can apply Theorem~\ref{thm:equivalent}.
 \end{proof}
 
 Thus if prefixes~$\Prefix$ and~$\PrefixB$ have the same antecedents,
@@ -1869,3 +1950,6 @@ We can avoid evaluating multiple such equivalent rule lists by eliminating all b
 %min objective( any permutation of P ) >= k/n + m/n + c*L
 
 %We only know k if we've already evaluated the length (L-1) permutations -- we do know it in the breadth-first setting.  (This idea could be generalized to shorter sub-prefixes if desired, e.g., for policies other than breadth first.)
+
+\subsection{Identical points bound}
+\label{sec:identical}

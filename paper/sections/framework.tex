@@ -1,4 +1,4 @@
-\section{A branch-and-bound framework for optimizing rule lists}
+\section{Learning optimal rule lists}
 
 \subsection{Rule lists for binary classification}
 \label{sec:setup}
@@ -177,13 +177,20 @@ One the results we prove later implies a constraint on the rules
 we need to generate -- they must have at least some minimum support
 given by the lower bound in Theorem~\ref{thm:min-capture}.
 
+\begin{arxiv}
 \subsection{Rule list representation and bit vector operations}
-
 Something along these lines... look at~\citet{YangRuSe16}
+\end{arxiv}
 
-\subsection{Branch-and-bound optimization framework}
+\subsection{Optimization framework}
 
-We define a simple objective function for a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$:
+\begin{arxiv}
+We define
+\end{arxiv}
+\begin{kdd}
+Define
+\end{kdd}
+a simple objective function for a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$:
 \begin{align}
 \Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K.
 \label{eq:objective}
@@ -337,7 +344,7 @@ objective~$\CurrentObj$, thus it is a dynamic, monotonically decreasing quantity
 %
 If we encounter a prefix~$\Prefix$ with lower bound
 ${b(\Prefix, \x, \y) \ge \CurrentObj}$,
-then by~\eqref{eq:prefix-lb}, we needn't consider \emph{any}
+then by Theorem~\ref{thm:bound}, we needn't consider \emph{any}
 rule list~${\RL' \in \StartsWith(\Prefix)}$ whose prefix~$\Prefix'$ starts with~$\Prefix$.
 %because ${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y)}$. \\
 %
@@ -346,8 +353,7 @@ provides a lower bound, \ie
 ${\Obj(\RL', \x, \y) \ge b(\Prefix', \x, \y) \ge}$ ${b(\Prefix, \x, \y) \ge \CurrentObj}$,
 and thus~$\RL'$ cannot be optimal. \\
 
-\begin{arxiv}
-\subsection{Incremental branch-and-bound computation}
+\subsection{Incremental computation}
 \label{sec:incremental}
 
 For every prefix~$\Prefix$ evaluated during
@@ -365,12 +371,15 @@ Furthermore, we exploit the hierarchical natue of the objective
 function and its lower bound to compute these quantities
 incrementally throughout branch-and-bound execution.
 %
+\begin{arxiv}
 In this section, we provide explicit expressions for
 the incremental computations that are central to our approach.
+\end{arxiv}
 %
-Later, in~\S\ref{sec:cache}, we describe a cache data structure
+Later, in~\S\ref{sec:implementation}, we describe a cache data structure
 for supporting our incremental framework in practice.
 
+\begin{arxiv}
 For completeness, before presenting our incremental expressions,
 let us begin by writing down the objective lower bound and objective
 of the empty rule list, ${\RL = ((), (), \Default, 0)}$,
