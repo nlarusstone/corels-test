@@ -33,7 +33,7 @@ datadir <- "../data/CrossValidation"
 traincsv <- paste(datadir, sprintf("%s_train-binary.csv", fname), sep = "/")
 testcsv <- paste(datadir, sprintf("%s_test-binary.csv", fname), sep = "/")
 
-list.of.packages <- c("RWeka", "ggplot2", "gbm",
+list.of.packages <- c("RWeka", "ggplot2", "gbm", "kernlab", "ada",
                       "svmRadial", "rpart", "randomForest")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if (length(new.packages) > 0)
