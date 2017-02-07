@@ -17,6 +17,10 @@ def mine_binary(din='../data/compas', froot='compas', max_cardinality=2,
     flabel = os.path.join(din, '%s%s.label' % (froot, suffix))
 
     x = tb.tabarray(SVfile=fin)
+
+    if (neg_names is None):
+        neg_names = [n.replace(':', ':not-') for n in x.dtype.names]
+
     y = tb.tabarray(array=(1 - x.extract()), names=neg_names)
 
     features = list(x.dtype.names)[:-1] + list(y.dtype.names)[:-1]
@@ -154,6 +158,10 @@ def apply_binary(din='../data/compas', froot='compas', neg_names=None):
     flabel = os.path.join(din, '%s_test.label' % froot)
 
     x = tb.tabarray(SVfile=ftest)
+
+    if (neg_names is None):
+        neg_names = [n.replace(':', ':not-') for n in x.dtype.names]
+
     y = tb.tabarray(array=(1 - x.extract()), names=neg_names)
 
     names = list(x.dtype.names) + list(y.dtype.names)
