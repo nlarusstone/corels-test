@@ -1967,5 +1967,87 @@ We can avoid evaluating multiple such equivalent rule lists by eliminating all b
 
 %We only know k if we've already evaluated the length (L-1) permutations -- we do know it in the breadth-first setting.  (This idea could be generalized to shorter sub-prefixes if desired, e.g., for policies other than breadth first.)
 
-\subsection{Identical points bound}
+\subsection{Equivalent points bound}
 \label{sec:identical}
+
+Consider a dataset~${\{(x_n, y_n)\}_{n=1}^N}$ and a set of antecedents~${\{s_m\}_{m=1}^M}$.
+%
+Define distinct datapoints to be equivalent if they are captured by
+exactly the same antecedents, \ie $x_i \neq x_j$ are equivalent if
+\begin{align}
+\frac{1}{M} \sum_{m=1}^M \one [ \Cap(x_i, s_m) = \Cap(x_j, s_m) ] = 1.
+\end{align}
+Notice that we can partition a dataset into sets of equivalent points;
+let~${\{e_u\}_{u=1}^U}$ enumerate these sets.
+%
+Now define~$\theta(e_u)$ to be the normalized support of the minority
+class label with respect to set~$e_u$, \eg let
+\begin{arxiv}
+\begin{align}
+{e_u = \{x_n : \one [ \Cap(x_n, s_m) = \Cap(x_i, s_m) ] \}},
+\end{align}
+\end{arxiv}
+\begin{kdd}
+${e_u = \{x_n : \one [ \Cap(x_n, s_m) = \Cap(x_i, s_m) ] \}}$,
+\end{kdd}
+and let~$q_u$ be the minority class label among points in~$e_u$, then
+\begin{align}
+\theta(e_u) = \frac{1}{N} \sum_{n=1}^N \one [ x_n \in e_u ] \wedge \one [ y_n = q_u ].
+\end{align}
+
+The existence of equivalent points sets with non-singleton support
+yields a tighter objective lower bound that we can combine with our other bounds;
+as our experiments demonstrate~(\S\ref{sec:experiments}),
+the practical consequences can be dramatic.
+%
+First, for intuition, we present a global bound in
+Proposition~\ref{prop:identical}; next, we explicitly integrate
+this bound into our framework in Theorem~\ref{thm:identical}.
+
+\begin{proposition}[Global equivalent points bound]
+\label{prop:identical}
+Let~$\RL$ be any rule list, then
+\begin{arxiv}
+\begin{align}
+\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u).
+\end{align}
+\end{arxiv}
+\begin{kdd}
+$\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u)$.
+\end{kdd}
+\end{proposition}
+
+Thus, if multiple observations that have identical features and
+opposite labels, no rule list can correctly classify all observations.
+%
+For each set of such observations, the number of mistakes is at least
+the number of observations with the minority label within the set.
+
+Now, recall that to obtain our lower bound~${b(\Prefix, \x, \y)}$
+in~\eqref{eq:lower-bound}, we simply deleted the
+default rule misclassification error~$\Loss_0(\Prefix, \Default, \x, \y)$
+from the objective~${\Obj(\RL, \x, \y)}$.
+%
+Theorem~\ref{thm:identical} obtains a tighter objective lower bound
+via a tighter lower bound~${0 \le b_0(\Prefix, \x, \y) \le}$
+$\Loss_0(\Prefix, \Default, \x, \y)$ on the default rule misclassification error.
+
+\begin{theorem}[Equivalent points bound]
+\label{thm:identical}
+Let~$\RL$ be a rule list with prefix~$\Prefix$
+and lower bound~${b(\Prefix, \x, \y)}$,
+then for any rule list~${\RL' \in \StartsWith(\RL)}$
+whose prefix~$\Prefix$ starts with~$\Prefix$,
+\begin{align}
+\Obj(\RL', \x, \y) \ge b(\Prefix, \x, \y) + b_0(\Prefix, \x, \y),
+\end{align}
+where
+\begin{align}
+b_0(\Prefix, \x, \y) = \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
+    \neg\, \Cap(x_n, \Prefix) \wedge \one [ x_n \in e_u ] \wedge \one [ y_n = q_u ].
+\end{align}
+\end{theorem}
+
+Thus, if multiple observations that are not captured by a prefix~$\Prefix$
+have identical features and opposite labels, no rule list that
+starts with~$\Prefix$ can correctly classify all these observations.
