@@ -1,7 +1,37 @@
 \section{Preliminary experiments}
 \label{sec:experiments}
 
-\begin{figure}[t!]
+Our experimental analysis addresses four questions:
+(1) How does CORELS' accuracy compare to other algorithms?
+(2) How rapidly does the objective function converge?
+(3) How rapidly does CORELS' prune the search space?
+(4) How much does each of the implementation optimizations contribute to CORELS' performance?
+All results presented use the COMPAS data set unless otherwise noted.
+
+We first ran a 10-fold cross validation experiment using CORELS and eight other algorithms:
+GLM, SVM, AdaBoost, CART, C4.5, RF, RIPPER, and scalable rule lists (SBRL).
+There were no statistically significant differences in the accuracies of the different
+algorithms. In fact, the difference between folds was far larger than the difference
+between algorithms. We conclude that CORELS produces models whose accuracy is comparable
+to those found via other algorithms.
+
+Figure \ref{fig:objective} illustrates how both the objective and the size of
+the remaining search space decrease as CORELS' executes.
+The objective drops quickly, within the first millisecond and then slowly
+converges to the optimal.
+In contrast, the search space steadily shrinks throughout the run as the
+lower bound slowly converges to the optimal objective.
+
+Finally, we determine the efficacy of each of our data structure and bounding
+optimizations.
+Table \ref{tab:ablation} provides sumary statistics for experiments using
+the full CORELS implementation and implementations with a specific
+optimization removed.
+Figure \ref{fig:ablation} presents a view of the same experiments, focusing
+on just three of the optimizations. These charts depict the number of rule
+lists of a given length in the queue during the algorithm's execution.
+
+begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 \begin{arxiv}
@@ -128,6 +158,7 @@ identical pts. bound & --- & 48 & $\ge 10$ & $>286$ & $>282$ \\
 \caption{Ablation experiment.
 Total time, time to optimum, maximum evaluated prefix length,
 number of queue insertions, maximum queue size.}
+\abel{tab:ablation}
 \end{table}
 
 \begin{figure}[t!]
