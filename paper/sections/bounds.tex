@@ -118,10 +118,18 @@ Let~$L(\RL)$ be the length of rule list~$\RL$
 and let~$\CurrentObj$ be the current best objective.
 %
 For all optimal rule lists ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$
+\begin{arxiv}
 \begin{align}
 L(\OptimalRL) \le \min \left(\left\lfloor \frac{\CurrentObj}{\Reg} \right\rfloor, M \right),
 \label{eq:max-length}
 \end{align}
+\end{arxiv}
+\begin{kdd}
+\begin{align}
+L(\OptimalRL) \le \min \left(\left\lfloor \CurrentObj / \Reg \right\rfloor, M \right),
+\label{eq:max-length}
+\end{align}
+\end{kdd}
 where~$\Reg$ is the regularization parameter.
 %
 \begin{arxiv}
@@ -185,10 +193,18 @@ Let~$L(\RL)$ be the length of rule list~$\RL$.
 \end{arxiv}
 %
 For all optimal rule lists ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
+\begin{arxiv}
 \begin{align}
 L(\OptimalRL) \le \min \left( \left\lfloor \frac{1}{2\Reg} \right\rfloor, M \right).
 \label{eq:max-length-trivial}
 \end{align}
+\end{arxiv}
+\begin{kdd}
+\begin{align}
+L(\OptimalRL) \le \min \left( \left\lfloor 1 / 2\Reg \right\rfloor, M \right).
+\label{eq:max-length-trivial}
+\end{align}
+\end{kdd}
 \end{corollary}
 
 \begin{arxiv}
