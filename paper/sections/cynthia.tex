@@ -1,0 +1,39 @@
+There are several important observations that translate into useful bounds
+and eliminate large parts of the search space.
+%
+We will discuss these in depth throughout this section:
+%
+\begin{itemize}
+\item Lower bounds on a prefix also hold for every extension of that prefix.
+(Theorem~\ref{thm:bound})
+
+\item We can sometimes prune all rule lists that are longer than a given prefix,
+even without knowing anything about what rules will be placed below that prefix.
+(Lemma~\ref{lemma:lookahead})
+
+\item We can calculate apriori an upper bound on the maximum length
+of an optimal rule list. (Theorem~\ref{thm:ub-prefix-specific})
+
+\item Each rule in an optimal rule list must have support that is
+sufficiently large. (Otherwise it would not be in an optimal rule list.)
+%
+This allows us to construct the rule list from frequent itemsets,
+while preserving the guarantee that we can find a globally optimal
+rule list from pre-mined rules. (Theorem~\ref{thm:min-capture})
+
+\item Each rule in an optimal rule list must predict accurately.
+%
+In particular, the number of observations predicted correctly
+by each rule in an optimal rule list must be above a threshold.
+(Theorem~\ref{thm:min-capture-correct})
+
+\item We need only consider the optimal permutation of rules
+in a prefix and we can omit all other permutations.
+(Theorem~\ref{thm:equivalent} and Corollary~\ref{thm:permutation})
+
+\item  If multiple observations have identical features and opposite labels,
+we know that any model will make mistakes.
+%
+In particular, the number of mistakes on these observations will be at least
+the number of observations with the minority label. (Theorem~\ref{thm:identical})
+\end{itemize}
