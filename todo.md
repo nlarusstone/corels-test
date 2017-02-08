@@ -17,7 +17,7 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Section 4 becomes section 3.5?
 
-- [ ] Curiosity
+- [ ] Curiosity -- probably leave out of KDD
 
 - [ ] Code:  We plan to make it public upon paper acceptance
 
