@@ -1,21 +1,65 @@
 \section{Implementation}
 \label{sec:implementation}
 
-Our algorithm is implemented with the use of a trie, a symmetry-aware map, and a queue as our core data structures. We use the trie as a cache to keep track of rule lists we have already evaluated. Each node in the trie contains the metadata associated with that corresponding rule list. This metadata includes bookkeeping information such as what child rule lists are feasible as well as information such as the lower bound and prediction for that rule list. Our trie also tracks the best observed rule list by keeping track of the minimum objective found and its associated rule list.
+We implement our algorithm using a collection of optimized data structures:
+a trie, a symmetry-aware map, and a queue.
+The trie acts like a cache, keeping track of rule lists we have already evaluated.
+Each node in the trie contains metadata associated with that corresponding rule list;
+the metadata consists of bookkeeping information such as what child rule lists are feasible and
+the lower bound and prediction for that rule list.
+The trie also tracks the best observed rule list by keeping track of the minimum objective
+found and its associated rule list.
 
-We implement the symmetry-aware map as an STL unordered\_map. We have two different versions of the map that both allow identical permutations to map to the same key. In both cases, the values contain the actual ordering of the rules that represents the current best prefix for that permutation. In the first version, keys to the map are the canonical order of rule lists: i.e. the lists 3-2-1 and 2-3-1 both map to 1-2-3. The second version has keys that represent the captured data points. These are equivalent for the rule lists 3-2-1 and 2-3-1, so both will map to the same key.
+We implement the symmetry-aware map using the C++ STL unordered\_map.
+We have two different versions of the map.
+Both versions map permutations of the same set of rules to the same key, whose value
+contains the best rule ordering (i.e., the one with the smallest objective).
+The two map implementations differ in the representation of keys.
+Every rule has a rule id number, and We call the numerically sorted order of a set of rules its
+canonical order.
+Keys in one version of the map represent the set of rules (in canonical order) comprising a
+rule list prefix.
+Keys in the other version represent the set of captured data points.
+The set of captured entries is identical for a given set of rules, independent of ordering, so
+different permutations still map to the same key.
 %
 Note that encodings of rule lists in canonical order tend to be
 significantly smaller than encodings of captured data points,
 especially for large datasets.
 %
-In general, for long runs of our algorithm, the symmetry-aware map dominates our memory usage. When inserting into the symmetry-aware map, we check if there is a permutation P1 of this rule list P0 already in the map. If the objective of P0 is better than the objective of P1, we update the map and remove P1 and its subtree from the trie. Otherwise we do not insert P0 into the symmetry-aware map or the trie.
+In general, the symmetry-aware map dominates memory usage during long runs.
+Before inserting permutation $P<sub>i</sub>$ into the symmetry-aware map, we check
+if there exists a permutation $P<sub>j</sub>$ of $P<sub>i</sub>$ alread in the map.
+If the objective of $P<sub>i</sub>$ is better than the objective of $P<sub>j</sub>$,
+we update the map and remove $P<sub>j</sub>$ and its subtree from the trie.
+Otherwise we do nothing (i.e., we do not insert $P<sub>i</sub>$ into the symmetry-aware map
+or the trie.
 
-We use a queue to index all of the leaves of the trie that still need to be explored. We implement a number of different scheduling schemes including BFS, DFS, and a priority queue. We also have a stochastic exploration process that bypasses the use of a queue by walking down the trie, randomly choosing a child each time, until a leaf is chosen to be explored. The priority queue allows us to order our exploration by different metrics such as the lower bound, the objective, or the curiosity of the leaves. We find that ordering by curiosity will often, but not always, lead to a faster runtime than using BFS.
+We use a queue to store all of the leaves of the trie that still need to be explored.
+We order entries in the queue to implement several different scheduling policies,
+including BFS, DFS, and a priority queue, ordered by the lower bound, the objective, or the
+curiosity.
+We also have a stochastic exploration process that bypasses the use of a queue by walking
+the trie, randomly choosing a child each time, until encountering a leaf.
+We find that ordering by curiosity often leads to a shorter runtime than using BFS.
 
-Our program executes as follows. While there are still leaves of the trie to be explored, we use our scheduling policy to select the next rule list to evaluate. Then, for every rule that is not already in this rule list, we calculate its lower bound, objective, and other metrics that would occur if the rule were added to the end of the rule list. If our new rule list has a lower bound that is below the minimum objective, then we insert it into the symmetry-aware map, the tree, and the queue and update the minimum objective if necessary. If the lower bound is greater than the minimum objective, meaning this new rule list could never be better than one we have already seen, we don't insert the new rule list into the tree or queue. 
+Mapping our algorithm to our data structures produces the following execution strategy.
+While there are still leaves of the trie to be explored, use the scheduling policy to select
+the next rule list to evaluate.
+Then, for every rule that is not already in this rule list, we calculate the lower bound,
+objective, and other metrics produced if the rule were appended to the rule list.
+If the new rule list produces a lower bound less than the current minimum objective, we insert that
+rule list into the symmetry-aware map, the tree, and the queue and, if necessary, update the
+current minimum objective.
+If the lower bound is greater than the minimum objective, meaning this new rule list is never
+better than one we have already seen, we do not insert the new rule list into the tree or queue. 
 
-Every time we update the minimum objective, we garbage collect the trie. We do this by traversing from the root the all of the leaves, deleting any subtrees of nodes with a lower bound that is larger than the minimum objective. In addition, if we encounter a node with no children, we prune upwards--deleting that node and recursively traversing the tree towards the root, deleting any childless nodes. This garbage collection allows us to limit the memory usage of the trie, though in our experiments we observe the minimum objective to decrease only a small number of times.
+Each time we update the minimum objective, we garbage collect the trie, by walking it
+from the root the leaves, deleting any subtrees of nodes with a lower bound larger than the current
+minimum objective. If we encounter a node with no children, we prune upwards--deleting that
+node and recursively traversing the tree towards the root, deleting any childless nodes.
+This garbage collection allows us to constrain the trie's memory consumption, though in our
+experiments we observe the minimum objective to decrease only a small number of times.
 
 %\section{Implementation architecture}
 %
