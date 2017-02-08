@@ -1970,10 +1970,14 @@ We can avoid evaluating multiple such equivalent rule lists by eliminating all b
 \subsection{Equivalent points bound}
 \label{sec:identical}
 
-The bounds in this section quantify the following observation:
-if multiple observations that are not captured by a prefix~$\Prefix$
-have identical features and opposite labels, no rule list that
+The bounds in this section quantify the following:
+%
+If multiple observations that are not captured by a prefix~$\Prefix$
+have identical features and opposite labels, then no rule list that
 starts with~$\Prefix$ can correctly classify all these observations.
+%
+For each set of such observations, the number of mistakes is at least
+the number of observations with the minority label within the set.
 
 Consider a dataset~${\{(x_n, y_n)\}_{n=1}^N}$ and a set of antecedents~${\{s_m\}_{m=1}^M}$.
 %
@@ -2021,12 +2025,6 @@ Let~$\RL$ be any rule list, then
 $\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u)$.
 \end{kdd}
 \end{proposition}
-
-Thus, if there exist multiple observations that have identical features and
-opposite labels, no rule list can correctly classify all observations.
-%
-For each set of such observations, the number of mistakes is at least
-the number of observations with the minority label within the set.
 
 Now, recall that to obtain our lower bound~${b(\Prefix, \x, \y)}$
 in~\eqref{eq:lower-bound}, we simply deleted the
