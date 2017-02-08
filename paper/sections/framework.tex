@@ -173,7 +173,7 @@ Before proceeding, we describe our approach to rule mining,
 which follows the methodology taken by~\citet{LethamRuMcMa15}
 and~\citet{YangRuSe16} \dots
 
-One the results we prove later implies a constraint on the rules
+One of the results we prove later implies a constraint on the rules
 we need to generate -- they must have at least some minimum support
 given by the lower bound in Theorem~\ref{thm:min-capture}.
 
@@ -196,7 +196,7 @@ a simple objective function for a rule list ${\RL = (\Prefix, \Labels, \Default,
 \label{eq:objective}
 \end{align}
 This objective function is a regularized empirical risk;
-it consists of a loss~$\Loss(\RL, \x, \y)$ measuring misclassification error,
+it consists of a loss~$\Loss(\RL, \x, \y)$, measuring misclassification error,
 and a regularization term that penalizes longer rule lists.
 %
 $\Loss(\RL, \x, \y)$~is the fraction of training data whose labels are
@@ -364,10 +364,10 @@ the objective~${\Obj(\RL, \x, \y)}$ of the corresponding rule list~$\RL$.
 These calculations are the dominant computations with respect to execution time.
 %
 This motivates our use of a highly optimized library,
-designed by~\citet{YangRuSe16}, for representing rule lists and
+designed by~\citet{YangRuSe16} for representing rule lists and
 performing operations encountered in evaluating functions of rule lists.
 %
-Furthermore, we exploit the hierarchical natue of the objective
+Furthermore, we exploit the hierarchical nature of the objective
 function and its lower bound to compute these quantities
 incrementally throughout branch-and-bound execution.
 %
