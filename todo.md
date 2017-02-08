@@ -21,6 +21,8 @@ Claim items by adding your name, and check them off when complete :)
 
 - [ ] Code:  We plan to make it public upon paper acceptance
 
+- [ ] Let's avoid the term "ablation"
+
 ### Our approach
 
 - [ ] Incremental branch-and-bound computation (Elaine)
