@@ -1970,6 +1970,11 @@ We can avoid evaluating multiple such equivalent rule lists by eliminating all b
 \subsection{Equivalent points bound}
 \label{sec:identical}
 
+The bounds in this section quantify the following observation:
+if multiple observations that are not captured by a prefix~$\Prefix$
+have identical features and opposite labels, no rule list that
+starts with~$\Prefix$ can correctly classify all these observations.
+
 Consider a dataset~${\{(x_n, y_n)\}_{n=1}^N}$ and a set of antecedents~${\{s_m\}_{m=1}^M}$.
 %
 Define distinct datapoints to be equivalent if they are captured by
@@ -2017,7 +2022,7 @@ $\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u)$.
 \end{kdd}
 \end{proposition}
 
-Thus, if multiple observations have identical features and
+Thus, if there exist multiple observations that have identical features and
 opposite labels, no rule list can correctly classify all observations.
 %
 For each set of such observations, the number of mistakes is at least
@@ -2047,7 +2052,3 @@ b_0(\Prefix, \x, \y) = \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
     \neg\, \Cap(x_n, \Prefix) \wedge \one [ x_n \in e_u ] \wedge \one [ y_n = q_u ].
 \end{align}
 \end{theorem}
-
-Thus, if multiple observations that are not captured by a prefix~$\Prefix$
-have identical features and opposite labels, no rule list that
-starts with~$\Prefix$ can correctly classify all these observations.
