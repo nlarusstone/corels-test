@@ -4,7 +4,7 @@
 Our experimental analysis addresses four questions:
 (1) How does CORELS' accuracy compare to other algorithms?
 (2) How rapidly does the objective function converge?
-(3) How rapidly does CORELS' prune the search space?
+(3) How rapidly does CORELS prune the search space?
 (4) How much does each of the implementation optimizations contribute to CORELS' performance?
 All results presented use the COMPAS data set unless otherwise noted.
 
@@ -16,18 +16,19 @@ between algorithms. We conclude that CORELS produces models whose accuracy is co
 to those found via other algorithms.
 
 Figure \ref{fig:objective} illustrates how both the objective and the size of
-the remaining search space decrease as CORELS' executes.
-The objective drops quickly, within the first millisecond and then slowly
-converges to the optimal.
-In contrast, the search space steadily shrinks throughout the run as the
-lower bound slowly converges to the optimal objective.
+the remaining search space decrease as CORELS executes.
+The objective drops quickly, achieving the optimal value within 10 seconds.
+CORELS certifies optimality in less than 6 minutes --
+the objective lower bound of the remaining search space
+monotonically converges to the optimal objective
+as the search space steadily shrinks.
 
 Finally, we determine the efficacy of each of our data structure and bounding
 optimizations.
 Table \ref{tab:ablation} provides sumary statistics for experiments using
 the full CORELS implementation and implementations with a specific
 optimization removed.
-Figure \ref{fig:ablation} presents a view of the same experiments, focusing
+Figure \ref{fig:queue} presents a view of the same experiments, focusing
 on just three of the optimizations. These charts depict the number of rule
 lists of a given length in the queue during the algorithm's execution.
 
