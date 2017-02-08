@@ -50,7 +50,9 @@ The efficacy of CORELS depends on how much of the search space our bounds allow 
 
 To keep track of all of these bounds for each rule list, we implemented a modified trie that we call a \emph{prefix tree}. Each node in the prefix tree represents an individual rule; thus, each path in the tree represents a rule list where the final node in the path contains the metrics about that rule list. This tree structure facilities the use of multiple different selection algorithms including breadth-first search, a priority queue based on a custom curiosity function, and a stochastic selection process. In addition, we are able to limit the number of nodes in the tree and thereby achieve a way of tuning space-time tradeoffs in a robust manner. This tree structure is a useful way of organizing the generation of rule lists and should be parallelizable.
 
+\begin{arxiv}
 We evaluated CORELS on a number of publicly available datasets and have made code for our algorithm and experiments publicly available. Our metric of success was 10-fold cross validated prediction accuracy on a subset of the data. These datasets involve hundreds of rules and hundreds or thousands of observations. CORELS is generally able to find the optimal rule list in a matter of seconds and certify it within about 10 minutes. We show that we are able to achieve better out-of-sample accuracy on these datasets than the popular greedy algorithms, CART and C5.0.
+\end{arxiv}
 
 This algorithm is designed for solving large (not massive) problems, where interpretability and certifiable optimality is important, such as recidivism prediction. Thus, we illustrate the efficacy or our approach using the dataset released by Northpointe (designers of the proprietary COMPAS algorithm). We show that it is possible to produce a certifiably optimal, interpretable rule list that achieves the same accuracy as a random forest applied to this dataset.
 %
