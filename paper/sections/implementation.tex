@@ -6,22 +6,25 @@ a trie, a symmetry-aware map, and a queue.
 The trie acts like a cache, keeping track of rule lists we have already evaluated.
 Each node in the trie contains metadata associated with that corresponding rule list;
 the metadata consists of bookkeeping information such as what child rule lists are feasible and
-the lower bound and prediction for that rule list.
+the lower bound and accuracy for that rule list.
 The trie also tracks the best observed rule list by keeping track of the minimum objective
 found and its associated rule list.
 
-We implement the symmetry-aware map using the C++ STL unordered\_map.
-We have two different versions of the map.
-Both versions map permutations of the same set of rules to the same key, whose value
-contains the best rule ordering (i.e., the one with the smallest objective).
-The two map implementations differ in the representation of keys.
+We implement the symmetry-aware map using the C++ STL unordered\_map, which
+% Since we are not yet doing anything with the capture-based representation, we shouldn't
+% discuss it as we won't be showing performance.
+% We have two different versions of the map.
+% Both versions 
+maps all permutations of a set of rules to a key, whose value
+contains the best ordering of those rules (i.e., the one with the smallest objective).
 Every rule has a rule id number, and we call the numerically sorted order of a set of rules its
-canonical order.
-Keys in one version of the map represent the set of rules (in canonical order) comprising a
-rule list prefix.
-Keys in the other version represent the set of captured data points.
-The set of captured entries is identical for a given set of rules, independent of ordering, so
-different permutations still map to the same key.
+canonical order, thus, by quering a set of rules by its canonical order, all
+permutations map to the same key.
+% Keys in one version of the map represent the set of rules (in canonical order) comprising a
+% rule list prefix.
+% Keys in the other version represent the set of captured data points.
+% The set of captured entries is identical for a given set of rules, independent of ordering, so
+% different permutations still map to the same key.
 %
 Note that encodings of rule lists in canonical order tend to be
 significantly smaller than encodings of captured data points,
