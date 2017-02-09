@@ -97,10 +97,11 @@ fout = os.path.join(din, 'frisk.csv')
 seed = sum([1, 4, 21, 12, 20]) # f:6, r:18, i:09, s:19, k:11
 num_folds = 10
 max_cardinality = 2
-min_support = 0.05
+min_support = 0.1
 labels = ['no', 'yes']
 minor = True
-
+predict_frisked = False
+predict_weapon = True
 
 np.random.seed(seed)
 
@@ -145,6 +146,7 @@ weapon = w.any(axis=1)
 assert weapon.sum() == 1520
 assert (x['searched'] & weapon).sum() == 1081   # 15% of searches yield weapon
 assert (x['frisked'] & weapon).sum() == 1414    # 4.7% of frisks lead to weapon (possibly via search)
+assert (x['searched'] | x['frisked']).sum() == 30961
 assert ((x['searched'] | x['frisked']) & weapon).sum() == 1445
 
 assert not np.isnan(x['arstmade']).any()
@@ -190,12 +192,22 @@ stop_reasons = [n for n in x.dtype.names if (n.startswith('cs') or
 for sr in stop_reasons:
     x[sr][np.isnan(x[sr]).nonzero()[0]] = 0
 
-names = ['city', 'sex', 'race', 'age', 'build', 'frisked']
+names = ['city', 'sex', 'race', 'age', 'build']
 
 keep = np.invert(np.isnan(x[names].extract()).any(axis=1))
 x = x[keep]
+weapon = weapon[keep]
 assert len(x) == 43858  # throw out 1929 records with missing data
-x = x[(x['age'] > 11) & (x['age'] < 90)]     # throw out age extremes
+ikeep = (x['age'] > 11) & (x['age'] < 90)
+x = x[ikeep]     # throw out age extremes
+weapon = weapon[ikeep]
+assert len(x) == 43747
+
+if (predict_weapon):
+    ikeep = (x['searched'] == 1) | (x['frisked'] == 1)
+    x = x[ikeep]
+    weapon = np.cast[int](weapon[ikeep])
+    assert (len(x) == 29595)
 
 city = [city_dict[i] for i in x['city']]
 sex = [sex_dict[i] for i in x['sex']]
@@ -209,12 +221,22 @@ stop_reasons_list = []
 for sr in stop_reasons:
     stop_reasons_list += [[rename_pos(stop_dict[sr]) if s else rename_neg(stop_dict[sr]) for s in x[sr]]]
 
-columns = [city, sex, race, age, build, inout, location] + stop_reasons_list + [x['frisked']]
-
-cnames = names[:-1] + ['inout', 'location'] + stop_reasons + names[-1:]
+if (predict_frisked):
+    columns = [city, sex, race, age, build, inout, location] + stop_reasons_list + [x['frisked']]
+    cnames = names + ['inout', 'location'] + stop_reasons + ['frisked']
+elif (predict_weapon):
+    columns = stop_reasons_list + [x['pct'], location, weapon]
+    cnames = stop_reasons + ['precinct', 'location', 'weapon']
 
 print 'write categorical dataset', fout
 y = tb.tabarray(columns=columns, names=cnames)
+
+if (predict_weapon):
+    y0 = y[y['weapon'] == 0]
+    y1 = y[y['weapon'] == 1]
+    y1 = y1[np.random.randint(0, len(y1), len(y0))]
+    y = y0.rowstack(y1)
+
 y.saveSV(fout)
 
 print 'permute and partition dataset'
