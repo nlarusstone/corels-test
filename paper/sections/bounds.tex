@@ -1463,7 +1463,7 @@ up to a permutation, and their objective lower bounds
 obey~${b(\Prefix, \x, \y) \le}$ ${b(\PrefixB, \x, \y)}$,
 Corollary~\ref{thm:permutation} implies that we can prune~$\PrefixB$.
 %
-In our implementation, we call this permutation-aware
+We call this permutation-aware
 garbage collection, and we illustrate the subsequent
 computational savings next in~\S\ref{sec:permutation-counting}.
 
@@ -1551,9 +1551,9 @@ which is smaller by a factor of about~360,000.
 % ELA : someone please double-check these numbers :)
 
 While a number like~$10^{24}$ seems infeasibly enormous,
-it does not represent the number of rule lists we actually evaluate.
+it does not represent the number of rule lists we evaluate.
 %
-As we demonstrate in our experiments~(\S\ref{sec:experiments}),
+As we show in ~(\S\ref{sec:experiments}),
 our permutation bound in Corollary~\ref{thm:permutation}
 and our other bounds together conspire to reduce the search space
 to a size manageable on a single computer.
