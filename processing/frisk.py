@@ -32,6 +32,7 @@ import numpy as np
 import tabular as tb
 
 import mine
+import utils
 
 
 city_dict = {1: 'Manhattan', 2: 'Brooklyn', 3: 'Bronx', 4: 'Queens', 5: 'Staten Island'}
@@ -92,6 +93,8 @@ din = os.path.join('..', 'data', 'frisk')
 dout = os.path.join('..', 'data', 'CrossValidation')
 zdata = os.path.join('..', 'data', '2014-20SQF.zip')
 fdata = os.path.join(din, '2014-SQF-web.csv')
+fout = os.path.join(din, 'frisk.csv')
+bout = os.path.join('..', 'data', 'frisk-binary.csv')
 fout = os.path.join(din, 'frisk.csv')
 
 seed = sum([1, 4, 21, 12, 20]) # f:6, r:18, i:09, s:19, k:11
@@ -217,6 +220,10 @@ print 'write categorical dataset', fout
 y = tb.tabarray(columns=columns, names=cnames)
 y.saveSV(fout)
 
+print 'write binary dataset', bout
+b = utils.to_binary(y)
+b.saveSV(bout)
+
 print 'permute and partition dataset'
 split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_folds)
 print 'number of folds:', num_folds
@@ -231,8 +238,13 @@ for i in range(num_folds):
     train_root = '%s_train' % cv_root
     ftest = os.path.join(dout, '%s.csv' % test_root)
     ftrain = os.path.join(dout, '%s.csv' % train_root)
+    btest = os.path.join(dout, '%s-binary.csv' % test_root)
+    btrain = os.path.join(dout, '%s-binary.csv' % train_root)
+    train_ind = np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])
     y[split_ind[i]].saveSV(ftest)
-    y[np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])].saveSV(ftrain)
+    y[train_ind].saveSV(ftrain)
+    b[split_ind[i]].saveSV(btest)
+    b[train_ind].saveSV(btrain)
 
     print 'mine rules from', ftrain
     num_rules[i] = mine.mine_rules(din=dout, froot=train_root,
