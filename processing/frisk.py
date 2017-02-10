@@ -69,7 +69,7 @@ inout_dict = {0: 'outside', 1: 'inside'}
 trhsloc_dict = {0: 'neither-housing-nor-transit-authority', 1: 'housing-authority', 2: 'transit-authority'}
 
 def rename_pos(s):
-    return s.replace(' - ', '=').replace(' ', '-')
+    return s.replace(' - ', '=').replace('reason for stop', 'stop-reason').replace('additional circumstances', 'circumstances').replace(' ', '-')
 
 def rename_neg(s):
     return s.replace(' - ', '=not-').replace(' ', '-')
@@ -100,7 +100,7 @@ fout = os.path.join(din, 'frisk.csv')
 seed = sum([1, 4, 21, 12, 20]) # f:6, r:18, i:09, s:19, k:11
 num_folds = 10
 max_cardinality = 2
-min_support = 0.05
+min_support = 0.005
 labels = ['no', 'yes']
 minor = True
 predict_frisked = False
