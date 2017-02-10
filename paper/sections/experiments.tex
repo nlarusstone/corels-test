@@ -33,6 +33,30 @@ Figure \ref{fig:queue} presents a view of the same experiments, focusing
 on just three of the optimizations. These charts depict the number of rule
 lists of a given length in the queue during the algorithm's execution.
 
+\begin{arxiv}
+\begin{table}[t]
+\centering
+\begin{tabular}{l | c}
+Method & COMPAS \\
+\hline
+GLM & 67.5 $\pm$ 1.8 \\
+SVM & 67.1 $\pm$ 2.0 \\
+AdaBoost & 67.3 $\pm$ 1.7 \\
+CART & 66.7 $\pm$ 2.1 \\
+C4.5 & 67.3 $\pm$ 1.8 \\
+RF & 67.3 $\pm$ 1.8 \\
+RIPPER & 67.3 $\pm$ 2.0 \\
+SBRL & 67.1 $\pm$ 1.7 \\
+CORELS & 67.6 $\pm$ 2.0 \\
+\end{tabular}
+\vspace{2mm}
+\caption{Comparison with other methods:
+Means and standard deviations of test error.
+Also report algorithm runtimes (mean $\pm$ standard deviation over 10 folds).}
+\label{tab:comparison}
+\end{table}
+\end{arxiv}
+
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
@@ -46,8 +70,7 @@ lists of a given length in the queue during the algorithm's execution.
 \caption{Comparison with other methods:
 Test error for us and a few other algorithms
 (CART, C4.5, CBA, CMAR/CPAR, C5.0, Ripper, \dots),
-as a function of sparsity over 10 folds, for one big dataset (box plots).
-Also report algorithm runtimes (mean $\pm$ standard deviation over 10 folds).}
+as a function of sparsity over 10 folds, for one big dataset (box plots).}
 \label{fig:comparison}
 \end{figure}
 
@@ -149,9 +172,9 @@ priority queue & 453 & 4 & 6 & 1.93 & 1.58 \\
 support bounds & 580 & 11 & 6 & 2.38 & 2.06 \\
 permutation map & 3634 & 19 & 6 & 15.0 & 14.1 \\
 lookahead bound & 4401 & 8 & 7 & 19.5 & 17.7 \\
-identical pts. bound & --- & 48 & $\ge 10$ & $>286$ & $>282$ \\
+equiv. pts. bound & --- & 48 & $\ge 10$ & $>286$ & $>282$ \\
 \end{tabular}
-\vspace{2mm}
+\vspace{5mm}
 \caption{Per-component performance improvement.
 The columns report averages over 10 cross-validation folds for
 the total execution time, time to optimum, maximum evaluated prefix length,
