@@ -1375,12 +1375,12 @@ Computing Machinery]
   \andify\shortauthors
   \global\let\authors=\authors
   \global\let\shortauthors=\shortauthors
-  \if@ACM@printacmref
-     \@mkbibcitation
-  \fi
+  % \if@ACM@printacmref
+  %  \@mkbibcitation
+  %\fi
   \hypersetup{pdfauthor={\authors},
     pdftitle={\@title}, pdfkeywords={\@concepts}}%
-  \@printendtopmatter
+  %\@printendtopmatter
   \@afterindentfalse
   \@afterheading
 }
