@@ -134,6 +134,7 @@ if __name__ == '__main__':
             log_fname += 'minor-'
         else:
             log_fname += 'no_minor-'
+        log_fname += 'removed=none-'
         if args.n:
             fxn.append('-n ' + args.n)
             log_fname += 'max_num_nodes={0}-'.format(args.n)
