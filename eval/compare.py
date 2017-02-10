@@ -17,6 +17,8 @@ bbrl = np.array(bbrl.strip().split('[')[1].split(']')[0].split(','))
 
 y = np.cast[float](np.vstack([other.T, sbrl, bbrl]).T)
 
+print '\n'.join(['%2.1f $\\pm$ %2.1f' % (m, s) for (m, s) in zip(y.mean(axis=0) * 100, y.std(axis=0) * 100)])
+
 pylab.ion()
 pylab.figure(1, figsize=(7, 5))
 pylab.clf()
@@ -45,4 +47,4 @@ a[0] -= 1
 a[1] += 1
 pylab.axis(a)
 
-pylab.savefig('../paper/figs/compare-compas.pdf')
+#pylab.savefig('../paper/figs/compare-compas.pdf')
