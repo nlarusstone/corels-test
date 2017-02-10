@@ -342,12 +342,21 @@ prefix evaluations, then
 \Remaining(\CurrentObj, \Queue)
 \le \sum_{\Prefix \in Q} \sum_{k=0}^{f(\Prefix)} \frac{(M - L(\Prefix))!}{(M - L(\Prefix) - k)!},
 \end{align}
+\begin{arxiv}
 where
 \begin{align}
 f(\Prefix) = \min \left( \left\lfloor
   \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor, M - L(\Prefix)\right).
 \label{eq:f}
 \end{align}
+\end{arxiv}
+\begin{kdd}
+\begin{align}
+\text{where} \quad f(\Prefix) = \min \left( \left\lfloor
+  \frac{\CurrentObj - b(\Prefix, \x, \y)}{\Reg} \right\rfloor, M - L(\Prefix)\right).
+\label{eq:f}
+\end{align}
+\end{kdd}
 \end{theorem}
 
 \begin{proof}
@@ -2041,12 +2050,27 @@ Let~$\RL$ be a rule list with prefix~$\Prefix$
 and lower bound~${b(\Prefix, \x, \y)}$,
 then for any rule list~${\RL' \in \StartsWith(\RL)}$
 whose prefix~$\Prefix$ starts with~$\Prefix$,
+\begin{arxiv}
 \begin{align}
 \Obj(\RL', \x, \y) \ge b(\Prefix, \x, \y) + b_0(\Prefix, \x, \y),
 \end{align}
 where
+\end{arxiv}
+\begin{kdd}
+\begin{align}
+\Obj(\RL', \x, \y) \ge b(\Prefix, \x, \y) + b_0(\Prefix, \x, \y), \quad \text{where}
+\end{align}
+\end{kdd}
+\begin{arxiv}
 \begin{align}
 b_0(\Prefix, \x, \y) = \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
     \neg\, \Cap(x_n, \Prefix) \wedge \one [ x_n \in e_u ] \wedge \one [ y_n = q_u ].
 \end{align}
+\end{arxiv}
+\begin{kdd}
+\begin{align}
+b_0(\Prefix, \x, \y) = \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
+    \neg\, \Cap(x_n, \Prefix) \wedge \one [ x_n \in e_u ] \wedge \one [ y_n = q_u ]. \nn
+\end{align}
+\end{kdd}
 \end{theorem}
