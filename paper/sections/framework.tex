@@ -335,13 +335,13 @@ initial best known rule list~$\InitialRL$ with objective
 ${\InitialObj = \Obj(\InitialRL, \x, \y)}$
 \State \textbf{Output:} Provably optimal rule list~$\OptimalRL$ with minimum objective~$\OptimalObj$ \\
 
-\State $(\CurrentRL, \CurrentObj) \gets (\InitialRL, \InitialObj)$ \Comment{Initialize best known RL \& objective}
+\State $(\CurrentRL, \CurrentObj) \gets (\InitialRL, \InitialObj)$ \Comment{Initialize best rule list and objective}
 \State $Q \gets $ queue$(\,[\,(\,)\,]\,)$ \Comment{Initialize queue with empty prefix}
 \While {$Q$ not empty} \Comment{Stop when queue is empty}
 	\State $\Prefix \gets Q$.pop(\,) \Comment{Remove prefix~$\Prefix$ from the queue}
 	\If {$b(\Prefix, \x, \y) < \CurrentObj$} \Comment{\textbf{Bound}: Apply Theorem~\ref{thm:bound}}
         \State $\Obj \gets \Obj(\RL, \x, \y)$ \Comment{Compute objective of~$\Prefix$'s rule list~$\RL$}
-        \If {$\Obj < \CurrentObj$} \Comment{Update best known RL \& objective}
+        \If {$\Obj < \CurrentObj$} \Comment{Update best rule list and objective}
             \State $(\CurrentRL, \CurrentObj) \gets (\RL, \Obj)$
         \EndIf
         \For {$s$ in $\RuleSet$} \Comment{\textbf{Branch}: Enqueue~$\Prefix$'s children}
@@ -351,7 +351,7 @@ ${\InitialObj = \Obj(\InitialRL, \x, \y)}$
         \EndFor
     \EndIf
 \EndWhile
-\State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Identify provably optimal RL \& objective}
+\State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Identify provably optimal solution}
 \end{algorithmic}
 \end{algorithm}
 
