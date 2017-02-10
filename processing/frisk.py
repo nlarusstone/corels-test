@@ -100,7 +100,7 @@ fout = os.path.join(din, 'frisk.csv')
 seed = sum([1, 4, 21, 12, 20]) # f:6, r:18, i:09, s:19, k:11
 num_folds = 10
 max_cardinality = 2
-min_support = 0.1
+min_support = 0.05
 labels = ['no', 'yes']
 minor = True
 predict_frisked = False
@@ -228,8 +228,8 @@ if (predict_frisked):
     columns = [city, sex, race, age, build, inout, location] + stop_reasons_list + [x['frisked']]
     cnames = names + ['inout', 'location'] + stop_reasons + ['frisked']
 elif (predict_weapon):
-    columns = stop_reasons_list + [x['pct'], location, weapon]
-    cnames = stop_reasons + ['precinct', 'location', 'weapon']
+    columns = stop_reasons_list + [location, inout, weapon]
+    cnames = stop_reasons + ['location', 'inout', 'weapon']
 
 print 'write categorical dataset', fout
 y = tb.tabarray(columns=columns, names=cnames)
