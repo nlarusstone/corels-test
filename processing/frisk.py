@@ -42,7 +42,7 @@ sex_dict = {0: 'female', 1: 'male'}
 race_dict = {1: 'black', 2: 'black Hispanic', 3: 'white Hispanic', 4: 'white',
              5: 'Asian/Pacific Islander', 6: 'Am. Indian/Native'}
 
-build_dict = {1: 'heavy', 2: 'musuclar', 3: 'medium', 4: 'thin'}
+build_dict = {1: 'heavy', 2: 'muscular', 3: 'medium', 4: 'thin'}
 
 stop_dict = {'cs_objcs': 'reason for stop - suspicious object',
              'cs_descr': 'reason for stop - fits description',
@@ -72,7 +72,7 @@ def rename_pos(s):
     return s.replace(' - ', '=').replace('reason for stop', 'stop-reason').replace('additional circumstances', 'circumstances').replace(' ', '-')
 
 def rename_neg(s):
-    return s.replace(' - ', '=not-').replace(' ', '-')
+    return s.replace(' - ', '=not-').replace('reason for stop', 'stop-reason').replace('additional circumstances', 'circumstances').replace(' ', '-')
 
 def age_func(a):
     if (a < 18):
@@ -99,8 +99,8 @@ fout = os.path.join(din, 'frisk.csv')
 
 seed = sum([1, 4, 21, 12, 20]) # f:6, r:18, i:09, s:19, k:11
 num_folds = 10
-max_cardinality = 2
-min_support = 0.005
+max_cardinality = 1
+min_support = 0.001
 labels = ['no', 'yes']
 minor = True
 predict_frisked = False
@@ -190,8 +190,8 @@ assert len(set(x['othfeatr'])) == 220
 assert set(x['inout']) == set([0, 1])
 assert set(x['trhsloc']) == set([0, 1, 2])
 
-stop_reasons = [n for n in x.dtype.names if (n.startswith('cs') or
-                                     n.startswith('ac')) and ('other' not in n)]
+stop_reasons = [n for n in x.dtype.names if (n.startswith('cs') or n.startswith('ac'))
+                                      and ('other' not in n)] # or n.startswith('ac'))
 for sr in stop_reasons:
     x[sr][np.isnan(x[sr]).nonzero()[0]] = 0
 
@@ -228,8 +228,8 @@ if (predict_frisked):
     columns = [city, sex, race, age, build, inout, location] + stop_reasons_list + [x['frisked']]
     cnames = names + ['inout', 'location'] + stop_reasons + ['frisked']
 elif (predict_weapon):
-    columns = stop_reasons_list + [location, inout, weapon]
-    cnames = stop_reasons + ['location', 'inout', 'weapon']
+    columns = stop_reasons_list + [city, location, inout, weapon]
+    cnames = stop_reasons + ['city', 'location', 'inout', 'weapon']
 
 print 'write categorical dataset', fout
 y = tb.tabarray(columns=columns, names=cnames)
@@ -237,7 +237,6 @@ y = tb.tabarray(columns=columns, names=cnames)
 if (predict_weapon):
     y0 = y[y['weapon'] == 0]
     y1 = y[y['weapon'] == 1]
-    y1 = y1[np.random.randint(0, len(y1), len(y0))]
     y = y0.rowstack(y1)
 
 y.saveSV(fout)
@@ -246,8 +245,15 @@ print 'write binary dataset', bout
 b = utils.to_binary(y)
 b.saveSV(bout)
 
+if (not predict_weapon):
+    split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_folds)
+else:
+    s0 = np.split(np.random.permutation(len(y0) / num_folds * num_folds), num_folds)
+    s1 = np.split(len(y0) + np.random.permutation(len(y1) / num_folds * num_folds), num_folds)
+    s1 = [i1[np.random.randint(0, len(i1), len(s0[0]))] for i1 in s1]
+    split_ind = [np.concatenate([i0, i1]) for (i0, i1) in zip(s0, s1)]
+
 print 'permute and partition dataset'
-split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_folds)
 print 'number of folds:', num_folds
 print 'train size:', len(split_ind[0]) * (num_folds - 1)
 print 'test size:', len(split_ind[0])
