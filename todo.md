@@ -13,37 +13,15 @@ Claim items by adding your name, and check them off when complete :)
 
 ## Writing
 
-- [ ] Abstract
+- [ ] Cynthia's paragraph goes somewhere (beginning of Section 3 or 4)
 
-- [x] Intro -- look at Ben's and Hongyu's papers as examples.  Perhaps start by
-      trying to tell a high-level story in approximately 10 sentences.
-      (This might make a good abstract!)  When you flesh things out, the intro
-      will probably be approximately one page.  Remember that our approach is
-      motivated by human-interpretability.  Paint a landscape of previous
-      approaches and where we fit in -- what makes our approach novel, and what
-      are its unique advantages?  Arrive at a set of clear statements that
-      highlight our main research contributions -- this can be done as a
-      bulleted list.  What is our algorithmic approach?  What data structures
-      do we leverage, and what do they achieve?  What theorems do we prove, and
-      what are the algorithmic and practical consequences?  How do we implement
-      and evaluate our algorithms? (Nicholas will write a draft, then Cynthia will take a pass)
+- [ ] Section 4 becomes section 3.5?
 
-### Related work
+- [ ] Curiosity -- probably leave out of KDD
 
-- [ ] Everyone should conduct a Google search on related work -- we might
-      uncover new things we didn't know about. The related work sections in Ben's and Hongyu's
-      papers provide good starting points.  If you find anything new that you think is
-      important, add the bibtex info as well as a couple sentences describing the work.
+- [ ] Code:  We plan to make it public upon paper acceptance
 
-- [X] Summarize Ben's and Hongyu's papers and describe how our work
-      relates, builds on, and differs from their recent work (1 paragraph) -- remember
-      that we're using the same rule mining approach as both as well as the rule library (Nicholas)
-
-- [X] Summarize the Garofalakis papers (1 paragraph) (Nicholas)
-
-- [x] Summarize the ProPublica paper (1 paragraph) (Nicholas)
-
-- [ ] Everything else (Cynthia)
+- [ ] Let's avoid the term "ablation"
 
 ### Our approach
 

@@ -3,13 +3,16 @@ import os
 import numpy as np
 import tabular as tb
 
+def transpose(L):
+  return [[row[i] for row in L] for i in range(len(L[0]))]
+
 def compute_minority(froot, dir='../data/'):
     fout = os.path.join(dir, '%s.out' % froot)
     flabel = os.path.join(dir, '%s.label' % froot)
     fminor = os.path.join(dir, '%s.minor' % froot)
 
     z = [line.strip().split()[1:] for line in open(fout, 'rU').read().strip().split('\n')]
-    z = tb.utils.listarraytranspose(z)
+    z = transpose(z)
     s = np.array([str(''.join(i)) for i in z])
     
     y = np.array(open(flabel, 'rU').read().strip().split('\n')[0].strip().split()[1:], int)

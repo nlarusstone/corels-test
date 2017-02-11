@@ -32,6 +32,7 @@ import numpy as np
 import tabular as tb
 
 import mine
+import utils
 
 
 city_dict = {1: 'Manhattan', 2: 'Brooklyn', 3: 'Bronx', 4: 'Queens', 5: 'Staten Island'}
@@ -41,7 +42,7 @@ sex_dict = {0: 'female', 1: 'male'}
 race_dict = {1: 'black', 2: 'black Hispanic', 3: 'white Hispanic', 4: 'white',
              5: 'Asian/Pacific Islander', 6: 'Am. Indian/Native'}
 
-build_dict = {1: 'heavy', 2: 'musuclar', 3: 'medium', 4: 'thin'}
+build_dict = {1: 'heavy', 2: 'muscular', 3: 'medium', 4: 'thin'}
 
 stop_dict = {'cs_objcs': 'reason for stop - suspicious object',
              'cs_descr': 'reason for stop - fits description',
@@ -68,10 +69,10 @@ inout_dict = {0: 'outside', 1: 'inside'}
 trhsloc_dict = {0: 'neither-housing-nor-transit-authority', 1: 'housing-authority', 2: 'transit-authority'}
 
 def rename_pos(s):
-    return s.replace(' - ', '=').replace(' ', '-')
+    return s.replace(' - ', '=').replace('reason for stop', 'stop-reason').replace('additional circumstances', 'circumstances').replace(' ', '-')
 
 def rename_neg(s):
-    return s.replace(' - ', '=not-').replace(' ', '-')
+    return s.replace(' - ', '=not-').replace('reason for stop', 'stop-reason').replace('additional circumstances', 'circumstances').replace(' ', '-')
 
 def age_func(a):
     if (a < 18):
@@ -93,14 +94,17 @@ dout = os.path.join('..', 'data', 'CrossValidation')
 zdata = os.path.join('..', 'data', '2014-20SQF.zip')
 fdata = os.path.join(din, '2014-SQF-web.csv')
 fout = os.path.join(din, 'frisk.csv')
+bout = os.path.join('..', 'data', 'frisk-binary.csv')
+fout = os.path.join(din, 'frisk.csv')
 
 seed = sum([1, 4, 21, 12, 20]) # f:6, r:18, i:09, s:19, k:11
 num_folds = 10
-max_cardinality = 2
-min_support = 0.05
+max_cardinality = 1
+min_support = 0.001
 labels = ['no', 'yes']
 minor = True
-
+predict_frisked = False
+predict_weapon = True
 
 np.random.seed(seed)
 
@@ -145,6 +149,7 @@ weapon = w.any(axis=1)
 assert weapon.sum() == 1520
 assert (x['searched'] & weapon).sum() == 1081   # 15% of searches yield weapon
 assert (x['frisked'] & weapon).sum() == 1414    # 4.7% of frisks lead to weapon (possibly via search)
+assert (x['searched'] | x['frisked']).sum() == 30961
 assert ((x['searched'] | x['frisked']) & weapon).sum() == 1445
 
 assert not np.isnan(x['arstmade']).any()
@@ -185,17 +190,27 @@ assert len(set(x['othfeatr'])) == 220
 assert set(x['inout']) == set([0, 1])
 assert set(x['trhsloc']) == set([0, 1, 2])
 
-stop_reasons = [n for n in x.dtype.names if (n.startswith('cs') or
-                                     n.startswith('ac')) and ('other' not in n)]
+stop_reasons = [n for n in x.dtype.names if (n.startswith('cs') or n.startswith('ac'))
+                                      and ('other' not in n)] # or n.startswith('ac'))
 for sr in stop_reasons:
     x[sr][np.isnan(x[sr]).nonzero()[0]] = 0
 
-names = ['city', 'sex', 'race', 'age', 'build', 'frisked']
+names = ['city', 'sex', 'race', 'age', 'build']
 
 keep = np.invert(np.isnan(x[names].extract()).any(axis=1))
 x = x[keep]
+weapon = weapon[keep]
 assert len(x) == 43858  # throw out 1929 records with missing data
-x = x[(x['age'] > 11) & (x['age'] < 90)]     # throw out age extremes
+ikeep = (x['age'] > 11) & (x['age'] < 90)
+x = x[ikeep]     # throw out age extremes
+weapon = weapon[ikeep]
+assert len(x) == 43747
+
+if (predict_weapon):
+    ikeep = (x['searched'] == 1) | (x['frisked'] == 1)
+    x = x[ikeep]
+    weapon = np.cast[int](weapon[ikeep])
+    assert (len(x) == 29595)
 
 city = [city_dict[i] for i in x['city']]
 sex = [sex_dict[i] for i in x['sex']]
@@ -209,16 +224,36 @@ stop_reasons_list = []
 for sr in stop_reasons:
     stop_reasons_list += [[rename_pos(stop_dict[sr]) if s else rename_neg(stop_dict[sr]) for s in x[sr]]]
 
-columns = [city, sex, race, age, build, inout, location] + stop_reasons_list + [x['frisked']]
-
-cnames = names[:-1] + ['inout', 'location'] + stop_reasons + names[-1:]
+if (predict_frisked):
+    columns = [city, sex, race, age, build, inout, location] + stop_reasons_list + [x['frisked']]
+    cnames = names + ['inout', 'location'] + stop_reasons + ['frisked']
+elif (predict_weapon):
+    columns = stop_reasons_list + [city, location, inout, weapon]
+    cnames = stop_reasons + ['city', 'location', 'inout', 'weapon']
 
 print 'write categorical dataset', fout
 y = tb.tabarray(columns=columns, names=cnames)
+
+if (predict_weapon):
+    y0 = y[y['weapon'] == 0]
+    y1 = y[y['weapon'] == 1]
+    y = y0.rowstack(y1)
+
 y.saveSV(fout)
 
+print 'write binary dataset', bout
+b = utils.to_binary(y)
+b.saveSV(bout)
+
+if (not predict_weapon):
+    split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_folds)
+else:
+    s0 = np.split(np.random.permutation(len(y0) / num_folds * num_folds), num_folds)
+    s1 = np.split(len(y0) + np.random.permutation(len(y1) / num_folds * num_folds), num_folds)
+    s1 = [i1[np.random.randint(0, len(i1), len(s0[0]))] for i1 in s1]
+    split_ind = [np.concatenate([i0, i1]) for (i0, i1) in zip(s0, s1)]
+
 print 'permute and partition dataset'
-split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_folds)
 print 'number of folds:', num_folds
 print 'train size:', len(split_ind[0]) * (num_folds - 1)
 print 'test size:', len(split_ind[0])
@@ -231,8 +266,13 @@ for i in range(num_folds):
     train_root = '%s_train' % cv_root
     ftest = os.path.join(dout, '%s.csv' % test_root)
     ftrain = os.path.join(dout, '%s.csv' % train_root)
+    btest = os.path.join(dout, '%s-binary.csv' % test_root)
+    btrain = os.path.join(dout, '%s-binary.csv' % train_root)
+    train_ind = np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])
     y[split_ind[i]].saveSV(ftest)
-    y[np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])].saveSV(ftrain)
+    y[train_ind].saveSV(ftrain)
+    b[split_ind[i]].saveSV(btest)
+    b[train_ind].saveSV(btrain)
 
     print 'mine rules from', ftrain
     num_rules[i] = mine.mine_rules(din=dout, froot=train_root,

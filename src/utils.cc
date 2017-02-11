@@ -51,8 +51,8 @@ void Logger::dumpState() {
 }
 
 std::string Logger::dumpRemainingSpaceSize() {
-    mpz_class s(_state.remaining_space_size);
-    return s.get_str();
+    //mpz_class s(_state.remaining_space_size);
+    //return s.get_str();
 }
 
 std::string Logger::dumpPrefixLens() {

@@ -8,6 +8,8 @@ import os
 
 import gmpy2
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
 import pylab
 import tabular as tb
 

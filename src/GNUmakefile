@@ -7,20 +7,23 @@ else
     LIBS :=
 endif
 
-LIBS += -L/usr/local/lib -lgmpxx -lgmp
+LIBS += -L/usr/local/lib -lgmp
+#-lgmpxx 
 
-ifneq ($(shell uname -n),beepboop)
-    LDFLAGS := -Wl,-no_pie
-    CFLAGS += -fno-omit-frame-pointer
-    ifneq ($(shell uname -r),15.6.0)
-        LIBS += -lprofiler -ltcmalloc
+ifeq (,$(findstring rc.fas.harvard.edu, $(shell uname -n)))
+    ifneq ($(shell uname -n),beepboop)
+		LDFLAGS := -Wl,-no_pie
+		CFLAGS += -fno-omit-frame-pointer
+        ifneq ($(shell uname -r),15.6.0)
+			LIBS += -lprofiler -ltcmalloc
+        endif
+    else
+		LDFLAGS :=
     endif
-else
-    LDFLAGS :=
-endif
 
-ifneq ($(shell uname),Darwin)
-    LIBS += -lbsd
+    ifneq ($(shell uname),Darwin)
+		LIBS += -lbsd
+    endif
 endif
 
 CC = gcc
@@ -32,7 +35,8 @@ CLEAN = bbcache *~ *.o *.so
 
 all: bbcache
 
-bbcache: main.o bbound.o cache.o rulelib.o utils.o memtrack.o
+#memtrack.o
+bbcache: main.o bbound.o cache.o rulelib.o utils.o 
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 main.o: main.cc $(DEPSDIR)/stamp
@@ -47,8 +51,8 @@ utils.o: utils.cc $(DEPSDIR)/stamp
 cache.o: cache.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
-memtrack.o: memtrack.cc $(DEPSDIR)/stamp
-	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+#memtrack.o: memtrack.cc $(DEPSDIR)/stamp
+#	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 rulelib.o: rulelib.c $(DEPSDIR)/stamp
 	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@

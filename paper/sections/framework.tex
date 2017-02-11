@@ -13,20 +13,39 @@ where ${x_n \in \{0, 1\}^J}$ are binary features and ${y_n \in \{0, 1\}}$ are la
 Let~${\x = \{x_n\}_{n=1}^N}$ and~${\y = \{y_n\}_{n=1}^N}$,
 and let~${x_{n,j}}$ denote the $j$-th feature of~$x_n$.
 
-\begin{figure}[b!]
+\begin{figure}[t!]
+%\begin{subfigure}{0.18\textwidth}
+%\begin{algorithmic}
+%\normalsize
+%\State \bif $p_1$ \bthen $q_1$
+%\State \belif $p_2$ \bthen $q_2$
+%\State \dots
+%\State \belif $p_K$ \bthen $q_K$
+%\State \belse $q_0$.
+%\end{algorithmic}
+%\end{subfigure}
+%\begin{subfigure}{0.28\textwidth}
 \begin{algorithmic}
 \normalsize
-\State \bif $p_1$ \bthen $q_1$
-\State \belif $p_2$ \bthen $q_2$
-\State \dots
-\State \belif $p_K$ \bthen $q_K$
-\State \belse $q_0$.
+\State \bif $(age=23-25) \wedge (priors=2-3)$ \bthen $yes$
+\State \belif $(sex=male) \wedge (age=18-22)$ \bthen $yes$
+\State \belif $(priors>3)$ \bthen $yes$
+\State \belse $no$
 \end{algorithmic}
-\caption{A $K$-rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$, where
-each rule ${r_k = p_k \rightarrow q_k}$, for all ${k = 0, \dots K}$.
+%\end{subfigure}
+%\caption{A $K$-rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$, where
+%each rule ${r_k = p_k \rightarrow q_k}$, for all ${k = 0, \dots K}$.
+%We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
+%where ${\Prefix = (p_1, \dots, p_K)}$
+%and ${\Labels = (q_1, \dots, q_K)}$.}
+\caption{An example 3-rule list ${\RL = (r_1, r_2, r_3, r_0)}$
+that predicts two-year recidivism for the COMPAS dataset.
+Each rule is of the form ${r_k = p_k \rightarrow q_k}$,
+for all ${k = 0, \dots, 3}$.
 We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
-where ${\Prefix = (p_1, \dots, p_K)}$
-and ${\Labels = (q_1, \dots, q_K)}$.}
+where ${\Prefix = (p_1, p_2, p_3)}$, ${\Labels = (1, 1, 1)}$,
+${\Default = 0}$, and ${K=3}$.
+}
 \label{fig:rule-list}
 \end{figure}
 
@@ -316,13 +335,13 @@ initial best known rule list~$\InitialRL$ with objective
 ${\InitialObj = \Obj(\InitialRL, \x, \y)}$
 \State \textbf{Output:} Provably optimal rule list~$\OptimalRL$ with minimum objective~$\OptimalObj$ \\
 
-\State $(\CurrentRL, \CurrentObj) \gets (\InitialRL, \InitialObj)$ \Comment{Initialize best known RL \& objective}
+\State $(\CurrentRL, \CurrentObj) \gets (\InitialRL, \InitialObj)$ \Comment{Initialize best rule list and objective}
 \State $Q \gets $ queue$(\,[\,(\,)\,]\,)$ \Comment{Initialize queue with empty prefix}
 \While {$Q$ not empty} \Comment{Stop when queue is empty}
 	\State $\Prefix \gets Q$.pop(\,) \Comment{Remove prefix~$\Prefix$ from the queue}
 	\If {$b(\Prefix, \x, \y) < \CurrentObj$} \Comment{\textbf{Bound}: Apply Theorem~\ref{thm:bound}}
-        \State $\Obj \gets \Obj(\RL, \x, \y)$ \Comment{Compute objective of rule list~$\RL$}
-        \If {$\Obj < \CurrentObj$} \Comment{Update best known RL \& objective}
+        \State $\Obj \gets \Obj(\RL, \x, \y)$ \Comment{Compute objective of~$\Prefix$'s rule list~$\RL$}
+        \If {$\Obj < \CurrentObj$} \Comment{Update best rule list and objective}
             \State $(\CurrentRL, \CurrentObj) \gets (\RL, \Obj)$
         \EndIf
         \For {$s$ in $\RuleSet$} \Comment{\textbf{Branch}: Enqueue~$\Prefix$'s children}
@@ -332,7 +351,7 @@ ${\InitialObj = \Obj(\InitialRL, \x, \y)}$
         \EndFor
     \EndIf
 \EndWhile
-\State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Identify provably optimal RL \& objective}
+\State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Identify provably optimal solution}
 \end{algorithmic}
 \end{algorithm}
 

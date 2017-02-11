@@ -1,5 +1,64 @@
-\section{Preliminary experiments}
+\section{Experiments}
 \label{sec:experiments}
+
+Our experimental analysis addresses four questions:
+(1) How does CORELS' accuracy compare to other algorithms?
+(2) How rapidly does the objective function converge?
+(3) How rapidly does CORELS prune the search space?
+(4) How much does each of the implementation optimizations contribute to CORELS' performance?
+All results presented use the COMPAS data set unless otherwise noted,
+and were executed on (describe machine) \dots
+[Sentence that we have more experiments]
+
+We first ran a 10-fold cross validation experiment using CORELS and eight other algorithms:
+GLM, SVM, AdaBoost, CART, C4.5, RF, RIPPER, and scalable rule lists (SBRL).
+There were no statistically significant differences in the accuracies of the
+algorithms. In fact, the difference between folds was far larger than the difference
+between algorithms. We conclude that CORELS produces models whose accuracy is comparable
+to those found via other algorithms.
+
+Figure \ref{fig:objective} illustrates how both the objective and the size of
+the remaining search space decrease as CORELS executes.
+The objective drops quickly, achieving the optimal value within 10 seconds.
+CORELS certifies optimality in less than 6 minutes --
+the objective lower bound of the remaining search space
+monotonically converges to the optimal objective
+as the search space steadily shrinks.
+
+Finally, we determine the efficacy of each of our data structure and bounding
+optimizations.
+Table \ref{tab:ablation} provides sumary statistics for experiments using
+the full CORELS implementation and implementations with a specific
+optimization removed.
+Figure \ref{fig:queue} presents a view of the same experiments, focusing
+on just three of the optimizations. These charts depict the number of rule
+lists of a given length in the queue during the algorithm's execution.
+
+
+\begin{arxiv}
+\begin{table}[t]
+\centering
+\begin{tabular}{l | c | c}
+Method & ProPublica & NYCLU \\
+\hline
+CORELS & 67.6 $\pm$ 2.0 & 69.8 $\pm$ 2.7 \\
+SBRL & 67.1 $\pm$ 1.7 & 69.7 $\pm$ 2.0 \\
+CART & 66.7 $\pm$ 2.1 & 69.8 $\pm$ 2.7 \\
+C4.5 & 67.3 $\pm$ 1.8 & 66.8 $\pm$ 2.1 \\
+RF & 67.3 $\pm$ 1.8 & 68.7 $\pm$ 2.4 \\
+RIPPER & 67.3 $\pm$ 2.0 & --- \\
+AdaBoost & 67.3 $\pm$ 1.7 & 70.6 $\pm$ 2.7 \\
+GLM & 67.5 $\pm$ 1.8 & 70.3 $\pm$ 2.5 \\
+SVM & 67.1 $\pm$ 2.0 & 70.2 $\pm$ 2.7 \\
+\end{tabular}
+\vspace{5mm}
+\caption{Comparison with other methods:
+Means and standard deviations of test error.
+Also report algorithm runtimes (mean $\pm$ standard deviation over 10 folds).
+CORELS ${\Reg = 0.005}$ for ProPublica and ${\Reg = 0.01}$ for NYCLU.}
+\label{tab:comparison}
+\end{table}
+\end{arxiv}
 
 \begin{figure}[t!]
 \begin{center}
@@ -14,8 +73,7 @@
 \caption{Comparison with other methods:
 Test error for us and a few other algorithms
 (CART, C4.5, CBA, CMAR/CPAR, C5.0, Ripper, \dots),
-as a function of sparsity over 10 folds, for one big dataset (box plots).
-Also report algorithm runtimes (mean $\pm$ standard deviation over 10 folds).}
+as a function of sparsity over 10 folds, for one big dataset (box plots).}
 \label{fig:comparison}
 \end{figure}
 
@@ -98,36 +156,39 @@ as a function of wall clock time.
 Missing: horizontal lines and x-ticks for CART and C4.5.
 %
 Bottom:
-The logarithm (base 10) of the upper bound
-from Proposition~\ref{prop:remaining-eval-coarse}
-on the size of the remaining search space,
-as a function of wall clock time.
-%
-This bound depends on the total number of available rules,
-as well as two dynamic quantities:
-the current best objective value,
-and the histogram of logical queue elements,
-partitioned by prefix length.}
+$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$
+as a function of wall clock time,
+where~$\Remaining(\CurrentObj, \Queue)$ is the upper bound
+from Theorem~\ref{thm:remaining-eval-fine}
+on the size of the remaining search space.}
 \label{fig:objective}
 \end{figure}
 
 \begin{table}[t]
 \centering
 \begin{tabular}{l | c | c | c | c | c}
-Ablated & $t_\text{total}$ & $t_\text{opt}$ & $K_\text{max}$ & $i_\text{total}$ & $\max | Q |$ \\
+Removed & $t_\text{total}$ & $t_\text{opt}$ & $K_\text{max}$ & $i_\text{total}$ & $\max | Q |$ \\
 component & (s) & (s) & & ($\times 10^6$) & ($\times 10^6$) \\
 \hline
-none & 336 & 7 & 6 & 1.61 & 1.37 \\
+none (CORELS) & 336 & 7 & 6 & 1.61 & 1.37 \\
 priority queue & 453 & 4 & 6 & 1.93 & 1.58 \\
 support bounds & 580 & 11 & 6 & 2.38 & 2.06 \\
 permutation map & 3634 & 19 & 6 & 15.0 & 14.1 \\
 lookahead bound & 4401 & 8 & 7 & 19.5 & 17.7 \\
-identical pts. bound & --- & 48 & $\ge 10$ & $>286$ & $>282$ \\
+equiv. pts. bound & --- & 48 & $\ge 10$ & $>286$ & $>282$ \\
 \end{tabular}
-\vspace{2mm}
-\caption{Ablation experiment.
-Total time, time to optimum, maximum evaluated prefix length,
-number of queue insertions, maximum queue size.}
+\vspace{5mm}
+\caption{Per-component performance improvement.
+The columns report averages over 10 cross-validation folds for
+the total execution time, time to optimum, maximum evaluated prefix length,
+number of queue insertions, and maximum queue size.
+The first row corresponds to our full CORELS algorithm,
+and subsequent rows to variants that each exclude a specific
+implementation optimization or bound removed.
+(These experiments to do not measure the cumulative effects
+of simultaneously removing multiple components.)
+}
+\label{tab:ablation}
 \end{table}
 
 \begin{figure}[t!]
@@ -138,7 +199,7 @@ number of queue insertions, maximum queue size.}
 \end{arxiv}
 \begin{kdd}
 %\includegraphics[width=0.5\textwidth]{figs/ela_compas-queue.pdf}
-\includegraphics[trim={30mm 10mm 20mm 10mm}, width=0.5\textwidth]{figs/ela_compas_compare_small-queue.pdf}
+\includegraphics[trim={30mm 10mm 20mm 10mm}, width=0.45\textwidth]{figs/ela_compas_compare_small-queue.pdf}
 \end{kdd}
 \end{center}
 \caption{Ablation experiment and logical queue composition.
