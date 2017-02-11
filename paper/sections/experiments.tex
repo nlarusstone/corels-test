@@ -34,26 +34,28 @@ Figure \ref{fig:queue} presents a view of the same experiments, focusing
 on just three of the optimizations. These charts depict the number of rule
 lists of a given length in the queue during the algorithm's execution.
 
+
 \begin{arxiv}
 \begin{table}[t]
 \centering
-\begin{tabular}{l | c}
-Method & COMPAS \\
+\begin{tabular}{l | c | c}
+Method & ProPublica & NYCLU \\
 \hline
-GLM & 67.5 $\pm$ 1.8 \\
-SVM & 67.1 $\pm$ 2.0 \\
-AdaBoost & 67.3 $\pm$ 1.7 \\
-CART & 66.7 $\pm$ 2.1 \\
-C4.5 & 67.3 $\pm$ 1.8 \\
-RF & 67.3 $\pm$ 1.8 \\
-RIPPER & 67.3 $\pm$ 2.0 \\
-SBRL & 67.1 $\pm$ 1.7 \\
-CORELS & 67.6 $\pm$ 2.0 \\
+CORELS & 67.6 $\pm$ 2.0 & 69.8 $\pm$ 2.7 \\
+SBRL & 67.1 $\pm$ 1.7 & 70.1 $\pm$ 1.9 \\
+CART & 66.7 $\pm$ 2.1 & 69.8 $\pm$ 2.7 \\
+C4.5 & 67.3 $\pm$ 1.8 & 66.8 $\pm$ 2.2 \\
+RF & 67.3 $\pm$ 1.8 & 70.2 $\pm$ 2.5 \\
+RIPPER & 67.3 $\pm$ 2.0 & --- \\
+AdaBoost & 67.3 $\pm$ 1.7 & 71.1 $\pm$ 2.7 \\
+GLM & 67.5 $\pm$ 1.8 & 70.9 $\pm$ 2.0 \\
+SVM & 67.1 $\pm$ 2.0 & 71.4 $\pm$ 2.5 \\
 \end{tabular}
-\vspace{2mm}
+\vspace{5mm}
 \caption{Comparison with other methods:
 Means and standard deviations of test error.
-Also report algorithm runtimes (mean $\pm$ standard deviation over 10 folds).}
+Also report algorithm runtimes (mean $\pm$ standard deviation over 10 folds).
+CORELS ${\Reg = 0.005}$ for ProPublica and ${\Reg = 0.01}$ for NYCLU.}
 \label{tab:comparison}
 \end{table}
 \end{arxiv}
