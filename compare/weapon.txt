@@ -1,0 +1,54 @@
+Running Cross Validation folds for frisk
+\nCV fold: frisk_0\n
+RUNNING SBRL
+test accuracy = 0.674353 ./Compare.sh: line 25: 74069 Abort trap: 6 ./sbrlmod -t 3 -d 1 ../data/CrossValidation//frisk_0_train.out ../data/CrossValidation//frisk_0_train.label ../data/CrossValidation//frisk_0_test.out ../data/CrossValidation//frisk_0_test.label
+RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
+0.6755942 0.6566158 0.6681447 0.6495211 0.6465059 0.6548421
+\nCV fold: frisk_1\n
+RUNNING SBRL
+test accuracy = 0.713906 ./Compare.sh: line 25: 76706 Abort trap: 6 ./sbrlmod -t 3 -d 1 ../data/CrossValidation//frisk_1_train.out ../data/CrossValidation//frisk_1_train.label ../data/CrossValidation//frisk_1_test.out ../data/CrossValidation//frisk_1_test.label
+RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
+0.7181625 0.7059241 0.7190493 0.7130188 0.6835757 0.6927989
+\nCV fold: frisk_2\n
+RUNNING SBRL
+test accuracy = 0.704328 ./Compare.sh: line 25: 79280 Abort trap: 6 ./sbrlmod -t 3 -d 1 ../data/CrossValidation//frisk_2_train.out ../data/CrossValidation//frisk_2_train.label ../data/CrossValidation//frisk_2_test.out ../data/CrossValidation//frisk_2_test.label
+RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
+0.7206456 0.7273856 0.7398013 0.7029088 0.673111 0.6972331
+\nCV fold: frisk_3\n
+RUNNING SBRL
+test accuracy = 0.685527 ./Compare.sh: line 25: 81884 Abort trap: 6 ./sbrlmod -t 3 -d 1 ../data/CrossValidation//frisk_3_train.out ../data/CrossValidation//frisk_3_train.label ../data/CrossValidation//frisk_3_test.out ../data/CrossValidation//frisk_3_test.label
+RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
+0.7316424 0.7128414 0.7277403 0.7291593 0.6679674 0.7117772
+\nCV fold: frisk_4\n
+RUNNING SBRL
+test accuracy = 0.691557 ./Compare.sh: line 25: 84541 Abort trap: 6 ./sbrlmod -t 3 -d 1 ../data/CrossValidation//frisk_4_train.out ../data/CrossValidation//frisk_4_train.label ../data/CrossValidation//frisk_4_test.out ../data/CrossValidation//frisk_4_test.label
+RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
+0.6871231 0.7094714 0.6920894 0.6708053 0.6475701 0.6837531
+\nCV fold: frisk_5\n
+RUNNING SBRL
+test accuracy = 0.714083 ./Compare.sh: line 25: 92892 Abort trap: 6 ./sbrlmod -t 3 -d 1 ../data/CrossValidation//frisk_5_train.out ../data/CrossValidation//frisk_5_train.label ../data/CrossValidation//frisk_5_test.out ../data/CrossValidation//frisk_5_test.label
+RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
+0.7405108 0.7250798 0.7307556 0.7201135 0.6775452 0.7311103
+\nCV fold: frisk_6\n
+RUNNING SBRL
+test accuracy = 0.678077 ./Compare.sh: line 25: 1435 Abort trap: 6 ./sbrlmod -t 3 -d 1 ../data/CrossValidation//frisk_6_train.out ../data/CrossValidation//frisk_6_train.label ../data/CrossValidation//frisk_6_test.out ../data/CrossValidation//frisk_6_test.label
+RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
+0.6982973 0.6920894 0.6683221 0.65768 0.6363959 0.6803831
+\nCV fold: frisk_7\n
+RUNNING SBRL
+test accuracy = 0.693508 ./Compare.sh: line 25: 9635 Abort trap: 6 ./sbrlmod -t 3 -d 1 ../data/CrossValidation//frisk_7_train.out ../data/CrossValidation//frisk_7_train.label ../data/CrossValidation//frisk_7_test.out ../data/CrossValidation//frisk_7_test.label
+RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
+0.6892515 0.7403335 0.7002483 0.7061015 0.7142604 0.7444129
+\nCV fold: frisk_8\n
+RUNNING SBRL
+test accuracy = 0.742107 ./Compare.sh: line 25: 17840 Abort trap: 6 ./sbrlmod -t 3 -d 1 ../data/CrossValidation//frisk_8_train.out ../data/CrossValidation//frisk_8_train.label ../data/CrossValidation//frisk_8_test.out ../data/CrossValidation//frisk_8_test.label
+RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
+0.7197588 0.7522171 0.7522171 0.7259667 0.6802057 0.7151472
+\nCV fold: frisk_9\n
+RUNNING SBRL
+test accuracy = 0.712841 ./Compare.sh: line 25: 26192 Abort trap: 6 ./sbrlmod -t 3 -d 1 ../data/CrossValidation//frisk_9_train.out ../data/CrossValidation//frisk_9_train.label ../data/CrossValidation//frisk_9_test.out ../data/CrossValidation//frisk_9_test.label
+RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
+0.7064562 0.7147925 0.7085846 0.7018446 0.6482795 0.7123093
+\nRUNNING BBRL for all 10 folds of frisk
+Test accuracies [0.6495211067754523, 0.71301880099326, 0.702908832919475, 0.7291592763391274, 0.670805250088684, 0.7201135154310039, 0.6576800283788578, 0.7061014544164598, 0.7259666548421426, 0.7018446257538135]
+Test accuracies mean, std 0.697711954594 0.0269939724855

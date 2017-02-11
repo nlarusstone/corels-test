@@ -136,8 +136,12 @@ def mine_rules(din='../data/adult', froot='adult', max_cardinality=2,
     print len(names), 'rules mined'
     print 'writing', fout
     f = open(fout, 'w')
-    f.write('\n'.join(['%s %s' % (n, ' '.join(np.cast[str](np.cast[int](r))))
+    if ('frisk' not in froot):
+        f.write('\n'.join(['%s %s' % (n, ' '.join(np.cast[str](np.cast[int](r))))
                         for (n, r) in zip(names, records)]) + '\n')
+    else:
+        f.write('\n'.join(['%s %s' % (n, ' '.join(np.cast[str](np.cast[int](r))))
+                            for (n, r) in zip(names, records) if ('not' not in n)]) + '\n')
     f.close()
 
     print 'writing', flabel
