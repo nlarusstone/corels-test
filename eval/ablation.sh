@@ -26,21 +26,21 @@ do
     minor=../data/CrossValidation/${dataset}_${i}_train.minor
     if [ "$ablation" = "none" ];
     then
-        $bbcache -n ${n} -c 2 -r 0.005 -p 1 $out $label $minor background
+        $bbcache -n ${n} -c 2 -r 0.005 -p 1 $out $label $minor $background
     elif [ "$ablation" = "priority" ];
     then
-        $bbcache -n ${n} -b -r 0.005 -p 1 $out $label $minor background
+        $bbcache -n ${n} -b -r 0.005 -p 1 $out $label $minor $background
     elif [ "$ablation" = "support" ];
     then
-        $bbcache -n ${n} -c 2 -r 0.005 -p 1 -a 1 $out $label $minor background
+        $bbcache -n ${n} -c 2 -r 0.005 -p 1 -a 1 $out $label $minor $background
     elif [ "$ablation" = "pmap" ];
     then
-        $bbcache -n ${n} -c 2 -r 0.005 $out $label $minor background
+        $bbcache -n ${n} -c 2 -r 0.005 $out $label $minor $background
     elif [ "$ablation" = "lookahead" ];
     then
-        $bbcache -n ${n} -c 2 -r 0.005 -p 1 -a 2 $out $label $minor background
+        $bbcache -n ${n} -c 2 -r 0.005 -p 1 -a 2 $out $label $minor $background
     elif [ "$ablation" = "identical" ];
     then
-        $bbcache -n ${n} -c 2 -r 0.005 -p 1 $out $label background
+        $bbcache -n ${n} -c 2 -r 0.005 -p 1 $out $label $background
     fi
 done
