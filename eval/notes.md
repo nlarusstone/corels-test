@@ -22,3 +22,7 @@
 
     python eval_model.py compas -k 1 -c 2 -p 1 -r 0.005 -n 3000000 2>&1 | tee ../logs/log-compas-no_id.txt
 
+# frisk
+
+    python eval_model.py frisk --minor -k 10 -n 10000000 -r 0.005 -c 2 -p 1 2>&1 | tee ../logs/log-weapon-lower_bound.txt
+
