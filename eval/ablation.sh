@@ -8,7 +8,7 @@ dataset=${args[0]}
 n=${args[1]}
 ablation=${args[2]}
 
-for i in `seq 0 0`;
+for i in `seq 0 9`;
 do
     bbcache=./../src/bbcache
     out=../data/CrossValidation/${dataset}_${i}_train.out
