@@ -27,7 +27,7 @@ num_folds = 10
 max_cardinality = 3
 min_support = 0.05
 labels = ['No', 'Yes']
-minor = True
+minor = False
 
 np.random.seed(seed)
 
