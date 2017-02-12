@@ -104,14 +104,16 @@ ftag = 'kdd_compas_ablation_small'
 ntot = len(log_root_list)
 pylab.ion()
 
-ablation_names = ['none (CORELS)', 'priority queue', 'support bounds',
-                  'permutation bounds', 'lookahead bound', 'equiv. pts. bound']
 num_rules = np.zeros(num_folds, int)
+
 t_tot = np.zeros((ntot, num_folds))
 t_opt = np.zeros((ntot, num_folds))
 max_prefix_length = np.zeros((ntot, num_folds), int)
 num_insertions = np.zeros((ntot, num_folds), int)
 max_queue = np.zeros((ntot, num_folds), int)
+min_obj = np.zeros((ntot, num_folds))
+ablation_names = ['none (CORELS)', 'priority queue', 'support bounds',
+                  'permutation bounds', 'lookahead bound', 'equiv. pts. bound']
 
 for (ncomp, log_root) in enumerate(log_root_list):
     for fold in range(num_folds):
@@ -141,6 +143,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
         if ('no_minor' in log_fname):
             x = x[x['tree_min_objective'] > 0]
 
+        min_obj[ncomp, fold] = x['tree_min_objective'].min()
         default_objective = x['tree_min_objective'][1]
         imin = np.nonzero(x['tree_min_objective'] == x['tree_min_objective'][-1])[0][0]
         tmin = x['total_time'][imin]
@@ -255,6 +258,7 @@ print 't_opt:', t_opt
 print 'K_max:', max_prefix_length
 print 'i_total:', num_insertions
 print 'max_Q:', max_queue
+print 'min_obj:', min_obj
 
 tt_m = np.cast[int](np.round(t_tot.mean(axis=1)))
 tt_s = np.cast[int](np.round(t_tot.std(axis=1)))
