@@ -64,7 +64,7 @@ def parse_prefix_sums(p):
 froot = 'compas'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
-num_folds = 1
+num_folds = 3
 lw = 2  # linewidth
 ms = 9  # markersize
 fs = 16 # fontsize
@@ -72,10 +72,11 @@ make_figure = False
 
 # log files generated on beepboop
 # no-minor execution using just under 400GB RAM when halted
+log_dir = '../logs/keep/'
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
+'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=800000000-c=0.0050000-v=1-f=1000.txt']
 ftag = "kdd_compas_ablation"
@@ -252,6 +253,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
             if (ncomp + 1 == ntot):
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)
 
+max_prefix_length += 1
 print 'num rules:', num_rules
 print 't_tot:', t_tot
 print 't_opt:', t_opt
@@ -260,17 +262,20 @@ print 'i_total:', num_insertions
 print 'max_Q:', max_queue
 print 'min_obj:', min_obj
 
-tt_m = np.cast[int](np.round(t_tot.mean(axis=1)))
-tt_s = np.cast[int](np.round(t_tot.std(axis=1)))
+#tt_m = np.cast[int](np.round(t_tot.mean(axis=1)))
+#tt_s = np.cast[int](np.round(t_tot.std(axis=1)))
+tt_m = t_tot.mean(axis=1) / 60.
+tt_s = t_tot.std(axis=1) / 60.
 to_m = np.cast[int](np.round(t_opt.mean(axis=1)))
 to_s = np.cast[int](np.round(t_opt.std(axis=1)))
 km_m = np.cast[int](max_prefix_length.mean(axis=1))
 km_s = max_prefix_length.std(axis=1)
-assert (km_s == 0).all()
+km_min = max_prefix_length.min(axis=1)
+km_max = max_prefix_length.max(axis=1)
 it_m = num_insertions.mean(axis=1) / 10**6
 it_s = num_insertions.std(axis=1) / 10**6
 mq_m = max_queue.mean(axis=1) / 10**6
 mq_s = max_queue.std(axis=1) / 10**6
 
-for rec in zip(ablation_names, tt_m, tt_s, to_m, to_s, it_m, it_s, mq_m, mq_s, km_m):
-    print '%s & %d, %d & %d, %d & %1.1f, %1.1f & %1.1f, %1.1f & %d \\\\' % rec
+for rec in zip(ablation_names, tt_m, tt_s, to_m, to_s, it_m, it_s, mq_m, mq_s, km_min, km_max):
+    print '%s & %1.1f (%1.1f) & %d (%d) & %1.1f (%1.1f) & %1.1f (%1.1f) & %d-%d \\\\' % rec

@@ -167,19 +167,21 @@ on the size of the remaining search space.}
 
 \begin{table}[t]
 \centering
+%\small
 \begin{tabular}{l | c | c | c | c | c}
-Removed & $t_\text{total}$ & $t_\text{opt}$ & $K_\text{max}$ & $i_\text{total}$ & $Q_\text{max}$ \\
-component & (s) & (s) & & ($\times 10^6$) & ($\times 10^6$) \\
+Removed & $t_\text{total}$ & $t_\text{opt}$ & $i_\text{total}$ & $Q_\text{max}$ & $K_\text{max}$ \\
+component & (min) & (s) & ($\times 10^6$) & ($\times 10^6$) & \\
 \hline
-none (CORELS) & 336 & 7 & 6 & 1.61 & 1.37 \\
-priority queue & 453 & 4 & 6 & 1.93 & 1.58 \\
-support bounds & 580 & 11 & 6 & 2.38 & 2.06 \\
-permutation map & 3634 & 19 & 6 & 15.0 & 14.1 \\
-lookahead bound & 4401 & 8 & 7 & 19.5 & 17.7 \\
-equiv. pts. bound & --- & 48 & $\ge 10$ & $>286$ & $>282$ \\
+none (CORELS) & 4.8 (1.7) & 8 (3) & 1.5 (0.5) & 1.2 (0.4) & 5-6 \\
+priority queue & 5.8 (2.1) & 4 (0) & 1.7 (0.5) & 1.3 (0.5) & 5-6 \\
+support bounds & 8.7 (3.1) & 13 (5) & 2.4 (0.8) & 1.9 (0.7) & 5-6 \\
+permutation map & 48.7 (19.3) & 22 (9) & 13.5 (5.2) & 12.1 (4.7) & 5-6 \\
+lookahead bound & 64.3 (24.7) & 8 (3) & 16.3 (6.0) & 14.6 (5.5) & 6-7 \\
+equiv. pts. bound & $>$137 & ** & $>$800 & $>$790 & $\ge$10 \\
+%equiv. pts. bound & --- & 48  & $>286$ & $>282$ & $\ge$ 10 \\
 \end{tabular}
 \vspace{5mm}
-\caption{Per-component performance improvement.
+\caption{Per-component performance improvement. (Currently 3-fold)
 The columns report averages over 10 cross-validation folds for
 the total execution time, time to optimum, maximum evaluated prefix length,
 number of queue insertions, and maximum queue size.
