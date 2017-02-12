@@ -1,45 +1,5 @@
 """
-#!/bin/bash
-
-# ./ablation.sh compas 1000000000 none
-# ./ablation.sh compas 1000000000 priority
-# ./ablation.sh compas 1000000000 support
-# ./ablation.sh compas 1000000000 pmap
-# ./ablation.sh compas 1000000000 lookahead
-# ./ablation.sh compas 800000000 identical
-
-args=("$@")
-dataset=${args[0]}
-n=${args[1]}
-ablation=${args[2]}
-
-
-for i in `seq 0 9`;
-do
-    bbcache=./../src/bbcache
-    out=../data/CrossValidation/${dataset}_${i}_train.out
-    label=../data/CrossValidation/${dataset}_${i}_train.label
-    minor=../data/CrossValidation/${dataset}_${i}_train.minor
-    if [ "$ablation" = "none" ];
-    then
-        $bbcache -n ${n} -c 2 -r 0.005 -p 1 $out $label $minor &
-    elif [ "$ablation" = "priority" ];
-    then
-        $bbcache -n ${n} -b -r 0.005 -p 1 $out $label $minor &
-    elif [ "$ablation" = "support" ];
-    then
-        $bbcache -n ${n} -c 2 -r 0.005 -p 1 -a 1 $out $label $minor &
-    elif [ "$ablation" = "pmap" ];
-    then
-        $bbcache -n ${n} -c 2 -r 0.005 $out $label $minor &
-    elif [ "$ablation" = "lookahead" ];
-    then
-        $bbcache -n ${n} -c 2 -r 0.005 -p 1 -a 2 $out $label $minor &
-    elif [ "$ablation" = "identical" ];
-    then
-        $bbcache -n ${n} -c 2 -r 0.005 -p 1 $out $label
-    fi
-done
+For KDD 2017 Figure 3.  See also `compas_ablation.py`
 
 
 """
@@ -67,8 +27,15 @@ lw = 2  # linewidth
 ms = 9  # markersize
 fs = 16 # fontsize
 
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-no_minor-max_num_nodes=700000000-c=0.0050000-v=1-f=1000.txt']
+# deprecated log files
+#log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
+#'for-%s-curious_lb-with_prefix_perm_map-no_minor-max_num_nodes=700000000-c=0.0050000-v=1-f=1000.txt']
+
+# log files generated on beepboop
+# no-minor execution using just under 400GB RAM when halted
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=800000000-c=0.0050000-v=1-f=1000.txt']
+
 ftag = 'compas_execution'
 
 ntot = len(log_root_list)
