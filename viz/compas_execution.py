@@ -96,10 +96,10 @@ opt = x['tree_min_objective'][-1]
 imin = np.nonzero(x['tree_min_objective'] == opt)[0][0]
 tmin = x['total_time'][imin]
 
-pylab.figure(1, figsize=(12, 8))
+pylab.figure(1, figsize=(9, 6))
 
 pylab.clf()
-ax1 = pylab.subplot2grid((12, 20), (0, 1), colspan=19, rowspan=6)
+ax1 = pylab.subplot2grid((12, 20), (0, 1), colspan=19, rowspan=5)
 
 ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
 
@@ -107,22 +107,24 @@ ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], 'c-', linewid
 ax1.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], 'b-', linewidth=lw*2)
 ax1.semilogx(y['total_time'][2:], y['current_lower_bound'][2:], 'm--', linewidth=lw*2)
 ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], 'c-', linewidth=lw)
-ax1.semilogx([tmin, tmin], [0, 0.5], 'k:', linewidth=lw)
+#ax1.semilogx([tmin, tmin], [0, opt], 'k:', linewidth=lw)
+ax1.semilogx(tmin, opt + 0.025, 'k*', markersize=10)
+ax1.semilogx(tmin, opt, 'k|', markeredgewidth=lw)
 
 ip = (x['tree_prefix_length'][1:] != x['tree_prefix_length'][:-1]).nonzero()[0] + 1
 for jj in ip:
     pl = x['tree_prefix_length'][jj]
     (tt, oo) = (x['total_time'][jj], x['tree_min_objective'][jj])
-    ax1.semilogx(tt, oo, 'ko')#, color='gray')
+    ax1.semilogx(tt, oo, 'k|', markeredgewidth=lw)
     ax1.text(tt, oo + 0.015, str(pl), fontsize=fs)
 
 pylab.xticks(fontsize=fs)
-pylab.ylabel('value\n', fontsize=fs)
+pylab.ylabel('value', fontsize=fs)
 pylab.title('execution progress', fontsize=fs)
 pylab.xticks(fontsize=fs)
-pylab.yticks(np.arange(0, 0.50, 0.05), fontsize=fs)
-pylab.axis([10**-4, 10**4, 0, 0.48])
-pylab.legend(['objective (CORELS)', 'lower bound (CORELS)', 'lower bound (w/o  equivalent points bound)'], loc=(10**-1.9, 0.15), fontsize=fs)
+pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
+pylab.axis([10**-4, 10**4, 0, 0.5])
+pylab.legend(['objective (CORELS)', 'lower bound (CORELS)', 'lower bound (w/o  equivalent points bound)'], loc=(10**-0.6, 0.15), fontsize=fs-2, frameon=False)
 
 ax2 = pylab.subplot2grid((12, 20), (7, 1), colspan=19, rowspan=4)
 
@@ -138,8 +140,8 @@ pylab.title('remaining search space', fontsize=fs)
 pylab.xlabel('time (s)', fontsize=fs)
 pylab.ylabel('log10(size)', fontsize=fs)
 pylab.xticks(fontsize=fs)
-pylab.yticks(range(0, 170, 20), fontsize=fs)
-pylab.legend(['w/o equivalent point bound', 'CORELS'], loc='center right', fontsize=fs)
-pylab.axis([10**-4, 10**4, 0, 160])
+pylab.yticks(range(0, 160, 25), fontsize=fs)
+pylab.legend(['w/o equivalent point bound', 'CORELS'], loc='center right', fontsize=fs-2, frameon=False)
+pylab.axis([10**-4, 10**4, 0, 161])
 pylab.draw()
 pylab.savefig('../figs/%s-remaining-space.pdf' % ftag)
