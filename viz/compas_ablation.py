@@ -81,6 +81,7 @@ log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_
 ftag = "kdd_compas_ablation"
 
 
+"""
 # deprecated log files
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-bfs-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
@@ -91,7 +92,6 @@ log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=100
 labels = ['none', 'no priority queue', 'no support bounds', 'no permutation map', 'no lookahead bound', 'no identical points bound']
 ftag = 'kdd_compas_ablation'
 
-"""
 # deprecated log files
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-no_pmap-minor-max_num_nodes=100000000-c=0.0050000-v=1-f=1000.txt',
@@ -113,7 +113,7 @@ num_insertions = np.zeros((ntot, num_folds), int)
 max_queue = np.zeros((ntot, num_folds), int)
 min_obj = np.zeros((ntot, num_folds))
 ablation_names = ['none (CORELS)', 'priority queue', 'support bounds',
-                  'permutation bounds', 'lookahead bound', 'equiv. pts. bound']
+                  'permutation map', 'lookahead bound', 'equiv. pts. bound']
 
 for (ncomp, log_root) in enumerate(log_root_list):
     for fold in range(num_folds):
@@ -273,4 +273,4 @@ mq_m = max_queue.mean(axis=1) / 10**6
 mq_s = max_queue.std(axis=1) / 10**6
 
 for rec in zip(ablation_names, tt_m, tt_s, to_m, to_s, it_m, it_s, mq_m, mq_s, km_m):
-    print '%s & %d $\\pm$ %d & %d $\\pm$ %d & %1.2f $\\pm$ %1.2f & %1.2f $\\pm$ %1.2f & %d' % rec
+    print '%s & %d, %d & %d, %d & %1.1f, %1.1f & %1.1f, %1.1f & %d \\\\' % rec
