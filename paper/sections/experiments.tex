@@ -153,7 +153,7 @@ as a function of wall clock time.
 \end{kdd}
 \end{center}
 \caption{Example executions of CORELS with (solid lines) and without
-(dashed lines) the equivalent points bound (Theorem~\ref{thm:identical}).
+(dashed lines) the equivalent points bound from Theorem~\ref{thm:identical}.
 %
 Top: Objective value (thin solid line) and lower bound (thick solid line)
 for CORELS, as a function of wall clock time (log scale).
@@ -220,7 +220,7 @@ after consuming 390-410GB RAM.
 %
 In all but the final row and column, we report averages
 (with standard deviations, in parentheses) over 10 cross-validation folds;
-in the final row, we report minimum values across folds. \\
+in the final row, we report thresholds that reflect minimum values across folds. \\
 %
 *~Only 4 out of 10 folds achieve the optimum.
 }
@@ -248,11 +248,10 @@ lookahead bound (bottom left), and equivalent points bound (bottom right).
 %
 The gray shading fills in the area beneath the total number of
 queue elements for CORELS, \ie the sum over prefixes of lengths~0
-through~4 in the top left figure; it approximates
-the convex hull of the colored lines due to the vertical axis's log scale.
+through~4 in the top left figure.
 %
-To aid visual comparisons, we replicate the same gray area
-in each of the other three subfigures.
+For comparison, we replicate the same gray region
+in the other three subfigures.
 }
 \label{fig:queue}
 \end{figure}
