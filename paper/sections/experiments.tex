@@ -149,14 +149,28 @@ as a function of wall clock time.
 \end{arxiv}
 \begin{kdd}
 % left lower right upper
-\includegraphics[trim={20mm, 20mm, 10mm, 5mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
+\includegraphics[trim={20mm, 25mm, 10mm, 5mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
 \end{kdd}
 \end{center}
-\caption{Two example executions of CORELS, with (solid lines)
-and without (dashed lines) the equivalent points bound,
-which in this case yields a significantly tighter lower bound.
+\caption{Example executions of CORELS with (solid lines) and without
+(dashed lines) the equivalent points bound (Theorem~\ref{thm:identical}).
 %
-Top: Objective value and lower bound as a function of wall clock time (log scale).
+Top: Objective value (thin solid line) and lower bound (thick solid line)
+for CORELS, as a function of wall clock time (log scale).
+%
+Numbered hatch marks along the objective indicate when the length of
+the best known rule list changes, and are labeled by the new length.
+%
+CORELS quickly the optimal value (star marker),
+and certifies optimality when the lower bound matches the objective value.
+%
+We also plot the lower bound (dashed line) from a separate execution
+of CORELS that does not leverage the equivalent points bound.
+%
+The large gap between this lower bound and the optimum
+demonstrates that this execution is far from complete.
+%
+%(For clarity, we do not plot the corresponding trace of the objective value.)
 %
 %Missing: horizontal lines and x-ticks for CART and C4.5.
 %
