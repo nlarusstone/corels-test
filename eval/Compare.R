@@ -18,8 +18,7 @@ printf <- function(...) cat(sprintf(...))
 
 args = commandArgs(TRUE)
 if (length(args)  == 0) {
-    stop(sprintf("Usage: Compare.R [dataset] e.g. Compare.R compas_0\n",
-                 args[1]))
+    stop(sprintf("Usage: Compare.R [dataset] e.g. Compare.R compas_0\n"))
 }
 
 # 'dataset' used to represent dataset

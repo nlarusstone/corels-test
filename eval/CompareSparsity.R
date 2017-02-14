@@ -13,13 +13,14 @@
 printf <- function(...) cat(sprintf(...))
 
 args = commandArgs(TRUE)
-if (length(args)  == 0) {
-    stop(sprintf("Usage: CompareSparsity.R [dataset] e.g. CompareSparsity.R compas_0\n",
+if (length(args)  <= 1) {
+    stop(sprintf("Usage: CompareSparsity.R [dataset] [outputfile] e.g. CompareSparsity.R compas_0 compas_sparsity.csv\n",
                  args[1]))
 }
 
 # 'dataset' used to represent dataset
 fname <- args[1]
+foutput <- args[2]
 
 printf("Assumes data is in data/CrossValidation\n")
 printf("Running %s_{train|test}-binary.csv ", fname)
@@ -53,19 +54,22 @@ testData$Class <-factor(testData$Class, labels=sortednames)
 trainDataWOClass <- subset(trainData, select=-c(Class))
 testDataWOClass <- subset(testData, select=-c(Class))
 
-
 ## CART
 ## complexity (cp) parameters -> 0.01 (default), 0.003, 0.001, 0.03, 0.1
 cartAccs <- c()
 cartLeaves <- c()
 cps <- c(0.001, 0.003, 0.01, 0.03, 0.1)
+cartResults <- data.frame(stringsAsFactors=F)
 
 for (val in cps) {
     cartModel <- rpart(Class ~ . , data=as.data.frame(trainData),
                        control = rpart.control(cp=val))
     pred.cartModel <- round(predict(cartModel, newdata=as.data.frame(testDataWOClass)))
-    cartAccs <- c(cartAccs, sum(testData$Class == factor(pred.cartModel[,"X1"], labels=sortednames))/length(testData$Class))
-    cartLeaves <- c(cartLeaves, length(which(cartModel$frame[,"var"]=="<leaf>")))
+    acc <- sum(testData$Class == factor(pred.cartModel[,"X1"], labels=sortednames))/length(testData$Class)
+    cartAccs <- c(cartAccs, acc)
+    leaves <- length(which(cartModel$frame[,"var"]=="<leaf>"))
+    cartLeaves <- c(cartLeaves, leaves)
+    cartResults <- rbind(cartResults, list(fname, "CART", 0.0, val, acc, leaves))
 }
 printf("CART:\n")
 printf("%s", cat(cps, "\n"))
@@ -78,6 +82,7 @@ printf("%s", cat(cartLeaves, "\n"))
 c45Accs <- c()
 c45Leaves <- c()
 Cs <- c(0.05, 0.15, 0.25, 0.35, 0.45)
+c45Results <- data.frame(stringsAsFactors=F)
 
 for (val in Cs) {
     data_train_fac <- as.data.frame(trainData)
@@ -85,8 +90,11 @@ for (val in Cs) {
     c45Model <- J48(Class ~ ., data=as.data.frame(data_train_fac),
                     control = Weka_control(C=val))
     pred.c45Model <- predict(c45Model, newdata=as.data.frame(testDataWOClass), type="class")
-    c45Accs <- c(c45Accs, sum(testData$Class == pred.c45Model)/length(testData$Class))
-    c45Leaves <- c(c45Leaves, c45Model$classifier$measureNumLeaves())
+    acc <- sum(testData$Class == pred.c45Model)/length(testData$Class)
+    c45Accs <- c(c45Accs, acc)
+    leaves <- c45Model$classifier$measureNumLeaves()
+    c45Leaves <- c(c45Leaves, leaves)
+    c45Results <- rbind(c45Results, list(fname, "C4.5", val, 0.0, acc, leaves))
 }
 printf("C4.5:\n")
 printf("%s", cat(Cs, "\n"))
@@ -95,10 +103,25 @@ printf("%s", cat(c45Leaves, "\n"))
 
 
 ## RIPPER
+ripResults <- data.frame(stringsAsFactors=F)
 ripModel <- JRip(Class ~ . , data=as.data.frame(trainData))
 pred.ripModel <- predict(ripModel, newdata=as.data.frame(testDataWOClass), type="class")
 ripAcc <- sum(testData$Class == pred.ripModel)/length(testData$Class)
 ripRuleLen <- length(as.list(ripModel$classifier$getRuleset()))
+ripResults <- rbind(ripResults, list(fname, "RIPPER", 0.0, 0.0, ripAcc, ripRuleLen))
 printf("RIPPER:\n")
 printf("%.4f\n", ripAcc)
 printf("%d\n", ripRuleLen)
+
+## Write out results
+colnames(cartResults) <- c("Fold", "Method", "C", "cp", "accuracy", "leaves")
+colnames(c45Results) <- c("Fold", "Method", "C", "cp", "accuracy", "leaves")
+colnames(ripResults) <- c("Fold", "Method", "C", "cp", "accuracy", "leaves")
+isNewFile <- is.na(file.info(foutput)$size) || file.info(foutput)$size == 0
+write.table(cartResults, foutput, row.names=F, col.names=isNewFile,
+            append=!isNewFile, quote = F, sep=",")
+write.table(c45Results, foutput, row.names=F, col.names=F, append=T,
+            quote = F, sep=",")
+write.table(ripResults, foutput, row.names=F, col.names=F, append=T,
+            quote = F, sep=",")
+
