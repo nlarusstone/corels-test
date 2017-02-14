@@ -1,6 +1,8 @@
 kdd17.tex --
 arxiv.tex --
 
-framework -- elaine
-bounds -- elaine
+framework --
+bounds --
+incremental --
+implementation --
 experiments --

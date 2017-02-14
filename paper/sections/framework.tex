@@ -185,6 +185,7 @@ not captured by~$\Prefix$.
 In the remainder of our presentation, whenever we refer to a rule list with a
 particular prefix, we implicitly assume these empirically determined label predictions.
 
+\begin{arxiv}
 \subsection{Rule mining}
 \label{sec:rule-mining}
 
@@ -196,12 +197,11 @@ One of the results we prove later implies a constraint on the rules
 we need to generate -- they must have at least some minimum support
 given by the lower bound in Theorem~\ref{thm:min-capture}.
 
-\begin{arxiv}
 \subsection{Rule list representation and bit vector operations}
 Something along these lines... look at~\citet{YangRuSe16}
 \end{arxiv}
 
-\subsection{Optimization framework}
+\subsection{Objective function}
 
 \begin{arxiv}
 We define
@@ -229,8 +229,50 @@ of data when increasing a rule list's length by one association rule.
 %fully specify a rule list~${\RL = (\Prefix, \Labels, \Default, K)}$,
 %thus let us define~${\Obj(\Prefix, \x, \y) \equiv \Obj(\RL, \x, \y)}$.
 
+\subsection{Optimization framework}
+
 Our objective has structure amenable to global optimization via a branch-and-bound framework.
 %
+In particular, we make a series of important observations that each translates into
+a useful bound, and together interact to eliminate large parts of the search space.
+%
+We will discuss these in depth throughout the following sections:
+%
+\begin{itemize}
+\item Lower bounds on a prefix also hold for every extension of that prefix.
+(Theorem~\ref{thm:bound})
+
+\item We can sometimes prune all rule lists that are longer than a given prefix,
+even without knowing anything about what rules will be placed below that prefix.
+(Lemma~\ref{lemma:lookahead})
+
+\item We can calculate apriori an upper bound on the maximum length
+of an optimal rule list. (Theorem~\ref{thm:ub-prefix-specific})
+
+\item Each rule in an optimal rule list must have support that is
+sufficiently large. (Otherwise it would not be in an optimal rule list.)
+%
+This allows us to construct the rule list from frequent itemsets,
+while preserving the guarantee that we can find a globally optimal
+rule list from pre-mined rules. (Theorem~\ref{thm:min-capture})
+
+\item Each rule in an optimal rule list must predict accurately.
+%
+In particular, the number of observations predicted correctly
+by each rule in an optimal rule list must be above a threshold.
+(Theorem~\ref{thm:min-capture-correct})
+
+\item We need only consider the optimal permutation of rules
+in a prefix and we can omit all other permutations.
+(Theorem~\ref{thm:equivalent} and Corollary~\ref{thm:permutation})
+
+\item  If multiple observations have identical features and opposite labels,
+we know that any model will make mistakes.
+%
+In particular, the number of mistakes on these observations will be at least
+the number of observations with the minority label. (Theorem~\ref{thm:identical})
+\end{itemize}
+
 We can decompose the misclassification error into two contributions
 corresponding to the prefix and default:
 \begin{align}
@@ -258,7 +300,10 @@ b(\Prefix, \x, \y) \equiv \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K \le \Obj(\R
 where we have suppressed the lower bound's dependence on label predictions~$\Labels$
 because they are fully determined, given~${(\Prefix, \x, \y)}$.
 %
-Furthermore, as we state next in Theorem~\ref{thm:bound},
+Furthermore,
+\begin{arxiv}
+as we state next in Theorem~\ref{thm:bound},
+\end{arxiv}
 $b(\Prefix, \x, \y)$ gives a lower bound on the objective of
 \emph{any} rule list whose prefix starts with~$\Prefix$.
 
@@ -371,254 +416,3 @@ For the objective of such a rule list, the current best objective
 provides a lower bound, \ie
 ${\Obj(\RL', \x, \y) \ge b(\Prefix', \x, \y) \ge}$ ${b(\Prefix, \x, \y) \ge \CurrentObj}$,
 and thus~$\RL'$ cannot be optimal. \\
-
-\subsection{Incremental computation}
-\label{sec:incremental}
-
-For every prefix~$\Prefix$ evaluated during
-Algorithm~\ref{alg:branch-and-bound}'s execution, we compute
-the objective lower bound~${b(\Prefix, \x, \y)}$ and, sometimes,
-the objective~${\Obj(\RL, \x, \y)}$ of the corresponding rule list~$\RL$.
-%
-These calculations are the dominant computations with respect to execution time.
-%
-This motivates our use of a highly optimized library,
-designed by~\citet{YangRuSe16} for representing rule lists and
-performing operations encountered in evaluating functions of rule lists.
-%
-Furthermore, we exploit the hierarchical nature of the objective
-function and its lower bound to compute these quantities
-incrementally throughout branch-and-bound execution.
-%
-\begin{arxiv}
-In this section, we provide explicit expressions for
-the incremental computations that are central to our approach.
-\end{arxiv}
-%
-Later, in~\S\ref{sec:implementation}, we describe a cache data structure
-for supporting our incremental framework in practice.
-
-\begin{arxiv}
-For completeness, before presenting our incremental expressions,
-let us begin by writing down the objective lower bound and objective
-of the empty rule list, ${\RL = ((), (), \Default, 0)}$,
-the first rule list evaluated in Algorithm~\ref{alg:branch-and-bound}.
-%
-Since its prefix contains zero rules, it has zero prefix
-misclassification error and also has length zero.
-%
-Thus, the empty rule list's objective lower bound is zero:
-\begin{align}
-  b((), \x, \y) = \Loss_p((), (), \x, \y) + \Reg \cdot 0 = 0.
-\end{align}
-%
-Since none of the data are captured by the empty prefix, the default rule
-corresponds to the majority class, and the objective corresponds to the
-default rule misclassification error, \ie
-\begin{align}
-  \Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg \cdot 0
-  &= \Loss_p((), (), \x, \y) + \Loss_0((), \Default, \x, \y) \nn \\
-  &= b((), \x, \y) + \Loss_0((), \Default, \x, \y) = \Loss_0((), \Default, \x, \y).
-\end{align}
-
-Now, we derive our incremental expressions for the objective function and its lower bound.
-%
-Let ${\RL = (\Prefix, \Labels, \Default, K)}$ and
-${\RL' = (\Prefix', \Labels', \Default', K + 1)}$
-be rule lists such that prefix ${\Prefix = (p_1, \dots, p_K)}$
-is the parent of ${\Prefix' = (p_1, \dots, p_K, p_{K+1})}$.
-%
-Let ${\Labels = (q_1, \dots, q_K)}$ and
-${\Labels' = (q_1, \dots, q_K, q_{K+1})}$ be the corresponding labels.
-%
-The hierarchical structure of Algorithm~\ref{alg:branch-and-bound}
-enforces that if we ever evaluate~$\RL'$, then we will have already
-evaluated both the objective and objective lower bound of its parent,~$\RL$.
-%
-We would like to reuse as much of these computations as possible
-in our evaluation of~$\RL'$.
-%
-We can write the objective lower bound of~$\RL'$ incrementally,
-with respect to the objective lower bound of~$\RL$:
-\begin{align}
-b(\Prefix', \Labels', \x, \y)
-  &= \Loss_p(\Prefix', \Labels', \x, \y) + \Reg (K + 1) \nn \\
-&= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K+1} \Cap(x_n, p_k \given \Prefix')
-  \wedge \one [ q_k \neq y_n ] + \Reg (K+1) \label{eq:non-inc-lb} \\
-&= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K + \Reg
-  + \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_{K+1} \given \Prefix') \wedge \one [q_{K+1} \neq y_n ] \nn \\
-&= b(\Prefix, \Labels, \x, \y) + \Reg
-  + \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_{K+1} \given \Prefix') \wedge \one [q_{K+1} \neq y_n ] \nn \\
-&= b(\Prefix, \Labels, \x, \y) + \Reg  + \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge
-  \Cap(x_n, p_{K+1}) \wedge \one [q_{K+1} \neq y_n].
-\label{eq:inc-lb}
-\end{align}
-%Notice that the term~${\neg\, \Cap(x_n, \Prefix)}$ in~\eqref{eq:inc-lb}
-%depends only on~$\Prefix$, \ie it does not depend on~$\Prefix'$; furthermore,
-%it is computed in the evaluation of~$\RL$'s default rule misclassification error,
-%\begin{align}
-%\Loss_0(\Prefix, \Default, \x, \y) = \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [q_0 \neq y_n].
-%\end{align}
-Thus, if we store $b(\Prefix, \Labels, \x, \y)$, % and ${\neg\, \Cap(\x, \Prefix)}$,
-then we can reuse this quantity when computing $b(\Prefix', \Labels', \x, \y)$.
-%
-Transforming~\eqref{eq:non-inc-lb} into~\eqref{eq:inc-lb} yields a
-significantly simpler expression that is a function of the stored
-quantity~$b(\Prefix, \Labels, \x, \y)$. %, as well as ${\neg\, \Cap(\x, \Prefix)}$
-%and the last rule of~$\RL'$, ${p_{K+1} \rightarrow q_{K+1}}$.
-%
-For the objective of~$\RL'$, first let us write a na\"ive expression:
-\begin{align}
-\Obj(\RL', \x, \y) &= \Loss(\RL', \x, \y) + \Reg (K + 1)
-= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y) + \Reg(K + 1) \nn \\
-&= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K+1} \Cap(x_n, p_k \given \Prefix')
-  \wedge \one [ q_k \neq y_n ] + \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix') \wedge
-  \one [q'_0 \neq y_n] + \Reg (K+1). \label{eq:non-inc-obj}
-\end{align}
-Instead, we can compute the objective of~$\RL'$ incrementally
-with respect to its objective lower bound:
-\begin{align}
-\Obj(\RL', \x, \y) &=  \Loss_p(\Prefix', \Labels', \x, \y) +
-  \Loss_0(\Prefix', \Default', \x, \y) + \Reg (K + 1) \nn \\
-&= b(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, y) \nn \\
-&= b(\Prefix', \Labels', \x, \y) + \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix') \wedge
-  \one [q'_0 \neq y_n] \nn \\
-&= b(\Prefix', \Labels', \x, \y) + \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge
-  (\neg\, \Cap(x_n, p_{K+1})) \wedge \one [q'_0 \neq y_n].
-\label{eq:inc-obj}
-\end{align}
-The expression in~\eqref{eq:inc-obj} is much simpler than the na\"ive
-one in~\eqref{eq:non-inc-obj}, and is a function of
-$b(\Prefix', \Labels', \x, \y)$, which we computed in~\eqref{eq:inc-lb}.
-%as well as ${\neg\, \Cap(\x, \Prefix)}$,
-%and the last antecedent~$p_{K+1}$ and default rule~$\Default'$ of~$\RL'$.
-Though we could compute the objective of~$\RL'$ incrementally
-with respect to that of~$\RL$, doing so would in practice require
-that we also store~$\Obj(\RL, \x, \y)$; we prefer the approach suggested
-by~\eqref{eq:inc-obj} since it avoids this additional storage overhead.
-
-\begin{algorithm}[t!]
-  \caption{Incremental branch-and-bound for learning rule lists, for simplicity, from a cold start.
-  We explicitly show the incremental objective lower bound and objective functions in Algorithm~\ref{alg:incremental-functions}.}
-\label{alg:incremental}
-\begin{algorithmic}
-\normalsize
-\State \textbf{Input:} Objective function~$\Obj(\RL, \x, \y)$,
-objective lower bound~${b(\Prefix, \x, \y)}$,
-set of antecedents ${\RuleSet = \{s_m\}_{m=1}^M}$,
-training data~$(\x, \y) = {\{(x_n, y_n)\}_{n=1}^N}$,
-regularization parameter~$\Reg$
-\State \textbf{Output:} Provably optimal rule list~$\OptimalRL$ with minimum objective~$\OptimalObj$ \\
-
-\State $\CurrentRL \gets ((), (), \Default, 0)$ \Comment{Initialize current best rule list with empty rule list}
-\State $\CurrentObj \gets \Obj(\CurrentRL, \x, \y)$ \Comment{Initialize current best objective}
-\State $Q \gets $ queue$(\,[\,(\,)\,]\,)$ \Comment{Initialize queue with empty prefix}
-\State $C \gets $ cache$(\,[\,(\,(\,)\,, 0\,)\,]\,)$ \Comment{Initialize cache with empty prefix and its objective lower bound}
-\While {$Q$ not empty} \Comment{Optimization complete when the queue is empty}
-	\State $\Prefix \gets Q$.pop(\,) \Comment{Remove a prefix~$\Prefix$ from the queue}
-        \State $b(\Prefix, \x, \y) \gets C$.find$(\Prefix)$ \Comment{Look up $\Prefix$'s lower bound in the cache}
-        \State $\mathbf{u} \gets \neg\,\Cap(\x, \Prefix)$ \Comment{Bit vector indicating data not captured by $\Prefix$}
-        \For {$s$ in $\RuleSet$} \Comment{Evaluate all of $\Prefix$'s children}
-            \If {$s$ not in $\Prefix$}
-                \State $\PrefixB \gets (\Prefix, s)$ \Comment{\textbf{Branch}: Generate child $\PrefixB$}
-                \State $\mathbf{v} \gets \mathbf{u} \wedge \Cap(\x, s)$ \Comment{Bit vector indicating data captured by $s$ in $\PrefixB$}
-                \State $b(\PrefixB, \x, \y) \gets b(\Prefix, \x, \y) + \Reg~ + $ \Call{IncrementalLowerBound}{$\mathbf{v}, \y, N$} \Comment{Eq.~\eqref{eq:inc-lb}}
-                \If {$b(\PrefixB, \x, \y) < \CurrentObj$} \Comment{\textbf{Bound}: Apply bound from Theorem~\ref{thm:bound}}
-                    \State $\Obj(\RLB, \x, \y) \gets b(\PrefixB, \x, \y)~ + $ \Call{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$} \Comment{Eq.~\eqref{eq:inc-obj}}
-                    \If {$\Obj(\RLB, \x, \y) < \CurrentObj$}
-                        \State $(\CurrentRL, \CurrentObj) \gets (\RLB, \Obj(\RLB, \x, \y))$ \Comment{Update current best rule list and objective}
-                    \EndIf
-                    \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
-                    \State $C$.insert$(\PrefixB, b(\PrefixB, \x, \y))$ \Comment{Add $\PrefixB$ and its lower bound to the cache}
-                \EndIf
-            \EndIf
-        \EndFor
-\EndWhile
-\State $(\OptimalRL, \OptimalObj) \gets (\CurrentRL, \CurrentObj)$ \Comment{Identify provably optimal rule list and objective}
-\end{algorithmic}
-\end{algorithm}
-
-\begin{algorithm}[t!]
-  \caption{Incremental objective lower bound~\eqref{eq:inc-lb} used in Algorithm~\ref{alg:incremental}.}
-\label{alg:incremental-lb}
-\begin{algorithmic}
-\normalsize
-\State \textbf{Input:}
-Bit vector~${\mathbf{v} \in \{0, 1\}^N}$ indicating data captured by $s$, the last antecedent in~$\PrefixB$,
-bit vector of class labels~${\y \in \{0, 1\}^N}$,
-number of observations~$N$
-\State \textbf{Output:} Component of~$\RLB$'s misclassification error due to data captured by~$s$ \\
-
-\Function{IncrementalLowerBound}{$\mathbf{v}, \y, N$}
-    \State $n_v = \Count(\mathbf{v})$ \Comment{Number of data captured by $s$, the last antecedent in $\PrefixB$}
-    \State $\mathbf{w} \gets \mathbf{v} \wedge \y$ \Comment{Bit vector indicating data captured by $s$ with label $1$}
-    \State $n_w = \Count(\mathbf{w})$ \Comment{Number of data captured by $s$ with label $1$}
-    \If {$n_w / n_v > 0.5$}
-        \State \Return $(n_v - n_w) / N$ \Comment{Misclassification error of the rule $s \rightarrow 1$}
-    \Else
-        \State \Return $n_w / N$ \Comment{Misclassification error of the rule $s \rightarrow 0$}
-    \EndIf
-    \EndFunction
-\end{algorithmic}
-\end{algorithm}
-
-\begin{algorithm}[t!]
-  \caption{Incremental objective function~\eqref{eq:inc-obj} used in Algorithm~\ref{alg:incremental}.}
-\label{alg:incremental-obj}
-\begin{algorithmic}
-\normalsize
-\State \textbf{Input:}
-Bit vector~${\mathbf{u} \in \{0, 1\}^N}$ indicating data not captured by~$\PrefixB$'s parent prefix,
-bit vector~${\mathbf{v} \in \{0, 1\}^N}$ indicating data not captured by $s$, the last antecedent in~$\PrefixB$,
-bit vector of class labels~${\y \in \{0, 1\}^N}$,
-number of observations~$N$
-\State \textbf{Output:} Component of~$\RLB$'s misclassification error due to its default rule \\
-
- \Function{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$}
-    \State $\mathbf{f} \gets \mathbf{u} \wedge \neg\,\mathbf{v} $ \Comment{Bit vector indicating data not captured by $\PrefixB$}
-    \State $n_f = \Count(\mathbf{f})$ \Comment{Number of data not captured by $\PrefixB$}
-    \State $\mathbf{g} \gets \mathbf{f} \wedge \y$ \Comment{Bit vector indicating data not captured by $\PrefixB$ with label $1$}
-    \State $n_g = \Count(\mathbf{w})$ \Comment{Number of data not captued by $\PrefixB$ with label $1$}
-    \If {$n_f / n_g > 0.5$}
-        \State \Return $(n_f - n_g) / N$ \Comment{Default rule misclassification error with label $1$}
-    \Else
-        \State \Return $n_g / N$ \Comment{Default rule misclassification error with label $0$}
-    \EndIf
-\EndFunction
-\end{algorithmic}
-\end{algorithm}
-
-We present an incremental branch-and-bound procedure in
-Algorithm~\ref{alg:incremental}, and show the incremental computations
-of the objective lower bound~\eqref{eq:inc-lb} and objective~\eqref{eq:inc-obj}
-as two separate functions in Algorithms~\ref{alg:incremental-lb}
-and~\ref{alg:incremental-obj}, respectively.
-%
-In Algorithm~\ref{alg:incremental}, we use a cache to store
-prefixes and their objective lower bounds.
-%
-Algorithm~\ref{alg:incremental} additionally reorganizes the structure
-of Algorithm~\ref{alg:branch-and-bound} to group together the computations
-associated with all children of a particular prefix.
-%
-This has two advantages.
-%
-The first is to consolidate cache queries: all children of the same
-parent prefix compute their objective lower bounds with respect to
-the parent's stored value, and we only require one cache `find' operation
-for the entire group of children, instead of a separate query for each child.
-%
-The second is to shrink the queue's size:
-instead of adding all of a prefix's children as separate queue elements,
-we represent the entire group of children in the queue by a single element.
-%
-Since the number of children associated with each prefix
-is close to the total number of possible antecedents,
-both of these effects can yield significant savings.
-%
-For example, if we are trying to optimize over rule lists formed
-from a set of 1000 antecedents, then the maximum queue size in
-Algorithm~\ref{alg:incremental} will be smaller than that in
-Algorithm~\ref{alg:branch-and-bound} by a factor of nearly 1000.
-
-\end{arxiv}
