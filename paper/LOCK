@@ -1,8 +1,8 @@
-kdd17.tex --
-arxiv.tex --
+kdd17.tex -- elaine
+arxiv.tex -- elaine
 
 framework --
 bounds --
-incremental --
-implementation --
+incremental -- elaine
+implementation -- elaine
 experiments --
