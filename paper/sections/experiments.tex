@@ -149,14 +149,28 @@ as a function of wall clock time.
 \end{arxiv}
 \begin{kdd}
 % left lower right upper
-\includegraphics[trim={20mm, 20mm, 10mm, 5mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
+\includegraphics[trim={20mm, 25mm, 10mm, 5mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
 \end{kdd}
 \end{center}
-\caption{Two example executions of CORELS, with (solid lines)
-and without (dashed lines) the equivalent points bound,
-which in this case yields a significantly tighter lower bound.
+\caption{Example executions of CORELS with (solid lines) and without
+(dashed lines) the equivalent points bound (Theorem~\ref{thm:identical}).
 %
-Top: Objective value and lower bound as a function of wall clock time (log scale).
+Top: Objective value (thin solid line) and lower bound (thick solid line)
+for CORELS, as a function of wall clock time (log scale).
+%
+Numbered hatch marks along the objective indicate when the length of
+the best known rule list changes, and are labeled by the new length.
+%
+CORELS quickly the optimal value (star marker),
+and certifies optimality when the lower bound matches the objective value.
+%
+We also plot the lower bound (dashed line) from a separate execution
+of CORELS that does not leverage the equivalent points bound.
+%
+The large gap between this lower bound and the optimum
+demonstrates that this execution is far from complete.
+%
+%(For clarity, we do not plot the corresponding trace of the objective value.)
 %
 %Missing: horizontal lines and x-ticks for CART and C4.5.
 %
@@ -221,12 +235,24 @@ in the final row, we report minimum values across folds.
 \end{arxiv}
 \begin{kdd}
 %\includegraphics[width=0.5\textwidth]{figs/ela_compas-queue.pdf}
-\includegraphics[trim={30mm 10mm 20mm 10mm}, width=0.45\textwidth]{figs/ela_compas_compare_small-queue.pdf}
+% left lower right upper
+\includegraphics[trim={30mm 15mm 35mm 25mm}, width=0.45\textwidth]{figs/ela_compas_compare_small-queue.pdf}
 \end{kdd}
 \end{center}
-\caption{Ablation experiment and logical queue composition.
-Note the last experiment is incomplete and was run on a (different)
-machine with a large amount of memory.  Was using about 136GB RAM when terminated.
+\caption{Queue composition. % logical queue
+%
+Numbers of prefixes in the queue, colored by length (log scale),
+as a function of wall clock time (log scale),
+for CORELS (top left), and without the permutation map (top right),
+lookahead bound (bottom left), and equivalent points bound (bottom right).
+%
+The gray shading fills in the area beneath the total number of
+queue elements for CORELS, \ie the sum over prefixes of lengths~0
+through~5 in the top left figure; it approximates
+the convex hull of the colored lines due to the vertical axis's log scale.
+%
+To aid visual comparisons, we replicate the same gray area
+in each of the other three subfigures.
 }
 \label{fig:queue}
 \end{figure}

@@ -96,7 +96,7 @@ log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=100
 'for-%s-curious_lb-no_pmap-minor-max_num_nodes=100000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=100000001-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-max_num_nodes=700000000-c=0.0050000-v=1-f=1000.txt']
-labels = ['none', 'no priority queue', 'no support bounds', 'no permutation map', 'no lookahead bound', 'no identical points bound']
+labels = ['CORELS', 'w/o priority queue', 'w/o support bounds', 'w/o permutation map', 'w/o lookahead bound', 'w/o equivalent points bound']
 ftag = 'ela_compas_compare'
 
 """
@@ -104,7 +104,7 @@ log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=100
 'for-%s-curious_lb-no_pmap-minor-max_num_nodes=100000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=100000001-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-max_num_nodes=700000000-c=0.0050000-v=1-f=1000.txt']
-labels = ['none', 'no permutation map', 'no lookahead bound', 'no identical points bound']
+labels = ['CORELS', 'w/o permutation map', 'w/o lookahead bound', 'w/o equivalent points bound']
 ftag = 'ela_compas_compare_small'
 
 
@@ -288,10 +288,10 @@ for (ncomp, log_root) in enumerate(log_root_list):
     else:
         pylab.legend(['%d' % length for length in range(0, max_length + 1)[::-1]], loc='upper left', fontsize=fs-3)
     if (ncomp > ntot/2 - 1):
-        pylab.xlabel('time (s)', fontsize=fs+2)
+        pylab.xlabel('Time (s)', fontsize=fs+2)
     if (ncomp in [0, ntot/2]):
-        pylab.ylabel('count', fontsize=fs+2)
-    #pylab.suptitle('lengths of prefixes in the logical queue\n', fontsize=fs)
+        pylab.ylabel('Number of prefixes', fontsize=fs+2)
+    pylab.suptitle('Queue composition', fontsize=fs+2)
     pylab.title(labels[ncomp], fontsize=fs+2)
     pylab.xticks(fontsize=fs-2)
     pylab.yticks(fontsize=fs-2)
