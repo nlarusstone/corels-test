@@ -149,14 +149,28 @@ as a function of wall clock time.
 \end{arxiv}
 \begin{kdd}
 % left lower right upper
-\includegraphics[trim={20mm, 20mm, 10mm, 5mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
+\includegraphics[trim={20mm, 25mm, 10mm, 5mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
 \end{kdd}
 \end{center}
-\caption{Two example executions of CORELS, with (solid lines)
-and without (dashed lines) the equivalent points bound,
-which in this case yields a significantly tighter lower bound.
+\caption{Example executions of CORELS with (solid lines) and without
+(dashed lines) the equivalent points bound (Theorem~\ref{thm:identical}).
 %
-Top: Objective value and lower bound as a function of wall clock time (log scale).
+Top: Objective value (thin solid line) and lower bound (thick solid line)
+for CORELS, as a function of wall clock time (log scale).
+%
+Numbered hatch marks along the objective indicate when the length of
+the best known rule list changes, and are labeled by the new length.
+%
+CORELS quickly the optimal value (star marker),
+and certifies optimality when the lower bound matches the objective value.
+%
+We also plot the lower bound (dashed line) from a separate execution
+of CORELS that does not leverage the equivalent points bound.
+%
+The large gap between this lower bound and the optimum
+demonstrates that this execution is far from complete.
+%
+%(For clarity, we do not plot the corresponding trace of the objective value.)
 %
 %Missing: horizontal lines and x-ticks for CART and C4.5.
 %
@@ -177,38 +191,38 @@ on the size of the remaining search space.}
 Removed & $t_\text{total}$ & $t_\text{opt}$ & $i_\text{total}$ & $Q_\text{max}$ & $K_\text{max}$ \\
 component & (min) & (s) & ($\times 10^6$) & ($\times 10^6$) & \\
 \hline
-none (CORELS) & 4.8 (1.7) & 8 (3) & 1.5 (0.5) & 1.2 (0.4) & 5-6 \\
-priority queue & 5.8 (2.1) & 4 (1) & 1.7 (0.5) & 1.3 (0.5) & 5-6 \\
-support bounds & 8.7 (3.1) & 13 (5) & 2.4 (0.8) & 1.9 (0.7) & 5-6 \\
-permutation map & 48.7 (19.3) & 22 (9) & 13.5 (5.2) & 12.1 (4.7) & 5-6 \\
-lookahead bound & 64.3 (24.7) & 8 (3) & 16.3 (6.0) & 14.6 (5.5) & 6-7 \\
-equiv. pts. bound & $>$137 & ** & $>$800 & $>$790 & $\ge$10
-%equiv. pts. bound & --- & 48  & $>286$ & $>282$ & $\ge$ 10 \\
+none (CORELS) & 5.5 (1.6) & 8 (2) & 1.7 (0.4) & 1.3 (0.4) & 5-6 \\
+priority queue & 6.7 (2.2) & 4 (1) & 1.9 (0.6) & 1.5 (0.5) & 5-6 \\
+support bounds & 10.2 (3.4) & 13 (4) & 2.7 (0.8) & 2.2 (0.7) & 5-6 \\
+permutation map & 58.6 (23.3) & 23 (6) & 16.0 (5.9) & 14.5 (5.7) & 5-6 \\
+lookahead bound & 71.9 (23.0) & 9 (2) & 18.5 (5.9) & 16.3 (5.3) & 6-7 \\
+%equiv. pts. bound & 188.6 (104.6) & 6178 (1840) & 803.8 (0.1) & 790.5 (0.4) & 10-10
+equiv. pts. bound & $>$134 & $>$7168* & $>$800 & $>$789 & $\ge$10
 \end{tabular}
 }
 \vspace{5mm}
 \caption{Per-component performance improvement.
 %
-The columns report the total execution time,
-time to optimum, maximum evaluated prefix length,
-number of queue insertions, and maximum queue size.
+The columns report the total execution time (minutes),
+time to optimum (seconds), number of queue insertions (millions),
+maximum queue size (millions), and maximum evaluated prefix length.
 %
 The first row corresponds to our full CORELS algorithm,
 and subsequent rows to variants that each exclude a specific
 implementation optimization or bound removed.
 %
-(We do not measure the cumulative effects of removing a sequence of components.)
+(We are not measuring the cumulative effects of removing a sequence of components.)
 %
 All rows represent complete executions, except for the final row,
-in which each execution was terminated, due to memory constraints,
+in which each execution was terminated due to memory constraints,
 %once the size of the cache reached ${8 \times 10^8}$ elements,
 after consuming 390-410GB RAM.
 %
 In all but the final row and column, we report averages
 (with standard deviations, in parentheses) over 10 cross-validation folds;
-in the final row, we report minimum values across folds.
+in the final row, we report minimum values across folds. \\
 %
-**~Only XXX folds in the final row achieve the optimum.
+*~Only 4 out of 10 folds achieve the optimum.
 }
 \label{tab:ablation}
 \end{table}
@@ -221,12 +235,24 @@ in the final row, we report minimum values across folds.
 \end{arxiv}
 \begin{kdd}
 %\includegraphics[width=0.5\textwidth]{figs/ela_compas-queue.pdf}
-\includegraphics[trim={30mm 10mm 20mm 10mm}, width=0.45\textwidth]{figs/ela_compas_compare_small-queue.pdf}
+% left lower right upper
+\includegraphics[trim={30mm 15mm 35mm 25mm}, width=0.45\textwidth]{figs/kdd_compas_compare_small-queue.pdf}
 \end{kdd}
 \end{center}
-\caption{Ablation experiment and logical queue composition.
-Note the last experiment is incomplete and was run on a (different)
-machine with a large amount of memory.  Was using about 136GB RAM when terminated.
+\caption{Queue composition. % logical queue
+%
+Numbers of prefixes in the queue (log scale), colored by length,
+as a function of wall clock time (log scale),
+for CORELS (top left), and without the permutation map (top right),
+lookahead bound (bottom left), and equivalent points bound (bottom right).
+%
+The gray shading fills in the area beneath the total number of
+queue elements for CORELS, \ie the sum over prefixes of lengths~0
+through~4 in the top left figure; it approximates
+the convex hull of the colored lines due to the vertical axis's log scale.
+%
+To aid visual comparisons, we replicate the same gray area
+in each of the other three subfigures.
 }
 \label{fig:queue}
 \end{figure}
