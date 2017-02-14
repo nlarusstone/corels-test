@@ -31,11 +31,11 @@ significantly smaller than encodings of captured data points,
 especially for large datasets.
 %
 In general, the symmetry-aware map dominates memory usage during long runs.
-Before inserting permutation $P<sub>i</sub>$ into the symmetry-aware map, we check
-if there exists a permutation $P<sub>j</sub>$ of $P<sub>i</sub>$ alread in the map.
-If the objective of $P<sub>i</sub>$ is better than the objective of $P<sub>j</sub>$,
-we update the map and remove $P<sub>j</sub>$ and its subtree from the trie.
-Otherwise we do nothing (i.e., we do not insert $P<sub>i</sub>$ into the symmetry-aware map
+Before inserting permutation $P_i$ into the symmetry-aware map, we check
+if there exists a permutation $P_j$ of $P_i$ alread in the map.
+If the objective of $P_i$ is better than the objective of $P_j$,
+we update the map and remove $P_j$ and its subtree from the trie.
+Otherwise we do nothing (i.e., we do not insert $P_i$ into the symmetry-aware map
 or the trie.
 
 We use a queue to store all of the leaves of the trie that still need to be explored.
