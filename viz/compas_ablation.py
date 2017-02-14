@@ -64,7 +64,7 @@ def parse_prefix_sums(p):
 froot = 'compas'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
-num_folds = 3
+num_folds = 10
 lw = 2  # linewidth
 ms = 9  # markersize
 fs = 16 # fontsize
@@ -279,3 +279,9 @@ mq_s = max_queue.std(axis=1) / 10**6
 
 for rec in zip(ablation_names, tt_m, tt_s, to_m, to_s, it_m, it_s, mq_m, mq_s, km_min, km_max):
     print '%s & %1.1f (%1.1f) & %d (%d) & %1.1f (%1.1f) & %1.1f (%1.1f) & %d-%d \\\\' % rec
+
+print 'last row:'
+print t_tot[-1:].min() / 60
+print ((min_obj[-1] - min_obj[0]) < 10**-6).sum()
+print t_opt[((min_obj[-1] - min_obj[0]) < 10**-6)].min()
+print max_queue[-1].min() / 10**6
