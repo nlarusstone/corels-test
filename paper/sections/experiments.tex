@@ -26,21 +26,39 @@ CORELS ${\Reg = 0.005}$ for ProPublica and ${\Reg = 0.01}$ for NYCLU.}
 \end{table}
 \end{arxiv}
 
+\begin{arxiv}
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
-\begin{arxiv}
 \includegraphics[width=0.75\textwidth]{figs/compare-compas.pdf}
-\end{arxiv}
-\begin{kdd}
-\includegraphics[width=0.4\textwidth]{figs/compare-compas.pdf}
-\end{kdd}
 \end{center}
 \caption{Comparison with other methods:
 Test error for us and a few other algorithms
 (CART, C4.5, CBA, CMAR/CPAR, C5.0, Ripper, \dots),
 as a function of sparsity over 10 folds, for one big dataset (box plots).}
 \label{fig:comparison}
+\end{figure}
+\end{arxiv}
+
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
+\begin{arxiv}
+\includegraphics[width=0.75\textwidth]{figs/compas-sparsity.pdf}
+\end{arxiv}
+\begin{kdd}
+% left lower right upper
+\includegraphics[trim={10mm, 0mm, 20mm, 10mm}, width=0.45\textwidth]{figs/compas-sparsity.pdf}
+\end{kdd}
+\end{center}
+\caption{Test accuracy as a function of model size.
+%
+We compare CORELS against other tree (C4.5, CART)
+and rule list (RIPPER, SBRL) learning algorithms.
+%
+For CORELS, C4.5, and CART, we vary parameters~$\Reg$, $C$, and~$cp$, respectively.
+}
+\label{fig:sparsity}
 \end{figure}
 
 Our experimental analysis addresses four questions:
@@ -69,6 +87,9 @@ between algorithms. We conclude that CORELS produces models whose accuracy is co
 to those found via other algorithms.
 %
 Figure~\ref{fig:rule-list} shows an optimal rule list learned in one of the folds.
+%
+Figure~\ref{fig:sparsity} shows that CORELS can learn short rule lists without
+sacrificing accuracy.
 
 Figure~\ref{fig:objective} illustrates how both the objective and the size of
 the remaining search space decrease as CORELS executes.
@@ -86,7 +107,7 @@ as the search space steadily shrinks.
 \end{arxiv}
 \begin{kdd}
 % left lower right upper
-\includegraphics[trim={20mm, 25mm, 10mm, 5mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
+\includegraphics[trim={20mm, 25mm, 20mm, 10mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
 \end{kdd}
 \end{center}
 \caption{Executions of CORELS with (solid lines) and without
