@@ -221,8 +221,12 @@ gives~\eqref{eq:max-length-trivial}.
 \end{proof}
 \end{arxiv}
 
-For any particular prefix~$\Prefix$, we can obtain potentially tighter upper bounds on
-prefix length for the family of all prefixes that start with~$\Prefix$.
+For any particular prefix~$\Prefix$, we can obtain potentially tighter
+upper bounds on prefix length for
+\begin{arxiv}
+the family of
+\end{arxiv}
+all prefixes that start with~$\Prefix$.
 
 %
 %\begin{kdd}
@@ -269,11 +273,17 @@ and Proposition~\ref{prop:trivial-length} gives~\eqref{eq:max-length-prefix}.
 \end{proof}
 \end{arxiv}
 
-Theorem~\ref{thm:ub-prefix-specific} can be viewed as a generalization
-of our one-step lookahead bound in Lemma~\ref{lemma:lookahead};
-rearranging to obtain a bound on~${K' - K}$
-gives an upper bound on the number of remaining `steps' corresponding
-to an iterative sequence of single-rule extensions of a prefix~$\Prefix$.
+We can view Theorem~\ref{thm:ub-prefix-specific} as a generalization
+of our one-step lookahead bound (Lemma~\ref{lemma:lookahead});
+rearranging to obtain a bound on ${K' - K}$
+gives an upper bound on the number of remaining `steps' corresponding to
+\begin{arxiv}
+an iterative
+\end{arxiv}
+\begin{kdd}
+a
+\end{kdd}
+sequence of single-rule extensions of a prefix~$\Prefix$.
 %
 \begin{arxiv}
 Notice that when~${\RL = ((), (), q_0, 0)}$ is the empty rule list,
@@ -308,8 +318,8 @@ present Theorem~\ref{thm:remaining-eval-fine},
 in which we use information about the state of
 Algorithm~\ref{alg:branch-and-bound}'s execution
 to calculate, for any given execution state,
-upper bounds on the number of prefix evaluations that might
-be required during the remaining course of algorithm execution.
+upper bounds on the number of additional prefix evaluations that might
+be required for the execution to complete.
 %
 This number of remaining evaluations is equal to the number of
 prefixes that are currently in or will be inserted into the queue.
@@ -524,12 +534,18 @@ Let ${\OptimalRL = (\Prefix, \Labels, \Default, K) \in \argmin_\RL \Obj(\RL, \x,
 be any optimal rule list, with objective~$\OptimalObj$.
 %
 For each antecedent~$p_k$ in prefix ${\Prefix = (p_1, \dots, p_K)}$,
+\begin{arxiv}
 the regularization parameter~$\Reg$ provides a lower bound
 on the normalized support of~$p_k$,
 \begin{align}
 \Reg < \Supp(p_k, \x \given \Prefix).
 \label{eq:min-capture}
 \end{align}
+\end{arxiv}
+\begin{kdd}
+the regularization parameter provides a lower bound,
+${\Reg < \Supp(p_k, \x \given \Prefix)}$, on the normalized support of~$p_k$.
+\end{kdd}
 \end{theorem}
 
 \begin{arxiv}
@@ -572,7 +588,13 @@ on the support of an antecedent~$p_i$ in an optimal rule list~$\OptimalRL$.
 Thus, we can prune a prefix~$\Prefix$ if any of its antecedents do not capture
 more than a fraction~$\Reg$ of data, even if~${b(\Prefix, \x, \y) < \OptimalObj}$.
 %
-Notice that the bound in Theorem~\ref{thm:min-capture}
+\begin{arxiv}
+Notice that the
+\end{arxiv}
+\begin{kdd}
+The
+\end{kdd}
+bound in Theorem~\ref{thm:min-capture}
 depends on the antecedents, but not the label predictions,
 and thus doesn't account for misclassification error.
 %
@@ -583,7 +605,7 @@ tightens the upper bound on~$\Obj(\RL, \x, \y)$ in~\eqref{eq:ub-i}.
 \end{arxiv}
 \begin{kdd}
 Theorem~\ref{thm:min-capture-correct} gives a tighter bound
-by leveraging this additional information.
+by leveraging this information.
 \end{kdd}
 
 \begin{theorem}[Lower bound on accurate antecedent support]
@@ -602,11 +624,16 @@ a_k \equiv \frac{1}{N} \sum_{n=1}^N
   \Cap(x_n, p_k \given \Prefix) \wedge \one [ q_k = y_n ].
 \label{eq:rule-correct}
 \end{align}
+\begin{arxiv}
 The regularization parameter~$\Reg$ provides a lower bound on~$a_k$:
 \begin{align}
 \Reg < a_k.
 \label{eq:min-capture-correct}
 \end{align}
+\end{arxiv}
+\begin{kdd}
+The regularization parameter provides a lower bound, $\Reg < a_k$.
+\end{kdd}
 \end{theorem}
 
 \begin{arxiv}
@@ -1576,7 +1603,7 @@ ${K=10}$ rules represents a (heuristic) upper limit on
 the size of an interpretable rule list,
 and ${M=1000}$ represents the approximate number of rules
 with sufficiently high support (Theorem~\ref{thm:min-capture})
-we expect to obtain via rule mining~(\S\ref{sec:rule-mining}),
+we expect to obtain via rule mining~(\S\ref{sec:setup}),
 for many datasets that might be used for constructing interpretable models.
 
 \begin{arxiv}

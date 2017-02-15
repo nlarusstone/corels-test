@@ -18,42 +18,6 @@ where ${x_n \in \{0, 1\}^J}$ are binary features and ${y_n \in \{0, 1\}}$ are la
 Let~${\x = \{x_n\}_{n=1}^N}$ and~${\y = \{y_n\}_{n=1}^N}$,
 and let~${x_{n,j}}$ denote the $j$-th feature of~$x_n$.
 
-\begin{figure}[t!]
-%\begin{subfigure}{0.18\textwidth}
-%\begin{algorithmic}
-%\normalsize
-%\State \bif $p_1$ \bthen $q_1$
-%\State \belif $p_2$ \bthen $q_2$
-%\State \dots
-%\State \belif $p_K$ \bthen $q_K$
-%\State \belse $q_0$.
-%\end{algorithmic}
-%\end{subfigure}
-%\begin{subfigure}{0.28\textwidth}
-\begin{algorithmic}
-\normalsize
-\State \bif $(age=23-25) \wedge (priors=2-3)$ \bthen $yes$
-\State \belif $(sex=male) \wedge (age=18-22)$ \bthen $yes$
-\State \belif $(priors>3)$ \bthen $yes$
-\State \belse $no$
-\end{algorithmic}
-%\end{subfigure}
-%\caption{A $K$-rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$, where
-%each rule ${r_k = p_k \rightarrow q_k}$, for all ${k = 0, \dots K}$.
-%We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
-%where ${\Prefix = (p_1, \dots, p_K)}$
-%and ${\Labels = (q_1, \dots, q_K)}$.}
-\caption{An example 3-rule list ${\RL = (r_1, r_2, r_3, r_0)}$
-that predicts two-year recidivism for the COMPAS dataset.
-Each rule is of the form ${r_k = p_k \rightarrow q_k}$,
-for all ${k = 0, \dots, 3}$.
-We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
-where ${\Prefix = (p_1, p_2, p_3)}$, ${\Labels = (1, 1, 1)}$,
-${\Default = 0}$, and ${K=3}$.
-}
-\label{fig:rule-list}
-\end{figure}
-
 A rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$ of length~${K \ge 0}$
 is a ${(K+1)}$-tuple consisting of~$K$ distinct association rules,
 ${r_k = p_k \rightarrow q_k}$, for ${k = 1, \dots, K}$,
@@ -138,13 +102,18 @@ captures datum~$x_n$, and~0 otherwise.
 %
 For example, let~$\Prefix$ and~$\Prefix'$ be prefixes such that~$\Prefix'$ starts
 with~$\Prefix$, then~$\Prefix'$ captures all the data that~$\Prefix$ captures:
+\begin{arxiv}
 \begin{align}
 \{x_n: \Cap(x_n, \Prefix)\} \subseteq \{x_n: \Cap(x_n, \Prefix')\}.
 \label{eq:cap-subset}
 \end{align}
+\end{arxiv}
+\begin{kdd}
+${\{x_n: \Cap(x_n, \Prefix)\} \subseteq \{x_n: \Cap(x_n, \Prefix')\}}$.
+\end{kdd}
 %We also define ${\Cap(\x, \beta) = \{\Cap(x_n, \beta)\}_{n=1}^N} \in \{0, 1\}^N$
 %to be~$\beta$'s captures vector.
-%
+
 Now let~$\Prefix$ be an ordered list of antecedents,
 and let~$\beta$ be a subset of antecedents in~$\Prefix$.
 %
@@ -153,7 +122,10 @@ captures datum~$x_n$ in the context of~$\Prefix$,
 \ie if the first antecedent in~$\Prefix$ that evaluates to true for~$x_n$
 is an antecedent in~$\beta$, and~0 otherwise.
 %
-Note that ${\Cap(x_n, \beta \given \Prefix) = 1}$ only if ${\Cap(x_n, \beta) = 1}$;
+\begin{arxiv}
+Note that
+\end{arxiv}
+${\Cap(x_n, \beta \given \Prefix) = 1}$ only if ${\Cap(x_n, \beta) = 1}$;
 ${\Cap(x_n, \beta \given \Prefix) = 0}$ either if ${\Cap(x_n, \beta) = 0}$,
 or if ${\Cap(x_n, \beta) = 1}$ but there is an antecedent~$\alpha$ in~$\Prefix$,
 preceding all antecedents in~$\beta$, such that ${\Cap(x_n, \alpha) = 1}$.
@@ -202,6 +174,45 @@ follows the methodology taken by~\citet{LethamRuMcMa15} and~\citet{YangRuSe16}.
 One of the results we prove later implies a constraint on the rules
 we need to generate -- they must have at least some minimum support
 given by the lower bound in Theorem~\ref{thm:min-capture}.
+
+\begin{figure}[t!]
+%\begin{subfigure}{0.18\textwidth}
+%\begin{algorithmic}
+%\normalsize
+%\State \bif $p_1$ \bthen $q_1$
+%\State \belif $p_2$ \bthen $q_2$
+%\State \dots
+%\State \belif $p_K$ \bthen $q_K$
+%\State \belse $q_0$.
+%\end{algorithmic}
+%\end{subfigure}
+%\begin{subfigure}{0.28\textwidth}
+\begin{algorithmic}
+\normalsize
+\State \bif $(age=23-25) \wedge (priors=2-3)$ \bthen $yes$
+\State \belif $(age=18-20)$ \bthen $yes$
+\State \belif $(sex=male) \wedge (age=21-22)$ \bthen $yes$
+\State \belif $(priors>3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+%\vspace{-2mm}
+%\end{subfigure}
+%\caption{A $K$-rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$, where
+%each rule ${r_k = p_k \rightarrow q_k}$, for all ${k = 0, \dots K}$.
+%We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
+%where ${\Prefix = (p_1, \dots, p_K)}$
+%and ${\Labels = (q_1, \dots, q_K)}$.}
+\caption{An example 4-rule list ${\RL = (r_1, r_2, r_3, r_4, r_0)}$
+that predicts two-year recidivism for the ProPublica dataset.
+Each rule is of the form ${r_k = p_k \rightarrow q_k}$,
+for all ${k = 0, \dots, 4}$.
+We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
+where ${\Prefix = (p_1, p_2, p_3, p_4)}$, ${\Labels = (1, 1, 1, 1)}$,
+${\Default = 0}$, and ${K=4}$.
+}
+\label{fig:rule-list}
+\end{figure}
+
 
 \begin{arxiv}
 \subsection{Rule list representation and bit vector operations}
