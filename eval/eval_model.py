@@ -166,7 +166,7 @@ if __name__ == '__main__':
             if args.sparsity:
                 cv_fold = args.fname + '_' + str(i)
                 with open(args.sparsity, 'a') as f:
-                    f.write("{0},CORELS,0,0,{1},{2}\n".format(cv_fold, acc, len_opt))
+                    f.write("{0},CORELS,0,0,{1},{2},{3}\n".format(cv_fold, args.r, acc, len_opt))
         else:
             plist.append(subprocess.Popen(fxn))
 
@@ -180,7 +180,7 @@ if __name__ == '__main__':
             if args.sparsity:
                 cv_fold = args.fname + '_' + str(i)
                 with open(args.sparsity, 'a') as f:
-                    f.write("{0},CORELS,0,0,{1},{2}\n".format(cv_fold, acc, len_opt))
+                    f.write("{0},CORELS,0,0,{1},{2},{3}\n".format(cv_fold, args.r, acc, len_opt))
 
 
     if (len(accuracies) > 0):

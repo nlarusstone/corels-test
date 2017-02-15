@@ -33,11 +33,14 @@ do
     # super-hack; forgive me. Something quick for KDD deadline
     sbrl_rules=$(cat $temp_f | grep -i "The best rulelist" | tr ":" "\n" | tail -n 1 | sed "s/ rules.*//g" | xargs)
     sbrl_acc=$(cat $temp_f | tail -n 1 | sed "s/.*=//g" | xargs)
-    echo "$cv_fold,SBRL,0,0,$sbrl_acc,$sbrl_rules" >> $outf
+    echo "$cv_fold,SBRL,0,0,0,$sbrl_acc,$sbrl_rules" >> $outf
 done
 
 echo "\nRUNNING CORELS for all 10 folds of $dataset"
-python eval_model.py $dataset --parallel --minor -c 2 -p 1 -r 0.005 -n 100000 --sparsity $outf >> $temp_f 2>&1
+echo "using regularization = {0.001, 0.003, 0.005, 0.01, 0.02}"
+for R in 0.001 0.003 0.005 0.01 0.02; do
+    python eval_model.py $dataset --parallel --minor -c 2 -p 1 -r $R -n 100000 --sparsity $outf >> $temp_f 2>&1
+done
 
 rm $temp_f
 

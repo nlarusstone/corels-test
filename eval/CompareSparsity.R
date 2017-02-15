@@ -69,7 +69,7 @@ for (val in cps) {
     cartAccs <- c(cartAccs, acc)
     leaves <- length(which(cartModel$frame[,"var"]=="<leaf>"))
     cartLeaves <- c(cartLeaves, leaves)
-    cartResults <- rbind(cartResults, list(fname, "CART", 0.0, val, acc, leaves))
+    cartResults <- rbind(cartResults, list(fname, "CART", 0.0, val, 0.0, acc, leaves))
 }
 printf("CART:\n")
 printf("%s", cat(cps, "\n"))
@@ -94,7 +94,7 @@ for (val in Cs) {
     c45Accs <- c(c45Accs, acc)
     leaves <- c45Model$classifier$measureNumLeaves()
     c45Leaves <- c(c45Leaves, leaves)
-    c45Results <- rbind(c45Results, list(fname, "C4.5", val, 0.0, acc, leaves))
+    c45Results <- rbind(c45Results, list(fname, "C4.5", val, 0.0, 0.0, acc, leaves))
 }
 printf("C4.5:\n")
 printf("%s", cat(Cs, "\n"))
@@ -108,15 +108,15 @@ ripModel <- JRip(Class ~ . , data=as.data.frame(trainData))
 pred.ripModel <- predict(ripModel, newdata=as.data.frame(testDataWOClass), type="class")
 ripAcc <- sum(testData$Class == pred.ripModel)/length(testData$Class)
 ripRuleLen <- length(as.list(ripModel$classifier$getRuleset()))
-ripResults <- rbind(ripResults, list(fname, "RIPPER", 0.0, 0.0, ripAcc, ripRuleLen))
+ripResults <- rbind(ripResults, list(fname, "RIPPER", 0.0, 0.0, 0.0, ripAcc, ripRuleLen))
 printf("RIPPER:\n")
 printf("%.4f\n", ripAcc)
 printf("%d\n", ripRuleLen)
 
 ## Write out results
-colnames(cartResults) <- c("Fold", "Method", "C", "cp", "accuracy", "leaves")
-colnames(c45Results) <- c("Fold", "Method", "C", "cp", "accuracy", "leaves")
-colnames(ripResults) <- c("Fold", "Method", "C", "cp", "accuracy", "leaves")
+colnames(cartResults) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves")
+colnames(c45Results) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves")
+colnames(ripResults) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves")
 isNewFile <- is.na(file.info(foutput)$size) || file.info(foutput)$size == 0
 write.table(cartResults, foutput, row.names=F, col.names=isNewFile,
             append=!isNewFile, quote = F, sep=",")
