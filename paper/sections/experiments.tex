@@ -14,8 +14,10 @@ and were executed on a server with two Intel Xeon E5-2699~v4
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
 %
-Due to page constraints, we only present a subset of experiments
-from an extensive evaluation contained in a long version of this~report.
+\begin{kdd}
+\footnote{Due to page constraints, we only present a subset of experiments
+from an extensive evaluation contained in a long version of this~report.}
+\end{kdd}
 
 We first ran a 10-fold cross validation experiment using CORELS and eight other algorithms:
 GLM, SVM, AdaBoost, CART, C4.5, RF, RIPPER, and scalable rule lists (SBRL).
@@ -23,8 +25,10 @@ There were no statistically significant differences in the accuracies of the
 algorithms. In fact, the difference between folds was far larger than the difference
 between algorithms. We conclude that CORELS produces models whose accuracy is comparable
 to those found via other algorithms.
+%
+Figure~\ref{fig:rule-list} shows an optimal rule list learned in one of the folds.
 
-Figure \ref{fig:objective} illustrates how both the objective and the size of
+Figure~\ref{fig:objective} illustrates how both the objective and the size of
 the remaining search space decrease as CORELS executes.
 The objective drops quickly, achieving the optimal value within 10 seconds.
 CORELS certifies optimality in less than 6 minutes --
@@ -34,12 +38,12 @@ as the search space steadily shrinks.
 
 Finally, we determine the efficacy of each of our data structure and bounding
 optimizations.
-Table \ref{tab:ablation} provides sumary statistics for experiments using
+Table~\ref{tab:ablation} provides sumary statistics for experiments using
 the full CORELS implementation and implementations with a specific
 optimization removed.
-Figure \ref{fig:queue} presents a view of the same experiments, focusing
-on just three of the optimizations. These charts depict the number of rule
-lists of a given length in the queue during the algorithm's execution.
+Figure~\ref{fig:queue} presents a view of the same experiments, focusing
+on three of our optimizations. These plots depict the number of
+prefixes of a given length in the queue during the algorithm's execution.
 
 
 \begin{arxiv}
@@ -159,34 +163,33 @@ as a function of wall clock time.
 \includegraphics[trim={20mm, 25mm, 10mm, 5mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
 \end{kdd}
 \end{center}
-\caption{Example executions of CORELS with (solid lines) and without
-(dashed lines) the equivalent points bound from Theorem~\ref{thm:identical}.
+\caption{Executions of CORELS with (solid lines) and without
+(dashed lines) the equivalent points bound (Theorem~\ref{thm:identical}).
 %
-Top: Objective value (thin solid line) and lower bound (thick solid line)
-for CORELS, as a function of wall clock time (log scale).
+Horizontal axes plot wall clock time (log scale).
 %
-Numbered hatch marks along the objective indicate when the length of
-the best known rule list changes, and are labeled by the new length.
+Top: Objective value (thin solid line) and lower bound (thick solid line) for CORELS.
+%as a function of wall clock time (log scale).
 %
-CORELS quickly the optimal value (star marker),
-and certifies optimality when the lower bound matches the objective value.
+Numbered hatch marks
+%along the objective
+indicate when the length of the best known rule list changes,
+and are labeled by the new length.
 %
-We also plot the lower bound (dashed line) from a separate execution
-of CORELS that does not leverage the equivalent points bound.
+%CORELS quickly the optimal value (star marker),
+%and certifies optimality when the lower bound matches the objective value.
+A star marks the optimum.
 %
-The large gap between this lower bound and the optimum
-demonstrates that this execution is far from complete.
+% A separate execution of
+CORELS without the equivalent points bound remains from complete,
+and its lower bound (dashed line) far from the optimum.
 %
-%(For clarity, we do not plot the corresponding trace of the objective value.)
-%
-%Missing: horizontal lines and x-ticks for CART and C4.5.
-%
-Bottom:
-$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$
-as a function of wall clock time,
-where~$\Remaining(\CurrentObj, \Queue)$ is the upper bound
-from Theorem~\ref{thm:remaining-eval-fine}
-on the size of the remaining search space.}
+Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
+%as a function of wall clock time,
+where~$\Remaining(\CurrentObj, \Queue)$
+is the upper bound on remaining search space size
+(Theorem~\ref{thm:remaining-eval-fine}).
+}
 \label{fig:objective}
 \end{figure}
 
@@ -210,24 +213,23 @@ equiv. pts. bound & $>$134 & $>$7168* & $>$800 & $>$789 & $\ge$10
 \vspace{5mm}
 \caption{Per-component performance improvement.
 %
-The columns report the total execution time (minutes),
-time to optimum (seconds), number of queue insertions (millions),
-maximum queue size (millions), and maximum evaluated prefix length.
+The columns report total execution time,
+time to optimum, number of queue insertions,
+maximum queue size, and maximum evaluated prefix length.
 %
-The first row corresponds to our full CORELS algorithm,
-and subsequent rows to variants that each exclude a specific
-implementation optimization or bound removed.
+The first row shows CORELS; subsequent rows show variants
+that each remove a specific implementation optimization or bound.
 %
-(We are not measuring the cumulative effects of removing a sequence of components.)
+%(We are not measuring the cumulative effects of removing a sequence of components.)
 %
 All rows represent complete executions, except for the final row,
-in which each execution was terminated due to memory constraints,
+in which each execution was terminated %due to memory constraints,
 %once the size of the cache reached ${8 \times 10^8}$ elements,
 after consuming 390-410GB RAM.
 %
-In all but the final row and column, we report averages
-(with standard deviations, in parentheses) over 10 cross-validation folds;
-in the final row, we report thresholds that reflect minimum values across folds. \\
+In all but the final row and column, we report means
+(and standard deviations) over 10 cross-validation folds;
+in the final row, we report thresholds that reflect minimum values across folds. %\\
 %
 *~Only 4 out of 10 folds achieve the optimum.
 }
