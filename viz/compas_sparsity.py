@@ -7,7 +7,7 @@ import tabular as tb
 plt.ion()
 
 z = tb.tabarray(SVfile='../eval/compas_sparsity.csv')
-y = tb.tabarray(SVfile='../eval/compas_sparsity-ela.csv', names=z.dtype.names)
+y = tb.tabarray(SVfile='../eval/compas_sparsity-CORELS.csv', names=z.dtype.names)
 
 x = z[z['Method'] != 'CORELS'].rowstack(y[y['Method'] == 'CORELS'])
 
