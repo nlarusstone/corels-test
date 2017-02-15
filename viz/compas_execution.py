@@ -30,12 +30,14 @@ fs = 16 # fontsize
 #log_dir = '../logs/'
 #log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
 #'for-%s-curious_lb-with_prefix_perm_map-no_minor-max_num_nodes=700000000-c=0.0050000-v=1-f=1000.txt']
+#fold = 0
 
 # log files generated on beepboop
 # no-minor execution using just under 400GB RAM when halted
 log_dir = '../logs/keep/'
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=800000000-c=0.0050000-v=1-f=1000.txt']
+fold = 1
 
 ftag = 'compas_execution'
 
@@ -43,7 +45,6 @@ ntot = len(log_root_list)
 
 pylab.ion()
 
-fold = 0
 tname = 'compas_%d_train.out' % fold
 log_fname_x = log_root_list[0] % tname
 log_fname_y = log_root_list[-1] % tname
@@ -73,10 +74,10 @@ ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
 
 ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], 'c-', linewidth=lw)
 ax1.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], 'b-', linewidth=lw*2)
-ax1.semilogx(y['total_time'][2:], y['current_lower_bound'][2:], 'm--', linewidth=lw*2)
+ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], 'm--', linewidth=lw*2)
 ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], 'c-', linewidth=lw)
 #ax1.semilogx([tmin, tmin], [0, opt], 'k:', linewidth=lw)
-ax1.semilogx(tmin, opt + 0.025, 'k*', markersize=10)
+ax1.semilogx(tmin, opt + 0.035, 'k*', markersize=10)
 ax1.semilogx(tmin, opt, 'k|', markeredgewidth=lw)
 
 ip = (x['tree_prefix_length'][1:] != x['tree_prefix_length'][:-1]).nonzero()[0] + 1
@@ -91,18 +92,22 @@ pylab.ylabel('Value', fontsize=fs)
 pylab.title('Execution progress', fontsize=fs)
 pylab.xticks(fontsize=fs)
 pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
-pylab.axis([10**-4, 10**4, 0, 0.5])
+pylab.axis([x['total_time'][2], 10**4, 0, 0.52])
 pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (w/o  equivalent points bound)'], loc=(10**-0.6, 0.15), fontsize=fs-2, frameon=False)
 
 ax2 = pylab.subplot2grid((24, 20), (13, 1), colspan=19, rowspan=8)
 
 yremaining = y['log_remaining_space_size'].copy()
 yremaining[yremaining > yremaining[0]] = yremaining[0]
-ax2.semilogx(y['total_time'][2:], yremaining[2:], 'm--', linewidth=lw*2)
+ax2.semilogx(y['total_time'][1:], yremaining[1:], 'm--', linewidth=lw*2)
 
 xremaining = x['log_remaining_space_size'].copy()
 xremaining[xremaining > xremaining[0]] = xremaining[0]
 ax2.semilogx(x['total_time'][2:ii+1], xremaining[2:ii+1], 'b-', linewidth=lw*2)
+
+yremaining = y['log_remaining_space_size'].copy()
+yremaining[yremaining > yremaining[0]] = yremaining[0]
+ax2.semilogx(y['total_time'][1:], yremaining[1:], 'm--', linewidth=lw*2)
 
 pylab.title('Size of remaining search space', fontsize=fs)
 pylab.xlabel('Time (s)', fontsize=fs)
@@ -110,6 +115,6 @@ pylab.ylabel('log10(Size)', fontsize=fs)
 pylab.xticks(fontsize=fs)
 pylab.yticks(range(0, 160, 25), fontsize=fs)
 pylab.legend(['w/o equivalent point bound', 'CORELS'], loc='center right', fontsize=fs-2, frameon=False)
-pylab.axis([10**-4, 10**4, 0, 161])
+pylab.axis([x['total_time'][2], 10**4, 0, 170])
 pylab.draw()
 pylab.savefig('../figs/%s-remaining-space.pdf' % ftag)
