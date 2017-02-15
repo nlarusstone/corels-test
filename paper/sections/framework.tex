@@ -3,9 +3,14 @@
 \subsection{Rule lists for binary classification}
 \label{sec:setup}
 
+\begin{arxiv}
 We restrict our setting to binary classification,
 where rule lists are Boolean functions;
 this framework is straightforward to generalize to multi-class classification.
+\end{arxiv}
+\begin{kdd}
+We restrict our setting to binary classification.
+\end{kdd}
 %
 Let~${\{(x_n, y_n)\}_{n=1}^N}$ denote training data,
 where ${x_n \in \{0, 1\}^J}$ are binary features and ${y_n \in \{0, 1\}}$ are labels.
@@ -82,7 +87,7 @@ ${\RL = (\Prefix, \Labels, \Default, K)}$,
 where we define ${\Prefix = (p_1, \dots, p_K)}$ to be $\RL$'s prefix,
 ${\Labels = (q_1, \dots, q_K) \in \{0, 1\}^K}$~gives
 the label predictions associated with~$\Prefix$,
-and we call ${\Default \in \{0, 1\}}$ the default label prediction.
+and ${\Default \in \{0, 1\}}$ is the default label prediction.
 
 Let ${\Prefix = (p_1, \dots, p_k, \dots, p_K)}$ be an antecedent list,
 then for any ${k \le K}$, we define ${\Prefix^k = (p_1, \dots, p_k)}$
@@ -115,7 +120,13 @@ We say that an antecedent~$p_k$ of antecedent list~$\Prefix$ captures~$x_n$
 in the context of~$\Prefix$ if~$p_k$ is the first antecedent in~$\Prefix$ that
 evaluates to true for~$x_n$.
 %
-We also say that an antecedent list captures those data captured by its antecedents;
+\begin{arxiv}
+We also say that an
+\end{arxiv}
+\begin{kdd}
+An
+\end{kdd}
+antecedent list captures those data captured by its antecedents;
 for a rule list~${\RL = (\Prefix, \Labels, \Default, K)}$,
 data not captured by the prefix~$\Prefix$
 are classified according to the default label prediction~$\Default$.
@@ -167,7 +178,7 @@ to be the normalized support of~$\beta$ in the context of~$\Prefix$,
 \label{eq:support-context}
 \end{align}
 
-Finally, we address how empirical data constrains rule lists.
+Next, we address how empirical data constrains rule lists.
 %
 Given training data~${(\x, \y)}$,
 an antecedent list ${\Prefix = (p_1, \dots, p_K)}$
@@ -185,18 +196,14 @@ not captured by~$\Prefix$.
 In the remainder of our presentation, whenever we refer to a rule list with a
 particular prefix, we implicitly assume these empirically determined label predictions.
 
-\begin{arxiv}
-\subsection{Rule mining}
-\label{sec:rule-mining}
-
-Before proceeding, we describe our approach to rule mining,
-which follows the methodology taken by~\citet{LethamRuMcMa15}
-and~\citet{YangRuSe16} \dots
-
+Finally, we note that our approach to rule mining
+follows the methodology taken by~\citet{LethamRuMcMa15} and~\citet{YangRuSe16}.
+%
 One of the results we prove later implies a constraint on the rules
 we need to generate -- they must have at least some minimum support
 given by the lower bound in Theorem~\ref{thm:min-capture}.
 
+\begin{arxiv}
 \subsection{Rule list representation and bit vector operations}
 Something along these lines... look at~\citet{YangRuSe16}
 \end{arxiv}
@@ -223,7 +230,13 @@ incorrectly predicted by~$\RL$.
 %
 In our setting, the regularization parameter~${\Reg \ge 0}$ is a small constant;
 \eg ${\Reg = 0.01}$ can be thought of as adding a penalty equivalent to misclassifying~$1\%$
-of data when increasing a rule list's length by one association rule.
+of data when increasing a rule list's length
+\begin{arxiv}
+by one association rule.
+\end{arxiv}
+\begin{kdd}
+by~one.
+\end{kdd}
 %
 %As noted in~\S\ref{sec:setup}, a prefix~$\Prefix$ and training data together
 %fully specify a rule list~${\RL = (\Prefix, \Labels, \Default, K)}$,
