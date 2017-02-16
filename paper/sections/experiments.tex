@@ -44,56 +44,51 @@ as a function of sparsity over 10 folds, for one big dataset (box plots).}
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 \begin{arxiv}
-\includegraphics[width=0.75\textwidth]{figs/compas-sparsity.pdf}
+\includegraphics[width=0.75\textwidth]{figs/compas-sparsity-training.pdf}
 \end{arxiv}
 \begin{kdd}
 % left lower right upper
-\includegraphics[trim={10mm, 0mm, 20mm, 10mm}, width=0.45\textwidth]{figs/compas-sparsity.pdf}
+\includegraphics[trim={10mm, 0mm, 20mm, 10mm}, width=0.45\textwidth]{figs/compas-sparsity-training.pdf}
+\end{kdd}
+\begin{arxiv}
+\includegraphics[width=0.5\textwidth]{figs/frisk-sparsity-training.pdf}
+\end{arxiv}
+\begin{kdd}
+% left lower right upper
+\includegraphics[trim={10mm, 10mm, 20mm, 0mm}, width=0.45\textwidth]{figs/frisk-sparsity-training.pdf}
 \end{kdd}
 \end{center}
-\caption{Test accuracy as a function of model size.
+\caption{Training and test accuracy as a function of model size.
 %
 We compare CORELS against other tree (CART, C4.5)
 and rule list (RIPPER, SBRL) learning algorithms.
 %
 For CORELS, CART, and C4.5, we vary the regularization parameter~$\Reg$,
 and complexity parameters~$cp$ and~$C$, respectively.
+% and are indicated within parentheses in the legend.
 %
-Markers and error bars indicate means and standard deviations, respectively,
-across cross-validation folds.
+Legend markers and error bars indicate means and standard deviations,
+respectively, of test error across cross-validation folds.
 %
-None of the models exhibit significant overfitting;
-mean training accuracy never exceeds mean test accuracy
-by more than about 0.01 (not pictured).
-}
-\label{fig:sparsity}
-\end{figure}
-
-\begin{figure}[b!]
-\begin{center}
-%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
-\begin{arxiv}
-\includegraphics[width=0.5\textwidth]{figs/frisk-sparsity.pdf}
-\end{arxiv}
-\begin{kdd}
-% left lower right upper
-\includegraphics[trim={20mm, 10mm, 20mm, 15mm}, width=0.45\textwidth]{figs/frisk-sparsity.pdf}
-\end{kdd}
-\end{center}
-\caption{Test accuracy as a function of model size,
-as in Figure~\ref{fig:sparsity}.
+Small circles mark associated training error means.
 %
-We use the New York Civil Liberties Union's 2014 stop-and-frisk dataset~\cite{nyclu:2014},
-to predict whether a weapon will be found on stopped individual
-who is frisked or searched.
+Top:  Two-year recidivism prediction for the ProPublica COMPAS dataset.
 %
-We do depict neither RIPPER, which we were unable to execute,
-nor C4.5, which finds models with $>1000$ leaves
+None of the models exhibit significant overfitting.
+%mean training accuracy never exceeds mean test accuracy
+%by more than about 0.01.
+%
+Bottom:  We use the New York Civil Liberties Union's 2014 stop-and-frisk
+dataset~\cite{nyclu:2014}, to predict whether a weapon will be found
+on a stopped individual who is frisked or searched.
+%
+We depict neither RIPPER, which we were unable to execute,
+nor C4.5, which finds models with over~1000 leaves
 and dramatically overfits for all tested parameters.
 %
 The other models do not significantly overfit, except for CART with ${cp = 0.001}$.
 }
-\label{fig:frisk-sparsity}
+\label{fig:sparsity}
 \end{figure}
 
 % CART implementation in R's rpart
@@ -146,7 +141,7 @@ as the search space steadily shrinks.
 \end{arxiv}
 \begin{kdd}
 % left lower right upper
-\includegraphics[trim={20mm, 25mm, 20mm, 10mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
+\includegraphics[trim={20mm, 25mm, 20mm, 15mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
 \end{kdd}
 \end{center}
 \caption{Executions of CORELS with (solid lines) and without
@@ -240,7 +235,7 @@ prefixes of a given length in the queue during the algorithm's execution.
 \begin{kdd}
 %\includegraphics[width=0.5\textwidth]{figs/ela_compas-queue.pdf}
 % left lower right upper
-\includegraphics[trim={30mm 15mm 35mm 20mm}, width=0.45\textwidth]{figs/kdd_compas_compare_small-queue.pdf}
+\includegraphics[trim={30mm 15mm 35mm 10mm}, width=0.45\textwidth]{figs/kdd_compas_compare_small-queue.pdf}
 \end{kdd}
 \end{center}
 \caption{Queue composition. % logical queue

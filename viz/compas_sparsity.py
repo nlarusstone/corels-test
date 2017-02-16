@@ -95,6 +95,7 @@ plt.yticks(fontsize=fs)
 plt.xlabel('Model size', fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
 plt.legend(legend, loc='lower right', fontsize=fs-3, numpoints=1, ncol=3)
+plt.title('Two-year recidivism prediction (ProPublica dataset)', fontsize=fs)
 
 ax.set_xlim(0, 36)
 
