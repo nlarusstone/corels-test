@@ -62,7 +62,7 @@ then extension of this rule list could possibly be optimal,
 therefore we do not insert the new rule list into the tree or queue.
 
 Each time we update the minimum objective, we garbage collect the trie, by walking it
-from the root the leaves, deleting all subtrees of any node with lower bound larger than the current
+from the root to the leaves, deleting all subtrees of any node with lower bound larger than the current
 minimum objective. If we encounter a node with no children, we prune upwards--deleting that
 node and recursively traversing the tree towards the root, deleting any childless nodes.
 This garbage collection allows us to constrain the trie's memory consumption, though in our
