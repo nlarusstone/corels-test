@@ -23,8 +23,13 @@ is a ${(K+1)}$-tuple consisting of~$K$ distinct association rules,
 ${r_k = p_k \rightarrow q_k}$, for ${k = 1, \dots, K}$,
 followed by a default rule~$r_0$.
 %
-Figure~\ref{fig:rule-list} illustrates~$\RL$,
-which for clarity, we sometimes call a $K$-rule list.
+Figure~\ref{fig:rule-list} illustrates
+\begin{arxiv}
+a rule list, which for clarity, we sometimes call a $K$-rule list.
+\end{arxiv}
+\begin{kdd}
+a rule list.
+\end{kdd}
 %
 An association rule~${r = p \rightarrow q}$ is an implication
 corresponding to the conditional statement, ``if~$p$, then~$q$.''
@@ -43,7 +48,51 @@ The final default rule~$r_0$ in a rule list can be thought of
 as a special association rule~${p_0 \rightarrow q_0}$
 whose antecedent~$p_0$ simply asserts true.
 
-Let ${\RL = (r_1, r_2, \dots, r_K, r_0)}$ be a $K$-rule list,
+\begin{figure}[t!]
+%\begin{subfigure}{0.18\textwidth}
+%\begin{algorithmic}
+%\normalsize
+%\State \bif $p_1$ \bthen $q_1$
+%\State \belif $p_2$ \bthen $q_2$
+%\State \dots
+%\State \belif $p_K$ \bthen $q_K$
+%\State \belse $q_0$.
+%\end{algorithmic}
+%\end{subfigure}
+%\begin{subfigure}{0.28\textwidth}
+\begin{algorithmic}
+\normalsize
+\State \bif $(age=23-25) \wedge (priors=2-3)$ \bthen $yes$
+\State \belif $(age=18-20)$ \bthen $yes$
+\State \belif $(sex=male) \wedge (age=21-22)$ \bthen $yes$
+\State \belif $(priors>3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+%\vspace{-2mm}
+%\end{subfigure}
+%\caption{A $K$-rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$, where
+%each rule ${r_k = p_k \rightarrow q_k}$, for all ${k = 0, \dots K}$.
+%We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
+%where ${\Prefix = (p_1, \dots, p_K)}$
+%and ${\Labels = (q_1, \dots, q_K)}$.}
+\caption{An example 4-rule list ${\RL = (r_1, r_2, r_3, r_4, r_0)}$
+that predicts two-year recidivism for the ProPublica dataset.
+Each rule is of the form ${r_k = p_k \rightarrow q_k}$,
+for all ${k = 0, \dots, 4}$.
+We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
+where ${\Prefix = (p_1, p_2, p_3, p_4)}$, ${\Labels = (1, 1, 1, 1)}$,
+${\Default = 0}$, and ${K=4}$.
+}
+\label{fig:rule-list}
+\end{figure}
+
+Let ${\RL = (r_1, r_2, \dots, r_K, r_0)}$ be a
+\begin{arxiv}
+$K$-rule list,
+\end{arxiv}
+\begin{kdd}
+rule list,
+\end{kdd}
 where ${r_k = p_k \rightarrow q_k}$ for each ${k = 0, \dots, K}$.
 %
 We introduce a useful alternate rule list representation:
@@ -174,45 +223,6 @@ follows the methodology taken by~\citet{LethamRuMcMa15} and~\citet{YangRuSe16}.
 One of the results we prove later implies a constraint on the rules
 we need to generate -- they must have at least some minimum support
 given by the lower bound in Theorem~\ref{thm:min-capture}.
-
-\begin{figure}[t!]
-%\begin{subfigure}{0.18\textwidth}
-%\begin{algorithmic}
-%\normalsize
-%\State \bif $p_1$ \bthen $q_1$
-%\State \belif $p_2$ \bthen $q_2$
-%\State \dots
-%\State \belif $p_K$ \bthen $q_K$
-%\State \belse $q_0$.
-%\end{algorithmic}
-%\end{subfigure}
-%\begin{subfigure}{0.28\textwidth}
-\begin{algorithmic}
-\normalsize
-\State \bif $(age=23-25) \wedge (priors=2-3)$ \bthen $yes$
-\State \belif $(age=18-20)$ \bthen $yes$
-\State \belif $(sex=male) \wedge (age=21-22)$ \bthen $yes$
-\State \belif $(priors>3)$ \bthen $yes$
-\State \belse $no$
-\end{algorithmic}
-%\vspace{-2mm}
-%\end{subfigure}
-%\caption{A $K$-rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$, where
-%each rule ${r_k = p_k \rightarrow q_k}$, for all ${k = 0, \dots K}$.
-%We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
-%where ${\Prefix = (p_1, \dots, p_K)}$
-%and ${\Labels = (q_1, \dots, q_K)}$.}
-\caption{An example 4-rule list ${\RL = (r_1, r_2, r_3, r_4, r_0)}$
-that predicts two-year recidivism for the ProPublica dataset.
-Each rule is of the form ${r_k = p_k \rightarrow q_k}$,
-for all ${k = 0, \dots, 4}$.
-We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
-where ${\Prefix = (p_1, p_2, p_3, p_4)}$, ${\Labels = (1, 1, 1, 1)}$,
-${\Default = 0}$, and ${K=4}$.
-}
-\label{fig:rule-list}
-\end{figure}
-
 
 \begin{arxiv}
 \subsection{Rule list representation and bit vector operations}

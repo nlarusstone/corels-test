@@ -45,7 +45,14 @@ CART \citep{Breiman84} and C4.5 \citep{Quinlan93} do not perform exploration of 
 Most rule learning methods are not designed for optimality or interpretability, but for computational speed and/or accuracy. In \textit{associative classification} \citep{Vanhoof10,Liu98,Li01,Yin03}, classifiers are often formed greedily from the top down as rule lists, or they are formed by taking the simple union of pre-mined rules, whereby any observation that fits into any of the rules is classified as positive. In \textit{inductive logic programming} \citep{muggleton1994inductive}, algorithms form disjunctive normal form patterns via a set of operations (rather than using optimization). These approaches are not appropriate for obtaining a guarantee of optimality. Methods for decision list learning construct rule lists iteratively in a greedy way
 \citep{Rivest87,Sokolova03,Marchand05,RudinLeMa13,Goessling2015}, which again have no guarantee on optimality, and tend not to produce optimal rule lists in general. Some methods allow for interpretations of single rules, without constructing rule lists \citep{McCormick:2011ws}.
 
-There is a tremendous amount of related work in other subfields that are too numerous to discuss at length here. We have not discussed \textit{rule mining} algorithms since they are part of an interchangeable preprocessing step for our algorithm and are deterministically fast (that is, they will not generally slow our algorithm down). We also did not discuss methods that create disjunctive normal form models, e.g., logical analysis of data, and many associative classification methods. 
+There is a tremendous amount of related work in other subfields that
+\begin{arxiv}
+are too numerous to discuss at length here.
+\end{arxiv}
+\begin{kdd}
+we do not discuss here.
+\end{kdd}
+We have not discussed \textit{rule mining} algorithms since they are part of an interchangeable preprocessing step for our algorithm and are deterministically fast (\ie they will not generally slow our algorithm down). We also did not discuss methods that create disjunctive normal form models, \eg logical analysis of data, and many associative classification methods. 
 
 \textit{Related problems with interpretable lists of rules:} Beyond trees that are optimized for accuracy and sparsity, rule lists have been developed that have exotic types of constraints, and for various applications.
 For example, Falling Rule Lists \citep{WangRu15} are constrained to have decreasing probabilities down the list as are rule lists for dynamic treatment regimes \citep{ZhangEtAl15} and cost-sensitive dynamic treatment regimes \citep{LakkarajuRu17}. Both Wang et. al \cite{WangRu15} and Lakkaraju et. al \cite{LakkarajuRu17} use Monte Carlo searches through the space of rule lists. The method proposed in this work could potentially be adapted to handle these kinds of interesting problems. We are currently working on bounds for Falling Rule Lists \citep{ChenRu17} similar to those presented here.
