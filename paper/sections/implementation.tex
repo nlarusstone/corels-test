@@ -18,7 +18,7 @@ We implement the symmetry-aware map using the C++ STL unordered\_map, which
 % We have two different versions of the map.
 % Both versions 
 maps all permutations of a set of rules to a key, whose value
-contains the best ordering of those rules (i.e., the one with the smallest objective).
+contains the best ordering of those rules (\ie the one with the smallest objective).
 Every rule has a rule id number, and we call the numerically sorted order of a set of rules its
 canonical order, thus, by quering a set of rules by its canonical order, all
 permutations map to the same key.
@@ -37,7 +37,7 @@ Before inserting permutation $P_i$ into the symmetry-aware map, we check
 if there exists a permutation $P_j$ of $P_i$ already in the map.
 If the objective of $P_i$ is better than the objective of $P_j$,
 we update the map and remove $P_j$ and its subtree from the trie.
-Otherwise we do nothing (i.e., we do not insert $P_i$ into the symmetry-aware map
+Otherwise we do nothing (\ie we do not insert $P_i$ into the symmetry-aware map
 or the trie).
 
 We use a queue to store all of the leaves of the trie that still need to be explored.
