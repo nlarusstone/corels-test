@@ -53,13 +53,23 @@ as a function of sparsity over 10 folds, for one big dataset (box plots).}
 \end{center}
 \caption{Test accuracy as a function of model size.
 %
-We compare CORELS against other tree (C4.5, CART)
+We compare CORELS against other tree (CART, C4.5)
 and rule list (RIPPER, SBRL) learning algorithms.
 %
-For CORELS, C4.5, and CART, we vary parameters~$\Reg$, $C$, and~$cp$, respectively.
+For CORELS, CART, and C4.5, we vary the regularization parameter~$\Reg$,
+and complexity parameters~$cp$ and~$C$, respectively.
+%
+Markers and error bars indicate means and standard deviations, respectively,
+across cross-validation folds.
+%
+No models exhibit significant overfitting -- training accuracy
 }
 \label{fig:sparsity}
 \end{figure}
+
+% CART implementation in R's rpart
+% C4.5 = J48 in RWeka
+% RIPPER in R's caret
 
 Our experimental analysis addresses four questions:
 (1) How does CORELS' accuracy compare to other algorithms?
