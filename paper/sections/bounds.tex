@@ -421,11 +421,20 @@ evaluated by Algorithm~\ref{alg:branch-and-bound}, given the state space of
 all rule lists formed from a set~$\RuleSet$ of~$M$ rules.
 %
 For any set~$\RuleSet$ of $M$ rules,
+\begin{arxiv}
 \begin{align}
 \TotalRemaining(\RuleSet) \le \sum_{k=0}^K \frac{M!}{(M - k)!},
 \label{eq:size-naive}
 \end{align}
 where ${K = \min(\lfloor 1/2 \Reg \rfloor, M)}$.
+\end{arxiv}
+\begin{kdd}
+\begin{align}
+\TotalRemaining(\RuleSet) \le \sum_{k=0}^K \frac{M!}{(M - k)!},
+\quad \text{where} \quad K = \min(\lfloor 1/2 \Reg \rfloor, M).
+\label{eq:size-naive}
+\end{align}
+\end{kdd}
 \end{proposition}
 
 \begin{proof}
