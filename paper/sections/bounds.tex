@@ -1499,11 +1499,13 @@ lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$
 \end{align}
 \end{corollary}
 
+\begin{arxiv}
 \begin{proof}
 Since prefixes~$\Prefix$ and~$\PrefixB$ contain
 the same antecedents, they both capture the same data.
 Thus, we can apply Theorem~\ref{thm:equivalent}.
 \end{proof}
+\end{arxiv}
 
 Thus if prefixes~$\Prefix$ and~$\PrefixB$ have the same antecedents,
 up to a permutation, and their objective lower bounds
@@ -1525,7 +1527,10 @@ Since every subset of~$K$ antecedents generates an equivalence
 class of~$K!$ prefixes equivalent up to permutation, permutation-aware
 garbage collection dramatically prunes the search space.
 
-First, notice that Algorithm~\ref{alg:branch-and-bound} describes a
+\begin{arxiv}
+First, notice that
+\end{arxiv}
+Algorithm~\ref{alg:branch-and-bound} describes a
 breadth-first exploration of the state space of rule lists.
 %
 Now suppose we integrate permutation-aware garbage collection into
