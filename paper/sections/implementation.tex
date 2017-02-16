@@ -4,7 +4,7 @@
 \input{sections/incremental}
 
 We implement our algorithm using a collection of optimized data structures:
-a trie, a symmetry-aware map, and a queue.
+a trie (prefix tree), a symmetry-aware map, and a queue.
 The trie acts like a cache, keeping track of rule lists we have already evaluated.
 Each node in the trie contains metadata associated with that corresponding rule list;
 the metadata consists of bookkeeping information such as what child rule lists are feasible and

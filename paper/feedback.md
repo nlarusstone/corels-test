@@ -7,7 +7,8 @@ other decision tree methods but more importantly our model size is much smaller 
 I don't know how best to communicate this but you get the idea!
 
 ~~2. Intro: "custom curiosity function" -- we don't define nor use this anywhere in the paper.~~
-*Now: "a priority queue whose priority metric is customizable,"*
+
+*Now "a priority queue whose priority metric is customizable,"*
 
 3. In the example in equation 2, did you mean to put
 cap(x_n, {p_k} | d_p) since you say that \beta should be a set?
@@ -18,6 +19,7 @@ This is not a big deal though. But supp(\beta, x) is defined in terms of cap(x_n
 ~~5. Page 5: missing section reference?
 "...we can furthermore apply it in the context of rule mining (§??).
 Specifically, it implies that we should only mine rules with normalized..."~~
+
 *Now refers to 3.1*
 
 6. Experiments: We say "We first ran a 10-fold cross-validation experiment using CORELS and eight other algorithms..."
@@ -48,13 +50,17 @@ The footnote mentions a long version of this report without saying where it is
 
 ## p5
 ~~Theres a (??) near the bottom of the right column -- and I'm not sure what it's referring to.~~
+
 *Now refers to 3.1*
 
 ## p6
 We say "permutation-aware garbage collection" at the bottom of the left column even though we refer to it as "symmetry-aware garbage collection" in the rest of the paper.
 
 ## p7
-Bottom of left column: we refer to a trie, a symmetry-aware map... -- do we want to call it a prefix-trie?
+~~Bottom of left column: we refer to a trie, a symmetry-aware map... -- do we want to call it a prefix-trie?~~
+
+*Now says "trie (prefix tree)" the first time it's mentioned*
+
 pp "Mapping our algorithm": we mention checking that the lower bound is less than the minimum objective -- should we mention that we check all of the bounds we just proved above?
 There seems to be a lot of whitespace above section 5 Experiments
 

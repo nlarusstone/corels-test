@@ -29,6 +29,7 @@ import numpy as np
 import tabular as tb
 
 import mine
+import utils
 
 
 def age_func(a):
@@ -123,7 +124,7 @@ bout = os.path.join('..', 'data', 'adult-binary.csv')
 
 seed = sum([1, 4, 21, 12, 20]) # a:1, d:4, u:21, l:12, t:20
 num_folds = 10
-max_cardinality = 2
+max_cardinality = 1
 min_support = 0.001
 labels = ['<=50K', '>50K']
 minor = True
