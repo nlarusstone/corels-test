@@ -6,7 +6,8 @@ other decision tree methods but more importantly our model size is much smaller 
 (thus making our solutions more interpretable?).
 I don't know how best to communicate this but you get the idea!
 
-2. Intro: "custom curiosity function" -- we don't define nor use this anywhere in the paper.
+~~2. Intro: "custom curiosity function" -- we don't define nor use this anywhere in the paper.~~
+*Now: "a priority queue whose priority metric is customizable,"*
 
 3. In the example in equation 2, did you mean to put
 cap(x_n, {p_k} | d_p) since you say that \beta should be a set?
