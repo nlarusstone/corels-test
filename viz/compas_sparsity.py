@@ -38,7 +38,7 @@ cdict = {'CORELS': 'r', 'C4.5': 'c', 'CART': 'gray', 'RIPPER': 'k', 'SBRL': 'pur
 mdict = {'CORELS': 's', 'C4.5': '^', 'CART': 'd', 'RIPPER': 'v', 'SBRL': 'o'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
 mfcdict = {'CORELS': 'coral', 'C4.5': 'paleturquoise', 'CART': 'white', 'RIPPER': 'lightgray', 'SBRL': 'plum'}
-msvec = np.array([12, 10, 8, 10, 10, 4, 6, 8, 10, 12, 4, 6, 8, 10, 12])
+msvec = np.array([12, 8, 4, 10, 10, 4, 6, 8, 10, 12, 4, 6, 8, 10, 12])
 mew = 2
 
 i = 0
@@ -50,7 +50,7 @@ for (method, xx, yy, w, h, ty, th) in data:
     if (w == 0):
         plt.plot(xx, yy, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc)
     else:
-        plt.errorbar(xx, yy, xerr=w, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc, capsize=0, elinewidth=1)
+        plt.errorbar(xx, yy, xerr=w, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc, capsize=4, elinewidth=2)
     i += 1
 
 i = 0
