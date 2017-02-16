@@ -69,6 +69,32 @@ by more than about 0.01 (not pictured).
 \label{fig:sparsity}
 \end{figure}
 
+\begin{figure}[b!]
+\begin{center}
+%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
+\begin{arxiv}
+\includegraphics[width=0.5\textwidth]{figs/frisk-sparsity.pdf}
+\end{arxiv}
+\begin{kdd}
+% left lower right upper
+\includegraphics[trim={20mm, 10mm, 20mm, 20mm}, width=0.45\textwidth]{figs/frisk-sparsity.pdf}
+\end{kdd}
+\end{center}
+\caption{Test accuracy as a function of model size,
+as in Figure~\ref{fig:sparsity}.
+%
+We use the New York Civil Liberties Union's 2014 stop-and-frisk dataset~\cite{nyclu:2014},
+to predict whether a weapon will be found on stopped individual
+who is frisked or searched.
+%
+We do not depict C4.5, which finds models with $>1000$ leaves
+and dramatically overfits for all tested parameters.
+%
+The other models do not significantly overfit, except for CART with ${cp = 0.001}$.
+}
+\label{fig:frisk-sparsity}
+\end{figure}
+
 % CART implementation in R's rpart
 % C4.5 = J48 in RWeka
 % RIPPER in R's caret
