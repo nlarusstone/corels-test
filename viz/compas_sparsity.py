@@ -22,7 +22,7 @@ ax = plt.subplot2grid((20, 1), (0, 1), colspan=1, rowspan=19)
 m.sort(order=['Method', 'C', 'cp', 'R'])
 s.sort(order=['Method', 'C', 'cp', 'R'])
 
-ind = range(10, 15) + range(5, 10) + range(5)
+ind = range(10, 15) + range(5, 10)[::-1] + range(5)
 m = m[ind].copy()
 s = s[ind].copy()
 
@@ -38,7 +38,7 @@ cdict = {'CORELS': 'r', 'C4.5': 'c', 'CART': 'gray', 'RIPPER': 'k', 'SBRL': 'pur
 mdict = {'CORELS': 's', 'C4.5': '^', 'CART': 'd', 'RIPPER': 'v', 'SBRL': 'o'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
 mfcdict = {'CORELS': 'coral', 'C4.5': 'paleturquoise', 'CART': 'white', 'RIPPER': 'lightgray', 'SBRL': 'plum'}
-msvec = np.array([12, 10, 8, 10, 10, 12, 10, 8, 6, 4, 12, 10, 8, 6, 4])
+msvec = np.array([12, 10, 8, 10, 10, 4, 6, 8, 10, 12, 4, 6, 8, 10, 12])
 mew = 2
 
 i = 0
