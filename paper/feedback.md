@@ -15,9 +15,10 @@ cap(x_n, {p_k} | d_p) since you say that \beta should be a set?
 4. Why not supp(x, \beta) (for definition notational consistency sake) and not supp(\beta, x)?
 This is not a big deal though. But supp(\beta, x) is defined in terms of cap(x_n, \beta).
 
-5. Page 5: missing section reference?
+~~5. Page 5: missing section reference?
 "...we can furthermore apply it in the context of rule mining (§??).
-Specifically, it implies that we should only mine rules with normalized..."
+Specifically, it implies that we should only mine rules with normalized..."~~
+*Now refers to 3.1*
 
 6. Experiments: We say "We first ran a 10-fold cross-validation experiment using CORELS and eight other algorithms..."
 But our figures only show results against C4.5, CART, RIPPER, and SBRL. Maybe we should stress that figure 2,3 only
@@ -46,9 +47,10 @@ The description of Algorithm 1 says "Branch-and-bound" but we used "Branch-and-c
 The footnote mentions a long version of this report without saying where it is
 
 ## p5
-Theres a (??) near the bottom of the right column -- and I'm not sure what it's referring to.
+~~Theres a (??) near the bottom of the right column -- and I'm not sure what it's referring to.~~
+*Now refers to 3.1*
 
-p6
+## p6
 We say "permutation-aware garbage collection" at the bottom of the left column even though we refer to it as "symmetry-aware garbage collection" in the rest of the paper.
 
 ## p7
