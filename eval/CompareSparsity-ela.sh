@@ -38,12 +38,10 @@ temp_f="random_file.txt"
 # done
 
 echo "\nRUNNING CORELS for all 10 folds of $dataset"
-#echo "using regularization = {0.005, 0.01, 0.02} for compas"
-#echo "using regularization = {0.01, 0.02, 0.04} for frisk"
-echo "using regularization = {0.0025, 0.01, 0.04} for frisk"
-#for R in 0.005 0.01 0.02; do
-#for R in 0.01 0.02 0.04; do
-for R in 0.0025 0.01 0.04; do
+echo "using regularization = {0.005, 0.01, 0.02} for compas"
+#echo "using regularization = {0.0025, 0.01, 0.04} for frisk"
+for R in 0.005 0.01 0.02; do
+#for R in 0.0025 0.01 0.04; do
     python eval_model.py $dataset --minor -c 2 -p 1 -r $R -n 100000000 --sparsity $outf >> $temp_f 2>&1
 done
 
