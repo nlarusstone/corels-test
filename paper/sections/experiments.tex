@@ -60,9 +60,6 @@ as a function of sparsity over 10 folds, for one big dataset (box plots).}
 \end{center}
 \caption{Training and test accuracy as a function of model size.
 %
-We compare CORELS against other tree (CART, C4.5)
-and rule list (RIPPER, SBRL) learning algorithms.
-%
 For CORELS, CART, and C4.5, we vary the regularization parameter~$\Reg$,
 and complexity parameters~$cp$ and~$C$, respectively.
 % and are indicated within parentheses in the legend.
@@ -72,15 +69,15 @@ respectively, of test error across cross-validation folds.
 %
 Small circles mark associated training error means.
 %
-Top:  Two-year recidivism prediction for the ProPublica COMPAS dataset.
+Top:  %Two-year recidivism prediction for the ProPublica COMPAS dataset.
+ProPublica dataset.
 %
 None of the models exhibit significant overfitting.
 %mean training accuracy never exceeds mean test accuracy
 %by more than about 0.01.
 %
-Bottom:  We use the New York Civil Liberties Union's 2014 stop-and-frisk
-dataset~\cite{nyclu:2014}, to predict whether a weapon will be found
-on a stopped individual who is frisked or searched.
+Bottom:  %Weapon prediction for the NYCLU stop-and-frisk dataset.
+NYCLU dataset.
 %
 We depict neither RIPPER, which we were unable to execute,
 nor C4.5, which finds models with over~1000 leaves
@@ -109,21 +106,28 @@ Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
 %
 \begin{kdd}
-\footnote{Due to page constraints, we only present a subset of experiments
-from an extensive evaluation contained in a long version of this~report.}
+\footnote{Due to page constraints, we only present a subset of experiments from
+an extensive evaluation contained in a long version of this report (in preparation).}
 \end{kdd}
 
 We first ran a 10-fold cross validation experiment using CORELS and eight other algorithms:
-GLM, SVM, AdaBoost, CART, C4.5, RF, RIPPER, and scalable rule lists (SBRL).
+GLM, SVM, AdaBoost, CART, C4.5, RF, RIPPER,~\footnote{We use publicly available R implementations, with default parameter settings.} and scalable rule lists (SBRL).~\footnote{https://github.com/Hongyuy/sbrlmod}
 There were no statistically significant differences in the accuracies of the
 algorithms. In fact, the difference between folds was far larger than the difference
 between algorithms. We conclude that CORELS produces models whose accuracy is comparable
 to those found via other algorithms.
 %
-Figure~\ref{fig:rule-list} shows an optimal rule list learned in one of the folds.
+Figure~\ref{fig:rule-list} shows an example optimal rule list that CORELS learns
+for predicting two-year recidivism, using the ProPublica dataset.
+
+Figure~\ref{fig:sparsity} summarizes differences in accuracy and model size
+for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
 %
-Figure~\ref{fig:sparsity} shows that CORELS
-can learn short rule lists without sacrificing accuracy.
+Here, we also show results using a 2014 stop-and-frisk dataset from the
+New York Civil Liberties Union (NYCLU)~\cite{nyclu:2014}, for predicting whether
+a weapon will be found on a stopped individual who is frisked or searched.
+%
+In both contexts, CORELS can learn short rule lists without sacrificing accuracy.
 
 Figure~\ref{fig:objective} illustrates how both the objective and the size of
 the remaining search space decrease as CORELS executes.

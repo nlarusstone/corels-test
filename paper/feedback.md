@@ -31,9 +31,15 @@ Specifically, it implies that we should only mine rules with normalized..."~~
 
 ## Experiments
 
-We say "We first ran a 10-fold cross-validation experiment using CORELS and eight other algorithms..."
+~~We say "We first ran a 10-fold cross-validation experiment using CORELS and eight other algorithms..."
 But our figures only show results against C4.5, CART, RIPPER, and SBRL. Maybe we should stress that figure 2,3 only
-shows numbers for methods for which we can determine a (straightforward and comparable) model size?
+shows numbers for methods for which we can determine a (straightforward and comparable) model size?~~
+
+*Now there's a paragraph: "Figure 2 summarizes differences in accuracy and model size
+for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
+Here, we also show results using a 2014 stop-and-frisk dataset from the
+New York Civil Liberties Union (NYCLU)~\cite{nyclu:2014}, for predicting whether
+a weapon will be found on a stopped individual who is frisked or searched."*
 
 # From Nicholas
 
@@ -45,6 +51,7 @@ pp3: we mention the ProPublica article and then Larson et al. without connecting
 Also, the end of that paragraph ends with a run-on sentence and should probably be split into 2 sentences.
 
 pp4: we mention we provide a collection of near-optimal solutions and the distance between each such solution -- we currently don't do that (though we could) and we never mention these near-optimal solutions again.
+
 Also, did we agree we wanted to say certificate?
 
 ## p2
@@ -63,6 +70,7 @@ Should the paragraph right before 3.2 be there? Seems a little out of place.
 
 ## p4
 The description of Algorithm 1 says "Branch-and-bound" but we used "Branch-and-cut" earlier
+
 The footnote mentions a long version of this report without saying where it is
 
 ## p5
