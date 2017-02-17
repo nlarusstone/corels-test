@@ -105,6 +105,8 @@ The description of Algorithm 1 says "Branch-and-bound" but we used "Branch-and-c
 say branch-and-bound and it's fine (just not something we wanted to emphasize, e.g., in the title).
 I could imagine only using "branch-and-bound"...*
 
+I would tend to prefer just using "branch-and-bound" unless there's a particular reason we say "branch-and-cut" in the following: 'and in particular, a special branch- and-cut algorithm, called Certi ably Optimal RulE ListS (CORELS).'
+
 ~~The footnote mentions a long version of this report without saying where it is~~
 
 *Now added "(in preparation)" for both such footnotes*
@@ -137,3 +139,5 @@ to aggressively prune the search space."*
 I printed in black and white and some of the differences in the figures can be hard to see (I don't know if this is a case we care about).
 
 *I do care! Which ones have issues?*
+
+Mainly in Fig. 3 (acc vs sparsity) the different techniques blend together because the shapes can be hard to distinguish. Also in Fig 5. the queue composition is really hard to tell apart because they're just different shades of gray.
