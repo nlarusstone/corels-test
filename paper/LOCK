@@ -2,10 +2,10 @@ kdd17.tex --
 arxiv.tex --
 
 intro --
-framework -- elaine
+framework --
 bounds --
 incremental --
-implementation --
+implementation -- elaine
 experiments --
 related work --
 
