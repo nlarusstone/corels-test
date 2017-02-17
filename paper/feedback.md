@@ -45,7 +45,9 @@ a weapon will be found on a stopped individual who is frisked or searched."*
 
 ## p1
 
-pp2: we list the same 3 references for two sentences in a row (3, 29, 30) -- maybe we should deduplicate this?
+~~pp2: we list the same 3 references for two sentences in a row (3, 29, 30) -- maybe we should deduplicate this?~~
+
+*Now refs appear once and sentences joined via semicolon*
 
 pp3: we mention the ProPublica article and then Larson et al. without connecting the two -- do we expect readers to look in our references each time we make a reference?
 Also, the end of that paragraph ends with a run-on sentence and should probably be split into 2 sentences.
