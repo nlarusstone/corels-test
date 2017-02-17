@@ -20,7 +20,7 @@ s = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.std, 
 #m[(m['Method'] == 'CORELS') & (m['R'] == 0.02)] = ('CORELS', 0, 0, 0.0025, '', 8., 0., .697)
 #s[(s['Method'] == 'CORELS') & (s['R'] == 0.02)] = ('CORELS', 0, 0, 0.0025, '', 1., 0., 0.02)
 
-fig = plt.figure(2, figsize=(11, 3.9))
+fig = plt.figure(2, figsize=(8, 3.5))
 plt.clf()
 ax = plt.subplot2grid((20, 1), (0, 1), colspan=1, rowspan=18)
 
@@ -111,11 +111,11 @@ for r in m:
         descr += ' (%s)' % ('%1.4f' % r['R']).strip('0')
     legend += [descr]
 
-fs = 16
+fs = 14
 plt.xticks(fontsize=fs)
 plt.yticks(fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
-plt.legend(legend, loc='lower right', fontsize=fs-4.5, numpoints=1, ncol=4, labelspacing=0.85, borderpad=.6, columnspacing=0.1, markerscale=0.9)
+plt.legend(legend, loc='lower right', fontsize=fs-3, numpoints=1, ncol=2, labelspacing=0.5, borderpad=.5, columnspacing=0.1, markerscale=0.6)
 plt.title('Weapon prediction (NYCLU stop-and-frisk dataset)', fontsize=fs)
 
 if log2:
@@ -128,7 +128,7 @@ else:
 if (with_training):
     plt.xticks(range(0, 56, 5), fontsize=fs)
     plt.yticks(np.arange(0.63, 0.76, 0.02), fontsize=fs)
-    ax.set_ylim(0.64, 0.75)
+    ax.set_ylim(0.63, 0.75)
     plt.show()
     plt.savefig('../figs/frisk-sparsity-training.pdf')
 else:
