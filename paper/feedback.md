@@ -142,4 +142,4 @@ I printed in black and white and some of the differences in the figures can be h
 
 Mainly in Fig. 3 (acc vs sparsity) the different techniques blend together because the shapes can be hard to distinguish. Also in Fig 5. the queue composition is really hard to tell apart because they're just different shades of gray.
 
-*In Fig. 3 the markers are bigger.  In Fig 5, I've eliminated the legend and label the lines explicitly.*
+*In Fig. 3 the markers are bigger.  In Fig 5, I've eliminated the legend and label the lines explicitly, and I think reversing the colors helps but I haven't checked.*

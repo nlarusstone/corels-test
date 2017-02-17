@@ -200,6 +200,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
 
         if (make_figure):
             color_vec = ['r', 'r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'm', 'violet', 'pink', 'gray', 'k']#[:(max_length + 1)][::-1]
+            color_vec = ['k', 'violet', 'm', 'purple', 'b', 'c', 'g', 'y', 'orange', 'r']
             #color_vec = ['purple', 'b', 'c', 'm', 'gray', 'k'][::-1]
 
             if (len(log_root_list) == 1):
