@@ -2,7 +2,7 @@ kdd17.tex --
 arxiv.tex --
 
 intro --
-framework --
+framework -- elaine
 bounds --
 incremental --
 implementation --
