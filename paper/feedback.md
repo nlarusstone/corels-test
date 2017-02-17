@@ -119,7 +119,7 @@ I would tend to prefer just using "branch-and-bound" unless there's a particular
 ## p6
 We say "permutation-aware garbage collection" at the bottom of the left column even though we refer to it as "symmetry-aware garbage collection" in the rest of the paper.
 
-*We actually also say "permutation-aware garbage collection" in the next column on the right (Section 3.8.2).  We say "symmetry-aware map" in the implementation, and "permutation map" in the experiments section figures.  I agree that this could be cleaner.*
+*We actually also say "permutation-aware garbage collection" in the next column on the right (Section 3.8.2).  We say "symmetry-aware map" in the implementation and also now the experiments section (where it used to say permutation map).*
 
 ## p7
 ~~Bottom of left column: we refer to a trie, a symmetry-aware map... -- do we want to call it a prefix-trie?~~
@@ -141,3 +141,5 @@ I printed in black and white and some of the differences in the figures can be h
 *I do care! Which ones have issues?*
 
 Mainly in Fig. 3 (acc vs sparsity) the different techniques blend together because the shapes can be hard to distinguish. Also in Fig 5. the queue composition is really hard to tell apart because they're just different shades of gray.
+
+*In Fig. 3 the markers are bigger.  In Fig 5, I've eliminated the legend and label the lines explicitly.*
