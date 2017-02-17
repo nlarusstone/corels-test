@@ -75,7 +75,7 @@ pp4: we mention we provide a collection of near-optimal solutions and the distan
 
 *Done*
 
-pp2: we use the word proprietary (which I know is part of the reason Cynthia hates COMPAS), but I think we really mean non-interpretable/black box
+~~pp2: we use the word proprietary (which I know is part of the reason Cynthia hates COMPAS), but I think we really mean non-interpretable/black box~~
 
 *I've added "black box"*
 
