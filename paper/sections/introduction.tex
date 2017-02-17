@@ -94,10 +94,13 @@ This tree structure facilitates the use of multiple different selection algorith
 We evaluated CORELS on a number of publicly available datasets and have made code for our algorithm and experiments publicly available. Our metric of success was 10-fold cross validated prediction accuracy on a subset of the data. These datasets involve hundreds of rules and hundreds or thousands of observations. CORELS is generally able to find the optimal rule list in a matter of seconds and certify it within about 10 minutes. We show that we are able to achieve better out-of-sample accuracy on these datasets than the popular greedy algorithms, CART and C5.0.
 \end{arxiv}
 
-This algorithm is designed for solving large (not massive) problems, where
-interpretability and certifiable optimality are important, such as recidivism prediction.
+With CORELS, we target large (not massive) problems,
+where interpretability and certifiable optimality are important.
 %
-We illustrate the efficacy of our approach using the ProPublica COMPAS dataset~\cite{LarsonMaKiAn16}.
+We illustrate the efficacy of our approach on two problems:
+predicting two-year recidivism using the ProPublica COMPAS dataset~\cite{LarsonMaKiAn16},
+and whether a weapon will be found on a stopped individual who is frisked or searched,
+using a 2014 stop-and-frisk dataset from the New York Civil Liberties Union (NYCLU)~\cite{nyclu:2014}.
 %
 We produce a certifiably optimal, interpretable rule list that achieves
 the same accuracy as a random forest approach, thereby calling into question
