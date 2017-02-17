@@ -16,7 +16,7 @@ x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(
 m = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
 s = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
 
-fig = plt.figure(1, figsize=(8, 3.5))
+fig = plt.figure(1, figsize=(11, 4.1))
 plt.clf()
 ax = plt.subplot2grid((20, 1), (0, 1), colspan=1, rowspan=19)
 
@@ -39,7 +39,7 @@ cdict = {'CORELS': 'r', 'C4.5': 'c', 'CART': 'gray', 'RIPPER': 'mediumblue', 'SB
 mdict = {'CORELS': 's', 'C4.5': '^', 'CART': 'd', 'RIPPER': 'v', 'SBRL': 'o'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
 mfcdict = {'CORELS': 'coral', 'C4.5': 'paleturquoise', 'CART': 'white', 'RIPPER': 'skyblue', 'SBRL': 'plum'}
-msvec = np.array([11, 9, 8, 10, 10, 9, 8, 7, 6, 5, 4, 6, 8, 10, 12]) * 1.2
+msvec = np.array([11, 9, 8, 10, 10, 9, 8, 7, 6, 5, 4, 6, 8, 10, 12]) * 2
 mew = 2
 
 i = 0
@@ -89,18 +89,18 @@ for r in m:
         descr += ' (%s)' % ('%1.3f' % r['R']).strip('0')
     legend += [descr]
 
-fs = 14
+fs = 16
 plt.xticks(fontsize=fs)
-plt.yticks(fontsize=fs)
+plt.yticks(np.arange(0.62, 0.71, 0.02), fontsize=fs)
 plt.xlabel('Model size', fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
-plt.legend(legend, loc='lower right', fontsize=fs-3, numpoints=1, ncol=3)
+plt.legend(legend, loc='lower right', fontsize=fs-4.5, numpoints=1, ncol=5, labelspacing=0.85, borderpad=.8, columnspacing=0.1, markerscale=0.9)
 plt.title('Two-year recidivism prediction (ProPublica dataset)', fontsize=fs)
 
 ax.set_xlim(0, 36)
 
 if (with_training):
-    ax.set_ylim(0.60, 0.7)
+    ax.set_ylim(0.61, 0.7)
     plt.show()
     plt.savefig('../figs/compas-sparsity-training.pdf')
 else:
