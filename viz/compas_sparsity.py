@@ -100,7 +100,7 @@ plt.title('Two-year recidivism prediction (ProPublica dataset)', fontsize=fs)
 ax.set_xlim(0, 36)
 
 if (with_training):
-    ax.set_ylim(0.601, 0.7)
+    ax.set_ylim(0.60, 0.7)
     plt.show()
     plt.savefig('../figs/compas-sparsity-training.pdf')
 else:

@@ -126,7 +126,8 @@ else:
     plt.xlabel('Model size', fontsize=fs)
 
 if (with_training):
-    ax.set_ylim(0.621, 0.75)
+    plt.yticks(np.arange(0.63, 0.76, 0.02), fontsize=fs)
+    ax.set_ylim(0.63, 0.75)
     plt.show()
     plt.savefig('../figs/frisk-sparsity-training.pdf')
 else:

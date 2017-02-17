@@ -13,9 +13,11 @@ for dataset in ['compas', 'weapon']:
     if (dataset == 'compas'):
         names = ['GLM', 'SVM', 'AdaBoost\n\n', 'CART', 'C4.5', 'RF', 'RIPPER\n', 'SBRL', 'CORELS']
         title = 'Recidivism prediction (ProPublica)'
+        yticks = np.arange(0.63, 0.72, 0.02)
     elif (dataset == 'weapon'):
         names = ['GLM', 'SVM', 'AdaBoost\n\n', 'CART', 'C4.5', 'RF', 'SBRL', 'CORELS']
         title = 'Weapon prediction (NYCLU)'
+        yticks = np.arange(0.62, 0.77, 0.02)
 
     x = open('../compare/%s.txt' % dataset, 'rU').read().strip().split('\n')
 
@@ -53,15 +55,15 @@ for dataset in ['compas', 'weapon']:
         pylab.plot(range(nmethods), y.mean(axis=0), 's', color='white', markeredgewidth=2, markersize=7)
 
         pylab.xticks(range(nmethods), names, fontsize=fs, rotation=40)
-        pylab.yticks(fontsize=fs)
+        pylab.yticks(yticks, fontsize=fs)
         if dataset == 'compas':
             pylab.ylabel('Accuracy', fontsize=fs)
 
         a = list(pylab.axis())
         a[0] -= 1
         a[1] += 1
-        a[2] = 0.621
-        a[3] = 0.76
+        #a[2] = 0.601
+        #a[3] = 0.76
         pylab.axis(a)
         pylab.title(title, fontsize=fs)
 
