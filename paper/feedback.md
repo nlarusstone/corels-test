@@ -67,6 +67,8 @@ pp4: we mention we provide a collection of near-optimal solutions and the distan
 
 ~~pp1: "each path in the tree represents a rule list with the final node in the path.." -> "each path in the tree represents a rule list such that the final node in the path.."~~
 
+*Done*
+
 pp2: we use the word proprietary (which I know is part of the reason Cynthia hates COMPAS), but I think we really mean non-interpretable/black box
 
 ## p3

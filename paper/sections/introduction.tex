@@ -45,7 +45,7 @@ The authors show that the COMPAS scores are racially biased, but since the model
 %
 By using COMPAS, users implicitly assumed that a transparent model
 would not be sufficiently accurate for recidivism prediction,
-thus a more accurate, black box model would have to suffice.
+\ie they assumed that a black box model would provide better accuracy.
 %
 We wondered whether there was indeed no possible transparent model that would suffice.
 %
@@ -59,7 +59,19 @@ This would enable one to say, for this problem and model class,
 with certainty and before resorting to black box methods,
 whether there exists a transparent model.
 
-To that end, we consider the class of rule lists created from pre-mined frequent itemsets. The rule list must be assembled from these itemsets to minimize a regularized risk function, $R$. This is a hard discrete optimization problem. Brute force solutions that minimize $R$ are computationally prohibitive due to the exponential number of possible rule lists. However, this is a worst case bound that is not realized in practical settings. For realistic cases, it is possible to solve fairly large cases of this problem to optimality, with the careful use of algorithms, data structures, and implementation techniques.
+To that end, we consider the class of rule lists created from pre-mined frequent itemsets.
+%
+The rule list must be assembled from these itemsets to minimize a regularized risk function,~$R$.
+%
+This is a hard discrete optimization problem.
+%
+Brute force solutions that minimize~$R$ are computationally prohibitive
+due to the exponential number of possible rule lists.
+%
+However, this is a worst case bound that is not realized in practical settings.
+%
+For realistic cases, it is possible to solve fairly large cases of this problem to optimality,
+with the careful use of algorithms, data structures, and implementation techniques.
 
 We develop specialized tools from the field of discrete optimization and artificial intelligence, and in particular, a special branch-and-cut algorithm, called  Certifiably Optimal RulE ListS (CORELS), that provides (1) the optimal solution, (2) a certficiate of optimality and (3) a collection of near-optimal solutions and the distance between each such solution and the optimal one. The certificate of optimality means that we can investigate how close other models (e.g., models provided by greedy algorithms) are to optimal. In particular, we can investigate if the rule lists from probabilistic approaches are nearly optimal or whether those approaches sacrifice too much accuracy in the interest of speed.
 
@@ -82,7 +94,14 @@ This tree structure facilitates the use of multiple different selection algorith
 We evaluated CORELS on a number of publicly available datasets and have made code for our algorithm and experiments publicly available. Our metric of success was 10-fold cross validated prediction accuracy on a subset of the data. These datasets involve hundreds of rules and hundreds or thousands of observations. CORELS is generally able to find the optimal rule list in a matter of seconds and certify it within about 10 minutes. We show that we are able to achieve better out-of-sample accuracy on these datasets than the popular greedy algorithms, CART and C5.0.
 \end{arxiv}
 
-This algorithm is designed for solving large (not massive) problems, where interpretability and certifiable optimality are important, such as recidivism prediction. We illustrate the efficacy of our approach using the COMPAS dataset \cite{LarsonMaKiAn16}. We produce a certifiably optimal, interpretable rule list that achieves the same accuracy as a random forest approach, thereby calling into question the need for use of a proprietary algorithm for recidivism prediction.
+This algorithm is designed for solving large (not massive) problems, where
+interpretability and certifiable optimality are important, such as recidivism prediction.
+%
+We illustrate the efficacy of our approach using the ProPublica COMPAS dataset~\cite{LarsonMaKiAn16}.
+%
+We produce a certifiably optimal, interpretable rule list that achieves
+the same accuracy as a random forest approach, thereby calling into question
+the need for use of a proprietary, black box algorithm for recidivism prediction.
 
 %\bibliographystyle{abbrvnat}
 %\bibliography{refs}
