@@ -55,6 +55,8 @@ a weapon will be found on a stopped individual who is frisked or searched."*
 
 Also, the end of that paragraph ends with a run-on sentence and should probably be split into 2 sentences.
 
+*The last sentence or the last two?  I've slightly rewritten the last two as three: "Answering that question requires solving a computationally hard problem. Namely, we would like to find a transparent model that is optimal among a particular pre-determined class of models, and certify its optimality. This would enable one to say, for this problem and model class, with certainty and before resorting to black box methods, whether there exists a transparent model."*
+
 pp4: we mention we provide a collection of near-optimal solutions and the distance between each such solution -- we currently don't do that (though we could) and we never mention these near-optimal solutions again.
 
 Also, did we agree we wanted to say certificate?

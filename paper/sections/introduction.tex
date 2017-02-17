@@ -47,7 +47,16 @@ By using COMPAS, users implicitly assumed that a transparent model
 would not be sufficiently accurate for recidivism prediction,
 thus a more accurate, black box model would have to suffice.
 %
-We wondered whether there was indeed no possible transparent model that would suffice. Answering that question requires solving a computationally hard problem, namely finding a transparent model that is optimal, with a certificate of optimality, among a particular pre-determined class of models. That way one could say, with certainty, whether a transparent model (from this class of models) with sufficient accuracy exists for this problem, before resorting to black box models.
+We wondered whether there was indeed no possible transparent model that would suffice.
+%
+Answering that question requires solving a computationally hard problem.
+%
+Namely, we would like to find a transparent model that is optimal
+among a particular pre-determined class of models, and certify its optimality.
+%
+This would enable one to say, for this problem and model class,
+with certainty and before resorting to black box methods,
+whether there exists a transparent model.
 
 To that end, we consider the class of rule lists created from pre-mined frequent itemsets. The rule list must be assembled from these itemsets to minimize a regularized risk function, $R$. This is a hard discrete optimization problem. Brute force solutions that minimize $R$ are computationally prohibitive due to the exponential number of possible rule lists. However, this is a worst case bound that is not realized in practical settings. For realistic cases, it is possible to solve fairly large cases of this problem to optimality, with the careful use of algorithms, data structures, and implementation techniques.
 
