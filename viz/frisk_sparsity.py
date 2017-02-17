@@ -44,7 +44,7 @@ cdict = {'CORELS': 'r', 'C4.5': 'c', 'CART': 'gray', 'RIPPER': 'k', 'SBRL': 'pur
 mdict = {'CORELS': 's', 'C4.5': '^', 'CART': 'd', 'RIPPER': 'v', 'SBRL': 'o'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
 mfcdict = {'CORELS': 'coral', 'C4.5': 'paleturquoise', 'CART': 'white', 'RIPPER': 'lightgray', 'SBRL': 'plum'}
-msvec = np.array([11, 9, 8, 10, 9, 8, 7, 6, 12, 8, 4]) * 2 - 2
+msvec = np.array([11, 9, 8, 10, 10, 9, 8, 7, 12, 8, 4]) * 2
 mew = 2
 
 #plt.plot(np.log2(4), .698, 's', markeredgewidth=mew, markeredgecolor='r', markerfacecolor='coral', markersize=12)
