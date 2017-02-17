@@ -198,7 +198,7 @@ lookahead bound & 71.9 (23.0) & 9 (2) & 18.5 (5.9) & 16.3 (5.3) & 6-7 \\
 equivalent pts bound & $>$134 & $>$7168 & $>$800 & $>$789 & $\ge$10
 \end{tabular}
 }
-\vspace{5mm}
+\vspace{3mm}
 \caption{Per-component performance improvement.
 %
 The columns report total execution time,
@@ -218,17 +218,18 @@ Note that the last row did not terminate.
 %
 In all but the final row and column, we report means
 (and standard deviations) over 10 cross-validation folds;
-in the final row, we report thresholds that reflect minimum values across folds. %\\
+in the final row, we report the minimum values across folds. %\\
 %
 %*~Only 4 out of 10 folds achieve the optimum.
 }
 \label{tab:ablation}
 \end{table}
 
-In the remainder, we show results using the ProPublica dataset.
+%In the remainder, we show results using the ProPublica dataset.
 %
 Figure~\ref{fig:objective} illustrates how both the objective and the size of
-the remaining search space decrease as CORELS executes.
+the remaining search space decrease as CORELS executes on the ProPublica
+dataset.
 The objective drops quickly, achieving the optimal value within 10 seconds.
 CORELS certifies optimality in less than 6 minutes --
 the objective lower bound of the remaining search space
