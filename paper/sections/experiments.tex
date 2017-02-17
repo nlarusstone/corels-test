@@ -26,19 +26,26 @@ CORELS ${\Reg = 0.005}$ for ProPublica and ${\Reg = 0.01}$ for NYCLU.}
 \end{table}
 \end{arxiv}
 
-\begin{arxiv}
+%\begin{arxiv}
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
-\includegraphics[width=0.75\textwidth]{figs/compare-compas.pdf}
+\begin{arxiv}
+\includegraphics[width=0.75\textwidth]{figs/compare-compas-weapon.pdf}
+\end{arxiv}
+\begin{kdd}
+% left lower right upper
+\includegraphics[trim={10mm, 10mm, 25mm, 5mm},
+width=0.48\textwidth]{figs/compare-compas-weapon.pdf}
+\end{kdd}
 \end{center}
-\caption{Comparison with other methods:
-Test error for us and a few other algorithms
-(CART, C4.5, CBA, CMAR/CPAR, C5.0, Ripper, \dots),
-as a function of sparsity over 10 folds, for one big dataset (box plots).}
+\caption{Test accuracy means (white squares)
+standard deviations (error bars),
+and values (colors correspond to folds).
+}
 \label{fig:comparison}
 \end{figure}
-\end{arxiv}
+%\end{arxiv}
 
 \begin{figure}[t!]
 \begin{center}
@@ -48,7 +55,7 @@ as a function of sparsity over 10 folds, for one big dataset (box plots).}
 \end{arxiv}
 \begin{kdd}
 % left lower right upper
-\includegraphics[trim={10mm, 0mm, 20mm, 10mm}, width=0.45\textwidth]{figs/compas-sparsity-training.pdf}
+\includegraphics[trim={10mm, 0mm, 20mm, 5mm}, width=0.45\textwidth]{figs/compas-sparsity-training.pdf}
 \end{kdd}
 \begin{arxiv}
 \includegraphics[width=0.5\textwidth]{figs/frisk-sparsity-training.pdf}
@@ -79,10 +86,9 @@ None of the models exhibit significant overfitting.
 Bottom:  %Weapon prediction for the NYCLU stop-and-frisk dataset.
 NYCLU dataset.
 %
-Of the models shown, only CART with ${cp = 0.001}$ significantly overfits.
+Here, only CART with ${cp = 0.001}$ significantly overfits.
 %
-We depict neither RIPPER, which we were unable to execute,
-nor C4.5, which finds large models (${>1000}$ leaves)
+We do not depict C4.5, which finds large models (${>1000}$ leaves)
 and dramatically overfits for all tested parameters.
 }
 \label{fig:sparsity}
@@ -93,42 +99,49 @@ and dramatically overfits for all tested parameters.
 % RIPPER in R's caret
 
 Our experimental analysis addresses four questions:
-(1) How does CORELS' accuracy compare to other algorithms?
+(1) How does CORELS' accuracy and model size compare to other algorithms?
 (2) How rapidly does the objective function converge?
 (3) How rapidly does CORELS prune the search space?
 (4) How much does each of the implementation optimizations contribute to CORELS' performance?
-
-All results presented use the ProPublica dataset, unless otherwise noted,
-and were executed on a server with two Intel Xeon E5-2699~v4
+%
+All results presented were executed on a server with two Intel Xeon E5-2699~v4
 (55M~cache, 2.20~GHz) processors and 448GB~RAM.
 %
 Except where we mention a memory constraint, all experiments
-can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
-%
-\begin{kdd}
-\footnote{Due to page constraints, we only present a subset of experiments from
+can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.\begin{kdd}
+~\footnote{Due to page constraints, we only present a subset of experiments from
 an extensive evaluation contained in a long version of this report (in preparation).}
 \end{kdd}
-
-We first ran a 10-fold cross validation experiment using CORELS and eight other algorithms:
-logistic regression, support vector machines, AdaBoost, CART, C4.5, random forests, RIPPER,~\footnote{We use publicly available R implementations, with default parameter settings.} and scalable rule lists (SBRL).~\footnote{https://github.com/Hongyuy/sbrlmod}
-There were no statistically significant differences in the accuracies of the
-algorithms. In fact, the difference between folds was far larger than the difference
-between algorithms. We conclude that CORELS produces models whose accuracy is comparable
-to those found via other algorithms.
 %
-Figure~\ref{fig:rule-list} shows an example optimal rule list that CORELS learns
-for predicting two-year recidivism, using the ProPublica dataset.
+We focus on two problems:
+using the ProPublica dataset~\cite{LarsonMaKiAn16} to predict two-year recidivism,
+and using the NYCLU 2014 stop-and-frisk dataset~\cite{nyclu:2014} to predict
+whether a weapon will be found on a stopped individual who is frisked or searched.
 
+We first ran a 10-fold cross validation experiment using CORELS and eight other
+algorithms:~\footnote{We use standard R packages, with default parameter settings, for the first seven.}
+logistic regression, support vector machines, AdaBoost, CART, C4.5, random forests, RIPPER,~\footnote{We were unable to execute RIPPER for the NYCLU problem.} and scalable rule lists (SBRL).~\footnote{https://github.com/Hongyuy/sbrlmod}
+%
+Figure~\ref{fig:rule-list} shows an  optimal rule list that CORELS learns
+for the ProPublica dataset.
+%
+Figure~\ref{fig:comparison} shows that there were no statistically significant
+differences in algorithm accuracies.
+\begin{arxiv}
+In fact, the difference between folds was far larger than the difference
+between algorithms.
+We conclude that CORELS produces models whose accuracy is comparable
+to those found via other algorithms.
+
+\end{arxiv}
+%
 Figure~\ref{fig:sparsity} summarizes differences in accuracy and model size
 for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
 %
-Here, we also show results using a 2014 stop-and-frisk dataset from the
-New York Civil Liberties Union (NYCLU)~\cite{nyclu:2014}, for predicting whether
-a weapon will be found on a stopped individual who is frisked or searched.
-%
 In both contexts, CORELS can learn short rule lists without sacrificing accuracy.
 
+In the remainder, we show results using the ProPublica dataset.
+%
 Figure~\ref{fig:objective} illustrates how both the objective and the size of
 the remaining search space decrease as CORELS executes.
 The objective drops quickly, achieving the optimal value within 10 seconds.
@@ -239,7 +252,7 @@ prefixes of a given length in the queue during the algorithm's execution.
 \begin{kdd}
 %\includegraphics[width=0.5\textwidth]{figs/ela_compas-queue.pdf}
 % left lower right upper
-\includegraphics[trim={30mm 15mm 35mm 10mm}, width=0.45\textwidth]{figs/kdd_compas_compare_small-queue.pdf}
+\includegraphics[trim={30mm 15mm 35mm 30mm}, width=0.45\textwidth]{figs/kdd_compas_compare_small-queue.pdf}
 \end{kdd}
 \end{center}
 \caption{Queue composition. % logical queue
@@ -250,8 +263,9 @@ for CORELS (top left), and without the permutation map (top right),
 lookahead bound (bottom left), and equivalent points bound (bottom right).
 %
 The gray shading fills in the area beneath the total number of
-queue elements for CORELS, \ie the sum over prefixes of lengths~0
-through~4 in the top left figure.
+queue elements for CORELS.
+%\ie the sum over prefixes of lengths~0
+%through~4 in the top left figure.
 %
 For comparison, we replicate the same gray region
 in the other three subfigures.
