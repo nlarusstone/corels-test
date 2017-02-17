@@ -55,14 +55,14 @@ and values (colors correspond to folds).
 \end{arxiv}
 \begin{kdd}
 % left lower right upper
-\includegraphics[trim={10mm, 0mm, 20mm, 5mm}, width=0.45\textwidth]{figs/compas-sparsity-training.pdf}
+\includegraphics[trim={12mm, 0mm, 24mm, 5mm}, width=0.43\textwidth]{figs/compas-sparsity-training.pdf}
 \end{kdd}
 \begin{arxiv}
 \includegraphics[width=0.5\textwidth]{figs/frisk-sparsity-training.pdf}
 \end{arxiv}
 \begin{kdd}
 % left lower right upper
-\includegraphics[trim={10mm, 10mm, 20mm, 1mm}, width=0.45\textwidth]{figs/frisk-sparsity-training.pdf}
+\includegraphics[trim={12mm, 12mm, 24mm, 1mm}, width=0.43\textwidth]{figs/frisk-sparsity-training.pdf}
 \end{kdd}
 \end{center}
 \caption{Training and test accuracy as a function of model size.
@@ -120,7 +120,7 @@ whether a weapon will be found on a stopped individual who is frisked or searche
 
 We first ran a 10-fold cross validation experiment using CORELS and eight other
 algorithms:~\footnote{We use standard R packages, with default parameter settings, for the first seven.}
-logistic regression, support vector machines, AdaBoost, CART, C4.5, random forests, RIPPER,~\footnote{We were unable to execute RIPPER for the NYCLU problem.} and scalable rule lists (SBRL).~\footnote{https://github.com/Hongyuy/sbrlmod}
+logistic regression, support vector machines, AdaBoost, CART, C4.5, random forests, RIPPER,~\footnote{We were unable to execute RIPPER for the NYCLU problem.} and scalable Bayesian rule lists (SBRL).~\footnote{https://github.com/Hongyuy/sbrlmod}
 %
 Figure~\ref{fig:rule-list} shows an  optimal rule list that CORELS learns
 for the ProPublica dataset.
@@ -140,16 +140,6 @@ for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning alg
 %
 In both contexts, CORELS can learn short rule lists without sacrificing accuracy.
 
-In the remainder, we show results using the ProPublica dataset.
-%
-Figure~\ref{fig:objective} illustrates how both the objective and the size of
-the remaining search space decrease as CORELS executes.
-The objective drops quickly, achieving the optimal value within 10 seconds.
-CORELS certifies optimality in less than 6 minutes --
-the objective lower bound of the remaining search space
-monotonically converges to the optimal objective
-as the search space steadily shrinks.
-
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
@@ -158,13 +148,13 @@ as the search space steadily shrinks.
 \end{arxiv}
 \begin{kdd}
 % left lower right upper
-\includegraphics[trim={20mm, 25mm, 20mm, 15mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
+\includegraphics[trim={20mm, 25mm, 24mm, 15mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
 \end{kdd}
 \end{center}
 \caption{Executions of CORELS with (solid lines) and without
 (dashed lines) the equivalent points bound (Theorem~\ref{thm:identical}).
 %
-Horizontal axes plot wall clock time (log scale).
+%Horizontal axes plot wall clock time (log scale).
 %
 Top: Objective value (thin solid line) and lower bound (thick solid line) for CORELS.
 %as a function of wall clock time (log scale).
@@ -202,10 +192,10 @@ component & (min) & (s) & ($\times 10^6$) & ($\times 10^6$) & \\
 none (CORELS) & 5.5 (1.6) & 8 (2) & 1.7 (0.4) & 1.3 (0.4) & 5-6 \\
 priority queue & 6.7 (2.2) & 4 (1) & 1.9 (0.6) & 1.5 (0.5) & 5-6 \\
 support bounds & 10.2 (3.4) & 13 (4) & 2.7 (0.8) & 2.2 (0.7) & 5-6 \\
-permutation map & 58.6 (23.3) & 23 (6) & 16.0 (5.9) & 14.5 (5.7) & 5-6 \\
+symmetry-aware map & 58.6 (23.3) & 23 (6) & 16.0 (5.9) & 14.5 (5.7) & 5-6 \\
 lookahead bound & 71.9 (23.0) & 9 (2) & 18.5 (5.9) & 16.3 (5.3) & 6-7 \\
 %equiv. pts. bound & 188.6 (104.6) & 6178 (1840) & 803.8 (0.1) & 790.5 (0.4) & 10-10
-equiv. pts. bound & $>$134 & $>$7168* & $>$800 & $>$789 & $\ge$10
+equivalent pts bound & $>$134 & $>$7168 & $>$800 & $>$789 & $\ge$10
 \end{tabular}
 }
 \vspace{5mm}
@@ -220,19 +210,30 @@ that each remove a specific implementation optimization or bound.
 %
 %(We are not measuring the cumulative effects of removing a sequence of components.)
 %
-All rows represent complete executions, except for the final row,
-in which each execution was terminated %due to memory constraints,
+%All rows represent complete executions, except for the final row,
+%in which each execution was terminated %due to memory constraints,
 %once the size of the cache reached ${8 \times 10^8}$ elements,
-after consuming 390-410GB RAM.
+%after consuming 390-410GB RAM.
+Note that the last row did not terminate.
 %
 In all but the final row and column, we report means
 (and standard deviations) over 10 cross-validation folds;
 in the final row, we report thresholds that reflect minimum values across folds. %\\
 %
-*~Only 4 out of 10 folds achieve the optimum.
+%*~Only 4 out of 10 folds achieve the optimum.
 }
 \label{tab:ablation}
 \end{table}
+
+In the remainder, we show results using the ProPublica dataset.
+%
+Figure~\ref{fig:objective} illustrates how both the objective and the size of
+the remaining search space decrease as CORELS executes.
+The objective drops quickly, achieving the optimal value within 10 seconds.
+CORELS certifies optimality in less than 6 minutes --
+the objective lower bound of the remaining search space
+monotonically converges to the optimal objective
+as the search space steadily shrinks.
 
 Finally, we determine the efficacy of each of our data structure and bounding
 optimizations.
@@ -247,20 +248,20 @@ prefixes of a given length in the queue during the algorithm's execution.
 \begin{center}
 \begin{arxiv}
 %\includegraphics[width=0.8\textwidth]{figs/ela_compas-queue.pdf}
-\includegraphics[width=\textwidth]{figs/ela_compas_compare-queue.pdf}
+\includegraphics[width=\textwidth]{figs/ela_compas_ablation-queue.pdf}
 \end{arxiv}
 \begin{kdd}
 %\includegraphics[width=0.5\textwidth]{figs/ela_compas-queue.pdf}
 % left lower right upper
-\includegraphics[trim={30mm 15mm 35mm 30mm}, width=0.45\textwidth]{figs/kdd_compas_compare_small-queue.pdf}
+\includegraphics[trim={30mm 15mm 35mm 30mm}, width=0.45\textwidth]{figs/kdd_compas_ablation_small-queue.pdf}
 \end{kdd}
 \end{center}
 \caption{Queue composition. % logical queue
 %
-Numbers of prefixes in the queue (log scale), colored by length,
+Numbers of prefixes in the queue (log scale), labeled and colored by length,
 as a function of wall clock time (log scale), for CORELS (top left),
 and without three specific implementation optimizations or bounds.
-%the permutation map (top right),
+%the permutation bounds (top right),
 %lookahead bound (bottom left), and equivalent points bound (bottom right).
 %
 The gray shading fills in the area beneath the total number of

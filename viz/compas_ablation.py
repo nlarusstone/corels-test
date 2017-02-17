@@ -64,11 +64,16 @@ def parse_prefix_sums(p):
 froot = 'compas'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
-num_folds = 10
 lw = 2  # linewidth
 ms = 9  # markersize
 fs = 16 # fontsize
+
+num_folds = 10
 make_figure = False
+
+num_folds = 2
+make_figure = True
+make_small = True
 
 # log files generated on beepboop
 # no-minor execution using just under 400GB RAM when halted
@@ -79,8 +84,13 @@ log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_
 'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=800000000-c=0.0050000-v=1-f=1000.txt']
+labels = ['CORELS', 'No priority queue', 'No support bounds', 'No symmetry-aware map', 'No lookahead bound', 'No equivalent points bound']
 ftag = "kdd_compas_ablation"
 
+if make_small:
+    log_root_list = log_root_list[:1] + log_root_list[-3:]
+    labels = labels[:1] + labels[-3:]
+    ftag += '_small'
 
 """
 # deprecated log files
@@ -114,10 +124,14 @@ num_insertions = np.zeros((ntot, num_folds), int)
 max_queue = np.zeros((ntot, num_folds), int)
 min_obj = np.zeros((ntot, num_folds))
 ablation_names = ['none (CORELS)', 'priority queue', 'support bounds',
-                  'permutation map', 'lookahead bound', 'equiv. pts. bound']
+                  'symmetry-aware map', 'lookahead bound', 'equiv. pts. bound']
 
 for (ncomp, log_root) in enumerate(log_root_list):
     for fold in range(num_folds):
+        if (fold == 1):
+            make_figure = True
+        else:
+            make_figure = False
         tname = 'compas_%d_train.out' % fold
         log_fname = log_root % tname
         print log_fname
@@ -185,7 +199,8 @@ for (ncomp, log_root) in enumerate(log_root_list):
         print "max queue size (millions): ", max_q / 10**6.
 
         if (make_figure):
-            color_vec = ['r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'm', 'violet', 'pink', 'gray', 'k']#[:(max_length + 1)][::-1]
+            color_vec = ['r', 'r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'm', 'violet', 'pink', 'gray', 'k']#[:(max_length + 1)][::-1]
+            color_vec = ['k', 'violet', 'm', 'purple', 'b', 'c', 'g', 'y', 'orange', 'r']
             #color_vec = ['purple', 'b', 'c', 'm', 'gray', 'k'][::-1]
 
             if (len(log_root_list) == 1):
@@ -202,7 +217,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
             else:
                 pylab.subplot(2, 2, ncomp+1)
 
-            for length in range(0, max_length + 1)[::-1]:
+            for length in range(1, max_length + 1)[::-1]:
                 jj = zc[:, length].nonzero()[0]
                 tt = x['total_time'][jj]
                 yy = zc[jj, length]
@@ -220,9 +235,9 @@ for (ncomp, log_root) in enumerate(log_root_list):
             else:
                 pylab.fill_between([tmin, 10**4], [10**-0.1, 10**-0.1], [10**8.3, 10**8.3],  color='gray', alpha=0.3)
             """
-            pylab.fill_between(t_comp, 10**-0.1 * np.ones(len(t_comp)), queue_comp, color='gray', alpha=0.3)
+            pylab.fill_between(t_comp, 10**-0.1 * np.ones(len(t_comp)), queue_comp, color='gray', alpha=0.25)
 
-            for length in range(0, max_length + 1):
+            for length in range(1, max_length + 1):
                 jj = zc[:, length].nonzero()[0]
                 tt = x['total_time'][jj]
                 yy = zc[jj, length]
@@ -233,15 +248,21 @@ for (ncomp, log_root) in enumerate(log_root_list):
                     yy = np.array([1] + list(yy))
                     tt = np.array([tt[0]] + list(tt))
                 pylab.loglog(tt, yy, color=color_vec[length % len(color_vec)], linewidth=lw*2)
+                tx = 10**(np.log10(tt[0] + 0.1 * (np.log10(tt[-1] - np.log10(tt[0])))))
+                ix = np.nonzero(tt < tx)[0][-1]
+                if (length == 1):
+                    txt = pylab.text(tt[0] * 0.47, 1.5, '%d ' % length, fontsize=fs+4)
+                else:
+                    txt = pylab.text(tt[0] * 0.4, 1.5, '%d ' % length, fontsize=fs+4)
             if (ntot == 6):
                 if (ncomp + 1 == ntot):
                     pylab.legend(['%d' % length for length in range(0, max_length + 1)[::-1]], loc='upper left', fontsize=fs-3)
-            else:
-                pylab.legend(['%d' % length for length in range(0, max_length + 1)[::-1]], loc='upper left', fontsize=fs-3)
+            #else:
+            #    #pylab.legend(['%d' % length for length in range(0, max_length + 1)[::-1]], loc='upper left', fontsize=fs-3)
             if (ncomp > ntot/2 - 1):
-                pylab.xlabel('time (s)', fontsize=fs+2)
+                pylab.xlabel('Time (s)', fontsize=fs+2)
             if (ncomp in [0, ntot/2]):
-                pylab.ylabel('count', fontsize=fs+2)
+                pylab.ylabel('Count', fontsize=fs+2)
             #pylab.suptitle('lengths of prefixes in the logical queue\n', fontsize=fs)
             pylab.title(labels[ncomp], fontsize=fs+2)
             pylab.xticks(fontsize=fs-2)

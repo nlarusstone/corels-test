@@ -39,7 +39,7 @@ cdict = {'CORELS': 'r', 'C4.5': 'c', 'CART': 'gray', 'RIPPER': 'mediumblue', 'SB
 mdict = {'CORELS': 's', 'C4.5': '^', 'CART': 'd', 'RIPPER': 'v', 'SBRL': 'o'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
 mfcdict = {'CORELS': 'coral', 'C4.5': 'paleturquoise', 'CART': 'white', 'RIPPER': 'skyblue', 'SBRL': 'plum'}
-msvec = np.array([11, 9, 8, 10, 10, 9, 8, 7, 6, 5, 4, 6, 8, 10, 12]) * 1.2
+msvec = np.array([11, 9, 8, 10, 10, 10, 9, 8, 7, 7, 8, 7, 6, 5, 4]) * 2
 mew = 2
 
 i = 0
@@ -91,10 +91,10 @@ for r in m:
 
 fs = 14
 plt.xticks(fontsize=fs)
-plt.yticks(fontsize=fs)
+plt.yticks(np.arange(0.60, 0.71, 0.02), fontsize=fs)
 plt.xlabel('Model size', fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
-plt.legend(legend, loc='lower right', fontsize=fs-3, numpoints=1, ncol=3)
+plt.legend(legend, loc='lower right', fontsize=fs-3, numpoints=1, ncol=3, labelspacing=0.5, borderpad=.5, columnspacing=0.1, markerscale=0.6)
 plt.title('Two-year recidivism prediction (ProPublica dataset)', fontsize=fs)
 
 ax.set_xlim(0, 36)

@@ -17,7 +17,7 @@ for dataset in ['compas', 'weapon']:
     elif (dataset == 'weapon'):
         names = ['GLM', 'SVM', 'AdaBoost\n\n', 'CART', 'C4.5', 'RF', 'SBRL', 'CORELS']
         title = 'Weapon prediction (NYCLU)'
-        yticks = np.arange(0.62, 0.77, 0.02)
+        yticks = np.arange(0.62, 0.76, 0.03)
 
     x = open('../compare/%s.txt' % dataset, 'rU').read().strip().split('\n')
 

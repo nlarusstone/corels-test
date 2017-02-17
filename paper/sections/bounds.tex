@@ -1129,7 +1129,7 @@ in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
 
 \end{arxiv}
 
-\subsection{Equivalent support bound for symmetry-aware garbage collection}
+\subsection{Equivalent support bound}
 \label{sec:equivalent}
 
 Let~$\PrefixB$ be a prefix, and let~$\xi(\PrefixB)$ be the set
@@ -1441,13 +1441,13 @@ and their objective lower bounds obey
 ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
 Theorem~\ref{thm:equivalent} implies that we can prune~$\PrefixB$.
 %
-In our implementation, we call this symmetry-aware garbage collection.
+%In our implementation, we call this symmetry-aware garbage collection.
 %
 Next, in Sections~\ref{sec:permutation} and~\ref{sec:permutation-counting},
 we highlight and analyze the special case of prefixes that capture
 the same data because they contain the same antecedents.
 
-\subsubsection{Permutation bound for permutation-aware garbage collection}
+\subsubsection{Permutation bound}% for permutation-aware garbage collection}
 \label{sec:permutation}
 
 Let~${P = \{p_k\}_{k=1}^K}$ be a set of~$K$ antecedents,
@@ -1512,11 +1512,12 @@ up to a permutation, and their objective lower bounds
 obey~${b(\Prefix, \x, \y) \le}$ ${b(\PrefixB, \x, \y)}$,
 Corollary~\ref{thm:permutation} implies that we can prune~$\PrefixB$.
 %
-We call this permutation-aware
-garbage collection, and we illustrate the subsequent
+We call this %permutation-aware garbage collection,
+symmetry-aware pruning,
+and we illustrate the subsequent
 computational savings next in~\S\ref{sec:permutation-counting}.
 
-\subsubsection{Upper bound on prefix evaluations with permutation-aware garbage collection}
+\subsubsection{Upper bound on prefix evaluations with symmetry-aware pruning}
 \label{sec:permutation-counting}
 
 Here, we present an upper bound on the total number of prefix

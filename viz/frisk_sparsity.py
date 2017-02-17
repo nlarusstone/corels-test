@@ -20,7 +20,7 @@ s = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.std, 
 #m[(m['Method'] == 'CORELS') & (m['R'] == 0.02)] = ('CORELS', 0, 0, 0.0025, '', 8., 0., .697)
 #s[(s['Method'] == 'CORELS') & (s['R'] == 0.02)] = ('CORELS', 0, 0, 0.0025, '', 1., 0., 0.02)
 
-fig = plt.figure(2, figsize=(8, 3.5))
+fig = plt.figure(2, figsize=(8, 3.6))
 plt.clf()
 ax = plt.subplot2grid((20, 1), (0, 1), colspan=1, rowspan=18)
 
@@ -44,7 +44,7 @@ cdict = {'CORELS': 'r', 'C4.5': 'c', 'CART': 'gray', 'RIPPER': 'k', 'SBRL': 'pur
 mdict = {'CORELS': 's', 'C4.5': '^', 'CART': 'd', 'RIPPER': 'v', 'SBRL': 'o'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
 mfcdict = {'CORELS': 'coral', 'C4.5': 'paleturquoise', 'CART': 'white', 'RIPPER': 'lightgray', 'SBRL': 'plum'}
-msvec = np.array([11, 9, 8, 10, 9, 8, 7, 6, 12, 8, 4]) * 1.2
+msvec = np.array([11, 9, 8, 10, 10, 9, 8, 7, 12, 8, 4]) * 2
 mew = 2
 
 #plt.plot(np.log2(4), .698, 's', markeredgewidth=mew, markeredgecolor='r', markerfacecolor='coral', markersize=12)
@@ -115,17 +115,18 @@ fs = 14
 plt.xticks(fontsize=fs)
 plt.yticks(fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
-plt.legend(legend, loc='lower right', fontsize=fs-3, numpoints=1, ncol=2)
+plt.legend(legend, loc='lower right', fontsize=fs-3, numpoints=1, ncol=2, labelspacing=0.5, borderpad=.5, columnspacing=0.1, markerscale=0.6)
 plt.title('Weapon prediction (NYCLU stop-and-frisk dataset)', fontsize=fs)
 
 if log2:
     ax.set_xlim(0, 11)
     plt.xlabel('log2(Model size)', fontsize=fs)
 else:
-    ax.set_xlim(0, 57)
+    ax.set_xlim(0, 56)
     plt.xlabel('Model size', fontsize=fs)
 
 if (with_training):
+    plt.xticks(range(0, 56, 5), fontsize=fs)
     plt.yticks(np.arange(0.63, 0.76, 0.02), fontsize=fs)
     ax.set_ylim(0.63, 0.75)
     plt.show()
