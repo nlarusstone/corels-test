@@ -49,7 +49,10 @@ a weapon will be found on a stopped individual who is frisked or searched."*
 
 *Now refs appear once and sentences joined via semicolon*
 
-pp3: we mention the ProPublica article and then Larson et al. without connecting the two -- do we expect readers to look in our references each time we make a reference?
+~~pp3: we mention the ProPublica article and then Larson et al. without connecting the two -- do we expect readers to look in our references each time we make a reference?~~
+
+*Now: "Consider the recent ProPublica article on the COMPAS recidivism prediction tool~\citep{LarsonMaKiAn16}. It highlights a case where a black-box, proprietary predictive model is being used for recidivism prediction. The authors show that the COMPAS scores are racially biased, but since the model is not transparent, no one (outside of the creators of COMPAS) can determine the reason or extent of the bias~\citep{LarsonMaKiAn16}"*
+
 Also, the end of that paragraph ends with a run-on sentence and should probably be split into 2 sentences.
 
 pp4: we mention we provide a collection of near-optimal solutions and the distance between each such solution -- we currently don't do that (though we could) and we never mention these near-optimal solutions again.
