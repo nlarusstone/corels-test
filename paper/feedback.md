@@ -71,7 +71,9 @@ Should the paragraph right before 3.2 be there? Seems a little out of place.
 ## p4
 The description of Algorithm 1 says "Branch-and-bound" but we used "Branch-and-cut" earlier
 
-The footnote mentions a long version of this report without saying where it is
+~~The footnote mentions a long version of this report without saying where it is~~
+
+*Now added "(in preparation)" for both such footnotes*
 
 ## p5
 ~~Theres a (??) near the bottom of the right column -- and I'm not sure what it's referring to.~~
