@@ -81,14 +81,29 @@ pp4: we mention we provide a collection of near-optimal solutions and the distan
 
 ## p3
 
-pp1: we have a sentence "Figure 1 illustrates a rule list." -- Could we just use (Fig 1.) after the previous sentence (or is that just for bio papers).
+~~pp1: we have a sentence "Figure 1 illustrates a rule list." -- Could we just use (Fig 1.) after the previous sentence (or is that just for bio papers).~~
+
+*We could but I tend to go with the more verbose style.*
 
 The paragraph on capturing data: "Now let d_p be an ordered list of antecedents..." is fairly confusing, even for me
 
-Should the paragraph right before 3.2 be there? Seems a little out of place.
+*I agree!  Any suggestions?*
+
+~~Should the paragraph right before 3.2 be there? Seems a little out of place.~~
+
+*Less awkward, I hope: "Finally, we note that our approach leverages pre-mined rules,
+following the methodology taken by~\citet{LethamRuMcMa15} and~\citet{YangRuSe16}.
+One of the results we prove later implies a constraint
+that can be used as a filter during rule mining --
+they must have at least some minimum support
+given by the lower bound in Theorem~\ref{thm:min-capture}."*
 
 ## p4
 The description of Algorithm 1 says "Branch-and-bound" but we used "Branch-and-cut" earlier
+
+*Indeed, and we mention branch-and-bound more than once.  I asked Cynthia at some point if we can
+say branch-and-bound and it's fine (just not something we wanted to emphasize, e.g., in the title).
+I could imagine only using "branch-and-bound"...*
 
 ~~The footnote mentions a long version of this report without saying where it is~~
 
@@ -110,7 +125,12 @@ We say "permutation-aware garbage collection" at the bottom of the left column e
 *Now says "trie (prefix tree)" the first time it's mentioned*
 
 pp "Mapping our algorithm": we mention checking that the lower bound is less than the minimum objective -- should we mention that we check all of the bounds we just proved above?
-There seems to be a lot of whitespace above section 5 Experiments
+
+*Good point, thinking about it...*
+
+~~There seems to be a lot of whitespace above section 5 Experiments~~
+
+*I think this has reduced due to other edits that have happened.*
 
 ## p8
 I printed in black and white and some of the differences in the figures can be hard to see (I don't know if this is a case we care about).
