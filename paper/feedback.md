@@ -63,6 +63,8 @@ a weapon will be found on a stopped individual who is frisked or searched."*
 
 pp4: we mention we provide a collection of near-optimal solutions and the distance between each such solution -- we currently don't do that (though we could) and we never mention these near-optimal solutions again.
 
+*I've tempered this by inserting "optionally," -- is this toned down enough?*
+
 ~~Also, did we agree we wanted to say certificate?~~
 
 *I'm ok with "certificate," which Cynthia uses a few other times in the intro*
@@ -74,6 +76,8 @@ pp4: we mention we provide a collection of near-optimal solutions and the distan
 *Done*
 
 pp2: we use the word proprietary (which I know is part of the reason Cynthia hates COMPAS), but I think we really mean non-interpretable/black box
+
+*I've added "black box"*
 
 ## p3
 
