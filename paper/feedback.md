@@ -126,11 +126,12 @@ We say "permutation-aware garbage collection" at the bottom of the left column e
 
 pp "Mapping our algorithm": we mention checking that the lower bound is less than the minimum objective -- should we mention that we check all of the bounds we just proved above?
 
-*Good point, thinking about it...*
+*Good point! I've added this sentence: "We also leverage our other bounds from Section 3
+to aggressively prune the search space."*
 
 ~~There seems to be a lot of whitespace above section 5 Experiments~~
 
-*I think this has reduced due to other edits that have happened.*
+*I've added negative whitespace via \vspace{-1mm}.  Also I think this has reduced due to other edits that have happened.*
 
 ## p8
 I printed in black and white and some of the differences in the figures can be hard to see (I don't know if this is a case we care about).
