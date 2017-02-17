@@ -53,13 +53,15 @@ a weapon will be found on a stopped individual who is frisked or searched."*
 
 *Now: "Consider the recent ProPublica article on the COMPAS recidivism prediction tool~\citep{LarsonMaKiAn16}. It highlights a case where a black-box, proprietary predictive model is being used for recidivism prediction. The authors show that the COMPAS scores are racially biased, but since the model is not transparent, no one (outside of the creators of COMPAS) can determine the reason or extent of the bias~\citep{LarsonMaKiAn16}"*
 
-Also, the end of that paragraph ends with a run-on sentence and should probably be split into 2 sentences.
+~~Also, the end of that paragraph ends with a run-on sentence and should probably be split into 2 sentences.~~
 
-*The last sentence or the last two?  I've slightly rewritten the last two as three: "Answering that question requires solving a computationally hard problem. Namely, we would like to find a transparent model that is optimal among a particular pre-determined class of models, and certify its optimality. This would enable one to say, for this problem and model class, with certainty and before resorting to black box methods, whether there exists a transparent model."*
+*The last sentence or the last two?  I've slightly rewritten the last two as three: "Answering that question requires solving a computationally hard problem. Namely, we would like to find a transparent model that is optimal within a particular pre-determined class of models, and produce a certificate of optimality. This would enable one to say, for this problem and model class, with certainty and before resorting to black box methods, whether there exists a transparent model."*
 
 pp4: we mention we provide a collection of near-optimal solutions and the distance between each such solution -- we currently don't do that (though we could) and we never mention these near-optimal solutions again.
 
-Also, did we agree we wanted to say certificate?
+~~Also, did we agree we wanted to say certificate?~~
+
+*I'm ok with "certificate," which Cynthia uses a few other times in the intro*
 
 ## p2
 
