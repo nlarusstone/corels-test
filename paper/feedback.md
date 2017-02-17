@@ -6,6 +6,8 @@ an alternative. We should stress that CORELS is just (or at least in most cases)
 other decision tree methods but more importantly our model size is much smaller because of our exploration method
 (thus making our solutions more interpretable?).
 
+*I would say that CART is competitive on both accuracy and model size (and RIPPER, at least for COMPAS). That we can certify optimality is what really distinguishes us for the examples we show in the experiments section.*
+
 ## Intro
 ~~"custom curiosity function" -- we don't define nor use this anywhere in the paper.~~
 
@@ -15,6 +17,8 @@ other decision tree methods but more importantly our model size is much smaller 
 
 In the example in equation 2, did you mean to put
 cap(x_n, {p_k} | d_p) since you say that \beta should be a set?
+
+*p_k on the left is a single antecedent -- is this what's confusing?*
 
 Why not supp(x, \beta) (for definition notational consistency sake) and not supp(\beta, x)?
 This is not a big deal though. But supp(\beta, x) is defined in terms of cap(x_n, \beta).
@@ -94,6 +98,8 @@ The description of Algorithm 1 says "Branch-and-bound" but we used "Branch-and-c
 ## p6
 We say "permutation-aware garbage collection" at the bottom of the left column even though we refer to it as "symmetry-aware garbage collection" in the rest of the paper.
 
+*We actually also say "permutation-aware garbage collection" in the next column on the right (Section 3.8.2).  We say "symmetry-aware map" in the implementation, and "permutation map" in the experiments section figures.  I agree that this could be cleaner.  *
+
 ## p7
 ~~Bottom of left column: we refer to a trie, a symmetry-aware map... -- do we want to call it a prefix-trie?~~
 
@@ -104,3 +110,5 @@ There seems to be a lot of whitespace above section 5 Experiments
 
 ## p8
 I printed in black and white and some of the differences in the figures can be hard to see (I don't know if this is a case we care about).
+
+*I do care! Which ones have issues?*
