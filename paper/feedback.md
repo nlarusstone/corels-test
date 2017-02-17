@@ -98,7 +98,7 @@ The description of Algorithm 1 says "Branch-and-bound" but we used "Branch-and-c
 ## p6
 We say "permutation-aware garbage collection" at the bottom of the left column even though we refer to it as "symmetry-aware garbage collection" in the rest of the paper.
 
-*We actually also say "permutation-aware garbage collection" in the next column on the right (Section 3.8.2).  We say "symmetry-aware map" in the implementation, and "permutation map" in the experiments section figures.  I agree that this could be cleaner.  *
+*We actually also say "permutation-aware garbage collection" in the next column on the right (Section 3.8.2).  We say "symmetry-aware map" in the implementation, and "permutation map" in the experiments section figures.  I agree that this could be cleaner.*
 
 ## p7
 ~~Bottom of left column: we refer to a trie, a symmetry-aware map... -- do we want to call it a prefix-trie?~~
