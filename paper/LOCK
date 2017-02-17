@@ -5,6 +5,6 @@ intro --
 framework --
 bounds --
 incremental --
-implementation -- elaine
-experiments --
+implementation --
+experiments -- elaine
 related work --
