@@ -20,7 +20,7 @@ s = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.std, 
 #m[(m['Method'] == 'CORELS') & (m['R'] == 0.02)] = ('CORELS', 0, 0, 0.0025, '', 8., 0., .697)
 #s[(s['Method'] == 'CORELS') & (s['R'] == 0.02)] = ('CORELS', 0, 0, 0.0025, '', 1., 0., 0.02)
 
-fig = plt.figure(2, figsize=(8, 3.5))
+fig = plt.figure(2, figsize=(8, 3.6))
 plt.clf()
 ax = plt.subplot2grid((20, 1), (0, 1), colspan=1, rowspan=18)
 
