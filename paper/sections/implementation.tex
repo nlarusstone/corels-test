@@ -13,12 +13,12 @@ We also track the best observed minimum objective and its associated rule list.
 
 The symmetry-aware map supports symmetry-aware pruning.
 %
-We implement this using the C++ STL unordered\_map, which
+We implement this using the C++ STL unordered\_map,
 % Since we are not yet doing anything with the capture-based representation, we shouldn't
 % discuss it as we won't be showing performance.
 % We have two different versions of the map.
 % Both versions 
-maps all permutations of a set of antecedents to a key, whose value
+to map all permutations of a set of antecedents to a key, whose value
 contains the best ordering of those antecedents (\ie the prefix with the smallest lower bound).
 %
 Every antecedent is associated with an index, and we call the numerically
@@ -36,7 +36,7 @@ permutations map to the same key.
 % significantly smaller than encodings of captured data points,
 % especially for large datasets.
 %
-In general, the symmetry-aware map dominates memory usage during long runs.
+The symmetry-aware map usually dominates memory usage during long runs.
 Before inserting permutation $P_i$ into the symmetry-aware map, we check
 if there exists a permutation $P_j$ of $P_i$ already in the map.
 If the lower bound of $P_i$ is better than that of $P_j$,
@@ -71,7 +71,7 @@ current minimum objective.
 %
 If the lower bound is greater than the minimum objective,
 then no extension of this rule list could possibly be optimal,
-therefore we do not insert the new rule list into the tree or queue.
+thus we do not insert the new rule list into the tree or queue.
 %
 We also leverage our other bounds from~\S\ref{sec:setup}
 to aggressively prune the search space.

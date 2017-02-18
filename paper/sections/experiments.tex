@@ -19,7 +19,7 @@ SVM & 67.1 $\pm$ 2.0 & 70.2 $\pm$ 2.7 \\
 \end{tabular}
 \vspace{5mm}
 \caption{Comparison with other methods:
-Means and standard deviations of test error.
+Means and standard deviations of test accuracy.
 Also report algorithm runtimes (mean $\pm$ standard deviation over 10 folds).
 CORELS ${\Reg = 0.005}$ for ProPublica and ${\Reg = 0.01}$ for NYCLU.}
 \label{tab:comparison}
@@ -72,9 +72,9 @@ and complexity parameters~$cp$ and~$C$, respectively.
 % and are indicated within parentheses in the legend.
 %
 Legend markers and error bars indicate means and standard deviations,
-respectively, of test error across cross-validation folds.
+respectively, of test accuracy across cross-validation folds.
 %
-Small circles mark associated training error means.
+Small circles mark associated training accuracy means.
 %
 Top:  %Two-year recidivism prediction for the ProPublica COMPAS dataset.
 ProPublica dataset.
@@ -86,7 +86,7 @@ None of the models exhibit significant overfitting.
 Bottom:  %Weapon prediction for the NYCLU stop-and-frisk dataset.
 NYCLU dataset.
 %
-Here, only CART with ${cp = 0.001}$ significantly overfits.
+Only CART with ${cp = 0.001}$ significantly overfits.
 %
 We do not depict C4.5, which finds large models (${>1000}$ leaves)
 and dramatically overfits for all tested parameters.
@@ -105,7 +105,7 @@ Our experimental analysis addresses four questions:
 (4) How much does each of the implementation optimizations contribute to CORELS' performance?
 %
 All results presented were executed on a server with two Intel Xeon E5-2699~v4
-(55M~cache, 2.20~GHz) processors and 448GB~RAM.
+(55MB~cache, 2.20~GHz) processors and 448GB~RAM.
 %
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.\begin{kdd}
@@ -138,7 +138,7 @@ to those found via other algorithms.
 Figure~\ref{fig:sparsity} summarizes differences in accuracy and model size
 for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
 %
-In both contexts, CORELS can learn short rule lists without sacrificing accuracy.
+For both problems, CORELS can learn short rule lists without sacrificing accuracy.
 
 \begin{figure}[t!]
 \begin{center}
@@ -151,12 +151,13 @@ In both contexts, CORELS can learn short rule lists without sacrificing accuracy
 \includegraphics[trim={20mm, 25mm, 24mm, 15mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
 \end{kdd}
 \end{center}
-\caption{CORELS with (solid lines) and without
-(dashed lines) the equivalent points bound (Theorem~\ref{thm:identical}).
+\caption{CORELS with (lines) and without
+(dashes) the equivalent points bound (Theorem~\ref{thm:identical}).
 %
 %Horizontal axes plot wall clock time (log scale).
 %
-Top: Objective value (thin solid line) and lower bound (thick solid line) for CORELS.
+Top: Objective value (thin line) and lower bound (thick line) for CORELS,
+and lower bound (dashes) for an execution without the equivalent points bound.
 %as a function of wall clock time (log scale).
 %
 Numbered hatch marks
@@ -169,8 +170,8 @@ and are labeled by the new length.
 A star marks the optimum.
 %
 % A separate execution of
-CORELS without the equivalent points bound remains far from complete,
-and its lower bound (dashed line) far from the optimum.
+%CORELS without the equivalent points bound remains far from complete,
+%and its lower bound (dashed line) far from the optimum.
 %
 Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
 %as a function of wall clock time,
@@ -190,7 +191,7 @@ Removed & $t_\text{total}$ & $t_\text{opt}$ & $i_\text{total}$ & $Q_\text{max}$ 
 component & (min) & (s) & ($\times 10^6$) & ($\times 10^6$) & \\
 \hline
 none (CORELS) & 5.5 (1.6) & 8 (2) & 1.7 (0.4) & 1.3 (0.4) & 5-6 \\
-priority queue & 6.7 (2.2) & 4 (1) & 1.9 (0.6) & 1.5 (0.5) & 5-6 \\
+priority queue (BFS) & 6.7 (2.2) & 4 (1) & 1.9 (0.6) & 1.5 (0.5) & 5-6 \\
 support bounds & 10.2 (3.4) & 13 (4) & 2.7 (0.8) & 2.2 (0.7) & 5-6 \\
 symmetry-aware map & 58.6 (23.3) & 23 (6) & 16.0 (5.9) & 14.5 (5.7) & 5-6 \\
 lookahead bound & 71.9 (23.0) & 9 (2) & 18.5 (5.9) & 16.3 (5.3) & 6-7 \\
@@ -214,7 +215,7 @@ that each remove a specific implementation optimization or bound.
 %in which each execution was terminated %due to memory constraints,
 %once the size of the cache reached ${8 \times 10^8}$ elements,
 %after consuming 390-410GB RAM.
-Note that the last row did not terminate.
+We terminated each experiment in the last row after consuming 390-410GB RAM.
 %
 In all but the final row and column, we report means
 (and standard deviations) over 10 cross-validation folds;
@@ -226,22 +227,24 @@ in the final row, we report the minimum values across folds. %\\
 \vspace{-8mm}
 \end{table}
 
-%In the remainder, we show results using the ProPublica dataset.
+In the remainder, we show results using the ProPublica dataset.
 %
 Figure~\ref{fig:objective} illustrates how both the objective and the size of
-the remaining search space decrease as CORELS executes on the ProPublica
-dataset.
+the remaining search space decrease as CORELS executes.
 The objective drops quickly, achieving the optimal value within 10 seconds.
 CORELS certifies optimality in less than 6 minutes --
 the objective lower bound of the remaining search space
-monotonically converges to the optimal objective
-as the search space steadily shrinks.
+steadily converges to the optimal objective as the search space shrinks.
 
-Finally, we determine the efficacy of each of our data structure and bounding
-optimizations.
-Table~\ref{tab:ablation} provides sumary statistics for experiments using
-the full CORELS implementation and implementations with a specific
-optimization removed.
+Finally, we determine the efficacy of each of our bounds and data structure optimizations.
+%
+Figure~\ref{fig:objective} highlights how a separate execution of CORELS without
+the equivalent points bound remains far from complete,
+and its lower bound far from the optimum.
+%
+Table~\ref{tab:ablation} provides summary statistics for experiments using
+the full CORELS implementation and variants each remove a specific optimization.
+%
 Figure~\ref{fig:queue} presents a view of the same experiments, focusing
 on three of our optimizations. These plots depict the number of
 prefixes of a given length in the queue during the algorithm's execution.
