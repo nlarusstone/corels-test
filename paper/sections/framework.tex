@@ -336,7 +336,7 @@ in a long version of this report (in preparation).}
 \label{sec:hierarchical}
 
 We can decompose the misclassification error into two contributions
-corresponding to the prefix and default:
+corresponding to the prefix and the default rule:
 \begin{align}
 \Loss(\RL, \x, \y) %= \Loss(\Prefix, r_q, \Default, \x, \y)
 \equiv \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y),
@@ -352,7 +352,7 @@ is the fraction of data captured and misclassified by the prefix, and
 \Loss_0(\Prefix, \Default, \x, \y) =
 \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [ \Default \neq y_n ]
 \end{align}
-is the fraction of data not captured by the prefix and misclassified by the default.
+is the fraction of data not captured by the prefix and misclassified by the default rule.
 %
 Eliminating the latter error term gives a lower bound~$b(\Prefix, \x, \y)$ on the objective,
 \begin{align}

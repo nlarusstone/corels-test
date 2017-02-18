@@ -274,16 +274,10 @@ and Proposition~\ref{prop:trivial-length} gives~\eqref{eq:max-length-prefix}.
 \end{arxiv}
 
 We can view Theorem~\ref{thm:ub-prefix-specific} as a generalization
-of our one-step lookahead bound (Lemma~\ref{lemma:lookahead});
-rearranging to obtain a bound on ${K' - K}$
-gives an upper bound on the number of remaining `steps' corresponding to
-\begin{arxiv}
-an iterative
-\end{arxiv}
-\begin{kdd}
-a
-\end{kdd}
-sequence of single-rule extensions of a prefix~$\Prefix$.
+of our one-step lookahead bound (Lemma~\ref{lemma:lookahead}),
+as~\eqref{eq:max-length-prefix} is equivalently a bound on ${K' - K}$,
+an upper bound on the number of remaining `steps' corresponding to
+an iterative sequence of single-rule extensions of a prefix~$\Prefix$.
 %
 \begin{arxiv}
 Notice that when~${\RL = ((), (), q_0, 0)}$ is the empty rule list,
@@ -411,7 +405,7 @@ Algorithm~\ref{alg:branch-and-bound}'s execution.
 It only depends on the number of rules and
 the regularization parameter~$\Reg$;
 \ie unlike Theorem~\ref{thm:remaining-eval-fine},
-it does not utilize algorithm execution state to
+it does not use algorithm execution state to
 bound the size of the search space.
 
 \begin{proposition}[Upper bound on the total number of prefix evaluations]
