@@ -1521,12 +1521,12 @@ computational savings next in~\S\ref{sec:permutation-counting}.
 \label{sec:permutation-counting}
 
 Here, we present an upper bound on the total number of prefix
-evaluations that accounts for the effect of permutation-aware
-garbage collection~(\S\ref{sec:permutation}).
+evaluations that accounts for the effect of symmetry-aware
+pruning~(\S\ref{sec:permutation}).
 %
 Since every subset of~$K$ antecedents generates an equivalence
-class of~$K!$ prefixes equivalent up to permutation, permutation-aware
-garbage collection dramatically prunes the search space.
+class of~$K!$ prefixes equivalent up to permutation, symmetry-aware
+pruning dramatically reduces the search space.
 
 \begin{arxiv}
 First, notice that
@@ -1534,17 +1534,17 @@ First, notice that
 Algorithm~\ref{alg:branch-and-bound} describes a
 breadth-first exploration of the state space of rule lists.
 %
-Now suppose we integrate permutation-aware garbage collection into
+Now suppose we integrate symmetry-aware pruning into
 our execution of branch-and-bound, so that after evaluating
 prefixes of length~$K$, we only keep a single best prefix
 from each set of prefixes equivalent up to a permutation.
 
 \begin{theorem}[Upper bound on the total number of prefix evaluations with
-permutation-aware garbage collection]
+symmetry-aware pruning]
 %
 Consider a state space of all rule lists formed from a set~$\RuleSet$
 of~$M$ antecedents, and consider the branch-and-bound algorithm with
-permutation-aware garbage collection.
+symmetry-aware pruning.
 %
 Define $\TotalRemaining(\RuleSet)$ to be the total number of prefixes evaluated.
 %
@@ -1593,8 +1593,8 @@ Let us compare, for example, to the na\"ive number of prefix evaluations
 given by the upper bound in Proposition~\ref{thm:ub-total-eval}.
 %
 If~${M = 100}$ and~${K = 5}$, then the na\"ive number is about
-${9.1 \times 10^9}$, while the reduced number due to permutation-aware
-garbage collection is about ${3.9 \times 10^8}$,
+${9.1 \times 10^9}$, while the reduced number due to symmetry-aware
+pruning is about ${3.9 \times 10^8}$,
 which is smaller by a factor of about~23.
 %
 If~${M=1000}$ and~${K = 10}$, the number of evaluations falls from
