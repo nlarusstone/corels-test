@@ -1,14 +1,15 @@
 \section{Conclusion}
 
-CORELS is an efficient and accurate algorithm for constructing provably
-optimal rule lists.
-Optimality is particularly important in the same domains where the
-interpretability of the model has social consequences, e.g., recidivism
-prediction.
-While achieving optimality on such combinatoric optimization problems is
-computationally hard, our ability to combine mathematically rigorous bounds
-with aggressive data structure pruning makes realistically sized problems
-tractable.
+CORELS is an efficient and accurate algorithm for constructing provably optimal rule lists.
+%
+Optimality is particularly important in domains where model interpretability
+has social consequences, \eg recidivism prediction.
+%
+While achieving optimality on such discrete optimization problems is
+computationally hard in general, we aggressively prune our problem's search space
+via a suite of bounds.
+%
+This makes realistically sized problems tractable.
+%
 CORELS is amenable to parallelization, which should allow it to scale to
 even larger problems.
-
