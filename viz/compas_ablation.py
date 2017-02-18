@@ -235,7 +235,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
             else:
                 pylab.fill_between([tmin, 10**4], [10**-0.1, 10**-0.1], [10**8.3, 10**8.3],  color='gray', alpha=0.3)
             """
-            pylab.fill_between(t_comp, 10**-0.1 * np.ones(len(t_comp)), queue_comp, color='gray', alpha=0.25)
+            pylab.fill_between(t_comp, 10**-0.1 * np.ones(len(t_comp)), queue_comp, color='gray', alpha=0.3)
 
             for length in range(1, max_length + 1):
                 jj = zc[:, length].nonzero()[0]
