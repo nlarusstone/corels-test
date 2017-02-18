@@ -147,12 +147,12 @@ in the context of~$\Prefix$ if~$p_k$ is the first antecedent in~$\Prefix$ that
 evaluates to true for~$x_n$.
 %
 \begin{arxiv}
-We also say that an
+We also say that a
 \end{arxiv}
 \begin{kdd}
-An
+A
 \end{kdd}
-antecedent list captures those data captured by its antecedents;
+prefix captures those data captured by its antecedents;
 for a rule list~${\RL = (\Prefix, \Labels, \Default, K)}$,
 data not captured by the prefix~$\Prefix$
 are classified according to the default label prediction~$\Default$.
@@ -184,10 +184,7 @@ captures datum~$x_n$ in the context of~$\Prefix$,
 \ie if the first antecedent in~$\Prefix$ that evaluates to true for~$x_n$
 is an antecedent in~$\beta$, and~0 otherwise.
 %
-\begin{arxiv}
-Note that
-\end{arxiv}
-${\Cap(x_n, \beta \given \Prefix) = 1}$ only if ${\Cap(x_n, \beta) = 1}$;
+Thus, ${\Cap(x_n, \beta \given \Prefix) = 1}$ only if ${\Cap(x_n, \beta) = 1}$;
 ${\Cap(x_n, \beta \given \Prefix) = 0}$ either if ${\Cap(x_n, \beta) = 0}$,
 or if ${\Cap(x_n, \beta) = 1}$ but there is an antecedent~$\alpha$ in~$\Prefix$,
 preceding all antecedents in~$\beta$, such that ${\Cap(x_n, \alpha) = 1}$.
@@ -233,10 +230,15 @@ particular prefix, we implicitly assume these empirically determined label predi
 Finally, we note that our approach leverages pre-mined rules,
 following the methodology taken by~\citet{LethamRuMcMa15} and~\citet{YangRuSe16}.
 %
-One of the results we prove later implies a constraint
+One of the results we later prove implies a constraint
 that can be used as a filter during rule mining --
-they must have at least some minimum support
+antecedents must have at least some minimum support
+\begin{arxiv}
 given by the lower bound in Theorem~\ref{thm:min-capture}.
+\end{arxiv}
+\begin{kdd}
+(Theorem~\ref{thm:min-capture}).
+\end{kdd}
 
 \begin{arxiv}
 \subsection{Rule list representation and bit vector operations}
@@ -282,7 +284,7 @@ by~one.
 Our objective has structure amenable to global optimization via a branch-and-bound framework.
 %
 In particular, we make a series of important observations that each translates into
-a useful bound, and together interact to eliminate large parts of the search space.
+a useful bound, and that together interact to eliminate large parts of the search~space.
 %
 We will discuss these in depth throughout the following sections:
 %
@@ -294,14 +296,14 @@ We will discuss these in depth throughout the following sections:
 even without knowing anything about what rules will be placed below that prefix.
 (\S\ref{sec:hierarchical}, Lemma~\ref{lemma:lookahead})
 
-\item We can calculate apriori an upper bound on the maximum length
+\item We can calculate \emph{a priori} an upper bound on the maximum length
 of an optimal rule list.
 (\S\ref{sec:ub-prefix-length}, Theorem~\ref{thm:ub-prefix-specific})
 
-\item Each rule in an optimal rule list must have support that is
-sufficiently large. (Otherwise it would not be in an optimal rule list.)
+\item Each rule in an optimal rule list must have support that is sufficiently large.
+%(Otherwise it would not be in an optimal rule list.)
 %
-This allows us to construct the rule list from frequent itemsets,
+This allows us to construct rule lists from frequent itemsets,
 while preserving the guarantee that we can find a globally optimal
 rule list from pre-mined rules.
 (\S\ref{sec:lb-support}, Theorem~\ref{thm:min-capture})
@@ -312,8 +314,8 @@ In particular, the number of observations predicted correctly
 by each rule in an optimal rule list must be above a threshold.
 (\S\ref{sec:lb-support}, Theorem~\ref{thm:min-capture-correct})
 
-\item We need only consider the optimal permutation of rules
-in a prefix and we can omit all other permutations.
+\item We need only consider the optimal permutation of antecedents in a prefix;
+we can omit all other permutations.
 (\S\ref{sec:equivalent}, Theorem~\ref{thm:equivalent} and Corollary~\ref{thm:permutation})
 
 \item  If multiple observations have identical features and opposite labels,
