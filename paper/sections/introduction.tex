@@ -26,7 +26,14 @@
 
 \section{Introduction}
 
-As machine learning continues to grow in importance for socially-important decisions, the interpretability of predictive models remains a crucial problem. Our goal is to build models that are both highly predictive and easily understood by humans. We use rule lists, also known as decision lists, to achieve this goal. Rule lists are lists composed of if-then statements, which are easily interpreted; the rules give a reason for each prediction.
+As machine learning continues to gain prominence in socially-important decision-making,
+the interpretability of predictive models remains a crucial problem.
+%
+Our goal is to build models that are both highly predictive and easily understood by humans.
+%
+We use rule lists, also known as decision lists, to achieve this goal.
+%
+Rule lists are lists composed of if-then statements, which are easily interpreted; the rules give a reason for each prediction~(Figure~\ref{fig:rule-list}).
 
 Constructing rule lists, or more generally, decision trees, has been a challenge for more than
 30 years; most approaches use greedy splitting techniques~\cite{Rivest87,Breiman84,Quinlan93}. 
@@ -71,6 +78,46 @@ However, this is a worst case bound that is not realized in practical settings.
 %
 For realistic cases, it is possible to solve fairly large cases of this problem to optimality,
 with the careful use of algorithms, data structures, and implementation techniques.
+
+\begin{figure}[b!]
+\vspace{-3mm}
+%\begin{subfigure}{0.18\textwidth}
+%\begin{algorithmic}
+%\normalsize
+%\State \bif $p_1$ \bthen $q_1$
+%\State \belif $p_2$ \bthen $q_2$
+%\State \dots
+%\State \belif $p_K$ \bthen $q_K$
+%\State \belse $q_0$.
+%\end{algorithmic}
+%\end{subfigure}
+%\begin{subfigure}{0.28\textwidth}
+\begin{algorithmic}
+\normalsize
+\State \bif $(age=23-25) \wedge (priors=2-3)$ \bthen $yes$
+\State \belif $(age=18-20)$ \bthen $yes$
+\State \belif $(sex=male) \wedge (age=21-22)$ \bthen $yes$
+\State \belif $(priors>3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{-3mm}
+%\end{subfigure}
+%\caption{A $K$-rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$, where
+%each rule ${r_k = p_k \rightarrow q_k}$, for all ${k = 0, \dots K}$.
+%We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
+%where ${\Prefix = (p_1, \dots, p_K)}$
+%and ${\Labels = (q_1, \dots, q_K)}$.}
+\caption{An example rule list %${\RL = (r_1, r_2, r_3, r_4, r_0)}$
+that predicts two-year recidivism for the ProPublica dataset,
+found by CORELS.
+%Each rule is of the form ${r_k = p_k \rightarrow q_k}$,
+%for all ${k = 0, \dots, 4}$.
+%We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
+%where ${\Prefix = (p_1, p_2, p_3, p_4)}$, ${\Labels = (1, 1, 1, 1)}$,
+%${\Default = 0}$, and ${K=4}$.
+}
+\label{fig:rule-list}
+\end{figure}
 
 We develop specialized tools from the field of discrete optimization and artificial intelligence, and in particular, a special branch-and-bound algorithm, called  Certifiably Optimal RulE ListS (CORELS), that provides
 (1) the optimal solution, (2) a certficiate of optimality and (3) optionally,

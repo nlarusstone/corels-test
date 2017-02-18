@@ -28,7 +28,7 @@ Figure~\ref{fig:rule-list} illustrates
 a rule list, which for clarity, we sometimes call a $K$-rule list.
 \end{arxiv}
 \begin{kdd}
-a rule list.
+a 4-rule list.
 \end{kdd}
 %
 An association rule~${r = p \rightarrow q}$ is an implication
@@ -45,9 +45,14 @@ is an association rule.
 %the antecedent in the previous example has a cardinality of two.
 %
 The final default rule~$r_0$ in a rule list can be thought of
-as a special association rule~${p_0 \rightarrow q_0}$
+as a
+\begin{arxiv}
+special
+\end{arxiv}
+association rule~${p_0 \rightarrow q_0}$
 whose antecedent~$p_0$ simply asserts true.
 
+\begin{arxiv}
 \begin{figure}[t!]
 %\begin{subfigure}{0.18\textwidth}
 %\begin{algorithmic}
@@ -85,6 +90,7 @@ ${\Default = 0}$, and ${K=4}$.
 }
 \label{fig:rule-list}
 \end{figure}
+\end{arxiv}
 
 Let ${\RL = (r_1, r_2, \dots, r_K, r_0)}$ be a
 \begin{arxiv}
@@ -101,6 +107,13 @@ where we define ${\Prefix = (p_1, \dots, p_K)}$ to be $\RL$'s prefix,
 ${\Labels = (q_1, \dots, q_K) \in \{0, 1\}^K}$~gives
 the label predictions associated with~$\Prefix$,
 and ${\Default \in \{0, 1\}}$ is the default label prediction.
+%
+In Figure~\ref{fig:rule-list}, ${\RL = (r_1, r_2, r_3, r_4, r_0)}$,
+and each rule is of the form ${r_k = p_k \rightarrow q_k}$,
+for all ${k = 0, \dots, 4}$;
+equivalently, ${\RL = (\Prefix, \Labels, \Default, K)}$,
+where ${\Prefix = (p_1, p_2, p_3, p_4)}$, ${\Labels = (1, 1, 1, 1)}$,
+${\Default = 0}$, and ${K=4}$.
 
 Let ${\Prefix = (p_1, \dots, p_k, \dots, p_K)}$ be an antecedent list,
 then for any ${k \le K}$, we define ${\Prefix^k = (p_1, \dots, p_k)}$
