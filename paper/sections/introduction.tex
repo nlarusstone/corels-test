@@ -126,7 +126,7 @@ called Certifiably Optimal RulE ListS (CORELS), that provides
 (1) the optimal solution, (2) a certificate of optimality, and (3) optionally,
 a collection of near-optimal solutions and the distance between each such solution and the optimal one.
 %
-The certificate of optimality means that we can investigate how close other models (\eg, models provided by greedy algorithms) are to optimal. In particular, we can investigate if the rule lists from probabilistic approaches are nearly optimal or whether those approaches sacrifice too much accuracy in the interest of speed.
+The certificate of optimality means that we can investigate how close other models (\eg models provided by greedy algorithms) are to optimal. In particular, we can investigate if the rule lists from probabilistic approaches are nearly optimal or whether those approaches sacrifice too much accuracy in the interest of speed.
 
 \begin{arxiv}
 Within its branch-and-cut procedure, CORELS maintains an upper bound on the maximum value of $R$ that each incomplete rule list can achieve. This allows it to prune an incomplete rule list (and every possible extension) if the bound is worse than the accuracy of the best rule list that we've already looked at. The use of careful bounding techniques leads to massive pruning of the search space of potential rule lists. We continue to consider incomplete and complete rule lists until we have either examined or eliminated every rule list from consideration. Thus, we terminate with the optimal rule list, the close-to-optimal rule lists, and a certificate of optimality.
