@@ -45,25 +45,34 @@ Otherwise we do nothing (\ie we do not insert $P_i$ into the symmetry-aware map
 or the trie).
 
 We use a queue to store all of the leaves of the trie that still need to be explored.
-We order entries in the queue to implement several different scheduling policies,
-including BFS, DFS, and a priority queue, ordered by the lower bound, the objective,
+%
+We order entries in the queue to implement several different policies,
+including breadth-first search (BFS) and best-first search.
+%
+For best-first we use a priority queue, ordered by the lower bound, the objective,
 or a custom priority metric.
-We also have a stochastic exploration process that bypasses the use of a queue by
-a random path from the root to a leaf.
+%
+We also have a stochastic exploration process that bypasses the need for a queue by
+following a random path from the root to a leaf.
+%
 We find that ordering by the lower bound and other priority metrics
 often leads to a shorter runtime than using BFS.
 
 Mapping our algorithm to our data structures produces the following execution strategy.
-While the trie contains unexplored leaves, use a scheduling policy to select
-the next prefix to extend.
+%
+While the trie contains unexplored leaves, a scheduling policy selects the next prefix to extend.
+%
 Then, for every antecedent that is not already in this prefix, we calculate the lower bound,
 objective, and other metrics for the rule list formed by appending the antecedent to the prefix.
+%
 If the lower bound of the new rule list is less than the current minimum objective, we insert that
 rule list into the symmetry-aware map, trie, and queue, and, if relevant, update the
 current minimum objective.
+%
 If the lower bound is greater than the minimum objective,
-then extension of this rule list could possibly be optimal,
+then no extension of this rule list could possibly be optimal,
 therefore we do not insert the new rule list into the tree or queue.
+%
 We also leverage our other bounds from~\S\ref{sec:setup}
 to aggressively prune the search space.
 
