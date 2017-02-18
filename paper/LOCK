@@ -2,11 +2,11 @@ kdd17.tex --
 arxiv.tex --
 
 intro --
+related work --
 framework -- elaine
 bounds --
 incremental --
 implementation --
 experiments --
-related work --
 
 refs --
