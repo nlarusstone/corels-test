@@ -11,16 +11,20 @@ the metadata consists of bookkeeping information such as what child rule lists a
 the lower bound and accuracy for that rule list.
 We also track the best observed minimum objective and its associated rule list.
 
-We implement the symmetry-aware map using the C++ STL unordered\_map, which
+The symmetry-aware map supports symmetry-aware pruning.
+%
+We implement this using the C++ STL unordered\_map, which
 % Since we are not yet doing anything with the capture-based representation, we shouldn't
 % discuss it as we won't be showing performance.
 % We have two different versions of the map.
 % Both versions 
 maps all permutations of a set of antecedents to a key, whose value
 contains the best ordering of those antecedents (\ie the prefix with the smallest lower bound).
-Every antecedent has an antecedent id number, and we call the numerically
-sorted order of a set of antecedents its canonical order, thus
-by quering a set of antecedents by its canonical order, all
+%
+Every antecedent is associated with an index, and we call the numerically
+sorted order of a set of antecedents its canonical order.
+%
+Thus by querying a set of antecedents by its canonical order, all
 permutations map to the same key.
 % Keys in one version of the map represent the set of rules (in canonical order) comprising a
 % rule list prefix.
