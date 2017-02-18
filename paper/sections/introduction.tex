@@ -132,7 +132,31 @@ The certificate of optimality means that we can investigate how close other mode
 Within its branch-and-cut procedure, CORELS maintains an upper bound on the maximum value of $R$ that each incomplete rule list can achieve. This allows it to prune an incomplete rule list (and every possible extension) if the bound is worse than the accuracy of the best rule list that we've already looked at. The use of careful bounding techniques leads to massive pruning of the search space of potential rule lists. We continue to consider incomplete and complete rule lists until we have either examined or eliminated every rule list from consideration. Thus, we terminate with the optimal rule list, the close-to-optimal rule lists, and a certificate of optimality.
 \end{arxiv}
 
-The efficacy of CORELS depends on how much of the search space our bounds allow us to prune. The upper bound on $R$ must thus be as tight as reasonably possible. The bound we maintain throughout the calculation is a minimum of several bounds, that come in three categories. The first category of bounds are those intrinsic to the rules themselves. This category includes bounds stating that each rule must capture sufficient data; if not, the rule list is provably non-optimal. The second type of bound compares an upper bound on the value of $R$ to that of the current best solution. This allows us to exclude parts of the search space that could never be better than our current solution. Finally, our last type of bound is based on comparing incomplete rule lists that capture the same data and pursuing only the more accurate option. This last class of bounds is especially important -- without our use of a novel \textit{symmetry-aware map}, we are unable to solve most problems of reasonable scale. This symmetry-aware map keeps track of the best accuracy for all the permutations of a given incomplete rule list.
+The efficacy of CORELS depends on how much of the search space our bounds
+allow us to prune; we seek a tight lower bound on~$R$.
+%
+The bound we maintain throughout execution is a maximum of several bounds,
+that come in three categories.
+%
+The first category of bounds are those intrinsic to the rules themselves.
+%
+This category includes bounds stating that each rule must capture sufficient data;
+if not, the rule list is provably non-optimal.
+%
+The second type of bound compares a lower bound on the value of~$R$
+to that of the current best solution.
+%
+This allows us to exclude parts of the search space that could never be better
+than our current solution.
+%
+Finally, our last type of bound is based on comparing incomplete rule lists that
+capture the same data and and allow us to pursue only the most accurate option.
+%
+This last class of bounds is especially important -- without our use of a novel
+\textit{symmetry-aware map}, we are unable to solve most problems of reasonable scale.
+%
+This symmetry-aware map keeps track of the best accuracy
+for all the permutations of a given incomplete rule list.
 
 We keep track of these bounds using a modified \emph{prefix tree},
 a data structure also known as a trie.
