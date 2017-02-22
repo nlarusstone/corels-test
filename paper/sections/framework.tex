@@ -1,4 +1,18 @@
 \section{Learning optimal rule lists}
+\label{sec:framework}
+
+\begin{arxiv}
+In this section, we present our framework for learning certifiably optimal rule lists.
+%
+First, we define our setting and useful notation~(\S\ref{sec:setup}),
+followed by the objective function we seek to minimize~(\S\ref{sec:objective}).
+%
+Next, we describe the principal structure of our optimization algorithm~(\S\ref{sec:optimization}), which depends on a hierarchically
+structured objective lower bound~(\S\ref{sec:hierarchical}).
+%
+We then derive a series of additional bounds that we incorporate into our
+algorithm because they enable aggressive pruning of our state space.
+\end{arxiv}
 
 \subsection{Rule lists for binary classification}
 \label{sec:setup}
@@ -23,12 +37,12 @@ is a ${(K+1)}$-tuple consisting of~$K$ distinct association rules,
 ${r_k = p_k \rightarrow q_k}$, for ${k = 1, \dots, K}$,
 followed by a default rule~$r_0$.
 %
-Figure~\ref{fig:rule-list} illustrates
 \begin{arxiv}
+Figure~\ref{fig:rule-list-symbols} illustrates
 a rule list, which for clarity, we sometimes call a $K$-rule list.
 \end{arxiv}
 \begin{kdd}
-a 4-rule list.
+Figure~\ref{fig:rule-list} illustrates a 4-rule list.
 \end{kdd}
 %
 An association rule~${r = p \rightarrow q}$ is an implication
@@ -54,17 +68,7 @@ whose antecedent~$p_0$ simply asserts true.
 
 \begin{arxiv}
 \begin{figure}[t!]
-%\begin{subfigure}{0.18\textwidth}
-%\begin{algorithmic}
-%\normalsize
-%\State \bif $p_1$ \bthen $q_1$
-%\State \belif $p_2$ \bthen $q_2$
-%\State \dots
-%\State \belif $p_K$ \bthen $q_K$
-%\State \belse $q_0$.
-%\end{algorithmic}
-%\end{subfigure}
-%\begin{subfigure}{0.28\textwidth}
+\begin{subfigure}{0.65\textwidth}
 \begin{algorithmic}
 \normalsize
 \State \bif $(age=23-25) \wedge (priors=2-3)$ \bthen $yes$
@@ -73,14 +77,19 @@ whose antecedent~$p_0$ simply asserts true.
 \State \belif $(priors>3)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
-%\vspace{-2mm}
-%\end{subfigure}
-%\caption{A $K$-rule list ${\RL = (r_1, r_2, \dots, r_K, r_0)}$, where
-%each rule ${r_k = p_k \rightarrow q_k}$, for all ${k = 0, \dots K}$.
-%We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
-%where ${\Prefix = (p_1, \dots, p_K)}$
-%and ${\Labels = (q_1, \dots, q_K)}$.}
-\caption{An example 4-rule list ${\RL = (r_1, r_2, r_3, r_4, r_0)}$
+\end{subfigure}
+\begin{subfigure}{0.34\textwidth}
+\begin{algorithmic}
+\normalsize
+\State \bif $p_1$ \bthen $q_1$
+\State \belif $p_2$ \bthen $q_2$
+\State \belif $p_3$ \bthen $q_3$
+\State \belif $p_4$ \bthen $q_4$
+\State \belse $q_0$.
+\end{algorithmic}
+\end{subfigure}
+\caption{The same 4-rule list ${\RL = (r_1, r_2, r_3, r_4, r_0)}$,
+as in Figure~\ref{fig:rule-list},
 that predicts two-year recidivism for the ProPublica dataset.
 Each rule is of the form ${r_k = p_k \rightarrow q_k}$,
 for all ${k = 0, \dots, 4}$.
@@ -88,7 +97,7 @@ We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
 where ${\Prefix = (p_1, p_2, p_3, p_4)}$, ${\Labels = (1, 1, 1, 1)}$,
 ${\Default = 0}$, and ${K=4}$.
 }
-\label{fig:rule-list}
+\label{fig:rule-list-symbols}
 \end{figure}
 \end{arxiv}
 
@@ -240,12 +249,9 @@ given by the lower bound in Theorem~\ref{thm:min-capture}.
 (Theorem~\ref{thm:min-capture}).
 \end{kdd}
 
-\begin{arxiv}
-\subsection{Rule list representation and bit vector operations}
-Something along these lines... look at~\citet{YangRuSe16}
-\end{arxiv}
 
 \subsection{Objective function}
+\label{sec:objective}
 
 \begin{arxiv}
 We define
@@ -280,6 +286,7 @@ by~one.
 %thus let us define~${\Obj(\Prefix, \x, \y) \equiv \Obj(\RL, \x, \y)}$.
 
 \subsection{Optimization framework}
+\label{sec:optimization}
 
 Our objective has structure amenable to global optimization via a branch-and-bound framework.
 %
