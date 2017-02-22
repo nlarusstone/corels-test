@@ -73,7 +73,7 @@ make_figure = False
 
 num_folds = 2
 make_figure = True
-make_small = True
+make_small = False
 
 # log files generated on beepboop
 # no-minor execution using just under 400GB RAM when halted
@@ -91,6 +91,11 @@ if make_small:
     log_root_list = log_root_list[:1] + log_root_list[-3:]
     labels = labels[:1] + labels[-3:]
     ftag += '_small'
+    if (make_figure):
+        pylab.figure(5, figsize=(12, 8))
+else:
+    if (make_figure):
+        pylab.figure(6, figsize=(16, 9))
 
 """
 # deprecated log files
@@ -203,11 +208,6 @@ for (ncomp, log_root) in enumerate(log_root_list):
             color_vec = ['k', 'violet', 'm', 'purple', 'b', 'c', 'g', 'y', 'orange', 'r']
             #color_vec = ['purple', 'b', 'c', 'm', 'gray', 'k'][::-1]
 
-            if (len(log_root_list) == 1):
-                pylab.figure(6, figsize=(14, 9))
-            else:
-                pylab.figure(5, figsize=(12, 8))
-
             if (ncomp == 0):
                 pylab.clf()
                 #pylab.subplot2grid((10, 20), (0, 1), colspan=19, rowspan=9)
@@ -254,11 +254,6 @@ for (ncomp, log_root) in enumerate(log_root_list):
                     txt = pylab.text(tt[0] * 0.47, 1.5, '%d ' % length, fontsize=fs+4)
                 else:
                     txt = pylab.text(tt[0] * 0.4, 1.5, '%d ' % length, fontsize=fs+4)
-            if (ntot == 6):
-                if (ncomp + 1 == ntot):
-                    pylab.legend(['%d' % length for length in range(0, max_length + 1)[::-1]], loc='upper left', fontsize=fs-3)
-            #else:
-            #    #pylab.legend(['%d' % length for length in range(0, max_length + 1)[::-1]], loc='upper left', fontsize=fs-3)
             if (ncomp > ntot/2 - 1):
                 pylab.xlabel('Time (s)', fontsize=fs+2)
             if (ncomp in [0, ntot/2]):
