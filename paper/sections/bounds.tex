@@ -702,12 +702,12 @@ it depends on the misclassification error associated with each
 rule in a rule list, thus it provides a lower bound on the number of
 observations that each such rule must correctly classify.
 
-\begin{arxiv}
+
+\begin{comment}
+
 \subsubsection{Some antecedent relationships that imply insufficient antecedent support}
 
 \dots
-
-\begin{comment}
 Let us say that rule~$A$ dominates rule~$B$ if the data captured by~$B$ is a subset of the data captured by~$A$.
 %
 Rule~$B$ should never follow rule~$A$ in a rule list because it will never capture additional data;
@@ -726,7 +726,7 @@ antecedent is~${(x_1 = 0) \wedge (x_2 = 1)}$, then rule~$A$ dominates rule~$B$.
 %
 %Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
 \end{comment}
-\end{arxiv}
+
 
 \begin{arxiv}
 \subsection{Upper bound on antecedent support}
@@ -1979,7 +1979,9 @@ where~$\Obj^*$ is the best known objective, since the left had expression
 provides a lower bound on~$\Obj(\cal{Q}^*)$.
 \end{comment}
 
-% ELA would like to generalize this to any two prefixes that capture similar data
+\end{arxiv}
+
+\begin{comment}
 
 \subsection{Equivalence of rule lists when rules commute}
 
@@ -1989,9 +1991,6 @@ provides a lower bound on~$\Obj(\cal{Q}^*)$.
 \begin{proof}
 \end{proof}
 
-\end{arxiv}
-
-\begin{comment}
 If two rules~$A$ and~$B$ capture disjoint subsets of data,
 then they commute globally in the sense that any rule list where~$A$ and~$B$ are
 adjacent is equivalent to another rule list where~$A$ and~$B$ swap positions.
@@ -2034,7 +2033,7 @@ the number of observations with the minority label within the set.
 Consider a dataset~${\{(x_n, y_n)\}_{n=1}^N}$ and a set of antecedents~${\{s_m\}_{m=1}^M}$.
 %
 Define distinct datapoints to be equivalent if they are captured by
-exactly the same antecedents, \ie $x_i \neq x_j$ are equivalent if
+exactly the same antecedents, \ie $x_i \neq x_j$ are equivalent~if
 \begin{align}
 \frac{1}{M} \sum_{m=1}^M \one [ \Cap(x_i, s_m) = \Cap(x_j, s_m) ] = 1.
 \end{align}
@@ -2078,6 +2077,11 @@ $\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u)$.
 \end{kdd}
 \end{proposition}
 
+\begin{arxiv}
+\begin{proof}
+\end{proof}
+\end{arxiv}
+
 Now, recall that to obtain our lower bound~${b(\Prefix, \x, \y)}$
 in~\eqref{eq:lower-bound}, we simply deleted the
 default rule misclassification error~$\Loss_0(\Prefix, \Default, \x, \y)$
@@ -2090,7 +2094,7 @@ $\Loss_0(\Prefix, \Default, \x, \y)$ on the default rule misclassification error
 \begin{theorem}[Equivalent points bound]
 \label{thm:identical}
 Let~$\RL$ be a rule list with prefix~$\Prefix$
-and lower bound~${b(\Prefix, \x, \y)}$,
+and lower bound ${b(\Prefix, \x, \y)}$,
 then for any rule list~${\RL' \in \StartsWith(\RL)}$
 whose prefix~$\Prefix$ starts with~$\Prefix$,
 \begin{arxiv}
@@ -2118,3 +2122,8 @@ b_0(\Prefix, \x, \y) = \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
 \end{align}
 \end{kdd}
 \end{theorem}
+
+\begin{arxiv}
+\begin{proof}
+\end{proof}
+\end{arxiv}
