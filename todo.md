@@ -1,6 +1,6 @@
 # To do
 
-## Code review (`clean-up` branch)
+## Code review ([clean-up branch](https://github.com/elaine84/bbcache/tree/clean-up))
 
 ### General
 
@@ -109,9 +109,6 @@
 - [ ] Add stopping condition based on the number of iterations
 
 - [ ] Add policy that switches from curiosity to BFS
-
-- [ ] Queue elements are printed to `queue.txt` -- make this optional,
-      consider an input file name and threshold for number of printed entries
 
 - [ ] Measure our logging overhead and determine a useful heuristic threshold
       (e.g., "writing a log entry every 50 iterations incurs about 1% overhead on tdata")
