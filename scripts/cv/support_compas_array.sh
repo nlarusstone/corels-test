@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH -n 1                            #The number of cores
+#SBATCH -n 4                            #The number of cores
 #SBATCH -N 1                            #Run on 1 node
-#SBATCH --mem=64000                     
+#SBATCH --mem=128000                     
 
 #SBATCH -t 1:00:00 #Indicate duration using HH:MM:SS
 #SBATCH -p serial_requeue #Based on your duration               

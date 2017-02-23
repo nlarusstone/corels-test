@@ -1,10 +1,10 @@
 #!/bin/bash
 
-#SBATCH -n 1                            #The number of cores
+#SBATCH -n 4                            #The number of cores
 #SBATCH -N 1                            #Run on 1 node
 #SBATCH --mem=256000                     
 
-#SBATCH -t 2:00:00 #Indicate duration using HH:MM:SS
+#SBATCH -t 3:00:00 #Indicate duration using HH:MM:SS
 #SBATCH -p serial_requeue #Based on your duration               
 
 #SBATCH -o ./out/pmap_compas_%a_out.txt
