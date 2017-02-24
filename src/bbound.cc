@@ -27,6 +27,27 @@ CuriousNode* curious_construct_policy(unsigned short new_rule, size_t nrules, bo
                             lower_bound, objective, curiosity, parent, num_captured, minority));
 }
 
+size_t prefix_map_size(PrefixPermutationMap* p) {
+	auto entrySize = sizeof(struct prefix_key) + sizeof(std::pair<double, unsigned char*>) + sizeof(void*);
+	auto bucketSize = sizeof(void*);
+	auto adminSize = 3 * sizeof(void*) + sizeof(size_t);
+	auto totalSize = adminSize + p->size() * entrySize + p->max_bucket_count() * bucketSize;
+
+	auto contentSize = 0;
+	for (const auto& kv : *p) {
+		// since accept is a vector<char>, 
+		// it uses capacity() bytes of additional memory
+		contentSize += sizeof(unsigned short) * kv.first.key[0];
+		contentSize += sizeof(unsigned char) * kv.second.second[0];
+	}
+	totalSize += contentSize;
+	return totalSize;
+}
+
+size_t captured_map_size(CapturedPermutationMap* p) {
+	return 0;
+}
+
 void prefix_map_garbage_collect(PrefixPermutationMap* p, size_t queue_min_length) {
     typename PrefixPermutationMap::iterator iter;
     size_t num_deleted = 0;
@@ -71,7 +92,7 @@ N* prefix_permutation_insert(construct_signature<N> construct_policy, unsigned s
 
     std::sort(parent_prefix.begin(), parent_prefix.end());
     
-    unsigned short *pre_key = (unsigned short*) malloc(sizeof(unsigned short) * (len_prefix + 1));
+    unsigned short *pre_key = new unsigned short[(len_prefix + 1)];//(unsigned short*) malloc(sizeof(unsigned short) * (len_prefix + 1));
     pre_key[0] = (unsigned short)len_prefix;
     memcpy(&pre_key[1], &parent_prefix[0], len_prefix * sizeof(unsigned short));
     
@@ -457,6 +478,7 @@ int bbound_queue(CacheTree<N>* tree,
                 Q* q, N*(*front)(Q*),
                 permutation_insert_signature<N, P> permutation_insert,
                 pmap_garbage_collect_signature<P> pmap_garbage_collect,
+                pmap_size_signature<P> pmap_size,
                 P* p, size_t num_iter, size_t switch_iter) {
     bool print_queue = 0;
     double start;
@@ -473,6 +495,8 @@ int bbound_queue(CacheTree<N>* tree,
         start = timestamp();
         logger.setInitialTime(start);
         logger.initializeState();
+        logger.setTreeNodeSize(sizeof(N));
+        logger.setPmapNodeSize(sizeof(struct prefix_key) + 64);
         logger.dumpState();         // initial log record
 
         min_objective = 1.0;
@@ -569,10 +593,17 @@ int bbound_queue(CacheTree<N>* tree,
         printf("Size of permutation map in bytes: %llu\n", pmap_size);
     }
     */
+
+    size_t mem = p->size() * sizeof(std::pair<double, unsigned char*>);
+    mem += p->bucket_count() * (sizeof(size_t) + sizeof(void*));
+    mem += p->size() * sizeof(void*);
+    mem += p->size() * (sizeof(void*) + sizeof(std::pair<double, unsigned char*>));
+    mem = pmap_size(p);
     MemTrack::TrackListMemoryUsage();
     //MemTrack::TrackListMemoryUsage();
     printf("TREE mem usage: %zu\n", logger.getTreeMemory());
     printf("PMAP mem usage: %zu\n", logger.getPmapMemory());
+    printf("mem: %zu\n", mem);
 
     // Print out queue
     char fname[] = "queue.txt"; // make this optional
@@ -807,6 +838,7 @@ bbound_queue<BaseNode, BaseQueue, PrefixPermutationMap>(CacheTree<BaseNode>* tre
                                   BaseNode*(*front)(BaseQueue*),
                                   permutation_insert_signature<BaseNode, PrefixPermutationMap> permutation_insert,
                                   pmap_garbage_collect_signature<PrefixPermutationMap> pmap_garbage_collect,
+                                  pmap_size_signature<PrefixPermutationMap> pmap_size,
                                   PrefixPermutationMap* p, size_t num_iter, size_t switch_iter);
 
 template int
@@ -817,6 +849,7 @@ bbound_queue<BaseNode, BaseQueue, CapturedPermutationMap>(CacheTree<BaseNode>* t
                                   BaseNode*(*front)(BaseQueue*),
                                   permutation_insert_signature<BaseNode, CapturedPermutationMap> permutation_insert,
                                   pmap_garbage_collect_signature<CapturedPermutationMap> pmap_garbage_collect,
+                                  pmap_size_signature<CapturedPermutationMap> pmap_size,
                                   CapturedPermutationMap* p, size_t num_iter, size_t switch_iter);
 
 template int
@@ -827,6 +860,7 @@ bbound_queue<CuriousNode, CuriousQueue, PrefixPermutationMap>(CacheTree<CuriousN
                                         CuriousNode*(*front)(CuriousQueue*),
                                         permutation_insert_signature<CuriousNode, PrefixPermutationMap> permutation_insert,
                                         pmap_garbage_collect_signature<PrefixPermutationMap> pmap_garbage_collect,
+                                        pmap_size_signature<PrefixPermutationMap> pmap_size,
                                         PrefixPermutationMap* p, size_t num_iter, size_t switch_iter);
 
 template int
@@ -837,6 +871,7 @@ bbound_queue<CuriousNode, CuriousQueue, CapturedPermutationMap>(CacheTree<Curiou
                                         CuriousNode*(*front)(CuriousQueue*),
                                         permutation_insert_signature<CuriousNode, CapturedPermutationMap> permutation_insert,
                                         pmap_garbage_collect_signature<CapturedPermutationMap> pmap_garbage_collect,
+                                        pmap_size_signature<CapturedPermutationMap> pmap_size,
                                         CapturedPermutationMap* p, size_t num_iter, size_t switch_iter);
 
 template void

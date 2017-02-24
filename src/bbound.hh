@@ -145,6 +145,8 @@ struct captured_hash {
     }
 };
 
+
+
 //typedef std::vector<bool> CapturedKey;
 //typedef VECTOR CapturedKey;
 typedef std::unordered_map<struct prefix_key, std::pair<double, unsigned char*>, prefix_hash> PrefixPermutationMap;
@@ -157,6 +159,12 @@ using pmap_garbage_collect_signature = void (*)(P*, size_t);
 void bfs_prefix_map_garbage_collect(PrefixPermutationMap* p, size_t min_length);
 void prefix_map_garbage_collect(PrefixPermutationMap* p, size_t min_length);
 void captured_map_garbage_collect(CapturedPermutationMap* p, size_t min_length);
+
+template<class P>
+using pmap_size_signature = size_t (*)(P*);
+
+size_t prefix_map_size(PrefixPermutationMap* p);
+size_t captured_map_size(CapturedPermutationMap* p);
 
 template<class N, class P>
 using permutation_insert_signature = N* (*)(construct_signature<N>, unsigned short, size_t, bool, bool, 
@@ -199,6 +207,7 @@ extern int bbound_queue(CacheTree<N>* tree,
                          Q* q, N*(*front)(Q*),
                          permutation_insert_signature<N, P> permutation_insert,
                          pmap_garbage_collect_signature<P> pmap_garbage_collect,
+                         pmap_size_signature<P> pmap_size,
                          P* p, size_t num_iter, size_t switch_iter);
 
 template<class N, class Q, class P>
