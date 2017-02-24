@@ -1,6 +1,6 @@
 # To do
 
-## Code review notes on([clean-up branch](https://github.com/elaine84/bbcache/tree/clean-up))
+## Code review notes on ([clean-up branch](https://github.com/elaine84/bbcache/tree/clean-up))
 
 ## Short paper
 
