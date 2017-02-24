@@ -570,6 +570,9 @@ int bbound_queue(CacheTree<N>* tree,
     }
     */
     MemTrack::TrackListMemoryUsage();
+    //MemTrack::TrackListMemoryUsage();
+    printf("TREE mem usage: %zu\n", logger.getTreeMemory());
+    printf("PMAP mem usage: %zu\n", logger.getPmapMemory());
 
     // Print out queue
     char fname[] = "queue.txt"; // make this optional

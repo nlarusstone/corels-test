@@ -219,7 +219,9 @@ int main(int argc, char *argv[]) {
     }
 
     if (run_bfs) {
+        logger.setTreeNodeSize(sizeof(BaseNode));
         if (use_prefix_perm_map) {
+            logger.setPmapNodeSize(sizeof(struct prefix_key));
             printf("BFS Permutation Map\n");        
             CacheTree<BaseNode> tree(nsamples, nrules, c, rules, labels, meta);
             BaseQueue bfs_q;
