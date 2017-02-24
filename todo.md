@@ -10,8 +10,12 @@
 - [ ] Are we displaying useful output during execution and at the end?
 - [ ] We should add the ability to generate predictions for a test dataset on a learned model
 - [ ] Would we like to support a more "plug-in" style framework (for scheduling policies, node types, and/or algorithms)?
+- [ ] Can we simplify anything about how we're using templates (are we not really leveraging them in places)?
 
 ### cache.cc and cache.hh
+
+- [ ] Anything that we should strip out of our Node types?  (Or perhaps introduce "lite" versions?)
+- [ ] Any extra cruft being stored in the trie?  (See below regarding interactions with logger)
 
 ### queue.cc and queue.hh
 
@@ -61,6 +65,7 @@
 - [ ] Delete references (in the intro and implementation) to things we haven't done or don't evaluate?
 - [ ] Make room for and add acknowledgements
 - [ ] Provide github link for our code
+- [ ] Revisit Johann's comments
 
 ## Long paper
 
