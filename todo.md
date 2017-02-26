@@ -53,6 +53,8 @@
 
 -----
 
+**Stuff below hasn't been organized recently, but contains some useful thoughts and notes**
+
 ## bbound improvements
 
 - [ ] Add stopping condition based on the number of iterations
@@ -135,6 +137,7 @@
 
 A place to note things we haven't implemented, but might
 
+- [ ] Anything we forgot about from our original Python implementation?
 - [ ] Framework to remember rejected antecedents
 - [ ] Framework aware of rules that commute
 - [ ] Framework aware of dominates relationships
@@ -142,3 +145,6 @@ A place to note things we haven't implemented, but might
 - [ ] Something like Thompson sampling using curiosity
 - [ ] Priority metric that blends between breadth-first and curiosity (non-stochastic)
 - [ ] Enforce that the output optimal rule list is the simplest
+- [ ] Explore simplifying constraints, e.g., rule lists whose predictions (never or rarely) switch between classes
+- [ ] A framework for leveraging our similar support bound (via locality-sensitive hashing?)
+- [ ] Parallelism :)
