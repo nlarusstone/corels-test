@@ -60,7 +60,7 @@ cartAccs <- c()
 cartTrainAccs <- c()
 cartLeaves <- c()
 cps <- c(0.001, 0.003, 0.01, 0.03, 0.1)
-## cps <- c(0.001, 0.003, 0.01, 0.03) ## for adult
+##cps <- c(0.0005, 0.001, 0.002, 0.01, 0.05) ## for adult
 cartResults <- data.frame(stringsAsFactors=F)
 
 for (val in cps) {
@@ -91,6 +91,7 @@ c45Accs <- c()
 c45TrainAccs <- c()
 c45Leaves <- c()
 Cs <- c(0.05, 0.15, 0.25, 0.35, 0.45)
+##Cs <- c(0.00001, 0.0001, 0.001, 0.01, 0.1) ## for adult
 c45Results <- data.frame(stringsAsFactors=F)
 
 for (val in Cs) {
