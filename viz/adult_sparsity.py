@@ -8,13 +8,16 @@ with_training = True
 plt.ion()
 
 z = tb.tabarray(SVfile='../eval/adult_sparsity.csv')
-b = tb.tabarray(SVfile='../eval/adult_sparsity-sbrl.csv', names=z.dtype.names, namesinheader=False)
+b = tb.tabarray(SVfile='../eval/adult_sparsity-sbrl.csv', names=list(z.dtype.names) + ['nclauses'], namesinheader=False,
+                linefixer=lambda x: x + ',2')
+b1 = tb.tabarray(SVfile='../eval/1adult_sparsity-sbrl.csv', names=list(z.dtype.names) + ['nclauses'], namesinheader=False,
+                 linefixer=lambda x: x + ',1')
 #y = tb.tabarray(SVfile='../eval/adult_sparsity-CORELS.csv', names=z.dtype.names, namesinheader=False)
 
-x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b)#.rowstack(y)
+x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(b1)#.rowstack(y)
 
-m = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
-s = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
+m = x.aggregate(On=['Method', 'C', 'cp', 'R', 'nclauses'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
+s = x.aggregate(On=['Method', 'C', 'cp', 'R', 'nclauses'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
 
 fig = plt.figure(1, figsize=(8, 3.5))
 plt.clf()
@@ -24,7 +27,7 @@ m.sort(order=['Method', 'C', 'cp', 'R'])
 s.sort(order=['Method', 'C', 'cp', 'R'])
 
 #ind = range(10, 15) + range(5, 10) + range(5)
-ind = range(10, 12) + range(5, 10)[1:] + range(5)[:-1]
+ind = range(10, 13) + range(5, 10)[1:] + range(5)[:-1]
 m = m[ind].copy()
 s = s[ind].copy()
 
@@ -41,7 +44,7 @@ mdict = {'CORELS': 's', 'C4.5': '^', 'CART': 'd', 'RIPPER': 'v', 'SBRL': 'o'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
 mfcdict = {'CORELS': 'coral', 'C4.5': 'paleturquoise', 'CART': 'white', 'RIPPER': 'skyblue', 'SBRL': 'plum'}
 msvec = np.array([11, 9, 8, 10, 10, 10, 9, 8, 7, 7, 8, 7, 6, 5, 4]) * 2
-msvec = np.array([11, 9, 10, 9, 8, 7, 7, 6, 5, 4]) * 2
+msvec = np.array([9, 7, 9, 10, 9, 8, 7, 7, 6, 5, 4]) * 2
 mew = 2
 
 plt.errorbar(5, 0.8376, yerr=0.0045, color='r', linewidth=0, marker='s', markersize=20, markeredgewidth=2, markeredgecolor='r', markerfacecolor='coral', capsize=4, elinewidth=2)
@@ -89,6 +92,11 @@ for r in m:
         descr += ' (%s)' % ('%1.5f' % r['cp']).strip('0')
     elif r['R']:
         descr += ' (%s)' % ('%1.5f' % r['R']).strip('0')
+    elif r['nclauses']:
+        if (r['nclauses'] == 1):
+            descr += ' (%d clause)' % r['nclauses']
+        else:
+            descr += ' (%d clauses)' % r['nclauses']
     legend += [descr]
 
 fs = 14
@@ -96,7 +104,7 @@ plt.xticks(fontsize=fs)
 plt.yticks(np.arange(0.80, 0.87, 0.01), fontsize=fs)
 plt.xlabel('Model size', fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
-plt.legend(legend, loc='lower right', fontsize=fs-3, numpoints=1, ncol=4, labelspacing=0.5, borderpad=.5, columnspacing=0.1, markerscale=0.6)
+plt.legend(legend, loc='lower left', fontsize=fs-3, numpoints=1, ncol=3, labelspacing=0.5, borderpad=.5, columnspacing=0.1, markerscale=0.6)
 plt.title('Income prediction (adult dataset)', fontsize=fs)
 
 ax.set_xlim(0, 35)
