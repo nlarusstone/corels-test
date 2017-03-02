@@ -141,7 +141,7 @@ def driver(din, dout, froot, train_suffix='', y_suffix=None, delimiter=' ',
         for f in fgroup:
             categories_to_features[f] = category
         flat_features += fgroup
-    assert (len(set(flat_features)) == len(flat_features))
+    #assert (len(set(flat_features)) == len(flat_features))
 
     nrules = len(Xtrain) - 1
     ndata = len(Xtrain[0])
@@ -207,6 +207,10 @@ def driver(din, dout, froot, train_suffix='', y_suffix=None, delimiter=' ',
 def titanic_cols(din='../data/titanic', dout='../data', froot='titanic_cols'):
     rule_name_list = driver(din=din, dout=dout, froot=froot, train_suffix='_train.tab', y_suffix='_train.Y')
     return rule_name_list
+
+def nurse(din='../data/nurse', dout='../data/nurse', froot='nurse.shuffled', maxlhs=2, minsupport=1):
+    driver(din=din, dout=dout, froot=froot, train_suffix='.txt', delimiter=',',
+           maxlhs=maxlhs, minsupport=minsupport)
 
 def telco(din='../data/telco', dout='../data', froot='telco.shuffled', maxlhs=2, minsupport=1):
     driver(din=din, dout=dout, froot=froot, train_suffix='.txt', delimiter=',',
