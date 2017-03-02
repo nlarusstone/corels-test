@@ -2147,5 +2147,19 @@ b_0(\Prefix, \x, \y) = \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
 
 \begin{arxiv}
 \begin{proof}
+\begin{align}
+\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K
+= \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) + \Reg K
+= b(\Prefix, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) \nn
+\end{align}
+where
+\begin{align}
+\Loss_0(\Prefix, \Default, \x, \y)
+&= \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [ q_0 \neq y_n ] \nn \\
+&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [ q_0 \neq y_n ]
+  \wedge \one [ x_n \in e_u ] \nn \\
+&\ge \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [ y_n = q_u ]
+  \wedge \one [ x_n \in e_u ] = b_0(\Prefix, \x, \y).
+\end{align}
 \end{proof}
 \end{arxiv}
