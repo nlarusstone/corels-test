@@ -2066,19 +2066,41 @@ this bound into our framework in Theorem~\ref{thm:identical}.
 
 \begin{proposition}[Global equivalent points bound]
 \label{prop:identical}
-Let~$\RL$ be any rule list, then
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list, then
 \begin{arxiv}
 \begin{align}
-\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u).
+\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u) + \Reg K.
 \end{align}
 \end{arxiv}
 \begin{kdd}
-$\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u)$.
+${\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u) + \Reg K}$.
 \end{kdd}
 \end{proposition}
 
 \begin{arxiv}
 \begin{proof}
+Recall that the objective is ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K}$,
+where the misclassification error~${\Loss(\RL, \x, \y)}$ is given by
+\begin{align}
+\Loss(\RL, \x, \y) &= \Loss_0(\Prefix, \Default, \x, \y) + \Loss_p(\Prefix, \Labels, \x, \y) \nn \\
+&= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[q_0 \neq y_n]
+   + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [q_k \neq y_n] \right) \nn \\
+&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[q_0 \neq y_n]
+   + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [q_k \neq y_n] \right)
+   \wedge \one [x_n \in e_u]  \nn \\
+&\ge \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[y_n = q_u]
+   + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [y_n = q_u] \right)
+   \wedge \one [x_n \in e_u] \nn \\
+&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix)
+   + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \right)
+   \wedge \one [x_n \in e_u] \wedge \one[y_n = q_u] \nn \\
+&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix)
+   + \Cap(x_n, \Prefix) \right)
+   \wedge \one [x_n \in e_u] \wedge \one[y_n = q_u] \nn \\
+&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \one [ x_n \in e_u ] \wedge \one [ y_n = q_u ]
+= \sum_{u=1}^U \theta(e_u). \nn
+\end{align}
+Thus, ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K \ge \sum_{u=1}^U \theta(e_u) + \Reg K}$.
 \end{proof}
 \end{arxiv}
 
