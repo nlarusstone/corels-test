@@ -1,7 +1,16 @@
+"""
+E.g., first run
+
+    ./sbrl.sh adult > adult_sparsity-sbrl.txt
+
+"""
+
 import numpy as np
 
 dataset = 'frisk'
 dataset = 'compas'
+dataset = 'adult'
+#dataset = '1adult'
 
 folds = open('%s_sparsity-sbrl.txt' % dataset, 'rU').read().strip().split('Initialize')[1:]
 out = []

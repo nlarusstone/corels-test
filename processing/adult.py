@@ -113,6 +113,21 @@ def native_country_func(c):
     else:
         return 'Not-United-States'
 
+seed = sum([1, 4, 21, 12, 20]) # a:1, d:4, u:21, l:12, t:20
+num_folds = 10
+
+max_cardinality = 2
+
+if (max_cardinality == 1):
+    min_support = 0.001
+    prefix = '1'
+elif (max_cardinality == 2):
+    min_support = 0.04
+    prefix = ''
+
+labels = ['<=50K', '>50K']
+minor = True
+
 din = os.path.join('..', 'data', 'adult')
 dout = os.path.join('..', 'data', 'CrossValidation')
 fdata = os.path.join(din, 'adult.data')
@@ -121,14 +136,6 @@ fnames = os.path.join(din, 'adult.names')
 fcomplete = os.path.join(din, 'adult-filtered.csv')
 fout = os.path.join(din, 'adult.csv')
 bout = os.path.join('..', 'data', 'adult-binary.csv')
-
-seed = sum([1, 4, 21, 12, 20]) # a:1, d:4, u:21, l:12, t:20
-num_folds = 10
-max_cardinality = 1
-min_support = 0.001
-labels = ['<=50K', '>50K']
-minor = True
-
 
 np.random.seed(seed)
 
@@ -229,14 +236,14 @@ for i in range(num_folds):
     num_rules[i] = mine.mine_rules(din=dout, froot=train_root,
                                    max_cardinality=max_cardinality,
                                    min_support=min_support, labels=labels,
-                                   minor=minor)
-    mine.apply_rules(din=dout, froot=cv_root, labels=labels)
+                                   minor=minor, prefix=prefix)
+    mine.apply_rules(din=dout, froot=cv_root, labels=labels, prefix=prefix)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
 
-#ben.driver(din='../data/adult', dout='../data/adult', froot='adult', train_suffix='.csv',
-#           delimiter=',', is_binary=False, maxlhs=2, minsupport=2.5, out_suffix='')
+#ben.driver(din='../data/adult', dout='../data/adult', froot='adult', train_prefix='.csv',
+#           delimiter=',', is_binary=False, maxlhs=2, minsupport=2.5, out_prefix='')
 #minority.compute_minority(froot='adult', dir='../data/adult')
 
 #mine.mine_rules(din=din, froot=root, max_cardinality=max_cardinality,
-#                min_support=min_support, labels=labels, suffix='_e', minor=minor)
+#                min_support=min_support, labels=labels, prefix='_e', minor=minor)

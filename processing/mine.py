@@ -7,14 +7,14 @@ import tabular as tb
 
 def mine_binary(din='../data/compas', froot='compas', max_cardinality=2,
                min_support=0.005, neg_names=None, minor=True,
-               verbose=False, suffix=''):
+               verbose=False, prefix=''):
     """
     This computes negations of features
 
     """
     fin = os.path.join(din, '%s.csv' % froot)
-    fout = os.path.join(din, '%s%s.out' % (froot, suffix))
-    flabel = os.path.join(din, '%s%s.label' % (froot, suffix))
+    fout = os.path.join(din, '%s%s.out' % (prefix, froot))
+    flabel = os.path.join(din, '%s%s.label' % (prefix, froot))
 
     x = tb.tabarray(SVfile=fin)
 
@@ -80,22 +80,22 @@ def mine_binary(din='../data/compas', froot='compas', max_cardinality=2,
 
     if (minor):
         import minority
-        fminor = os.path.join(din, '%s%s.minor' % (froot, suffix))
+        fminor = os.path.join(din, '%s%s.minor' % (prefix, froot))
         print 'computing', fminor
-        minority.compute_minority(froot='%s%s' % (froot, suffix), dir=din)
+        minority.compute_minority(froot='%s%s' % (prefix, froot), dir=din)
 
     return len(names)
 
 def mine_rules(din='../data/adult', froot='adult', max_cardinality=2,
                min_support=0.01, labels=['<=50K', '>50K'], minor=True,
-               verbose=False, suffix=''):
+               verbose=False, prefix=''):
     """
     This doesn't do negations of features so it's not complete.
 
     """
     fin = os.path.join(din, '%s.csv' % froot)
-    fout = os.path.join(din, '%s%s.out' % (froot, suffix))
-    flabel = os.path.join(din, '%s%s.label' % (froot, suffix))
+    fout = os.path.join(din, '%s%s.out' % (prefix, froot))
+    flabel = os.path.join(din, '%s%s.label' % (prefix, froot))
 
     x = tb.tabarray(SVfile=fin)
     features = list(x.dtype.names)[:-1]
@@ -153,19 +153,19 @@ def mine_rules(din='../data/adult', froot='adult', max_cardinality=2,
 
     if (minor):
         import minority
-        fminor = os.path.join(din, '%s%s.minor' % (froot, suffix))
+        fminor = os.path.join(din, '%s%s.minor' % (prefix, froot))
         print 'computing', fminor
-        minority.compute_minority(froot='%s%s' % (froot, suffix), dir=din)
+        minority.compute_minority(froot='%s%s' % (prefix, froot), dir=din)
 
     return len(names)
 
-def apply_binary(din='../data/compas', froot='compas', neg_names=None):
+def apply_binary(din='../data/compas', froot='compas', neg_names=None, prefix=''):
 
-    ftrain = os.path.join(din, '%s_train.out' % froot)
-    ftrain_label = os.path.join(din, '%s_train.label' % froot)
+    ftrain = os.path.join(din, '%s%s_train.out' % (prefix, froot))
+    ftrain_label = os.path.join(din, '%s%s_train.label' % (prefix, froot))
     ftest = os.path.join(din, '%s_test.csv' % froot)
-    fout = os.path.join(din, '%s_test.out' % froot)
-    flabel = os.path.join(din, '%s_test.label' % froot)
+    fout = os.path.join(din, '%s%s_test.out' % (prefix, froot))
+    flabel = os.path.join(din, '%s%s_test.label' % (prefix, froot))
 
     x = tb.tabarray(SVfile=ftest)
 
@@ -206,12 +206,12 @@ def apply_binary(din='../data/compas', froot='compas', neg_names=None):
                        for (l, r) in zip(labels, recs)]) + '\n')
     f.close()
 
-def apply_rules(din='../data/adult', froot='adult', labels=['<=50K', '>50K']):
+def apply_rules(din='../data/adult', froot='adult', labels=['<=50K', '>50K'], prefix=''):
 
-    ftrain = os.path.join(din, '%s_train.out' % froot)
+    ftrain = os.path.join(din, '%s%s_train.out' % (prefix, froot))
     ftest = os.path.join(din, '%s_test.csv' % froot)
-    fout = os.path.join(din, '%s_test.out' % froot)
-    flabel = os.path.join(din, '%s_test.label' % froot)
+    fout = os.path.join(din, '%s%s_test.out' % (prefix, froot))
+    flabel = os.path.join(din, '%s%s_test.label' % (prefix, froot))
 
     x = tb.tabarray(SVfile=ftest)
     names = x.dtype.names
