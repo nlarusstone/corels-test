@@ -28,15 +28,15 @@ do
     echo "RUNNING CART, C4.5, RIPPER"
     Rscript CompareSparsity.R $cv_fold $outf >> $temp_f 2>&1
 
-    echo "RUNNING SBRL"
-    eval "$sbrl_run" >> $temp_f 2>&1
+    #echo "RUNNING SBRL"
+    #eval "$sbrl_run" >> $temp_f 2>&1
     # super-hack; forgive me. Something quick for KDD deadline
-    sbrl_rules=$(cat $temp_f | grep -i "The best rulelist" | tr ":" "\n" | tail -n 1 | sed "s/ rules.*//g" | xargs)
-    sbrl_acc=$(cat $temp_f | tail -n 1 | sed "s/.*=//g" | xargs)
-    echo "$cv_fold,SBRL,0,0,0,$sbrl_acc,$sbrl_rules,0." >> $outf
+    #sbrl_rules=$(cat $temp_f | grep -i "The best rulelist" | tr ":" "\n" | tail -n 1 | sed "s/ rules.*//g" | xargs)
+    #sbrl_acc=$(cat $temp_f | tail -n 1 | sed "s/.*=//g" | xargs)
+    #echo "$cv_fold,SBRL,0,0,0,$sbrl_acc,$sbrl_rules,0." >> $outf
 done
 
-echo "\nUse CompareSparsity-ela.sh to run CORELS\n"
+#echo "\nUse CompareSparsity-ela.sh to run CORELS\n"
 #echo "\nRUNNING CORELS for all 10 folds of $dataset"
 #echo "using regularization = {0.001, 0.003, 0.005, 0.01, 0.02}"
 #for R in 0.001 0.003 0.005 0.01 0.02; do

@@ -59,11 +59,15 @@ testDataWOClass <- subset(testData, select=-c(Class))
 cartAccs <- c()
 cartTrainAccs <- c()
 cartLeaves <- c()
-cps <- c(0.001, 0.003, 0.01, 0.03, 0.1)
-##cps <- c(0.0005, 0.001, 0.002, 0.01, 0.05) ## for adult (using 0.002 because 0.005 is similar to 0.01)
+if (startsWith(fname, "adult")) {
+    cps <- c(0.0005, 0.001, 0.002, 0.01, 0.05) ## (using 0.002 because 0.005 is similar to 0.01)
+} else {
+    cps <- c(0.001, 0.003, 0.01, 0.03, 0.1)
+}
 cartResults <- data.frame(stringsAsFactors=F)
 
 for (val in cps) {
+    printf("val %1.5f\n", val)
     cartModel <- rpart(Class ~ . , data=as.data.frame(trainData),
                        control = rpart.control(cp=val))
 
@@ -90,8 +94,13 @@ printf("%s", cat(cartTrainAccs, "\n"))
 c45Accs <- c()
 c45TrainAccs <- c()
 c45Leaves <- c()
-Cs <- c(0.05, 0.15, 0.25, 0.35, 0.45)
-##Cs <- c(0.00001, 0.0001, 0.001, 0.01, 0.1) ## for adult
+if (startsWith(fname, "adult")) {
+    Cs <- c(0.00001, 0.0001, 0.001, 0.01, 0.1)
+} else if (startsWith(fname, "frisk")) {
+    Cs <- c(0.00001, 0.0001, 0.0005, 0.001)
+} else {
+    Cs <- c(0.05, 0.15, 0.25, 0.35, 0.45)
+}
 c45Results <- data.frame(stringsAsFactors=F)
 
 for (val in Cs) {
@@ -119,33 +128,38 @@ printf("%s", cat(c45Leaves, "\n"))
 printf("%s", cat(c45TrainAccs, "\n"))
 
 ## RIPPER
-ripResults <- data.frame(stringsAsFactors=F)
-ripModel <- JRip(Class ~ . , data=as.data.frame(trainData))
+if (!(startsWith(fname, "frisk"))) {
+    ripResults <- data.frame(stringsAsFactors=F)
+    ripModel <- JRip(Class ~ . , data=as.data.frame(trainData))
 
-pred.ripModel <- predict(ripModel, newdata=as.data.frame(testDataWOClass), type="class")
-ripAcc <- sum(testData$Class == pred.ripModel)/length(testData$Class)
+    pred.ripModel <- predict(ripModel, newdata=as.data.frame(testDataWOClass), type="class")
+    ripAcc <- sum(testData$Class == pred.ripModel)/length(testData$Class)
 
-trainPred.ripModel <- predict(ripModel, newdata=as.data.frame(trainDataWOClass), type="class")
-ripTrainAcc <- sum(trainData$Class == trainPred.ripModel)/length(trainData$Class)
+    trainPred.ripModel <- predict(ripModel, newdata=as.data.frame(trainDataWOClass), type="class")
+    ripTrainAcc <- sum(trainData$Class == trainPred.ripModel)/length(trainData$Class)
 
-ripRuleLen <- length(as.list(ripModel$classifier$getRuleset()))
-ripResults <- rbind(ripResults, list(fname, "RIPPER", 0.0, 0.0, 0.0, ripAcc, ripRuleLen, ripTrainAcc))
+    ripRuleLen <- length(as.list(ripModel$classifier$getRuleset()))
+    ripResults <- rbind(ripResults, list(fname, "RIPPER", 0.0, 0.0, 0.0, ripAcc, ripRuleLen, ripTrainAcc))
 
 
-printf("RIPPER:\n")
-printf("%.4f\n", ripAcc)
-printf("%d\n", ripRuleLen)
-printf("%.4f\n", ripTrainAcc)
+    printf("RIPPER:\n")
+    printf("%.4f\n", ripAcc)
+    printf("%d\n", ripRuleLen)
+    printf("%.4f\n", ripTrainAcc)
+}
 
 ## Write out results
 colnames(cartResults) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy")
 colnames(c45Results) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy")
-colnames(ripResults) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy")
+if (!(startsWith(fname, "frisk"))) {
+    colnames(ripResults) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy")
+}
 isNewFile <- is.na(file.info(foutput)$size) || file.info(foutput)$size == 0
 write.table(cartResults, foutput, row.names=F, col.names=isNewFile,
             append=!isNewFile, quote = F, sep=",")
 write.table(c45Results, foutput, row.names=F, col.names=F, append=T,
             quote = F, sep=",")
-write.table(ripResults, foutput, row.names=F, col.names=F, append=T,
-            quote = F, sep=",")
-
+if (!(startsWith(fname, "frisk"))) {
+    write.table(ripResults, foutput, row.names=F, col.names=F, append=T,
+                quote = F, sep=",")
+}
