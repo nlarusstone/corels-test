@@ -110,7 +110,7 @@ plt.title('Income prediction (adult dataset)', fontsize=fs)
 ax.set_xlim(0, 35)
 
 if (with_training):
-    ax.set_ylim(0.795, 0.852)
+    ax.set_ylim(0.8, 0.852)
     plt.show()
     plt.savefig('../figs/adult-sparsity-training.pdf')
 else:
