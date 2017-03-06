@@ -101,6 +101,12 @@ class Logger {
     inline void setTreeNumEvaluated(size_t n) {
         _state.tree_num_evaluated = n;
     }
+    inline void setTreeNodeSize(size_t n) {
+        _state.tree_node_size = n;
+    }
+    inline size_t getTreeMemory() {
+        return _state.tree_num_nodes * _state.tree_node_size;
+    }
     inline void setQueueSize(size_t n) {
         _state.queue_size = n;
     }
@@ -154,6 +160,12 @@ class Logger {
     }
     inline void incPmapDiscardNum() {
         ++_state.pmap_discard_num;
+    }
+    inline void setPmapNodeSize(size_t n) {
+        _state.pmap_node_size = n;
+    }
+    inline size_t getPmapMemory() {
+        return _state.pmap_node_size * _state.pmap_size;
     }
     inline void subtreeSize(mpz_t tot, unsigned int len_prefix, double lower_bound) {
         // theorem 4 (fine-grain upper bound on number of remaining prefix evaluations)
@@ -215,11 +227,15 @@ class Logger {
         _state.tree_prefix_length = 0;
         _state.tree_num_nodes = 0;
         _state.tree_num_evaluated = 0;
+        _state.tree_node_size = 0;
+        _state.tree_memory = 0;
         _state.queue_size = 0;
         _state.queue_min_length = 0;
+        _state.queue_memory = 0;
         _state.pmap_size = 0;
         _state.pmap_null_num = 0;
         _state.pmap_discard_num = 0;
+        _state.pmap_memory = 0;
         mpz_init(_state.remaining_space_size);
         initRemainingSpaceSize();
     }
@@ -250,11 +266,16 @@ class Logger {
         size_t tree_prefix_length;
         size_t tree_num_nodes;
         size_t tree_num_evaluated;
+        size_t tree_node_size;
+        size_t tree_memory;
         size_t queue_size;
         size_t queue_min_length;                // monotonically increases
+        size_t queue_memory;
         size_t pmap_size;                       // size of pmap
         size_t pmap_null_num;                   // number of pmap lookup operations that return null
         size_t pmap_discard_num;                // number of pmap lookup operations that trigger discard
+        size_t pmap_node_size;
+        size_t pmap_memory;
         size_t* prefix_lens;
         mpz_t remaining_space_size;
     };

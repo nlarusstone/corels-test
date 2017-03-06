@@ -1,17 +1,19 @@
-\section{Lower bounds for proving optimality}
+%\section{Lower bounds for proving optimality}
+%
+%Our problem has rich structure beyond the hierarchical objective lower bound
+%in Theorem~\ref{thm:bound}, including several instances of symmetries.
+%%
+%In this section, we enumerate a series of additional bounds and
+%symmetries that combine to yield aggressive pruning opportunities
+%throughout the execution of our branch-and-bound algorithm.
+%%
+%We additionally quantify the computational consequences of many
+%of these observations.
+%%
+%Below, we begin with an immediate consequence of Theorem~\ref{thm:bound}.
+%%followed by a more general version of Theorem~\ref{thm:bound}.
 
-Our problem has rich structure beyond the hierarchical objective lower bound
-in Theorem~\ref{thm:bound}, including several instances of symmetries.
-%
-In this section, we enumerate a series of additional bounds and
-symmetries that combine to yield aggressive pruning opportunities
-throughout the execution of our branch-and-bound algorithm.
-%
-We additionally quantify the computational consequences of many
-of these observations.
-%
-Below, we begin with an immediate consequence of Theorem~\ref{thm:bound}.
-%followed by a more general version of Theorem~\ref{thm:bound}.
+Next, we state an immediate consequence of Theorem~\ref{thm:bound}.
 
 \begin{lemma}[Objective lower bound with one-step lookahead]
 \label{lemma:lookahead}
@@ -41,47 +43,47 @@ which includes the penalty for longer prefixes,
 Therefore, even if we encounter a prefix~$\Prefix$
 with lower bound ${b(\Prefix, \x, \y) \le \CurrentObj}$,
 if ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$, then we can prune
-all prefixes~$\Prefix'$ that start with and are longer than~$\Prefix$. \\
+all prefixes~$\Prefix'$ that start with and are longer than~$\Prefix$.
 
-Before proceeding, let us summarize the remainder of this section.
-%
-First, we prove upper bounds on prefix
-length~(\S\ref{sec:ub-prefix-length}),
-and corresponding upper bounds on the number of
-prefix evaluations~(\S\ref{sec:ub-size}).
-%
-\begin{arxiv}
-Next, we prove lower~(\S\ref{sec:lb-support})
-and upper~(\S\ref{sec:ub-support}) bounds on antecedent support,
-and provide a unified analysis of consequences of
-these antecedent support bounds~(\S\ref{sec:reject}).
-\end{arxiv}
-\begin{kdd}
-Next, we prove lower~(\S\ref{sec:lb-support}) bounds on
-antecedent support, and describe algorithmic consequences.
-\end{kdd}
-%
-We then analyze rule lists whose prefixes
-capture the same data~(\S\ref{sec:equivalent}),
-which enables symmetry-aware garbage collection.
-%
-In particular, we highlight the special case of prefixes
-that are equivalent up to a permutation of their
-antecedents~(\S\ref{sec:permutation});
-this enables permutation-aware garbage collection,
-which we characterize via another upper bound on
-the number of prefix evaluations~(\S\ref{sec:permutation-counting}).
-%
-\begin{arxiv}
-Next, we slightly generalize the result from~\S\ref{sec:equivalent}
-to rule lists whose prefixes capture nearly the same data~(\S\ref{sec:similar}).
-%
-\dots
-\end{arxiv}
-%
-Finally, we show how to tighten the objective lower bound,
-sometimes dramatically, when the data of interest partitions
-into non-singleton equivalence classes~(\S\ref{sec:identical}).
+%Before proceeding, let us summarize the remainder of this section.
+%%
+%First, we prove upper bounds on prefix
+%length~(\S\ref{sec:ub-prefix-length}),
+%and corresponding upper bounds on the number of
+%prefix evaluations~(\S\ref{sec:ub-size}).
+%%
+%\begin{arxiv}
+%Next, we prove lower~(\S\ref{sec:lb-support})
+%and upper~(\S\ref{sec:ub-support}) bounds on antecedent support,
+%and provide a unified analysis of consequences of
+%these antecedent support bounds~(\S\ref{sec:reject}).
+%\end{arxiv}
+%\begin{kdd}
+%Next, we prove lower~(\S\ref{sec:lb-support}) bounds on
+%antecedent support, and describe algorithmic consequences.
+%\end{kdd}
+%%
+%We then analyze rule lists whose prefixes
+%capture the same data~(\S\ref{sec:equivalent}),
+%which enables symmetry-aware garbage collection.
+%%
+%In particular, we highlight the special case of prefixes
+%that are equivalent up to a permutation of their
+%antecedents~(\S\ref{sec:permutation});
+%this enables permutation-aware garbage collection,
+%which we characterize via another upper bound on
+%the number of prefix evaluations~(\S\ref{sec:permutation-counting}).
+%%
+%\begin{arxiv}
+%Next, we slightly generalize the result from~\S\ref{sec:equivalent}
+%to rule lists whose prefixes capture nearly the same data~(\S\ref{sec:similar}).
+%%
+%\dots
+%\end{arxiv}
+%%
+%Finally, we show how to tighten the objective lower bound,
+%sometimes dramatically, when the data of interest partitions
+%into non-singleton equivalence classes~(\S\ref{sec:identical}).
 
 \subsection{Upper bounds on prefix length}
 \label{sec:ub-prefix-length}
@@ -219,8 +221,12 @@ gives~\eqref{eq:max-length-trivial}.
 \end{proof}
 \end{arxiv}
 
-For any particular prefix~$\Prefix$, we can obtain potentially tighter upper bounds on
-prefix length for the family of all prefixes that start with~$\Prefix$.
+For any particular prefix~$\Prefix$, we can obtain potentially tighter
+upper bounds on prefix length for
+\begin{arxiv}
+the family of
+\end{arxiv}
+all prefixes that start with~$\Prefix$.
 
 %
 %\begin{kdd}
@@ -267,11 +273,11 @@ and Proposition~\ref{prop:trivial-length} gives~\eqref{eq:max-length-prefix}.
 \end{proof}
 \end{arxiv}
 
-Theorem~\ref{thm:ub-prefix-specific} can be viewed as a generalization
-of our one-step lookahead bound in Lemma~\ref{lemma:lookahead};
-rearranging to obtain a bound on~${K' - K}$
-gives an upper bound on the number of remaining `steps' corresponding
-to an iterative sequence of single-rule extensions of a prefix~$\Prefix$.
+We can view Theorem~\ref{thm:ub-prefix-specific} as a generalization
+of our one-step lookahead bound (Lemma~\ref{lemma:lookahead}),
+as~\eqref{eq:max-length-prefix} is equivalently a bound on ${K' - K}$,
+an upper bound on the number of remaining `steps' corresponding to
+an iterative sequence of single-rule extensions of a prefix~$\Prefix$.
 %
 \begin{arxiv}
 Notice that when~${\RL = ((), (), q_0, 0)}$ is the empty rule list,
@@ -306,8 +312,8 @@ present Theorem~\ref{thm:remaining-eval-fine},
 in which we use information about the state of
 Algorithm~\ref{alg:branch-and-bound}'s execution
 to calculate, for any given execution state,
-upper bounds on the number of prefix evaluations that might
-be required during the remaining course of algorithm execution.
+upper bounds on the number of additional prefix evaluations that might
+be required for the execution to complete.
 %
 This number of remaining evaluations is equal to the number of
 prefixes that are currently in or will be inserted into the queue.
@@ -399,7 +405,7 @@ Algorithm~\ref{alg:branch-and-bound}'s execution.
 It only depends on the number of rules and
 the regularization parameter~$\Reg$;
 \ie unlike Theorem~\ref{thm:remaining-eval-fine},
-it does not utilize algorithm execution state to
+it does not use algorithm execution state to
 bound the size of the search space.
 
 \begin{proposition}[Upper bound on the total number of prefix evaluations]
@@ -409,11 +415,20 @@ evaluated by Algorithm~\ref{alg:branch-and-bound}, given the state space of
 all rule lists formed from a set~$\RuleSet$ of~$M$ rules.
 %
 For any set~$\RuleSet$ of $M$ rules,
+\begin{arxiv}
 \begin{align}
 \TotalRemaining(\RuleSet) \le \sum_{k=0}^K \frac{M!}{(M - k)!},
 \label{eq:size-naive}
 \end{align}
 where ${K = \min(\lfloor 1/2 \Reg \rfloor, M)}$.
+\end{arxiv}
+\begin{kdd}
+\begin{align}
+\TotalRemaining(\RuleSet) \le \sum_{k=0}^K \frac{M!}{(M - k)!},
+\quad \text{where} \quad K = \min(\lfloor 1/2 \Reg \rfloor, M).
+\label{eq:size-naive}
+\end{align}
+\end{kdd}
 \end{proposition}
 
 \begin{proof}
@@ -522,12 +537,18 @@ Let ${\OptimalRL = (\Prefix, \Labels, \Default, K) \in \argmin_\RL \Obj(\RL, \x,
 be any optimal rule list, with objective~$\OptimalObj$.
 %
 For each antecedent~$p_k$ in prefix ${\Prefix = (p_1, \dots, p_K)}$,
+\begin{arxiv}
 the regularization parameter~$\Reg$ provides a lower bound
 on the normalized support of~$p_k$,
 \begin{align}
 \Reg < \Supp(p_k, \x \given \Prefix).
 \label{eq:min-capture}
 \end{align}
+\end{arxiv}
+\begin{kdd}
+the regularization parameter provides a lower bound,
+${\Reg < \Supp(p_k, \x \given \Prefix)}$, on the normalized support of~$p_k$.
+\end{kdd}
 \end{theorem}
 
 \begin{arxiv}
@@ -570,7 +591,13 @@ on the support of an antecedent~$p_i$ in an optimal rule list~$\OptimalRL$.
 Thus, we can prune a prefix~$\Prefix$ if any of its antecedents do not capture
 more than a fraction~$\Reg$ of data, even if~${b(\Prefix, \x, \y) < \OptimalObj}$.
 %
-Notice that the bound in Theorem~\ref{thm:min-capture}
+\begin{arxiv}
+Notice that the
+\end{arxiv}
+\begin{kdd}
+The
+\end{kdd}
+bound in Theorem~\ref{thm:min-capture}
 depends on the antecedents, but not the label predictions,
 and thus doesn't account for misclassification error.
 %
@@ -581,7 +608,7 @@ tightens the upper bound on~$\Obj(\RL, \x, \y)$ in~\eqref{eq:ub-i}.
 \end{arxiv}
 \begin{kdd}
 Theorem~\ref{thm:min-capture-correct} gives a tighter bound
-by leveraging this additional information.
+by leveraging this information.
 \end{kdd}
 
 \begin{theorem}[Lower bound on accurate antecedent support]
@@ -600,11 +627,16 @@ a_k \equiv \frac{1}{N} \sum_{n=1}^N
   \Cap(x_n, p_k \given \Prefix) \wedge \one [ q_k = y_n ].
 \label{eq:rule-correct}
 \end{align}
+\begin{arxiv}
 The regularization parameter~$\Reg$ provides a lower bound on~$a_k$:
 \begin{align}
 \Reg < a_k.
 \label{eq:min-capture-correct}
 \end{align}
+\end{arxiv}
+\begin{kdd}
+The regularization parameter provides a lower bound, $\Reg < a_k$.
+\end{kdd}
 \end{theorem}
 
 \begin{arxiv}
@@ -658,7 +690,7 @@ checking it first can accelerate pruning.
 %
 In addition to applying Theorem~\ref{thm:min-capture} in the context of
 constructing rule lists, we can furthermore apply it in the context of
-rule mining~(\S\ref{sec:rule-mining}).
+rule mining~(\S\ref{sec:setup}).
 %
 Specifically, it implies that we should only mine rules with
 normalized support greater than~$\Reg$;
@@ -670,12 +702,12 @@ it depends on the misclassification error associated with each
 rule in a rule list, thus it provides a lower bound on the number of
 observations that each such rule must correctly classify.
 
-\begin{arxiv}
+
+\begin{comment}
+
 \subsubsection{Some antecedent relationships that imply insufficient antecedent support}
 
 \dots
-
-\begin{comment}
 Let us say that rule~$A$ dominates rule~$B$ if the data captured by~$B$ is a subset of the data captured by~$A$.
 %
 Rule~$B$ should never follow rule~$A$ in a rule list because it will never capture additional data;
@@ -694,7 +726,7 @@ antecedent is~${(x_1 = 0) \wedge (x_2 = 1)}$, then rule~$A$ dominates rule~$B$.
 %
 %Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
 \end{comment}
-\end{arxiv}
+
 
 \begin{arxiv}
 \subsection{Upper bound on antecedent support}
@@ -813,7 +845,7 @@ therefore~$\Prefix''$ cannot be optimal,
 Similar to Theorem~\ref{thm:min-capture}, our lower bound on
 antecedent support, we can apply Theorem~\ref{thm:ub-support}
 in the contexts of both constructing rule lists and
-rule mining~(\S\ref{sec:rule-mining}).
+rule mining~(\S\ref{sec:setup}).
 %
 Theorem~\ref{thm:ub-support} implies that if we only seek a single
 optimal rule list, then during branch-and-bound execution,
@@ -1091,7 +1123,7 @@ in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
 
 \end{arxiv}
 
-\subsection{Equivalent support bound for symmetry-aware garbage collection}
+\subsection{Equivalent support bound}
 \label{sec:equivalent}
 
 Let~$\PrefixB$ be a prefix, and let~$\xi(\PrefixB)$ be the set
@@ -1403,13 +1435,13 @@ and their objective lower bounds obey
 ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$,
 Theorem~\ref{thm:equivalent} implies that we can prune~$\PrefixB$.
 %
-In our implementation, we call this symmetry-aware garbage collection.
+%In our implementation, we call this symmetry-aware garbage collection.
 %
 Next, in Sections~\ref{sec:permutation} and~\ref{sec:permutation-counting},
 we highlight and analyze the special case of prefixes that capture
 the same data because they contain the same antecedents.
 
-\subsubsection{Permutation bound for permutation-aware garbage collection}
+\subsubsection{Permutation bound}% for permutation-aware garbage collection}
 \label{sec:permutation}
 
 Let~${P = \{p_k\}_{k=1}^K}$ be a set of~$K$ antecedents,
@@ -1461,46 +1493,52 @@ lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$
 \end{align}
 \end{corollary}
 
+\begin{arxiv}
 \begin{proof}
 Since prefixes~$\Prefix$ and~$\PrefixB$ contain
 the same antecedents, they both capture the same data.
 Thus, we can apply Theorem~\ref{thm:equivalent}.
 \end{proof}
+\end{arxiv}
 
 Thus if prefixes~$\Prefix$ and~$\PrefixB$ have the same antecedents,
 up to a permutation, and their objective lower bounds
 obey~${b(\Prefix, \x, \y) \le}$ ${b(\PrefixB, \x, \y)}$,
 Corollary~\ref{thm:permutation} implies that we can prune~$\PrefixB$.
 %
-We call this permutation-aware
-garbage collection, and we illustrate the subsequent
+We call this %permutation-aware garbage collection,
+symmetry-aware pruning,
+and we illustrate the subsequent
 computational savings next in~\S\ref{sec:permutation-counting}.
 
-\subsubsection{Upper bound on prefix evaluations with permutation-aware garbage collection}
+\subsubsection{Upper bound on prefix evaluations with symmetry-aware pruning}
 \label{sec:permutation-counting}
 
 Here, we present an upper bound on the total number of prefix
-evaluations that accounts for the effect of permutation-aware
-garbage collection~(\S\ref{sec:permutation}).
+evaluations that accounts for the effect of symmetry-aware
+pruning~(\S\ref{sec:permutation}).
 %
 Since every subset of~$K$ antecedents generates an equivalence
-class of~$K!$ prefixes equivalent up to permutation, permutation-aware
-garbage collection dramatically prunes the search space.
+class of~$K!$ prefixes equivalent up to permutation, symmetry-aware
+pruning dramatically reduces the search space.
 
-First, notice that Algorithm~\ref{alg:branch-and-bound} describes a
+\begin{arxiv}
+First, notice that
+\end{arxiv}
+Algorithm~\ref{alg:branch-and-bound} describes a
 breadth-first exploration of the state space of rule lists.
 %
-Now suppose we integrate permutation-aware garbage collection into
+Now suppose we integrate symmetry-aware pruning into
 our execution of branch-and-bound, so that after evaluating
 prefixes of length~$K$, we only keep a single best prefix
 from each set of prefixes equivalent up to a permutation.
 
 \begin{theorem}[Upper bound on the total number of prefix evaluations with
-permutation-aware garbage collection]
+symmetry-aware pruning]
 %
 Consider a state space of all rule lists formed from a set~$\RuleSet$
 of~$M$ antecedents, and consider the branch-and-bound algorithm with
-permutation-aware garbage collection.
+symmetry-aware pruning.
 %
 Define $\TotalRemaining(\RuleSet)$ to be the total number of prefixes evaluated.
 %
@@ -1549,8 +1587,8 @@ Let us compare, for example, to the na\"ive number of prefix evaluations
 given by the upper bound in Proposition~\ref{thm:ub-total-eval}.
 %
 If~${M = 100}$ and~${K = 5}$, then the na\"ive number is about
-${9.1 \times 10^9}$, while the reduced number due to permutation-aware
-garbage collection is about ${3.9 \times 10^8}$,
+${9.1 \times 10^9}$, while the reduced number due to symmetry-aware
+pruning is about ${3.9 \times 10^8}$,
 which is smaller by a factor of about~23.
 %
 If~${M=1000}$ and~${K = 10}$, the number of evaluations falls from
@@ -1558,8 +1596,13 @@ about~${9.6 \times 10^{29}}$ to about~${2.7 \times 10^{24}}$,
 which is smaller by a factor of about~360,000.
 %
 % ELA : someone please double-check these numbers :)
+\begin{arxiv}
 
-While a number like~$10^{24}$ seems infeasibly enormous,
+\end{arxiv}
+\begin{kdd}
+%
+\end{kdd}
+While~$10^{24}$ seems infeasibly enormous,
 it does not represent the number of rule lists we evaluate.
 %
 As we show in ~(\S\ref{sec:experiments}),
@@ -1574,8 +1617,8 @@ ${K=10}$ rules represents a (heuristic) upper limit on
 the size of an interpretable rule list,
 and ${M=1000}$ represents the approximate number of rules
 with sufficiently high support (Theorem~\ref{thm:min-capture})
-we expect to obtain via rule mining~(\S\ref{sec:rule-mining}),
-for many datasets that might be used for constructing interpretable models.
+we expect to obtain via rule mining~(\S\ref{sec:setup}).
+%for many datasets that might be used for constructing interpretable models.
 
 \begin{arxiv}
 \subsection{Similar support bound}
@@ -1936,7 +1979,9 @@ where~$\Obj^*$ is the best known objective, since the left had expression
 provides a lower bound on~$\Obj(\cal{Q}^*)$.
 \end{comment}
 
-% ELA would like to generalize this to any two prefixes that capture similar data
+\end{arxiv}
+
+\begin{comment}
 
 \subsection{Equivalence of rule lists when rules commute}
 
@@ -1946,9 +1991,6 @@ provides a lower bound on~$\Obj(\cal{Q}^*)$.
 \begin{proof}
 \end{proof}
 
-\end{arxiv}
-
-\begin{comment}
 If two rules~$A$ and~$B$ capture disjoint subsets of data,
 then they commute globally in the sense that any rule list where~$A$ and~$B$ are
 adjacent is equivalent to another rule list where~$A$ and~$B$ swap positions.
@@ -1991,7 +2033,7 @@ the number of observations with the minority label within the set.
 Consider a dataset~${\{(x_n, y_n)\}_{n=1}^N}$ and a set of antecedents~${\{s_m\}_{m=1}^M}$.
 %
 Define distinct datapoints to be equivalent if they are captured by
-exactly the same antecedents, \ie $x_i \neq x_j$ are equivalent if
+exactly the same antecedents, \ie $x_i \neq x_j$ are equivalent~if
 \begin{align}
 \frac{1}{M} \sum_{m=1}^M \one [ \Cap(x_i, s_m) = \Cap(x_j, s_m) ] = 1.
 \end{align}
@@ -2018,22 +2060,49 @@ yields a tighter objective lower bound that we can combine with our other bounds
 as our experiments demonstrate~(\S\ref{sec:experiments}),
 the practical consequences can be dramatic.
 %
-First, for intuition, we present a global bound in
+First, for intuition, we present a general bound in
 Proposition~\ref{prop:identical}; next, we explicitly integrate
 this bound into our framework in Theorem~\ref{thm:identical}.
 
-\begin{proposition}[Global equivalent points bound]
+\begin{proposition}[General equivalent points bound]
 \label{prop:identical}
-Let~$\RL$ be any rule list, then
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list, then
 \begin{arxiv}
 \begin{align}
-\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u).
+\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u) + \Reg K.
 \end{align}
 \end{arxiv}
 \begin{kdd}
-$\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u)$.
+${\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u) + \Reg K}$.
 \end{kdd}
 \end{proposition}
+
+\begin{arxiv}
+\begin{proof}
+Recall that the objective is ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K}$,
+where the misclassification error~${\Loss(\RL, \x, \y)}$ is given by
+\begin{align}
+\Loss(\RL, \x, \y) &= \Loss_0(\Prefix, \Default, \x, \y) + \Loss_p(\Prefix, \Labels, \x, \y) \nn \\
+&= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[q_0 \neq y_n]
+   + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [q_k \neq y_n] \right) \nn \\
+&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[q_0 \neq y_n]
+   + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [q_k \neq y_n] \right)
+   \wedge \one [x_n \in e_u]  \nn \\
+&\ge \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[y_n = q_u]
+   + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [y_n = q_u] \right)
+   \wedge \one [x_n \in e_u] \nn \\
+&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix)
+   + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \right)
+   \wedge \one [x_n \in e_u] \wedge \one[y_n = q_u] \nn \\
+&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix)
+   + \Cap(x_n, \Prefix) \right)
+   \wedge \one [x_n \in e_u] \wedge \one[y_n = q_u] \nn \\
+&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \one [ x_n \in e_u ] \wedge \one [ y_n = q_u ]
+= \sum_{u=1}^U \theta(e_u). \nn
+\end{align}
+Thus, ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K \ge \sum_{u=1}^U \theta(e_u) + \Reg K}$.
+\end{proof}
+\end{arxiv}
 
 Now, recall that to obtain our lower bound~${b(\Prefix, \x, \y)}$
 in~\eqref{eq:lower-bound}, we simply deleted the
@@ -2047,12 +2116,13 @@ $\Loss_0(\Prefix, \Default, \x, \y)$ on the default rule misclassification error
 \begin{theorem}[Equivalent points bound]
 \label{thm:identical}
 Let~$\RL$ be a rule list with prefix~$\Prefix$
-and lower bound~${b(\Prefix, \x, \y)}$,
+and lower bound ${b(\Prefix, \x, \y)}$,
 then for any rule list~${\RL' \in \StartsWith(\RL)}$
-whose prefix~$\Prefix$ starts with~$\Prefix$,
+whose prefix~$\Prefix'$ starts with~$\Prefix$,
 \begin{arxiv}
 \begin{align}
 \Obj(\RL', \x, \y) \ge b(\Prefix, \x, \y) + b_0(\Prefix, \x, \y),
+\label{eq:identical}
 \end{align}
 where
 \end{arxiv}
@@ -2074,3 +2144,22 @@ b_0(\Prefix, \x, \y) = \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
 \end{align}
 \end{kdd}
 \end{theorem}
+
+\begin{arxiv}
+\begin{proof}
+\begin{align}
+\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K
+= \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) + \Reg K
+= b(\Prefix, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) \nn
+\end{align}
+where
+\begin{align}
+\Loss_0(\Prefix, \Default, \x, \y)
+&= \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [ q_0 \neq y_n ] \nn \\
+&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [ q_0 \neq y_n ]
+  \wedge \one [ x_n \in e_u ] \nn \\
+&\ge \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [ y_n = q_u ]
+  \wedge \one [ x_n \in e_u ] = b_0(\Prefix, \x, \y).
+\end{align}
+\end{proof}
+\end{arxiv}

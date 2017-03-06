@@ -1,6 +1,12 @@
-kdd17.tex -- 
+kdd17.tex --
 arxiv.tex --
 
+intro --
+related work --
 framework --
 bounds --
+incremental --
+implementation --
 experiments --
+
+refs --

@@ -1,42 +1,316 @@
 \section{Experiments}
 \label{sec:experiments}
 
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
+\begin{arxiv}
+\includegraphics[trim={10mm, 5mm, 25mm, 5mm},
+width=\textwidth]{figs/compare-compas-weapon.pdf}
+\end{arxiv}
+\begin{kdd}
+% left lower right upper
+\includegraphics[trim={10mm, 11mm, 25mm, 5mm},
+width=0.48\textwidth]{figs/compare-compas-weapon.pdf}
+\end{kdd}
+\end{center}
+\caption{Test accuracy means (white squares),
+standard deviations (error bars),
+and values (colors correspond to folds).
+}
+\label{fig:comparison}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
+\begin{arxiv}
+\includegraphics[trim={12mm, 0mm, 24mm, 5mm},
+width=0.75\textwidth]{figs/compas-sparsity-training.pdf}
+\end{arxiv}
+\begin{kdd}
+% left lower right upper
+\includegraphics[trim={12mm, 0mm, 24mm, 5mm}, width=0.43\textwidth]{figs/compas-sparsity-training.pdf}
+\end{kdd}
+\begin{arxiv}
+\includegraphics[trim={12mm, 5mm, 24mm, 1mm},
+width=0.75\textwidth]{figs/frisk-sparsity-training.pdf}
+\end{arxiv}
+\begin{kdd}
+% left lower right upper
+\includegraphics[trim={12mm, 12mm, 24mm, 1mm}, width=0.43\textwidth]{figs/frisk-sparsity-training.pdf}
+\end{kdd}
+\end{center}
+\caption{Training and test accuracy as a function of model size.
+%
+For CORELS, CART, and C4.5, we vary the regularization parameter~$\Reg$,
+and complexity parameters~$cp$ and~$C$, respectively.
+% and are indicated within parentheses in the legend.
+%
+Legend markers and error bars indicate means and standard deviations,
+respectively, of test accuracy across cross-validation folds.
+%
+Small circles mark associated training accuracy means.
+%
+Top:  %Two-year recidivism prediction for the ProPublica COMPAS dataset.
+ProPublica dataset.
+%
+None of the models exhibit significant overfitting.
+%mean training accuracy never exceeds mean test accuracy
+%by more than about 0.01.
+%
+Bottom:  %Weapon prediction for the NYCLU stop-and-frisk dataset.
+NYCLU dataset.
+%
+Only CART with ${cp = 0.001}$ significantly overfits.
+%
+We do not depict C4.5, which finds large models (${>100}$ leaves)
+and dramatically overfits for all tested parameters.
+}
+\label{fig:sparsity}
+\end{figure}
+
+% CART implementation in R's rpart
+% C4.5 = J48 in RWeka
+% RIPPER in R's caret
+
 Our experimental analysis addresses four questions:
-(1) How does CORELS' accuracy compare to other algorithms?
+(1) How does CORELS' accuracy and model size compare to other algorithms?
 (2) How rapidly does the objective function converge?
 (3) How rapidly does CORELS prune the search space?
 (4) How much does each of the implementation optimizations contribute to CORELS' performance?
-All results presented use the COMPAS data set unless otherwise noted,
-and were executed on (describe machine) \dots
-[Sentence that we have more experiments]
+%
+All results presented were executed on a server with two Intel Xeon E5-2699~v4
+(55MB~cache, 2.20~GHz) processors and 448GB~RAM.
+%
+Except where we mention a memory constraint, all experiments
+can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.\begin{kdd}
+~\footnote{Due to page constraints, we only present a subset of experiments from
+an extensive evaluation contained in a long version of this report (in preparation).}
+\end{kdd}
+%
+We focus on two problems:
+using the ProPublica dataset~\cite{LarsonMaKiAn16} to predict two-year recidivism,
+and using the NYCLU 2014 stop-and-frisk dataset~\cite{nyclu:2014} to predict
+whether a weapon will be found on a stopped individual who is frisked or searched.
 
-We first ran a 10-fold cross validation experiment using CORELS and eight other algorithms:
-GLM, SVM, AdaBoost, CART, C4.5, RF, RIPPER, and scalable rule lists (SBRL).
-There were no statistically significant differences in the accuracies of the
-algorithms. In fact, the difference between folds was far larger than the difference
-between algorithms. We conclude that CORELS produces models whose accuracy is comparable
+We first ran a 10-fold cross validation experiment using CORELS and eight other
+algorithms:~\footnote{We use standard R packages, with default parameter settings, for the first seven.}
+logistic regression, support vector machines, AdaBoost, CART, C4.5, random forests, RIPPER,~\footnote{We were unable to execute RIPPER for the NYCLU problem.} and scalable Bayesian rule lists (SBRL).~\footnote{https://github.com/Hongyuy/sbrlmod}
+%
+Figure~\ref{fig:rule-list} shows an  optimal rule list that CORELS learns
+for the ProPublica dataset.
+%
+Figure~\ref{fig:comparison} shows that there were no statistically significant
+differences in algorithm accuracies.
+\begin{arxiv}
+In fact, the difference between folds was far larger than the difference
+between algorithms.
+We conclude that CORELS produces models whose accuracy is comparable
 to those found via other algorithms.
 
-Figure \ref{fig:objective} illustrates how both the objective and the size of
+\end{arxiv}
+%
+Figure~\ref{fig:sparsity} summarizes differences in accuracy and model size
+for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
+%
+For both problems, CORELS can learn short rule lists without sacrificing accuracy.
+
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
+\begin{arxiv}
+\includegraphics[trim={20mm, 15mm, 24mm, 15mm},
+width=0.75\textwidth]{figs/compas_execution-remaining-space.pdf}
+\end{arxiv}
+\begin{kdd}
+% left lower right upper
+\includegraphics[trim={20mm, 25mm, 24mm, 15mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
+\end{kdd}
+\end{center}
+\caption{CORELS with (lines) and without
+(dashes) the equivalent points bound (Theorem~\ref{thm:identical}).
+%
+%Horizontal axes plot wall clock time (log scale).
+%
+Top: Objective value (thin line) and lower bound (thick line) for CORELS,
+and lower bound (dashes) for an execution without the equivalent points bound.
+%as a function of wall clock time (log scale).
+%
+Numbered hatch marks
+%along the objective
+indicate when the length of the best known rule list changes,
+and are labeled by the new length.
+%
+%CORELS quickly the optimal value (star marker),
+%and certifies optimality when the lower bound matches the objective value.
+A star marks the optimum.
+%
+% A separate execution of
+%CORELS without the equivalent points bound remains far from complete,
+%and its lower bound (dashed line) far from the optimum.
+%
+Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
+%as a function of wall clock time,
+where~$\Remaining(\CurrentObj, \Queue)$
+is the upper bound on remaining search space size
+(Theorem~\ref{thm:remaining-eval-fine}).
+}
+\label{fig:objective}
+\end{figure}
+
+%\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
+\begin{arxiv}
+\begin{table}[t!]
+\begin{tabular}{l | c | c | c | c | c}
+Removed component & $t_\text{total}$ (min) & $t_\text{opt}$ (s) & $i_\text{total}$ ($\times 10^6$) & $Q_\text{max}$ ($\times 10^6$) & $K_\text{max}$ \\
+\hline
+none (CORELS) & 5.5 (1.6) & 8 (2) & 1.7 (0.4) & 1.3 (0.4) & 5-6 \\
+priority queue (BFS) & 6.7 (2.2) & 4 (1) & 1.9 (0.6) & 1.5 (0.5) & 5-6 \\
+support bounds & 10.2 (3.4) & 13 (4) & 2.7 (0.8) & 2.2 (0.7) & 5-6 \\
+symmetry-aware map & 58.6 (23.3) & 23 (6) & 16.0 (5.9) & 14.5 (5.7) & 5-6 \\
+lookahead bound & 71.9 (23.0) & 9 (2) & 18.5 (5.9) & 16.3 (5.3) & 6-7 \\
+%equiv. pts. bound & 188.6 (104.6) & 6178 (1840) & 803.8 (0.1) & 790.5 (0.4) & 10-10
+equivalent pts bound & $>$134 & $>$7168* & $>$800 & $>$789 & $\ge$10
+\end{tabular}
+\vspace{4mm}
+\caption{Per-component performance improvement.
+%
+The columns report total execution time,
+time to optimum, number of queue insertions,
+maximum queue size, and maximum evaluated prefix length.
+%
+The first row shows CORELS; subsequent rows show variants
+that each remove a specific implementation optimization or bound.
+%
+(We are not measuring the cumulative effects of removing a sequence of components.)
+%
+All rows represent complete executions, except for the final row,
+in which each execution was terminated due to memory constraints,
+once the size of the cache reached ${8 \times 10^8}$ elements,
+after consuming 390-410GB RAM.
+We terminated each experiment in the last row after consuming 390-410GB RAM.
+%
+In all but the final row and column, we report means
+(and standard deviations) over 10 cross-validation folds;
+in the final row, we report the minimum values across folds. \\
+%
+*~Only 4 out of 10 folds achieve the optimum before being terminated.
+}
+\label{tab:ablation}
+\end{table}
+\end{arxiv}
+\begin{kdd}
+\begin{table}[t!]
+\centering
+\resizebox{0.49\textwidth}{!}{
+\begin{tabular}{l | c | c | c | c | c}
+Removed & $t_\text{total}$ & $t_\text{opt}$ & $i_\text{total}$ & $Q_\text{max}$ & $K_\text{max}$ \\
+component & (min) & (s) & ($\times 10^6$) & ($\times 10^6$) & \\
+\hline
+none (CORELS) & 5.5 (1.6) & 8 (2) & 1.7 (0.4) & 1.3 (0.4) & 5-6 \\
+priority queue (BFS) & 6.7 (2.2) & 4 (1) & 1.9 (0.6) & 1.5 (0.5) & 5-6 \\
+support bounds & 10.2 (3.4) & 13 (4) & 2.7 (0.8) & 2.2 (0.7) & 5-6 \\
+symmetry-aware map & 58.6 (23.3) & 23 (6) & 16.0 (5.9) & 14.5 (5.7) & 5-6 \\
+lookahead bound & 71.9 (23.0) & 9 (2) & 18.5 (5.9) & 16.3 (5.3) & 6-7 \\
+%equiv. pts. bound & 188.6 (104.6) & 6178 (1840) & 803.8 (0.1) & 790.5 (0.4) & 10-10
+equivalent pts bound & $>$134 & $>$7168 & $>$800 & $>$789 & $\ge$10
+\end{tabular}
+}
+\vspace{4mm}
+\caption{Per-component performance improvement.
+%
+The columns report total execution time,
+time to optimum, number of queue insertions,
+maximum queue size, and maximum evaluated prefix length.
+%
+The first row shows CORELS; subsequent rows show variants
+that each remove a specific implementation optimization or bound.
+%
+We terminated each experiment in the last row after consuming 390-410GB RAM.
+%
+In all but the final row and column, we report means
+(and standard deviations) over 10 cross-validation folds;
+in the final row, we report the minimum values across folds.
+}
+\label{tab:ablation}
+\vspace{-8mm}
+\end{table}
+\end{kdd}
+
+In the remainder, we show results using the ProPublica dataset.
+%
+Figure~\ref{fig:objective} illustrates how both the objective and the size of
 the remaining search space decrease as CORELS executes.
 The objective drops quickly, achieving the optimal value within 10 seconds.
 CORELS certifies optimality in less than 6 minutes --
 the objective lower bound of the remaining search space
-monotonically converges to the optimal objective
-as the search space steadily shrinks.
+steadily converges to the optimal objective as the search space shrinks.
 
-Finally, we determine the efficacy of each of our data structure and bounding
-optimizations.
-Table \ref{tab:ablation} provides sumary statistics for experiments using
-the full CORELS implementation and implementations with a specific
-optimization removed.
-Figure \ref{fig:queue} presents a view of the same experiments, focusing
-on just three of the optimizations. These charts depict the number of rule
-lists of a given length in the queue during the algorithm's execution.
-
+Finally, we determine the efficacy of each of our bounds and data structure optimizations.
+%
+Figure~\ref{fig:objective} highlights how a separate execution of CORELS without
+the equivalent points bound remains far from complete,
+with its lower bound far from the optimum.
+%
+Table~\ref{tab:ablation} provides summary statistics for experiments using
+the full CORELS implementation and variants each remove a specific optimization.
+%
+Figure~\ref{fig:queue} presents a view of the same experiments, focusing
+on three of our optimizations. These plots depict the number of
+prefixes of a given length in the queue during the algorithm's execution.
 
 \begin{arxiv}
-\begin{table}[t]
+\begin{figure}[t!]
+\begin{center}
+\includegraphics[trim={30mm 10mm 35mm 30mm},
+width=\textwidth]{figs/kdd_compas_ablation-queue.pdf}
+\end{center}
+\caption{Logical queue composition.
+%
+Numbers of prefixes in the queue (log scale), labeled and colored by length,
+as a function of wall clock time (log scale), for CORELS (top left),
+and without five specific implementation optimizations or bounds.
+%the permutation bounds (top right),
+%lookahead bound (bottom left), and equivalent points bound (bottom right).
+%
+The gray shading fills in the area beneath the total number of
+queue elements for CORELS.
+\ie the sum over all lengths in the top left figure.
+%
+For comparison, we replicate the same gray region
+in the other three subfigures.
+}
+\label{fig:queue}
+\end{figure}
+\end{arxiv}
+\begin{kdd}
+\begin{figure}[t!]
+\begin{center}
+% left lower right upper
+\includegraphics[trim={30mm 15mm 35mm 30mm},
+width=0.45\textwidth]{figs/kdd_compas_ablation_small-queue.pdf}
+\end{center}
+\caption{Queue composition.
+%
+Numbers of prefixes in the queue (log scale), labeled and colored by length,
+as a function of wall clock time (log scale), for CORELS (top left),
+and without three specific implementation optimizations or bounds.
+%
+The gray shading fills in the area beneath the total number of
+queue elements for CORELS.
+\ie the sum over all lengths in the top left figure.
+%
+For comparison, we replicate the same gray region
+in the other three subfigures.
+}
+\label{fig:queue}
+\end{figure}
+\end{kdd}
+
+\begin{comment}
+
+\begin{table}[t!]
 \centering
 \begin{tabular}{l | c | c}
 Method & ProPublica & NYCLU \\
@@ -53,66 +327,19 @@ SVM & 67.1 $\pm$ 2.0 & 70.2 $\pm$ 2.7 \\
 \end{tabular}
 \vspace{5mm}
 \caption{Comparison with other methods:
-Means and standard deviations of test error.
+Means and standard deviations of test accuracy.
 Also report algorithm runtimes (mean $\pm$ standard deviation over 10 folds).
 CORELS ${\Reg = 0.005}$ for ProPublica and ${\Reg = 0.01}$ for NYCLU.}
 \label{tab:comparison}
 \end{table}
-\end{arxiv}
 
-\begin{figure}[t!]
-\begin{center}
-%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
-\begin{arxiv}
-\includegraphics[width=0.75\textwidth]{figs/compare-compas.pdf}
-\end{arxiv}
-\begin{kdd}
-\includegraphics[width=0.4\textwidth]{figs/compare-compas.pdf}
-\end{kdd}
-\end{center}
-\caption{Comparison with other methods:
-Test error for us and a few other algorithms
-(CART, C4.5, CBA, CMAR/CPAR, C5.0, Ripper, \dots),
-as a function of sparsity over 10 folds, for one big dataset (box plots).}
-\label{fig:comparison}
-\end{figure}
-
-\begin{arxiv}
-\begin{figure}[t!]
-\begin{center}
-\end{center}
-\caption{Missing:  Test error as a function of regularization and sparsity
-(number of rules) as a function of regularization, over 10 folds,
-for one big dataset.}
-\label{fig:regularization}
-\end{figure}
-\end{arxiv}
-
-\begin{arxiv}
-\begin{figure}[t!]
-\begin{center}
-\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
-\end{center}
-\caption{Ablation experiment:
-Show the effect of each ``piece'' at a time,
-run X without each in turn and show the difference in either
-quality of solution or runtime or amount of memory, size of cache or queue,
-where X is a specific implementation
-(meaning a specific scheduling policy and node type)}
-\label{fig:ablation}
-\end{figure}
-\end{arxiv}
-
-\begin{arxiv}
 \begin{figure}[t!]
 \begin{center}
 \end{center}
 \caption{Missing:  Some sort of comparison of different scheduling policies}
 \label{fig:scheduling-policy}
 \end{figure}
-\end{arxiv}
 
-\begin{arxiv}
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.65\textwidth]{figs/sketch-queue-size.png}
@@ -139,101 +366,7 @@ as a function of wall clock time.
 }
 \label{fig:queue-cache-size-insertions}
 \end{figure}
-\end{arxiv}
 
-\begin{figure}[t!]
-\begin{center}
-%\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
-\begin{arxiv}
-\includegraphics[width=0.8\textwidth]{figs/ela_compas-remaining-space.pdf}
-\end{arxiv}
-\begin{kdd}
-\includegraphics[width=0.4\textwidth]{figs/ela_compas-remaining-space.pdf}
-\end{kdd}
-\end{center}
-\caption{Top: Objective value and lower bound as a function of wall clock time.
-%
-Missing: horizontal lines and x-ticks for CART and C4.5.
-%
-Bottom:
-$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$
-as a function of wall clock time,
-where~$\Remaining(\CurrentObj, \Queue)$ is the upper bound
-from Theorem~\ref{thm:remaining-eval-fine}
-on the size of the remaining search space.}
-\label{fig:objective}
-\end{figure}
-
-\begin{table}[t]
-\centering
-\begin{tabular}{l | c | c | c | c | c}
-Removed & $t_\text{total}$ & $t_\text{opt}$ & $K_\text{max}$ & $i_\text{total}$ & $\max | Q |$ \\
-component & (s) & (s) & & ($\times 10^6$) & ($\times 10^6$) \\
-\hline
-none (CORELS) & 336 & 7 & 6 & 1.61 & 1.37 \\
-priority queue & 453 & 4 & 6 & 1.93 & 1.58 \\
-support bounds & 580 & 11 & 6 & 2.38 & 2.06 \\
-permutation map & 3634 & 19 & 6 & 15.0 & 14.1 \\
-lookahead bound & 4401 & 8 & 7 & 19.5 & 17.7 \\
-equiv. pts. bound & --- & 48 & $\ge 10$ & $>286$ & $>282$ \\
-\end{tabular}
-\vspace{5mm}
-\caption{Per-component performance improvement.
-The columns report averages over 10 cross-validation folds for
-the total execution time, time to optimum, maximum evaluated prefix length,
-number of queue insertions, and maximum queue size.
-The first row corresponds to our full CORELS algorithm,
-and subsequent rows to variants that each exclude a specific
-implementation optimization or bound removed.
-(These experiments to do not measure the cumulative effects
-of simultaneously removing multiple components.)
-}
-\label{tab:ablation}
-\end{table}
-
-\begin{figure}[t!]
-\begin{center}
-\begin{arxiv}
-%\includegraphics[width=0.8\textwidth]{figs/ela_compas-queue.pdf}
-\includegraphics[width=\textwidth]{figs/ela_compas_compare-queue.pdf}
-\end{arxiv}
-\begin{kdd}
-%\includegraphics[width=0.5\textwidth]{figs/ela_compas-queue.pdf}
-\includegraphics[trim={30mm 10mm 20mm 10mm}, width=0.45\textwidth]{figs/ela_compas_compare_small-queue.pdf}
-\end{kdd}
-\end{center}
-\caption{Ablation experiment and logical queue composition.
-Note the last experiment is incomplete and was run on a (different)
-machine with a large amount of memory.  Was using about 136GB RAM when terminated.
-}
-\label{fig:queue}
-\end{figure}
-
-%\begin{figure}[t!]
-%\begin{center}
-%%\includegraphics[width=0.65\textwidth]{figs/sketch-search-space.png}
-%\begin{arxiv}
-%\includegraphics[width=0.8\textwidth]{figs/ela_compas-remaining-space.pdf}
-%\end{arxiv}
-%\begin{kdd}
-%\includegraphics[width=0.5\textwidth]{figs/ela_compas-remaining-space.pdf}
-%\end{kdd}
-%\end{center}
-%\caption{The logarithm (base 10) of the upper bound
-%from Proposition~\ref{prop:remaining-eval-coarse}
-%on the size of the remaining search space,
-%as a function of wall clock time.
-%%
-%This bound depends on the total number of available rules,
-%as well as two dynamic quantities:
-%the current best objective value,
-%and the histogram of logical queue elements,
-%partitioned by prefix length.
-%}
-%\label{fig:search-space}
-%\end{figure}
-
-\begin{arxiv}
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.65\textwidth]{figs/sketch-max-length.png}
@@ -250,4 +383,4 @@ machine with a large amount of memory.  Was using about 136GB RAM when terminate
 \caption{Best prefix length over time}
 \label{fig:prefix-length}
 \end{figure}
-\end{arxiv}
+\end{comment}

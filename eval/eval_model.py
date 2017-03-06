@@ -33,7 +33,7 @@ parser.add_argument('fname')
 parser.add_argument('--parallel', action='store_true')
 parser.add_argument('--minor', action='store_true')
 parser.add_argument('-k', type=int, default=10)
-#parser.add_argument('label')
+parser.add_argument('--sparsity', type=str, default='')
 
 def run_model(fname, log_fname):
     with open(log_fname, 'r') as f:
@@ -94,7 +94,8 @@ def run_model(fname, log_fname):
     print 'Accuracy: ', acc
     print 'True Positive  | False Negative || %d | %d' % (true_positive, false_negative)
     print 'False Positive | True Negative  || %d | %d' % (false_positive, true_negative)
-    return acc
+
+    return len(opt), acc
 
 if __name__ == '__main__':
     args = parser.parse_args()
@@ -162,11 +163,18 @@ if __name__ == '__main__':
             proc = subprocess.check_call(fxn)
 	    #proc.wait()
             print
+            train_name = args.fname + '_' + str(i) + '_train'
+            len_opt, train_acc = run_model(train_name, log_list[i])
+            accuracies.append(train_acc)
             print '---- Calculating Validation Accuracy For Fold {0} -----'.format(i)
             print
-            #accuracies.append(run_model(fname, log_fname))
-            #test_name = args.fname + '_' + str(i) + '_test'
-            #test_accuracies.append(run_model(test_name, log_list[i]))
+            test_name = args.fname + '_' + str(i) + '_test'
+            len_opt, acc = run_model(test_name, log_list[i])
+            test_accuracies.append(acc)
+            if args.sparsity:
+                cv_fold = args.fname + '_' + str(i)
+                with open(args.sparsity, 'a') as f:
+                    f.write("{0},CORELS,0,0,{1},{2},{3},{4}\n".format(cv_fold, args.r, acc, len_opt, train_acc))
         else:
             plist.append(subprocess.Popen(fxn))
 
@@ -175,8 +183,13 @@ if __name__ == '__main__':
             plist[i].wait()
             train_name = args.fname + '_' + str(i) + '_train'
             test_name = args.fname + '_' + str(i) + '_test'
-            #accuracies.append(run_model(train_name, log_list[i]))
-            test_accuracies.append(run_model(test_name, log_list[i]))
+            len_opt, acc = run_model(test_name, log_list[i])
+            test_accuracies.append(acc)
+            if args.sparsity:
+                cv_fold = args.fname + '_' + str(i)
+                with open(args.sparsity, 'a') as f:
+                    f.write("{0},CORELS,0,0,{1},{2},{3},{4}\n".format(cv_fold, args.r, acc, len_opt, train_acc))
+
 
     if (len(accuracies) > 0):
         print
