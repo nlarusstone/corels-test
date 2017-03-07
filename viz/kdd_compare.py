@@ -1,3 +1,7 @@
+"""
+For KDD 2017 Figure 2.
+
+"""
 import numpy as np
 import pylab
 
@@ -62,8 +66,6 @@ for dataset in ['compas', 'weapon']:
         a = list(pylab.axis())
         a[0] -= 1
         a[1] += 1
-        #a[2] = 0.601
-        #a[3] = 0.76
         pylab.axis(a)
         pylab.title(title, fontsize=fs)
 

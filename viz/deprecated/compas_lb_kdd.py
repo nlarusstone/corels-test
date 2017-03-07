@@ -11,13 +11,8 @@ import numpy as np
 import pylab
 import tabular as tb
 
+import utils
 
-def parse_prefix_lengths(p):
-    ij = [q.split(':') for q in p.split(';') if q]
-    return np.array([(int(i), int(j)) for (i, j) in ij])
-
-def parse_prefix_sums(p):
-    return np.sum([int(q.split(':')[1]) for q in p.split(';') if q])
 
 froot = 'compas'
 data_dir = '../data/CrossValidation/'
@@ -51,7 +46,7 @@ default_objective = x['tree_min_objective'][1]
 imin = np.nonzero(x['tree_min_objective'] == x['tree_min_objective'][-1])[0][0]
 tmin = x['total_time'][imin]
 
-prefix_sums = np.array([parse_prefix_sums(p) for p in x['prefix_lengths']])
+prefix_sums = np.array([utils.parse_prefix_sums(p) for p in x['prefix_lengths']])
 
 print "num records:", len(x)
 print "time to achieve optimum:", tmin

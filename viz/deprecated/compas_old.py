@@ -11,38 +11,30 @@ import numpy as np
 import pylab
 import tabular as tb
 
+import utils
 
-def parse_prefix_lengths(p):
-    ij = [q.split(':') for q in p.split(';') if q]
-    return np.array([(int(i), int(j)) for (i, j) in ij])
 
-def parse_prefix_sums(p):
-    return np.sum([int(q.split(':')[1]) for q in p.split(';') if q])
+# python eval_model.py compas --minor -k 10 -n 10000000 -r 0.01 -c 2 -p 1
+# ../logs/for-compas_0_train.out-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0100000-v=1-f=1000.txt
 
-# python eval_model.py adult --parallel --minor -k 10 -n 10000000 -r 0.01 -b -p 1
-# ../logs/for-adult_0_train.out-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0100000-v=1-f=1000.txt
-
-froot = 'adult'
+froot = 'compas'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
-log_froot = 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0100000-v=1-f=1000.txt'
-ftag = 'ela_adult'
-log_froot = 'for-%s-bfs-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0100000-v=1-f=1000.txt'
-ftag = 'ela_adult-bfs'
+ftag = 'ela_compas'
 num_folds = 1
-lw = 2  # linewidth
+lw = 3  # linewidth
 ms = 9  # markersize
 fs = 16 # fontsize
 
-pylab.ion()
+pylab.ioff()
 for i in range(1, 9):
     pylab.figure(i)
     pylab.clf()
 
-for fold in range(0, num_folds):
+for fold in [1]: #range(0, num_folds):
 
-    fname = 'adult_%d_train.out' % fold
-    log_fname = log_froot % fname
+    fname = 'compas_%d_train.out' % fold
+    log_fname = 'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0100000-v=1-f=1000.txt' % fname
     fname = os.path.join(data_dir, fname)
 
     print 'cross-validation fold:', fold
@@ -53,13 +45,13 @@ for fold in range(0, num_folds):
     log_fname = os.path.join(log_dir, log_fname)
     print 'reading', log_fname
     x = tb.tabarray(SVfile=log_fname)
-    #x = x[:-1]  # ignore last log record because it measures the time to delete the queue
+    x = x[1:-4]  # ignore last log record because it measures the time to delete the queue
 
     default_objective = x['tree_min_objective'][1]
     imin = np.nonzero(x['tree_min_objective'] == x['tree_min_objective'][-1])[0][0]
     tmin = x['total_time'][imin]
 
-    prefix_sums = np.array([parse_prefix_sums(p) for p in x['prefix_lengths']])
+    prefix_sums = np.array([utils.parse_prefix_sums(p) for p in x['prefix_lengths']])
 
     print "num records:", len(x)
     print "time to achieve optimum:", tmin
@@ -68,35 +60,28 @@ for fold in range(0, num_folds):
     pylab.figure(1)
     #pylab.clf()
     #pylab.subplot(2, 1, 1)
+    pylab.semilogx(x['total_time'], x['tree_min_objective'], 'b--', linewidth=lw)
     if ('curious_lb' in log_fname):
-        ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
-    else:
-        ii = len(x)
-    pylab.semilogx(x['total_time'][1:ii], x['tree_min_objective'][1:ii], 'b-', linewidth=lw*2)
-    if ('curious_lb' in log_fname):
-        pylab.semilogx(x['total_time'][1:ii], x['current_lower_bound'][1:ii], 'c--', linewidth=lw*2)
-    training_error = x['tree_min_objective'] - c * x['tree_prefix_length']
-    pylab.semilogx(x['total_time'][1:ii], training_error[1:ii], 'm', linewidth=lw)
+        pylab.semilogx(x['total_time'], x['current_lower_bound'], 'c-', linewidth=lw)
+    pylab.semilogx(x['total_time'], x['tree_min_objective'] - c * x['tree_prefix_length'], 'm', linewidth=2)
 
     #pylab.plot(x['total_time'][1], default_objective, 'co', markersize=ms)
     #pylab.plot(x['total_time'][imin], x['tree_min_objective'][imin], 'ms', markersize=ms)
     ax = list(pylab.axis())
-    ax[0] = x['total_time'][1]
-    ax[1] = 10**3
-    ax[2] = 0
-    ax[3] = 0.25
+    ax[0] = -0.04
+    ax[2] = 0.0
     #ax[3] = 0.51
     pylab.axis(ax)
-    #pylab.axis('tight')
     pylab.xlabel('time (s)', fontsize=fs)
     pylab.ylabel('value', fontsize=fs)
     pylab.title('progress during execution', fontsize=fs)
     pylab.xticks(fontsize=(fs-2))
     pylab.yticks(fontsize=(fs-2))
+    pylab.axis('tight')
     if ('curious_lb' in log_fname):
-        pylab.legend(['objective', 'lower bound', 'training error'], loc='lower right')
+        pylab.legend(['objective', 'lower bound', 'test error'], loc='lower right')
     else:
-        pylab.legend(['objective', 'training error'], loc='lower left')
+        pylab.legend(['current best objective'])
 
     """
     pylab.subplot(2, 1, 2)
@@ -125,9 +110,9 @@ for fold in range(0, num_folds):
     pylab.figure(2)
     #pylab.clf()
     #pylab.subplot2grid((10, 1), (0, 0), rowspan=6)
-    pylab.plot(x['total_time'], x['tree_num_nodes'], 'b-', linewidth=lw*2)
-    pylab.plot(x['total_time'], x['queue_size'], 'c--', linewidth=lw*2)
-    pylab.plot(x['total_time'], prefix_sums, 'm-', linewidth=lw)
+    pylab.plot(x['total_time'], x['tree_num_nodes'], 'k:', linewidth=lw)
+    pylab.plot(x['total_time'], x['queue_size'], 'r-', linewidth=lw)
+    pylab.plot(x['total_time'], prefix_sums, 'b-', linewidth=lw)
     #pylab.xlabel('time (s)', fontsize=fs)
     pylab.ylabel('size', fontsize=fs)
     pylab.title('data structure size', fontsize=fs)
@@ -155,45 +140,35 @@ for fold in range(0, num_folds):
     kvp = [[(lc[0], int(lc[1])) for lc in lh if (len(lc) == 2)] for lh in split_hist]
     z = tb.tabarray(kvpairs=kvp)
     assert ([int(name) for name in z.dtype.names] == range(max_length + 1))
-    #zc = z.extract()[:, ::-1].cumsum(axis=1)[:, ::-1]
-    zc = z.extract()
-    color_vec = ['r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'violet', 'm', 'gray', 'k'][:(max_length + 1)][::-1]
-    #color_vec = ['b', 'c', 'm', 'gray', 'k'][::-1]
+    zc = z.extract()[:, ::-1].cumsum(axis=1)[:, ::-1]
+    color_vec = ['r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'violet', 'm', 'gray', 'k']
 
     if (fold == 0):
         pylab.figure(6)
         #pylab.clf()
-        for length in range(0, max_length + 1)[::-1]:
-            jj = zc[:, length].nonzero()[0]
-            tt = x['total_time'][jj]
-            yy = zc[jj, length]
-            yy = np.array([1] + list(yy) + [1])
-            tt = np.array([tt[0]] + list(tt) + [tt[-1]])
-            pylab.loglog(tt, yy, color=color_vec[length % len(color_vec)], linewidth=lw*2)
-        pylab.legend(['length %d' % length for length in range(0, max_length + 1)[::-1]], loc='upper left')
+        for length in range(max_length + 1):
+            pylab.plot(x['total_time'], zc[:, length], color=color_vec[length % len(color_vec)])
+        pylab.legend([str(length) for length in range(max_length + 1)], loc='upper left')
         pylab.xlabel('time (s)', fontsize=fs)
         pylab.ylabel('count', fontsize=fs)
-        pylab.title('lengths of prefixes in the logical queue', fontsize=fs)
+        pylab.title('logical queue size broken down by prefix length')
         pylab.xticks(fontsize=(fs-2))
         pylab.yticks(fontsize=(fs-2))
-        if 'curious_lb' in fname:
-            ax = [x['total_time'][1], 10**3, 10**-0.1, 10**6]
-        else:
-            ax = [x['total_time'][1], 10**3.5, 10**-0.1, 10**7]
-        pylab.axis(ax)
         pylab.draw()
         pylab.savefig('../figs/%s-queue.png' % ftag)
 
     pylab.figure(7)
     #pylab.clf()
     pylab.subplot(2, 1, 1)
-    pylab.plot(x['total_time'], x['tree_prefix_length'], 'b-', linewidth=lw)
+    pylab.semilogx(x['total_time'], x['tree_prefix_length'], 'b-', linewidth=lw)
     #pylab.xlabel('time (s)', fontsize=fs)
     pylab.ylabel('length', fontsize=fs)
     pylab.title('length of rule list with current best objective', fontsize=fs)
     pylab.xticks(fontsize=(fs-2))
-    pylab.yticks(fontsize=(fs-2))
+    pylab.yticks(range(5), fontsize=(fs-2))
     ax = list(pylab.axis())
+    ax[3] = ax[3] + 0.2
+    pylab.axis(ax)
     pylab.legend(['incomplete execution'], loc='lower right')
 
     """
@@ -246,7 +221,7 @@ for fold in range(0, num_folds):
     pylab.figure(3)
     #pylab.clf()
     pylab.subplot(3, 1, 1)
-    pylab.plot(x['total_time'], x['log_remaining_space_size'], 'b-', linewidth=lw)
+    pylab.semilogx(x['total_time'], x['log_remaining_space_size'], 'b-', linewidth=lw)
     #pylab.xlabel('time (s)', fontsize=fs)
     pylab.ylabel('log10(size)', fontsize=fs)
     pylab.title('log10(size of remaining search space)', fontsize=fs)

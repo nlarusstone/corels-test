@@ -1,5 +1,5 @@
 """
-For KDD 2017 Table 1.  See also `compas_compare.py`
+For KDD 2017 Table 1 and Figure 5.  See also `kdd_compas_execution.py`
 
 #!/bin/bash
 
@@ -52,13 +52,7 @@ import numpy as np
 import pylab
 import tabular as tb
 
-
-def parse_prefix_lengths(p):
-    ij = [q.split(':') for q in p.split(';') if q]
-    return np.array([(int(i), int(j)) for (i, j) in ij])
-
-def parse_prefix_sums(p):
-    return np.sum([int(q.split(':')[1]) for q in p.split(';') if q])
+import utils
 
 
 froot = 'compas'
@@ -96,26 +90,6 @@ if make_small:
 else:
     if (make_figure):
         pylab.figure(6, figsize=(16, 9))
-
-"""
-# deprecated log files
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-bfs-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000001-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-no_pmap-minor-max_num_nodes=100000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=100000001-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-no_minor-max_num_nodes=700000000-c=0.0050000-v=1-f=1000.txt']
-labels = ['none', 'no priority queue', 'no support bounds', 'no permutation map', 'no lookahead bound', 'no identical points bound']
-ftag = 'kdd_compas_ablation'
-
-# deprecated log files
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-no_pmap-minor-max_num_nodes=100000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=100000001-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-no_minor-max_num_nodes=700000000-c=0.0050000-v=1-f=1000.txt']
-labels = ['none', 'no permutation map', 'no lookahead bound', 'no identical points bound']
-ftag = 'kdd_compas_ablation_small'
-"""
 
 ntot = len(log_root_list)
 pylab.ion()
@@ -169,7 +143,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
         tmin = x['total_time'][imin]
         tmax = x['total_time'][-1]
 
-        prefix_sums = np.array([parse_prefix_sums(p) for p in x['prefix_lengths']])
+        prefix_sums = np.array([utils.parse_prefix_sums(p) for p in x['prefix_lengths']])
         n_ins = x['tree_insertion_num'][-1]
 
         print "num records:", len(x)
@@ -210,7 +184,6 @@ for (ncomp, log_root) in enumerate(log_root_list):
 
             if (ncomp == 0):
                 pylab.clf()
-                #pylab.subplot2grid((10, 20), (0, 1), colspan=19, rowspan=9)
 
             if (len(log_root_list) == 6):
                 pylab.subplot(2, 3, ncomp+1)
@@ -229,12 +202,6 @@ for (ncomp, log_root) in enumerate(log_root_list):
                     tt = np.array([tt[0]] + list(tt))
                 pylab.loglog(tt, yy, color=color_vec[length % len(color_vec)], linewidth=lw*2)
 
-            """
-            if (ncomp + 1 < ntot):
-                pylab.fill_between([tmin, x['total_time'][-1]], [10**-0.1, 10**-0.1], [10**8.3, 10**8.3],  color='gray', alpha=0.3)
-            else:
-                pylab.fill_between([tmin, 10**4], [10**-0.1, 10**-0.1], [10**8.3, 10**8.3],  color='gray', alpha=0.3)
-            """
             pylab.fill_between(t_comp, 10**-0.1 * np.ones(len(t_comp)), queue_comp, color='gray', alpha=0.3)
 
             for length in range(1, max_length + 1):

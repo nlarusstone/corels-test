@@ -1,5 +1,5 @@
 """
-For KDD 2017 Figure 3.  See also `compas_ablation.py`
+For KDD 2017 Figure 4.  See also `kdd_compas_ablation.py`
 
 
 """
@@ -11,26 +11,12 @@ import pylab
 import tabular as tb
 
 
-def parse_prefix_lengths(p):
-    ij = [q.split(':') for q in p.split(';') if q]
-    return np.array([(int(i), int(j)) for (i, j) in ij])
-
-def parse_prefix_sums(p):
-    return np.sum([int(q.split(':')[1]) for q in p.split(';') if q])
-
-
 froot = 'compas'
 data_dir = '../data/CrossValidation/'
 num_folds = 1
 lw = 2  # linewidth
 ms = 9  # markersize
 fs = 16 # fontsize
-
-# deprecated log files
-#log_dir = '../logs/'
-#log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-max_num_nodes=10000000-c=0.0050000-v=1-f=1000.txt',
-#'for-%s-curious_lb-with_prefix_perm_map-no_minor-max_num_nodes=700000000-c=0.0050000-v=1-f=1000.txt']
-#fold = 0
 
 # log files generated on beepboop
 # no-minor execution using just under 400GB RAM when halted
@@ -77,7 +63,6 @@ ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='g
 ax1.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '-', color='coral', linewidth=lw*2)
 ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='mediumblue', linewidth=lw*2)
 ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='gray', linewidth=lw)
-#ax1.semilogx([tmin, tmin], [0, opt], 'k:', linewidth=lw)
 ax1.semilogx(tmin, opt + 0.035, 'k*', markersize=10)
 ax1.semilogx(tmin, opt, 'k|', markeredgewidth=lw)
 

@@ -12,14 +12,8 @@ import pylab
 import tabular as tb
 
 import space
+import utils
 
-
-def parse_prefix_lengths(p):
-    ij = [q.split(':') for q in p.split(';') if q]
-    return np.array([(int(i), int(j)) for (i, j) in ij])
-
-def parse_prefix_sums(p):
-    return np.sum([int(q.split(':')[1]) for q in p.split(';') if q])
 
 # Command run:  ./bbcache -c 1 -p 1 -r 0.001 -f 100 ../data/tdata_R.out ../data/tdata_R.label
 # Yields log file with 739 records
@@ -42,7 +36,7 @@ default_objective = x['tree_min_objective'][1]
 imin = np.nonzero(x['tree_min_objective'] == x['tree_min_objective'][-1])[0][0]
 tmin = x['total_time'][imin]
 
-prefix_sums = np.array([parse_prefix_sums(p) for p in x['prefix_lengths']])
+prefix_sums = np.array([utils.parse_prefix_sums(p) for p in x['prefix_lengths']])
 
 print "num records:", len(x)
 print "time to achieve optimum:", tmin
@@ -189,7 +183,7 @@ pylab.draw()
 pylab.savefig('../figs/ela-max-length-check.png')
 
 total_space_size = space.state_space_size(nrules=nrules, min_objective=default_objective, c=c)
-remaining_space_size = [space.remaining_search_space(nrules=nrules, min_objective=current_objective, c=c, prefix_lengths=parse_prefix_lengths(pl)) for (current_objective, pl) in x[['tree_min_objective', 'prefix_lengths']]]
+remaining_space_size = [space.remaining_search_space(nrules=nrules, min_objective=current_objective, c=c, prefix_lengths=utils.parse_prefix_lengths(pl)) for (current_objective, pl) in x[['tree_min_objective', 'prefix_lengths']]]
 remaining_space_size[0] = total_space_size
 log10_total = float(gmpy2.log10(total_space_size))
 log10_remaining = [float(gmpy2.log10(r)) if r else 1 for r in remaining_space_size]

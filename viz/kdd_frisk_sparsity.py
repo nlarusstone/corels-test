@@ -1,3 +1,7 @@
+"""
+For KDD 2017 Figure 3.
+
+"""
 import matplotlib.patches as mp
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,9 +21,6 @@ x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(
 m = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
 s = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
 
-#m[(m['Method'] == 'CORELS') & (m['R'] == 0.02)] = ('CORELS', 0, 0, 0.0025, '', 8., 0., .697)
-#s[(s['Method'] == 'CORELS') & (s['R'] == 0.02)] = ('CORELS', 0, 0, 0.0025, '', 1., 0., 0.02)
-
 fig = plt.figure(2, figsize=(8, 3.6))
 plt.clf()
 ax = plt.subplot2grid((20, 1), (0, 1), colspan=1, rowspan=18)
@@ -27,15 +28,9 @@ ax = plt.subplot2grid((20, 1), (0, 1), colspan=1, rowspan=18)
 m.sort(order=['Method', 'C', 'cp', 'R'])
 s.sort(order=['Method', 'C', 'cp', 'R'])
 
-#ind = range(10, 15) + range(5, 10) + range(5)
 ind = [-4, -3, -2] + [-1] + [5, 6, 7, 9] #+ [0, 1, 4]
 m = m[ind].copy()
 s = s[ind].copy()
-
-#m = m[m['Method'] == 'CORELS'].rowstack(m[m['Method'] != 'CORELS'])
-#.rowstack(m[m['Method'] == 'RIPPER']).rowstack(m[m['Method'] == 'SBRL']).rowstack(m[m['Method'] == 'CART']).rowstack(m[m['Method'] == 'C4.5'])
-#s = s[s['Method'] == 'CORELS'].rowstack(s[s['Method'] != 'CORELS'])
-#.rowstack(s[s['Method'] == 'RIPPER']).rowstack(s[s['Method'] == 'SBRL']).rowstack(s[s['Method'] == 'CART']).rowstack(s[s['Method'] == 'C4.5'])
 
 data = zip(m['Method'], m['leaves'], m['accuracy'], s['leaves'], s['accuracy'], m['train_accuracy'], s['train_accuracy'])
 
@@ -47,15 +42,9 @@ mfcdict = {'CORELS': 'coral', 'C4.5': 'paleturquoise', 'CART': 'white', 'RIPPER'
 msvec = np.array([11, 9, 8, 10, 10, 9, 8, 7, 12, 8, 4]) * 2
 mew = 2
 
-#plt.plot(np.log2(4), .698, 's', markeredgewidth=mew, markeredgecolor='r', markerfacecolor='coral', markersize=12)
-#plt.plot(np.log2(3), .671, 's', markeredgewidth=mew, markeredgecolor='r', markerfacecolor='coral', markersize=10)
-
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:
-    if (0):#(i == 8):
-        mfc = 'None'
-    else:
-        mfc = mfcdict[method]
+    mfc = mfcdict[method]
     if (method == 'C4.5'):
         w = 0
     if (w == 0):
@@ -71,18 +60,13 @@ for (method, xx, yy, w, h, ty, th) in data:
         plt.errorbar(xx, yy, xerr=xerr, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc, capsize=4, elinewidth=2)
     i += 1
 
-#"""
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:
-    if (0):#(i == 8):
-        mfc = 'None'
-    else:
-        mfc = mfcdict[method]
+    mfc = mfcdict[method]
     if log2:
         xx = np.log2(xx)
     plt.errorbar(xx, yy, yerr=h, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc, capsize=4, elinewidth=2)
     i += 1
-#"""
 
 if (with_training):
     i = 0

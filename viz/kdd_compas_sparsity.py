@@ -1,3 +1,7 @@
+"""
+For KDD 2017 Figure 3.
+
+"""
 import matplotlib.patches as mp
 import matplotlib.pyplot as plt
 import numpy as np
@@ -27,11 +31,6 @@ ind = range(10, 15) + range(5, 10) + range(5)
 m = m[ind].copy()
 s = s[ind].copy()
 
-#m = m[m['Method'] == 'CORELS'].rowstack(m[m['Method'] != 'CORELS'])
-#.rowstack(m[m['Method'] == 'RIPPER']).rowstack(m[m['Method'] == 'SBRL']).rowstack(m[m['Method'] == 'CART']).rowstack(m[m['Method'] == 'C4.5'])
-#s = s[s['Method'] == 'CORELS'].rowstack(s[s['Method'] != 'CORELS'])
-#.rowstack(s[s['Method'] == 'RIPPER']).rowstack(s[s['Method'] == 'SBRL']).rowstack(s[s['Method'] == 'CART']).rowstack(s[s['Method'] == 'C4.5'])
-
 data = zip(m['Method'], m['leaves'], m['accuracy'],  s['leaves'], s['accuracy'], m['train_accuracy'], s['train_accuracy'])
 
 ms = 5
@@ -44,10 +43,7 @@ mew = 2
 
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:
-    if (0):#(i == 8):
-        mfc = 'None'
-    else:
-        mfc = mfcdict[method]
+    mfc = mfcdict[method]
     if (w == 0):
         plt.plot(xx, yy, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc)
     else:
@@ -56,10 +52,7 @@ for (method, xx, yy, w, h, ty, th) in data:
 
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:
-    if (0):#(i == 8):
-        mfc = 'None'
-    else:
-        mfc = mfcdict[method]
+    mfc = mfcdict[method]
     if (i == 2):
         xx -= 0.075
     plt.errorbar(xx, yy, yerr=h, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc, capsize=4, elinewidth=2)
@@ -75,7 +68,6 @@ if (with_training):
             mfc = mfcdict[method]
         if ty:
             plt.plot(xx, ty, 'o', markersize=5, color='white', markeredgewidth=2, markeredgecolor='k')
-            #plt.plot([xx, xx], [ty, yy], color=cdict[method])
         i += 1
 
 legend = []
