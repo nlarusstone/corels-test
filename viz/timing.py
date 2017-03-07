@@ -58,5 +58,20 @@ print 'fraction of "real work" time in permutation_insert(): %2.3f' % (permutati
 print 'fraction of "real work" time in tree->insert(): %2.3f' % (tree_insertion / rule_evaluation)
 print 'want to verify: remaining "real work" time spent computing lower bound + support bound checks + identical points bound (minority)?'
 print 'TODO: modify logger.setLowerBoundTime(time_diff(t1)) to report cumulative time measurements'
-print 'TODO: add timing measurement for identical points bound'
+print 'TODO: add timing measurement around identical points bound'
 
+"""
+fraction of time in evaluate_children(): 0.975
+fraction of time in node_select(): 0.017
+fraction of time accounted for: 0.993
+want to verify: remaining time spent in garbage_collect() ?
+TODO: add timing measurement around garbage_collect
+
+fraction of time doing "real work" in evaluate_children(): 0.990
+fraction of "real work" time computing objective (does not include lower bound or support bound checks): 0.426
+fraction of "real work" time in permutation_insert(): 0.012
+fraction of "real work" time in tree->insert(): 0.001
+want to verify: remaining "real work" time spent computing lower bound + support bound checks + identical points bound (minority)?
+TODO: modify logger.setLowerBoundTime(time_diff(t1)) to report cumulative time measurements
+TODO: add timing measurement for identical points bound
+"""
