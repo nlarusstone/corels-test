@@ -13,7 +13,7 @@ lw = 2  # linewidth
 ms = 9  # markersize
 fs = 16 # fontsize
 
-# log files generated on beepboop
+# log files generated on beepboop for KDD ablation experiments
 log_dir = '../logs/keep/'
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt']
 fold = 1
@@ -31,8 +31,6 @@ print 'num rules:', nrules
 
 log_fname = os.path.join(log_dir, log_fname)
 x = tb.tabarray(SVfile=log_fname)
-
-pylab.figure(1)
 
 
 # total time = wall clock time
@@ -56,6 +54,7 @@ print 'fraction of time doing "real work" in evaluate_children(): %2.3f' % (rule
 print 'fraction of "real work" time computing objective (does not include lower bound or support bound checks): %2.3f' % (objective / rule_evaluation)
 print 'fraction of "real work" time in permutation_insert(): %2.3f' % (permutation_map_insertion / rule_evaluation)
 print 'fraction of "real work" time in tree->insert(): %2.3f' % (tree_insertion / rule_evaluation)
+print 'fraction of "real work" time accounted for: %2.3f' % ((objective + permutation_map_insertion + tree_insertion) / rule_evaluation)
 print 'want to verify: remaining "real work" time spent computing lower bound + support bound checks + identical points bound (minority)?'
 print 'TODO: modify logger.setLowerBoundTime(time_diff(t1)) to report cumulative time measurements'
 print 'TODO: add timing measurement around identical points bound'
@@ -71,7 +70,33 @@ fraction of time doing "real work" in evaluate_children(): 0.990
 fraction of "real work" time computing objective (does not include lower bound or support bound checks): 0.426
 fraction of "real work" time in permutation_insert(): 0.012
 fraction of "real work" time in tree->insert(): 0.001
+fraction of "real work" time accounted for: 0.439
 want to verify: remaining "real work" time spent computing lower bound + support bound checks + identical points bound (minority)?
 TODO: modify logger.setLowerBoundTime(time_diff(t1)) to report cumulative time measurements
 TODO: add timing measurement for identical points bound
 """
+
+pylab.figure(1, figsize=(6, 5.5))
+pylab.clf()
+
+total_time = x['total_time']
+evaluate_children_time = x['evaluate_children_time']
+node_select_time = x['node_select_time']
+rule_evaluation_time = x['rule_evaluation_time']
+objective_time = x['objective_time']
+permutation_map_insertion_time = x['permutation_map_insertion_time']
+tree_insertion_time = x['tree_insertion_time']
+
+pylab.plot(total_time, total_time, '-', color='k', linewidth=lw)
+pylab.plot(total_time, evaluate_children_time, '--', color='m', linewidth=lw+2)
+pylab.plot(total_time, objective_time + permutation_map_insertion_time + tree_insertion_time, '-', color='gray', linewidth=lw+2)
+pylab.plot(total_time, objective_time, '--', color='b', linewidth=lw)
+pylab.xlabel('total time (s)', fontsize=fs)
+pylab.ylabel('time (s)', fontsize=fs)
+pylab.axis([0, 150, 0, 150])
+pylab.legend(['total time', 'evaluate_children(.)', 'obj + (pmap & tree insertion)', 'objective'], fontsize=fs-3.5, loc='upper left')
+pylab.axis([0, 150, 0, 150])
+pylab.xticks(fontsize=fs)
+pylab.yticks(fontsize=fs)
+
+pylab.savefig('../figs/%s-timing.pdf' % ftag)
