@@ -128,7 +128,7 @@ pylab.xlabel('time (s)', fontsize=fs)
 pylab.ylabel('count', fontsize=fs)
 pylab.axis([0, 150, 0, 10**8])
 pylab.legend(['lower bound evaluations', 'permutation map lookups', 'cache insertions',
-              'permutation map size', 'permutation map null lookups',
+              'permutation map size', 'permutation map new insertions',
               'prefixes that insert children'], fontsize=fs-1, loc='lower right')
 pylab.xticks(fontsize=fs-1)
 pylab.yticks(fontsize=fs-1)
@@ -162,7 +162,7 @@ pylab.plot(total_time, tree_num_evaluated / scale, '-', color='r', linewidth=lw)
 pylab.xlabel('time (s)', fontsize=fs)
 pylab.ylabel('count (millions)', fontsize=fs)
 pylab.axis([0, 150, 0, 2])
-pylab.legend(['permutation map lookups', 'cache insertions', 'permutation map size', 'permutation map null lookups',
+pylab.legend(['permutation map lookups', 'cache insertions', 'permutation map size', 'permutation map new insertions',
               'prefixes that insert children'], fontsize=fs-1.5, loc=(0.09, 0.5))
 #pylab.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
 pylab.xticks(fontsize=fs-1)
@@ -199,7 +199,7 @@ pylab.xlabel('time (s)', fontsize=fs-2)
 pylab.ylabel('count', fontsize=fs-2)
 pylab.axis([10**-4.5, 150, 0, 10**8])
 pylab.legend(['lower bound evaluations', 'permutation map lookups', 'cache insertions',
-              'permutation map size', 'pmap null lookups',
+              'permutation map size', 'pmap new insertions',
               'prefixes that insert children', 'discards triggered by pmap'], fontsize=fs-4.5, loc='upper left')
 pylab.xticks(fontsize=fs-2)
 pylab.yticks(fontsize=fs-2)
