@@ -10,7 +10,7 @@ void Logger::setLogFileName(char *fname) {
     printf("writing logs to: %s\n\n", fname);
     _f.open(fname, ios::out | ios::trunc);
 
-    _f << "total_time,evaluate_children_time,node_select_time,"
+    _f << "total_time,evaluate_children_time,evaluate_children_num,node_select_time,"
        << "rule_evaluation_time,lower_bound_time,lower_bound_num,"
        << "objective_time,tree_insertion_time,tree_insertion_num,"
        << "permutation_map_insertion_time,permutation_map_insertion_num,"
@@ -28,6 +28,7 @@ void Logger::dumpState() {
 
     _f << _state.total_time << ","
        << _state.evaluate_children_time << ","
+       << _state.evaluate_children_num << ","
        << _state.node_select_time << ","
        << _state.rule_evaluation_time << ","
        << _state.lower_bound_time << ","
