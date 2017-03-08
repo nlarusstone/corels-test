@@ -268,7 +268,8 @@ void evaluate_children(CacheTree<N>* tree, N* parent, VECTOR parent_not_captured
         lower_bound = parent_lower_bound - parent_minority + (float)(num_captured - captured_correct) / nsamples + c;
         logger.setLowerBoundTime(time_diff(t1));
         logger.incLowerBoundNum();
-        if (lower_bound >= tree->min_objective()) // hierarchical objective lower bound
+        if (((ablation != 2) && ((lower_bound + c) >= tree->min_objective())) ||
+            (lower_bound >= tree->min_objective())) // hierarchical objective lower bound with lookahead bound
             continue;
         double t2 = timestamp();
         rule_vandnot(not_captured, parent_not_captured, captured, nsamples, &num_not_captured);
