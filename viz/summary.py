@@ -157,7 +157,7 @@ pylab.clf()
 
 pylab.subplot(1, 2, 1)
 scale = 10.**6
-pylab.plot(total_time, lower_bound_num, linewidth=lw)
+#pylab.plot(total_time, lower_bound_num, linewidth=lw)
 pylab.plot(total_time, permutation_map_insertion_num / scale, '-', color='gray', linewidth=lw+2)
 pylab.plot(total_time, tree_insertion_num / scale, '--', color='r', linewidth=lw+2)
 pylab.plot(total_time, pmap_size / scale, '-', color='gray', linewidth=lw)
@@ -233,10 +233,10 @@ pylab.clf()
 ii = evaluate_children_num.nonzero()[0][0]
 s = np.cast[float](evaluate_children_num[ii:]) * 155
 tt =  total_time[ii:]
-pylab.plot(tt, lower_bound_num[ii:] / s, linewidth=lw)
-pylab.plot(tt, objective_num[ii:] / s, linewidth=lw)
-pylab.plot(tt, permutation_map_insertion_num[ii:] / s, linewidth=lw)
-pylab.plot(tt, tree_insertion_num[ii:] / s, linewidth=lw)
+pylab.plot(tt, lower_bound_num[ii:] / s, 'b', linewidth=lw+2)
+pylab.plot(tt, objective_num[ii:] / s, 'b--', linewidth=lw+2)
+pylab.plot(tt, permutation_map_insertion_num[ii:] / s, '-', color='gray', linewidth=lw+2)
+pylab.plot(tt, tree_insertion_num[ii:] / s, 'r--', linewidth=lw+2)
 pylab.axis([0, 150, 0, 1.])
 pylab.title('Combinined effects eliminate prefixes', fontsize=fs)
 #pylab.title('Counts normalized by\n(# rules) x (# prefixes we try to extend)')
