@@ -25,23 +25,21 @@ width=0.75\textwidth]{figs/frisk-sparsity-training.pdf}
 \caption{Training and test accuracy as a function of model size.
 %
 For CORELS, CART, and C4.5, we vary the regularization parameter~$\Reg$,
-and complexity parameters~$cp$ and~$C$, respectively.
-% and are indicated within parentheses in the legend.
+and complexity parameters~$cp$ and~$C$, respectively;
+numbers within parentheses in the legend indicate parameter values.
 %
 Legend markers and error bars indicate means and standard deviations,
 respectively, of test accuracy across cross-validation folds.
 %
 Small circles mark associated training accuracy means.
 %
-Top:  %Two-year recidivism prediction for the ProPublica COMPAS dataset.
-ProPublica dataset.
+Top:  Two-year recidivism prediction for the ProPublica COMPAS dataset.
 %
-None of the models exhibit significant overfitting.
-%mean training accuracy never exceeds mean test accuracy
-%by more than about 0.01.
+None of the models exhibit significant overfitting:
+mean training accuracy never exceeds mean test accuracy
+by more than about 0.01.
 %
-Bottom:  %Weapon prediction for the NYCLU stop-and-frisk dataset.
-NYCLU dataset.
+Bottom:  Weapon prediction for the NYCLU stop-and-frisk dataset.
 %
 Only CART with ${cp = 0.001}$ significantly overfits.
 %
@@ -106,27 +104,21 @@ width=0.75\textwidth]{figs/compas_execution-remaining-space.pdf}
 \caption{CORELS with (lines) and without
 (dashes) the equivalent points bound (Theorem~\ref{thm:identical}).
 %
-%Horizontal axes plot wall clock time (log scale).
-%
 Top: Objective value (thin line) and lower bound (thick line) for CORELS,
-and lower bound (dashes) for an execution without the equivalent points bound.
-%as a function of wall clock time (log scale).
+as a function of wall clock time (log scale).
 %
-Numbered hatch marks
-%along the objective
+Numbered hatch marks along the trace of the objective value
 indicate when the length of the best known rule list changes,
 and are labeled by the new length.
 %
-%CORELS quickly the optimal value (star marker),
-%and certifies optimality when the lower bound matches the objective value.
-A star marks the optimum.
+CORELS quickly achieves the optimal value (star marker),
+and certifies optimality when the lower bound matches the objective value.
 %
-% A separate execution of
-%CORELS without the equivalent points bound remains far from complete,
-%and its lower bound (dashed line) far from the optimum.
+A separate execution of CORELS without the equivalent points bound remains
+far from complete, and its lower bound (dashed line) far from the optimum.
 %
 Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
-%as a function of wall clock time,
+as a function of wall clock time (log scale),
 where~$\Remaining(\CurrentObj, \Queue)$
 is the upper bound on remaining search space size
 (Theorem~\ref{thm:remaining-eval-fine}).
@@ -206,6 +198,7 @@ width=\textwidth]{figs/kdd_compas_ablation-queue.pdf}
 Numbers of prefixes in the queue (log scale), labeled and colored by length,
 as a function of wall clock time (log scale), for CORELS (top left),
 and without five specific implementation optimizations or bounds.
+%EXPAND HERE
 %the permutation bounds (top right),
 %lookahead bound (bottom left), and equivalent points bound (bottom right).
 %
