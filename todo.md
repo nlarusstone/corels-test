@@ -54,10 +54,23 @@
 - [ ] Show improvements due to curiosity on tic-tac-toe, and ideally something else -- if we do this, add section on curiosity
 - [ ] Add results for adult, with one and two clauses (Elaine)
 
+### Logger analysis: Timing measurements (see Elaine email 3/6)
+
+- [ ] Add a timing measurement around `garbage_collect(.)` and check the above assertion.
+- [ ] Modify `logger.setLowerBoundTime(time_diff(t1))` to report cumulative time measurements,
+      analogous to `logger.addToObjTime(time_diff(t2))`
+- [ ] Add a timing measurement for the identical points bound.
+- [ ] Complete the analysis of our timing measurements -- update the figure and generate a table summary.
+
+### Logger analysis: Operations and data structures (see Elaine email 3/7)
+
+- [ ] Separately measure the effects of our two support bounds (low priority).
+- [ ] Summarize our results in 1-2 tables.
+
 ### General
 
-- [ ] Curiosity is missing -- it gives significant improvement for tic-tac-toe, but what else?
 - [ ] Do we want a more thorough description of how we do rule mining, and our bit vector representation and operations?
+- [ ] Subsets of data
 
 -----
 
