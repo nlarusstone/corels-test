@@ -67,6 +67,10 @@
 - [ ] Separately measure the effects of our two support bounds (low priority).
 - [ ] Summarize our results in 1-2 tables.
 
+### Logger analysis: Other
+
+- [ ] Revisit the remaining logger fields
+
 ### General
 
 - [ ] Do we want a more thorough description of how we do rule mining, and our bit vector representation and operations?
