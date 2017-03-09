@@ -56,9 +56,6 @@ class Logger {
     inline void addToRuleEvalTime(double t) {
         _state.rule_evaluation_time += t;
     }
-    inline void incRuleEvalNum() {
-        ++_state.rule_evaluation_num;
-    }
     inline void addToNodeSelectTime(double t) {
         _state.node_select_time += t;
     }
@@ -213,7 +210,6 @@ class Logger {
         _state.node_select_time = 0.;
         _state.node_select_num = 0;
         _state.rule_evaluation_time = 0.;
-        _state.rule_evaluation_num = 0;
         _state.lower_bound_time = 0.;
         _state.lower_bound_num = 0;
         _state.objective_time = 0.;
@@ -252,7 +248,6 @@ class Logger {
         double node_select_time;
         size_t node_select_num;
         double rule_evaluation_time;
-        size_t rule_evaluation_num;
         double lower_bound_time;
         size_t lower_bound_num;
         double objective_time;

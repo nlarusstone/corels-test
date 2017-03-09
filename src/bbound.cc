@@ -344,7 +344,6 @@ void evaluate_children(CacheTree<N>* tree, N* parent, VECTOR parent_not_captured
     rule_vfree(&not_captured_minority);
 
     logger.addToRuleEvalTime(time_diff(t0));
-    logger.incRuleEvalNum();
     logger.decPrefixLen(parent->depth());
     logger.removeQueueElement(len_prefix - 1, parent_lower_bound);
     if (parent->num_children() == 0) {
