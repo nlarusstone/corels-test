@@ -225,12 +225,38 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 pylab.xlabel('Time (s)', fontsize=fs+2)
             if (ncomp in [0, ntot/2]):
                 pylab.ylabel('Count', fontsize=fs+2)
+            (ymin, ymax) = (10**-0.1, 10**8.3)
+            t_corels = int(np.round(t_comp[-1]))
+            tmax = np.round(tt[-1])
+            if (make_small):
+                xloc = tmax / 5000
+            else:
+                xloc = tmax / 10000
+            if (ncomp == 0):
+                pylab.plot([t_corels, t_corels], [ymin, ymax], 'k:', linewidth=2)
+                if (make_small):
+                    xloc = 0.4
+                else:
+                    xloc = 0.1
+                pylab.text(xloc, 10**7.4, 'T $\\equiv$ %d s' % t_corels, fontsize=fs)
+            else:
+                pylab.plot([tmax, tmax], [ymin, ymax], 'k:', linewidth=2)
+                if (tmax / t_corels) < 10:
+                    descr = '%d s $\\approx$ %1.1f T' % (np.round(tmax), tmax / t_corels)
+                else:
+                    descr = '%d s $\\approx$ %d T' % (np.round(tmax), np.round(tmax / t_corels))
+                if (ncomp == (ntot - 1)):
+                    descr = '> %s' % descr
+                    xloc = 0.02
+                else:
+                    descr = (14 - (len(descr.split('$')[0] + descr.split('$')[-1]) + 1)) * ' ' + descr
+                pylab.text(xloc, 10**7.4, descr, fontsize=fs)
             #pylab.suptitle('lengths of prefixes in the logical queue\n', fontsize=fs)
             pylab.title(labels[ncomp], fontsize=fs+2)
             pylab.xticks(fontsize=fs-2)
             pylab.yticks(fontsize=fs-2)
             #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
-            ax = [10**-4, 10**4, 10**-0.1, 10**8.3]
+            ax = [10**-4, 10**4, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()
             if (ncomp + 1 == ntot):
