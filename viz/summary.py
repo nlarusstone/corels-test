@@ -1,3 +1,7 @@
+"""
+./bbcache -c 2 -n 1000000000 -p 1 -r 0.005 ../data/CrossValidation/compas_1_train.out ../data/CrossValidation/compas_1_train.label ../data/CrossValidation/compas_1_train.minor
+
+"""
 import os
 
 import gmpy2
@@ -94,8 +98,8 @@ pylab.plot(total_time, total_time, '-', color='k', linewidth=lw)
 pylab.plot(total_time, evaluate_children_time, '--', color='k', linewidth=lw)
 pylab.plot(total_time, objective_time + permutation_map_insertion_time + tree_insertion_time, '-', color='gray', linewidth=lw)
 pylab.plot(total_time, objective_time, '--', color='gray', linewidth=lw)
-pylab.xlabel('Time (s)', fontsize=fs)
-pylab.ylabel('Time (s)', fontsize=fs)
+pylab.xlabel('time (s)', fontsize=fs)
+pylab.ylabel('time (s)', fontsize=fs)
 pylab.axis([0, 150, 0, 150])
 pylab.legend(['total wall clock time', 'time in evaluate_children(.)', 'obj + (pmap + cache insertion)', 'objective after lower bound'], fontsize=fs-4, loc='upper left')
 pylab.xticks(fontsize=fs)
@@ -119,7 +123,8 @@ pmap_size = x['pmap_size']
 pmap_null_num = x['pmap_null_num']
 pmap_discard_num = x['pmap_discard_num']
 
-pylab.subplot(1, 2, 1)
+pylab.subplot2grid((20, 20), (0, 0), colspan=9, rowspan=19)
+#pylab.subplot(1, 2, 1)
 pylab.semilogy(total_time, lower_bound_num, '-', color='b', linewidth=lw+2)
 #pylab.semilogy(total_time, objective_num, '--', color='b', linewidth=lw+2)
 pylab.semilogy(total_time, permutation_map_insertion_num, '-', color='gray', linewidth=lw+2)
@@ -132,30 +137,32 @@ pylab.semilogy(total_time, tree_num_evaluated, '--', color='b', linewidth=lw)
 pylab.xlabel('Time (s)', fontsize=fs)
 pylab.ylabel('Count', fontsize=fs)
 pylab.axis([0, 150, 0, 10**8])
-pylab.legend(['lower bound evaluations', 'permutation map lookups', 'cache insertions',
-              'permutation map size', 'permutation map new insertions', 'prefixes we try to extend',
-              'prefixes that insert children'], fontsize=fs-2, loc='lower right')
+pylab.legend(['Lower bound evaluations', 'Permutation map lookups', 'Cache insertions',
+              'Permutation map size', 'Permutation map new insertions', 'Prefixes we try to extend',
+              'Prefixes that insert children'], fontsize=fs-2, loc='lower right')
 pylab.xticks(fontsize=fs-1)
 pylab.yticks(fontsize=fs-1)
 
-pylab.subplot(1, 2, 2)
+pylab.subplot2grid((20, 20), (0, 10), colspan=9, rowspan=19)
+#pylab.subplot(1, 2, 2)
 pylab.semilogy(total_time, tree_num_nodes, '-', color='r', linewidth=lw+4)
 pylab.semilogy(total_time, physical_queue, '--', color='k', linewidth=lw)
 pylab.semilogy(total_time, logical_queue, '-', color='k', linewidth=lw)
 pylab.xlabel('Time (s)', fontsize=fs)
-pylab.ylabel('Count', fontsize=fs)
+#pylab.ylabel('Count', fontsize=fs)
 pylab.axis([0, 150, 0, 10**8])
-pylab.legend(['cache size', 'physical queue size', 'logical queue size'], fontsize=fs-2, loc='lower left')
+pylab.legend(['Cache size', 'Physical queue size', 'Logical queue size'], fontsize=fs-2, loc='lower left')
 pylab.xticks(fontsize=fs-1)
 pylab.yticks(fontsize=fs-1)
 
-pylab.suptitle('operations performed and data structure sizes', fontsize=fs)
+pylab.suptitle('Operations performed and data structure sizes', fontsize=fs)
 pylab.savefig('../figs/%s-operations-semilogy.pdf' % ftag)
 
 pylab.figure(3, figsize=(12.5, 5))
 pylab.clf()
 
-pylab.subplot(1, 2, 1)
+pylab.subplot2grid((20, 20), (0, 0), colspan=9, rowspan=19)
+#pylab.subplot(1, 2, 1)
 scale = 10.**6
 #pylab.plot(total_time, lower_bound_num, linewidth=lw)
 pylab.plot(total_time, permutation_map_insertion_num / scale, '-', color='gray', linewidth=lw+2)
@@ -168,32 +175,34 @@ pylab.plot(total_time, tree_num_evaluated / scale, '--', color='b', linewidth=lw
 pylab.xlabel('Time (s)', fontsize=fs)
 pylab.ylabel('Count (millions)', fontsize=fs)
 pylab.axis([0, 150, 0, 2])
-pylab.legend(['permutation map lookups', 'cache insertions', 'permutation map size',
-              'permutation map new insertions', 'prefixes we try to extend',
-              'prefixes that insert children'], fontsize=fs-2, loc=(0.1, 0.47))
+pylab.legend(['Permutation map lookups', 'Cache insertions', 'Permutation map size',
+              'Permutation map new insertions', 'Prefixes we try to extend',
+              'Prefixes that insert children'], fontsize=fs-2.5, loc=(0.12, 0.47))
 #pylab.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-pylab.xticks(fontsize=fs-1)
-pylab.yticks(np.arange(0, 2.1, 0.4), fontsize=fs-1)
+pylab.xticks(fontsize=fs)
+pylab.yticks(np.arange(0, 2.1, 0.4), fontsize=fs)
 
-pylab.subplot(1, 2, 2)
+pylab.subplot2grid((20, 20), (0, 10), colspan=9, rowspan=19)
+#pylab.subplot(1, 2, 2)
 pylab.plot(total_time, tree_num_nodes / scale, '-', color='r', linewidth=lw+4)
 pylab.plot(total_time, physical_queue / scale, '--', color='k', linewidth=lw)
 pylab.plot(total_time, logical_queue / scale, '-', color='k', linewidth=lw)
 pylab.xlabel('Time (s)', fontsize=fs)
-pylab.ylabel('Count (millions)', fontsize=fs)
+#pylab.ylabel('Count (millions)', fontsize=fs)
 pylab.axis([0, 150, 0, 2])
-pylab.legend(['cache size', 'physical queue size', 'logical queue size'], fontsize=fs-2, loc='upper right')
+pylab.legend(['Cache size', 'Physical queue size', 'Logical queue size'], fontsize=fs-2.5, loc='upper right')
 #pylab.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-pylab.xticks(fontsize=fs-1)
-pylab.yticks(np.arange(0, 2.1, 0.4), fontsize=fs-1)
+pylab.xticks(fontsize=fs)
+pylab.yticks(np.arange(0, 2.1, 0.4), fontsize=fs)
 
-pylab.suptitle('operations performed and data structure sizes', fontsize=fs)
+pylab.suptitle('Operations performed and data structure sizes', fontsize=fs)
 pylab.savefig('../figs/%s-operations-plot.pdf' % ftag)
 
 pylab.figure(4, figsize=(12.5, 5))
 pylab.clf()
 
-pylab.subplot(1, 2, 1)
+pylab.subplot2grid((20, 20), (0, 0), colspan=9, rowspan=19)
+#pylab.subplot(1, 2, 1)
 scale = 10.**6
 pylab.loglog(total_time, lower_bound_num, 'b', linewidth=lw+2)
 #pylab.loglog(total_time, objective_num, '--', color='b', linewidth=lw+2)
@@ -204,46 +213,67 @@ pylab.loglog(total_time, pmap_null_num, '--', color='gray', linewidth=lw+2)
 pylab.loglog(total_time, evaluate_children_num, '-', color='b', linewidth=lw)
 pylab.loglog(total_time, tree_num_evaluated, '--', color='b', linewidth=lw)
 pylab.loglog(total_time, pmap_discard_num, '--', color='gray', linewidth=lw)
-pylab.xlabel('Time (s)', fontsize=fs-2)
-pylab.ylabel('Count', fontsize=fs-2)
+pylab.xlabel('Time (s)', fontsize=fs)
+pylab.ylabel('Count', fontsize=fs)
 pylab.axis([10**-4.5, 150, 0, 10**8])
-pylab.legend(['lower bound evaluations', 'permutation map lookups', 'cache insertions',
-              'permutation map size', 'pmap new insertions', 'prefixes we try to extend',
-              'prefixes that insert children', 'discards triggered by pmap'], fontsize=fs-4.5, loc='upper left')
-pylab.xticks(fontsize=fs-2)
-pylab.yticks(fontsize=fs-2)
+pylab.legend(['Lower bound evaluations', 'Permutation map lookups', 'Cache insertions',
+              'Permutation map size', 'Pmap new insertions', 'Prefixes we try to extend',
+              'Prefixes that insert children', 'Discards triggered by pmap'],
+              fontsize=fs-4.5, loc='upper left', labelspacing=0.2)
+pylab.xticks(fontsize=fs)
+pylab.yticks(fontsize=fs)
 
-pylab.subplot(1, 2, 2)
+pylab.subplot2grid((20, 20), (0, 10), colspan=9, rowspan=19)
+#pylab.subplot(1, 2, 2)
 pylab.loglog(total_time, tree_num_nodes, '-', color='r', linewidth=lw+4)
 pylab.loglog(total_time, physical_queue, '--', color='k', linewidth=lw)
 pylab.loglog(total_time, logical_queue, '-', color='k', linewidth=lw)
-pylab.xlabel('Time (s)', fontsize=fs-2)
-pylab.ylabel('Count', fontsize=fs-2)
+pylab.xlabel('Time (s)', fontsize=fs)
+#pylab.ylabel('Count', fontsize=fs)
 pylab.axis([10**-4.5, 150, 0, 10**8])
-pylab.legend(['cache size', 'physical queue size', 'logical queue size'], fontsize=fs-4.5, loc='upper left')
+pylab.legend(['Cache size', 'Physical queue size', 'Logical queue size'], fontsize=fs-4.5, loc='upper left')
 pylab.xticks(fontsize=fs-2)
 pylab.yticks(fontsize=fs-2)
 
-pylab.suptitle('operations performed and data structure sizes', fontsize=fs)
+pylab.suptitle('Operations performed and data structure sizes', fontsize=fs)
 pylab.savefig('../figs/%s-operations-loglog.pdf' % ftag)
 
-pylab.figure(5, figsize=(6, 5.5))
+pylab.figure(5, figsize=(6, 3.5))
 pylab.clf()
+pylab.subplot2grid((10, 10), (0, 0), colspan=10, rowspan=9)
 
 ii = evaluate_children_num.nonzero()[0][0]
 s = np.cast[float](evaluate_children_num[ii:]) * 155
 tt =  total_time[ii:]
-pylab.plot(tt, lower_bound_num[ii:] / s, 'b', linewidth=lw+2)
-pylab.plot(tt, objective_num[ii:] / s, 'b--', linewidth=lw+2)
-pylab.plot(tt, permutation_map_insertion_num[ii:] / s, '-', color='gray', linewidth=lw+2)
-pylab.plot(tt, tree_insertion_num[ii:] / s, 'r--', linewidth=lw+2)
+pylab.plot(tt, 1. - tree_insertion_num[ii:] / s, 'r--', linewidth=lw+1)
+pylab.plot(tt, 1. - permutation_map_insertion_num[ii:] / s, '-', color='gray', linewidth=lw+1)
+pylab.plot(tt, 1. - objective_num[ii:] / s, 'b--', linewidth=lw+1)
+pylab.plot(tt, 1. - lower_bound_num[ii:] / s, 'b', linewidth=lw+1)
 pylab.axis([0, 150, 0, 1.])
-pylab.title('Combinined effects eliminate prefixes', fontsize=fs)
-#pylab.title('Counts normalized by\n(# rules) x (# prefixes we try to extend)')
-pylab.legend(['lower bound evaluations', 'objective evaluations', 'permutation map lookups', 'cache insertions'],
-             loc='center right', fontsize=fs)
+pylab.title('Cumulative eliminated children', fontsize=fs)
+pylab.legend(['Permutation bound', 'Equivalent points bound', 'Lower + lookahead bounds', 'Support bounds'],
+             loc='center right', fontsize=fs-1)
 pylab.xticks(fontsize=fs)
 pylab.yticks(fontsize=fs)
 pylab.xlabel('Time (s)', fontsize=fs)
 pylab.ylabel('Normalized fraction', fontsize=fs)
-pylab.savefig('../figs/%s-elimination.pdf' % ftag)
+pylab.savefig('../figs/%s-eliminated.pdf' % ftag)
+
+pylab.figure(6, figsize=(6, 3.5))
+pylab.clf()
+pylab.subplot2grid((10, 10), (0, 0), colspan=10, rowspan=9)
+
+pylab.plot(tt,  lower_bound_num[ii:] / s, 'b', linewidth=lw+1)
+pylab.plot(tt,  objective_num[ii:] / s, 'b--', linewidth=lw+1)
+pylab.plot(tt,  permutation_map_insertion_num[ii:] / s, '-', color='gray', linewidth=lw+1)
+pylab.plot(tt,  tree_insertion_num[ii:] / s, 'r--', linewidth=lw+1)
+pylab.axis([0, 150, 0, 1.])
+pylab.title('Normalized operations', fontsize=fs)
+#pylab.title('Counts normalized by\n(# rules) x (# prefixes we try to extend)')
+pylab.legend(['Lower bound evaluations', 'Objective evaluations', 'Permutation map lookups', 'Cache insertions',],
+             loc='center right', fontsize=fs-1)
+pylab.xticks(fontsize=fs)
+pylab.yticks(fontsize=fs)
+pylab.xlabel('Time (s)', fontsize=fs)
+pylab.ylabel('Normalized fraction', fontsize=fs)
+pylab.savefig('../figs/%s-normalized.pdf' % ftag)
