@@ -13,7 +13,7 @@
 - [ ] Add Cynthia's unpublished reference somewhere (Cynthia)
 - [ ] Add C4.5 to stop-and-frisk with broken axis (Elaine)
 - [ ] Try to make RIPPER work on stop-and-frisk (Elaine)
-- [ ] Add runtime to Fig 6 subfigures (vertical line) (Elaine)
+- [ ] Add runtime to Fig 6 subfigures (vertical line) and update captions (Elaine)
 - [ ] Language around similarity bound -- we don't use it (Elaine)
 
 ## Long paper
