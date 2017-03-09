@@ -9,7 +9,12 @@
 - [ ] Delete references (in the intro and implementation) to things we haven't done or don't evaluate?
 - [ ] Make room for and add acknowledgements
 - [ ] Provide github link for our code
-- [ ] Revisit Johann's comments
+- [ ] Revisit Johann's comments (Elaine)
+- [ ] Add Cynthia's unpublished reference somewhere (Cynthia)
+- [ ] Add C4.5 to stop-and-frisk with broken axis (Elaine)
+- [ ] Try to make RIPPER work on stop-and-frisk (Elaine)
+- [ ] Add runtime to Fig 6 subfigures (vertical line) (Elaine)
+- [ ] Language around similarity bound -- we don't use it (Elaine)
 
 ## Long paper
 
@@ -20,7 +25,7 @@
 
 ### Bounds
 
-- [ ] Write missing proofs for equivalent points bounds
+- [ ] Fix up proofs for equivalent points bounds (Elaine)
 
 ### Data
 
@@ -37,14 +42,17 @@
 
 ### Implementation (wish list)
 
-- [ ] Add BitVector node and a version of our algorithm (probably using new functions) that uses it
+- [ ] Add BitVector node and a version of our algorithm (probably using new functions) that uses it (`captured_vector` branch)
 
 ### Experiments
 
+- [ ] Describe CORELS experiments in greater detail (rule mining, regularization parameter)
 - [ ] Describe stop-and-frisk dataset in greater detail
 - [ ] Measurements with and without our symmetry map using captured bit vectors
 - [ ] Should we output confusion matrices?
 - [ ] Provide more examples of rule lists that we find (Elaine)
+- [ ] Show improvements due to curiosity on tic-tac-toe, and ideally something else -- if we do this, add section on curiosity
+- [ ] Add results for adult, with one and two clauses (Elaine)
 
 ### General
 
