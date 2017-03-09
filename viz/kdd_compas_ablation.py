@@ -237,7 +237,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 if (make_small):
                     xloc = 0.4
                 else:
-                    xloc = 0.1
+                    xloc = 0.2
                 pylab.text(xloc, 10**7.4, 'T $\\equiv$ %d s' % t_corels, fontsize=fs)
             else:
                 pylab.plot([tmax, tmax], [ymin, ymax], 'k:', linewidth=2)
