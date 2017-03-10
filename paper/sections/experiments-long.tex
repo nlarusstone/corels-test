@@ -7,9 +7,25 @@
 \includegraphics[trim={10mm, 5mm, 25mm, 5mm},
 width=\textwidth]{figs/compare-compas-weapon.pdf}
 \end{center}
-\caption{Test accuracy means (white squares),
+\caption{Comparison of CORELS and a panel of eight other algorithms:
+logistic regression (GLM), support vector machines (SVM),
+AdaBoost, CART, C4.5, random forests (RF), RIPPER,
+scalable Bayesian rule lists (SBRL).
+%
+Test accuracy means (white squares),
 standard deviations (error bars),
-and values (colors correspond to folds).
+and values (colors correspond to folds),
+for 10-fold cross-validation experiments.
+%
+Left:~Two-year recidivism prediction for the ProPublica COMPAS dataset.
+%
+For CORELS, we use regularization parameter~${\Reg=0.005}$.
+%
+Right:~Weapon prediction for the NYCLU stop-and-frisk dataset.
+%
+For CORELS, we use~${\Reg=0.01}$.
+%
+Note that we were unable to execute RIPPER for the NYCLU problem.
 }
 \label{fig:comparison}
 \end{figure}
@@ -27,6 +43,9 @@ width=0.75\textwidth]{figs/frisk-sparsity-training.pdf}
 For CORELS, CART, and C4.5, we vary the regularization parameter~$\Reg$,
 and complexity parameters~$cp$ and~$C$, respectively;
 numbers within parentheses in the legend indicate parameter values.
+%
+Note that the CART implementation sets ${cp = 0.01}$ by default,
+and C4.5 uses ${C = 0.25}$.
 %
 Legend markers and error bars indicate means and standard deviations,
 respectively, of test accuracy across cross-validation folds.
@@ -49,10 +68,6 @@ and dramatically overfits for all tested parameters.
 \label{fig:sparsity}
 \end{figure}
 
-% CART implementation in R's rpart
-% C4.5 = J48 in RWeka
-% RIPPER in R's caret
-
 Our experimental analysis addresses four questions:
 (1) How does CORELS' accuracy and model size compare to other algorithms?
 (2) How rapidly does the objective function converge?
@@ -74,22 +89,28 @@ and using the NYCLU 2014 stop-and-frisk dataset~\cite{nyclu:2014} to predict
 whether a weapon will be found on a stopped individual who is frisked or searched.
 
 We first ran a 10-fold cross validation experiment using CORELS and eight other
-algorithms:~\footnote{We use standard R packages, with default parameter settings, for the first seven.}
-logistic regression, support vector machines, AdaBoost, CART, C4.5, random forests, RIPPER,~\footnote{We were unable to execute RIPPER for the NYCLU problem.} and scalable Bayesian rule lists (SBRL).~\footnote{https://github.com/Hongyuy/sbrlmod}
+algorithms:
+logistic regression, support vector machines, AdaBoost, CART, C4.5, random forests, RIPPER, and scalable Bayesian rule lists (SBRL).~\footnote{For SBRL, we use the C implementation at \url{https://github.com/Hongyuy/sbrlmod}.}
+%
+We use standard R packages, with default parameter settings,
+for the first seven algorithms.~\footnote{For CART, C4.5 (J48), and RIPPER,
+\ie the tree and rule list learning algorithms, we use the implementations
+from the R packages rpart, RWeka, and caret, respectively.
+%
+By default, CART uses complexity parameter ${cp = 0.01}$,
+and C4.5 uses complexity parameter ${C = 0.25}$.
+}
 %
 Figure~\ref{fig:rule-list} shows an  optimal rule list that CORELS learns
 for the ProPublica dataset.
 %
 Figure~\ref{fig:comparison} shows that there were no statistically significant
 differences in algorithm accuracies.
-\begin{arxiv}
 In fact, the difference between folds was far larger than the difference
 between algorithms.
 We conclude that CORELS produces models whose accuracy is comparable
 to those found via other algorithms.
 
-\end{arxiv}
-%
 Figure~\ref{fig:sparsity} summarizes differences in accuracy and model size
 for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
 %

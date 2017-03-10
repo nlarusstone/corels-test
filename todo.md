@@ -46,6 +46,7 @@
 
 ### Experiments
 
+- [ ] Emphasize the intuitive interpretation of our regularization parameter
 - [ ] Describe CORELS experiments in greater detail (rule mining, regularization parameter)
 - [ ] Describe stop-and-frisk dataset in greater detail
 - [ ] Measurements with and without our symmetry map using captured bit vectors
