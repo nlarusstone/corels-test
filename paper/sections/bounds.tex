@@ -2201,6 +2201,28 @@ applying~\eqref{eq:lb-equiv-pts-uncap} gives a lower bound on~$\Obj(\RL, \x, \y)
 &= b(\Prefix, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) \nn \\
 &\ge b(\Prefix, \x, \y) + b_0(\Prefix, \x, \y).
 \end{align}
-Finally, for any rule list~$\RL'$ whose prefix~$\Prefix'$ starts with~$\Prefix$, \dots
+Analogously, for any rule list~$\RL'$ whose prefix~$\Prefix'$ starts with~$\Prefix$,
+$\Obj(\RL, \x, \y) \ge b(\Prefix, \x, \y) + b_0(\Prefix, \x, \y)$.
+\begin{align}
+b(\Prefix', \x, \y) &= \Loss_p(\Prefix', \Labels, \x, \y) + \Reg K'
+= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] + \Reg K' \nn \\
+&= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K + \frac{1}{N} \sum_{n=1}^N \sum_{k=K}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] + \Reg (K' - K) \nn \\
+&= b(\Prefix, \x, \y) + \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] + \Reg (K' - K)
+\end{align}
+\begin{align}
+b_0(\Prefix, \x, \y) &= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
+    \neg\, \Cap(x_n, \Prefix) \wedge \one [ x_n \in e_u ] \wedge \one [ y_n = q_u ] \nn \\
+&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
+    \left(\neg\, \Cap(x_n, \Prefix')+ \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \right) \wedge \one [ x_n \in e_u ] \wedge \one [ y_n = q_u ] \nn \\
+&= b_0(\Prefix', \x, \y) + \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
+    \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ x_n \in e_u ] \wedge \one [ y_n = q_u ]
+\end{align}
+Combining gives
+\begin{align}
+\Obj(\RL', \x, \y) &\ge b(\Prefix', \x, \y) + b_0(\Prefix', \x, \y) \nn \\
+&= b(\Prefix, \x, \y) + \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] + \Reg (K' - K) + b_0(\Prefix', \x, \y) \nn \\
+&\dots \nn \\
+&\ge b(\Prefix, \x, \y) + b_0(\Prefix, \x, \y).
+\end{align}
 \end{proof}
 \end{arxiv}
