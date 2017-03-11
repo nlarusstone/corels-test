@@ -2,30 +2,48 @@
 
 ## Code review notes on ([clean-up branch](https://github.com/elaine84/bbcache/blob/clean-up/todo.md))
 
-## Short paper
+## Short paper (and by extension, long paper)
 
+- [ ] Add Cynthia's unpublished reference somewhere (Cynthia)
 - [ ] Check language regarding best-first search, priority queue and metric
 - [ ] Clarify that our experiments with the priority queue use the lower bound
 - [ ] Delete references (in the intro and implementation) to things we haven't done or don't evaluate?
 - [ ] Make room for and add acknowledgements
 - [ ] Provide github link for our code
 - [ ] Revisit Johann's comments (Elaine)
-- [ ] Add Cynthia's unpublished reference somewhere (Cynthia)
 - [ ] Add C4.5 to stop-and-frisk with broken axis (Elaine)
 - [ ] Try to make RIPPER work on stop-and-frisk (Elaine)
-- [ ] Add runtime to Fig 6 subfigures (vertical line) and update captions (Elaine)
-- [ ] Language around similarity bound -- we don't use it (Elaine)
+- [x] Add runtime to Fig 6 subfigures (vertical line) and update caption (Elaine)
+- [ ] Add clarification around the similarity bound that we aren't yet using it, possible future work (Elaine)
 
 ## Long paper
+
+- [ ] Fill in acknowledgements (Everyone)
+- [ ] Add paragraph on Hongyu's paper in related work (Cynthia)
+- [ ] Extended version of our short paper's implementation section (Nicholas)
+- [ ] Add measurements, and update the writing if relevant (Nicholas)
+- [ ] Add a more detailed description of our algorithm as pseudocode, that includes all bounds and data structures (Nicholas)
+- [ ] Flag new paragraphs for others (Elaine)
+- [x] Add proofs for equivalent points bounds (Elaine)
+- [ ] Convert to JMLR format (Elaine)
+- [ ] Add sentences in experiments section about how the order of the bounds matters (Elaine)
+- [ ] Note that ablation results / efficacy of different CORELS components are heavily dataset-dependent (Elaine)
+- [ ] More description about stop-and-frisk problem and dataset and describe the problems with bullet points (Elaine)
+- [x] Add details about algorithm implementations and parameters used (Elaine)
+- [ ] Emphasize the intuitive interpretation of our objective function, including the regularization parameter (Elaine)
+- [ ] Provide more examples of rule lists that we find (Elaine)
+- [ ] Ablation experiment for a dataset where the equivalent points bound doesn't help (e.g., tic-tac-toe)
+- [ ] Show improvements due to curiosity on tic-tac-toe, and ideally something else (Elaine)
+- [ ] Add section on curiosity -- this depends on showing results (Elaine)
+
+-----
+
+## Long paper (wish list post-submission)
 
 ### Definitions
 
 - [ ] Stop overloading the notation for misclassification error (takes 3 arguments always)
 - [ ] Swap the arguments in the notation for captures
-
-### Bounds
-
-- [ ] Fix up proofs for equivalent points bounds (Elaine)
 
 ### Data
 
@@ -35,25 +53,16 @@
 - [ ] Look at the datasets from Stat 220
 - [ ] Figure out what is going on with the nursery dataset -- maybe ping Hongyu again (Elaine)
 
-### Implementation (writing)
-
-- [ ] Extended version of our short paper's implementation section (Nicholas)
-- [ ] Add a more detailed description of our algorithm as pseudocode, that includes all bounds and data structures (Nicholas)
-
-### Implementation (wish list)
+### Implementation
 
 - [ ] Add BitVector node and a version of our algorithm (probably using new functions) that uses it (`captured_vector` branch)
 
 ### Experiments
 
-- [ ] Emphasize the intuitive interpretation of our regularization parameter
-- [ ] Describe CORELS experiments in greater detail (rule mining, regularization parameter)
-- [ ] Describe stop-and-frisk dataset in greater detail
 - [ ] Measurements with and without our symmetry map using captured bit vectors
 - [ ] Should we output confusion matrices?
-- [ ] Provide more examples of rule lists that we find (Elaine)
-- [ ] Show improvements due to curiosity on tic-tac-toe, and ideally something else -- if we do this, add section on curiosity
 - [ ] Add results for adult, with one and two clauses (Elaine)
+- [ ] Describe the logger
 
 ### Logger analysis: Timing measurements (see Elaine email 3/6)
 
