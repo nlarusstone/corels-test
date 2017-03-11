@@ -74,15 +74,15 @@ in our evaluation of~$\RL'$.
 We can write the objective lower bound of~$\RL'$ incrementally,
 with respect to the objective lower bound of~$\RL$:
 \begin{align}
-b(\Prefix', \Labels', \x, \y)
+b(\Prefix', \x, \y)
   &= \Loss_p(\Prefix', \Labels', \x, \y) + \Reg (K + 1) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K+1} \Cap(x_n, p_k \given \Prefix')
   \wedge \one [ q_k \neq y_n ] + \Reg (K+1) \label{eq:non-inc-lb} \\
 &= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K + \Reg
   + \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_{K+1} \given \Prefix') \wedge \one [q_{K+1} \neq y_n ] \nn \\
-&= b(\Prefix, \Labels, \x, \y) + \Reg
+&= b(\Prefix, \x, \y) + \Reg
   + \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_{K+1} \given \Prefix') \wedge \one [q_{K+1} \neq y_n ] \nn \\
-&= b(\Prefix, \Labels, \x, \y) + \Reg  + \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge
+&= b(\Prefix, \x, \y) + \Reg  + \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge
   \Cap(x_n, p_{K+1}) \wedge \one [q_{K+1} \neq y_n].
 \label{eq:inc-lb}
 \end{align}
@@ -92,12 +92,12 @@ b(\Prefix', \Labels', \x, \y)
 %\begin{align}
 %\Loss_0(\Prefix, \Default, \x, \y) = \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [q_0 \neq y_n].
 %\end{align}
-Thus, if we store $b(\Prefix, \Labels, \x, \y)$, % and ${\neg\, \Cap(\x, \Prefix)}$,
-then we can reuse this quantity when computing $b(\Prefix', \Labels', \x, \y)$.
+Thus, if we store $b(\Prefix, \x, \y)$, % and ${\neg\, \Cap(\x, \Prefix)}$,
+then we can reuse this quantity when computing $b(\Prefix', \x, \y)$.
 %
 Transforming~\eqref{eq:non-inc-lb} into~\eqref{eq:inc-lb} yields a
 significantly simpler expression that is a function of the stored
-quantity~$b(\Prefix, \Labels, \x, \y)$. %, as well as ${\neg\, \Cap(\x, \Prefix)}$
+quantity~$b(\Prefix, \x, \y)$. %, as well as ${\neg\, \Cap(\x, \Prefix)}$
 %and the last rule of~$\RL'$, ${p_{K+1} \rightarrow q_{K+1}}$.
 %
 For the objective of~$\RL'$, first let us write a na\"ive expression:
@@ -113,16 +113,16 @@ with respect to its objective lower bound:
 \begin{align}
 \Obj(\RL', \x, \y) &=  \Loss_p(\Prefix', \Labels', \x, \y) +
   \Loss_0(\Prefix', \Default', \x, \y) + \Reg (K + 1) \nn \\
-&= b(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, y) \nn \\
-&= b(\Prefix', \Labels', \x, \y) + \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix') \wedge
+&= b(\Prefix', \x, \y) + \Loss_0(\Prefix', \Default', \x, y) \nn \\
+&= b(\Prefix', \x, \y) + \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix') \wedge
   \one [q'_0 \neq y_n] \nn \\
-&= b(\Prefix', \Labels', \x, \y) + \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge
+&= b(\Prefix', \x, \y) + \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge
   (\neg\, \Cap(x_n, p_{K+1})) \wedge \one [q'_0 \neq y_n].
 \label{eq:inc-obj}
 \end{align}
 The expression in~\eqref{eq:inc-obj} is much simpler than the na\"ive
 one in~\eqref{eq:non-inc-obj}, and is a function of
-$b(\Prefix', \Labels', \x, \y)$, which we computed in~\eqref{eq:inc-lb}.
+$b(\Prefix', \x, \y)$, which we computed in~\eqref{eq:inc-lb}.
 %as well as ${\neg\, \Cap(\x, \Prefix)}$,
 %and the last antecedent~$p_{K+1}$ and default rule~$\Default'$ of~$\RL'$.
 Though we could compute the objective of~$\RL'$ incrementally
