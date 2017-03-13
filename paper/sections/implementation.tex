@@ -53,17 +53,30 @@ or the trie).
 
 We use a queue to store all of the leaves of the trie that still need to be explored.
 %
+\begin{arxiv}
+We order entries in the queue to implement several different policies.
+%
+A first-in-first-out (FIFO) queue implements breadth-first search (BFS),
+and a priority queue implements best-first search.
+%
+Example priority queue policies include ordering
+by the lower bound, the objective, or a custom metric
+that maps prefixes to real values.
+\end{arxiv}
+\begin{kdd}
 We order entries in the queue to implement several different policies,
 including breadth-first search (BFS) and best-first search.
 %
 For best-first we use a priority queue, ordered by the lower bound, the objective,
 or a custom priority metric.
+\end{kdd}
 %
-We also have a stochastic exploration process that bypasses the need for a queue by
-following a random path from the root to a leaf.
+We also support a stochastic exploration process that bypasses
+the need for a queue by instead following random paths from the root to leaves.
 %
 We find that ordering by the lower bound and other priority metrics
 often leads to a shorter runtime than using BFS.
+
 
 Mapping our algorithm to our data structures produces the following execution strategy.
 %
@@ -93,6 +106,43 @@ experiments we observe the minimum objective to decrease only a small number of 
 \begin{kdd}
 \vspace{-1mm}
 \end{kdd}
+
+\begin{arxiv}
+\section{Curiosity}
+
+We introduce a custom priority metric that we call \emph{curiosity}:
+\begin{align}
+\Curiosity(\Prefix, \x, \y) = \frac{1}{\NCap} \left(\sum_{n=1}^N \sum_{k=1}^K
+  \Cap(x_n, p_k \given \Prefix) \wedge \one [ q_k \neq y_n ] \right)
+  + \frac{\Reg K N}{\NCap} \,,
+\end{align}
+where~$\NCap$ is the number of datapoints captured by~$\Prefix$, \ie
+\begin{align}
+\NCap \equiv \sum_{n=1}^N \Cap(x_n, \Prefix).
+\end{align}
+%
+We can think of the curiosity as the expected objective value
+of a rule list~${\RL' = }$ ${(\Prefix', \Labels', \Default', K')}$
+generated from~$\Prefix$, for a simple model.
+%
+Assume that prefix~$\Prefix'$ starts with~$\Prefix$ and captures all the data,
+such that each additional antecedent in~$\Prefix'$
+both captures as many `new' datapoints and makes as many mistakes as
+as each antecedent in~$\Prefix$, on average.
+%
+The expected objective value is then the sum of the expected prefix
+misclassification error and the expected regularization penalty:
+\begin{align}
+\E[ \Obj(\RL', \x, \y) ] &= \E[\Loss_p(\Prefix, \Labels, \x, \y)] + \E[ \Reg K' ] \nn \\
+&= \E[ K' ] \left(\frac{\Loss_p(\Prefix, \Labels, \x, \y)}{K}\right) + \Reg \E[ K' ] \nn \\
+&=  \left(\frac{N}{\NCap / K}\right)
+  \left(\frac{\Loss_p(\Prefix, \Labels, \x, \y)}{K}\right)
+  + \Reg \left(\frac{N}{\NCap / K}\right) \nn \\
+&= \left(\frac{N}{\NCap}\right) \left(\frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K
+  \Cap(x_n, p_k \given \Prefix) \wedge \one [ q_k \neq y_n ] \right)
+  + \frac{\Reg K N}{\NCap} = \Curiosity(\Prefix, \x, \y).
+\end{align}
+\end{arxiv}
 
 %\section{Implementation architecture}
 %
