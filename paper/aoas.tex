@@ -1,0 +1,96 @@
+\documentclass[aoas,preprint]{imsart}
+\setattribute{journal}{name}{}
+
+\usepackage{amsmath,amssymb,amsthm,amsfonts}
+\usepackage{fullpage}
+\usepackage[round]{natbib}
+\usepackage{url}
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+
+\input{latex_front}
+\input{latex_macros}
+
+\newtheorem{lemma}{Lemma}
+\newtheorem{theorem}{Theorem}
+\newtheorem{remark}{Remark}
+\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}
+\newtheorem{claim}{Claim}
+\newtheorem{corollary}{Corollary}
+
+\includecomment{arxiv}\excludecomment{kdd}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Learning certifiably optimal\\ rule lists for categorical data}
+\runtitle{Learning certifiably optimal rule lists for categorical data}
+
+\begin{aug}
+\author{\fnms{Elaine} \snm{Angelino}\ead[label=e1]{elaine@eecs.berkeley.edu}},
+\author{\fnms{Nicholas} \snm{Larus-Stone}\ead[label=e2]{nlarusstone@college.harvard.edu}},
+\author{\fnms{Daniel} \snm{Alabi}\ead[label=e3]{alabid@g.harvard.edu}}, \\
+\author{\fnms{Margo} \snm{Seltzer}\ead[label=e4]{margo@eecs.harvard.edu}},
+\and
+\author{\fnms{Cynthia} \snm{Rudin}\ead[label=e5]{cynthia@cs.duke.edu}}
+
+\affiliation{UC Berkeley, Harvard University, and Duke University}
+\runauthor{Angelino, Larus-Stone, Alabi, Seltzer, and Rudin}
+
+\address{Elaine Angelino\\
+Department of Electrical Engineering and Computer Sciences\\
+University of California, Berkeley\\
+Berkeley, CA\\
+\printead{e1}}
+
+\address{Nicholas Larus-Stone, Daniel Alabi, \and\\
+Margo Seltzer\\
+School of Engineering and Applied Sciences\\
+Harvard University\\
+Cambridge, MA\\
+\printead{e2}\\
+\phantom{E-mail:\ }\printead*{e3}\\
+\phantom{E-mail:\ }\printead*{e4}}
+
+\address{Cynthia Rudin\\
+Department of Computer Science\\
+Department of Electrical and Computer Engineering\\
+Duke University\\
+Durham, NC\\
+\printead{e5}}
+\end{aug}
+
+
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+\end{frontmatter}
+
+\tableofcontents
+
+\input{sections/introduction}
+
+\input{sections/related_work}
+
+\input{sections/framework}
+
+\input{sections/bounds}
+
+\input{sections/implementation}
+
+\input{sections/experiments-long}
+
+\input{sections/conclusion}
+
+\subsubsection*{Acknowledgments}
+
+E.A. is supported by the Miller Institute for Basic Research in Science,
+University of California, Berkeley, and is hosted by Prof. M.I. Jordan
+at RISELab.
+
+\bibliography{refs}
+\bibliographystyle{abbrvnat}
+
+\end{document}
