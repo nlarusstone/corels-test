@@ -42,7 +42,13 @@ which includes the penalty for longer prefixes,
 
 Therefore, even if we encounter a prefix~$\Prefix$
 with lower bound ${b(\Prefix, \x, \y) \le \CurrentObj}$,
-if ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$, then we can prune
+\begin{kdd}
+if
+\end{kdd}
+\begin{arxiv}
+as long as
+\end{arxiv}
+${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$, then we can prune
 all prefixes~$\Prefix'$ that start with and are longer than~$\Prefix$.
 
 %Before proceeding, let us summarize the remainder of this section.
@@ -135,13 +141,14 @@ L(\OptimalRL) \le \min \left(\left\lfloor \CurrentObj / \Reg \right\rfloor, M \r
 where~$\Reg$ is the regularization parameter.
 %
 \begin{arxiv}
-Furthermore, if the current best rule list~$\CurrentRL$
-has length~$K$ and zero misclassification error,
+Furthermore, if~$\CurrentRL$ is a rule list with
+objective ${\Obj(\CurrentRL, \x, \y) = \CurrentObj}$,
+length~$K$, and zero misclassification error,
 then for every optimal rule list
-${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
-if ${\CurrentRL \in}$ ${\argmin_d \Obj(\RL, \x, \y)}$,
+${\OptimalRL \in}$ ${\argmin_\RL \Obj(\RL, \x, \y)}$,
+if ${\CurrentRL \in \argmin_d \Obj(\RL, \x, \y)}$,
 then ${L(\OptimalRL) \le K}$,
-or otherwise if ${\CurrentRL \notin}$ ${\argmin_d \Obj(\RL, \x, \y)}$,
+or otherwise if ${\CurrentRL \notin \argmin_d \Obj(\RL, \x, \y)}$,
 then ${L(\OptimalRL) \le K - 1}$.
 \end{arxiv}
 \end{theorem}
@@ -212,7 +219,7 @@ L(\OptimalRL) \le \min \left( \left\lfloor 1 / 2\Reg \right\rfloor, M \right).
 \begin{arxiv}
 \begin{proof}
 Let ${d = ((), (), q_0, 0)}$ be the empty rule list;
-it has objective ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) \le 1/2}$,
+it has objective ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) \le}$ ${1/2}$,
 which gives an upper bound on~$\CurrentObj$.
 %
 Combining with~\eqref{eq:max-length}
@@ -1605,7 +1612,12 @@ which is smaller by a factor of about~360,000.
 While~$10^{24}$ seems infeasibly enormous,
 it does not represent the number of rule lists we evaluate.
 %
-As we show in ~(\S\ref{sec:experiments}),
+\begin{kdd}
+As we show in~\S\ref{sec:experiments},
+\end{kdd}
+\begin{arxiv}
+As we show in our experiments~(\S\ref{sec:experiments}),
+\end{arxiv}
 our permutation bound in Corollary~\ref{thm:permutation}
 and our other bounds together conspire to reduce the search space
 to a size manageable on a single computer.

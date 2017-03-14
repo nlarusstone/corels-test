@@ -70,7 +70,6 @@ whose antecedent~$p_0$ simply asserts true.
 \begin{figure}[t!]
 \begin{subfigure}{0.65\textwidth}
 \begin{algorithmic}
-\normalsize
 \State \bif $(age=23-25) \wedge (priors=2-3)$ \bthen $yes$
 \State \belif $(age=18-20)$ \bthen $yes$
 \State \belif $(sex=male) \wedge (age=21-22)$ \bthen $yes$
@@ -80,7 +79,6 @@ whose antecedent~$p_0$ simply asserts true.
 \end{subfigure}
 \begin{subfigure}{0.34\textwidth}
 \begin{algorithmic}
-\normalsize
 \State \bif $p_1$ \bthen $q_1$
 \State \belif $p_2$ \bthen $q_2$
 \State \belif $p_3$ \bthen $q_3$
@@ -117,7 +115,7 @@ ${\Labels = (q_1, \dots, q_K) \in \{0, 1\}^K}$~gives
 the label predictions associated with~$\Prefix$,
 and ${\Default \in \{0, 1\}}$ is the default label prediction.
 %
-In Figure~\ref{fig:rule-list}, ${\RL = (r_1, r_2, r_3, r_4, r_0)}$,
+In Figure~\ref{fig:rule-list}, ${\RL =}$ ${(r_1, r_2, r_3, r_4, r_0)}$,
 and each rule is of the form ${r_k = p_k \rightarrow q_k}$,
 for all ${k = 0, \dots, 4}$;
 equivalently, ${\RL = (\Prefix, \Labels, \Default, K)}$,
@@ -125,7 +123,7 @@ where ${\Prefix = (p_1, p_2, p_3, p_4)}$, ${\Labels = (1, 1, 1, 1)}$,
 ${\Default = 0}$, and ${K=4}$.
 
 Let ${\Prefix = (p_1, \dots, p_k, \dots, p_K)}$ be an antecedent list,
-then for any ${k \le K}$, we define ${\Prefix^k = (p_1, \dots, p_k)}$
+then for any ${k \le K}$, we define ${\Prefix^k =}$ ${(p_1, \dots, p_k)}$
 to be the $k$-prefix of~$\Prefix$.
 %
 For any such $k$-prefix~$\Prefix^k$,
@@ -206,7 +204,7 @@ For example, if ${\Prefix = (p_1, \dots, p_k, \dots, p_K)}$ is a prefix, then
 \end{align}
 indicates whether antecedent~$p_k$ captures datum~$x_n$ in the context of~$\Prefix$.
 %
-Now, define~${\Supp(\beta, \x)}$ to be the normalized support of~$\beta$,
+Now, define ${\Supp(\beta, \x)}$ to be the normalized support of~$\beta$,
 \begin{align}
 \Supp(\beta, \x) = \frac{1}{N} \sum_{n=1}^N \Cap(x_n, \beta),
 \label{eq:support}
@@ -377,9 +375,11 @@ $b(\Prefix, \x, \y)$ gives a lower bound on the objective of
 \emph{any} rule list whose prefix starts with~$\Prefix$.
 
 \begin{theorem}[Hierarchical objective lower bound]
+\begin{kdd}
 Define~${b(\Prefix, \x, \y) = \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K}$.
-%
+\end{kdd}
 \begin{arxiv}
+Define ${b(\Prefix, \x, \y)}$ as in~\eqref{eq:lower-bound}.
 Also, define
 ${\StartsWith(\Prefix) = \{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
 to be the set of all rule lists whose prefix starts with~$\Prefix$.
@@ -394,7 +394,7 @@ Let ${\RL = }$ ${(\Prefix, \Labels, \Default, K)}$ be a rule list
 with prefix~$\Prefix$, and let
 ${\RL' = (\Prefix', \Labels', \Default', K')}$ $\in \StartsWith(\Prefix)$
 be any rule list such that its prefix~$\Prefix'$ starts with~$\Prefix$
-and ${K' \ge K}$, then ${b(\Prefix, \x, \y) \le \Obj(\RL', \x, \y)}$.
+and ${K' \ge K}$, then ${b(\Prefix, \x, \y) \le}$ ${\Obj(\RL', \x, \y)}$.
 \label{thm:bound}
 \end{theorem}
 
@@ -407,7 +407,8 @@ and ${\Labels' = (q_1, \dots, q_K, q_{K+1}, \dots, q_{K'})}$.
 Notice that~$\Prefix'$ yields the same mistakes as~$\Prefix$,
 and possibly additional mistakes:
 \begin{align}
-\Loss_p(\Prefix', \Labels', \x, \y)
+&\Loss_p(\Prefix', \Labels', \x, \y)
+= \frac{1}{N} \sum_{n=1}^N  \sum_{k=1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [ q_k \neq y_n ]
 + \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] \right) \nn \\
 &\ge \Loss_p(\Prefix, \Labels, \x, \y),

@@ -102,7 +102,7 @@ quantity~$b(\Prefix, \x, \y)$. %, as well as ${\neg\, \Cap(\x, \Prefix)}$
 %
 For the objective of~$\RL'$, first let us write a na\"ive expression:
 \begin{align}
-\Obj(\RL', \x, \y) &= \Loss(\RL', \x, \y) + \Reg (K + 1)
+&\Obj(\RL', \x, \y) = \Loss(\RL', \x, \y) + \Reg (K + 1)
 = \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y) + \Reg(K + 1) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K+1} \Cap(x_n, p_k \given \Prefix')
   \wedge \one [ q_k \neq y_n ] + \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix') \wedge
@@ -132,7 +132,7 @@ by~\eqref{eq:inc-obj} since it avoids this additional storage overhead.
 
 \begin{algorithm}[t!]
   \caption{Incremental branch-and-bound for learning rule lists, for simplicity, from a cold start.
-  We explicitly show the incremental objective lower bound and objective functions in Algorithm~\ref{alg:incremental-functions}.}
+  We explicitly show the incremental objective lower bound and objective functions in Algorithms~\ref{alg:incremental-lb} and~\ref{alg:incremental-obj}, respectively.}
 \label{alg:incremental}
 \begin{algorithmic}
 \normalsize
@@ -155,9 +155,9 @@ regularization parameter~$\Reg$
             \If {$s$ not in $\Prefix$}
                 \State $\PrefixB \gets (\Prefix, s)$ \Comment{\textbf{Branch}: Generate child $\PrefixB$}
                 \State $\mathbf{v} \gets \mathbf{u} \wedge \Cap(\x, s)$ \Comment{Bit vector indicating data captured by $s$ in $\PrefixB$}
-                \State $b(\PrefixB, \x, \y) \gets b(\Prefix, \x, \y) + \Reg~ + $ \Call{IncrementalLowerBound}{$\mathbf{v}, \y, N$} \Comment{Eq.~\eqref{eq:inc-lb}}
+                \State $b(\PrefixB, \x, \y) \gets b(\Prefix, \x, \y) + \Reg~ + $ \Call{IncrementalLowerBound}{$\mathbf{v}, \y, N$} %\Comment{Eq.~\eqref{eq:inc-lb}}
                 \If {$b(\PrefixB, \x, \y) < \CurrentObj$} \Comment{\textbf{Bound}: Apply bound from Theorem~\ref{thm:bound}}
-                    \State $\Obj(\RLB, \x, \y) \gets b(\PrefixB, \x, \y)~ + $ \Call{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$} \Comment{Eq.~\eqref{eq:inc-obj}}
+                    \State $\Obj(\RLB, \x, \y) \gets b(\PrefixB, \x, \y)~ + $ \Call{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$} %\Comment{Eq.~\eqref{eq:inc-obj}}
                     \If {$\Obj(\RLB, \x, \y) < \CurrentObj$}
                         \State $(\CurrentRL, \CurrentObj) \gets (\RLB, \Obj(\RLB, \x, \y))$ \Comment{Update current best rule list and objective}
                     \EndIf
