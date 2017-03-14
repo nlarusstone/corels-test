@@ -114,14 +114,15 @@ Bounds for CORELS have no such approximations and are substantially tighter.
 Yang et al. aim to find the optimal solution but do not aim to prove optimality.
 
 Both~\citet{YangRuSe16} and~\citet{RudinEr15} contributed bounds that we started from
-in this work, and in particular, Ertekin uses the same objective as we do and has
+in this work, and in particular, the second of these uses the same objective as we do and has
 some of the same bounds, including the minimum support bound (\S\ref{sec:lb-support}, Theorem~\ref{thm:min-capture}).
 %
-However, the work of Ertekin is for a different purpose, namely it is for building rule lists
-that can be customized; since Ertekin uses mixed integer programming (MIP), users can easily
+However, Ertekin and Rudin's work is for a different purpose,
+namely it is for building rule lists that can be customized;
+since the authors use mixed integer programming (MIP), users can easily
 add constraints to the MIP and create rule lists that obey these arbitrary constraints.
 %
-Ertekin's rule lists are certifiably optimal.
+As in our framework, their rule lists are certifiably optimal.
 %
 However, since generic MIP software is used without efficient bounds and
 data structures like the ones introduced here,

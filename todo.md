@@ -4,7 +4,7 @@
 
 ## Short paper (and by extension, long paper)
 
-- [ ] Add Cynthia's unpublished reference somewhere (Cynthia)
+- [ ] Add a sentence for Rudin and Ertekin's work (Cynthia)
 - [ ] Check language regarding best-first search, priority queue and metric
 - [ ] Clarify that our experiments with the priority queue use the lower bound
 - [ ] Delete references (in the intro and implementation) to things we haven't done or don't evaluate?
@@ -14,7 +14,6 @@
 - [ ] Add C4.5 to stop-and-frisk with broken axis (Elaine)
 - [ ] Try to make RIPPER work on stop-and-frisk (Elaine)
 - [x] Add runtime to Fig 6 subfigures (vertical line) and update caption (Elaine)
-- [ ] Add clarification around the similarity bound that we aren't yet using it, possible future work (Elaine)
 
 ## Long paper
 
@@ -24,6 +23,7 @@
 - [ ] Add measurements, and update the writing if relevant (Nicholas)
 - [ ] Add a more detailed description of our algorithm as pseudocode, that includes all bounds and data structures (Nicholas)
 - [ ] Flag new paragraphs for others (Elaine)
+- [ ] Add clarification around the similarity bound that we aren't yet using it, possible future work (Elaine)
 - [x] Add proofs for equivalent points bounds (Elaine)
 - [ ] Convert to JMLR format (Elaine)
 - [ ] Add sentences in experiments section about how the order of the bounds matters (Elaine)
