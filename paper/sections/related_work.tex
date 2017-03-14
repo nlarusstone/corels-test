@@ -26,8 +26,12 @@
 
 \section{Related Work}
 
-
+\begin{kdd}
 We discuss related literature in several subfields.
+\end{kdd}
+\begin{arxiv}
+We discuss related literature in several subfields, and highlight two recent works that this paper builds on.
+\end{arxiv}
 
 \textit{Interpretable Models:} There is a growing interest in interpretable (transparent, comprehensible) models because of their societal importance~\citep[see ][]{ruping2006learning,bratko1997machine,dawes1979robust,VellidoEtAl12,Giraud98,Holte93,Schmueli10,Huysmans11,Freitas14}. There are now regulations on algorithmic decision-making in the European Union on the ``right to an explanation" \citep{Goodman2016EU} that would legally require interpretability in~predictions.
 
@@ -93,7 +97,36 @@ and with exotic types of constraints.
 %
 For example, Falling Rule Lists \citep{WangRu15} are constrained to have decreasing probabilities down the list as are rule lists for dynamic treatment regimes \citep{ZhangEtAl15} and cost-sensitive dynamic treatment regimes \citep{LakkarajuRu17}. Both Wang et. al \cite{WangRu15} and Lakkaraju et. al \cite{LakkarajuRu17} use Monte Carlo searches through the space of rule lists. The method proposed in this work could potentially be adapted to handle these kinds of interesting problems. We are currently working on bounds for Falling Rule Lists \citep{ChenRu17} similar to those presented here.
 
+\begin{arxiv}
+Two works that this paper builds on are those of~\citet{YangRuSe16}, and~\citet{RudinEr15}.
+%
+The work of Yang et al. provided the bit vector libraries and several ideas that were used here,
+and we used their code as a starting point.
+%
+Yang's SBRL method has uses beyond those of CORELS because SBRL models are probabilistic,
+producing an estimate of~${\P(Y=1 \given X)}$ for any~$X$, rather than a yes/no classification.
+%
+On the other hand, because the model is probabilistic, the bounds involve approximations
+involving gamma functions.
+%
+Bounds for CORELS have no such approximations and are substantially tighter.
+%
+Yang et al. aim to find the optimal solution but do not aim to prove optimality.
 
+Both~\citet{YangRuSe16} and~\citet{RudinEr15} contributed bounds that we started from
+in this work, and in particular, Ertekin uses the same objective as we do and has
+some of the same bounds, including the minimum support bound (\S\ref{sec:lb-support}, Theorem~\ref{thm:min-capture}).
+%
+However, the work of Ertekin is for a different purpose, namely it is for building rule lists
+that can be customized; since Ertekin uses mixed integer programming (MIP), users can easily
+add constraints to the MIP and create rule lists that obey these arbitrary constraints.
+%
+Ertekin's rule lists are certifiably optimal.
+%
+However, since generic MIP software is used without efficient bounds and
+data structures like the ones introduced here,
+it can take a much longer time to prove optimality and to find the optimal solution.
+\end{arxiv}
 
 
 %	Recent work in the field of decision lists has focused on the creation of probabilistic decision lists that generate a posterior distribution over the space of potential decision lists\citep{LethamRuMcMa15,YangRuSe16}. These methods achieve good accuracy while maintaining a small execution time. In addition, these methods improve on existing methods such as CART or C5.0 by optimizing over the global space of decision lists as opposed to searching for rules greedily and getting stuck at local optima. We take the same approach towards optimizing over the global search space, though we don’t use probabilistic techniques. In addition, we use the rule mining framework from \citep{LethamRuMcMa15} to generate the rules for our data sets. \citep{YangRuSe16} builds on \citep{LethamRuMcMa15} by placing bounds on the search space and creating a high performance bit vector manipulation library. We use that bit vector manipulation library to perform our computations, and add additional bounds to further prune the search space.
