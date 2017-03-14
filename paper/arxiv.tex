@@ -1,74 +1,62 @@
-\documentclass[aoas,preprint]{imsart}
-\setattribute{journal}{name}{}
+\documentclass[twoside,11pt]{article}
+\usepackage{jmlr2e}
+%\documentclass[aoas,preprint]{imsart}
+%\setattribute{journal}{name}{}
 
-\usepackage{amsmath,amssymb,amsthm,amsfonts}
-\usepackage{fullpage}
-\usepackage[round]{natbib}
+\usepackage{amsmath,amsfonts}
+%\usepackage{amsmath,amssymb,amsthm,amsfonts}
+%\usepackage{fullpage}
+%\usepackage[round]{natbib}
 \usepackage{url}
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 
 \input{latex_front}
 \input{latex_macros}
 
-\newtheorem{lemma}{Lemma}
-\newtheorem{theorem}{Theorem}
-\newtheorem{remark}{Remark}
-\newtheorem{definition}{Definition}
-\newtheorem{proposition}{Proposition}
-\newtheorem{claim}{Claim}
-\newtheorem{corollary}{Corollary}
-
 \includecomment{arxiv}\excludecomment{kdd}
+
+% See http://www.jmlr.org/format/sample.tex
+
+% Heading arguments are {volume}{year}{pages}{submitted}{published}{author-full-names}
+\jmlrheading{xx}{20xx}{1-41}{4/17}{xx/xx}{angelinoxx}{Elaine Angelino, Nicholas Larus-Stone, Daniel Alabi, Margo Seltzer, and Cynthia Rudin}
+
+% Short headings should be running head and authors last names
+\ShortHeadings{Learning Certifiably Optimal Rule Lists for Categorical Data}{Angelino, Larus-Stone, Alabi, Seltzer, and Rudin}
+\firstpageno{1}
 
 \begin{document}
 
-\begin{frontmatter}
+\title{Learning Certifiably Optimal Rule Lists for Categorical Data}
 
-\title{Learning certifiably optimal\\ rule lists for categorical data}
-\runtitle{Learning certifiably optimal rule lists for categorical data}
+\author{\name Elaine Angelino \email elaine@eecs.berkeley.edu \\
+        \addr Department of Electrical Engineering and Computer Sciences\\
+        University of California, Berkeley,
+        Berkeley, CA 94720
+        \AND
+        \name Nicholas Larus-Stone \email nlarusstone@college.harvard.edu \\
+        \name Daniel Alabi \email alabid@g.harvard.edu \\
+        \name Margo Seltzer \email margo@eecs.harvard.edu \\
+        \addr School of Engineering and Applied Sciences\\
+        Harvard University,
+        Cambridge, MA 02138
+        \AND
+        \name Cynthia Rudin \email cynthia@cs.duke.edu \\
+        \addr Department of Computer Science and
+        Department of Electrical and Computer Engineering\\
+        Duke University,
+        Durham, NC 27708}
 
-\begin{aug}
-\author{\fnms{Elaine} \snm{Angelino}\ead[label=e1]{elaine@eecs.berkeley.edu}},
-\author{\fnms{Nicholas} \snm{Larus-Stone}\ead[label=e2]{nlarusstone@college.harvard.edu}},
-\author{\fnms{Daniel} \snm{Alabi}\ead[label=e3]{alabid@g.harvard.edu}}, \\
-\author{\fnms{Margo} \snm{Seltzer}\ead[label=e4]{margo@eecs.harvard.edu}},
-\and
-\author{\fnms{Cynthia} \snm{Rudin}\ead[label=e5]{cynthia@cs.duke.edu}}
+\editor{XX}
 
-\affiliation{UC Berkeley, Harvard University, and Duke University}
-\runauthor{Angelino, Larus-Stone, Alabi, Seltzer, and Rudin}
+\maketitle
 
-\address{Elaine Angelino\\
-Department of Electrical Engineering and Computer Sciences\\
-University of California, Berkeley\\
-Berkeley, CA\\
-\printead{e1}}
-
-\address{Nicholas Larus-Stone, Daniel Alabi, \and\\
-Margo Seltzer\\
-School of Engineering and Applied Sciences\\
-Harvard University\\
-Cambridge, MA\\
-\printead{e2}\\
-\phantom{E-mail:\ }\printead*{e3}\\
-\phantom{E-mail:\ }\printead*{e4}}
-
-\address{Cynthia Rudin\\
-Department of Computer Science\\
-Department of Electrical and Computer Engineering\\
-Duke University\\
-Durham, NC\\
-\printead{e5}}
-\end{aug}
-
-
-\begin{abstract}
+\begin{abstract}%   <- trailing '%' for backward compatibility of .sty file
 \input{sections/abstract}
 \end{abstract}
 
-\end{frontmatter}
-
-\tableofcontents
+\begin{keywords}
+    Rule lists, Decision trees, Optimization, Interpretable models
+\end{keywords}
 
 \input{sections/introduction}
 
@@ -84,13 +72,12 @@ Durham, NC\\
 
 \input{sections/conclusion}
 
-\subsubsection*{Acknowledgments}
-
-E.A. is supported by the Miller Institute for Basic Research in Science,
+% Acknowledgements should go at the end, before appendices and references
+\acks{E.A. is supported by the Miller Institute for Basic Research in Science,
 University of California, Berkeley, and is hosted by Prof. M.I. Jordan
-at RISELab.
+at RISELab.}
 
+\vskip 0.2in
 \bibliography{refs}
-\bibliographystyle{abbrvnat}
 
 \end{document}
