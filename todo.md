@@ -17,6 +17,7 @@
 
 ## Long paper
 
+- [ ] See http://www.jmlr.org/format/format.html (Everyone)
 - [ ] Fill in acknowledgements (Everyone)
 - [ ] Add paragraph on Hongyu's paper in related work (Cynthia)
 - [ ] Extended version of our short paper's implementation section (Nicholas)
@@ -25,7 +26,7 @@
 - [ ] Flag new paragraphs for others (Elaine)
 - [ ] Add clarification around the similarity bound that we aren't yet using it, possible future work (Elaine)
 - [x] Add proofs for equivalent points bounds (Elaine)
-- [ ] Convert to JMLR format (Elaine)
+- [x] Convert to JMLR format (Elaine)
 - [ ] Add sentences in experiments section about how the order of the bounds matters (Elaine)
 - [ ] Note that ablation results / efficacy of different CORELS components are heavily dataset-dependent (Elaine)
 - [ ] More description about stop-and-frisk problem and dataset and describe the problems with bullet points (Elaine)
