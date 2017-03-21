@@ -288,7 +288,7 @@ an iterative sequence of single-rule extensions of a prefix~$\Prefix$.
 %
 \begin{arxiv}
 Notice that when~${\RL = ((), (), q_0, 0)}$ is the empty rule list,
-this bound replicates~\eqref{eq:max-length}, since~${b(\Prefix, \x, \y) = 0}$.
+this bound replicates~\eqref{eq:max-length}, since ${b(\Prefix, \x, \y) = 0}$.
 \end{arxiv}
 
 \begin{arxiv}
@@ -336,13 +336,13 @@ weaker propositions that provide useful intuition.
 \end{arxiv}
 
 \begin{arxiv}
-\begin{theorem}[Fine-grain upper bound on the number of remaining prefix evaluations]
+\begin{theorem}[Fine-grain upper bound on remaining prefix evaluations]%~~~
 \end{arxiv}
 \begin{kdd}
 \begin{theorem}[Upper bound on the number of remaining prefix evaluations]
 \end{kdd}
 \label{thm:remaining-eval-fine}
-Consider a state space of all rule lists formed from a set of~$M$ antecedents,
+~Consider the state space of all rule lists formed from a set of~$M$ antecedents,
 and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
 during execution.
 %
@@ -415,9 +415,14 @@ the regularization parameter~$\Reg$;
 it does not use algorithm execution state to
 bound the size of the search space.
 
+\begin{arxiv}
 \begin{proposition}[Upper bound on the total number of prefix evaluations]
+\end{arxiv}
+\begin{kdd}
+\begin{proposition}[Upper bound on the total number of prefix evaluations]
+\end{kdd}
 \label{thm:ub-total-eval}
-Define~$\TotalRemaining(\RuleSet)$ to be the total number of prefixes
+~Define $\TotalRemaining(\RuleSet)$ to be the total number of prefixes
 evaluated by Algorithm~\ref{alg:branch-and-bound}, given the state space of
 all rule lists formed from a set~$\RuleSet$ of~$M$ rules.
 %
@@ -480,7 +485,7 @@ prefix-specific objective lower bound information from
 prefixes in the queue, which further constrains
 the lengths of prefixes in the remaining search space.
 
-\begin{proposition}[Coarse-grain upper bound on the number of remaining prefix evaluations]
+\begin{proposition}[Coarse-grain upper bound on remaining prefix evaluations] \hfill
 \label{prop:remaining-eval-coarse}
 Consider a state space of all rule lists formed from a set of~$M$ antecedents,
 and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
@@ -540,9 +545,15 @@ both are related to the regularization parameter~$\Reg$.
 
 \begin{theorem}[Lower bound on antecedent support]
 \label{thm:min-capture}
+\begin{arxiv}
+~Let ${\OptimalRL = (\Prefix, \Labels, \Default, K)}$
+be any optimal rule list with objective~$\OptimalObj$, \ie
+${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$.
+\end{arxiv}
+\begin{kdd}
 Let ${\OptimalRL = (\Prefix, \Labels, \Default, K) \in \argmin_\RL \Obj(\RL, \x, \y)}$
 be any optimal rule list, with objective~$\OptimalObj$.
-%
+\end{kdd}
 For each antecedent~$p_k$ in prefix ${\Prefix = (p_1, \dots, p_K)}$,
 \begin{arxiv}
 the regularization parameter~$\Reg$ provides a lower bound
@@ -567,7 +578,7 @@ and labels ${\Labels = (q_1, \dots, q_K)}$.
 Consider the rule list ${\RL = (\Prefix', \Labels', \Default', K-1)}$
 derived from~$\OptimalRL$ by deleting a rule ${p_i \rightarrow q_i}$,
 therefore ${\Prefix' = (p_1, \dots, p_{i-1}, p_{i+1}, \dots, p_K)}$
-and ${\Labels' = (q_1, \dots, q_{i-1}, q'_{i+1}, \dots, q'_K)}$,
+and ${\Labels' = (q_1, \dots, q_{i-1},}$ ${q'_{i+1}, \dots, q'_K)}$,
 where~$q'_k$ need not be the same as~$q_k$, for ${k > i}$ and~${k = 0}$.
 
 The largest possible discrepancy between~$\OptimalRL$ and~$\RL$ would occur
@@ -620,11 +631,21 @@ by leveraging this information.
 
 \begin{theorem}[Lower bound on accurate antecedent support]
 \label{thm:min-capture-correct}
+\begin{arxiv}
+Let ${\OptimalRL}$
+be any optimal rule list with objective~$\OptimalObj$, \ie
+${\OptimalRL = (\Prefix, \Labels, \Default, K) \in \argmin_\RL \Obj(\RL, \x, \y)}$.
+%
+Let $\OptimalRL$ have prefix ${\Prefix = (p_1, \dots, p_K)}$
+and labels ${\Labels = (q_1, \dots, q_K)}$.
+\end{arxiv}
+\begin{kdd}
 Let ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$
 be any optimal rule list, with objective~$\OptimalObj$;
 let ${\OptimalRL = (\Prefix, \Labels, \Default, K)}$,
 with prefix ${\Prefix = (p_1, \dots, p_K)}$
 and labels ${\Labels = (q_1, \dots, q_K)}$.
+\end{kdd}
 %
 For each rule~${p_k \rightarrow q_k}$ in~$\OptimalRL$,
 define~$a_k$ to be the fraction of data that are captured by~$p_k$
@@ -749,9 +770,11 @@ captured by preceding antecedents in the rule list.
 
 \begin{theorem}[Upper bound on antecedent support]
 \label{thm:ub-support}
-Let ${\RL^* = (\Prefix, \Labels, \Default, K) \in \argmin_\RL \Obj(\RL, \x, \y)}$
-be any optimal rule list, and let
-${\Prefix = (p_1, \dots, p_{j-1}, p_j, \dots, p_{K-1}, p_K)}$ be its prefix.
+Let ${\OptimalRL = (\Prefix, \Labels, \Default, K)}$
+be any optimal rule list with objective~$\OptimalObj$, \ie
+${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$,
+and let ${\Prefix = (p_1, \dots, p_{j-1},}$
+${p_j, \dots, p_{K-1}, p_K)}$ be its prefix.
 %
 The last antecedent~$p_K$ in~$\Prefix$ has support
 \begin{align}
@@ -779,7 +802,7 @@ We begin by focusing on the last antecedent in a rule list.
 Let ${\RL = (\Prefix, \Labels, \Default, K)}$
 be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
 and objective ${\Obj(\RL, \x, \y) \le \OptimalObj}$, where
-${\OptimalObj \equiv \min_{\RLB} \Obj(\RLB, \x, \y)}$
+${\OptimalObj \equiv}$ ${\min_{\RLB} \Obj(\RLB, \x, \y)}$
 is the optimal objective.
 %
 Also let ${\RL' = (\Prefix', \Labels', \Default', K + 1)}$
@@ -817,7 +840,7 @@ therefore
 \end{align}
 $\RL'$ is an optimal rule list,
 \ie ${\RL' \in \argmin_{\RLB} \Obj(\RLB, \x, y)}$,
-if and only if ${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) = \OptimalObj}$,
+if and only if ${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) =}$ ${\OptimalObj}$,
 which requires ${\epsilon = \Reg}$.
 %
 Otherwise, ${\epsilon < \Reg}$, in which case
@@ -840,7 +863,7 @@ Thus for any rule list~$\RL''$ whose prefix
 $\Prefix'' = (p_1, \dots, p_{K+1}, \dots, p_{K'})$ starts
 with~$\Prefix'$ and ends with one or more additional rules,
 each additional rule~$p_k$ has support
-${\Supp(p_k, \x \given \Prefix'') \le \epsilon \le \Reg}$,
+${\Supp(p_k, \x \given \Prefix'') \le}$ ${\epsilon \le \Reg}$,
 for all~${k > K+1}$.
 %
 By Theorem~\ref{thm:min-capture},
@@ -883,7 +906,7 @@ we need not mine rules with a larger fraction of observations.
 
 In this section, we demonstrate further consequences of
 our lower~(\S\ref{sec:lb-support}) and upper
-bounds~(\S\ref{sec:ub-support}) on antecedent support,
+bounds (\S\ref{sec:ub-support}) on antecedent support,
 under a unified framework we refer to as antecedent rejection.
 %
 Let ${\Prefix = (p_1, \dots, p_K)}$ be a prefix,
@@ -914,7 +937,7 @@ related rule lists whose prefixes all reject the same antecedent.
 \begin{theorem}[Antecedent rejection propagates]
 \label{thm:reject}
 For any prefix ${\Prefix = (p_1, \dots, p_K)}$,
-let~$\StartContains(\Prefix)$ denote the set of all
+let $\StartContains(\Prefix)$ denote the set of all
 prefixes~$\Prefix'$ such that
 the set of all antecedents in~$\Prefix$ is a subset of
 the set of all antecedents in~$\Prefix'$, \ie
@@ -938,10 +961,10 @@ first~${K - 1}$ antecedents of~$\Prefix$.
 %
 Let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
 be any rule list with prefix
-${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'}, \dots, P_{\kappa})}$
+${\PrefixB = (P_1, \dots, P_{K'-1},}$ ${P_{K'}, \dots, P_{\kappa})}$
 such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
 ${(P_1, \dots, P_{K'-1}) \in}$ ${\StartContains(\Prefix^{K-1})}$
-and antecedent~${P_{K'} = p_{K}}$.
+and antecedent ${P_{K'} = p_{K}}$.
 %
 It follows that prefix~$\PrefixB$ rejects~$P_{K'}$
 for the same reason that~$\Prefix$ rejects~$p_{K}$,
@@ -956,16 +979,16 @@ Combine Propositions~\ref{prop:min-capture},
 
 \begin{proposition}[Insufficient antecedent support propagates]
 \label{prop:min-capture}
-Define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
+First define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
 and let ${\Prefix = (p_1, \dots, p_{K-1}, p_{K})}$ be a prefix,
 such that its last antecedent~$p_{K}$ has insufficient support,
 \ie the opposite of the bound in~\eqref{eq:min-capture}:
 ${\Supp(p_K, \x \given \Prefix) \le \Reg}$.
 %
-Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$,
+Let ${\Prefix^{K-1} =}$ ${(p_1, \dots, p_{K-1})}$,
 and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
 be any rule list with prefix
-${\PrefixB = (P_1, \dots, P_{K'-1}, P_{K'}, \dots, P_{\kappa})}$,
+${\PrefixB = (P_1, \dots, P_{K'-1},}$ ${P_{K'}, \dots, P_{\kappa})}$,
 such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
 ${(P_1, \dots, P_{K'-1}) \in \StartContains(\Prefix^{K-1})}$
 and~${P_{K'} = p_{K}}$.
@@ -988,10 +1011,10 @@ set of antecedents in ${\Prefix^{K} = (p_1, \dots, p_{K})}$:
 \le \Reg.
 \end{align}
 Similarly, the support of~$P_{K'}$ in~$\PrefixB$ depends only on
-the set of antecedents in ${\PrefixB^{K'} = (P_1, \dots, P_{K'})}$:
+the set of antecedents in ${\PrefixB^{K'} =}$ ${(P_1, \dots, P_{K'})}$:
 \begin{align}
 \Supp(P_{K'}, \x \given \PrefixB)
-= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, P_{K'} \given \PrefixB)
+&= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, P_{K'} \given \PrefixB) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap(x_n, \PrefixB^{K'-1}) \right)
   \wedge \Cap(x_n, P_{K'}) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K'-1} \neg\, \Cap(x_n, P_k) \right)
@@ -999,8 +1022,8 @@ the set of antecedents in ${\PrefixB^{K'} = (P_1, \dots, P_{K'})}$:
 &\le \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
   \wedge \Cap(x_n, P_{K'}) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
-  \wedge \Cap(x_n, p_{K}) \nn \\
-&= \Supp(p_K, \x \given \Prefix) \le \Reg.
+  \wedge \Cap(x_n, p_{K})
+= \Supp(p_K, \x \given \Prefix) \le \Reg.
 \label{ineq:supp}
 \end{align}
 The first inequality reflects the condition that
@@ -1016,8 +1039,13 @@ therefore by Theorem~\ref{thm:min-capture}, $\RLB$~cannot be optimal,
 
 \begin{proposition}[Insufficient accurate antecedent support propagates]
 \label{prop:min-capture-correct}
-Define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
-and let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list
+~Let~$\StartContains(\Prefix)$ denote the set of all
+prefixes~$\Prefix'$ such that
+the set of all antecedents in~$\Prefix$ is a subset of
+the set of all antecedents in~$\Prefix'$,
+as in~\eqref{eq:start-contains}.
+%
+Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list
 with prefix ${\Prefix = (p_1, \dots, p_{K})}$
 and labels ${\Labels = (q_1, \dots, q_{K})}$, such that
 the last antecedent~$p_{K}$ has insufficient accurate support,
@@ -1029,7 +1057,7 @@ the last antecedent~$p_{K}$ has insufficient accurate support,
 %
 Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$
 and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
-be any rule list with prefix ${\PrefixB = (P_1, \dots, P_{\kappa})}$
+be any rule list with prefix ${\PrefixB =}$ ${(P_1, \dots, P_{\kappa})}$
 and labels ${\LabelsB = (Q_1, \dots, Q_{\kappa})}$,
 such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
 ${(P_1, \dots, P_{K'-1})}$ ${\in \StartContains(\Prefix^{K-1})}$
@@ -1043,7 +1071,7 @@ ${\RLB \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
 \begin{proof}
 The accurate support of~$P_{K'}$ in~$\PrefixB$ is insufficient:
 \begin{align}
-\frac{1}{N} \sum_{n=1}^N \Cap(x_n, P_{K'} \given \PrefixB) \wedge \one [ Q_{K'} = y_n ]
+\frac{1}{N} \sum_{n=1}^N \Cap(x_n, P_{K'} &\given \PrefixB) \wedge \one [ Q_{K'} = y_n ] \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K'-1} \neg\, \Cap(x_n, P_k) \right)
    \wedge \Cap(x_n, P_{K'}) \wedge \one [ Q_{K'} = y_n ] \nn \\
 &\le \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
@@ -1075,12 +1103,13 @@ and let ${\Prefix = (p_1, \dots, p_{K})}$ be a prefix,
 such that its last antecedent~$p_{K}$ has excessive support,
 \ie the opposite of the bound in~\eqref{eq:ub-support-last}:
 \begin{align}
-\Supp(p_K, \x \given \Prefix) \ge 1 - \Supp(\Prefix^{K-1}, \x) - \Reg.
+\Supp(p_K, \x \given \Prefix) \ge 1 - \Supp(\Prefix^{K-1}, \x) - \Reg,
 \end{align}
-Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$;
-let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
+where ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$.
+%
+Let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
 be any rule list with prefix
-${\PrefixB = (P_1, \dots, P_{\kappa})}$
+${\PrefixB =}$ ${(P_1, \dots, P_{\kappa})}$
 such that~$\PrefixB$ starts with ${\PrefixB^{K'-1} =}$
 ${(P_1, \dots, P_{K'-1}) \in \StartContains(\Prefix^{K-1})}$
 and~${P_{K'} = p_{K}}$.
@@ -1150,16 +1179,8 @@ the minimum objective over all rule lists whose prefixes start with
 
 \begin{theorem}[Equivalent support bound]
 \label{thm:equivalent}
-\begin{arxiv}
-Define ${\StartsWith(\Prefix) = }$
-${\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
-to be the set of all rule lists whose prefixes start with~$\Prefix$.
-\end{arxiv}
-\begin{kdd}
-Define $\StartsWith(\Prefix)$
-to be the set of all rule lists whose prefix starts with~$\Prefix$,
-as in~\eqref{eq:starts-with}.
-\end{kdd}
+Define $\StartsWith(\Prefix)$ to be the set of all rule lists
+whose prefixes starts with~$\Prefix$, as in~\eqref{eq:starts-with}.
 %
 Let ${\RL = (\Prefix, \Labels, \Default, K)}$
 be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$,
@@ -1199,14 +1220,13 @@ ${\StartsWith(\Prefix)}$ be any rule list
 whose prefix starts with~$\Prefix$, such that~${K' \ge K}$.
 %
 Denote the prefix and labels of~$\RL'$ by
-${\Prefix' = (p_1, \dots, p_K, p_{K+1}, \dots, p_{K'})}$
+${\Prefix' = (p_1, \dots, p_K,}$ ${p_{K+1}, \dots, p_{K'})}$
 and ${\Labels = (q_1, \dots, q_{K'})}$, respectively.
 %
-Finally, define
-${\RLB' = (\PrefixB', \LabelsB', \DefaultB', \kappa') \in \StartsWith(\PrefixB)}$
-to be the `analogous' rule list, \ie whose prefix
-${\PrefixB' = (P_1, \dots, P_\kappa, P_{\kappa+1}, \dots, P_{\kappa'})
-= (P_1, \dots, P_\kappa, p_{K+1}, \dots, p_{K'})}$
+Finally, define ${\RLB' = (\PrefixB', \LabelsB', \DefaultB', \kappa') \in}$
+${\StartsWith(\PrefixB)}$ to be the `analogous' rule list, \ie whose prefix
+${\PrefixB' = (P_1, \dots, P_\kappa, P_{\kappa+1}, \dots, P_{\kappa'}) =}$
+${(P_1, \dots, P_\kappa, p_{K+1}, \dots, p_{K'})}$
 starts with~$\PrefixB$ and ends with the same ${K'-K}$
 antecedents as~$\Prefix'$.
 %
@@ -1219,19 +1239,19 @@ in the objectives of rule lists~$\RLB'$ and~$\RLB$.
 %
 Let us expand the first difference as
 \begin{align}
-\Obj(\RL',& \x, \y) - \Obj(\RL, \x, \y)
+&\Obj(\RL', \x, \y) - \Obj(\RL, \x, \y)
   = \Loss(\RL', \x, \y) + \Reg K' - \Loss(\RL, \x, \y) - \Reg K \nn \\
 &= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y)
   - \Loss_p(\Prefix, \Labels, \x, \y) - \Loss_0(\Prefix, \Default, \x, \y)
-  + \Reg (K' - K).
+  + \Reg (K' - K). \nn
 \end{align}
 Similarly, let us expand the second difference as
 \begin{align}
-\Obj(\RLB',& \x, \y) - \Obj(\RLB, \x, \y)
+&\Obj(\RLB', \x, \y) - \Obj(\RLB, \x, \y)
   = \Loss(\RLB', \x, \y) + \Reg \kappa' - \Loss(\RLB, \x, \y) - \Reg \kappa \nn \\
 &= \Loss_p(\PrefixB', \LabelsB', \x, \y) + \Loss_0(\PrefixB', \DefaultB', \x, \y)
   - \Loss_p(\PrefixB, \LabelsB, \x, \y) - \Loss_0(\PrefixB, \DefaultB, \x, \y)
-  + \Reg (K' - K),
+  + \Reg (K' - K), \nn
 \end{align}
 where we have used the fact that ${\kappa' - \kappa = K' - K}$.
 
@@ -1311,7 +1331,7 @@ of~$\RL'$ and~$\RL$ is the same as that between~$\RLB'$ and~$\RLB$, \ie
 \end{align}
 
 Next, suppose that the objective lower bounds of~$\RL$ and~$\RLB$
-obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$, thus
+obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$, therefore
 \begin{align}
 \Obj(\RL, \x, \y)
 &= \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) + \Reg K \nn \\
@@ -1448,7 +1468,7 @@ Next, in Sections~\ref{sec:permutation} and~\ref{sec:permutation-counting},
 we highlight and analyze the special case of prefixes that capture
 the same data because they contain the same antecedents.
 
-\subsubsection{Permutation bound}% for permutation-aware garbage collection}
+\subsection{Permutation bound}% for permutation-aware garbage collection}
 \label{sec:permutation}
 
 Let~${P = \{p_k\}_{k=1}^K}$ be a set of~$K$ antecedents,
@@ -1518,7 +1538,12 @@ symmetry-aware pruning,
 and we illustrate the subsequent
 computational savings next in~\S\ref{sec:permutation-counting}.
 
+\begin{arxiv}
+\subsection{Upper bound on prefix evaluations with symmetry-aware pruning}
+\end{arxiv}
+\begin{kdd}
 \subsubsection{Upper bound on prefix evaluations with symmetry-aware pruning}
+\end{kdd}
 \label{sec:permutation-counting}
 
 Here, we present an upper bound on the total number of prefix
@@ -1540,8 +1565,7 @@ our execution of branch-and-bound, so that after evaluating
 prefixes of length~$K$, we only keep a single best prefix
 from each set of prefixes equivalent up to a permutation.
 
-\begin{theorem}[Upper bound on the total number of prefix evaluations with
-symmetry-aware pruning]
+\begin{theorem}[Upper bound on prefix evaluations with symmetry-aware pruning]
 %
 Consider a state space of all rule lists formed from a set~$\RuleSet$
 of~$M$ antecedents, and consider the branch-and-bound algorithm with
@@ -1638,12 +1662,14 @@ we expect to obtain via rule mining~(\S\ref{sec:setup}).
 
 We now present a relaxation of our equivalent support bound
 from Theorem~\ref{thm:equivalent}.
+%
+Note that our implementation~(\S\ref{sec:implementation}) does not
+currently leverage the bound in Theorem~\ref{thm:similar}.
 
 \begin{theorem}[Similar support bound]
 \label{thm:similar}
-Define ${\StartsWith(\Prefix) = }$
-${\{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
-to be the set of all rule lists whose prefixes start with~$\Prefix$.
+Define $\StartsWith(\Prefix)$ to be the set of all rule lists
+whose prefixes starts with~$\Prefix$, as in~\eqref{eq:starts-with}.
 %
 Let ${\Prefix = (p_1, \dots, p_K)}$ and
 ${\PrefixB = (P_1, \dots, P_{\kappa})}$ be prefixes
@@ -1671,7 +1697,7 @@ of data captured by~$\PrefixB$ and not captured by~$\Prefix$, \ie
 \end{align}
 We can bound the difference between the objectives of the
 optimal rule lists in~$\StartsWith(\Prefix)$
-and~$\StartsWith(\PrefixB)$ as follows:
+and $\StartsWith(\PrefixB)$ as follows:
 \begin{align}
 \min_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)
 - \min_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)
@@ -1709,7 +1735,7 @@ respectively.
 Finally, define
 ${\RLB' = (\PrefixB', \LabelsB', \DefaultB', \kappa') \in \StartsWith(\PrefixB)}$
 to be the `analogous' rule list, \ie whose prefix
-${\PrefixB' = (P_1, \dots, P_\kappa, P_{\kappa+1}, \dots, P_{\kappa'})
+${\PrefixB' =}$ ${(P_1, \dots, P_\kappa, P_{\kappa+1}, \dots, P_{\kappa'})
 = (P_1, \dots, P_\kappa, p_{K+1}, \dots, p_{K'})}$
 starts with~$\PrefixB$ and ends with the same ${K'-K}$
 antecedents as~$\Prefix'$.
@@ -1717,7 +1743,6 @@ antecedents as~$\Prefix'$.
 Let ${\LabelsB' = (Q_1, \dots, Q_{\kappa'})}$
 denote the labels of~$\RLB'$.
 
-[Expand on this.]
 %Suppose that the lower bounds of~$\Prefix$ and~$\PrefixB$
 %obey ${b(\Prefix, \x, \y) < b(\PrefixB, \x, \y)}$.
 %
@@ -1751,7 +1776,8 @@ antecedents as~$\RLB^*$, where~${K^* = K + \kappa^* - \kappa}$.
 By~\eqref{eq:similar-analogous},
 \begin{align}
 \min_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)
-= \Obj(\RLB^*, \x, \y) &\ge \Obj(\RL^*, \x, \y)
+&= \Obj(\RLB^*, \x, \y) \nn \\
+&\ge \Obj(\RL^*, \x, \y)
   + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \omega - \Omega \nn \\
 &\ge \min_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)
   + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \omega - \Omega.
@@ -1792,117 +1818,6 @@ prefix~$\PrefixB'$ in the following set:
 \end{align}
 
 \begin{comment}
-To demonstrate~\eqref{eq:similar-analogous-optimal},
-we consider two separate scenarios.
-%
-In the first scenario, prefixes~$\Prefix$ and~$\PrefixB$
-capture the same data, therefore ${\omega = \Omega = 0}$.
-%
-By claim~\eqref{eq:equiv-analogous-optimal},
-which we justify in the proof of Theorem~\ref{thm:equivalent},
-${\RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)}$,
-thus
-\begin{align}
-\Obj(\RLB^*, \x, \y)
-  = \min_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)
-\le \min_{\RLB^\dagger \in \StartsWith(\PrefixB)}
-  \Obj(\RLB^\dagger, \x, \y) + \omega + \Omega.
-\end{align}
-
-In the second scenario, prefixes~$\Prefix$ and~$\PrefixB$
-do not capture the same data, thus either~${\omega \neq 0}$,
-or~${\omega \neq 0}$, or both.
-%
-Consequently, prefixes~$\Prefix$ and~$\PrefixB$
-are not composed of the same antecedents.
-%
-Define~${\phi = \{p_k : (p_k \in \Prefix) \wedge (p_k \notin \PrefixB)\}}$
-to be the set of antecedents in~$\Prefix$ that are not in~$\PrefixB$,
-and define~${\Phi = \{P_k : (P_k \in \PrefixB) \wedge (P_k \notin \Prefix)\}}$
-to be the set of antecedents in~$\PrefixB$ that are not in~$\Prefix$;
-either~${\phi \neq \emptyset}$, or~${\Phi \neq \emptyset}$, or both.
-
-Suppose~${\phi \neq \emptyset}$, and let~${p \in \phi}$
-be an antecedent in~$\phi$.
-%
-It follows that there exists a subset of rule lists
-in~$\StartsWith(\PrefixB)$ that do not have analogues
-in~$\StartsWith(\Prefix)$.
-%
-Let~${\RLB'' \in \StartsWith(\PrefixB)}$ be such a rule list,
-such that its prefix ${\PrefixB'' = (P_1, \dots, P_\kappa, \dots, p, \dots)}$
-starts with~$\PrefixB$ and contains~$p$ among its remaining antecedents.
-%
-Since~$p$ captures a subset of the data that~$\Prefix$ captures,
-and~$\PrefixB$ captures a similar set of data as~$\Prefix$, it follows
-that~$p$ in~$\PrefixB''$ can capture at most a small set of data
-no larger than~$\omega$:
-\begin{align}
-\frac{1}{N} \sum_{n=1}^N \Cap(x_n, p \given \PrefixB'')
-&\le \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \PrefixB) \wedge \Cap(x_n, p) \nn \\
-&\le \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \PrefixB) \wedge \Cap(x_n, \Prefix)
-= \omega \le \Reg.
-\end{align}
-By Theorem~\ref{thm:min-capture}, antecedent~$p$ has insufficient
-support in~$\RLB''$, and thus~$\RLB''$ cannot be optimal, \ie
-${\RLB'' \notin}$ ${\argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)}$.
-%
-Similarly, if~${\Phi \neq \emptyset}$
-and~${P \in \Phi}$, and~${\RL'' \in \StartsWith(\Prefix)}$
-is any rule list whose prefix starts with~$\Prefix$
-and contains antecedent~$P$, then~$P$ in~$\Prefix''$
-only has normalized support
-\begin{align}
-\frac{1}{N} \sum_{n=1}^N \Cap(x_n, P \given \Prefix'')
-&\le \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \Cap(x_n, P) \nn \\
-&\le \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \Cap(x_n, \PrefixB)
-= \Omega \le \Reg.
-\end{align}
-By Theorem~\ref{thm:min-capture}, antecedent~$P$ has insufficient
-support in~$\RL''$, and thus~$\RL''$ can't be optimal, \ie ${\RL'' \notin}$
-${\argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)}$.
-
-To finish justifying claim~\eqref{eq:similar-analogous-optimal}
-for the second scenario, first define
-\begin{align}
-\tau(\Prefix, \Phi) \equiv
-  \{\RL'' = (\Prefix'', \Labels'', \Default'', K'') :
-    \RL'' \in \StartsWith(\Prefix) \textnormal{ and }
-    p_k \notin \Phi, \forall p_k \in \Prefix''\} \subset \StartsWith(\Prefix)
-\end{align}
-to be the set of all rule lists whose prefixes start with~$\Prefix$
-and don't contain any antecedents in~$\Phi$.
-%
-Now, recognize that the optimal prefixes in~$\tau(\Prefix, \Phi)$
-and~$\StartsWith(\Prefix)$ are the same, \ie
-\begin{align}
-\argmin_{\RL^\dagger \in \tau(\Prefix, \Phi)} \Obj(\RL^\dagger, \x, \y)
-= \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y),
-\end{align}
-and similarly, the optimal prefixes in~$\tau(\PrefixB, \phi)$
-and~$\StartsWith(\PrefixB)$ are the same, \ie
-\begin{align}
-\argmin_{\RLB^\dagger \in \tau(\PrefixB, \phi)} \Obj(\RLB^\dagger, \x, \y)
-= \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
-\end{align}
-We have shown that every~${\RL'' \in \tau(\Prefix, \Phi)}$
-has a direct analogue~${\RLB'' \in \tau(\PrefixB, \phi)}$,
-such that~$\RL''$ and~$\RLB''$ obey~\eqref{eq:similar-analogous},
-and vice versa.
-
-By~\eqref{eq:similar-analogous},
-\begin{align}
-\Obj(\RLB^*, \x, \y) &\ge \Obj(\RL^*, \x, \y)
-  - \left( b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) \right) - \omega - \Omega \nn \\
-&= \min_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)
-  - \left( b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) \right) - \omega - \Omega.
-\label{eq:sa-1}
-\end{align}
-
-[Explain this.] Combining~\eqref{eq:sa-1} and~\eqref{eq:sa-2} gives~\eqref{eq:similar-analogous-optimal}.
-
-\end{proof}
-
 \begin{theorem}[Very similar support bound]
 \label{thm:very-similar}
 Define ${\StartsWith(\Prefix) = }$
@@ -2042,10 +1957,11 @@ starts with~$\Prefix$ can correctly classify all these observations.
 For each set of such observations, the number of mistakes is at least
 the number of observations with the minority label within the set.
 
-Consider a dataset~${\{(x_n, y_n)\}_{n=1}^N}$ and a set of antecedents~${\{s_m\}_{m=1}^M}$.
+Consider a dataset~${\{(x_n, y_n)\}_{n=1}^N}$ and also a set of antecedents
+${\{s_m\}_{m=1}^M}$.
 %
 Define distinct datapoints to be equivalent if they are captured by
-exactly the same antecedents, \ie $x_i \neq x_j$ are equivalent~if
+exactly the same antecedents, \ie ${x_i \neq x_j}$ are equivalent~if
 \begin{align}
 \frac{1}{M} \sum_{m=1}^M \one [ \Cap(x_i, s_m) = \Cap(x_j, s_m) ] = 1.
 \end{align}
@@ -2113,7 +2029,8 @@ we first sum over all sets of equivalent points, and then for each such set,
 count differences between class labels and the minority class label of the set,
 instead of counting mistakes:
 \begin{align}
-\Loss(\RL, \x, \y) &= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[q_0 \neq y_n]
+&\Loss(\RL, \x, \y) \nn \\
+&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[q_0 \neq y_n]
    + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [q_k \neq y_n] \right)
    \wedge \one [x_n \in e_u]  \nn \\
 &\ge \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[y_n = q_u]
@@ -2136,7 +2053,7 @@ not captured by prefix~$\Prefix$.
 \end{align}
 where the final equality applies the definition of~$\theta(e_u)$ in~\eqref{eq:theta}.
 %
-Thus, ${\Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg K}$ ${\ge \sum_{u=1}^U \theta(e_u) + \Reg K}$.
+Therefore, ${\Obj(\RL, \x, \y) =}$ ${\Loss(\RL, \x, \y) + \Reg K}$ ${\ge \sum_{u=1}^U \theta(e_u) + \Reg K}$.
 \end{proof}
 \end{arxiv}
 
@@ -2146,8 +2063,8 @@ default rule misclassification error~$\Loss_0(\Prefix, \Default, \x, \y)$
 from the objective~${\Obj(\RL, \x, \y)}$.
 %
 Theorem~\ref{thm:identical} obtains a tighter objective lower bound
-via a tighter lower bound~${0 \le b_0(\Prefix, \x, \y) \le}$
-$\Loss_0(\Prefix, \Default, \x, \y)$ on the default rule misclassification error.
+via a tighter lower bound on the default rule misclassification error,
+${0 \le b_0(\Prefix, \x, \y) \le}$ $\Loss_0(\Prefix, \Default, \x, \y)$.
 
 \begin{theorem}[Equivalent points bound]
 \label{thm:identical}
@@ -2232,7 +2149,7 @@ First, let us define
 \end{align}
 Now, we write a lower bound on~${b(\Prefix', \x, \y)}$ with respect to~${b(\Prefix, \x, \y)}$:
 \begin{align}
-b(\Prefix', \x, \y) &= \Loss_p(\Prefix', \Labels, \x, \y) + \Reg K'
+&b(\Prefix', \x, \y) = \Loss_p(\Prefix', \Labels, \x, \y) + \Reg K'
 = \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] + \Reg K' \nn \\
 &= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K + \frac{1}{N} \sum_{n=1}^N \sum_{k=K}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] + \Reg (K' - K) \nn \\
 &= b(\Prefix, \x, \y) + \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] + \Reg (K' - K) \nn \\
@@ -2245,7 +2162,7 @@ b(\Prefix', \x, \y) &= \Loss_p(\Prefix', \Labels, \x, \y) + \Reg K'
 \end{align}
 Next, we write ${b_0(\Prefix, \x, \y)}$ with respect to~${b_0(\Prefix', \x, \y)}$,
 \begin{align}
-b_0(\Prefix, \x, \y) &= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
+&b_0(\Prefix, \x, \y) = \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
     \neg\, \Cap(x_n, \Prefix) \wedge \one [ x_n \in e_u ] \wedge \one [ y_n = q_u ] \nn \\
 &= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
     \left(\neg\, \Cap(x_n, \Prefix')+ \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \right)
