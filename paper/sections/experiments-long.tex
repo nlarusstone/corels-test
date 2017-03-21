@@ -9,9 +9,9 @@
 width=\textwidth]{figs/compare-compas-weapon.pdf}
 \end{center}
 \caption{Comparison of CORELS and a panel of eight other algorithms:
-logistic regression (GLM), support vector machines (SVM),
-AdaBoost, CART, C4.5, random forests (RF), RIPPER,
-scalable Bayesian rule lists (SBRL).
+logistic regression~(GLM), support vector machines~(SVM),
+AdaBoost, CART, C4.5, random forests~(RF), RIPPER,
+scalable Bayesian rule lists~(SBRL).
 %
 Test accuracy means (white squares),
 standard deviations (error bars),
@@ -31,25 +31,29 @@ Note that we were unable to execute RIPPER for the NYCLU problem.
 \label{fig:comparison}
 \end{figure}
 
-Our experimental analysis addresses four questions:
-(1) How does CORELS' accuracy and model size compare to other algorithms?
-(2) How rapidly does the objective function converge?
-(3) How rapidly does CORELS prune the search space?
-(4) How much does each of the implementation optimizations contribute to CORELS' performance?
-%
-All results presented were executed on a server with two Intel Xeon E5-2699~v4
-(55MB~cache, 2.20~GHz) processors and 448GB~RAM.
+Our experimental analysis addresses five questions:
+\begin{itemize}
+\item How does CORELS' accuracy compare to other algorithms?
+\item How does CORELS' model size compare to other algorithms?
+\item How rapidly does the objective function converge?
+\item How rapidly does CORELS prune the search space?
+\item How much does each of the implementation optimizations contribute to CORELS' performance?
+\end{itemize}
+
+All results that we present were executed on a server with two Intel Xeon E5-2699~v4
+(55~MB cache, 2.20~GHz) processors and 448~GB RAM.
 %
 Except where we mention a memory constraint, all experiments
-can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.\begin{kdd}
-~\footnote{Due to page constraints, we only present a subset of experiments from
-an extensive evaluation contained in a long version of this report (in preparation).}
-\end{kdd}
-%
-We focus on two problems:
-using the ProPublica dataset~\cite{LarsonMaKiAn16} to predict two-year recidivism,
-and using the NYCLU 2014 stop-and-frisk dataset~\cite{nyclu:2014} to predict
+can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
+
+Our evaluation focuses on two socially-important prediction problems from recent,
+publicly-available datasets:
+\begin{itemize}
+\item Predicting which individuals in the ProPublica COMPAS
+dataset~\cite{LarsonMaKiAn16} recidivate within two years.
+\item Using the NYCLU 2014 stop-and-frisk dataset~\cite{nyclu:2014} to predict
 whether a weapon will be found on a stopped individual who is frisked or searched.
+\end{itemize}
 
 We first ran a 10-fold cross validation experiment using CORELS and eight other
 algorithms:
