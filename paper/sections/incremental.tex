@@ -47,7 +47,7 @@ Thus, the empty rule list's objective lower bound is zero:
 %
 Since none of the data are captured by the empty prefix, the default rule
 corresponds to the majority class, and the objective corresponds to the
-default rule misclassification error, \ie
+default rule misclassification error:
 \begin{align}
   \Obj(\RL, \x, \y) = \Loss(\RL, \x, \y) + \Reg \cdot 0
   &= \Loss_p((), (), \x, \y) + \Loss_0((), \Default, \x, \y) \nn \\
@@ -58,11 +58,11 @@ Now, we derive our incremental expressions for the objective function and its lo
 %
 Let ${\RL = (\Prefix, \Labels, \Default, K)}$ and
 ${\RL' = (\Prefix', \Labels', \Default', K + 1)}$
-be rule lists such that prefix ${\Prefix = (p_1, \dots, p_K)}$
+be rule lists such that prefix ${\Prefix =}$ ${(p_1, \dots, p_K)}$
 is the parent of ${\Prefix' = (p_1, \dots, p_K, p_{K+1})}$.
 %
 Let ${\Labels = (q_1, \dots, q_K)}$ and
-${\Labels' = (q_1, \dots, q_K, q_{K+1})}$ be the corresponding labels.
+${\Labels' = (q_1, \dots,}$ ${q_K, q_{K+1})}$ be the corresponding labels.
 %
 The hierarchical structure of Algorithm~\ref{alg:branch-and-bound}
 enforces that if we ever evaluate~$\RL'$, then we will have already
