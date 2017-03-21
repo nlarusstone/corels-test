@@ -119,12 +119,31 @@ We develop specialized tools from the fields of discrete optimization and artifi
 Specifically, we introduce a special branch-and-bound algorithm,
 called Certifiably Optimal RulE ListS (CORELS), that provides
 (1) the optimal solution, (2) a certificate of optimality, and (3) optionally,
-a collection of near-optimal solutions and the distance between each such solution and the optimal one.
+a collection of near-optimal solutions and the distance between each
+such solution and the optimal one.
 %
-The certificate of optimality means that we can investigate how close other models (\eg models provided by greedy algorithms) are to optimal. In particular, we can investigate if the rule lists from probabilistic approaches are nearly optimal or whether those approaches sacrifice too much accuracy in the interest of speed.
+The certificate of optimality means that we can investigate how close other models
+(\eg models provided by greedy algorithms) are to optimal.
+%
+In particular, we can investigate if the rule lists from probabilistic approaches
+are nearly optimal or whether those approaches sacrifice too much accuracy
+in the interest of speed.
 
 \begin{arxiv}
-Within its branch-and-cut procedure, CORELS maintains an upper bound on the maximum value of $R$ that each incomplete rule list can achieve. This allows it to prune an incomplete rule list (and every possible extension) if the bound is worse than the accuracy of the best rule list that we've already looked at. The use of careful bounding techniques leads to massive pruning of the search space of potential rule lists. We continue to consider incomplete and complete rule lists until we have either examined or eliminated every rule list from consideration. Thus, we terminate with the optimal rule list, the close-to-optimal rule lists, and a certificate of optimality.
+Within its branch-and-bound procedure, CORELS maintains a lower bound on the
+minimum value of~$R$ that each incomplete rule list can achieve.
+%
+This allows CORELS to prune an incomplete rule list (and every possible extension)
+if the bound is larger than the error of the best rule list that we've already evaluated.
+%
+The use of careful bounding techniques leads to massive pruning of
+the search space of potential rule lists.
+%
+We continue to consider incomplete and complete rule lists until we have either
+examined or eliminated every rule list from consideration.
+%
+Thus, we terminate with the optimal rule list %, the close-to-optimal rule lists,
+and a certificate of optimality.
 \end{arxiv}
 
 The efficacy of CORELS depends on how much of the search space our bounds
@@ -174,7 +193,18 @@ This tree structure is a useful way of organizing the generation
 and evaluation of rule lists, and should be parallelizable.
 
 \begin{arxiv}
-We evaluated CORELS on a number of publicly available datasets and have made code for our algorithm and experiments publicly available. Our metric of success was 10-fold cross validated prediction accuracy on a subset of the data. These datasets involve hundreds of rules and hundreds or thousands of observations. CORELS is generally able to find the optimal rule list in a matter of seconds and certify it within about 10 minutes. We show that we are able to achieve better out-of-sample accuracy on these datasets than the popular greedy algorithms, CART and C5.0.
+We evaluated CORELS on a number of publicly available datasets.
+%and have made code for our algorithm and experiments publicly available.
+%
+Our metric of success was 10-fold cross validated prediction accuracy on a subset of the data.
+%
+These datasets involve hundreds of rules and thousands of observations.
+%
+CORELS is generally able to find the optimal rule list in a matter of seconds
+and certify it within about 10 minutes.
+%
+We show that we are able to achieve better out-of-sample accuracy on these
+datasets than the popular greedy algorithms, CART and C4.5.
 \end{arxiv}
 
 CORELS targets large (not massive) problems,
