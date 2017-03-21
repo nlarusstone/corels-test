@@ -6,7 +6,7 @@
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
 \includegraphics[trim={10mm, 5mm, 25mm, 5mm},
-width=\textwidth]{figs/compare-compas-weapon.pdf}
+width=0.78\textwidth]{figs/compare-compas-weapon.pdf}
 \end{center}
 \caption{Comparison of CORELS and a panel of eight other algorithms:
 logistic regression~(GLM), support vector machines~(SVM),
@@ -32,13 +32,11 @@ Note that we were unable to execute RIPPER for the NYCLU problem.
 \end{figure}
 
 Our experimental analysis addresses five questions:
-\begin{itemize}
-\item How does CORELS' accuracy compare to other algorithms?
-\item How does CORELS' model size compare to other algorithms?
-\item How rapidly does the objective function converge?
-\item How rapidly does CORELS prune the search space?
-\item How much does each of the implementation optimizations contribute to CORELS' performance?
-\end{itemize}
+(1) How does CORELS' accuracy compare to other algorithms?
+(2) How does CORELS' model size compare to other algorithms?
+(3) How rapidly does the objective function converge?
+(4) How rapidly does CORELS prune the search space?
+(5) How much does each of the implementation optimizations contribute to CORELS' performance?
 
 All results that we present were executed on a server with two Intel Xeon E5-2699~v4
 (55~MB cache, 2.20~GHz) processors and 448~GB RAM.
@@ -83,9 +81,9 @@ to those found via other algorithms.
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
 \includegraphics[trim={12mm, 0mm, 24mm, 5mm},
-width=0.75\textwidth]{figs/compas-sparsity-training.pdf}
+width=0.74\textwidth]{figs/compas-sparsity-training.pdf}
 \includegraphics[trim={12mm, 5mm, 24mm, 1mm},
-width=0.75\textwidth]{figs/frisk-sparsity-training.pdf}
+width=0.74\textwidth]{figs/frisk-sparsity-training.pdf}
 \end{center}
 \caption{Training and test accuracy as a function of model size.
 %
@@ -121,6 +119,8 @@ Figure~\ref{fig:sparsity} summarizes differences in accuracy and model size
 for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
 %
 For both problems, CORELS can learn short rule lists without sacrificing accuracy.
+
+\clearpage
 
 \begin{figure}[t!]
 \begin{center}
