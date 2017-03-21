@@ -375,20 +375,16 @@ $b(\Prefix, \x, \y)$ gives a lower bound on the objective of
 \emph{any} rule list whose prefix starts with~$\Prefix$.
 
 \begin{theorem}[Hierarchical objective lower bound]
-\begin{kdd}
-Define~${b(\Prefix, \x, \y) = \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K}$.
-\end{kdd}
 \begin{arxiv}
-Define ${b(\Prefix, \x, \y)}$ as in~\eqref{eq:lower-bound}.
-Also, define
-${\StartsWith(\Prefix) = \{(\Prefix', \Labels', \Default', K') : \Prefix' \textnormal{ starts with } \Prefix \}}$
-to be the set of all rule lists whose prefix starts with~$\Prefix$.
+Define~${b(\Prefix, \x, \y)}$
 \end{arxiv}
 \begin{kdd}
-Also, define $\StartsWith(\Prefix)$
-to be the set of all rule lists whose prefix starts with~$\Prefix$,
-as in~\eqref{eq:starts-with}.
+Define~${b(\Prefix, \x, \y) = \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K}$,
 \end{kdd}
+as in~\eqref{eq:lower-bound}.
+%
+Also, define $\StartsWith(\Prefix)$ to be the set of all rule lists
+whose prefixes starts with~$\Prefix$, as in~\eqref{eq:starts-with}.
 %
 Let ${\RL = }$ ${(\Prefix, \Labels, \Default, K)}$ be a rule list
 with prefix~$\Prefix$, and let
