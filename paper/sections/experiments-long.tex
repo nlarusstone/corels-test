@@ -44,14 +44,23 @@ All results that we present were executed on a server with two Intel Xeon E5-269
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
 
-Our evaluation focuses on two socially-important prediction problems from recent,
-publicly-available datasets:
+Our evaluation focuses on two socially-important prediction problems associated
+with recent, publicly-available datasets:
 \begin{itemize}
 \item Predicting which individuals in the ProPublica COMPAS
-dataset~\cite{LarsonMaKiAn16} recidivate within two years.
-\item Using the NYCLU 2014 stop-and-frisk dataset~\cite{nyclu:2014} to predict
+dataset~\citep{LarsonMaKiAn16} recidivate within two years.
+\item Using the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
 whether a weapon will be found on a stopped individual who is frisked or searched.
 \end{itemize}
+%
+Our choice of and approach to the second problem is inspired by the work
+of~\citet{Goel16}, who develop regression models to analyze racial disparities
+in New York City's stop-and-frisk policy, for a similar, larger dataset.
+%
+In particular, the authors argue for a simple and interpretable stop rule that
+could potentially be used by police officers, and present an effective
+heuristic that combines three stop criteria, based on a reduced version of their
+full regression model.
 
 We first ran a 10-fold cross validation experiment using CORELS and eight other
 algorithms:
