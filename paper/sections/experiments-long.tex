@@ -38,6 +38,22 @@ Our experimental analysis addresses five questions:
 (4) How rapidly does CORELS prune the search space?
 (5) How much does each of the implementation optimizations contribute to CORELS' performance?
 
+\begin{figure}[t!]
+\begin{algorithmic}
+\State \bif $(location = transit~authority)$ \bthen $yes$
+\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
+\State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\caption{An example rule list that predicts whether a weapon will be found on a
+stopped individual who is frisked or searched, for the NYCLU stop-and-frisk dataset.
+%
+This is the most common optimal rule list found by CORELS across 10 cross-validation
+folds; the others contain the same rules, up to a permutation.
+}
+\label{fig:weapon-rule-list}
+\end{figure}
+
 All results that we present were executed on a server with two Intel Xeon E5-2699~v4
 (55~MB cache, 2.20~GHz) processors and 448~GB RAM.
 %
@@ -57,10 +73,10 @@ Our choice of and approach to the second problem is inspired by the work
 of~\citet{Goel16}, who develop regression models to analyze racial disparities
 in New York City's stop-and-frisk policy, for a similar, larger dataset.
 %
-In particular, the authors argue for a simple and interpretable stop rule that
-could potentially be used by police officers, and present an effective
-heuristic that combines three stop criteria, based on a reduced version of their
-full regression model.
+In particular, the authors arrive at a simple and interpretable rule that
+could potentially be used by police officers to effectively frisk or search
+stopped individuals only when these interventions are likely to discover
+criminal possession of a weapon.
 
 We first ran a 10-fold cross validation experiment using CORELS and eight other
 algorithms:
@@ -74,10 +90,20 @@ from the R packages rpart, RWeka, and caret, respectively.
 By default, CART uses complexity parameter ${cp = 0.01}$,
 and C4.5 uses complexity parameter ${C = 0.25}$.
 }
+
+Figures~\ref{fig:rule-list} and~\ref{fig:weapon-rule-list}
+show example optimal rule lists that CORELS learns
+for the ProPublica and NYCLU datasets, respectively.
 %
-Figure~\ref{fig:rule-list} shows an  optimal rule list that CORELS learns
-for the ProPublica dataset.
+While our goal is to provide illustrative examples, and not to provide a
+detailed analysis nor to advocate for the use of these specific models,
+we note that these rule lists are short and easy to understand.
 %
+In particular, the three-rule list for weapon prediction
+in Figure~\ref{fig:weapon-rule-list} has the spirit of the heuristic
+strategy presented by~\citet{Goel16}, that combines three stop criteria
+and is based on a reduced version of their full regression model.
+
 Figure~\ref{fig:comparison} shows that there were no statistically significant
 differences in algorithm accuracies.
 In fact, the difference between folds was far larger than the difference
