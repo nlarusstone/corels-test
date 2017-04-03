@@ -18,7 +18,7 @@
 ## Long paper
 
 - [ ] See http://www.jmlr.org/format/format.html (Everyone)
-- [ ] Fill in acknowledgements (Everyone)
+- [x] Fill in acknowledgements (Everyone)
 - [x] Add paragraphs on Hongyu's and Ertekin's papers in related work (Cynthia)
 - [ ] Extended version of our short paper's implementation section (Nicholas)
 - [ ] Add measurements, and update the writing if relevant (Nicholas)
@@ -29,8 +29,9 @@
 - [x] Convert to JMLR format (Elaine)
 - [ ] Add sentences in experiments section about how the order of the bounds matters (Elaine)
 - [ ] Note that ablation results / efficacy of different CORELS components are heavily dataset-dependent (Elaine)
-- [ ] More description about stop-and-frisk problem and dataset and describe the problems with bullet points (Elaine)
+- [x] More description about stop-and-frisk problem and dataset and describe the problems with bullet points (Elaine)
 - [x] Add details about algorithm implementations and parameters used (Elaine)
+- [ ] Describe data preprocessing and rule mining
 - [ ] Emphasize the intuitive interpretation of our objective function, including the regularization parameter (Elaine)
 - [ ] Provide more examples of rule lists that we find (Elaine)
 - [ ] Ablation experiment for a dataset where the equivalent points bound doesn't help (e.g., tic-tac-toe)
