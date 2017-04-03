@@ -65,7 +65,7 @@ Our work builds specifically on that of \citet{YangRuSe16}.
 In particular, we use their library for efficiently representing and
 operating on bit vectors, and build on their bounds.
 %
-Note that the 1995 RIPPER algorithm \cite{ripper} is similar to the Bayesian tree methods in that it grows, prunes, and then locally optimizes.
+Note that the 1995 RIPPER algorithm \citep{ripper} is similar to the Bayesian tree methods in that it grows, prunes, and then locally optimizes.
 
 \textit{Rule learning methods:} 
 Most rule learning methods are not designed for optimality or interpretability, but for computational speed and/or accuracy. In \textit{associative classification} \citep{Vanhoof10,Liu98,Li01,Yin03}, classifiers are often formed greedily from the top down as rule lists, or they are formed by taking the simple union of pre-mined rules, whereby any observation that fits into any of the rules is classified as positive.
@@ -95,7 +95,7 @@ We have not discussed \textit{rule mining} algorithms since they are part of an 
 for accuracy and sparsity, rule lists have been developed for various applications,
 and with exotic types of constraints.
 %
-For example, Falling Rule Lists \citep{WangRu15} are constrained to have decreasing probabilities down the list as are rule lists for dynamic treatment regimes \citep{ZhangEtAl15} and cost-sensitive dynamic treatment regimes \citep{LakkarajuRu17}. Both Wang et. al \cite{WangRu15} and Lakkaraju et. al \cite{LakkarajuRu17} use Monte Carlo searches through the space of rule lists. The method proposed in this work could potentially be adapted to handle these kinds of interesting problems. We are currently working on bounds for Falling Rule Lists \citep{ChenRu17} similar to those presented here.
+For example, Falling Rule Lists \citep{WangRu15} are constrained to have decreasing probabilities down the list as are rule lists for dynamic treatment regimes \citep{ZhangEtAl15} and cost-sensitive dynamic treatment regimes \citep{LakkarajuRu17}. Both \citet{WangRu15} and \citet{LakkarajuRu17} use Monte Carlo searches through the space of rule lists. The method proposed in this work could potentially be adapted to handle these kinds of interesting problems. We are currently working on bounds for Falling Rule Lists \citep{ChenRu17} similar to those presented here.
 
 \begin{arxiv}
 Two works that this paper builds on are those of~\citet{YangRuSe16}, and~\citet{RudinEr15}.
