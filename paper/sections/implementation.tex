@@ -101,7 +101,17 @@ from the root to the leaves, deleting all subtrees of any node with lower bound 
 minimum objective. If we encounter a node with no children, we prune upwards--deleting that
 node and recursively traversing the tree towards the root, deleting any childless nodes.
 This garbage collection allows us to constrain the trie's memory consumption, though in our
-experiments we observe the minimum objective to decrease only a small number of times.
+experiments we observe the minimum objective to decrease only a
+\begin{kdd}
+small number of times. \\
+
+Our code is at \textbf{\url{https://github.com/nlarusstone/corels}}.
+\end{kdd}
+\begin{arxiv}
+few times.
+
+Our implementation of CORELS is at \url{https://github.com/nlarusstone/corels}.
+\end{arxiv}
 
 \begin{kdd}
 \vspace{-1mm}
