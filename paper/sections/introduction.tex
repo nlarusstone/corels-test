@@ -134,15 +134,15 @@ Within its branch-and-bound procedure, CORELS maintains a lower bound on the
 minimum value of~$R$ that each incomplete rule list can achieve.
 %
 This allows CORELS to prune an incomplete rule list (and every possible extension)
-if the bound is larger than the error of the best rule list that we've already evaluated.
+if the bound is larger than the error of the best rule list that it has already evaluated.
 %
 The use of careful bounding techniques leads to massive pruning of
 the search space of potential rule lists.
 %
-We continue to consider incomplete and complete rule lists until we have either
+It continues to consider incomplete and complete rule lists until it has either
 examined or eliminated every rule list from consideration.
 %
-Thus, we terminate with the optimal rule list %, the close-to-optimal rule lists,
+Thus, CORELS terminates with the optimal rule list %, the close-to-optimal rule lists,
 and a certificate of optimality.
 \end{arxiv}
 
