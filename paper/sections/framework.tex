@@ -68,7 +68,7 @@ whose antecedent~$p_0$ simply asserts true.
 
 \begin{arxiv}
 \begin{figure}[t!]
-\begin{subfigure}{0.65\textwidth}
+\begin{subfigure}{0.63\textwidth}
 \begin{algorithmic}
 \State \bif $(age=23-25) \wedge (priors=2-3)$ \bthen $yes$
 \State \belif $(age=18-20)$ \bthen $yes$
@@ -77,13 +77,14 @@ whose antecedent~$p_0$ simply asserts true.
 \State \belse $no$
 \end{algorithmic}
 \end{subfigure}
-\begin{subfigure}{0.34\textwidth}
+\hfill
+\begin{subfigure}{0.32\textwidth}
 \begin{algorithmic}
 \State \bif $p_1$ \bthen $q_1$
 \State \belif $p_2$ \bthen $q_2$
 \State \belif $p_3$ \bthen $q_3$
 \State \belif $p_4$ \bthen $q_4$
-\State \belse $q_0$.
+\State \belse $q_0$
 \end{algorithmic}
 \end{subfigure}
 \caption{The same 4-rule list ${\RL = (r_1, r_2, r_3, r_4, r_0)}$,
