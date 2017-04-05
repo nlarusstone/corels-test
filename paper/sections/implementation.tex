@@ -93,17 +93,22 @@ If the lower bound is greater than the minimum objective,
 then no extension of this rule list could possibly be optimal,
 thus we do not insert the new rule list into the tree or queue.
 %
-We also leverage our other bounds from~\S\ref{sec:setup}
+We also leverage our other bounds from~\S\ref{sec:framework}
 to aggressively prune the search space.
 
-Each time we update the minimum objective, we garbage collect the trie, by walking it
-from the root to the leaves, deleting all subtrees of any node with lower bound larger than the current
-minimum objective. If we encounter a node with no children, we prune upwards--deleting that
+During execution, we garbage collect the trie.
+%
+Each time we update the minimum objective,
+we traverse the trie in a depth-first manner, deleting all subtrees
+of any node with lower bound larger than the current minimum objective.
+%
+At other times, when we encounter a node with no children, we prune upwards--deleting that
 node and recursively traversing the tree towards the root, deleting any childless nodes.
+%
 This garbage collection allows us to constrain the trie's memory consumption, though in our
 experiments we observe the minimum objective to decrease only a
 \begin{kdd}
-small number of times. \\
+few times. \\
 
 Our code is at \textbf{\url{https://github.com/nlarusstone/corels}}.
 \end{kdd}
