@@ -1,58 +1,12 @@
 \section{Experiments}
 \label{sec:experiments}
 
-\begin{figure}[t!]
-\begin{center}
-%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
-% left lower right upper
-\includegraphics[trim={10mm, 5mm, 25mm, 5mm},
-width=0.84\textwidth]{figs/compare-compas-weapon.pdf}
-\end{center}
-\caption{Comparison of CORELS and a panel of eight other algorithms:
-logistic regression~(GLM), support vector machines~(SVM),
-AdaBoost, CART, C4.5, random forests~(RF), RIPPER,
-scalable Bayesian rule lists~(SBRL).
-%
-Test accuracy means (white squares),
-standard deviations (error bars),
-and values (colors correspond to folds),
-for 10-fold cross-validation experiments.
-%
-Left:~Two-year recidivism prediction for the ProPublica COMPAS dataset.
-%
-For CORELS, we use regularization parameter~${\Reg=0.005}$.
-%
-Right:~Weapon prediction for the NYCLU stop-and-frisk dataset.
-%
-For CORELS, we use~${\Reg=0.01}$.
-%
-Note that we were unable to execute RIPPER for the NYCLU problem.
-}
-\label{fig:comparison}
-\end{figure}
-
 Our experimental analysis addresses five questions:
 (1) How does CORELS' accuracy compare to other algorithms?
 (2) How does CORELS' model size compare to other algorithms?
 (3) How rapidly does the objective function converge?
 (4) How rapidly does CORELS prune the search space?
 (5) How much does each of the implementation optimizations contribute to CORELS' performance?
-
-\begin{figure}[t!]
-\begin{algorithmic}
-\State \bif $(location = transit~authority)$ \bthen $yes$
-\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
-\State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
-\State \belse $no$
-\end{algorithmic}
-\caption{An example rule list that predicts whether a weapon will be found on a
-stopped individual who is frisked or searched, for the NYCLU stop-and-frisk dataset.
-%
-This is the most common optimal rule list found by CORELS across 10 cross-validation
-folds; the others contain the same rules, up to a permutation.
-}
-\label{fig:weapon-rule-list}
-\end{figure}
 
 All results that we present were executed on a server with two Intel Xeon E5-2699~v4
 (55~MB cache, 2.20~GHz) processors and 448~GB RAM.
@@ -92,6 +46,52 @@ from the R packages rpart, RWeka, and caret, respectively.
 By default, CART uses complexity parameter ${cp = 0.01}$,
 and C4.5 uses complexity parameter ${C = 0.25}$.
 }
+
+\begin{figure}[t!]
+\begin{algorithmic}
+\State \bif $(location = transit~authority)$ \bthen $yes$
+\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
+\State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\caption{An example rule list that predicts whether a weapon will be found on a
+stopped individual who is frisked or searched, for the NYCLU stop-and-frisk dataset.
+%
+This is the most common optimal rule list found by CORELS across 10 cross-validation
+folds; the others contain the same rules, up to a permutation.
+}
+\label{fig:weapon-rule-list}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
+% left lower right upper
+\includegraphics[trim={10mm, 10mm, 25mm, 5mm},
+width=0.95\textwidth]{figs/compare-compas-weapon.pdf}
+\end{center}
+\caption{Comparison of CORELS and a panel of eight other algorithms:
+logistic regression~(GLM), support vector machines~(SVM),
+AdaBoost, CART, C4.5, random forests~(RF), RIPPER,
+scalable Bayesian rule lists~(SBRL).
+%
+Test accuracy means (white squares),
+standard deviations (error bars),
+and values (colors correspond to folds),
+for 10-fold cross-validation experiments.
+%
+Left:~Two-year recidivism prediction for the ProPublica COMPAS dataset.
+%
+For CORELS, we use regularization parameter~${\Reg=0.005}$.
+%
+Right:~Weapon prediction for the NYCLU stop-and-frisk dataset.
+%
+For CORELS, we use~${\Reg=0.01}$.
+%
+Note that we were unable to execute RIPPER for the NYCLU problem.
+}
+\label{fig:comparison}
+\end{figure}
 
 Figures~\ref{fig:rule-list} and~\ref{fig:weapon-rule-list}
 show example optimal rule lists that CORELS learns
@@ -247,7 +247,6 @@ All rows represent complete executions, except for the final row,
 in which each execution was terminated due to memory constraints,
 once the size of the cache reached ${8 \times 10^8}$ elements,
 after consuming 390-410GB RAM.
-We terminated each experiment in the last row after consuming 390-410GB RAM.
 %
 In all but the final row and column, we report means
 (and standard deviations) over 10 cross-validation folds;
@@ -268,18 +267,21 @@ width=0.85\textwidth]{figs/kdd_compas_ablation-queue.pdf}
 \caption{Logical queue composition.
 %
 Numbers of prefixes in the queue (log scale), labeled and colored by length,
-as a function of wall clock time (log scale), for CORELS (top left),
-and without five specific implementation optimizations or bounds.
+as a function of wall clock time (log scale), for full CORELS (top left),
+and five variants that each remove a specific implementation optimization or bound.
 %EXPAND HERE
 %the permutation bounds (top right),
 %lookahead bound (bottom left), and equivalent points bound (bottom right).
 %
 The gray shading fills in the area beneath the total number of
-queue elements for CORELS.
+queue elements for CORELS,
 \ie the sum over all lengths in the top left figure.
 %
 For comparison, we replicate the same gray region
 in the other three subfigures.
+%
+For each execution, we indicate the total time both in seconds,
+and relative to the full CORELS implementation (T = 149 s).
 }
 \label{fig:queue}
 \end{figure}
