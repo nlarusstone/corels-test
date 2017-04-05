@@ -65,7 +65,11 @@ Our work builds specifically on that of \citet{YangRuSe16}.
 In particular, we use their library for efficiently representing and
 operating on bit vectors, and build on their bounds.
 %
-Note that the 1995 RIPPER algorithm \citep{ripper} is similar to the Bayesian tree methods in that it grows, prunes, and then locally optimizes.
+Note that the
+\begin{kdd}
+1995
+\end{kdd}
+RIPPER algorithm \citep{ripper} is similar to the Bayesian tree methods in that it grows, prunes, and then locally optimizes.
 
 \textit{Rule learning methods:} 
 Most rule learning methods are not designed for optimality or interpretability, but for computational speed and/or accuracy. In \textit{associative classification} \citep{Vanhoof10,Liu98,Li01,Yin03}, classifiers are often formed greedily from the top down as rule lists, or they are formed by taking the simple union of pre-mined rules, whereby any observation that fits into any of the rules is classified as positive.
@@ -95,7 +99,7 @@ We have not discussed \textit{rule mining} algorithms since they are part of an 
 for accuracy and sparsity, rule lists have been developed for various applications,
 and with exotic types of constraints.
 %
-For example, Falling Rule Lists \citep{WangRu15} are constrained to have decreasing probabilities down the list as are rule lists for dynamic treatment regimes \citep{ZhangEtAl15} and cost-sensitive dynamic treatment regimes \citep{LakkarajuRu17}. Both \citet{WangRu15} and \citet{LakkarajuRu17} use Monte Carlo searches through the space of rule lists. The method proposed in this work could potentially be adapted to handle these kinds of interesting problems. We are currently working on bounds for Falling Rule Lists \citep{ChenRu17} similar to those presented here.
+For example, Falling Rule Lists \citep{WangRu15} are constrained to have decreasing probabilities down the list as are rule lists for dynamic treatment regimes \citep{ZhangEtAl15} and cost-sensitive dynamic treatment regimes \citep{LakkarajuRu17}. Both \citet{WangRu15} and \citet{LakkarajuRu17} use Monte Carlo searches to explore the space of rule lists. The method proposed in this paper could potentially be adapted to handle these kinds of interesting problems. We are currently working on bounds for Falling Rule Lists \citep{ChenRu17} similar to those presented here.
 
 \begin{arxiv}
 Two works that this paper builds on are those of~\citet{YangRuSe16}, and~\citet{RudinEr15}.
@@ -103,10 +107,10 @@ Two works that this paper builds on are those of~\citet{YangRuSe16}, and~\citet{
 The work of Yang et al. provided the bit vector libraries and several ideas that were used here,
 and we used their code as a starting point.
 %
-Yang's SBRL method has uses beyond those of CORELS because SBRL models are probabilistic,
+Their scalable Bayesian rule lists (SBRL) method has uses beyond those of CORELS because SBRL models are probabilistic,
 producing an estimate of~${\P(Y=1 \given X)}$ for any~$X$, rather than a yes/no classification.
 %
-On the other hand, because the model is probabilistic, the bounds involve approximations
+On the other hand, because the model is probabilistic, the bounds depend on approximations
 involving gamma functions.
 %
 Bounds for CORELS have no such approximations and are substantially tighter.
@@ -114,7 +118,7 @@ Bounds for CORELS have no such approximations and are substantially tighter.
 Yang et al. aim to find the optimal solution but do not aim to prove optimality.
 
 Both~\citet{YangRuSe16} and~\citet{RudinEr15} contributed bounds that we started from
-in this work, and in particular, the second of these uses the same objective as we do and has
+in this work, and in particular, the latter uses the same objective as we do and has
 some of the same bounds, including the minimum support bound (\S\ref{sec:lb-support}, Theorem~\ref{thm:min-capture}).
 %
 However, Ertekin and Rudin's work is for a different purpose,
@@ -126,7 +130,7 @@ As in our framework, their rule lists are certifiably optimal.
 %
 However, since generic MIP software is used without efficient bounds and
 data structures like the ones introduced here,
-it can take a much longer time to prove optimality and to find the optimal solution.
+much more time can be required to prove optimality and to find the optimal solution.
 \end{arxiv}
 
 
