@@ -1,18 +1,3 @@
-%\section{Lower bounds for proving optimality}
-%
-%Our problem has rich structure beyond the hierarchical objective lower bound
-%in Theorem~\ref{thm:bound}, including several instances of symmetries.
-%%
-%In this section, we enumerate a series of additional bounds and
-%symmetries that combine to yield aggressive pruning opportunities
-%throughout the execution of our branch-and-bound algorithm.
-%%
-%We additionally quantify the computational consequences of many
-%of these observations.
-%%
-%Below, we begin with an immediate consequence of Theorem~\ref{thm:bound}.
-%%followed by a more general version of Theorem~\ref{thm:bound}.
-
 Next, we state an immediate consequence of Theorem~\ref{thm:bound}.
 
 \begin{lemma}[Objective lower bound with one-step lookahead]
@@ -50,46 +35,6 @@ as long as
 \end{arxiv}
 ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$, then we can prune
 all prefixes~$\Prefix'$ that start with and are longer than~$\Prefix$.
-
-%Before proceeding, let us summarize the remainder of this section.
-%%
-%First, we prove upper bounds on prefix
-%length~(\S\ref{sec:ub-prefix-length}),
-%and corresponding upper bounds on the number of
-%prefix evaluations~(\S\ref{sec:ub-size}).
-%%
-%\begin{arxiv}
-%Next, we prove lower~(\S\ref{sec:lb-support})
-%and upper~(\S\ref{sec:ub-support}) bounds on antecedent support,
-%and provide a unified analysis of consequences of
-%these antecedent support bounds~(\S\ref{sec:reject}).
-%\end{arxiv}
-%\begin{kdd}
-%Next, we prove lower~(\S\ref{sec:lb-support}) bounds on
-%antecedent support, and describe algorithmic consequences.
-%\end{kdd}
-%%
-%We then analyze rule lists whose prefixes
-%capture the same data~(\S\ref{sec:equivalent}),
-%which enables symmetry-aware garbage collection.
-%%
-%In particular, we highlight the special case of prefixes
-%that are equivalent up to a permutation of their
-%antecedents~(\S\ref{sec:permutation});
-%this enables permutation-aware garbage collection,
-%which we characterize via another upper bound on
-%the number of prefix evaluations~(\S\ref{sec:permutation-counting}).
-%%
-%\begin{arxiv}
-%Next, we slightly generalize the result from~\S\ref{sec:equivalent}
-%to rule lists whose prefixes capture nearly the same data~(\S\ref{sec:similar}).
-%%
-%\dots
-%\end{arxiv}
-%%
-%Finally, we show how to tighten the objective lower bound,
-%sometimes dramatically, when the data of interest partitions
-%into non-singleton equivalence classes~(\S\ref{sec:identical}).
 
 \subsection{Upper bounds on prefix length}
 \label{sec:ub-prefix-length}
@@ -235,7 +180,6 @@ the family of
 \end{arxiv}
 all prefixes that start with~$\Prefix$.
 
-%
 %\begin{kdd}
 %By considering this constraint in the context of a specific
 %prefix~$\Prefix$, we can obtain potentially tighter upper bounds on
@@ -730,32 +674,6 @@ it depends on the misclassification error associated with each
 rule in a rule list, thus it provides a lower bound on the number of
 observations that each such rule must correctly classify.
 
-
-\begin{comment}
-
-\subsubsection{Some antecedent relationships that imply insufficient antecedent support}
-
-\dots
-Let us say that rule~$A$ dominates rule~$B$ if the data captured by~$B$ is a subset of the data captured by~$A$.
-%
-Rule~$B$ should never follow rule~$A$ in a rule list because it will never capture additional data;
-this scenario is a special case where~\eqref{eq:min-capture} immediately applies.
-%
-More precisely, if~$\RL$ is a rule list that contains rule~$A$ and doesn't contain rule~$B$,
-and~$\RL'$ is derived from~$\RL$ by inserting rule~$B$ anywhere after~$A$, then
-\begin{align}
-\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) + c \ge \Obj(\RL, \x, \y).
-\end{align}
-By considering rule semantics, it is easy to think of common situations
-leading to dominance relationships between rules.
-%
-For example, if rule~$A$'s antecedent is~${(x_1 = 0)}$ and rule~$B$'s
-antecedent is~${(x_1 = 0) \wedge (x_2 = 1)}$, then rule~$A$ dominates rule~$B$.
-%
-%Similar to symmetry-aware pruning, we achieve this by restricting how we grow a prefix, as informed by a hash map rdict that maps a rule R_i to a set of rules T_i = {R_k} such that R_i dominates every R_k in T_i. When growing a prefix that ends with rule R_i, we only append a rule R_k if it is not in T_i. Notice that the intersection of S_i and T_i is the empty set, thus the mappings represented by cdict and rdict can easily be combined into a single mapping.
-\end{comment}
-
-
 \begin{arxiv}
 \subsection{Upper bound on antecedent support}
 \label{sec:ub-support}
@@ -1154,8 +1072,6 @@ Furthermore, we can also prune \emph{any} prefix~$\Prefix'$
 whose antecedents contains the set of antecedents in~$\Prefix$,
 in almost any order, with the constraint that all antecedent
 in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
-
-%Let Q be P's parent. If Q rejects a rule, then P will also reject that rule. This 'inheritance' of rejected rules only depends on which data are captured by Q, and doesn't actually depend on the order of rules in Q. Let S be the set of rules formed from (K-1) rules of P, in any order. P inherits rejected rules from any elements of S. Because of our symmetry-based garbage collection of prefixes equivalent up to a permutation, there are at most K elements of S in the cache; we can identify these via the inverse canonical map (ICM) that maps an ordered prefix to its permutation in the cache. We thus lazily initialize the list of P's reject list of rejected rules.
 
 \end{arxiv}
 
@@ -1907,43 +1823,6 @@ provides a lower bound on~$\Obj(\cal{Q}^*)$.
 \end{comment}
 
 \end{arxiv}
-
-\begin{comment}
-
-\subsection{Equivalence of rule lists when rules commute}
-
-\begin{theorem}
-\end{theorem}
-
-\begin{proof}
-\end{proof}
-
-If two rules~$A$ and~$B$ capture disjoint subsets of data,
-then they commute globally in the sense that any rule list where~$A$ and~$B$ are
-adjacent is equivalent to another rule list where~$A$ and~$B$ swap positions.
-%
-More generally, a rule list containing possibly multiple, possibly overlapping
-pairs of commuting rules is equivalent to any other rule list that can be generated
-by swapping one or more such pairs of rules.
-%
-We can avoid evaluating multiple such equivalent rule lists by eliminating all but one.
-%
-%We achieve this by restricting how we grow a prefix (by appending a rule), as informed by a hash map cdict that maps each rule R_i to a set of rules S_i = {R_j} such that R_i commutes with every R_j in S_i and j > i. When growing a prefix that ends with rule R_i, we only append a rule R_j if it is not in S_i.
-
-\begin{itemize}
-\item other permutation bounds
-\end{itemize}
-\end{comment}
-
-%For any prefix P, we can write down a lower bound on its permutations' objectives.  (I'm not talking about longer prefixes, just permutations of the same length, call it L.)   An easy bound comes from assuming that there is a permutation that makes no mistakes on captured data, so the only contributions to the objective come from the mistakes of the default rule (call this m) and c*L.  All the permutations capture the same data, so m is constant and this gives
-
-%min objective( any permutation of P ) >= m/n + c*L
-
-%Actually we can make this tighter if we know lower bound information from permutations of sub-prefixes.  For example, the length (L-1) "sub-prefixes" of P generate L permutation groups.  We can add the minimum number of mistakes (on captured data) made by prefixes over all of these groups to our bound, call this k
-
-%min objective( any permutation of P ) >= k/n + m/n + c*L
-
-%We only know k if we've already evaluated the length (L-1) permutations -- we do know it in the breadth-first setting.  (This idea could be generalized to shorter sub-prefixes if desired, e.g., for policies other than breadth first.)
 
 \subsection{Equivalent points bound}
 \label{sec:identical}
