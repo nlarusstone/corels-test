@@ -73,10 +73,10 @@ Our choice of and approach to the second problem is inspired by the work
 of~\citet{Goel16}, who develop regression models to analyze racial disparities
 in New York City's stop-and-frisk policy, for a similar, larger dataset.
 %
-In particular, the authors arrive at a simple and interpretable rule that
-could potentially be used by police officers to effectively frisk or search
-stopped individuals only when these interventions are likely to discover
-criminal possession of a weapon.
+In particular, the authors arrive at a simple and interpretable heuristic that
+could potentially help police officers more effectively decide when to
+frisk and/or search stopped individuals, \ie when such
+interventions are likely to discover criminal possession of a weapon.
 
 We first ran a 10-fold cross validation experiment using CORELS
 and eight other algorithms:
@@ -103,7 +103,7 @@ we note that these rule lists are short and easy to understand.
 %
 In particular, the three-rule list for weapon prediction
 in Figure~\ref{fig:weapon-rule-list} has the spirit of the heuristic
-strategy presented by~\citet{Goel16}, that combines three stop criteria
+strategy presented by~\citet{Goel16} that combines three stop criteria
 and is based on a reduced version of their full regression model.
 
 Figure~\ref{fig:comparison} shows that there were no statistically significant
@@ -118,9 +118,9 @@ to those found via other algorithms.
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
 \includegraphics[trim={12mm, 0mm, 24mm, 5mm},
-width=0.74\textwidth]{figs/compas-sparsity-training.pdf}
+width=0.68\textwidth]{figs/compas-sparsity-training.pdf}
 \includegraphics[trim={12mm, 5mm, 24mm, 1mm},
-width=0.74\textwidth]{figs/frisk-sparsity-training.pdf}
+width=0.68\textwidth]{figs/frisk-sparsity-training.pdf}
 \end{center}
 \caption{Training and test accuracy as a function of model size.
 %
@@ -193,8 +193,9 @@ is the upper bound on remaining search space size
 
 In the remainder, we show results using the ProPublica dataset.
 %
-Figure~\ref{fig:objective} illustrates how both the objective and the size of
-the remaining search space decrease as CORELS executes.
+The solid lines in Figure~\ref{fig:objective} illustrate how both the objective (top)
+and the size of the remaining search space (bottom) decrease as CORELS executes.
+%
 The objective drops quickly, achieving the optimal value within 10 seconds.
 CORELS certifies optimality in less than 6 minutes --
 the objective lower bound of the remaining search space
@@ -202,16 +203,19 @@ steadily converges to the optimal objective as the search space shrinks.
 
 Finally, we determine the efficacy of each of our bounds and data structure optimizations.
 %
-Figure~\ref{fig:objective} highlights how a separate execution of CORELS without
-the equivalent points bound remains far from complete,
-with its lower bound far from the optimum.
+Both panels of Figure~\ref{fig:objective} also highlight a separate
+execution of CORELS without the equivalent points bound.
 %
-Table~\ref{tab:ablation} provides summary statistics for experiments using
-the full CORELS implementation and variants each remove a specific optimization.
+After nearly 3 hours, the execution is still far from complete;
+in particular, the lower bound is far from the optimum objective value.
 %
-Figure~\ref{fig:queue} presents a view of the same experiments, focusing
-on three of our optimizations. These plots depict the number of
-prefixes of a given length in the queue during the algorithm's execution.
+Table~\ref{tab:ablation} provides summary statistics for experiments using the full
+CORELS implementation and five variants that each remove a specific optimization.
+%
+Figure~\ref{fig:queue} presents a view of the same experiments.
+%
+These plots depict the number of prefixes of a given length in the queue
+during the algorithm's execution.
 
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
 \begin{table}[t!]
