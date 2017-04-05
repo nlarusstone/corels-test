@@ -164,13 +164,13 @@ This allows us to exclude parts of the search space that could never be better
 than our current solution.
 %
 Finally, our last type of bound is based on comparing incomplete rule lists that
-capture the same data and and allow us to pursue only the most accurate option.
+capture the same data and allow us to pursue only the most accurate option.
 %
 This last class of bounds is especially important -- without our use of a novel
 \textit{symmetry-aware map}, we are unable to solve most problems of reasonable scale.
 %
 This symmetry-aware map keeps track of the best accuracy
-for all the permutations of a given incomplete rule list.
+over all observed permutations of a given incomplete rule list.
 
 We keep track of these bounds using a modified \emph{prefix tree},
 a data structure also known as a trie.
@@ -184,7 +184,7 @@ enables a variety of strategies, including breadth-first,
 best-first, and stochastic search.
 %
 In particular, we can design different best-first strategies
-by customizing the priority metric of a priority queue.
+by customizing how we order elements in a priority queue.
 %
 In addition, we are able to limit the number of nodes in the tree
 and thereby enable tuning of space-time tradeoffs in a robust manner.
@@ -196,23 +196,29 @@ and evaluation of rule lists, and is parallelizable.
 We evaluated CORELS on a number of publicly available datasets.
 %and have made code for our algorithm and experiments publicly available.
 %
-Our metric of success was 10-fold cross validated prediction accuracy on a subset of the data.
+Our metric of success was 10-fold cross-validated prediction accuracy on a subset of the data.
 %
 These datasets involve hundreds of rules and thousands of observations.
 %
-CORELS is generally able to find the optimal rule list in a matter of seconds
-and certify it within about 10 minutes.
+CORELS is generally able to find an optimal rule list in a matter of seconds
+and certify its optimality within about 10 minutes.
 %
-We show that we are able to achieve better out-of-sample accuracy on these
-datasets than the popular greedy algorithms, CART and C4.5.
+We show that we are able to achieve better or similar out-of-sample accuracy on these
+datasets compared to the popular greedy algorithms, CART and C4.5.
 \end{arxiv}
 
 CORELS targets large (not massive) problems,
 where interpretability and certifiable optimality are important.
 %
 We illustrate the efficacy of our approach using (1)~the ProPublica COMPAS dataset~\citep{LarsonMaKiAn16}, for the problem of two-year recidivism prediction,
-and (2)~the New York Civil Liberties Union (NYCLU) 2014 stop-and-frisk
-dataset~\citep{nyclu:2014}, to predict whether a weapon will be found
+and (2)~the
+\begin{kdd}
+New York Civil Liberties Union (NYCLU)
+\end{kdd}
+\begin{arxiv}
+NYCLU
+\end{arxiv}
+2014 stop-and-frisk dataset~\citep{nyclu:2014}, to predict whether a weapon will be found
 on a stopped individual who is frisked or searched.
 %
 We produce certifiably optimal, interpretable rule lists that achieve
