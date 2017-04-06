@@ -21,7 +21,7 @@ spell:
 	$(shell for i in $(TEXFILES); do ispell $(i); done)
 
 clean:
-	rm -f *.aux *.bbl *.log *.blg *.out
+	rm -f *.aux *.bbl *.log *.blg *.out *.cut *.toc
 
 flush: clean
 	rm -f $(PDFS)
