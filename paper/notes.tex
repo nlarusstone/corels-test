@@ -1,4 +1,3 @@
-
 \begin{comment}
 
 \subsubsection{Some antecedent relationships that imply insufficient antecedent support}
@@ -62,3 +61,81 @@ We can avoid evaluating multiple such equivalent rule lists by eliminating all b
 %min objective( any permutation of P ) >= k/n + m/n + c*L
 
 %We only know k if we've already evaluated the length (L-1) permutations -- we do know it in the breadth-first setting.  (This idea could be generalized to shorter sub-prefixes if desired, e.g., for policies other than breadth first.)
+
+\begin{comment}
+
+\begin{table}[t!]
+\centering
+\begin{tabular}{l | c | c}
+Method & ProPublica & NYCLU \\
+\hline
+CORELS & 67.6 $\pm$ 2.0 & 69.8 $\pm$ 2.7 \\
+SBRL & 67.1 $\pm$ 1.7 & 69.7 $\pm$ 2.0 \\
+CART & 66.7 $\pm$ 2.1 & 69.8 $\pm$ 2.7 \\
+C4.5 & 67.3 $\pm$ 1.8 & 66.8 $\pm$ 2.1 \\
+RF & 67.3 $\pm$ 1.8 & 68.7 $\pm$ 2.4 \\
+RIPPER & 67.3 $\pm$ 2.0 & --- \\
+AdaBoost & 67.3 $\pm$ 1.7 & 70.6 $\pm$ 2.7 \\
+GLM & 67.5 $\pm$ 1.8 & 70.3 $\pm$ 2.5 \\
+SVM & 67.1 $\pm$ 2.0 & 70.2 $\pm$ 2.7 \\
+\end{tabular}
+\vspace{5mm}
+\caption{Comparison with other methods:
+Means and standard deviations of test accuracy.
+Also report algorithm runtimes (mean $\pm$ standard deviation over 10 folds).
+CORELS ${\Reg = 0.005}$ for ProPublica and ${\Reg = 0.01}$ for NYCLU.}
+\label{tab:comparison}
+\end{table}
+
+\begin{figure}[t!]
+\begin{center}
+\end{center}
+\caption{Missing:  Some sort of comparison of different scheduling policies}
+\label{fig:scheduling-policy}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-queue-size.png}
+\includegraphics[width=0.8\textwidth]{figs/ela_compas-queue-cache-size-insertions.pdf}
+\end{center}
+\caption{Cache and queue data structure sizes and insertions.
+%
+The top plot shows the sizes of the cache and queue data structures,
+as a function of wall clock time.
+%
+The number of nodes in the cache (solid black line) is an
+upper bound on the number of elements in the physical queue
+(dotted gray line), since the physical queue elements only
+correspond to the cache trie data structure's leaf nodes
+plus disconnected cache nodes that have been marked for deletion.
+%
+The queue's physical size is an upper bound on its
+logical size (solid blue line), which doesn't include nodes
+that have been marked for deletion.
+%
+The bottom plot shows the cumulative number of cache insertions,
+which is equivalent to the cumulative number of queue insertions,
+as a function of wall clock time.
+}
+\label{fig:queue-cache-size-insertions}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-max-length.png}
+\includegraphics[width=0.8\textwidth]{figs/ela-max-length-check.png}
+\end{center}
+\caption{Max prefix length over time (computed from objective value)}
+\label{fig:max-length}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+\includegraphics[width=0.8\textwidth]{figs/ela_compas-prefix-length.pdf}
+\end{center}
+\caption{Best prefix length over time}
+\label{fig:prefix-length}
+\end{figure}
+\end{comment}
+
