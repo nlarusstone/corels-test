@@ -21,10 +21,7 @@ We also track the best observed minimum objective and its associated rule list.
 The symmetry-aware map supports symmetry-aware pruning.
 %
 We implement this using the C++ STL unordered\_map,
-% Since we are not yet doing anything with the capture-based representation, we shouldn't
-% discuss it as we won't be showing performance.
 % We have two different versions of the map.
-% Both versions 
 to map all permutations of a set of antecedents to a key, whose value
 contains the best ordering of those antecedents (\ie the prefix with the smallest lower bound).
 %
@@ -43,7 +40,13 @@ permutations map to the same key.
 % significantly smaller than encodings of captured data points,
 % especially for large datasets.
 %
-The symmetry-aware map usually dominates memory usage during long runs.
+\begin{kdd}
+This map dominates memory usage for problems that explore longer prefixes.
+\end{kdd}
+\begin{arxiv}
+The symmetry-aware map dominates memory usage for problems that explore longer prefixes.
+\end{arxiv}
+%
 Before inserting permutation $P_i$ into the symmetry-aware map, we check
 if there exists a permutation $P_j$ of $P_i$ already in the map.
 If the lower bound of $P_i$ is better than that of $P_j$,
@@ -156,63 +159,3 @@ misclassification error and the expected regularization penalty:
   + \frac{\Reg K N}{\NCap} = \Curiosity(\Prefix, \x, \y).
 \end{align}
 \end{comment}
-
-%\section{Implementation architecture}
-%
-%We present an architecture for executing our branch-and-bound algorithm,
-%consisting of a cache, a queue that is associated with a search policy,
-%and, optionally, a symmetry-aware map.
-%%
-%First, we describe the cache, our primary data structure~(\S\ref{sec:cache});
-%it is organized as a prefix tree and supports the incremental computations,
-%detailed in~\S\ref{sec:incremental}, that are central to our approach.
-%%
-%Second, we describe the queue and search policy~(\S\ref{sec:queue}).
-%%
-%Like the queue in Algorithm~\ref{alg:branch-and-bound},
-%our queue keeps track of which prefixes to evaluate during execution.
-%%
-%The policy for selecting a prefix from the queue to evaluate next,
-%and thus also the natural queue data structure, depend on
-%the search policy employed for exploring the space of rule lists
-%%
-%Next, we describe the symmetry-aware map~(\S\ref{sec:map}),
-%which enables garbage collection of prefixes eliminated by the
-%equivalent support bound in Theorem~\ref{sec:equivalent}.
-%%
-%While we present the map as an optional component of our architecture,
-%our calculations in~\S\ref{sec:permutation-counting}
-%and experiments in~\S\ref{sec:experiments} demonstrate that
-%it is critical for efficient and practical algorithm performance.
-%%
-%Finally, we summarize an artifact we implemented~(\S\ref{sec:system}),
-%which we evaluate in~\S\ref{sec:experiments}.
-%
-%\subsection{Prefix tree cache for incremental computation}
-%\label{sec:cache}
-%
-%We maintain a cache to support incremental computation.
-%%
-%Our cache is organized as a prefix tree, which is also known as a trie.
-%%
-%
-%\subsection{Queue and search policies}
-%\label{sec:queue}
-%
-%Different search policies suggest different natural queue data structures.
-%
-%\begin{itemize}
-%\item breadth-first
-%\item depth-first
-%\item something based on greedy
-%\item (curiosity, lower bound, optimization) $\times$ (priority queue, something like Thompson sampling)
-%\item optimistic
-%\end{itemize}
-%
-%\subsection{Map data structure for symmetry-aware garbage collection}
-%\label{sec:map}
-%
-%%\subsection{Large-scale optimization}
-%
-%\subsection{System}
-%\label{sec:system}
