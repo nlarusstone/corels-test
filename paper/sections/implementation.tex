@@ -49,10 +49,11 @@ The symmetry-aware map dominates memory usage for problems that explore longer p
 %
 Before inserting permutation $P_i$ into the symmetry-aware map, we check
 if there exists a permutation $P_j$ of $P_i$ already in the map.
-If the lower bound of $P_i$ is better than that of $P_j$,
-we update the map and remove $P_j$ and its subtree from the trie.
-Otherwise we do nothing (\ie we do not insert $P_i$ into the symmetry-aware map
-or the trie).
+If there is no permutation exists, then we insert $P_i$ in the map.
+Otherwise, if a permutation $P_j$ exists and the lower bound of $P_i$ is better than 
+that of $P_j$, we update the map and remove $P_j$ and its subtree from the trie.
+Else, if $P_j$ exists and has a better lower bound than $P_i$, we do nothing 
+(\ie we do not insert $P_i$ into the symmetry-aware map or the trie).
 
 We use a queue to store all of the leaves of the trie that still need to be explored.
 %
