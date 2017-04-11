@@ -176,6 +176,12 @@ misclassification error and the expected regularization penalty:
 %
 The curiosity for a prefix~$\Prefix$ is thus also equal to its objective lower bound,
 scaled by the inverse of its normalized support.
+%
+For two prefixes with the same lower bound, curiosity gives higher priority to
+the one that captures more data.
+%
+This is a well-motivated scheduling strategy if we model prefixes that extend
+the prefix with smaller support as having more `potential' to make mistakes.
 
 In preliminary experiments, we observe that using a priority queue ordered by
 curiosity sometimes yields a dramatic reduction in execution time,
