@@ -602,12 +602,12 @@ a_k \equiv \frac{1}{N} \sum_{n=1}^N
 \begin{arxiv}
 The regularization parameter~$\Reg$ provides a lower bound on~$a_k$:
 \begin{align}
-\Reg < a_k.
+\Reg \le a_k.
 \label{eq:min-capture-correct}
 \end{align}
 \end{arxiv}
 \begin{kdd}
-The regularization parameter provides a lower bound, $\Reg < a_k$.
+The regularization parameter provides a lower bound, $\Reg \le a_k$.
 \end{kdd}
 \end{theorem}
 
@@ -648,12 +648,12 @@ Relating this bound to the objectives of~$\RL$ and~$\OptimalRL$ gives
 \label{eq:ub-ii}
 \end{align}
 Combining~\eqref{eq:ub-ii} with the requirement
-${\OptimalObj < \Obj(\RL, \x, \y)}$ gives the bound~${\Reg < a_i}$.
+${\OptimalObj \le \Obj(\RL, \x, \y)}$ gives the bound~${\Reg \le a_i}$.
 \end{proof}
 \end{arxiv}
 
-Thus, we can prune a prefix if any of its rules do not capture
-and correctly classify at least a fraction~$\Reg$ of data.
+Thus, we can prune a prefix if any of its rules correctly classifies
+less than a fraction~$\Reg$ of data.
 %
 While the lower bound in Theorem~\ref{thm:min-capture} is a sub-condition
 of the lower bound in Theorem~\ref{thm:min-capture-correct},
@@ -665,7 +665,7 @@ constructing rule lists, we can furthermore apply it in the context of
 rule mining~(\S\ref{sec:setup}).
 %
 Specifically, it implies that we should only mine rules with
-normalized support greater than~$\Reg$;
+normalized support of at least~$\Reg$;
 we need not mine rules with a smaller fraction of observations.
 %
 In contrast, we can only apply Theorem~\ref{thm:min-capture-correct}
