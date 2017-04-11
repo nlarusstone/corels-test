@@ -1911,10 +1911,10 @@ instead of counting mistakes:
 &\Loss(\RL, \x, \y) \nn \\
 &= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[q_0 \neq y_n]
    + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [q_k \neq y_n] \right)
-   \wedge \one [x_n \in e_u]  \nn \\
+   \one [x_n \in e_u]  \nn \\
 &\ge \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[y_n = q_u]
    + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [y_n = q_u] \right)
-   \wedge \one [x_n \in e_u].
+   \one [x_n \in e_u].
 \label{eq:lb-equiv-pts}
 \end{align}
 Next, we factor out the indicator for equivalent point set membership,
