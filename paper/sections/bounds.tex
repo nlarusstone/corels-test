@@ -708,7 +708,7 @@ For all ${k \le K - 1}$, every antecedent~$p_k$ in~$\Prefix$ has support
 less than the fraction of all data not captured by preceding antecedents,
 by an amount greater than the regularization parameter~$\Reg$:
 \begin{align}
-\Supp(p_k, \x \given \Prefix) < 1 - \Supp(\Prefix^{k-1}, \x) - \Reg,
+\Supp(p_k, \x \given \Prefix) \le 1 - \Supp(\Prefix^{k-1}, \x) - \Reg,
 \label{eq:ub-support}
 \end{align}
 where ${\Prefix^{k-1} = (p_1, \dots, p_{k-1})}$.
@@ -798,7 +798,7 @@ rule mining~(\S\ref{sec:setup}).
 Theorem~\ref{thm:ub-support} implies that if we only seek a single
 optimal rule list, then during branch-and-bound execution,
 we can prune a prefix if we ever add an antecedent with support
-too similar to the support of set of data not captured by the
+too similar to the support of the set of data not captured by the
 preceding antecedents.
 %
 One way to view this result is that if
@@ -814,7 +814,7 @@ similar to that of~$\RL$, and any reduction may not be
 sufficient to offset the penalty for longer prefixes.
 %
 Furthermore, Theorem~\ref{thm:ub-support} implies that we should
-only mine rules with normalized support less than ${1 - \Reg}$;
+only mine rules with normalized support less than or equal to ${1 - \Reg}$;
 we need not mine rules with a larger fraction of observations.
 \end{arxiv}
 
