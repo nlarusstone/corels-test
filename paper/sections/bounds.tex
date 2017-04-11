@@ -503,13 +503,13 @@ For each antecedent~$p_k$ in prefix ${\Prefix = (p_1, \dots, p_K)}$,
 the regularization parameter~$\Reg$ provides a lower bound
 on the normalized support of~$p_k$,
 \begin{align}
-\Reg < \Supp(p_k, \x \given \Prefix).
+\Reg \le \Supp(p_k, \x \given \Prefix).
 \label{eq:min-capture}
 \end{align}
 \end{arxiv}
 \begin{kdd}
 the regularization parameter provides a lower bound,
-${\Reg < \Supp(p_k, \x \given \Prefix)}$, on the normalized support of~$p_k$.
+${\Reg \le \Supp(p_k, \x \given \Prefix)}$, on the normalized support of~$p_k$.
 \end{kdd}
 \end{theorem}
 
@@ -542,7 +542,7 @@ in the context of~$\Prefix$, defined in~\eqref{eq:support-context},
 and the regularization `bonus' comes from the fact that~$\RL$
 is one rule shorter than~$\OptimalRL$.
 
-At the same time, we must have ${\OptimalObj < \Obj(\RL, \x, \y)}$ for~$\OptimalRL$ to be optimal.
+At the same time, we must have ${\OptimalObj \le \Obj(\RL, \x, \y)}$ for~$\OptimalRL$ to be optimal.
 %
 Combining this with~\eqref{eq:ub-i} and rearranging gives~\eqref{eq:min-capture},
 therefore the regularization parameter~$\Reg$ provides a lower bound
@@ -550,8 +550,8 @@ on the support of an antecedent~$p_i$ in an optimal rule list~$\OptimalRL$.
 \end{proof}
 \end{arxiv}
 
-Thus, we can prune a prefix~$\Prefix$ if any of its antecedents do not capture
-more than a fraction~$\Reg$ of data, even if~${b(\Prefix, \x, \y) < \OptimalObj}$.
+Thus, we can prune a prefix~$\Prefix$ if any of its antecedents capture less than
+a fraction~$\Reg$ of data, even if~${b(\Prefix, \x, \y) < \OptimalObj}$.
 %
 \begin{arxiv}
 Notice that the
