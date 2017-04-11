@@ -1851,11 +1851,11 @@ Now define~$\theta(e_u)$ to be the normalized support of the minority
 class label with respect to set~$e_u$, \eg let
 \begin{arxiv}
 \begin{align}
-{e_u = \{x_n : \one [ \Cap(x_n, s_m) = \Cap(x_i, s_m) ] \}},
+{e_u = \{x_n : \forall m, \one [ \Cap(x_n, s_m) = \Cap(x_i, s_m) ] \}},
 \end{align}
 \end{arxiv}
 \begin{kdd}
-${e_u = \{x_n : \one [ \Cap(x_n, s_m) = \Cap(x_i, s_m) ] \}}$,
+${e_u = \{x_n : \forall m, \one [ \Cap(x_n, s_m) = \Cap(x_i, s_m) ] \}}$,
 \end{kdd}
 and let~$q_u$ be the minority class label among points in~$e_u$, then
 \begin{align}
