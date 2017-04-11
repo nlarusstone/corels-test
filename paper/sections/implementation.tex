@@ -127,36 +127,64 @@ Our implementation of CORELS is at \url{https://github.com/nlarusstone/corels}.
 \end{kdd}
 
 \begin{arxiv}
-\section{Curiosity}
+\subsection{Custom scheduling policies}
 
-We introduce a custom priority metric that we call \emph{curiosity}:
-\begin{align}
-\Curiosity(\Prefix, \x, \y) = \frac{1}{\NCap} \left(\sum_{n=1}^N \sum_{k=1}^K
-  \Cap(x_n, p_k \given \Prefix) \wedge \one [ q_k \neq y_n ] \right)
-  + \frac{\Reg K N}{\NCap} \,,
-\end{align}
-where~$\NCap$ is the number of datapoints captured by~$\Prefix$, \ie
-${\NCap \equiv \sum_{n=1}^N \Cap(x_n, \Prefix)}$.
+In our setting, an ideal scheduling policy would immediately identify an optimal
+rule list, and then certify its optimality by systematically eliminating the
+remaining search space.
 %
-We can think of the curiosity as the expected objective value
-of a rule list~${\RL' = }$ ${(\Prefix', \Labels', \Default', K')}$
-generated from~$\Prefix$, for a simple model.
+This motivates trying to design scheduling policies that tend to quickly find optimal rule lists.
+%
+When we use a priority queue to order the set of prefixes to evaluate next,
+we are free to implement different scheduling policies via the ordering of
+elements in the queue.
+%
+This motivates designing functions that assign higher priorities to `better'
+prefixes that we believe are more likely to lead to optimal rule lists.
+%
+Note that we follow the convention that priority queue elements are ordered
+by keys, such that keys with smaller values correspond to higher priorities.
+
+We introduce a custom function that we call \emph{curiosity}.
+%
+First, let~$\NCap$ denote the number of datapoints captured by~$\Prefix$, \ie
+\begin{align}
+\NCap \equiv \sum_{n=1}^N \Cap(x_n, \Prefix). \nn
+\end{align}
+%
+Now consider a simple model for the expected objective value of a rule list
+${\RL' = (\Prefix', \Labels', \Default', K')}$ generated from~$\Prefix$.
 %
 Assume that prefix~$\Prefix'$ starts with~$\Prefix$ and captures all the data,
 such that each additional antecedent in~$\Prefix'$
 both captures as many `new' datapoints and makes as many mistakes as
 as each antecedent in~$\Prefix$, on average.
 %
-The expected objective value is then the sum of the expected prefix
+We define curiosity as the expected objective value of~$\RL'$,
+which is equal to the sum of the expected prefix
 misclassification error and the expected regularization penalty:
 \begin{align}
-\E[ \Obj(\RL', \x, \y) ] &= \E[\Loss_p(\Prefix, \Labels, \x, \y)] + \E[ \Reg K' ] \nn \\
+\Curiosity(\Prefix, \x, \y) \equiv \E[ \Obj(\RL', \x, \y) ] &= \E[\Loss_p(\Prefix, \Labels, \x, \y)] + \E[ \Reg K' ] \nn \\
 &= \E[ K' ] \left(\frac{\Loss_p(\Prefix, \Labels, \x, \y)}{K}\right) + \Reg \E[ K' ] \nn \\
 &=  \left(\frac{N}{\NCap / K}\right)
   \left(\frac{\Loss_p(\Prefix, \Labels, \x, \y)}{K}\right)
   + \Reg \left(\frac{N}{\NCap / K}\right) \nn \\
-&= \left(\frac{N}{\NCap}\right) \left(\frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K
-  \Cap(x_n, p_k \given \Prefix) \wedge \one [ q_k \neq y_n ] \right)
-  + \frac{\Reg K N}{\NCap} = \Curiosity(\Prefix, \x, \y).
+&= \left( \frac{N}{\NCap} \right) \biggl(\Loss_p(\Prefix, \Labels, \x, \y) + \Reg K \biggr) \nn \\
+&= \left( \frac{1}{N} \sum_{n=1}^N \Cap(x_n, \Prefix) \right)^{-1} b(\Prefix, \x, \y)
+= \frac{b(\Prefix, \x, \y)}{\Supp(\Prefix, \x)}. \nn
 \end{align}
+%
+The curiosity for a prefix~$\Prefix$ is thus also equal to its objective lower bound,
+scaled by the inverse of its normalized support.
+
+In preliminary experiments, we observe that using a priority queue ordered by
+curiosity sometimes yields a dramatic reduction in execution time,
+compared to using a priority queue ordered by the objective lower bound.
+%
+Thus far, we have observed significant benefits on specific small problems,
+where the structure of the solutions happen to render curiosity particularly
+effective (not shown).
+%
+Designing and studying other `curious' functions, that are effective in more
+general settings, is an exciting direction for future work.
 \end{arxiv}
