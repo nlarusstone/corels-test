@@ -901,7 +901,7 @@ First define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
 and let ${\Prefix = (p_1, \dots, p_{K-1}, p_{K})}$ be a prefix,
 such that its last antecedent~$p_{K}$ has insufficient support,
 \ie the opposite of the bound in~\eqref{eq:min-capture}:
-${\Supp(p_K, \x \given \Prefix) \le \Reg}$.
+${\Supp(p_K, \x \given \Prefix) < \Reg}$.
 %
 Let ${\Prefix^{K-1} =}$ ${(p_1, \dots, p_{K-1})}$,
 and let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
@@ -926,7 +926,7 @@ set of antecedents in ${\Prefix^{K} = (p_1, \dots, p_{K})}$:
   \wedge \Cap(x_n, p_K) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
   \wedge \Cap(x_n, p_K)
-\le \Reg.
+< \Reg.
 \end{align}
 Similarly, the support of~$P_{K'}$ in~$\PrefixB$ depends only on
 the set of antecedents in ${\PrefixB^{K'} =}$ ${(P_1, \dots, P_{K'})}$:
@@ -941,7 +941,7 @@ the set of antecedents in ${\PrefixB^{K'} =}$ ${(P_1, \dots, P_{K'})}$:
   \wedge \Cap(x_n, P_{K'}) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
   \wedge \Cap(x_n, p_{K})
-= \Supp(p_K, \x \given \Prefix) \le \Reg.
+= \Supp(p_K, \x \given \Prefix) < \Reg.
 \label{ineq:supp}
 \end{align}
 The first inequality reflects the condition that
@@ -970,7 +970,7 @@ the last antecedent~$p_{K}$ has insufficient accurate support,
 \ie the opposite of the bound in~\eqref{eq:min-capture-correct}:
 \begin{align}
 \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_K \given \Prefix) \wedge \one [ q_K = y_n ]
-\le \Reg.
+< \Reg.
 \end{align}
 %
 Let ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$
@@ -998,7 +998,7 @@ The accurate support of~$P_{K'}$ in~$\PrefixB$ is insufficient:
    \wedge \Cap(x_n, p_K) \wedge \one [ Q_{K'} = y_n ] \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_K \given \Prefix) \wedge \one [ Q_{K'} = y_n ] \nn \\
 &\le \frac{1}{N} \sum_{n=1}^N \Cap(x_n, p_K \given \Prefix) \wedge \one [ q_{K} = y_n ]
-\le \Reg.
+< \Reg.
 \end{align}
 The first inequality reflects the condition that
 ${\PrefixB^{K'-1} \in \StartContains(\Prefix^{K-1})}$,
@@ -1021,7 +1021,7 @@ and let ${\Prefix = (p_1, \dots, p_{K})}$ be a prefix,
 such that its last antecedent~$p_{K}$ has excessive support,
 \ie the opposite of the bound in~\eqref{eq:ub-support-last}:
 \begin{align}
-\Supp(p_K, \x \given \Prefix) \ge 1 - \Supp(\Prefix^{K-1}, \x) - \Reg,
+\Supp(p_K, \x \given \Prefix) > 1 - \Supp(\Prefix^{K-1}, \x) - \Reg,
 \end{align}
 where ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$.
 %
@@ -1048,12 +1048,12 @@ Expanding these two terms gives
 &= \Supp(\PrefixB^{K'-1}, \x) + \Supp(P_{K'}, \x \given \PrefixB) \nn \\
 &\ge \Supp(\Prefix, \x)
 = \Supp(\Prefix^{K-1}, \x) + \Supp(p_K, \x \given \Prefix)
-\ge 1 - \Reg.
+> 1 - \Reg.
 \end{align}
 Rearranging gives
 \begin{align}
 \Supp(P_{K'}, \x \given \PrefixB)
-\ge 1 - \Supp(\PrefixB^{K'-1}, \x) - \Reg,
+> 1 - \Supp(\PrefixB^{K'-1}, \x) - \Reg,
 \end{align}
 thus~$P_{K'}$ has excessive support in~$\PrefixB$.
 %
