@@ -40,19 +40,19 @@ starts with~$\Prefix$ and ends with a new antecedent~$p_{K+1}$.
 Suppose~$p_{K+1}$ in the context of~$\Prefix'$ captures nearly all
 data not captured by~$\Prefix$, except for a fraction~$\epsilon$
 upper bounded by the regularization parameter~$\Reg$:
-\begin{align}
+\begin{align*}
 1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x \given \Prefix') \equiv \epsilon \le \Reg.
-\end{align}
+\end{align*}
 %
 Since~$\Prefix'$ starts with~$\Prefix$,
 its prefix misclassification error is at least as great;
 the only discrepancy between the misclassification errors
 of~$\RL$ and~$\RL'$ can come from the difference between the support of
 the set of data not captured by~$\Prefix$ and the support of~$p_{K+1}$:
-\begin{align}
+\begin{align*}
 | \Loss(\RL', \x, \y) - \Loss(\RL, \x, \y) | \le
 1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x \given \Prefix') = \epsilon.
-\end{align}
+\end{align*}
 The best outcome for~$\RL'$ would occur if its misclassification
 error were smaller than that of~$\RL$ by~$\epsilon$,
 %\eg this could happen if all data not captured by~$\Prefix'$
@@ -61,21 +61,21 @@ error were smaller than that of~$\RL$ by~$\epsilon$,
 % --> it's more complicated, would need to discuss minority class label, etc.
 %
 therefore
-\begin{align}
-\Obj(\RL', \x, \y) &= \Loss(\RL', \x, \y) + \Reg (K+1) \nn \\
+\begin{align*}
+\Obj(\RL', \x, \y) &= \Loss(\RL', \x, \y) + \Reg (K+1) \\
 &\ge \Loss(\RL, \x, \y) - \epsilon + \Reg(K+1)
 = \Obj(\RL, \x, \y) - \epsilon + \Reg \ge \Obj(\RL, \x, \y) \ge \OptimalObj.
-\end{align}
+\end{align*}
 $\RL'$ is an optimal rule list,
 \ie ${\RL' \in \argmin_{\RLB} \Obj(\RLB, \x, y)}$,
 if and only if ${\Obj(\RL', \x, \y) = \Obj(\RL, \x, \y) =}$ ${\OptimalObj}$,
 which requires ${\epsilon = \Reg}$.
 %
 Otherwise, ${\epsilon < \Reg}$, in which case
-\begin{align}
+\begin{align*}
 \Obj(\RL', \x, \y) \ge \Obj(\RL, \x, \y) - \epsilon + \Reg
 > \Obj(\RL, \x, \y) \ge \OptimalObj,
-\end{align}
+\end{align*}
 therefore $\RL'$ is not optimal, \ie  ${\RL' \notin \argmin_{\RLB} \Obj(\RLB, \x, \y)}$.
 %
 This demonstrates the desired result for ${k = K}$.
@@ -86,9 +86,9 @@ in the context of a rule list~$\RL''$.
 Let~$\RL$ and~$\RL'$ retain their definitions from above,
 thus as before, that the data not captured by~$\Prefix'$
 has normalized support~${\epsilon \le \Reg}$, \ie
-\begin{align}
+\begin{align*}
 1 - \Supp(\Prefix', \x) = 1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x \given \Prefix') = \epsilon \le \Reg.
-\end{align}
+\end{align*}
 Thus for any rule list~$\RL''$ whose prefix
 $\Prefix'' = (p_1, \dots, p_{K+1}, \dots, p_{K'})$ starts
 with~$\Prefix'$ and ends with one or more additional rules,
@@ -131,9 +131,9 @@ Define~$\StartContains(\Prefix)$ as in~\eqref{eq:start-contains},
 and let ${\Prefix = (p_1, \dots, p_{K})}$ be a prefix,
 such that its last antecedent~$p_{K}$ has excessive support,
 \ie the opposite of the bound in~\eqref{eq:ub-support}:
-\begin{align}
+\begin{align*}
 \Supp(p_K, \x \given \Prefix) > 1 - \Supp(\Prefix^{K-1}, \x) - \Reg,
-\end{align}
+\end{align*}
 where ${\Prefix^{K-1} = (p_1, \dots, p_{K-1})}$.
 %
 Let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
@@ -150,22 +150,22 @@ and furthermore, ${\RLB \notin \argmin_{\RL} \Obj(\RL, \x, \y)}$.
 \begin{proof}
 Since ${\PrefixB^{K'} = (P_1, \dots, P_{K'})}$
 contains all the antecedents in~$\Prefix$, we have that
-\begin{align}
+\begin{align*}
 \Supp(\PrefixB^{K'}, \x) \ge \Supp(\Prefix, \x).
-\end{align}
+\end{align*}
 Expanding these two terms gives
-\begin{align}
+\begin{align*}
 \Supp(\PrefixB^{K'}, \x)
-&= \Supp(\PrefixB^{K'-1}, \x) + \Supp(P_{K'}, \x \given \PrefixB) \nn \\
+&= \Supp(\PrefixB^{K'-1}, \x) + \Supp(P_{K'}, \x \given \PrefixB) \\
 &\ge \Supp(\Prefix, \x)
 = \Supp(\Prefix^{K-1}, \x) + \Supp(p_K, \x \given \Prefix)
 > 1 - \Reg.
-\end{align}
+\end{align*}
 Rearranging gives
-\begin{align}
+\begin{align*}
 \Supp(P_{K'}, \x \given \PrefixB)
 > 1 - \Supp(\PrefixB^{K'-1}, \x) - \Reg,
-\end{align}
+\end{align*}
 thus~$P_{K'}$ has excessive support in~$\PrefixB$.
 %
 By Theorem~\ref{thm:ub-support},
@@ -226,12 +226,11 @@ correctly classified this same data, thus
 \label{eq:similar-analogous}
 \end{align}
 %
-
 Now let~$\RLB^*$ be an optimal rule list with prefix
 constrained to start with~$\PrefixB$,
-\begin{align}
+\begin{align*}
 \RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y),
-\end{align}
+\end{align*}
 and let~$\kappa^*$ be the length of~$\RLB^*$.
 %
 Also let~$\RL^*$ be the analogous $K^*$-rule list whose prefix
@@ -239,11 +238,11 @@ starts with~$\Prefix$ and ends with the same~${\kappa^* - \kappa}$
 antecedents as~$\RLB^*$, where~${K^* = K + \kappa^* - \kappa}$.
 %
 By~\eqref{eq:similar-analogous},
-\begin{align}
+\begin{align*}
 \min_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)
-&= \Obj(\RLB^*, \x, \y) \nn \\
+&= \Obj(\RLB^*, \x, \y) \\
 &\ge \Obj(\RL^*, \x, \y)
-  + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \omega - \Omega \nn \\
+  + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \omega - \Omega \\
 &\ge \min_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)
   + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \omega - \Omega.
-\end{align}
+\end{align*}
