@@ -157,8 +157,6 @@ for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning alg
 %
 For both problems, CORELS can learn short rule lists without sacrificing accuracy.
 
-\clearpage
-
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
@@ -214,9 +212,6 @@ CORELS implementation and five variants that each remove a specific optimization
 %
 Figure~\ref{fig:queue} presents a view of the same experiments.
 %
-These plots depict the number of prefixes of a given length in the queue
-during the algorithm's execution.
-
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
 \begin{table}[t!]
 \centering
@@ -257,7 +252,7 @@ in the final row, we report the minimum values across folds. \\
 \vspace{4mm}
 \label{tab:ablation}
 \end{table}
-
+%
 \begin{figure}[b!]
 \begin{center}
 % left lower right upper
@@ -285,3 +280,6 @@ and relative to the full CORELS implementation (T = 149 s).
 }
 \label{fig:queue}
 \end{figure}
+%
+These plots depict the number of prefixes of a given length in the queue
+during the algorithm's execution.
