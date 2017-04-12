@@ -207,12 +207,12 @@ First, note that~${K' \ge K}$, since~$\Prefix'$ starts with~$\Prefix$.
 Now recall from~\eqref{eq:prefix-lb} that
 %
 \begin{align}
-b(\Prefix, \x, \y) = \Loss(\RL, \Labels, \x, \y) + \Reg K
-\le \Loss(\RL', \Labels', \x, \y) + \Reg K' = b(\Prefix', \x, \y),
+b(\Prefix, \x, \y) = \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K
+\le \Loss_p(\Prefix', \Labels', \x, \y) + \Reg K' = b(\Prefix', \x, \y),
 \end{align}
 %
 and from~\eqref{eq:prefix-loss} that
-${\Loss(\RL, \Labels, \x, \y) \le \Loss(\RL', \Labels', \x, \y)}$.
+${\Loss_p(\Prefix, \Labels, \x, \y) \le \Loss_p(\Prefix', \Labels', \x, \y)}$.
 %
 Combining these bounds and rearranging gives
 \begin{align}
