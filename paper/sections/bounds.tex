@@ -715,11 +715,9 @@ Define~$p_k$ to have insufficient accurate support in~$\Prefix$
 if it does not obey the bound in~\eqref{eq:min-capture-correct}
 of Theorem~\ref{thm:min-capture-correct}.
 %
-Define~$p_k$ to have excessive support in~$\Prefix$ if it
-does not obey the appropriate bound in Theorem~\ref{thm:ub-support}
-(Appendix~A),
-\ie either it's the last antecedent and doesn't obey~\eqref{eq:ub-support},
-or it's any other antecedent and doesn't obey~\eqref{eq:ub-support-last}.
+Define~$p_k$ to have excessive support in~$\Prefix$
+if it does not obey the bound in~\eqref{eq:ub-support}
+of Theorem~\ref{thm:ub-support} (Appendix~A).
 %
 If~$p_k$ in the context of~$\Prefix$ has insufficient support,
 insufficient accurate support, or excessive support,
@@ -895,14 +893,26 @@ ${\RLB \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
 Theorem~\ref{thm:reject} implies potentially significant
 computational savings.
 %
-During branch-and-bound execution, if we ever encounter a
+We know from Theorems~\ref{thm:min-capture},
+\ref{thm:min-capture-correct}, and~\ref{thm:ub-support}
+that during branch-and-bound execution, if we ever encounter a
 prefix ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ that rejects its
 last antecedent~$p_K$, then we can prune~$\Prefix$.
 %
-Furthermore, we can also prune \emph{any} prefix~$\Prefix'$
+By Theorem~\ref{thm:reject}, we can also prune \emph{any} prefix~$\Prefix'$
 whose antecedents contains the set of antecedents in~$\Prefix$,
-in almost any order, with the constraint that all antecedent
+in almost any order, with the constraint that all antecedents
 in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
+%
+Notice that these latter antecedents are also rejected
+directly by the bounds in Theorems~\ref{thm:min-capture},
+\ref{thm:min-capture-correct}, and~\ref{thm:ub-support};
+this is how our implementation works in practice.
+%
+In a preliminary implementation (not shown), we maintained additional
+data structures to support the direct use of Theorem~\ref{thm:reject}.
+%
+We leave the design of efficient data structures for this task as future work.
 
 \end{arxiv}
 
