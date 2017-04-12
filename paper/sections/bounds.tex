@@ -216,7 +216,9 @@ ${\Loss_p(\Prefix, \Labels, \x, \y) \le \Loss_p(\Prefix', \Labels', \x, \y)}$.
 %
 Combining these bounds and rearranging gives
 \begin{align}
-b(\Prefix, \x, \y) + \Reg (K' - K) \le b(\Prefix', \x, \y).
+b(\Prefix', \x, \y) &= \Loss_p(\Prefix', \Labels', \x, \y) + \Reg K + \Reg(K' - K) \nn \\
+&\ge \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K + \Reg(K' - K)
+= b(\Prefix, \x, \y) + \Reg (K' - K).
 \label{eq:length-diff}
 \end{align}
 Combining~\eqref{eq:length-diff} with~${b(\Prefix', \x, \y) < \CurrentObj}$
