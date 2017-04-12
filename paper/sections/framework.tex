@@ -408,10 +408,12 @@ and possibly additional mistakes:
 = \frac{1}{N} \sum_{n=1}^N  \sum_{k=1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [ q_k \neq y_n ]
 + \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] \right) \nn \\
-&\ge \Loss_p(\Prefix, \Labels, \x, \y),
+&=\Loss_p(\Prefix, \Labels, \x, \y)
++ \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ]
+\ge \Loss_p(\Prefix, \Labels, \x, \y),
 \label{eq:prefix-loss}
 \end{align}
-where we have used the fact that
+where in the second equality we have used the fact that
 ${\Cap(x_n, p_k \given \Prefix') = \Cap(x_n, p_k \given \Prefix)}$
 for~${1 \le k \le K}$.
 %

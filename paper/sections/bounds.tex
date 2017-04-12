@@ -16,8 +16,8 @@ it follows that ${\Obj(\RL', \x, \y) \ge \CurrentObj}$.
 By the definition of the lower bound~\eqref{eq:lower-bound},
 which includes the penalty for longer prefixes,
 \begin{align}
-\Obj(\Prefix', \x, y) \ge b(\Prefix', \x, \y) &= \Loss_p(\Prefix', \x, \y) + \Reg K' \nn \\
-&= \Loss_p(\Prefix', \x, \y) + \Reg K + \Reg (K' - K) \nn \\
+\Obj(\Prefix', \x, y) \ge b(\Prefix', \x, \y) &= \Loss_p(\Prefix', \Labels', \x, \y) + \Reg K' \nn \\
+&= \Loss_p(\Prefix', \Labels', \x, \y) + \Reg K + \Reg (K' - K) \nn \\
 &= b(\Prefix, \x, \y) + \Reg (K' - K)
 \ge b(\Prefix, \x, \y) + \Reg \ge \CurrentObj.
 \label{eq:lookahead}
