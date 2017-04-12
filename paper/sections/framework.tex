@@ -173,10 +173,10 @@ captures datum~$x_n$, and~0 otherwise.
 For example, let~$\Prefix$ and~$\Prefix'$ be prefixes such that~$\Prefix'$ starts
 with~$\Prefix$, then~$\Prefix'$ captures all the data that~$\Prefix$ captures:
 \begin{arxiv}
-\begin{align}
+\begin{align*}
 \{x_n: \Cap(x_n, \Prefix)\} \subseteq \{x_n: \Cap(x_n, \Prefix')\}.
-\label{eq:cap-subset}
-\end{align}
+%\label{eq:cap-subset}
+\end{align*}
 \end{arxiv}
 \begin{kdd}
 ${\{x_n: \Cap(x_n, \Prefix)\} \subseteq \{x_n: \Cap(x_n, \Prefix')\}}$.
@@ -198,18 +198,18 @@ or if ${\Cap(x_n, \beta) = 1}$ but there is an antecedent~$\alpha$ in~$\Prefix$,
 preceding all antecedents in~$\beta$, such that ${\Cap(x_n, \alpha) = 1}$.
 %
 For example, if ${\Prefix = (p_1, \dots, p_k, \dots, p_K)}$ is a prefix, then
-\begin{align}
+\begin{align*}
 \Cap(x_n, p_k \given \Prefix) =
   \left(\bigwedge_{k'=1}^{k - 1} \neg\, \Cap(x_n, p_{k'}) \right)
   \wedge \Cap(x_n, p_k)
-\end{align}
+\end{align*}
 indicates whether antecedent~$p_k$ captures datum~$x_n$ in the context of~$\Prefix$.
 %
 Now, define ${\Supp(\beta, \x)}$ to be the normalized support of~$\beta$,
-\begin{align}
+\begin{align*}
 \Supp(\beta, \x) = \frac{1}{N} \sum_{n=1}^N \Cap(x_n, \beta),
-\label{eq:support}
-\end{align}
+%\label{eq:support}
+\end{align*}
 and similarly define~${\Supp(\beta, \x \given \Prefix)}$
 to be the normalized support of~$\beta$ in the context of~$\Prefix$,
 \begin{align}
@@ -343,21 +343,21 @@ in a long version of this report (in preparation).}
 
 We can decompose the misclassification error into two contributions
 corresponding to the prefix and the default rule:
-\begin{align}
+\begin{align*}
 \Loss(\RL, \x, \y) %= \Loss(\Prefix, r_q, \Default, \x, \y)
 \equiv \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y),
-\end{align}
+\end{align*}
 where ${\Prefix = (p_1, \dots, p_K)}$ and ${\Labels = (q_1, \dots, q_K)}$;
-\begin{align}
+\begin{align*}
 \Loss_p(\Prefix, \Labels, \x, \y) =
 \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [ q_k \neq y_n ]
-\label{eq:loss}
-\end{align}
+%\label{eq:loss}
+\end{align*}
 is the fraction of data captured and misclassified by the prefix, and
-\begin{align}
+\begin{align*}
 \Loss_0(\Prefix, \Default, \x, \y) =
 \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [ \Default \neq y_n ]
-\end{align}
+\end{align*}
 is the fraction of data not captured by the prefix and misclassified by the default rule.
 %
 Eliminating the latter error term gives a lower bound~$b(\Prefix, \x, \y)$ on the objective,
