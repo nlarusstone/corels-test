@@ -182,6 +182,10 @@ the one that captures more data.
 %
 This is a well-motivated scheduling strategy if we model prefixes that extend
 the prefix with smaller support as having more `potential' to make mistakes.
+%
+We note that using curiosity in practice does not introduce new bit vector
+or other expensive computations; during execution, we can calculate curiosity
+as a simple function of already derived quantities.
 
 In preliminary experiments, we observe that using a priority queue ordered by
 curiosity sometimes yields a dramatic reduction in execution time,
