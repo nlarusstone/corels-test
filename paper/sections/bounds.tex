@@ -1504,8 +1504,9 @@ then we can prune all prefixes that start with any
 prefix~$\PrefixB'$ in the following set:
 \begin{align}
 \left\{ \PrefixB' : b(\PrefixB', \x, \y) + \Reg - b(\Prefix, \x, \y) \ge
-\frac{1}{N} \sum_{n=1}^N \Cap(x_n, \Prefix) \oplus \Cap(x_n, \PrefixB') \right\}.
+\frac{1}{N} \sum_{n=1}^N \Cap(x_n, \Prefix) \oplus \Cap(x_n, \PrefixB') \right\},
 \end{align}
+where the symbol~$\oplus$ denotes the logical operation, exclusive or (XOR).
 
 \begin{comment}
 \begin{theorem}[Very similar support bound]
