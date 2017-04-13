@@ -26,14 +26,13 @@ whether a weapon will be found on a stopped individual who is frisked or searche
 %
 From the original dataset of 45,787 records, each describing an incident involving
 a stopped person, we identify a subset of 29,595 records for which the individual
-was frisked and/or searched (Appendix~C).
+was frisked and/or searched.
 %
-Of these, criminal possession of a weapon was identified in about only 5\% of instances.
+Of these, criminal possession of a weapon was identified in only about 5\% of instances.
 %
-To address the class imbalance for this problem,  we sample records from the
-smaller class with replacement; in our 10-fold cross-validation experiments,
-each fold contains 50,743 datapoints.~\footnote{We generate cross-validation folds fist,
-and then resample within each fold.}
+Resampling due to class imbalance, for 10-fold cross-validation, yields folds
+that each contain 50,743 datapoints.~\footnote{For further details about these
+preprocessing steps, see Appendix~C.}
 \end{itemize}
 %
 Our choice of and approach to the second problem is inspired by the work
