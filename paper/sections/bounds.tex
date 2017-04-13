@@ -1417,13 +1417,17 @@ we expect to obtain via rule mining~(\S\ref{sec:setup}).
 \subsection{Similar support bound}
 \label{sec:similar}
 
-We now present a relaxation of our equivalent support bound
-from Theorem~\ref{thm:equivalent}.
+We now present a relaxation of Theorem~\ref{thm:equivalent},
+our equivalent support bound.
+%
+Theorem~\ref{thm:similar} implies that if we know that no extensions of
+a prefix~$\Prefix$ are better than the current best objective,
+then we can prune all prefixes with support similar to~$\Prefix$'s support.
 %
 Understanding how to exploit this result in practice
 represents an exciting direction for future work;
 our implementation~(\S\ref{sec:implementation}) does not
-currently leverage the bound in Theorem~\ref{thm:similar}
+currently leverage the bound in Theorem~\ref{thm:similar}.
 
 \begin{theorem}[Similar support bound]
 \label{thm:similar}
