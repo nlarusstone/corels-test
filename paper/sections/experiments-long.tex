@@ -47,6 +47,47 @@ By default, CART uses complexity parameter ${cp = 0.01}$,
 and C4.5 uses complexity parameter ${C = 0.25}$.
 }
 
+\begin{figure}[t]
+\begin{algorithmic}
+\State \bif $(age = 23-25) \band (priors = 2-3)$ \bthen $yes$
+\State \belif $(age = 18-20)$ \bthen $yes$
+\State \belif $(sex = male) \band (age = 21-22)$ \bthen $yes$
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(age = 23-25) \band (priors = 2-3)$ \bthen $yes$
+\State \belif $(age = 18-20)$ \bthen $yes$
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belif $(sex = male) \band (age = 21-22)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(age = 23-25) \band (priors = 2-3)$ \bthen $yes$
+\State \belif $(sex = male) \band (age = 21-22)$ \bthen $yes$
+\State \belif $(age = 18-20)$ \bthen $yes$
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\caption{Example optimal rule lists that predict two-year recidivism for the
+ProPublica dataset, found by CORELS, across 10 cross-validation folds.
+%
+The most common rule list was found by 6 folds (top),
+the next was found by 2 folds (middle), and the last by 1 fold (bottom).
+%
+We observe that all of these rule lists start with the same rule,
+end with the same default rule, and contain the same prefix rules, up to a permutation;
+the prefix rules always predict the positive class label,
+and the default rule always predicts the negative class label.
+%
+Note that our objective does is not designed to enforce any of these properties,
+though some may be seen as desirable.
+}
+\label{fig:recidivism-all-folds}
+\end{figure}
+
 \begin{figure}[t!]
 \begin{algorithmic}
 \State \bif $(location = transit~authority)$ \bthen $yes$
@@ -93,7 +134,7 @@ Note that we were unable to execute RIPPER for the NYCLU problem.
 \label{fig:comparison}
 \end{figure}
 
-Figures~\ref{fig:rule-list} and~\ref{fig:weapon-rule-list}
+Figures~\ref{fig:recidivism-all-folds} and~\ref{fig:weapon-rule-list}
 show example optimal rule lists that CORELS learns
 for the ProPublica and NYCLU datasets, respectively.
 %
