@@ -125,10 +125,12 @@ one in~\eqref{eq:non-inc-obj}, and is a function of
 $b(\Prefix', \x, \y)$, which we computed in~\eqref{eq:inc-lb}.
 %as well as ${\neg\, \Cap(\x, \Prefix)}$,
 %and the last antecedent~$p_{K+1}$ and default rule~$\Default'$ of~$\RL'$.
-Though we could compute the objective of~$\RL'$ incrementally
-with respect to that of~$\RL$, doing so would in practice require
-that we also store~$\Obj(\RL, \x, \y)$; we prefer the approach suggested
-by~\eqref{eq:inc-obj} since it avoids this additional storage overhead.
+Note that instead of computing~$\Obj(\RL', \x, \y)$ incrementally from~$b(\Prefix', \x, \y)$
+as in~\eqref{eq:inc-obj}, we could have computed it incrementally from~$\Obj(\RL, \x, \y)$.
+However, doing so would in practice require that we store~$\Obj(\RL, \x, \y)$
+in addition to~$b(\Prefix, \x, \y)$, which we already store to support~\eqref{eq:inc-lb}.
+We prefer the incremental approach suggested by~\eqref{eq:inc-obj}
+since it avoids this additional storage overhead.
 
 \begin{algorithm}[t!]
   \caption{Incremental branch-and-bound for learning rule lists, for simplicity, from a cold start.
