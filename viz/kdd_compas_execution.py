@@ -25,7 +25,18 @@ log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=800000000-c=0.0050000-v=1-f=1000.txt']
 fold = 1
 
-ftag = 'compas_execution'
+large = True
+
+if large:
+    ftag = 'compas_execution_large'
+    fs_legend = fs
+    legend_xloc = 10**-1.2
+    wo = 'Without'
+else:
+    ftag = 'compas_execution'
+    fs_legend = fs - 2
+    legend_xloc = 10**-0.6
+    wo = 'w/o'
 
 ntot = len(log_root_list)
 
@@ -52,10 +63,16 @@ opt = x['tree_min_objective'][-1]
 imin = np.nonzero(x['tree_min_objective'] == opt)[0][0]
 tmin = x['total_time'][imin]
 
-pylab.figure(1, figsize=(9, 6))
+if large:
+    pylab.figure(1, figsize=(9, 9))
+else:
+    pylab.figure(1, figsize=(9, 6))
 
 pylab.clf()
-ax1 = pylab.subplot2grid((24, 20), (0, 1), colspan=19, rowspan=10)
+if large:
+    ax1 = pylab.subplot2grid((30, 20), (0, 1), colspan=19, rowspan=12)
+else:
+    ax1 = pylab.subplot2grid((24, 20), (0, 1), colspan=19, rowspan=10)
 
 ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
 
@@ -79,9 +96,12 @@ pylab.title('Execution progress', fontsize=fs)
 pylab.xticks(fontsize=fs)
 pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
 pylab.axis([x['total_time'][2], 10**4, 0, 0.52])
-pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (w/o  equivalent points bound)'], loc=(10**-0.6, 0.15), fontsize=fs-2, frameon=False)
+pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (%s equivalent points bound)' % wo], loc=(legend_xloc, 0.15), fontsize=fs_legend, frameon=False)
 
-ax2 = pylab.subplot2grid((24, 20), (13, 1), colspan=19, rowspan=8)
+if large:
+    ax2 = pylab.subplot2grid((30, 20), (15, 1), colspan=19, rowspan=12)
+else:
+    ax2 = pylab.subplot2grid((24, 20), (13, 1), colspan=19, rowspan=8)
 
 yremaining = y['log_remaining_space_size'].copy()
 yremaining[yremaining > yremaining[0]] = yremaining[0]
@@ -99,8 +119,12 @@ pylab.title('Size of remaining search space', fontsize=fs)
 pylab.xlabel('Time (s)', fontsize=fs)
 pylab.ylabel('log10(Size)', fontsize=fs)
 pylab.xticks(fontsize=fs)
-pylab.yticks(range(0, 160, 50), fontsize=fs)
-pylab.legend(['w/o equivalent points bound', 'CORELS'], loc='center right', fontsize=fs-2, frameon=False)
+if large:
+    pylab.yticks(range(0, 180, 25), fontsize=fs)
+else:
+    pylab.yticks(range(0, 160, 50), fontsize=fs)
+
+pylab.legend(['%s equivalent points bound' % wo, 'CORELS'], loc='center right', fontsize=fs_legend, frameon=False)
 pylab.axis([x['total_time'][2], 10**4, 0, 170])
 pylab.draw()
 pylab.savefig('../figs/%s-remaining-space.pdf' % ftag)
