@@ -68,11 +68,11 @@ whose antecedent~$p_0$ simply asserts true.
 
 \begin{arxiv}
 \begin{figure}[t!]
-\begin{subfigure}{0.63\textwidth}
+\begin{subfigure}{0.67\textwidth}
 \begin{algorithmic}
-\State \bif $(age=23-25) \wedge (priors=2-3)$ \bthen $yes$
+\State \bif $(age=23-25) \,\wedge\, (priors=2-3)$ \bthen $yes$
 \State \belif $(age=18-20)$ \bthen $yes$
-\State \belif $(sex=male) \wedge (age=21-22)$ \bthen $yes$
+\State \belif $(sex=male) \,\wedge\, (age=21-22)$ \bthen $yes$
 \State \belif $(priors>3)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
