@@ -120,15 +120,15 @@ with respect to its objective lower bound:
   (\neg\, \Cap(x_n, p_{K+1})) \wedge \one [q'_0 \neq y_n].
 \label{eq:inc-obj}
 \end{align}
-The expression in~\eqref{eq:inc-obj} is much simpler than the na\"ive
-one in~\eqref{eq:non-inc-obj}, and is a function of
-$b(\Prefix', \x, \y)$, which we computed in~\eqref{eq:inc-lb}.
+The expression in~\eqref{eq:inc-obj} is simpler to compute than that
+in~\eqref{eq:non-inc-obj}, because the former reuses $b(\Prefix', \x, \y)$,
+which we already computed in~\eqref{eq:inc-lb}.
 %as well as ${\neg\, \Cap(\x, \Prefix)}$,
 %and the last antecedent~$p_{K+1}$ and default rule~$\Default'$ of~$\RL'$.
-Note that instead of computing~$\Obj(\RL', \x, \y)$ incrementally from~$b(\Prefix', \x, \y)$
-as in~\eqref{eq:inc-obj}, we could have computed it incrementally from~$\Obj(\RL, \x, \y)$.
+Note that instead of computing~$\Obj(\RL', \x, \y)$ incrementally from $b(\Prefix', \x, \y)$
+as in~\eqref{eq:inc-obj}, we could have computed it incrementally from $\Obj(\RL, \x, \y)$.
 However, doing so would in practice require that we store~$\Obj(\RL, \x, \y)$
-in addition to~$b(\Prefix, \x, \y)$, which we already store to support~\eqref{eq:inc-lb}.
+in addition to~$b(\Prefix, \x, \y)$, which we already must store to support~\eqref{eq:inc-lb}.
 We prefer the incremental approach suggested by~\eqref{eq:inc-obj}
 since it avoids this additional storage overhead.
 
