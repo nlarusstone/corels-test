@@ -8,11 +8,15 @@ Our experimental analysis addresses five questions:
 (4) How rapidly does CORELS prune the search space?
 (5) How much does each of the implementation optimizations contribute to CORELS' performance?
 
+\subsection{Computational environment}
+
 All results that we present were executed on a server with two Intel Xeon E5-2699~v4
 (55~MB cache, 2.20~GHz) processors and 448~GB RAM.
 %
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
+
+\subsection{Datasets and prediction problems}
 
 Our evaluation focuses on two socially-important prediction problems associated
 with recent, publicly-available datasets:
@@ -43,6 +47,8 @@ In particular, the authors arrive at a simple and interpretable heuristic that
 could potentially help police officers more effectively decide when to
 frisk and/or search stopped individuals, \ie when such
 interventions are likely to discover criminal possession of a weapon.
+
+\subsection{Example rule lists}
 
 We first ran a 10-fold cross validation experiment using CORELS
 and eight other algorithms:
@@ -159,6 +165,8 @@ in Figure~\ref{fig:weapon-rule-list} has the spirit of the heuristic
 strategy presented by~\citet{Goel16} that combines three stop criteria
 and is based on a reduced version of their full regression model.
 
+\subsection{Comparison of accuracy and model size for CORELS and other algorithms}
+
 Figure~\ref{fig:comparison} shows that there were no statistically significant
 differences in algorithm accuracies.
 In fact, the difference between folds was far larger than the difference
@@ -241,6 +249,8 @@ is the upper bound on remaining search space size
 }
 \label{fig:objective}
 \end{figure}
+
+\subsection{CORELS execution traces and efficacy of algorithm optimizations}
 
 In the remainder, we show results using the ProPublica dataset.
 %
