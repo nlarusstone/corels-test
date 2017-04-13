@@ -14,7 +14,7 @@ We then derive a series of additional bounds that we incorporate into our
 algorithm because they enable aggressive pruning of our state space.
 \end{arxiv}
 
-\subsection{Rule lists for binary classification}
+\subsection{Notation}
 \label{sec:setup}
 
 \begin{arxiv}
@@ -477,7 +477,7 @@ objective~$\CurrentObj$, thus it is a dynamic, monotonically decreasing quantity
 %
 If we encounter a prefix~$\Prefix$ with lower bound
 ${b(\Prefix, \x, \y) \ge \CurrentObj}$,
-then by Theorem~\ref{thm:bound}, we needn't consider \emph{any}
+then by Theorem~\ref{thm:bound}, we do not need to consider \emph{any}
 rule list~${\RL' \in \StartsWith(\Prefix)}$ whose prefix~$\Prefix'$ starts with~$\Prefix$.
 %because ${b(\Prefix', \x, \y) \ge b(\Prefix, \x, \y)}$. \\
 %
