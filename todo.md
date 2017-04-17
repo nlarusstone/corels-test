@@ -17,6 +17,7 @@
 
 ## Long paper
 
+- [ ] Regenerate Figures 7 and 8 using a run with a more typical execution time
 - [ ] See http://www.jmlr.org/format/format.html (Everyone)
 - [x] Fill in acknowledgements (Everyone)
 - [x] Add paragraphs on Hongyu's and Ertekin's papers in related work (Cynthia)
