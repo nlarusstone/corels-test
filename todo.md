@@ -35,8 +35,8 @@
 - [ ] Emphasize the intuitive interpretation of our objective function, including the regularization parameter (Elaine)
 - [ ] Provide more examples of rule lists that we find (Elaine)
 - [ ] Ablation experiment for a dataset where the equivalent points bound doesn't help (e.g., tic-tac-toe)
-- [ ] Show improvements due to curiosity on tic-tac-toe, and ideally something else (Elaine)
-- [ ] Add section on curiosity -- this depends on showing results (Elaine)
+- [x] Add section on curiosity -- no experiments is ok (Elaine)
+- [ ] [Large census dataset](https://archive.ics.uci.edu/ml/datasets/US+Census+Data+(1990)) -- already processed by Hongyu
 
 -----
 
