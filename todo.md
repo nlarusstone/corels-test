@@ -17,6 +17,8 @@
 
 ## Long paper
 
+- [ ] Compare to COMPAS scores
+- [ ] Discussion about what CORELS doesn't do, but could be extended to do, as in Cynthia's slides (Cynthia?)
 - [ ] Regenerate Figures 7 and 8 using a run with a more typical execution time
 - [ ] See http://www.jmlr.org/format/format.html (Everyone)
 - [x] Fill in acknowledgements (Everyone)
