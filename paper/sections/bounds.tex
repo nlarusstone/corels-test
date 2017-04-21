@@ -709,7 +709,7 @@ Let ${\Prefix = (p_1, \dots, p_K)}$ be a prefix,
 and let~$p_k$ be an antecedent in~$\Prefix$.
 %
 Define~$p_k$ to have insufficient support in~$\Prefix$
-if does not obey the bound in~\eqref{eq:min-capture}
+if it does not obey the bound in~\eqref{eq:min-capture}
 of Theorem~\ref{thm:min-capture}.
 %
 Define~$p_k$ to have insufficient accurate support in~$\Prefix$
@@ -938,7 +938,7 @@ the minimum objective over all rule lists whose prefixes start with
 \begin{theorem}[Equivalent support bound]
 \label{thm:equivalent}
 Define $\StartsWith(\Prefix)$ to be the set of all rule lists
-whose prefixes starts with~$\Prefix$, as in~\eqref{eq:starts-with}.
+whose prefixes start with~$\Prefix$, as in~\eqref{eq:starts-with}.
 %
 Let ${\RL = (\Prefix, \Labels, \Default, K)}$
 be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$,
@@ -1433,7 +1433,7 @@ currently leverage the bound in Theorem~\ref{thm:similar}.
 \begin{theorem}[Similar support bound]
 \label{thm:similar}
 Define $\StartsWith(\Prefix)$ to be the set of all rule lists
-whose prefixes starts with~$\Prefix$, as in~\eqref{eq:starts-with}.
+whose prefixes start with~$\Prefix$, as in~\eqref{eq:starts-with}.
 %
 Let ${\Prefix = (p_1, \dots, p_K)}$ and
 ${\PrefixB = (P_1, \dots, P_{\kappa})}$ be prefixes
@@ -1627,11 +1627,11 @@ Now define~$\theta(e_u)$ to be the normalized support of the minority
 class label with respect to set~$e_u$, \eg let
 \begin{arxiv}
 \begin{align}
-{e_u = \{x_n : \forall m, \one [ \Cap(x_n, s_m) = \Cap(x_i, s_m) ] \}},
+{e_u = \{x_n : \forall m \in [M],\, \one [ \Cap(x_n, s_m) = \Cap(x_i, s_m) ] \}},
 \end{align}
 \end{arxiv}
 \begin{kdd}
-${e_u = \{x_n : \forall m, \one [ \Cap(x_n, s_m) = \Cap(x_i, s_m) ] \}}$,
+${e_u = \{x_n : \forall m \in [M],\, \one [ \Cap(x_n, s_m) = \Cap(x_i, s_m) ] \}}$,
 \end{kdd}
 and let~$q_u$ be the minority class label among points in~$e_u$, then
 \begin{align}
