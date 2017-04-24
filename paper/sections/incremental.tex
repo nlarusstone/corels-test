@@ -215,9 +215,9 @@ number of observations~$N$
     \State $\mathbf{g} \gets \mathbf{f} \wedge \y$ \Comment{Bit vector indicating data not captured by $\PrefixB$ with label $1$}
     \State $n_g = \Count(\mathbf{g})$ \Comment{Number of data not captued by $\PrefixB$ with label $1$}
     \If {$n_g / n_f > 0.5$}
-        \State \Return $(n_f - n_g) / N$ \Comment{Misclassification error of default label prediction $1$}
+        \State \Return $(n_f - n_g) / N$ \Comment{Misclassification error of the default label prediction $1$}
     \Else
-        \State \Return $n_g / N$ \Comment{Misclassification error of default label prediction $0$}
+        \State \Return $n_g / N$ \Comment{Misclassification error of the default label prediction $0$}
     \EndIf
 \EndFunction
 \end{algorithmic}
