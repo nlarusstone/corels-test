@@ -16,6 +16,29 @@ All results that we present were executed on a server with two Intel Xeon E5-269
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
 
+\subsection{Algorithmic Speedup}
+Inspired by work that described how much faster MIO techniques have become in the past 25 years~\citep{Bertsimas16}, 
+we calculate how much of an overall speed-up CORELS gives when compared to a naive implementation 25 years ago.
+%
+On the COMPAS dataset, where $nrules = 156$, naively evaluating all prefixes of up to length 5 would
+require examining $8.7 x 10^{10}$ different prefixes.
+%
+However, while CORELS only examines prefixes up to length 5 in order to certify optimality, a naive implementation 
+would have to look at even longer prefixes. 
+%
+Without our equivalent points bound, but with all of our other optimizations, we look at prefixes up to length 10.
+%
+Naively evaluating all prefixes up to length 10 would require looking at $6.4 x 10^{21}$ different prefixes.
+%
+However, CORELS examines only 83,357,673 prefixes in total---a reduction of $7.7 x 10^{13}$.
+%
+It takes us about 2$\mu$s to evaluate a single prefix.
+%
+A naive solution would take $1.54 x 10^8$ seconds---about 5 years---while CORELS takes only 2 minutes.
+%
+It is clear that brute force wouldn't scale to larger problems.
+%
+
 \subsection{Datasets and prediction problems}
 
 Our evaluation focuses on two socially-important prediction problems associated
@@ -23,7 +46,14 @@ with recent, publicly-available datasets:
 \begin{itemize}
 \item Predicting which individuals in the ProPublica COMPAS
 dataset~\citep{LarsonMaKiAn16} recidivate within two years.
-The dataset contains records for 7,215 individuals.
+This dataset contains records for all offenders in Broward County, Florida
+in 2013 and 2014 who were given a COMPAS score pre-trial.
+Recidivism is defined as committing a crime within 2 years of the COMPAS
+assessment.
+This dataset contains records for 7,215 individuals.
+%
+Our rule mining framework extracts 14 features and combines them into
+156 rules (on average across our cross validation folds).
 %
 \item Using the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
 whether a weapon will be found on a stopped individual who is frisked or searched.
