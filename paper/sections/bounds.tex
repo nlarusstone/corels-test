@@ -955,7 +955,17 @@ constitute the proof of Theorem~\ref{thm:reject}.
 \subsection{Equivalent support bound}
 \label{sec:equivalent}
 
-Let~$\PrefixB$ be a prefix, and let~$\xi(\PrefixB)$ be the set
+If two prefixes capture the same data, and one is more accurate than the other,
+then there is no benefit to considering prefixes that start with the less accurate one.
+%
+Consider a rule list starting with prefix~$\Prefix$,
+that is the best possible prefix starting with~$\Prefix$.
+%
+If we take that rule list, and replace its prefix~$\Prefix$ with another prefix
+whose support is the same as that of~$\Prefix$ (it could include different antecedents),
+then its objective can only become worse or remain the same.
+
+Formally, let~$\PrefixB$ be a prefix, and let~$\xi(\PrefixB)$ be the set
 of all prefixes that capture exactly the same data as~$\PrefixB$.
 %
 Now, let~$\RL$ be a rule list with prefix~$\Prefix$
