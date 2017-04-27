@@ -958,11 +958,11 @@ constitute the proof of Theorem~\ref{thm:reject}.
 If two prefixes capture the same data, and one is more accurate than the other,
 then there is no benefit to considering prefixes that start with the less accurate one.
 %
-Consider a rule list starting with prefix~$\Prefix$,
-that is the best possible prefix starting with~$\Prefix$.
+Let~$\Prefix$ be a prefix,
+and consider the best possible rule list whose prefix starts with~$\Prefix$.
 %
-If we take that rule list, and replace its prefix~$\Prefix$ with another prefix
-whose support is the same as that of~$\Prefix$ (it could include different antecedents),
+If we take its antecedents in~$\Prefix$ and replace them with another prefix
+with the same support (that could include different antecedents),
 then its objective can only become worse or remain the same.
 
 Formally, let~$\PrefixB$ be a prefix, and let~$\xi(\PrefixB)$ be the set
@@ -1274,15 +1274,27 @@ the same data because they contain the same antecedents.
 \subsection{Permutation bound}% for permutation-aware garbage collection}
 \label{sec:permutation}
 
-Let~${P = \{p_k\}_{k=1}^K}$ be a set of~$K$ antecedents,
+If two prefixes are composed of the same antecedents,
+\ie they contain the same antecedents up to a permutation,
+then they capture the same data, and thus Theorem~\ref{thm:equivalent} applies.
+%
+Therefore, if one is more accurate than the other, then there is no benefit to
+considering prefixes that start with the less accurate one.
+%
+Let~$\Prefix$ be a prefix,
+and consider the best possible rule list whose prefix starts with~$\Prefix$.
+%
+If we permute its antecedents in~$\Prefix$,
+then its objective can only become worse or remain the same.
+
+Formally, let~${P = \{p_k\}_{k=1}^K}$ be a set of~$K$ antecedents,
 and let~$\Pi$ be the set of all $K$-prefixes corresponding to
 permutations of antecedents in~$P$.
 %
-Now, let~$\RL$ be a rule list with prefix~$\Prefix$ in~$\Pi$,
-such that~$\RL$ has the minimum objective over all rule lists
-with prefixes in~$\Pi$.
+Let prefix~$\Prefix$ in~$\Pi$ have the minimum prefix misclassification
+error over all prefixes in~$\Pi$.
 %
-Finally, let~$\RL'$ be a rule list whose prefix~$\Prefix'$
+Also, let~$\RL'$ be a rule list whose prefix~$\Prefix'$
 starts with~$\Prefix$, such that~$\RL'$ has the minimum objective
 over all rule lists whose prefixes start with~$\Prefix$.
 %
