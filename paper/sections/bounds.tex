@@ -40,8 +40,23 @@ all prefixes~$\Prefix'$ that start with and are longer than~$\Prefix$.
 \label{sec:ub-prefix-length}
 
 \begin{arxiv}
-The simplest upper bound on prefix length is given by the total
-number of available antecedents.
+In this section, we derive several upper bounds on prefix length:
+\begin{itemize}
+\item The simplest upper bound on prefix length is given by the total
+number of available antecedents. (Proposition~\ref{prop:trivial-length})
+%
+\item The current best objective~$\CurrentObj$ implies an upper bound
+on prefix length. (Theorem~\ref{thm:ub-prefix-length})
+%
+\item For intuition, we state a version of the above bound that is valid
+at the start of execution. (Corollary~\ref{cor:ub-prefix-length})
+%
+\item By considering specific families of prefixes,
+we can obtain tighter bounds on prefix length. (Theorem~\ref{thm:ub-prefix-specific})
+\end{itemize}
+In the next section (\S\ref{sec:ub-size}), we use these results
+to derive corresponding upper bounds on the number of
+prefix evaluations made by Algorithm~\ref{alg:branch-and-bound}.
 
 \begin{proposition}[Trivial upper bound on prefix length]
 \label{prop:trivial-length}
@@ -135,7 +150,7 @@ in which case ${K^* < K}$, \ie ${K^* \leq K-1}$, since $K$ is an integer.
 The latter part of Theorem~\ref{thm:ub-prefix-length} tells us that
 if we only need to identify a single instance of an optimal rule list
 ${\OptimalRL \in \argmin_\RL \Obj(\RL, \x, \y)}$, and we encounter a perfect
-$K$-prefix with zero misclassification error, then we can prune all
+$K$-rule list with zero misclassification error, then we can prune all
 prefixes of length~$K$ or greater.
 
 \end{arxiv}
@@ -275,10 +290,23 @@ The relevant execution state depends on the current
 best objective~$\CurrentObj$ and information about
 prefixes we are planning to evaluate, \ie prefixes in the
 queue~$\Queue$ of Algorithm~\ref{alg:branch-and-bound}.
-%
+
 \begin{arxiv}
-After~Theorem~\ref{thm:remaining-eval-fine}, we present two
+We use Theorem~\ref{thm:remaining-eval-fine} in some of our empirical results
+(\S\ref{sec:experiments}, Figure~\ref{fig:objective}) to help illustrate
+the dramatic impact of certain algorithm optimizations.
+%
+The execution trace of this upper bound on remaining prefix evaluations
+complements the execution traces of other quantities,
+\eg that of the current best objective~$\CurrentObj$.
+%
+After presenting Theorem~\ref{thm:remaining-eval-fine}, we also give two
 weaker propositions that provide useful intuition.
+%
+In particular, Proposition~\ref{prop:remaining-eval-coarse} is a practical
+approximation to Theorem~\ref{thm:remaining-eval-fine} that is significantly
+easier to compute; we use it in our implementation as a metric of
+execution progress that we display to the user.
 \end{arxiv}
 
 \begin{arxiv}
