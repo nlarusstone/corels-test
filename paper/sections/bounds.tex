@@ -799,8 +799,34 @@ ${\RLB \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
 
 \begin{proof}
 Combine Proposition~\ref{prop:min-capture}, Proposition~\ref{prop:min-capture-correct},
-and Proposition~\ref{prop:ub-support} (Appendix~A).
+and Proposition~\ref{prop:ub-support}.
+%
+The first two are found below, and the last in Appendix~A.
 \end{proof}
+
+Theorem~\ref{thm:reject} implies potentially significant
+computational savings.
+%
+We know from Theorems~\ref{thm:min-capture},
+\ref{thm:min-capture-correct}, and~\ref{thm:ub-support}
+that during branch-and-bound execution, if we ever encounter a
+prefix ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ that rejects its
+last antecedent~$p_K$, then we can prune~$\Prefix$.
+%
+By Theorem~\ref{thm:reject}, we can also prune \emph{any} prefix~$\Prefix'$
+whose antecedents contains the set of antecedents in~$\Prefix$,
+in almost any order, with the constraint that all antecedents
+in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
+%
+Notice that these latter antecedents are also rejected
+directly by the bounds in Theorems~\ref{thm:min-capture},
+\ref{thm:min-capture-correct}, and~\ref{thm:ub-support};
+this is how our implementation works in practice.
+%
+In a preliminary implementation (not shown), we maintained additional
+data structures to support the direct use of Theorem~\ref{thm:reject}.
+%
+We leave the design of efficient data structures for this task as future work.
 
 \begin{proposition}[Insufficient antecedent support propagates]
 \label{prop:min-capture}
@@ -921,30 +947,9 @@ By Theorem~\ref{thm:min-capture-correct},
 ${\RLB \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
 \end{proof}
 
-Theorem~\ref{thm:reject} implies potentially significant
-computational savings.
-%
-We know from Theorems~\ref{thm:min-capture},
-\ref{thm:min-capture-correct}, and~\ref{thm:ub-support}
-that during branch-and-bound execution, if we ever encounter a
-prefix ${\Prefix = (p_1, \dots, p_{K-1}, p_K)}$ that rejects its
-last antecedent~$p_K$, then we can prune~$\Prefix$.
-%
-By Theorem~\ref{thm:reject}, we can also prune \emph{any} prefix~$\Prefix'$
-whose antecedents contains the set of antecedents in~$\Prefix$,
-in almost any order, with the constraint that all antecedents
-in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
-%
-Notice that these latter antecedents are also rejected
-directly by the bounds in Theorems~\ref{thm:min-capture},
-\ref{thm:min-capture-correct}, and~\ref{thm:ub-support};
-this is how our implementation works in practice.
-%
-In a preliminary implementation (not shown), we maintained additional
-data structures to support the direct use of Theorem~\ref{thm:reject}.
-%
-We leave the design of efficient data structures for this task as future work.
-
+Propositions~\ref{prop:min-capture} and~\ref{prop:min-capture-correct},
+combined with Proposition~\ref{prop:ub-support} (Appendix~A),
+constitute the proof of Theorem~\ref{thm:reject}.
 \end{arxiv}
 
 \subsection{Equivalent support bound}
