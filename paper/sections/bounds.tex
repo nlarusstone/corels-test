@@ -1727,13 +1727,13 @@ where the misclassification error~${\Loss(\RL, \x, \y)}$ is given by
 &= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[q_0 \neq y_n]
    + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [q_k \neq y_n] \right).
 \end{align}
-In the context of the rule list~$\RL$, each set of equivalent points is classified by
-either a specific antecedent~$p_k$ in~$\RL$, or the default rule~$p_0$.
+Any particular rule list uses a specific rule, and therefore a single class label,
+to classify all points within a set of equivalent points.
 %
-For a set of equivalent points~$u$, the rule list~$\RL$ correctly classifies either
+Thus, for a set of equivalent points~$u$, the rule list~$\RL$ correctly classifies either
 points that have the majority class label, or points that have the minority class label.
 %
-Thus, $\RL$ misclassifies a number of points in~$u$ at least as great as
+It follows that~$\RL$ misclassifies a number of points in~$u$ at least as great as
 the number of points with the minority class label.
 %
 To translate this into a lower bound on~$\Loss(\RL, \x, \y)$,
