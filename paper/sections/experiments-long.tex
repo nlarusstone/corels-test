@@ -354,12 +354,13 @@ in the final row, we report the minimum values across folds. \\
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={30mm 10mm 35mm 30mm},
+\includegraphics[trim={15mm 20mm 5mm 25mm},
 width=\textwidth]{figs/kdd_compas_ablation-queue.pdf}
 \end{center}
+\vspace{-5mm}
 \caption{Logical queue composition.
 %
-Numbers of prefixes in the queue (log scale), labeled and colored by length,
+Numbers of prefixes in the queue (log scale), colored by length (legend),
 as a function of wall clock time (log scale), for full CORELS (top left),
 and five variants that each remove a specific implementation optimization or bound.
 %EXPAND HERE
@@ -375,6 +376,8 @@ in the other three subfigures.
 %
 For each execution, we indicate the total time both in seconds,
 and relative to the full CORELS implementation (T = 149 s).
+%
+Note that the execution of the last variant is incomplete (bottom right).
 }
 \label{fig:queue}
 \end{figure}
