@@ -453,6 +453,9 @@ ${\InitialObj = \Obj(\InitialRL, \x, \y)}$
 \State $Q \gets $ queue$(\,[\,(\,)\,]\,)$ \Comment{Initialize queue with empty prefix}
 \While {$Q$ not empty} \Comment{Stop when queue is empty}
 	\State $\Prefix \gets Q$.pop(\,) \Comment{Remove prefix~$\Prefix$ from the queue}
+	\begin{arxiv}
+	\State $\RL \gets (\Prefix, \Labels, \Default, K)$ \Comment{Set label predictions~$\Labels$ and~$\Default$ to minimize training error}
+	\end{arxiv}
 	\If {$b(\Prefix, \x, \y) < \CurrentObj$} \Comment{\textbf{Bound}: Apply Theorem~\ref{thm:bound}}
         \State $\Obj \gets \Obj(\RL, \x, \y)$ \Comment{Compute objective of~$\Prefix$'s rule list~$\RL$}
         \If {$\Obj < \CurrentObj$} \Comment{Update best rule list and objective}

@@ -142,7 +142,7 @@ regularization parameter~$\Reg$
 \State $Q \gets $ queue$(\,[\,(\,)\,]\,)$ \Comment{Initialize queue with empty prefix}
 \State $C \gets $ cache$(\,[\,(\,(\,)\,, 0\,)\,]\,)$ \Comment{Initialize cache with empty prefix and its objective lower bound}
 \While {$Q$ not empty} \Comment{Optimization complete when the queue is empty}
-	\State $\Prefix \gets Q$.pop(\,) \Comment{Remove a prefix~$\Prefix$ from the queue}
+	\State $\Prefix \gets Q$.pop(\,) \Comment{Remove a length-$K$ prefix~$\Prefix$ from the queue}
         \State $b(\Prefix, \x, \y) \gets C$.find$(\Prefix)$ \Comment{Look up $\Prefix$'s lower bound in the cache}
         \State $\mathbf{u} \gets \neg\,\Cap(\x, \Prefix)$ \Comment{Bit vector indicating data not captured by $\Prefix$}
         \For {$s$ in $\RuleSet$} \Comment{Evaluate all of $\Prefix$'s children}
@@ -153,6 +153,7 @@ regularization parameter~$\Reg$
                 \If {$b(\PrefixB, \x, \y) < \CurrentObj$} \Comment{\textbf{Bound}: Apply bound from Theorem~\ref{thm:bound}}
                     \State $\Obj(\RLB, \x, \y) \gets b(\PrefixB, \x, \y)~ + $ \Call{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$} %\Comment{Eq.~\eqref{eq:inc-obj}}
                     \If {$\Obj(\RLB, \x, \y) < \CurrentObj$}
+                        \State $\RLB \gets (\PrefixB, \LabelsB, \DefaultB, K+1)$ \Comment{$\LabelsB, \DefaultB$ are set in the incremental functions}
                         \State $(\CurrentRL, \CurrentObj) \gets (\RLB, \Obj(\RLB, \x, \y))$ \Comment{Update current best rule list and objective}
                     \EndIf
                     \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
