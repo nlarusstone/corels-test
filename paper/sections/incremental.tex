@@ -152,8 +152,8 @@ regularization parameter~$\Reg$
                 \State $b(\PrefixB, \x, \y) \gets b(\Prefix, \x, \y) + \Reg~ + $ \Call{IncrementalLowerBound}{$\mathbf{v}, \y, N$} %\Comment{Eq.~\eqref{eq:inc-lb}}
                 \If {$b(\PrefixB, \x, \y) < \CurrentObj$} \Comment{\textbf{Bound}: Apply bound from Theorem~\ref{thm:bound}}
                     \State $\Obj(\RLB, \x, \y) \gets b(\PrefixB, \x, \y)~ + $ \Call{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$} %\Comment{Eq.~\eqref{eq:inc-obj}}
+                    \State $\RLB \gets (\PrefixB, \LabelsB, \DefaultB, K+1)$ \Comment{$\LabelsB, \DefaultB$ are set in the incremental functions}
                     \If {$\Obj(\RLB, \x, \y) < \CurrentObj$}
-                        \State $\RLB \gets (\PrefixB, \LabelsB, \DefaultB, K+1)$ \Comment{$\LabelsB, \DefaultB$ are set in the incremental functions}
                         \State $(\CurrentRL, \CurrentObj) \gets (\RLB, \Obj(\RLB, \x, \y))$ \Comment{Update current best rule list and objective}
                     \EndIf
                     \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
