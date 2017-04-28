@@ -283,13 +283,13 @@ to calculate, for any given execution state,
 upper bounds on the number of additional prefix evaluations that might
 be required for the execution to complete.
 %
-This number of remaining evaluations is equal to the number of
-prefixes that are currently in or will be inserted into the queue.
-%
 The relevant execution state depends on the current
 best objective~$\CurrentObj$ and information about
 prefixes we are planning to evaluate, \ie prefixes in the
 queue~$\Queue$ of Algorithm~\ref{alg:branch-and-bound}.
+%
+We define the number of \emph{remaining prefix evaluations} as the number of
+prefixes that are currently in or will be inserted into the queue.
 
 \begin{arxiv}
 We use Theorem~\ref{thm:remaining-eval-fine} in some of our empirical results
