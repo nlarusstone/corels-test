@@ -17,6 +17,7 @@ Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
 
 \subsection{Algorithmic Speedup}
+%TODO Remove calculation
 Inspired by work that described how much faster MIO techniques have become in the past 25 years~\citep{Bertsimas16}, 
 we calculate how much of an overall speed-up CORELS gives when compared to a naive implementation 25 years ago.
 %
@@ -38,6 +39,16 @@ A naive solution would take $1.54 x 10^8$ seconds---about 5 years---while CORELS
 %
 It is clear that brute force wouldn't scale to larger problems.
 %
+
+However, if we look at how processor speeds have changed over the last 25 years, we can see that the fastest supercomputer in the world
+in 1993 ran at 131.0 GFlops/s~\citep{Supercomputer}.
+
+computers are about 1,000,000 faster now than they were in 1993
+Even with our algorithmic and data structural improvements, CORELS would have run in over 120,000,000s in 1993---an unreasonable amount of time.
+Thus, our advances are only meaningful because we can run them on a modern system.
+Combining our algorithmic improvements with the increase in modern processor speeds, our algorithm runs more than 1 billion times faster than a naive implementation would have in 1993.
+%Nov 2016 125,435.9 TFlops/s
+%June 1993 131.0 GFlops/s
 
 \subsection{Datasets and prediction problems}
 
