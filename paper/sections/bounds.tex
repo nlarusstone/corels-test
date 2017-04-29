@@ -283,13 +283,13 @@ to calculate, for any given execution state,
 upper bounds on the number of additional prefix evaluations that might
 be required for the execution to complete.
 %
-This number of remaining evaluations is equal to the number of
-prefixes that are currently in or will be inserted into the queue.
-%
 The relevant execution state depends on the current
 best objective~$\CurrentObj$ and information about
 prefixes we are planning to evaluate, \ie prefixes in the
 queue~$\Queue$ of Algorithm~\ref{alg:branch-and-bound}.
+%
+We define the number of \emph{remaining prefix evaluations} as the number of
+prefixes that are currently in or will be inserted into the queue.
 
 \begin{arxiv}
 We use Theorem~\ref{thm:remaining-eval-fine} in some of our empirical results
@@ -310,7 +310,7 @@ execution progress that we display to the user.
 \end{arxiv}
 
 \begin{arxiv}
-\begin{theorem}[Fine-grain upper bound on remaining prefix evaluations]%~~~
+\begin{theorem}[Fine-grained upper bound on remaining prefix evaluations]%~~~
 \end{arxiv}
 \begin{kdd}
 \begin{theorem}[Upper bound on the number of remaining prefix evaluations]
@@ -454,7 +454,7 @@ the lengths of prefixes in the remaining search space.
 %
 However, Proposition~\ref{prop:remaining-eval-coarse}
 is weaker than Theorem~\ref{thm:remaining-eval-fine} because
-it leverages only coarse-grain information from the queue.
+it leverages only coarse-grained information from the queue.
 %
 Specifically, Theorem~\ref{thm:remaining-eval-fine} is
 strictly tighter because it additionally incorporates
@@ -462,7 +462,7 @@ prefix-specific objective lower bound information from
 prefixes in the queue, which further constrains
 the lengths of prefixes in the remaining search space.
 
-\begin{proposition}[Coarse-grain upper bound on remaining prefix evaluations] \hfill
+\begin{proposition}[Coarse-grained upper bound on remaining prefix evaluations] \hfill
 \label{prop:remaining-eval-coarse}
 Consider a state space of all rule lists formed from a set of~$M$ antecedents,
 and consider Algorithm~\ref{alg:branch-and-bound} at a particular instant
@@ -955,7 +955,17 @@ constitute the proof of Theorem~\ref{thm:reject}.
 \subsection{Equivalent support bound}
 \label{sec:equivalent}
 
-Let~$\PrefixB$ be a prefix, and let~$\xi(\PrefixB)$ be the set
+If two prefixes capture the same data, and one is more accurate than the other,
+then there is no benefit to considering prefixes that start with the less accurate one.
+%
+Let~$\Prefix$ be a prefix,
+and consider the best possible rule list whose prefix starts with~$\Prefix$.
+%
+If we take its antecedents in~$\Prefix$ and replace them with another prefix
+with the same support (that could include different antecedents),
+then its objective can only become worse or remain the same.
+
+Formally, let~$\PrefixB$ be a prefix, and let~$\xi(\PrefixB)$ be the set
 of all prefixes that capture exactly the same data as~$\PrefixB$.
 %
 Now, let~$\RL$ be a rule list with prefix~$\Prefix$
@@ -1220,7 +1230,7 @@ for the second scenario, first define
     p_k \notin \Phi, \forall p_k \in \Prefix''\} \subset \StartsWith(\Prefix)
 \end{align}
 to be the set of all rule lists whose prefixes start with~$\Prefix$
-and don't contain any antecedents in~$\Phi$.
+and do not contain any antecedents in~$\Phi$.
 %
 Now, recognize that the optimal prefixes in~$\tau(\Prefix, \Phi)$
 and~$\StartsWith(\Prefix)$ are the same, \ie
@@ -1264,15 +1274,27 @@ the same data because they contain the same antecedents.
 \subsection{Permutation bound}% for permutation-aware garbage collection}
 \label{sec:permutation}
 
-Let~${P = \{p_k\}_{k=1}^K}$ be a set of~$K$ antecedents,
+If two prefixes are composed of the same antecedents,
+\ie they contain the same antecedents up to a permutation,
+then they capture the same data, and thus Theorem~\ref{thm:equivalent} applies.
+%
+Therefore, if one is more accurate than the other, then there is no benefit to
+considering prefixes that start with the less accurate one.
+%
+Let~$\Prefix$ be a prefix,
+and consider the best possible rule list whose prefix starts with~$\Prefix$.
+%
+If we permute its antecedents in~$\Prefix$,
+then its objective can only become worse or remain the same.
+
+Formally, let~${P = \{p_k\}_{k=1}^K}$ be a set of~$K$ antecedents,
 and let~$\Pi$ be the set of all $K$-prefixes corresponding to
 permutations of antecedents in~$P$.
 %
-Now, let~$\RL$ be a rule list with prefix~$\Prefix$ in~$\Pi$,
-such that~$\RL$ has the minimum objective over all rule lists
-with prefixes in~$\Pi$.
+Let prefix~$\Prefix$ in~$\Pi$ have the minimum prefix misclassification
+error over all prefixes in~$\Pi$.
 %
-Finally, let~$\RL'$ be a rule list whose prefix~$\Prefix'$
+Also, let~$\RL'$ be a rule list whose prefix~$\Prefix'$
 starts with~$\Prefix$, such that~$\RL'$ has the minimum objective
 over all rule lists whose prefixes start with~$\Prefix$.
 %
@@ -1705,13 +1727,13 @@ where the misclassification error~${\Loss(\RL, \x, \y)}$ is given by
 &= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[q_0 \neq y_n]
    + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [q_k \neq y_n] \right).
 \end{align}
-In the context of the rule list~$\RL$, each set of equivalent points is classified by
-either a specific antecedent~$p_k$ in~$\RL$, or the default rule~$p_0$.
+Any particular rule list uses a specific rule, and therefore a single class label,
+to classify all points within a set of equivalent points.
 %
-For a set of equivalent points~$u$, the rule list~$\RL$ correctly classifies either
+Thus, for a set of equivalent points~$u$, the rule list~$\RL$ correctly classifies either
 points that have the majority class label, or points that have the minority class label.
 %
-Thus, $\RL$ misclassifies a number of points in~$u$ at least as great as
+It follows that~$\RL$ misclassifies a number of points in~$u$ at least as great as
 the number of points with the minority class label.
 %
 To translate this into a lower bound on~$\Loss(\RL, \x, \y)$,

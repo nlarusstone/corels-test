@@ -86,13 +86,14 @@ if make_small:
     labels = labels[:1] + labels[-3:]
     ftag += '_small'
     if (make_figure):
+        pylab.ion()
         pylab.figure(5, figsize=(12, 8))
 else:
     if (make_figure):
-        pylab.figure(6, figsize=(16, 9))
+        pylab.ion()
+        pylab.figure(6, figsize=(11, 13))
 
 ntot = len(log_root_list)
-pylab.ion()
 
 num_rules = np.zeros(num_folds, int)
 
@@ -186,21 +187,9 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 pylab.clf()
 
             if (len(log_root_list) == 6):
-                pylab.subplot(2, 3, ncomp+1)
+                pylab.subplot(3, 2, ncomp+1)
             else:
                 pylab.subplot(2, 2, ncomp+1)
-
-            for length in range(1, max_length + 1)[::-1]:
-                jj = zc[:, length].nonzero()[0]
-                tt = x['total_time'][jj]
-                yy = zc[jj, length]
-                if (ncomp < 3):
-                    yy = np.array([1] + list(yy) + [1])
-                    tt = np.array([tt[0]] + list(tt) + [tt[-1]])
-                else:
-                    yy = np.array([1] + list(yy))
-                    tt = np.array([tt[0]] + list(tt))
-                pylab.loglog(tt, yy, color=color_vec[length % len(color_vec)], linewidth=lw*2)
 
             pylab.fill_between(t_comp, 10**-0.1 * np.ones(len(t_comp)), queue_comp, color='gray', alpha=0.3)
 
@@ -217,13 +206,14 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 pylab.loglog(tt, yy, color=color_vec[length % len(color_vec)], linewidth=lw*2)
                 tx = 10**(np.log10(tt[0] + 0.1 * (np.log10(tt[-1] - np.log10(tt[0])))))
                 ix = np.nonzero(tt < tx)[0][-1]
-                if (length == 1):
-                    txt = pylab.text(tt[0] * 0.47, 1.5, '%d ' % length, fontsize=fs+4)
-                else:
-                    txt = pylab.text(tt[0] * 0.4, 1.5, '%d ' % length, fontsize=fs+4)
-            if (ncomp > ntot/2 - 1):
+                if make_small:
+                    if (length == 1):
+                        txt = pylab.text(tt[0] * 0.47, 1.5, '%d ' % length, fontsize=fs+4)
+                    else:
+                        txt = pylab.text(tt[0] * 0.4, 1.5, '%d ' % length, fontsize=fs+4)
+            if (ncomp > ntot - 3):
                 pylab.xlabel('Time (s)', fontsize=fs+2)
-            if (ncomp in [0, ntot/2]):
+            if (ncomp % 2 == 0):
                 pylab.ylabel('Count', fontsize=fs+2)
             (ymin, ymax) = (10**-0.1, 10**8.3)
             t_corels = int(np.round(t_comp[-1]))
@@ -260,6 +250,10 @@ for (ncomp, log_root) in enumerate(log_root_list):
             pylab.axis(ax)
             pylab.draw()
             if (ncomp + 1 == ntot):
+                if make_small:
+                    pass
+                else:
+                    pylab.legend(['%d' % ii for ii in range(1, 10)], bbox_to_anchor=(1.02, 2.16), loc=2)
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)
 
 max_prefix_length += 1
