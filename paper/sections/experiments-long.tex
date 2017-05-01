@@ -16,40 +16,6 @@ All results that we present were executed on a server with two Intel Xeon E5-269
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
 
-\subsection{Algorithmic Speedup}
-%TODO Remove calculation
-Inspired by work that described how much faster MIO techniques have become in the past 25 years~\citep{Bertsimas16}, 
-we calculate how much of an overall speed-up CORELS gives when compared to a naive implementation 25 years ago.
-%
-On the COMPAS dataset, where $nrules = 156$, naively evaluating all prefixes of up to length 5 would
-require examining $8.7 x 10^{10}$ different prefixes.
-%
-However, while CORELS only examines prefixes up to length 5 in order to certify optimality, a naive implementation 
-would have to look at even longer prefixes. 
-%
-Without our equivalent points bound, but with all of our other optimizations, we look at prefixes up to length 10.
-%
-Naively evaluating all prefixes up to length 10 would require looking at $6.4 x 10^{21}$ different prefixes.
-%
-However, CORELS examines only 83,357,673 prefixes in total---a reduction of $7.7 x 10^{13}$.
-%
-It takes us about 2$\mu$s to evaluate a single prefix.
-%
-A naive solution would take $1.54 x 10^8$ seconds---about 5 years---while CORELS takes only 2 minutes.
-%
-It is clear that brute force wouldn't scale to larger problems.
-%
-
-However, if we look at how processor speeds have changed over the last 25 years, we can see that the fastest supercomputer in the world
-in 1993 ran at 131.0 GFlops/s~\citep{Supercomputer}.
-
-computers are about 1,000,000 faster now than they were in 1993
-Even with our algorithmic and data structural improvements, CORELS would have run in over 120,000,000s in 1993---an unreasonable amount of time.
-Thus, our advances are only meaningful because we can run them on a modern system.
-Combining our algorithmic improvements with the increase in modern processor speeds, our algorithm runs more than 1 billion times faster than a naive implementation would have in 1993.
-%Nov 2016 125,435.9 TFlops/s
-%June 1993 131.0 GFlops/s
-
 \subsection{Datasets and prediction problems}
 
 Our evaluation focuses on two socially-important prediction problems associated
@@ -64,7 +30,7 @@ assessment.
 This dataset contains records for 7,215 individuals.
 %
 Our rule mining framework extracts 14 features and combines them into
-156 rules (on average across our cross validation folds).
+156 rules on average (folds ranged from containing 155 to 157 rules).
 %
 \item Using the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
 whether a weapon will be found on a stopped individual who is frisked or searched.
@@ -395,3 +361,41 @@ Note that the execution of the last variant is incomplete (bottom right).
 %
 These plots depict the number of prefixes of a given length in the queue
 during the algorithm's execution.
+
+\subsection{Algorithmic Speedup}
+%TODO Remove calculation
+We calculate the overall speed-up of CORELS compared to a naive implementation and determine the feasibility of running
+our algorithm 30 years ago.
+%
+On the COMPAS dataset, where the number of rules is $M = 156$, naively evaluating all prefixes of up to length 5 would
+require examining $8.7 \times 10^{10}$ different prefixes.
+%
+However, while CORELS only examines prefixes up to length 5 in order to certify optimality, a naive implementation 
+would have to look at even longer prefixes. 
+%
+Without our equivalent points bound, but with all of our other optimizations, we evaluate prefixes up to at least length 10 
+(see \ref{tab:ablation} and \ref{fig:queue}).
+%
+Naively evaluating all prefixes up to length 10 would require looking at $6.4 \times 10^{21}$ different prefixes.
+%
+However, CORELS examines only 181,481,555 prefixes in total---a reduction of $3.5 \times 10^{13}$.
+%
+It takes us about 2$\mu$s to evaluate a single prefix.
+%
+A naive solution would take $1.54 \times 10^8$ seconds---about 5 years---while CORELS takes only 2 minutes.
+%
+It is clear that brute force would not scale to larger problems.
+%
+
+
+In addition, Moore's law holds that computing power doubled every 18 months from 1984-2006.
+%
+This is a period of 264 months, which means computing power has gone up by at least a factor of $30,000$ since 1984.
+%
+Thus, even with our algorithmic and data structural improvements, CORELS would have run in over 3,600,000s in 1984---an unreasonable amount of time.
+%
+Our advances are only meaningful because we can run them on a modern system.
+%
+Combining our algorithmic improvements with the increase in modern processor speeds, our algorithm runs more than $10^{18}$ times faster than a naive implementation would have in 1984.
+%
+This helps explain why our algorithm, nor other branch-and-bound variants, had not been developed before now.
