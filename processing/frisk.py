@@ -97,7 +97,7 @@ if predict_frisked:
 else:
     ftag = 'weapon'
 
-din = os.path.join('..', 'data', ftag)
+din = os.path.join('..', 'data', 'frisk')
 dout = os.path.join('..', 'data', 'CrossValidation')
 zdata = os.path.join('..', 'data', '2014-20SQF.zip')
 fdata = os.path.join(din, '2014-SQF-web.csv')
