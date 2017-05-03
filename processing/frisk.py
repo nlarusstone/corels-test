@@ -89,13 +89,21 @@ def age_func(a):
         return '>40'    # support = 6776
 
 
-din = os.path.join('..', 'data', 'frisk')
+predict_frisked = False
+predict_weapon = True
+
+if predict_frisked:
+    ftag = 'frisk'
+else:
+    ftag = 'weapon'
+
+din = os.path.join('..', 'data', ftag)
 dout = os.path.join('..', 'data', 'CrossValidation')
 zdata = os.path.join('..', 'data', '2014-20SQF.zip')
 fdata = os.path.join(din, '2014-SQF-web.csv')
-fout = os.path.join(din, 'frisk.csv')
-bout = os.path.join('..', 'data', 'frisk-binary.csv')
-fout = os.path.join(din, 'frisk.csv')
+fout = os.path.join(din, '%s.csv' % ftag)
+bout = os.path.join('..', 'data', '%s-binary.csv' % ftag)
+fout = os.path.join(din, '%s.csv' % ftag)
 
 seed = sum([1, 4, 21, 12, 20]) # f:6, r:18, i:09, s:19, k:11
 num_folds = 10
@@ -103,8 +111,6 @@ max_cardinality = 1
 min_support = 0.001
 labels = ['no', 'yes']
 minor = True
-predict_frisked = False
-predict_weapon = True
 
 np.random.seed(seed)
 
@@ -261,7 +267,7 @@ print 'test size:', len(split_ind[0])
 num_rules = np.zeros(num_folds, int)
 for i in range(num_folds):
     print 'generate cross-validation split', i
-    cv_root = 'frisk_%d' % i
+    cv_root = '%s_%d' % (ftag, i)
     test_root = '%s_test' % cv_root
     train_root = '%s_train' % cv_root
     ftest = os.path.join(dout, '%s.csv' % test_root)
