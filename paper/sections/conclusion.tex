@@ -20,34 +20,32 @@ Finally, we would like to clarify some limitations of CORELS.
 As far as we can tell, CORELS is the current best algorithm for solving a
 specialized optimal decision tree problem.
 %
-It can handle large numbers of observations, but could have difficulty proving
-optimality when there are many highly correlated features; this is because it is
-more difficult to exclude portions of the search space when this happens.
-%
-It is not designed for raw image processing or other problems where the features
+While our approach scales well to large numbers of observations,
+it could have difficulty proving optimality
+for problems with many possibly relevant features that are highly correlated,
+when large regions of the search space might be challenging to exclude.
+
+CORELS is not designed for raw image processing or other problems where the features
 themselves are not interpretable.
 %
-It does not automatically choose the subgroup with the highest likelihood of a
-positive outcome.
-%
-For that, one would need an algorithm such as Falling Rule Lists~\citep{WangRu15},
+It also does not automatically choose the subgroup with the highest likelihood of a
+positive outcome; doing so would require an algorithm such as Falling Rule Lists \citep{WangRu15},
 which forces the estimated probabilities to decrease along the list.
 %
-Also CORELS does not technically produce estimates of~${P(Y=1 \given x)}$ but one
-could simply compute the empirical proportion~${\hat{P}(Y=1 \given x \textrm{ obeys } a_k)}$
-for each prefix~$a_k$, and use this to estimate~${P(Y=1 \given x)}$.
+While CORELS does not technically produce estimates of ${\P(Y=1 \given x)}$,
+one could form such an estimate by computing the empirical
+proportion ${\hat{\P}(Y=1 \given x \textrm{ obeys } a_k)}$ for each prefix~$a_k$.
 %
-CORELS is not designed to assist with causal inference applications since
+Furthermore, it is not designed to assist with causal inference applications, since
 it does not estimate the effect of a treatment via the conditional difference
-${P(y=1 \given \textrm{treatment} = \textrm{True}, x) - P(y=1 \given \textrm{treatment} = \textrm{False}, x)}$.
+${\P(y=1 \given \textrm{treatment} = \textrm{True}, x) -}$ ${\P(y=1 \given \textrm{treatment} = \textrm{False}, x)}$.
 %
 Alternative algorithms that estimate conditional differences with interpretable
-rule lists are Causal Falling Rule Lists~\citep{WangRu16}
-and Cost-Effective Interpretable Treatment Regimes (CITR)~\citep{LakkarajuRu17}.
-%
-CORELS's rule lists are a form of decision tree.
-%
-In CORELS's ``trees,'' the leaves are conjunctions.
+rule lists include Causal Falling Rule Lists \citep{WangRu16}
+and Cost-Effective Interpretable Treatment Regimes (CITR) \citep{LakkarajuRu17}.
+
+Lastly, recall that a rule list is a form of decision tree,
+where in our setting, the leaves are conjunctions.
 %
 It may be possible to generalize ideas from CORELS to handle decision trees of
 other forms, which could be an interesting project for future work.
