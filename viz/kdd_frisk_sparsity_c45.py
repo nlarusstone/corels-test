@@ -48,7 +48,7 @@ mew = 2
 
 ax1 = plt.subplot2grid((20, 60), (0, 1), colspan=44, rowspan=18)
 plt.xticks(fontsize=fs)
-ytplt.yticks(fontsize=fs)
+plt.yticks(fontsize=fs)
 plt.xlabel('Model size', fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
 ax1.set_xlim(0, 56)
@@ -130,7 +130,7 @@ for r in m:
 
 fs = 14
 
-ax1.legend(legend, loc='upper left', fontsize=fs-2.5, numpoints=1, ncol=3, labelspacing=0.5, borderpad=.5, columnspacing=0.1, markerscale=0.6)
+ax1.legend(legend, loc='upper left', fontsize=fs-3, numpoints=1, ncol=3, labelspacing=0.5, borderpad=.5, columnspacing=0.1, markerscale=0.6)
 
 plt.suptitle('Weapon prediction (NYCLU stop-and-frisk dataset)', fontsize=fs)
 
