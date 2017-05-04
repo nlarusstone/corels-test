@@ -2,7 +2,7 @@ TARGETS = arxiv kdd17
 
 TEXFILES = $(wildcard *.tex sections/*.tex)
 BIBFILES = $(wildcard *.bib)
-FIGFILES = $(wildcard figs/*.png)
+FIGFILES = $(wildcard figs/*.pdf)
 PDFS = $(addsuffix .pdf,$(TARGETS))
 
 %.pdf: %.tex $(TEXFILES) $(BIBFILES) $(FIGFILES)
