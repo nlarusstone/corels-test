@@ -312,8 +312,8 @@ Algorithm variant & (min) & down & optimum (s) & prefix length \\
 CORELS & 5.5 (1.6) & --- & 8 (2) & 5-6 \\
 No priority queue (BFS) & 6.8 (2.2) & 1.2$\times$ & 4 (1) & 5-6 \\
 No support bounds & 10 (3.4) & 1.8$\times$ & 13 (4) & 5-6 \\
-No symmetry-aware map & 59 (23) & 10$\times$ & 23 (6) & 5-6 \\
 No lookahead bound & 72 (23) & 13$\times$ & 9 (2) & 6-7 \\
+No symmetry-aware map & 59 (23) & 10$\times$ & 23 (6) & 5-6 \\
 No equivalent points bound & $>$190 (100) & $>$39$\times$ & $>$7100~* & $\ge$10 \\
 \hline
 \end{tabular}
@@ -325,8 +325,8 @@ Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^6$) & s
 CORELS & 180 (54) & 1.7 (0.4) & 1.3 (0.4) \\
 No priority queue (BFS) & 230 (75) & 1.9 (0.6) & 1.5 (0.5) \\
 No support bounds & 360 (120) & 2.7 (0.8) & 2.2 (0.7) \\
-No symmetry-aware map & 2000 (770) & 16 (5.9) & 15 (5.7) \\
 No lookahead bound & 2200 (710) & 19 (5.9) & 16 (5.3) \\
+No symmetry-aware map & 2000 (770) & 16 (5.9) & 15 (5.7) \\
 No equivalent points bound & $>$1490 & $>$800 & $>$790 \\
 \end{tabular}
 %\vspace{4mm}
@@ -373,27 +373,26 @@ See also Figure~\ref{fig:queue}. \\
 \vspace{1mm}
 \begin{tabular}{l | c  r | c | c}
 & Total time & Slow- & Time to & Max evaluated~ \\
-Algorithm variant & (s) & down & optimum ($\mu$s) & prefix length \\
+Algorithm variant & (min) & down & optimum ($\mu$s) & prefix length \\
 \hline
-CORELS & 47.43 (3.8) & --- & 6.86 (0.2) & 11-11 \\
-No priority queue (BFS) & 143.71 (13.0) & 3.03$\times$ & 25.66 (0.6) & 11-11 \\
-No support bounds & 89.58 (7.6) & 1.89$\times$ & 10.79 (0.3) & 11-12 \\
-No symmetry-aware map & 2697.78 (8093.3) & 66.63$\times$ & 0.66 (2.0) & 1-11 \\
-No lookahead bound & 75.14 (5.2) & 1.59$\times$ & 6.87 (0.3) & 11-12 \\
-No equivalent points bound & 0.00 (0.0) & 0.00$\times$ & 0.00 (0.0) & 1-1 \\
+No priority queue (BFS) & 2.40 (0.2) & 3.03$\times$ & 25.66 (0.6) & 11-11 \\
+No support bounds & 1.49 (0.1) & 1.89$\times$ & 10.79 (0.3) & 11-12 \\
+No lookahead bound & 1.25 (0.1) & 1.59$\times$ & 6.87 (0.3) & 11-12 \\
+No symmetry-aware map & 613.78 (102.8) & 770.78$\times$ & 6.65 (0.1) & 11-11 \\
+No equivalent points bound & 2.40 (0.5) & 3.02$\times$ & 6.40 (0.4) & 13-13 \\
 \hline
 \end{tabular}
 \begin{tabular}{l | c | c | c}
 \hline
  & Lower bound & Total queue &  Max queue \\
-Algorithm variant & evaluations ($\times 10^5$) & insertions ($\times 10^5$) & size ($\times 10^5$) \\
+Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^5$) & size ($\times 10^5$) \\
 \hline
-CORELS & 64.58 (4.9) & 1.73 (0.1) & 1.13 (0.1) \\
-No priority queue (BFS) & 200.73 (17.5) & 5.40 (0.5) & 2.00 (0.1) \\
-No support bounds & 121.54 (9.8) & 3.08 (0.3) & 1.91 (0.1) \\
-No symmetry-aware map & 3891.73 (11675.2) & 107.35 (322.0) & 79.87 (239.6) \\
-No lookahead bound & 102.41 (7.3) & 2.78 (0.2) & 1.82 (0.1) \\
-No equivalent points bound & 0.00 (0.0) & 0.00 (0.0) & 0.00 (0.0) \\
+CORELS & 6.46 (0.5) & 1.73 (0.1) & 1.13 (0.1) \\
+No priority queue (BFS) & 20.07 (1.7) & 5.40 (0.5) & 2.00 (0.1) \\
+No support bounds & 12.15 (1.0) & 3.08 (0.3) & 1.91 (0.1) \\
+No lookahead bound & 10.24 (0.7) & 2.78 (0.2) & 1.82 (0.1) \\
+No symmetry-aware map & 5160.78 (848.8) & 1427.72 (238.0) & 1064.29 (175.6) \\
+No equivalent points bound & 25.19 (5.4) & 7.48 (0.5) & 4.64 (0.2) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Per-component performance improvement, as in Table~\ref{tab:ablation},

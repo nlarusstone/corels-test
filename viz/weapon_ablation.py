@@ -64,8 +64,8 @@ fs = 16 # fontsize
 num_folds = 10
 make_figure = False
 
-#num_folds = 1
-#make_figure = True
+#num_folds = 2
+#figure_fold = 1
 #make_small = False
 
 # log files generated on beepboop
@@ -73,10 +73,10 @@ log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
 'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
-'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=800000000-c=0.0100000-v=1-f=1000.txt']
-labels = ['CORELS', 'No priority queue (BFS)', 'No support bounds', 'No symmetry-aware map', 'No lookahead bound', 'No equivalent points bound']
+'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt']
+labels = ['CORELS', 'No priority queue (BFS)', 'No support bounds', 'No lookahead bound', 'No symmetry-aware map', 'No equivalent points bound']
 ftag = "weapon_ablation"
 
 if make_small:
@@ -107,7 +107,11 @@ ablation_names = ['none (CORELS)', 'priority queue', 'support bounds',
 
 for (ncomp, log_root) in enumerate(log_root_list):
     for fold in range(num_folds):
-        if (make_figure) and (fold == 0):
+        #if (make_figure) and (fold == 1):
+        #    make_figure = True
+        #else:
+        #    make_figure = False
+        if (fold == figure_fold):
             make_figure = True
         else:
             make_figure = False
@@ -180,7 +184,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
 
         if (make_figure):
             color_vec = ['r', 'r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'm', 'violet', 'pink', 'gray', 'k']#[:(max_length + 1)][::-1]
-            color_vec = ['k', 'violet', 'm', 'purple', 'b', 'c', 'g', 'y', 'orange', 'r']
+            color_vec = ['k', 'violet', 'm', 'purple', 'b', 'c', 'green', 'yellowgreen', 'y', 'orange', 'r', 'brown']
             #color_vec = ['purple', 'b', 'c', 'm', 'gray', 'k'][::-1]
 
             if (ncomp == 0):
@@ -234,7 +238,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
                     descr = '%d s $\\approx$ %1.1f T' % (np.round(tmax), tmax / t_corels)
                 else:
                     descr = '%d s $\\approx$ %d T' % (np.round(tmax), np.round(tmax / t_corels))
-                if (ncomp == 3):
+                if (ncomp == 4):
                     xloc = 0.02
                 else:
                     descr = (14 - (len(descr.split('$')[0] + descr.split('$')[-1]) + 1)) * ' ' + descr
@@ -245,15 +249,13 @@ for (ncomp, log_root) in enumerate(log_root_list):
             pylab.xticks(fontsize=fs-2)
             pylab.yticks(fontsize=fs-2)
             #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
-            ax = [10**-4, 10**4.6, ymin, ymax]
+            ax = [10**-4, 10**4.9, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()
-            if (ncomp == 4):
-                if make_small:
-                    pass
-                else:
-                    pylab.legend(['%d' % ii for ii in range(1, 11)], bbox_to_anchor=(2.2, 2.2), loc=2)
-                pylab.suptitle('\nExecution traces of queue contents (NYCLU stop-and-frisk dataset)', fontsize=fs+2)
+            if (ncomp + 1 == ntot):
+                if not (make_small):
+                    pylab.legend(['%d' % ii for ii in range(1, max_length + 1)], bbox_to_anchor=(1., 2.3), loc=2)
+                    pylab.suptitle('\nExecution traces of queue contents (NYCLU stop-and-frisk dataset)', fontsize=fs+2)
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)
 
 max_prefix_length += 1
@@ -267,8 +269,8 @@ print 'min_obj:', min_obj
 
 #tt_m = np.cast[int](np.round(t_tot.mean(axis=1)))
 #tt_s = np.cast[int](np.round(t_tot.std(axis=1)))
-tt_m = t_tot.mean(axis=1)
-tt_s = t_tot.std(axis=1)
+tt_m = t_tot.mean(axis=1) / 60.
+tt_s = t_tot.std(axis=1) / 60.
 to_m = t_opt.mean(axis=1) * 10**3
 to_s = t_opt.std(axis=1) * 10**3
 km_m = np.cast[int](max_prefix_length.mean(axis=1))
@@ -284,15 +286,15 @@ for rec in zip(ablation_names, tt_m, tt_s, to_m, to_s, it_m, it_s, mq_m, mq_s, k
     print '%s & %1.1f (%1.1f) & %d (%d) & %1.1f (%1.1f) & %1.1f (%1.1f) & %d-%d \\\\' % rec
 
 slow_m = (t_tot / t_tot[0]).mean(axis=1) # slowdown
-lb_m = lower_bound_num.mean(axis=1) / 10**5
-lb_s = lower_bound_num.std(axis=1) / 10**5
+lb_m = lower_bound_num.mean(axis=1) / 10**6
+lb_s = lower_bound_num.std(axis=1) / 10**6
 
 print '& Total time & Slow- & Time to & Max evaluated \\\\'
-print 'Algorithm variant & (s) & down & optimum ($\mu$s) & prefix length \\\\'
+print 'Algorithm variant & (min) & down & optimum ($\mu$s) & prefix length \\\\'
 for rec in zip(labels, tt_m, tt_s, slow_m, to_m, to_s, km_min, km_max):
     print '%s & %1.2f (%1.1f) & %1.2f$\\times$ & %1.2f (%1.1f) & %d-%d \\\\' % rec
 
 print '& Lower bound & Total queue &  Max queue~~~~ \\\\'
-print 'Algorithm variant & computations ($\times 10^5$) & insertions ($\times 10^5$) & size ($\times 10^5$) \\\\'
+print 'Algorithm variant & computations ($\\times 10^6$) & insertions ($\\times 10^5$) & size ($\\times 10^5$) \\\\'
 for rec in zip(labels, lb_m, lb_s, it_m, it_s, mq_m, mq_s):
     print '%s & %1.2f (%1.1f) & %1.2f (%1.1f) & %1.2f (%1.1f) \\\\' % rec
