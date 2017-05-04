@@ -247,7 +247,7 @@ By~\eqref{eq:similar-analogous},
   + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \omega - \Omega.
 \end{align*}
 
-\section*{Appendix C. Data processing details}
+\section*{Appendix C. Data processing details and antecedent mining}
 
 \textbf{NYCLU stop-and-frisk dataset.} The original dataset contains 45,787 records,
 each describing an incident involving a stopped person; the individual
@@ -268,8 +268,6 @@ smaller class with replacement.
 We generate cross-validation folds first, and then resample within each fold.
 %
 In our 10-fold cross-validation experiments, each training set contains 50,743 datapoints.
-
-\section*{Appendix D. Antecedents}
 
 Table~\ref{tab:frisk-data} shows the 5 categorical attributes,
 corresponding to a total of 28 dimensions, that we use from the
@@ -314,7 +312,7 @@ inside or outside & inside, outside & 2 \\
 \label{tab:frisk-data}
 \end{table}
 
-\section*{Appendix E. Optimal rule lists for weapon prediction, for different~$\Reg$}
+\section*{Appendix D. Optimal rule lists for weapon prediction, for different~$\Reg$}
 
 Example optimal rule lists that predict whether a weapon will be found on a
 stopped individual who is frisked or searched, for the NYCLU stop-and-frisk dataset,
