@@ -92,7 +92,7 @@ for jj in ip:
 
 pylab.xticks(fontsize=fs)
 pylab.ylabel('Value', fontsize=fs)
-pylab.title('Execution progress', fontsize=fs)
+pylab.title('Execution progress (ProPublica dataset)', fontsize=fs)
 pylab.xticks(fontsize=fs)
 pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
 pylab.axis([x['total_time'][2], 10**4, 0, 0.52])
