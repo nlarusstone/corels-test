@@ -326,7 +326,8 @@ No lookahead bound & 2200 (710) & 19 (5.9) & 16 (5.3) \\
 No equivalent points bound & $>$1490 & $>$800 & $>$790 \\
 \end{tabular}
 %\vspace{4mm}
-\caption{Per-component performance improvement.
+\caption{Per-component performance improvement, for the ProPublica dataset
+recidivism prediction problem.
 %
 The columns report the total execution time,
 time to optimum, maximum evaluated prefix length,
@@ -365,7 +366,7 @@ in the remaining fields, we report minimum values across folds.
 & Total time & Slow- & Time to & Max evaluated~ \\
 Algorithm variant & (s) & down & optimum ($\mu$s) & prefix length \\
 \hline
-CORELS & 47.43 (3.8) & 1.00$\times$ & 6.86 (0.2) & 11-11 \\
+CORELS & 47.43 (3.8) & --- & 6.86 (0.2) & 11-11 \\
 No priority queue (BFS) & 143.71 (13.0) & 3.03$\times$ & 25.66 (0.6) & 11-11 \\
 No support bounds & 89.58 (7.6) & 1.89$\times$ & 10.79 (0.3) & 11-12 \\
 No symmetry-aware map & 2697.78 (8093.3) & 66.63$\times$ & 0.66 (2.0) & 1-11 \\
@@ -386,25 +387,10 @@ No lookahead bound & 102.41 (7.3) & 2.78 (0.2) & 1.82 (0.1) \\
 No equivalent points bound & 0.00 (0.0) & 0.00 (0.0) & 0.00 (0.0) \\
 \end{tabular}
 %\vspace{4mm}
-\caption{Per-component performance improvement.
-%
-The columns report the total execution time,
-time to optimum, maximum evaluated prefix length,
-number of times we completely evaluate a prefix~$\Prefix$'s lower bound~$b(\Prefix, \x, \y)$,
-total number of queue insertions (which is equal to the number of cache insertions),
-and maximum logical queue size.
-%
-The first row shows CORELS; subsequent rows show variants
-that each remove a specific implementation optimization or bound.
-%
-(We are not measuring the cumulative effects of removing a sequence of components.)
+\caption{Per-component performance improvement, as in Table~\ref{tab:ablation},
+for the NYCLU stop-and-frisk dataset weapon prediction problem.
 %
 All rows represent complete executions.
-%
-We report means (and standard deviations) over 10 cross-validation folds.
-%
-We also report the  mean slowdown in total execution time,
-with respect to CORELS.
 }
 \vspace{4mm}
 \label{tab:ablation-weapon}
