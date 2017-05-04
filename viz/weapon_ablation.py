@@ -64,9 +64,9 @@ fs = 16 # fontsize
 num_folds = 10
 make_figure = False
 
-num_folds = 1
-make_figure = True
-make_small = False
+#num_folds = 1
+#make_figure = True
+#make_small = False
 
 # log files generated on beepboop
 log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
@@ -267,41 +267,32 @@ print 'min_obj:', min_obj
 
 #tt_m = np.cast[int](np.round(t_tot.mean(axis=1)))
 #tt_s = np.cast[int](np.round(t_tot.std(axis=1)))
-tt_m = t_tot.mean(axis=1) / 60.
-tt_s = t_tot.std(axis=1) / 60.
-to_m = np.cast[int](np.round(t_opt.mean(axis=1)))
-to_s = np.cast[int](np.round(t_opt.std(axis=1)))
+tt_m = t_tot.mean(axis=1)
+tt_s = t_tot.std(axis=1)
+to_m = np.cast[int](np.round(t_opt.mean(axis=1))) * 10**3
+to_s = np.cast[int](np.round(t_opt.std(axis=1))) * 10**3
 km_m = np.cast[int](max_prefix_length.mean(axis=1))
 km_s = max_prefix_length.std(axis=1)
 km_min = max_prefix_length.min(axis=1)
 km_max = max_prefix_length.max(axis=1)
-it_m = num_insertions.mean(axis=1) / 10**6
-it_s = num_insertions.std(axis=1) / 10**6
-mq_m = max_queue.mean(axis=1) / 10**6
-mq_s = max_queue.std(axis=1) / 10**6
+it_m = num_insertions.mean(axis=1) / 10**5
+it_s = num_insertions.std(axis=1) / 10**5
+mq_m = max_queue.mean(axis=1) / 10**5
+mq_s = max_queue.std(axis=1) / 10**5
 
 for rec in zip(ablation_names, tt_m, tt_s, to_m, to_s, it_m, it_s, mq_m, mq_s, km_min, km_max):
     print '%s & %1.1f (%1.1f) & %d (%d) & %1.1f (%1.1f) & %1.1f (%1.1f) & %d-%d \\\\' % rec
 
 slow_m = (t_tot / t_tot[0]).mean(axis=1) # slowdown
-lb_m = lower_bound_num.mean(axis=1) / 10**6
-lb_s = lower_bound_num.std(axis=1) / 10**6
-
-print 'for no equiv pts:'
-print 'folds that achieve min objective:', ((min_obj[-1] - min_obj[0]) < 10**-6).sum()
-print 'total time >', t_tot[-1:].min() / 60
-print 'time to optimum >', t_opt[-1][((min_obj[-1] - min_obj[0]) < 10**-6)].min()
-print 'max prefix length >=', max_prefix_length[-1]
-print 'num lower bound evals >=', lower_bound_num[-1].min()
-print 'total queue insertions >', num_insertions[-1].min() / 10**6
-print 'max queue size >', max_queue[-1].min() / 10**6
+lb_m = lower_bound_num.mean(axis=1) / 10**5
+lb_s = lower_bound_num.std(axis=1) / 10**5
 
 print '& Total time & Slow- & Time to & Max evaluated \\\\'
-print 'Algorithm variant & (min) & down & optimum (s) & prefix length \\\\'
+print 'Algorithm variant & (s) & down & optimum ($\mu$s) & prefix length \\\\'
 for rec in zip(labels, tt_m, tt_s, slow_m, to_m, to_s, km_min, km_max):
     print '%s & %1.2f (%1.1f) & %1.2f$\\times$ & %d (%d) & %d-%d \\\\' % rec
 
 print '& Lower bound & Total queue &  Max queue~~~~ \\\\'
-print 'Algorithm variant & computations ($\times 10^6$) & insertions ($\times 10^6$) & size ($\times 10^6$) \\\\'
+print 'Algorithm variant & computations ($\times 10^5$) & insertions ($\times 10^5$) & size ($\times 10^5$) \\\\'
 for rec in zip(labels, lb_m, lb_s, it_m, it_s, mq_m, mq_s):
     print '%s & %1.2f (%1.1f) & %1.2f (%1.1f) & %1.2f (%1.1f) \\\\' % rec
