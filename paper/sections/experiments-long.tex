@@ -299,39 +299,36 @@ Figure~\ref{fig:queue} presents a view of the same experiments.
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
 \begin{table}[t!]
 \begin{tabular}{l | c  r | c | c}
-& Total time & Slow- & Time to & Max evaluated \\
+& Total time & Slow- & Time to & Max evaluated~ \\
 Algorithm variant & (min) & down & optimum (s) & prefix length \\
 \hline
 CORELS & 5.5 (1.6) & --- & 8 (2) & 5-6 \\
-No priority queue (BFS) & 6.7 (2.2) & 1.2$\times$ & 4 (1) & 5-6 \\
-No support bounds & 10.2 (3.4) & 1.8$\times$ & 13 (4) & 5-6 \\
-No symmetry-aware map & 58.6 (23.3) & 9.0$\times$ & 23 (6) & 5-6 \\
-No lookahead bound & 71.9 (23.0) & 12$\times$ & 9 (2) & 6-7 \\
-%equiv. pts. bound & 188.6 (104.6) & 6178 (1840) & 803.8 (0.1) & 790.5 (0.4) & 10-10
-No equivalent pts bound & $>$134 & $>64\times$ & $>$7168* & $\ge$10 \\
+No priority queue (BFS) & 6.8 (2.2) & 1.2$\times$ & 4 (1) & 5-6 \\
+No support bounds & 10 (3.4) & 1.8$\times$ & 13 (4) & 5-6 \\
+No symmetry-aware map & 59 (23) & 10$\times$ & 23 (6) & 5-6 \\
+No lookahead bound & 72 (23) & 13$\times$ & 9 (2) & 6-7 \\
+No equivalent points bound & $>$190 (100) & $>$39$\times$ & $>$7100~* & $\ge$10 \\
 \hline
 \end{tabular}
 \begin{tabular}{l | c | c | c}
 \hline
- & Total evaluated & Total queue &  Max queue~~~~ \\
-Algorithm variant & prefixes ($\times 10^6$) & insertions ($\times 10^6$) & size ($\times 10^6$) \\
+ & Lower bound & Total queue &  Max queue \\
+Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^6$) & size ($\times 10^6$) \\
 \hline
-CORELS & & 1.7 (0.4) & 1.3 (0.4) \\
-No priority queue (BFS) & & 1.9 (0.6) & 1.5 (0.5) \\
-No support bounds  & & 2.7 (0.8) & 2.2 (0.7) \\
-No symmetry-aware map & & 16.0 (5.9) & 14.5 (5.7) \\
-No lookahead bound & & 18.5 (5.9) & 16.3 (5.3) \\
-%equiv. pts. bound & 188.6 (104.6) & 6178 (1840) & 803.8 (0.1) & 790.5 (0.4) & 10-10
-No equivalent pts bound & & $>$800 & $>$789
+CORELS & 180 (54) & 1.7 (0.4) & 1.3 (0.4) \\
+No priority queue (BFS) & 230 (75) & 1.9 (0.6) & 1.5 (0.5) \\
+No support bounds & 360 (120) & 2.7 (0.8) & 2.2 (0.7) \\
+No symmetry-aware map & 2000 (770) & 16 (5.9) & 15 (5.7) \\
+No lookahead bound & 2200 (710) & 19 (5.9) & 16 (5.3) \\
+No equivalent points bound & $>$1490 & $>$800 & $>$790 \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Per-component performance improvement.
 %
-The columns report total execution time~(min),
-time to optimum~(s),  maximum evaluated prefix length,
-total number of evaluated prefixes~(millions),
-total number of queue insertions~(millions),
-and maximum queue size.
+The columns report the total execution time,
+time to optimum, maximum evaluated prefix length,
+number of times we completely evaluate a prefix~$\Prefix$'s lower bound~$b(\Prefix, \x, \y)$,
+total number of queue insertions, and maximum queue size.
 %
 The first row shows CORELS; subsequent rows show variants
 that each remove a specific implementation optimization or bound.
@@ -344,11 +341,14 @@ once the size of the cache reached ${8 \times 10^8}$ elements,
 after consuming 390-410GB RAM.
 %
 In all but the final row and column, we report means
-(and standard deviations) over 10 cross-validation folds;
-in the final row, we report the minimum values across folds.
+(and standard deviations) over 10 cross-validation folds.
 %
-We also report the slowdown in mean total execution time,
-with respect to CORELS. \\
+We also report the  mean slowdown in total execution time,
+with respect to CORELS.
+%
+In the final row, we report the mean (and standard deviation) of the
+incomplete execution time and corresponding slowdown;
+in the remaining fields, we report minimum values across folds.
 %
 *~Only 4 out of 10 folds achieve the optimum before being terminated.
 }
