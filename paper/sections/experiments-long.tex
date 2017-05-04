@@ -301,6 +301,10 @@ during the algorithm's execution.
 
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
 \begin{table}[t!]
+\begin{centering}
+\textbf{Per-component performance improvement (ProPublica dataset)} \\
+\end{centering}
+\vspace{1mm}
 \begin{tabular}{l | c  r | c | c}
 & Total time & Slow- & Time to & Max evaluated~ \\
 Algorithm variant & (min) & down & optimum (s) & prefix length \\
@@ -326,8 +330,7 @@ No lookahead bound & 2200 (710) & 19 (5.9) & 16 (5.3) \\
 No equivalent points bound & $>$1490 & $>$800 & $>$790 \\
 \end{tabular}
 %\vspace{4mm}
-\caption{Per-component performance improvement, for the ProPublica dataset
-recidivism prediction problem.
+\caption{Per-component performance improvement, for the ProPublica dataset.
 %
 The columns report the total execution time,
 time to optimum, maximum evaluated prefix length,
@@ -355,6 +358,8 @@ In the final row, we report the mean (and standard deviation) of the
 incomplete execution time and corresponding slowdown;
 in the remaining fields, we report minimum values across folds.
 %
+See also Figure~\ref{fig:queue}. \\
+%
 *~Only 4 out of 10 folds achieve the optimum before being terminated.
 }
 \vspace{4mm}
@@ -362,6 +367,10 @@ in the remaining fields, we report minimum values across folds.
 \end{table}
 
 \begin{table}[t!]
+\begin{centering}
+\textbf{Per-component performance improvement (NYCLU stop-and-frisk dataset)} \\
+\end{centering}
+\vspace{1mm}
 \begin{tabular}{l | c  r | c | c}
 & Total time & Slow- & Time to & Max evaluated~ \\
 Algorithm variant & (s) & down & optimum ($\mu$s) & prefix length \\
@@ -388,9 +397,12 @@ No equivalent points bound & 0.00 (0.0) & 0.00 (0.0) & 0.00 (0.0) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Per-component performance improvement, as in Table~\ref{tab:ablation},
-for the NYCLU stop-and-frisk dataset weapon prediction problem.
+for the NYCLU stop-and-frisk dataset.
 %
 All rows represent complete executions.
+%
+See Table~\ref{tab:ablation} for a detailed caption,
+also Figure~\ref{fig:queue-weapon}.
 }
 \vspace{4mm}
 \label{tab:ablation-weapon}
@@ -405,7 +417,7 @@ width=0.94\textwidth]{figs/kdd_compas_ablation-queue.pdf}
 \vspace{-5mm}
 \caption{Summary of the logical queue's contents, for full CORELS (top left)
 and five variants that each remove a specific implementation optimization or bound,
-as in Table~\ref{tab:ablation}.
+for the ProPublica dataset.  See also Table~\ref{tab:ablation}.
 %
 %We summarize the composition of the logical queue,
 %\ie the nodes in the physical that have not been marked for deletion.
@@ -444,30 +456,9 @@ width=0.94\textwidth]{figs/weapon_ablation-queue.pdf}
 \vspace{-5mm}
 \caption{Summary of the logical queue's contents, for full CORELS (top left)
 and five variants that each remove a specific implementation optimization or bound,
-as in Table~\ref{tab:ablation}.
+for the NYCLU stop-and-frisk dataset, as in Table~\ref{tab:ablation-weapon}.
 %
-%We summarize the composition of the logical queue,
-%\ie the nodes in the physical that have not been marked for deletion.
-%
-Solid lines plot the numbers of prefixes in the logical queue (log scale), colored by length (legend),
-as a function of wall clock time (log scale).
-%
-All plots are generated using a single, representative cross-validation training set.
-%
-%EXPAND HERE
-%the permutation bounds (top right),
-%lookahead bound (bottom left), and equivalent points bound (bottom right).
-%
-The gray shading fills in the area beneath the total number of
-queue elements for CORELS,
-\ie the sum over all lengths in the top left figure.
-%
-For comparison, we replicate the same gray region
-in the other five subfigures.
-%
-For each execution, we indicate the total time in seconds,
-relative to the full CORELS implementation (T = 40 s),
-and with a dashed vertical line.
+See Figure~\ref{fig:queue} for a detailed caption.
 }
 \label{fig:queue-weapon}
 \end{figure}
