@@ -269,38 +269,50 @@ We generate cross-validation folds first, and then resample within each fold.
 %
 In our 10-fold cross-validation experiments, each training set contains 50,743 datapoints.
 
-\clearpage
-\section*{Appendix D. Mined rules}
+\section*{Appendix D. Antecedents}
 
-\textbf{Weapon prediction (NYCLU stop-and-frisk dataset) with 28 rules (\S\ref{sec:sparsity})} \\
-cs\_objcs: stop reason = suspicious object \\
-cs\_descr: stop reason = fits description \\
-cs\_casng: stop reason = casing \\
-cs\_lkout: stop reason = acting as lookout \\
-cs\_cloth: stop reason = suspicious clothing \\
-cs\_drgtr: stop reason = drug transaction \\
-cs\_furtv: stop reason = furtive movements \\
-cs\_vcrim: stop reason = actions of violent crime \\
-cs\_bulge: stop reason = suspicious bulge \\
-ac\_proxm: additional circumstances = proximity to crime scene \\
-ac\_evasv: additional circumstances = evasive response \\
-ac\_assoc: additional circumstances = associating with criminals \\
-ac\_cgdir: additional circumstances = changed direction \\
-ac\_incid: additional circumstances = high crime area \\
-ac\_time: additional circumstances = time of day \\
-ac\_stsnd: additional circumstances = sights and sounds of criminal activity \\
-ac\_rept: additional circumstances = witness report \\
-ac\_inves: additional circumstances = ongoing investigation \\
-city: Queens \\
-city: Manhattan \\
-city: Brooklyn \\
-city: Staten \\
-city: Bronx \\
-location: neither housing nor transit authority \\
-location: housing authority \\
-location: transit authority \\
-inout: outside \\
-inout: inside
+Table~\ref{tab:frisk-data} shows the 5 categorical attributes,
+corresponding to a total of 28 dimensions, that we use from the
+NYCLU stop-and-frisk dataset for the weapon prediction problem.
+%
+Our experiments in~\S\ref{sec:experiments} through~\S\ref{sec:sparsity}
+use 28 single-clause antecedents corresponding these 28 dimensions,
+\eg (\emph{stop reason = suspicious object}).
+%
+Our experiments in~\S\ref{sec:traces} use the same antecedents,
+as well as negations of the 18 antecedents corresponding to the two features
+\emph{stop reason} and \emph{additional circumstances},
+which gives a total of 46 antecedents.
+
+\begin{table}[h!]
+\centering
+%$Q_\text{max}$ $K_\text{max}$
+\begin{tabular}{l | l | c}
+Feature & Values & Dim. \\
+\hline
+stop reason & suspicious object, fits description, casing, & 9 \\
+& acting as lookout, suspicious clothing, & \\
+& drug transaction, furtive movements, & \\
+& actions of violent crime, suspicious bulge \\
+\hline
+additional & proximity to crime scene, evasive response,  & 9 \\
+circumstances & associating with criminals, changed direction, & \\
+& high crime area, time of day,  & \\
+& sights and sounds of criminal activity, & \\
+& witness report, ongoing investigation & \\
+\hline
+city & Queens,  Manhattan, Brooklyn, Staten, Bronx & 5 \\
+\hline
+location & housing authority, transit authority, & 3 \\
+& neither housing nor transit authority & \\
+\hline
+inside or outside & inside, outside & 2 \\
+\end{tabular}
+%\vspace{4mm}
+\caption{Categorical features (28 dimensions) from the NYCLU stop-and-frisk dataset.}
+\vspace{4mm}
+\label{tab:frisk-data}
+\end{table}
 
 \section*{Appendix E. Optimal rule lists for weapon prediction, for different~$\Reg$}
 
