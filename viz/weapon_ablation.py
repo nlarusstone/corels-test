@@ -64,10 +64,10 @@ fs = 16 # fontsize
 num_folds = 10
 make_figure = False
 figure_fold = -1
+make_small = False
 
 #num_folds = 2
 #figure_fold = 1
-#make_small = False
 
 # log files generated on beepboop
 log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
