@@ -63,6 +63,7 @@ fs = 16 # fontsize
 
 num_folds = 10
 make_figure = False
+figure_fold = -1
 
 #num_folds = 2
 #figure_fold = 1
@@ -107,10 +108,6 @@ ablation_names = ['none (CORELS)', 'priority queue', 'support bounds',
 
 for (ncomp, log_root) in enumerate(log_root_list):
     for fold in range(num_folds):
-        #if (make_figure) and (fold == 1):
-        #    make_figure = True
-        #else:
-        #    make_figure = False
         if (fold == figure_fold):
             make_figure = True
         else:
