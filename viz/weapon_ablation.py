@@ -269,8 +269,8 @@ print 'min_obj:', min_obj
 #tt_s = np.cast[int](np.round(t_tot.std(axis=1)))
 tt_m = t_tot.mean(axis=1)
 tt_s = t_tot.std(axis=1)
-to_m = np.cast[int](np.round(t_opt.mean(axis=1))) * 10**3
-to_s = np.cast[int](np.round(t_opt.std(axis=1))) * 10**3
+to_m = t_opt.mean(axis=1) * 10**3
+to_s = t_opt.std(axis=1) * 10**3
 km_m = np.cast[int](max_prefix_length.mean(axis=1))
 km_s = max_prefix_length.std(axis=1)
 km_min = max_prefix_length.min(axis=1)
@@ -290,7 +290,7 @@ lb_s = lower_bound_num.std(axis=1) / 10**5
 print '& Total time & Slow- & Time to & Max evaluated \\\\'
 print 'Algorithm variant & (s) & down & optimum ($\mu$s) & prefix length \\\\'
 for rec in zip(labels, tt_m, tt_s, slow_m, to_m, to_s, km_min, km_max):
-    print '%s & %1.2f (%1.1f) & %1.2f$\\times$ & %d (%d) & %d-%d \\\\' % rec
+    print '%s & %1.2f (%1.1f) & %1.2f$\\times$ & %1.2f (%1.1f) & %d-%d \\\\' % rec
 
 print '& Lower bound & Total queue &  Max queue~~~~ \\\\'
 print 'Algorithm variant & computations ($\times 10^5$) & insertions ($\times 10^5$) & size ($\times 10^5$) \\\\'
