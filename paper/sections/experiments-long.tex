@@ -328,7 +328,8 @@ No equivalent points bound & $>$1490 & $>$800 & $>$790 \\
 The columns report the total execution time,
 time to optimum, maximum evaluated prefix length,
 number of times we completely evaluate a prefix~$\Prefix$'s lower bound~$b(\Prefix, \x, \y)$,
-total number of queue insertions, and maximum queue size.
+total number of queue insertions (which is equal to the number of cache insertions),
+and maximum logical queue size.
 %
 The first row shows CORELS; subsequent rows show variants
 that each remove a specific implementation optimization or bound.
@@ -360,14 +361,21 @@ in the remaining fields, we report minimum values across folds.
 \begin{center}
 % left lower right upper
 \includegraphics[trim={15mm 20mm 5mm 25mm},
-width=\textwidth]{figs/kdd_compas_ablation-queue.pdf}
+width=0.94\textwidth]{figs/kdd_compas_ablation-queue.pdf}
 \end{center}
 \vspace{-5mm}
-\caption{Logical queue composition.
+\caption{Summary of the logical queue's contents, for full CORELS (top left)
+and five variants that each remove a specific implementation optimization or bound,
+as in Table~\ref{tab:ablation}.
 %
-Numbers of prefixes in the queue (log scale), colored by length (legend),
-as a function of wall clock time (log scale), for full CORELS (top left),
-and five variants that each remove a specific implementation optimization or bound.
+%We summarize the composition of the logical queue,
+%\ie the nodes in the physical that have not been marked for deletion.
+%
+Solid lines plot the numbers of prefixes in the logical queue (log scale), colored by length (legend),
+as a function of wall clock time (log scale).
+%
+All plots are generated using a single, representative cross-validation training set.
+%
 %EXPAND HERE
 %the permutation bounds (top right),
 %lookahead bound (bottom left), and equivalent points bound (bottom right).
@@ -377,10 +385,11 @@ queue elements for CORELS,
 \ie the sum over all lengths in the top left figure.
 %
 For comparison, we replicate the same gray region
-in the other three subfigures.
+in the other five subfigures.
 %
-For each execution, we indicate the total time both in seconds,
-and relative to the full CORELS implementation (T = 149 s).
+For each execution, we indicate the total time in seconds,
+relative to the full CORELS implementation (T = 342 s),
+and with a dashed vertical line.
 %
 Note that the execution of the last variant is incomplete (bottom right).
 }
