@@ -296,6 +296,9 @@ CORELS implementation and five variants that each remove a specific optimization
 %
 Figure~\ref{fig:queue} presents a view of the same experiments.
 %
+These plots depict the number of prefixes of a given length in the queue
+during the algorithm's execution.
+
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
 \begin{table}[t!]
 \begin{tabular}{l | c  r | c | c}
@@ -395,9 +398,43 @@ Note that the execution without the equivalent points bound (bottom right) is in
 }
 \label{fig:queue}
 \end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+% left lower right upper
+\includegraphics[trim={15mm 20mm 5mm 25mm},
+width=0.94\textwidth]{figs/weapon_ablation-queue.pdf}
+\end{center}
+\vspace{-5mm}
+\caption{Summary of the logical queue's contents, for full CORELS (top left)
+and five variants that each remove a specific implementation optimization or bound,
+as in Table~\ref{tab:ablation}.
 %
-These plots depict the number of prefixes of a given length in the queue
-during the algorithm's execution.
+%We summarize the composition of the logical queue,
+%\ie the nodes in the physical that have not been marked for deletion.
+%
+Solid lines plot the numbers of prefixes in the logical queue (log scale), colored by length (legend),
+as a function of wall clock time (log scale).
+%
+All plots are generated using a single, representative cross-validation training set.
+%
+%EXPAND HERE
+%the permutation bounds (top right),
+%lookahead bound (bottom left), and equivalent points bound (bottom right).
+%
+The gray shading fills in the area beneath the total number of
+queue elements for CORELS,
+\ie the sum over all lengths in the top left figure.
+%
+For comparison, we replicate the same gray region
+in the other five subfigures.
+%
+For each execution, we indicate the total time in seconds,
+relative to the full CORELS implementation (T = 40 s),
+and with a dashed vertical line.
+}
+\label{fig:queue}
+\end{figure}
 
 \subsection{Algorithmic Speedup}
 %TODO Remove calculation
