@@ -247,16 +247,9 @@ For both problems, CORELS can learn short rule lists without sacrificing accurac
 \includegraphics[trim={34mm, 20mm, 34mm, 10mm},
 width=\textwidth]{figs/weapon_execution_large-remaining-space.pdf}
 \end{center}
-\caption{Execution progress of CORELS and selected variants.
-%
-Left: CORELS with (lines) and without
-(dashes) the equivalent points bound (Theorem~\ref{thm:identical}),
-for the ProPublica dataset (${\Reg = 0.005}$, ${M = 155}$).
-%
-Right: CORELS with (lines) and without (dashes)
-the permutation bound (Corollary~\ref{thm:permutation}),
-and thus the symmetry-aware map,
-for the NYCLU dataset (${\Reg = 0.01}$, ${M = 46}$).
+\caption{Execution progress of CORELS and selected variants,
+for the ProPublica (${\Reg = 0.005}$, ${M = 155}$) (left)
+and NYCLU (${\Reg = 0.01}$, ${M = 46}$) (right) datasets.
 %
 Top: Objective value (thin line) and lower bound (thick line) for CORELS,
 as a function of wall clock time (log scale).
@@ -268,8 +261,12 @@ and are labeled by the new length.
 CORELS quickly achieves the optimal value (star marker),
 and certifies optimality when the lower bound matches the objective value.
 %
-A separate execution of CORELS without the equivalent points (Theorem~\ref{thm:identical})
-bound remains far from complete, and its lower bound (dashed line) far from the optimum.
+On the left, a separate and significantly longer execution of CORELS
+without the equivalent points  (Theorem~\ref{thm:identical}) bound remains
+far from complete, and its lower bound (dashed line) far from the optimum.
+%
+On the right, a separate execution of CORELS without the permutation bound (Corollary~\ref{thm:permutation}), and thus the symmetry-aware map,
+requires orders of magnitude more time to complete.
 %
 Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
 as a function of wall clock time (log scale),
