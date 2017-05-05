@@ -317,20 +317,20 @@ inside or outside & inside, outside & 2 \\
 Example optimal rule lists that predict two-year recidivism, for the ProPublica dataset,
 found by CORELS, across 10 cross-validation folds.
 %
-Figures~\ref{fig:recidivism-rule-list-02} and~\ref{fig:recidivism-rule-list-01}
-use regularization parameters~${\Reg = 0.02}$ and~0.01, respectively,
-and Figure~\ref{fig:recidivism-all-folds}~(\S\ref{sec:examples}) uses~${\Reg = 0.005}$;
-together, these also correspond to the experiments summarized in~\S\ref{sec:sparsity}
+Figure~\ref{fig:recidivism-rule-list-02-01} shows examples for
+regularization parameters~${\Reg = 0.02}$ and~0.01,
+and Figure~\ref{fig:recidivism-all-folds}~(\S\ref{sec:examples}) for~${\Reg = 0.005}$;
+together, these correspond to the results for CORELS summarized in~\S\ref{sec:sparsity}
 (Figure~\ref{fig:sparsity}, top).
 %
-The optimal rule lists tend to grow in length as the regularization parameter decreases.
+Notice that optimal rule lists tend to grow in length as the regularization parameter decreases.
 
-For the largest regularization parameter~${\Reg = 0.02}$~(Figure~\ref{fig:recidivism-rule-list-02}),
+For the largest regularization parameter~${\Reg = 0.02}$~(Figure~\ref{fig:recidivism-rule-list-02-01}),
 we observe that all folds identify the same length-1 rule list.
 %
-For the intermediate value~${\Reg = 0.01}$~(Figure~\ref{fig:recidivism-all-folds}),
-we observed in~\S\ref{sec:examples} that across the folds,
-all the optimal rule lists contain the same prefix rules, up to a permutation.
+For the smallest value~${\Reg = 0.005}$~(Figure~\ref{fig:recidivism-all-folds}),
+we observed in~\S\ref{sec:examples} that the folds identify three different
+optimal rule lists that all contain the same prefix rules, up to a permutation.
 %
 Across all three regularization parameter values and all folds,
 the prefix rules always predict the positive class label,
@@ -339,23 +339,12 @@ and the default rule always predicts the negative class label.
 We note that our objective is not designed to enforce any of these properties,
 though some may be seen as desirable.
 %
-With the smaller regularization parameter~${\Reg = 0.005}$~(Figure~\ref{fig:recidivism-all-folds}, \S\ref{sec:examples}),
+With the intermediate~${\Reg = 0.01}$ (Figure~\ref{fig:recidivism-all-folds},~\S\ref{sec:examples}),
 we observe a greater diversity of optimal rule lists, though they share similar structure.
 
 %compas 0.02
 %{priors:>3}~1;default~0
-\begin{figure}[h!]
-\begin{algorithmic}
-\State \bif $(priors > 3)$ \bthen $yes$ \Comment{Found by all 10 folds}
-\State \belse $no$
-\end{algorithmic}
-\caption{Optimal rule list for the ProPublica dataset,
-found by CORELS with regularization parameter~${\Reg = 0.02}$,
-for all 10 cross-validation folds.
-}
-\label{fig:recidivism-rule-list-02}
-\end{figure}
-
+%
 %compas 0.01
 %{sex:Male,juvenile-crimes:>0}~1;{priors:>3}~1;default~0
 %{age:23-25,priors:2-3}~1;{age:18-20}~1;{sex:Male,age:21-22}~1;{priors:>3}~1;default~0
@@ -368,6 +357,15 @@ for all 10 cross-validation folds.
 %{age:18-20}~1;{priors:>3}~1;default~0
 %{age:18-20}~1;{sex:Male,age:21-22}~1;{priors:>3}~1;default~0
 \begin{figure}[h!]
+\textbf{Two-year recidivism prediction $(\Reg = 0.02)$}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(priors > 3)$ \bthen $yes$ \Comment{Found by all 10 folds}
+\State \belse $no$
+\end{algorithmic}
+\vspace{5mm}
+\textbf{Two-year recidivism prediction $(\Reg = 0.01)$}
+\vspace{1mm}
 \begin{algorithmic}
 \State \bif $(age = 23-25) \band (priors = 2-3)$ \bthen $yes$ \Comment{Found by 3 folds}
 \State \belif $(age = 18-20)$ \bthen $yes$
@@ -409,10 +407,10 @@ for all 10 cross-validation folds.
 \State \belse $no$
 \end{algorithmic}
 \caption{Example optimal rule lists for the ProPublica dataset,
-found by CORELS with regularization parameter~${\Reg = 0.01}$,
-across 10 cross-validation folds.
+found by CORELS with regularization parameters~${\Reg = 0.02}$~(top),
+and~0.01~(bottom) across 10 cross-validation folds.
 }
-\label{fig:recidivism-rule-list-01}
+\label{fig:recidivism-rule-list-02-01}
 \end{figure}
 
 \section*{Appendix E. Optimal rule lists for weapon prediction, for different~$\Reg$}
@@ -421,15 +419,16 @@ Example optimal rule lists that predict whether a weapon will be found on a
 stopped individual who is frisked or searched, for the NYCLU stop-and-frisk dataset,
 found by CORELS, across 10 cross-validation folds.
 %
-Figures~\ref{fig:weapon-rule-list-04}, \ref{fig:weapon-rule-list-01}, and~\ref{fig:weapon-rule-list-0025}
-use regularization parameters~${\Reg = 0.04}$, 0.01, and 0.0025, respectively,
-and correspond to the experiments summarized in~\S\ref{sec:sparsity}
-(Figure~\ref{fig:sparsity}, bottom).
+Figure~\ref{fig:weapon-rule-list-04-01} shows
+regularization parameters~${\Reg = 0.04}$ and~0.01,
+and Figure~\ref{fig:weapon-rule-list-0025} shows~0.0025;
+together, these results correspond to the results for CORELS summarized
+in~\S\ref{sec:sparsity} (Figure~\ref{fig:sparsity}, bottom).
 %
 The optimal rule lists tend to grow in length as the regularization parameter decreases.
 
-For each of the larger regularization parameters~${\Reg = 0.04}$~(Figure~\ref{fig:weapon-rule-list-04})
-and 0.01~(Figure~\ref{fig:weapon-rule-list-01}), we observe that across the folds,
+For each of the larger regularization parameters in Figure~\ref{fig:weapon-rule-list-04-01},
+${\Reg = 0.04}$~(top) and 0.01~(bottom), we observe that across the folds,
 all the optimal rule lists contain the same prefix rules, up to a permutation.
 %
 Furthermore, the prefix rules always predict the positive class label,
@@ -452,24 +451,7 @@ we observe a greater diversity of optimal rule lists, though they share similar 
 %{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
 %{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
 %{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
-\begin{figure}[h!]
-\begin{algorithmic}
-\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 7 folds}
-\State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
-\State \belse $no$
-\end{algorithmic}
-\vspace{1mm}
-\begin{algorithmic}
-\State \bif $(stop~reason = suspicious~bulge)$ \bthen $yes$ \Comment{Found by 3 folds}
-\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
-\State \belse $no$
-\end{algorithmic}
-\caption{Example optimal rule lists for the NYCLU stop-and-frisk dataset,
-found by CORELS with regularization parameter~${\Reg = 0.04}$, across 10 cross-validation folds.
-}
-\label{fig:weapon-rule-list-04}
-\end{figure}
-
+%
 %frisk 0.01
 %{cs_bulge:stop-reason=suspicious-bulge}~1;{location:transit-authority}~1;{cs_objcs:stop-reason=suspicious-object}~1;default~0
 %{cs_objcs:stop-reason=suspicious-object}~1;{location:transit-authority}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
@@ -482,6 +464,21 @@ found by CORELS with regularization parameter~${\Reg = 0.04}$, across 10 cross-v
 %{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;{location:transit-authority}~1;default~0
 %{location:transit-authority}~1;{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
 \begin{figure}[h!]
+\textbf{Weapon prediction $(\Reg = 0.04)$}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 7 folds}
+\State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~bulge)$ \bthen $yes$ \Comment{Found by 3 folds}
+\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{5mm}
+\textbf{Weapon prediction $(\Reg = 0.04)$}
 \begin{algorithmic}
 \State \bif $(location = transit~authority)$ \bthen $yes$ \Comment{Found by 3 folds}
 \State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
@@ -517,9 +514,10 @@ found by CORELS with regularization parameter~${\Reg = 0.04}$, across 10 cross-v
 \State \belse $no$
 \end{algorithmic}
 \caption{Example optimal rule lists for the NYCLU stop-and-frisk dataset,
-found by CORELS with regularization parameter~${\Reg = 0.01}$, across 10 cross-validation folds.
+found by CORELS with regularization parameters~${\Reg = 0.04}$~(top) and~0.01~(bottom),
+across 10 cross-validation folds.
 }
-\label{fig:weapon-rule-list-01}
+\label{fig:weapon-rule-list-04-01}
 \end{figure}
 
 %frisk 0.025
