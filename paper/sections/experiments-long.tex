@@ -242,12 +242,18 @@ For both problems, CORELS can learn short rule lists without sacrificing accurac
 \begin{center}
 %\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
 % left lower right upper
-\includegraphics[trim={20mm, 25mm, 24mm, 20mm},
-width=0.9\textwidth]{figs/compas_execution_large-remaining-space.pdf}
+%\includegraphics[trim={13mm, 20mm, 0mm, 13mm},
+%width=0.495\textwidth]{figs/compas_execution_large-remaining-space.pdf}
+\includegraphics[trim={30mm, 20mm, 30mm, 10mm},
+width=\textwidth]{figs/weapon_execution_large-remaining-space.pdf}
 \end{center}
-\caption{CORELS with (lines) and without
+\caption{Left: CORELS with (lines) and without
 (dashes) the equivalent points bound (Theorem~\ref{thm:identical}),
 for the ProPublica dataset (${\Reg = 0.005}$, ${M = 155}$).
+%
+Right: CORELS with (lines) and without (dashes)
+the symmetry-aware map %(\ie the permutation bound, Corollary~\ref{thm:permutation}),
+for the NYCLU dataset (${\Reg = 0.01}$, ${M = 46}$).
 %
 Top: Objective value (thin line) and lower bound (thick line) for CORELS,
 as a function of wall clock time (log scale).
