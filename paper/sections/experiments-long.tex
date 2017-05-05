@@ -215,11 +215,15 @@ Small circles mark associated training accuracy means.
 %
 Top:  Two-year recidivism prediction for the ProPublica COMPAS dataset.
 %
+%For CORELS and SBRL, the number of antecedents~$M$ is between 155 and 157.
+%
 None of the models exhibit significant overfitting --
 mean training accuracy never exceeds mean test accuracy
 by more than about 0.01.
 %
 Bottom:  Weapon prediction for the NYCLU stop-and-frisk dataset.
+%
+%For CORELS and SBRL, we use ${M = 28}$ antecedents.
 %
 Only CART with ${cp = 0.001}$ significantly overfits.
 %
@@ -243,7 +247,7 @@ width=0.9\textwidth]{figs/compas_execution_large-remaining-space.pdf}
 \end{center}
 \caption{CORELS with (lines) and without
 (dashes) the equivalent points bound (Theorem~\ref{thm:identical}),
-for the ProPublica dataset.
+for the ProPublica dataset (${\Reg = 0.005}$, ${M = 155}$).
 %
 Top: Objective value (thin line) and lower bound (thick line) for CORELS,
 as a function of wall clock time (log scale).
@@ -331,7 +335,8 @@ No symmetry-aware map & 2000 (770) & 16 (5.9) & 15 (5.7) \\
 No equivalent points bound & $>$1490 & $>$800 & $>$790 \\
 \end{tabular}
 %\vspace{4mm}
-\caption{Per-component performance improvement, for the ProPublica dataset.
+\caption{Per-component performance improvement, for the ProPublica dataset
+(${\Reg = 0.005}$, ${M = 155}$).
 %
 The columns report the total execution time,
 time to optimum, maximum evaluated prefix length,
@@ -398,12 +403,12 @@ No equivalent points bound & 25 (5.4) & 7.5 (0.5) & 4.6 (0.2) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Per-component performance improvement, as in Table~\ref{tab:ablation},
-for the NYCLU stop-and-frisk dataset.
+for the NYCLU stop-and-frisk dataset (${\Reg = 0.01}$, ${M = 46}$).
 %
 All rows represent complete executions.
 %
 See Table~\ref{tab:ablation} for a detailed caption,
-also Figure~\ref{fig:queue-weapon}.
+and also Figure~\ref{fig:queue-weapon}.
 }
 \vspace{4mm}
 \label{tab:ablation-weapon}
@@ -418,7 +423,7 @@ width=0.94\textwidth]{figs/kdd_compas_ablation-queue.pdf}
 \vspace{-5mm}
 \caption{Summary of the logical queue's contents, for full CORELS (top left)
 and five variants that each remove a specific implementation optimization or bound,
-for the ProPublica dataset.  See also Table~\ref{tab:ablation}.
+for the ProPublica dataset (${\Reg = 0.005}$, ${M = 156}$).  See also Table~\ref{tab:ablation}.
 %
 %We summarize the composition of the logical queue,
 %\ie the nodes in the physical that have not been marked for deletion.
@@ -443,7 +448,7 @@ For each execution, we indicate the total time in seconds,
 relative to the full CORELS implementation (T = 342 s),
 and with a dashed vertical line.
 %
-Note that the execution without the equivalent points bound (bottom right) is incomplete.
+The execution without the equivalent points bound (bottom right) is incomplete.
 }
 \label{fig:queue}
 \end{figure}
@@ -457,7 +462,7 @@ width=0.94\textwidth]{figs/weapon_ablation-queue.pdf}
 \vspace{-5mm}
 \caption{Summary of the logical queue's contents, for full CORELS (top left)
 and five variants that each remove a specific implementation optimization or bound,
-for the NYCLU stop-and-frisk dataset, as in Table~\ref{tab:ablation-weapon}.
+for the NYCLU stop-and-frisk dataset (${\Reg = 0.01}$, ${M = 46}$), as in Table~\ref{tab:ablation-weapon}.
 %
 See Figure~\ref{fig:queue} for a detailed caption.
 }

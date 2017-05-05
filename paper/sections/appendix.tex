@@ -523,6 +523,7 @@ of optimal rule lists, though they share similar structure.
 \end{algorithmic}
 \vspace{5mm}
 \textbf{Weapon prediction $(\Reg = 0.01)$}
+\vspace{1mm}
 \begin{algorithmic}
 \State \bif $(location = transit~authority)$ \bthen $yes$ \Comment{Found by 3 folds}
 \State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
@@ -576,6 +577,8 @@ across 10 cross-validation folds.
 %{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{location:housing-authority}~0;{cs_descr:stop-reason=fits-description}~0;{city:Manhattan}~1;default~0
 %{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_descr:stop-reason=fits-description}~0;{cs_vcrim:stop-reason=actions-of-violent-crime}~0;{location:transit-authority}~1;{inout:inside}~0;{city:Manhattan}~1;{ac_evasv:circumstances=evasive-response}~0;{city:Bronx}~1;default~0
 \begin{figure}[h!]
+\textbf{Weapon prediction $(\Reg = 0.0025)$}
+\vspace{0.5mm}
 \scriptsize
 \begin{algorithmic}
 \State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 4 folds $(K=7)$}
@@ -656,8 +659,8 @@ across 10 cross-validation folds.
 \State \belif $(city = Bronx)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
-\caption{Example optimal rule lists for the NYCLU stop-and-frisk dataset,
-found by CORELS with regularization parameter~${\Reg = 0.0025}$, across 10 cross-validation folds.
+\caption{Example optimal rule lists for the NYCLU stop-and-frisk dataset~${\Reg = 0.0025}$.
+%found by CORELS with regularization parameter, across 10 cross-validation folds.
 }
 \label{fig:weapon-rule-list-0025}
 \end{figure}
