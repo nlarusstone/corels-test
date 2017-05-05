@@ -1,5 +1,5 @@
 """
-For KDD 2017 Figure 4.  See also `kdd_compas_ablation.py`
+See also `kdd_compas_execution.py`
 
 
 """
@@ -11,7 +11,7 @@ import pylab
 import tabular as tb
 
 
-froot = 'compas'
+froot = 'weapon'
 data_dir = '../data/CrossValidation/'
 num_folds = 1
 lw = 2  # linewidth
@@ -19,32 +19,29 @@ ms = 9  # markersize
 fs = 16 # fontsize
 
 # log files generated on beepboop
-# no-minor execution using just under 400GB RAM when halted
-log_dir = '../logs/keep/'
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=800000000-c=0.0050000-v=1-f=1000.txt']
+log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep'
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
+'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt']
 fold = 1
 
 large = True
 
 if large:
-    ftag = 'compas_execution_large'
+    ftag = 'weapon_execution_large'
     fs_legend = fs - 1
     legend_xloc = 10**-1.2
-    legend_yloc = 0.2
     wo = 'w/o'
 else:
-    ftag = 'compas_execution'
+    ftag = 'weapon_execution'
     fs_legend = fs - 2
     legend_xloc = 10**-0.6
-    legend_yloc = 0.15
     wo = 'w/o'
 
 ntot = len(log_root_list)
 
 pylab.ion()
 
-tname = 'compas_%d_train.out' % fold
+tname = 'weapon_%d_train.out' % fold
 log_fname_x = log_root_list[0] % tname
 log_fname_y = log_root_list[-1] % tname
 fname = os.path.join(data_dir, tname)
@@ -69,10 +66,10 @@ if large:
     pylab.figure(1, figsize=(14, 7.5))
 else:
     pylab.figure(1, figsize=(9, 6))
+    pylab.clf()
 
-pylab.clf()
 if large:
-    ax1 = pylab.subplot2grid((24, 40), (0, 1), colspan=18, rowspan=11)
+    ax1 = pylab.subplot2grid((24, 40), (0, 22), colspan=18, rowspan=11)
 else:
     ax1 = pylab.subplot2grid((24, 20), (0, 1), colspan=19, rowspan=10)
 
@@ -80,7 +77,7 @@ ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
 
 ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='gray', linewidth=lw)
 ax1.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '-', color='coral', linewidth=lw*2)
-ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='mediumblue', linewidth=lw*2)
+ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='c', linewidth=lw*2)
 ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='gray', linewidth=lw)
 ax1.semilogx(tmin, opt - 0.035, 'k*', markersize=10)
 ax1.semilogx(tmin, opt, 'k|', markeredgewidth=lw)
@@ -94,20 +91,20 @@ for jj in ip:
 
 pylab.xticks(fontsize=fs)
 pylab.ylabel('Value', fontsize=fs)
-pylab.title('Execution progress (ProPublica dataset)', fontsize=fs)
+pylab.title('Execution progress (NYCLU dataset)', fontsize=fs)
 pylab.xticks(fontsize=fs)
 pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
-pylab.axis([x['total_time'][2], 10**4, 0, 0.50])
-pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (%s equiv. pts. bound)' % wo], loc=(legend_xloc, legend_yloc), fontsize=fs_legend, frameon=False)
+pylab.axis([x['total_time'][2], 10**4.5, 0, 0.5])
+pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (%s map)' % wo], loc='lower right', fontsize=fs_legend, frameon=False, borderpad=0.01)
 
 if large:
-    ax2 = pylab.subplot2grid((24, 40), (14, 1), colspan=18, rowspan=8)
+    ax2 = pylab.subplot2grid((24, 40), (14, 22), colspan=18, rowspan=8)
 else:
     ax2 = pylab.subplot2grid((24, 20), (13, 1), colspan=19, rowspan=8)
 
 yremaining = y['log_remaining_space_size'].copy()
 yremaining[yremaining > yremaining[0]] = yremaining[0]
-ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*2, color='mediumblue')
+ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*2, color='c')
 
 xremaining = x['log_remaining_space_size'].copy()
 xremaining[xremaining > xremaining[0]] = xremaining[0]
@@ -115,18 +112,15 @@ ax2.semilogx(x['total_time'][2:ii+1], xremaining[2:ii+1], '-', color='coral', li
 
 yremaining = y['log_remaining_space_size'].copy()
 yremaining[yremaining > yremaining[0]] = yremaining[0]
-ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*2, color='mediumblue')
+ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*2, color='c')
 
 pylab.title('Size of remaining search space', fontsize=fs)
 pylab.xlabel('Time (s)', fontsize=fs)
 pylab.ylabel('log10(Size)', fontsize=fs)
 pylab.xticks(fontsize=fs)
-if large:
-    pylab.yticks(range(0, 160, 50), fontsize=fs)
-else:
-    pylab.yticks(range(0, 160, 50), fontsize=fs)
+pylab.yticks(range(0, 61, 20), fontsize=fs)
 
-pylab.legend(['%s equivalent points bound' % wo, 'CORELS'], loc='center right', fontsize=fs_legend, frameon=False)
-pylab.axis([x['total_time'][2], 10**4, 0, 170])
+pylab.legend(['%s symmetry-aware map' % wo, 'CORELS'], loc='upper right', fontsize=fs_legend, frameon=False)
+pylab.axis([x['total_time'][2], 10**4.5, 0, 60])
 pylab.draw()
 pylab.savefig('../figs/%s-remaining-space.pdf' % ftag)
