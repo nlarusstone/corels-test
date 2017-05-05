@@ -32,13 +32,13 @@ It also does not automatically choose the subgroup with the highest likelihood o
 positive outcome; doing so would require an algorithm such as Falling Rule Lists \citep{WangRu15},
 which forces the estimated probabilities to decrease along the list.
 %
-While CORELS does not technically produce estimates of ${\P(Y=1 \given X)}$,
+While CORELS does not technically produce estimates of ${\P(Y=1 \given x)}$,
 one could form such an estimate by computing the empirical
-proportion ${\hat{\P}(Y=1 \given X \textrm{ obeys } p_k)}$ for each antecedent~$p_k$.
+proportion ${\hat{\P}(Y=1 \given x \textrm{ obeys } p_k)}$ for each antecedent~$p_k$.
 %
 Furthermore, it is not designed to assist with causal inference applications, since
 it does not estimate the effect of a treatment via the conditional difference
-${\P(Y=1 \given \textrm{treatment} = \textrm{True}, X) -}$ ${\P(Y=1 \given \textrm{treatment} = \textrm{False}, X)}$.
+${\P(Y=1 \given \textrm{treatment} = \textrm{True}, x) -}$ ${\P(Y=1 \given \textrm{treatment} = \textrm{False}, x)}$.
 %
 Alternative algorithms that estimate conditional differences with interpretable
 rule lists include Causal Falling Rule Lists \citep{WangRu16}
