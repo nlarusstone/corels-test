@@ -312,18 +312,24 @@ inside or outside & inside, outside & 2 \\
 \label{tab:frisk-data}
 \end{table}
 
-\section*{Appendix D. Optimal rule lists for recidivism prediction, for different~$\Reg$}
+\section*{Appendix D. Example optimal rule lists, for different values of~$\Reg$}
 
-Example optimal rule lists that predict two-year recidivism, for the ProPublica dataset,
-found by CORELS, across 10 cross-validation folds.
+For each of our prediction problems, we provide listings of
+optimal rule lists found by CORELS, across 10 cross-validation folds,
+for different values of the regularization parameter~$\Reg$.
+%
+These rule lists correspond to the results for CORELS summarized
+in Figure~\ref{fig:sparsity}~(\S\ref{sec:sparsity}).
+%
+Recall that as~$\Reg$ decreases, optimal rule lists tend to grow in length. \\
+
+\textbf{ProPublica recidivism dataset.}
+We show example optimal rule lists that predict two-year recidivism.
 %
 Figure~\ref{fig:recidivism-rule-list-02-01} shows examples for
-regularization parameters~${\Reg = 0.02}$ and~0.01,
-and Figure~\ref{fig:recidivism-all-folds}~(\S\ref{sec:examples}) for~${\Reg = 0.005}$;
-together, these correspond to the results for CORELS summarized in~\S\ref{sec:sparsity}
-(Figure~\ref{fig:sparsity}, top).
-%
-Notice that optimal rule lists tend to grow in length as the regularization parameter decreases.
+regularization parameters~${\Reg = 0.02}$ and~0.01;
+we showed examples for~${\Reg = 0.005}$ in
+Figure~\ref{fig:recidivism-all-folds}~(\S\ref{sec:examples}) .
 
 For the largest regularization parameter~${\Reg = 0.02}$~(Figure~\ref{fig:recidivism-rule-list-02-01}),
 we observe that all folds identify the same length-1 rule list.
@@ -413,21 +419,15 @@ and~0.01~(bottom) across 10 cross-validation folds.
 \label{fig:recidivism-rule-list-02-01}
 \end{figure}
 
-\section*{Appendix E. Optimal rule lists for weapon prediction, for different~$\Reg$}
-
-Example optimal rule lists that predict whether a weapon will be found on a
-stopped individual who is frisked or searched, for the NYCLU stop-and-frisk dataset,
-found by CORELS, across 10 cross-validation folds.
+\textbf{NYCLU stop-and-frisk dataset.}
+We show example optimal rule lists that predict whether a weapon
+will be found on a stopped individual who is frisked or searched.
 %
 Figure~\ref{fig:weapon-rule-list-04-01} shows
 regularization parameters~${\Reg = 0.04}$ and~0.01,
-and Figure~\ref{fig:weapon-rule-list-0025} shows~0.0025;
-together, these results correspond to the results for CORELS summarized
-in~\S\ref{sec:sparsity} (Figure~\ref{fig:sparsity}, bottom).
-%
-The optimal rule lists tend to grow in length as the regularization parameter decreases.
+and Figure~\ref{fig:weapon-rule-list-0025} shows~0.0025.
 
-For each of the larger regularization parameters in Figure~\ref{fig:weapon-rule-list-04-01},
+For each of the two larger regularization parameters in Figure~\ref{fig:weapon-rule-list-04-01},
 ${\Reg = 0.04}$~(top) and 0.01~(bottom), we observe that across the folds,
 all the optimal rule lists contain the same prefix rules, up to a permutation.
 %
@@ -436,9 +436,9 @@ and the default rule always predicts the negative class label.
 %
 We note that our objective is not designed to enforce any of these properties,
 though some may be seen as desirable.
-
-With the smaller regularization parameter~${\Reg = 0.0025}$~(Figure~\ref{fig:weapon-rule-list-0025}),
-we observe a greater diversity of optimal rule lists, though they share similar structure.
+%
+With the smaller regularization parameter~${\Reg = 0.0025}$ (Figure~\ref{fig:weapon-rule-list-0025}), we observe a greater diversity
+of optimal rule lists, though they share similar structure.
 
 %frisk 0.04
 %{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_objcs:stop-reason=suspicious-object}~1;default~0
@@ -478,7 +478,7 @@ we observe a greater diversity of optimal rule lists, though they share similar 
 \State \belse $no$
 \end{algorithmic}
 \vspace{5mm}
-\textbf{Weapon prediction $(\Reg = 0.04)$}
+\textbf{Weapon prediction $(\Reg = 0.01)$}
 \begin{algorithmic}
 \State \bif $(location = transit~authority)$ \bthen $yes$ \Comment{Found by 3 folds}
 \State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
