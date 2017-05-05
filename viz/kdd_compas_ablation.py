@@ -255,7 +255,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 if make_small:
                     pass
                 else:
-                    pylab.legend(['%d' % ii for ii in range(1, 10)], bbox_to_anchor=(1.02, 2.16), loc=2)
+                    pylab.legend(['%d' % ii for ii in range(1, 10)], bbox_to_anchor=(1., 2.16), loc=2)
                 pylab.suptitle('\nExecution traces of queue contents (ProPublica dataset)', fontsize=fs+2)
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)
 
