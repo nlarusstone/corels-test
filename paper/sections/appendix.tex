@@ -302,8 +302,8 @@ In 30,961 records, the individual was frisked and/or searched (67.6\%); of those
 a criminal possession of a weapon was identified 1,445 times (4.7\% of these records).
 %
 We remove 1,929 records with missing data, as well as a small number with extreme values
-for the individual's age -- we eliminate those with age $< 12$ or $>89$;
-we also assume that one age marked `366' is a typo, and we replace it with `36'.
+for the individual's age -- we eliminate those with age~${< 12}$ or~${>89}$.
+%we also assume that one age marked `366' is a typo, and we replace it with `36'.
 %
 This yields a set of 29,595 records in which the individual was frisked and/or searched.
 %
@@ -314,7 +314,7 @@ We generate cross-validation folds first, and then resample within each fold.
 %
 In our 10-fold cross-validation experiments, each training set contains 50,743 datapoints.
 
-Table~\ref{tab:frisk-data} shows the 5 categorical attributes,
+Table~\ref{tab:frisk-data} shows the 5 categorical attributes that we use,
 corresponding to a total of 28 values.
 %
 Our results in~\S\ref{sec:examples} through~\S\ref{sec:sparsity}
