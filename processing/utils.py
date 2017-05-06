@@ -9,7 +9,13 @@ def to_binary(x):
         dlist = list(set(x[n]))
         dlist.sort()
         if (len(dlist) == 2):
-            dlist = dlist[1:]
+            if hasattr(dlist[0], 'split'):
+                if ('=not-' in dlist[0]):
+                    dlist = dlist[1:]
+                else:
+                    dlist = dlist[:1]
+            else:
+                dlist = dlist[1:]
         for d in dlist:
             names.append('%s:%s' % (n, str(d)))
             columns.append(np.cast[int](x[n] == d))

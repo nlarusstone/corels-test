@@ -1,20 +1,20 @@
 """
-For KDD 2017 Table 1 and Figure 5.  See also `kdd_compas_execution.py`
+See also `kdd_compas_execution.py`
 
 #!/bin/bash
 
-# ./ablation.sh compas 1000000000 none
-# ./ablation.sh compas 1000000000 priority
-# ./ablation.sh compas 1000000000 support
-# ./ablation.sh compas 1000000000 pmap
-# ./ablation.sh compas 1000000000 lookahead
-# ./ablation.sh compas 800000000 identical
+# ./ablation.sh weapon 1000000000 none 0.01
+# ./ablation.sh weapon 1000000000 priority 0.01
+# ./ablation.sh weapon 1000000000 support 0.01
+# ./ablation.sh weapon 1000000000 pmap 0.01
+# ./ablation.sh weapon 1000000000 lookahead 0.01
+# ./ablation.sh weapon 800000000 identical 0.01
 
 args=("$@")
 dataset=${args[0]}
 n=${args[1]}
 ablation=${args[2]}
-
+r=${args[3]}
 
 for i in `seq 0 9`;
 do
@@ -24,25 +24,24 @@ do
     minor=../data/CrossValidation/${dataset}_${i}_train.minor
     if [ "$ablation" = "none" ];
     then
-        $bbcache -n ${n} -c 2 -r 0.005 -p 1 $out $label $minor &
+        $bbcache -n ${n} -c 2 -r $r -p 1 $out $label $minor &
     elif [ "$ablation" = "priority" ];
     then
-        $bbcache -n ${n} -b -r 0.005 -p 1 $out $label $minor &
+        $bbcache -n ${n} -b -r $r -p 1 $out $label $minor &
     elif [ "$ablation" = "support" ];
     then
-        $bbcache -n ${n} -c 2 -r 0.005 -p 1 -a 1 $out $label $minor &
+        $bbcache -n ${n} -c 2 -r $r -p 1 -a 1 $out $label $minor &
     elif [ "$ablation" = "pmap" ];
     then
-        $bbcache -n ${n} -c 2 -r 0.005 $out $label $minor &
+        $bbcache -n ${n} -c 2 -r $r $out $label $minor &
     elif [ "$ablation" = "lookahead" ];
     then
-        $bbcache -n ${n} -c 2 -r 0.005 -p 1 -a 2 $out $label $minor &
+        $bbcache -n ${n} -c 2 -r $r -p 1 -a 2 $out $label $minor &
     elif [ "$ablation" = "identical" ];
     then
-        $bbcache -n ${n} -c 2 -r 0.005 -p 1 $out $label
+        $bbcache -n ${n} -c 2 -r $r -p 1 $out $label
     fi
 done
-
 
 """
 import os
@@ -55,7 +54,7 @@ import tabular as tb
 import utils
 
 
-froot = 'compas'
+froot = 'weapon'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
 lw = 2  # linewidth
@@ -64,22 +63,22 @@ fs = 16 # fontsize
 
 num_folds = 10
 make_figure = False
-
-num_folds = 1
-make_figure = True
+figure_fold = -1
 make_small = False
 
+#num_folds = 2
+#figure_fold = 1
+
 # log files generated on beepboop
-# no-minor execution using just under 400GB RAM when halted
-log_dir = '../logs/keep/'
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=800000000-c=0.0050000-v=1-f=1000.txt']
-labels = ['CORELS', 'No priority queue (BFS)', 'No support bounds', 'No lookahead bound',  'No symmetry-aware map', 'No equivalent points bound']
-ftag = "kdd_compas_ablation"
+log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
+'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
+'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt']
+labels = ['CORELS', 'No priority queue (BFS)', 'No support bounds', 'No lookahead bound', 'No symmetry-aware map', 'No equivalent points bound']
+ftag = "weapon_ablation"
 
 if make_small:
     log_root_list = log_root_list[:1] + log_root_list[-3:]
@@ -109,11 +108,11 @@ ablation_names = ['none (CORELS)', 'priority queue', 'support bounds',
 
 for (ncomp, log_root) in enumerate(log_root_list):
     for fold in range(num_folds):
-        if (make_figure) and (fold == 0):
+        if (fold == figure_fold):
             make_figure = True
         else:
             make_figure = False
-        tname = 'compas_%d_train.out' % fold
+        tname = 'weapon_%d_train.out' % fold
         log_fname = log_root % tname
         print log_fname
         fname = os.path.join(data_dir, tname)
@@ -182,7 +181,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
 
         if (make_figure):
             color_vec = ['r', 'r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'm', 'violet', 'pink', 'gray', 'k']#[:(max_length + 1)][::-1]
-            color_vec = ['k', 'violet', 'm', 'purple', 'b', 'c', 'g', 'yellowgreen', 'y', 'orange', 'r', 'brown']
+            color_vec = ['k', 'violet', 'm', 'purple', 'b', 'c', 'green', 'yellowgreen', 'y', 'orange', 'r', 'brown']
             #color_vec = ['purple', 'b', 'c', 'm', 'gray', 'k'][::-1]
 
             if (ncomp == 0):
@@ -217,7 +216,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 pylab.xlabel('Time (s)', fontsize=fs+2)
             if (ncomp % 2 == 0):
                 pylab.ylabel('Count', fontsize=fs+2)
-            (ymin, ymax) = (10**-0.1, 10**8.3)
+            (ymin, ymax) = (10**-0.1, 10**8)
             t_corels = int(np.round(t_comp[-1]))
             tmax = np.round(tt[-1])
             if (make_small):
@@ -229,34 +228,31 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 if (make_small):
                     xloc = 0.4
                 else:
-                    xloc = 0.2
-                pylab.text(xloc, 10**7.4, 'T $\\equiv$ %d s' % t_corels, fontsize=fs)
+                    xloc = 0.1
+                pylab.text(xloc, 10**7, 'T $\\equiv$ %d s' % t_corels, fontsize=fs)
             else:
                 if (tmax / t_corels) < 10:
                     descr = '%d s $\\approx$ %1.1f T' % (np.round(tmax), tmax / t_corels)
                 else:
                     descr = '%d s $\\approx$ %d T' % (np.round(tmax), np.round(tmax / t_corels))
-                if (ncomp == (ntot - 1)):
-                    descr = '> %s' % descr
+                if (ncomp == 4):
                     xloc = 0.02
                 else:
-                    pylab.plot([tmax, tmax], [ymin, ymax], 'k--', linewidth=lw)
                     descr = (14 - (len(descr.split('$')[0] + descr.split('$')[-1]) + 1)) * ' ' + descr
-                pylab.text(xloc, 10**7.4, descr, fontsize=fs)
+                pylab.plot([tmax, tmax], [ymin, ymax], 'k--', linewidth=lw)
+                pylab.text(xloc, 10**7, descr, fontsize=fs)
             #pylab.suptitle('lengths of prefixes in the logical queue\n', fontsize=fs)
             pylab.title(labels[ncomp], fontsize=fs+2)
             pylab.xticks(fontsize=fs-2)
             pylab.yticks(fontsize=fs-2)
             #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
-            ax = [10**-4, 10**4, ymin, ymax]
+            ax = [10**-4, 10**4.9, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()
             if (ncomp + 1 == ntot):
-                if make_small:
-                    pass
-                else:
-                    pylab.legend(['%d' % ii for ii in range(1, 10)], bbox_to_anchor=(1., 2.16), loc=2)
-                pylab.suptitle('\nExecution traces of queue contents (ProPublica dataset)', fontsize=fs+2)
+                if not (make_small):
+                    pylab.legend(['%d' % ii for ii in range(1, max_length + 1)], bbox_to_anchor=(1., 2.3), loc=2)
+                    pylab.suptitle('\nExecution traces of queue contents (NYCLU stop-and-frisk dataset)', fontsize=fs+2)
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)
 
 max_prefix_length += 1
@@ -272,16 +268,16 @@ print 'min_obj:', min_obj
 #tt_s = np.cast[int](np.round(t_tot.std(axis=1)))
 tt_m = t_tot.mean(axis=1) / 60.
 tt_s = t_tot.std(axis=1) / 60.
-to_m = np.cast[int](np.round(t_opt.mean(axis=1)))
-to_s = np.cast[int](np.round(t_opt.std(axis=1)))
+to_m = t_opt.mean(axis=1) * 10**3
+to_s = t_opt.std(axis=1) * 10**3
 km_m = np.cast[int](max_prefix_length.mean(axis=1))
 km_s = max_prefix_length.std(axis=1)
 km_min = max_prefix_length.min(axis=1)
 km_max = max_prefix_length.max(axis=1)
-it_m = num_insertions.mean(axis=1) / 10**6
-it_s = num_insertions.std(axis=1) / 10**6
-mq_m = max_queue.mean(axis=1) / 10**6
-mq_s = max_queue.std(axis=1) / 10**6
+it_m = num_insertions.mean(axis=1) / 10**5
+it_s = num_insertions.std(axis=1) / 10**5
+mq_m = max_queue.mean(axis=1) / 10**5
+mq_s = max_queue.std(axis=1) / 10**5
 
 for rec in zip(ablation_names, tt_m, tt_s, to_m, to_s, it_m, it_s, mq_m, mq_s, km_min, km_max):
     print '%s & %1.1f (%1.1f) & %d (%d) & %1.1f (%1.1f) & %1.1f (%1.1f) & %d-%d \\\\' % rec
@@ -290,21 +286,12 @@ slow_m = (t_tot / t_tot[0]).mean(axis=1) # slowdown
 lb_m = lower_bound_num.mean(axis=1) / 10**6
 lb_s = lower_bound_num.std(axis=1) / 10**6
 
-print 'for no equiv pts:'
-print 'folds that achieve min objective:', ((min_obj[-1] - min_obj[0]) < 10**-6).sum()
-print 'total time >', t_tot[-1:].min() / 60
-print 'time to optimum >', t_opt[-1][((min_obj[-1] - min_obj[0]) < 10**-6)].min()
-print 'max prefix length >=', max_prefix_length[-1]
-print 'num lower bound evals >=', lower_bound_num[-1].min()
-print 'total queue insertions >', num_insertions[-1].min() / 10**6
-print 'max queue size >', max_queue[-1].min() / 10**6
-
 print '& Total time & Slow- & Time to & Max evaluated \\\\'
-print 'Algorithm variant & (min) & down & optimum (s) & prefix length \\\\'
+print 'Algorithm variant & (min) & down & optimum ($\mu$s) & prefix length \\\\'
 for rec in zip(labels, tt_m, tt_s, slow_m, to_m, to_s, km_min, km_max):
-    print '%s & %1.2f (%1.1f) & %1.2f$\\times$ & %d (%d) & %d-%d \\\\' % rec
+    print '%s & %1.2f (%1.1f) & %1.2f$\\times$ & %1.2f (%1.1f) & %d-%d \\\\' % rec
 
 print '& Lower bound & Total queue &  Max queue~~~~ \\\\'
-print 'Algorithm variant & computations ($\times 10^6$) & insertions ($\times 10^6$) & size ($\times 10^6$) \\\\'
+print 'Algorithm variant & computations ($\\times 10^6$) & insertions ($\\times 10^5$) & size ($\\times 10^5$) \\\\'
 for rec in zip(labels, lb_m, lb_s, it_m, it_s, mq_m, mq_s):
     print '%s & %1.2f (%1.1f) & %1.2f (%1.1f) & %1.2f (%1.1f) \\\\' % rec
