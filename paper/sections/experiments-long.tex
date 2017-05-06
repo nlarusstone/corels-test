@@ -51,7 +51,8 @@ For our experiments in~\S\ref{sec:traces}, we add negations of 18 of these antec
 which gives a total of 46 antecedents.
 \end{itemize}
 %
-For further details about data preprocessing steps and antecedent mining, see Appendix~C.
+For further details about data preprocessing steps and antecedent mining,
+see Appendix~\ref{appendix:data}.
 %
 Our choice of and approach to the weapon prediction problem is inspired by the work
 of~\citet{Goel16}, who develop regression models to analyze racial disparities
@@ -179,6 +180,10 @@ In particular, the three-rule list for weapon prediction
 in Figure~\ref{fig:weapon-rule-list} has the spirit of the heuristic
 strategy presented by~\citet{Goel16} that combines three stop criteria
 and is based on a reduced version of their full regression model.
+%
+For each of our prediction problems, see Appendix~\ref{appendix:examples} for listings of
+optimal rule lists found by CORELS, across cross-validation folds,
+for different values of the regularization parameter~$\Reg$.
 
 \subsection{Comparison of accuracy and model size for CORELS and other algorithms}
 \label{sec:sparsity}
@@ -237,6 +242,9 @@ Figure~\ref{fig:sparsity} summarizes differences in accuracy and model size
 for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
 %
 For both problems, CORELS can learn short rule lists without sacrificing accuracy.
+%
+For listings of example optimal rule lists that correspond to the results
+for CORELS summarized in Figure~\ref{fig:sparsity}, see Appendix~\ref{appendix:examples}.
 
 \begin{figure}[t!]
 \begin{center}
