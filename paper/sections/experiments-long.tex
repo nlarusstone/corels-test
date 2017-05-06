@@ -377,7 +377,7 @@ Without our equivalent points bound, but with all of our other optimizations, we
 (see \ref{tab:ablation} and \ref{fig:queue}).
 %
 Naively evaluating all prefixes up to length 10 would require looking at $6.4 \times 10^{21}$ different prefixes.
-%
+% TODO: On average 180 million, but also update to use (nrules - 4) * num_eval_children
 However, CORELS examines only 181,481,555 prefixes in total---a reduction of $3.5 \times 10^{13}$.
 %
 It takes us about 2$\mu$s to evaluate a single prefix.
@@ -390,7 +390,7 @@ It is clear that brute force would not scale to larger problems.
 
 In addition, Moore's law holds that computing power doubled every 18 months from 1984-2006.
 %
-This is a period of 264 months, which means computing power has gone up by at least a factor of $30,000$ since 1984.
+This is a period of 264 months, which means computing power has gone up by at least a factor of $32,000$ since 1984.
 %
 Thus, even with our algorithmic and data structural improvements, CORELS would have run in over 3,600,000s in 1984---an unreasonable amount of time.
 %
