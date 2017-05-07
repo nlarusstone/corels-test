@@ -20,23 +20,24 @@ ms = 9  # markersize
 fs = 16 # fontsize
 
 num_folds = 10
-make_figure = False
+make_figure = True
 figure_fold = -1
 make_small = False
 
-#num_folds = 1
-#figure_fold = 0
+num_folds = 1
+figure_fold = 0
 
 # log files generated on beepboop
 log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
 
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0400000-v=1-f=10.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0025000-v=1-f=1000.txt']
-
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0400000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0025000-v=1-f=1000.txt']
+if make_figure:
+    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0400000-v=1-f=10.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=1-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0025000-v=1-f=1000.txt']
+else:
+    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0400000-v=1-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=1-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0025000-v=1-f=1000.txt']
 
 labels = ['$\lambda$ = 0.04', '$\lambda$ = 0.01', '$\lambda$ = 0.0025']
 ftag = "weapon_reg"
