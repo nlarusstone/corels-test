@@ -289,6 +289,64 @@ the remaining search space decays much more slowly without this bound (dashed li
 \label{fig:objective}
 \end{figure}
 
+\subsection{CORELS with different regularization parameters}
+\label{sec:reg-param}
+
+\begin{table}[t!]
+\begin{centering}
+CORELS with different regularization parameters (NYCLU stop-and-frisk dataset) \\
+\end{centering}
+\vspace{2mm}
+\begin{tabular}{l | c | c | c | c | c}
+& Total & Time to & Max evaluated & Total queue &  Max queue \\
+$\lambda$ & time (s) & optimum (s) & prefix length & insertions ($\times 10^6$) & size ($\times 10^3$) \\
+\hline
+0.04 & 0.33 (0.03) & 0.001 (0.0004) & 6 & 0.033 (0.002) & 1.9 (0.1) \\
+0.01 & 32 (2) & 0.004 (0.001) & 11 & 3.2 (0.2) & 170 (13) \\
+0.0025 & 450 (30) & 21 (25) & 16-17 & 41 (2.7) & 2400 (170) \\
+\end{tabular}
+%\vspace{4mm}
+\caption{Summary of CORELS executions, for the NYCLU stop-and-frisk dataset (${M = 28}$),
+for same three regularization parameters as in Figure~\ref{fig:sparsity} (bottom).
+%
+The columns report the total execution time,
+time to optimum, maximum evaluated prefix length,
+number of times we completely evaluate a prefix~$\Prefix$'s lower bound~$b(\Prefix, \x, \y)$,
+and total number of queue insertions (which is equal to the number of cache insertions).
+%
+We report means (and standard deviations) over 10 cross-validation folds.
+%
+See also Figure~\ref{fig:queue-weapon-reg}.
+}
+\vspace{4mm}
+\label{tab:weapon-reg}
+\end{table}
+
+\begin{figure}[t!]
+\begin{center}
+% left lower right upper
+\includegraphics[trim={30mm 0mm 15mm 0mm},
+width=\textwidth]{figs/weapon_reg-queue.pdf}
+\end{center}
+\vspace{-5mm}
+\caption{Summary of CORELS's logical queue,
+for the NYCLU stop-and-frisk dataset (${M = 28}$),
+for same three regularization parameters as in Figure~\ref{fig:sparsity} (bottom).
+%
+See also Table~\ref{tab:weapon-reg}.
+%
+Solid lines plot the numbers of prefixes in the logical queue (log scale), colored by length (legend),
+as a function of wall clock time (log scale).
+%
+All plots are generated using a single, representative cross-validation training set.
+%
+For each execution, the gray shading fills in the area beneath the total number
+of queue elements, \ie the sum over all lengths;
+we also annotate the total time in seconds, marked with a dashed vertical line.
+}
+\label{fig:queue-weapon-reg}
+\end{figure}
+
 \subsection{CORELS execution traces and efficacy of algorithm optimizations}
 \label{sec:traces}
 
@@ -325,8 +383,8 @@ Per-component performance improvement (ProPublica dataset) \\
 \end{centering}
 \vspace{1mm}
 \begin{tabular}{l | c  r | c | c}
-& Total time & Slow- & Time to & Max evaluated~ \\
-Algorithm variant & (min) & down & optimum (s) & prefix length \\
+& Total & Slow- & Time to & Max evaluated~ \\
+Algorithm variant & time (min) & down & optimum (s) & prefix length \\
 \hline
 CORELS & 5.5 (1.6) & --- & 8 (2) & 5-6 \\
 No priority queue (BFS) & 6.8 (2.2) & 1.2$\times$ & 4 (1) & 5-6 \\
@@ -392,8 +450,8 @@ Per-component performance improvement (NYCLU stop-and-frisk dataset) \\
 \end{centering}
 \vspace{1mm}
 \begin{tabular}{l | c  r | c | c}
-& Total time & Slow- & Time to & Max evaluated~ \\
-Algorithm variant & (min) & down & optimum ($\mu$s) & prefix length \\
+& Total & Slow- & Time to & Max evaluated~ \\
+Algorithm variant & time (min) & down & optimum ($\mu$s) & prefix length \\
 \hline
 CORELS & 0.8 (0.1) & --- & 6.9 (0.2) & 11 \\
 No priority queue (BFS) & 2.4 (0.2) & 3.0$\times$ & 26 (0.6) & 11 \\
