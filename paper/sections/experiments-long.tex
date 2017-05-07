@@ -305,10 +305,35 @@ in particular, the lower bound is far from the optimum objective value.
 Table~\ref{tab:ablation} provides summary statistics for experiments using the full
 CORELS implementation and five variants that each remove a specific optimization.
 %
+The time to optimum column marks the first time we encounter the optimal rule list, 
+which is much smaller than the time it takes to certify optimality.
+%
+The max evaluated prefix length column displays the longest prefix placed in the queue
+as well as the longest prefix considered, which is always one more due to our incremental
+computation.
+%
+Due to our regularization constant, the longest prefix CORELS places in its queue is
+5 while an implementation without just the equivalent points bound looks at prefixes of over
+length 10.
+%
+The number of lower bound evaluations is a proxy for the number of prefixes we examine in the 
+course of execution.
+%
+This number tracks quite well with the overall time and we can calculate how long it takes to 
+evaluate each prefix by taking the ratio of the number of lower bound evaluations and the time.
+%
+Finally, the table tracks the total number of insertions in our queue and the maximum size of our queue.
+%
+The maximum queue size is a large fraction of the total number of elements we add to the queue, but is 
+only a small part of the total number of prefixes we evaluate.
+%
 Figure~\ref{fig:queue} presents a view of the same experiments.
 %
 These plots depict the number of prefixes of a given length in the queue
 during the algorithm's execution.
+%
+Note that the gray area in Figure~\ref{fig:queue} is equivalent to the max queue size column for
+CORELS in Table~\ref{tab:ablation}.
 
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
 \begin{table}[t!]
@@ -486,22 +511,24 @@ require examining $8.7 \times 10^{10}$ different prefixes.
 However, while CORELS only examines prefixes up to length 5 in order to certify optimality, a naive implementation 
 would have to look at even longer prefixes. 
 %
-Without our equivalent points bound, but with all of our other optimizations, we evaluate prefixes up to at least length 10 
-(see \ref{tab:ablation} and \ref{fig:queue}).
+Without our equivalent points bound, but with all of our other optimizations, we evaluate prefixes up to at least length 10 (see 
+Table~\ref{tab:ablation} and Figure~\ref{fig:queue})---thus a naive algorithm would have to evaluate prefixes of length 10 or longer.
 %
 Naively evaluating all prefixes up to length 10 would require looking at $6.4 \times 10^{21}$ different prefixes.
-% TODO: On average 180 million, but also update to use (nrules - 4) * num_eval_children
-However, CORELS examines only 181,481,555 prefixes in total---a reduction of $3.5 \times 10^{13}$.
 %
-It takes us about 2$\mu$s to evaluate a single prefix.
+However, CORELS examines only 180 million prefixes in total---a reduction of $3.5 \times 10^{13}$.
+%
+It takes us about 2$\mu$s to evaluate a single prefix (given by dividing the number of lower bound evaluations by the total time
+in Table~\ref{tab:ablation}).
 %
 A naive solution would take $1.54 \times 10^8$ seconds---about 5 years---while CORELS takes only 2 minutes.
 %
 It is clear that brute force would not scale to larger problems.
 %
 
-
-In addition, Moore's law holds that computing power doubled every 18 months from 1984-2006.
+We compare our current computing circumstances to those of 1984, the year when CART was published.
+%
+Moore's law holds that computing power doubled every 18 months from 1984-2006.
 %
 This is a period of 264 months, which means computing power has gone up by at least a factor of $32,000$ since 1984.
 %
