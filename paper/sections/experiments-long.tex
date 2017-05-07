@@ -246,51 +246,10 @@ For both problems, CORELS can learn short rule lists without sacrificing accurac
 For listings of example optimal rule lists that correspond to the results
 for CORELS summarized in Figure~\ref{fig:sparsity}, see Appendix~\ref{appendix:examples}.
 
-\begin{figure}[t!]
-\begin{center}
-%\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
-% left lower right upper
-%\includegraphics[trim={13mm, 20mm, 0mm, 13mm},
-%width=0.495\textwidth]{figs/compas_execution_large-remaining-space.pdf}
-\includegraphics[trim={34mm, 20mm, 34mm, 10mm},
-width=\textwidth]{figs/weapon_execution_large-remaining-space.pdf}
-\end{center}
-\caption{Execution progress of CORELS and selected variants,
-for the ProPublica (${\Reg = 0.005}$, ${M = 155}$) (left)
-and NYCLU (${\Reg = 0.01}$, ${M = 46}$) (right) datasets.
-%
-Top: Objective value (thin line) and lower bound (thick line) for CORELS,
-as a function of wall clock time (log scale).
-%
-Numbered hatch marks along the trace of the objective value
-indicate when the length of the best known rule list changes,
-and are labeled by the new length.
-%
-CORELS quickly achieves the optimal value (star marker),
-and certifies optimality when the lower bound matches the objective value.
-%
-On the left, a separate and significantly longer execution of CORELS
-without the equivalent points  (Theorem~\ref{thm:identical}) bound remains
-far from complete, and its lower bound (dashed line) far from the optimum.
-%
-On the right, a separate execution of CORELS without the permutation bound (Corollary~\ref{thm:permutation}), and thus the symmetry-aware map,
-requires orders of magnitude more time to complete.
-%
-Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
-as a function of wall clock time (log scale),
-where~$\Remaining(\CurrentObj, \Queue)$
-is the upper bound on remaining search space size
-(Theorem~\ref{thm:remaining-eval-fine}).
-%
-For this problem, the equivalent points bound is responsible for the ability of
-CORELS to quickly eliminate most of the search space (solid line);
-the remaining search space decays much more slowly without this bound (dashed line).
-}
-\label{fig:objective}
-\end{figure}
-
 \subsection{CORELS with different regularization parameters}
 \label{sec:reg-param}
+
+Add a figure of execution traces with different regularization parameters.
 
 \begin{table}[t!]
 \begin{centering}
@@ -325,7 +284,7 @@ See also Figure~\ref{fig:queue-weapon-reg}.
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={30mm 0mm 15mm 0mm},
+\includegraphics[trim={30mm 0mm 15mm 15mm},
 width=\textwidth]{figs/weapon_reg-queue.pdf}
 \end{center}
 \vspace{-5mm}
@@ -347,26 +306,10 @@ we also annotate the total time in seconds, marked with a dashed vertical line.
 \label{fig:queue-weapon-reg}
 \end{figure}
 
-\subsection{CORELS execution traces and efficacy of algorithm optimizations}
+\subsection{Efficacy of CORELS algorithm optimizations}
 \label{sec:traces}
 
-In the remainder, we show results using the ProPublica dataset.
-%
-The solid lines in Figure~\ref{fig:objective} illustrate how both the objective (top)
-and the size of the remaining search space (bottom) decrease as CORELS executes.
-%
-The objective drops quickly, achieving the optimal value within 10 seconds.
-CORELS certifies optimality in less than 6 minutes --
-the objective lower bound of the remaining search space
-steadily converges to the optimal objective as the search space shrinks.
-
-Finally, we determine the efficacy of each of our bounds and data structure optimizations.
-%
-Both panels of Figure~\ref{fig:objective} additionally highlight a separate
-execution of CORELS without the equivalent points bound.
-%
-After nearly 3 hours, the execution is still far from complete;
-in particular, the lower bound is far from the optimum objective value.
+We determine the efficacy of each of our bounds and data structure optimizations.
 %
 Table~\ref{tab:ablation} provides summary statistics for experiments using the full
 CORELS implementation and five variants that each remove a specific optimization.
@@ -539,6 +482,74 @@ for the NYCLU stop-and-frisk dataset (${\Reg = 0.01}$, ${M = 46}$), as in Table~
 See Figure~\ref{fig:queue} for a detailed caption.
 }
 \label{fig:queue-weapon}
+\end{figure}
+
+Finally, Figure~\ref{fig:objective} highlights the most significant
+algorithm optimizations for our prediction problems,
+using the ProPublica (left) and NYCLU (right) datasets.
+%
+For CORELS (solid lines) with the ProPublica recidivism dataset (left),
+the objective drops quickly, achieving the optimal value within 10 seconds.
+CORELS certifies optimality in less than 6 minutes --
+the objective lower bound of the remaining search space
+steadily converges to the optimal objective as the search space shrinks.
+%
+In the same plots (left), we additionally highlight a separate execution of CORELS
+without the equivalent points bound (Theorem~\ref{thm:identical}) (dark blue dashed lines).
+%
+After nearly 3 hours, the execution is still far from complete;
+in particular, the lower bound is far from the optimum objective value (top)
+and much of the search space remains (bottom).
+%
+For the NYCLU stop-and-frisk dataset (right),
+CORELS achieves the optimum objective in well under a second,
+and certifies optimality in less than a minute.
+%
+CORELS without the permutation bound (Corollary~\ref{thm:permutation}),
+and thus the symmetry-aware map, requires orders of magnitude more time to complete
+(cyan dashed lines).
+
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
+% left lower right upper
+%\includegraphics[trim={13mm, 20mm, 0mm, 13mm},
+%width=0.495\textwidth]{figs/compas_execution_large-remaining-space.pdf}
+\includegraphics[trim={34mm, 20mm, 34mm, 10mm},
+width=\textwidth]{figs/weapon_execution_large-remaining-space.pdf}
+\end{center}
+\caption{Execution progress of CORELS and selected variants,
+for the ProPublica (${\Reg = 0.005}$, ${M = 155}$) (left)
+and NYCLU (${\Reg = 0.01}$, ${M = 46}$) (right) datasets.
+%
+Top: Objective value (thin line) and lower bound (thick line) for CORELS,
+as a function of wall clock time (log scale).
+%
+Numbered hatch marks along the trace of the objective value
+indicate when the length of the best known rule list changes,
+and are labeled by the new length.
+%
+CORELS quickly achieves the optimal value (star marker),
+and certifies optimality when the lower bound matches the objective value.
+%
+On the left, a separate and significantly longer execution of CORELS
+without the equivalent points  (Theorem~\ref{thm:identical}) bound remains
+far from complete, and its lower bound (dashed line) far from the optimum.
+%
+On the right, a separate execution of CORELS without the permutation bound (Corollary~\ref{thm:permutation}), and thus the symmetry-aware map,
+requires orders of magnitude more time to complete.
+%
+Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
+as a function of wall clock time (log scale),
+where~$\Remaining(\CurrentObj, \Queue)$
+is the upper bound on remaining search space size
+(Theorem~\ref{thm:remaining-eval-fine}).
+%
+For this problem, the equivalent points bound is responsible for the ability of
+CORELS to quickly eliminate most of the search space (solid line);
+the remaining search space decays much more slowly without this bound (dashed line).
+}
+\label{fig:objective}
 \end{figure}
 
 \subsection{Algorithmic Speedup}
