@@ -249,7 +249,41 @@ for CORELS summarized in Figure~\ref{fig:sparsity}, see Appendix~\ref{appendix:e
 \subsection{CORELS with different regularization parameters}
 \label{sec:reg-param}
 
-Add a figure of execution traces with different regularization parameters.
+\begin{figure}[t!]
+\begin{center}
+% left lower right upper
+\includegraphics[trim={30mm 0mm 15mm 15mm},
+width=\textwidth]{figs/weapon_reg-execution.pdf}
+\end{center}
+\vspace{-5mm}
+\caption{Example executions of CORELS,
+for the NYCLU stop-and-frisk dataset (${M = 28}$),
+for same three regularization parameters as in Figure~\ref{fig:sparsity} (bottom).
+%
+See also Table~\ref{tab:weapon-reg} and Figure~\ref{fig:queue-weapon-reg}.
+%
+Top: Objective value (thin line) and lower bound (thick line) for CORELS,
+as a function of wall clock time (log scale).
+%
+Numbered points along the trace of the objective value
+indicate when the length of the best known rule list changes,
+and are labeled by the new length.
+%
+For each value of~$\Reg$, CORELS quickly achieves the optimal value (star markers),
+and certifies optimality when the lower bound matches the objective value;
+as~$\Reg$ decreases, execution time increases
+%
+Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
+as a function of wall clock time (log scale),
+where~$\Remaining(\CurrentObj, \Queue)$
+is the upper bound on remaining search space size
+(Theorem~\ref{thm:remaining-eval-fine}).
+%
+Rightmost panels: For visual comparison, we overlay the execution traces
+from the panels to the left, for the three different~$\Reg$.
+}
+\label{fig:weapon-reg-execution}
+\end{figure}
 
 \begin{table}[t!]
 \begin{centering}
