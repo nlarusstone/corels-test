@@ -700,8 +700,8 @@ rule mining~(\S\ref{sec:setup}).
 Specifically, it implies that we should only mine rules with
 normalized support of at least~$\Reg$;
 we need not mine rules with a smaller fraction of observations.~\footnote{We
-describe our application of this idea in Appendix C, where provide details on
-data processing.}
+describe our application of this idea in Appendix~\ref{appendix:data},
+where we provide details on data processing.}
 %
 In contrast, we can only apply Theorem~\ref{thm:min-capture-correct}
 in the context of constructing rule lists;
@@ -714,7 +714,8 @@ observations that each such rule must correctly classify.
 \label{sec:ub-support}
 
 In the previous section~(\S\ref{sec:lb-support}), we proved lower bounds on
-antecedent support; in Appendix~A, we give an upper bound on antecedent support.
+antecedent support; in Appendix~\ref{appendix:ub-supp},
+we give an upper bound on antecedent support.
 %
 Specifically, Theorem~\ref{thm:ub-support} shows that an antecedent's
 support in a rule list cannot be too similar to the set of data not
@@ -750,7 +751,7 @@ of Theorem~\ref{thm:min-capture-correct}.
 %
 Define~$p_k$ to have excessive support in~$\Prefix$
 if it does not obey the bound in~\eqref{eq:ub-support}
-of Theorem~\ref{thm:ub-support} (Appendix~A).
+of Theorem~\ref{thm:ub-support} (Appendix~\ref{appendix:ub-supp}).
 %
 If~$p_k$ in the context of~$\Prefix$ has insufficient support,
 insufficient accurate support, or excessive support,
@@ -803,7 +804,7 @@ ${\RLB \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
 Combine Proposition~\ref{prop:min-capture}, Proposition~\ref{prop:min-capture-correct},
 and Proposition~\ref{prop:ub-support}.
 %
-The first two are found below, and the last in Appendix~A.
+The first two are found below, and the last in Appendix~\ref{appendix:ub-supp}.
 \end{proof}
 
 Theorem~\ref{thm:reject} implies potentially significant
@@ -950,7 +951,7 @@ ${\RLB \notin \argmin_{\RL^\dagger} \Obj(\RL^\dagger, \x, \y)}$.
 \end{proof}
 
 Propositions~\ref{prop:min-capture} and~\ref{prop:min-capture-correct},
-combined with Proposition~\ref{prop:ub-support} (Appendix~A),
+combined with Proposition~\ref{prop:ub-support} (Appendix~\ref{appendix:ub-supp}),
 constitute the proof of Theorem~\ref{thm:reject}.
 \end{arxiv}
 
@@ -1009,256 +1010,7 @@ lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$
 
 \begin{arxiv}
 \begin{proof}
-We begin by defining four related rule lists.
-%
-First, let ${\RL = (\Prefix, \Labels, \Default, K)}$
-be a rule list with prefix ${\Prefix = (p_1, \dots, p_K)}$
-and labels ${\Labels = (q_1, \dots, q_K)}$.
-%
-Second, let ${\RLB = (\PrefixB, \LabelsB, \DefaultB, \kappa)}$
-be a rule list with prefix ${\PrefixB = (P_1, \dots, P_\kappa)}$
-that captures the same data as~$\Prefix$,
-and labels ${\LabelsB = (Q_1, \dots, Q_\kappa)}$.
-%
-Third, let ${\RL' = (\Prefix', \Labels', \Default', K') \in}$
-${\StartsWith(\Prefix)}$ be any rule list
-whose prefix starts with~$\Prefix$, such that~${K' \ge K}$.
-%
-Denote the prefix and labels of~$\RL'$ by
-${\Prefix' = (p_1, \dots, p_K,}$ ${p_{K+1}, \dots, p_{K'})}$
-and ${\Labels = (q_1, \dots, q_{K'})}$, respectively.
-%
-Finally, define ${\RLB' = (\PrefixB', \LabelsB', \DefaultB', \kappa') \in}$
-${\StartsWith(\PrefixB)}$ to be the `analogous' rule list, \ie whose prefix
-${\PrefixB' = (P_1, \dots, P_\kappa, P_{\kappa+1}, \dots, P_{\kappa'}) =}$
-${(P_1, \dots, P_\kappa, p_{K+1}, \dots, p_{K'})}$
-starts with~$\PrefixB$ and ends with the same ${K'-K}$
-antecedents as~$\Prefix'$.
-%
-Let ${\LabelsB' = (Q_1, \dots, Q_{\kappa'})}$
-denote the labels of~$\RLB'$.
-
-Next, we claim that the difference in the objectives
-of rule lists~$\RL'$ and~$\RL$ is the same as the difference
-in the objectives of rule lists~$\RLB'$ and~$\RLB$.
-%
-Let us expand the first difference as
-\begin{align}
-&\Obj(\RL', \x, \y) - \Obj(\RL, \x, \y)
-  = \Loss(\RL', \x, \y) + \Reg K' - \Loss(\RL, \x, \y) - \Reg K \nn \\
-&= \Loss_p(\Prefix', \Labels', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y)
-  - \Loss_p(\Prefix, \Labels, \x, \y) - \Loss_0(\Prefix, \Default, \x, \y)
-  + \Reg (K' - K). \nn
-\end{align}
-Similarly, let us expand the second difference as
-\begin{align}
-&\Obj(\RLB', \x, \y) - \Obj(\RLB, \x, \y)
-  = \Loss(\RLB', \x, \y) + \Reg \kappa' - \Loss(\RLB, \x, \y) - \Reg \kappa \nn \\
-&= \Loss_p(\PrefixB', \LabelsB', \x, \y) + \Loss_0(\PrefixB', \DefaultB', \x, \y)
-  - \Loss_p(\PrefixB, \LabelsB, \x, \y) - \Loss_0(\PrefixB, \DefaultB, \x, \y)
-  + \Reg (K' - K), \nn
-\end{align}
-where we have used the fact that ${\kappa' - \kappa = K' - K}$.
-
-The prefixes~$\Prefix$ and~$\PrefixB$ capture the same data.
-%
-Equivalently, the set of data that is not captured by~$\Prefix$
-is the same as the set of data that is not captured by~$\PrefixB$, \ie
-\begin{align}
-\{x_n : \neg\, \Cap(x_n, \Prefix)\} = \{x_n : \neg\, \Cap(x_n, \PrefixB)\}.
-\end{align}
-Thus, the corresponding rule lists~$\RL$ and~$\RLB$
-share the same default rule, \ie ${\Default = \DefaultB}$,
-yielding the same default rule misclassification error:
-\begin{align}
-\Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
-\end{align}
-Similarly, prefixes~$\Prefix'$ and~$\PrefixB'$ capture
-the same data, and thus rule lists~$\RL'$ and~$\RLB'$
-have the same default rule misclassification error:
-\begin{align}
-\Loss_0(\Prefix, \Default, \x, \y) = \Loss_0(\PrefixB, \DefaultB, \x, \y).
-\end{align}
-
-At this point, to demonstrate our claim relating the objectives
-of~$\RL$, $\RL'$, $\RLB$, and~$\RLB'$, what remains is to
-show that the difference in the misclassification errors
-of prefixes~$\Prefix'$ and~$\Prefix$ is the same as that
-between~$\PrefixB'$ and~$\PrefixB$.
-%
-We can expand the first difference as
-\begin{align}
-\Loss_p(\Prefix', \Labels', \x, \y) - \Loss_p(\Prefix, \Labels, \x, \y)
-%&= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K'}
-%  \one [ \Cap(x_n, p_k \given \Prefix') \wedge (q_k \neq y_n) ]
-%  - \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^K
-%  \one [ \Cap(x_n, p_k \given \Prefix) \wedge (q_k \neq y_n) ] \\
-&= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-  \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ],
-\end{align}
-where we have used the fact that since~$\Prefix'$
-starts with~$\Prefix$, the first~$K$ rules in~$\Prefix'$
-make the same mistakes as those in~$\Prefix$.
-%
-Similarly, we can expand the second difference as
-\begin{align}
-\Loss_p(\PrefixB', \LabelsB', \x, \y) - \Loss_p(\PrefixB, \LabelsB, \x, \y)
-&= \frac{1}{N} \sum_{n=1}^N \sum_{k=\kappa+1}^{\kappa'}
-  \Cap(x_n, P_k \given \PrefixB') \wedge \one [ Q_k \neq y_n ] \nn \\
-&= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-  \Cap(x_n, p_k \given \PrefixB') \wedge \one [ Q_k \neq y_n ] \nn \\
-&= \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'}
-  \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] \label{eq:third} \\
-&= \Loss_p(\Prefix', \Labels', \x, \y) - \Loss_p(\Prefix, \Labels, \x, \y) \nn.
-\end{align}
-To justify the equality in~\eqref{eq:third}, we observe first that
-prefixes~$\PrefixB'$ and~$\Prefix'$ start with~$\kappa$ and~$K$
-antecedents, respectively, that capture the same data.
-%
-Second, prefixes~$\PrefixB'$ and~$\Prefix'$ end with exactly
-the same ordered list of~${K' - K}$ antecedents,
-therefore for any~${k = 1, \dots, K' - K}$,
-antecedent ${P_{\kappa + k} = p_{K + k}}$ in~$\PrefixB'$
-captures the same data as~$p_{K + k}$ captures in~$\Prefix'$.
-%
-It follows that the corresponding labels are all equivalent, \ie
-${Q_{\kappa + k} = q_{K + k}}$, for all~${k = 1, \dots, K' - K}$,
-and consequently, the prefix misclassification error associated
-with the last~${K' - K}$ antecedents of~$\Prefix'$ is the same
-as that of~$\PrefixB'$.
-%
-We have therefore shown that the difference between the objectives
-of~$\RL'$ and~$\RL$ is the same as that between~$\RLB'$ and~$\RLB$, \ie
-\begin{align}
-\Obj(\RL', \x, \y) - \Obj(\RL, \x, \y)
-= \Obj(\RLB', \x, \y) - \Obj(\RLB, \x, \y).
-\label{eq:equiv-analogous}
-\end{align}
-
-Next, suppose that the objective lower bounds of~$\RL$ and~$\RLB$
-obey ${b(\Prefix, \x, \y) \le b(\PrefixB, \x, \y)}$, therefore
-\begin{align}
-\Obj(\RL, \x, \y)
-&= \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) + \Reg K \nn \\
-&= b(\Prefix, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) \nn \\
-&\le b(\PrefixB, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y)
-= b(\PrefixB, \x, \y) + \Loss_0(\PrefixB, \DefaultB, \x, \y)
-= \Obj(\RLB, \x, \y).
-\label{eqref:equiv-ineq}
-\end{align}
-Now let~$\RL^*$ be an optimal rule list with prefix
-constrained to start with~$\Prefix$,
-\begin{align}
-\RL^* \in \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y),
-\end{align}
-and let~$K^*$ be the length of~$\RL^*$.
-%
-Let~$\RLB^*$ be the analogous $\kappa^*$-rule list whose prefix starts
-with~$\PrefixB$ and ends with the same~${K^* - K}$ antecedents as~$\RL^*$,
-where~${\kappa^* = \kappa + K^* - K}$.
-%
-By~\eqref{eq:equiv-analogous},
-\begin{align}
-\Obj(\RL^*, \x, \y) - \Obj(\RL, \x, \y)
-= \Obj(\RLB^*, \x, \y) - \Obj(\RLB, \x, \y).
-\label{eq:equiv-diff}
-\end{align}
-Furthermore, we claim that~$\RLB^*$ is an optimal rule list
-with prefix constrained to start with~$\PrefixB$,
-\begin{align}
-\RLB^* \in \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
-\label{eq:equiv-analogous-optimal}
-\end{align}
-
-To demonstrate~\eqref{eq:equiv-analogous-optimal},
-we consider two separate scenarios.
-%
-In the first scenario, prefixes~$\Prefix$ and~$\PrefixB$
-are composed of the same antecedents,
-\ie the two prefixes are equivalent up to a permutation of
-their antecedents, and as a consequence,
-${\kappa = K}$ and~${\kappa^* = K^*}$.
-%
-Here, every rule list~${\RL'' \in \StartsWith(\Prefix)}$
-that starts with~$\Prefix$
-has an analogue~${\RLB'' \in \StartsWith(\PrefixB)}$
-that starts with~$\PrefixB$,
-such that~$\RL''$ and~$\RLB''$ obey~\eqref{eq:equiv-analogous},
-and vice versa, and thus~\eqref{eq:equiv-analogous-optimal}
-is a direct consequence of~\eqref{eq:equiv-diff}.
-
-In the second scenario, prefixes~$\Prefix$ and~$\PrefixB$
-are not composed of the same antecedents.
-%
-Define~${\phi = \{p_k : (p_k \in \Prefix) \wedge (p_k \notin \PrefixB)\}}$
-to be the set of antecedents in~$\Prefix$ that are not in~$\PrefixB$,
-and define~${\Phi = \{P_k : (P_k \in \PrefixB) \wedge (P_k \notin \Prefix)\}}$
-to be the set of antecedents in~$\PrefixB$ that are not in~$\Prefix$;
-either~${\phi \neq \emptyset}$, or~${\Phi \neq \emptyset}$, or both.
-
-Suppose~${\phi \neq \emptyset}$, and let~${p \in \phi}$
-be an antecedent in~$\phi$.
-%
-It follows that there exists a subset of rule lists
-in~$\StartsWith(\PrefixB)$ that do not have analogues
-in~$\StartsWith(\Prefix)$.
-%
-Let~${\RLB'' \in \StartsWith(\PrefixB)}$ be such a rule list,
-such that its prefix ${\PrefixB'' = (P_1, \dots, P_\kappa, \dots, p, \dots)}$
-starts with~$\PrefixB$ and contains~$p$ among its remaining antecedents.
-%
-Since~$p$ captures a subset of the data that~$\Prefix$ captures,
-and~$\PrefixB$ captures the same data as~$\Prefix$,
-it follows that~$p$ does not capture any data in~$\PrefixB''$, \ie
-\begin{align}
-\frac{1}{N} \sum_{n=1}^N \Cap(x_n, p \given \PrefixB'') = 0 \le \Reg.
-\end{align}
-By Theorem~\ref{thm:min-capture}, antecedent~$p$ has insufficient
-support in~$\RLB''$, and thus~$\RLB''$ cannot be optimal, \ie
-${\RLB'' \notin}$ ${\argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y)}$.
-%
-By a similar argument, if~${\Phi \neq \emptyset}$
-and~${P \in \Phi}$, and~${\RL'' \in \StartsWith(\Prefix)}$
-is any rule list whose prefix starts with~$\Prefix$
-and contains antecedent~$P$, then~$\RL''$ cannot be optimal, \ie
-${\RL'' \notin \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y)}$.
-
-To finish justifying claim~\eqref{eq:equiv-analogous-optimal}
-for the second scenario, first define
-\begin{align}
-\tau(\Prefix, \Phi) \equiv
-  \{\RL'' = (\Prefix'', \Labels'', \Default'', K'') :
-    \RL'' \in \StartsWith(\Prefix) \textnormal{ and }
-    p_k \notin \Phi, \forall p_k \in \Prefix''\} \subset \StartsWith(\Prefix)
-\end{align}
-to be the set of all rule lists whose prefixes start with~$\Prefix$
-and do not contain any antecedents in~$\Phi$.
-%
-Now, recognize that the optimal prefixes in~$\tau(\Prefix, \Phi)$
-and~$\StartsWith(\Prefix)$ are the same, \ie
-\begin{align}
-\argmin_{\RL^\dagger \in \tau(\Prefix, \Phi)} \Obj(\RL^\dagger, \x, \y)
-= \argmin_{\RL^\dagger \in \StartsWith(\Prefix)} \Obj(\RL^\dagger, \x, \y),
-\end{align}
-and similarly, the optimal prefixes in~$\tau(\PrefixB, \phi)$
-and~$\StartsWith(\PrefixB)$ are the same, \ie
-\begin{align}
-\argmin_{\RLB^\dagger \in \tau(\PrefixB, \phi)} \Obj(\RLB^\dagger, \x, \y)
-= \argmin_{\RLB^\dagger \in \StartsWith(\PrefixB)} \Obj(\RLB^\dagger, \x, \y).
-\end{align}
-Since we have shown that every~${\RL'' \in \tau(\Prefix, \Phi)}$
-has a direct analogue~${\RLB'' \in \tau(\PrefixB, \phi)}$,
-such that~$\RL''$ and~$\RLB''$ obey~\eqref{eq:equiv-analogous},
-and vice versa, we again have~\eqref{eq:equiv-analogous-optimal}
-as a consequence of~\eqref{eq:equiv-diff}.
-
-We can now finally combine~\eqref{eqref:equiv-ineq}
-and~\eqref{eq:equiv-analogous-optimal} to obtain
-\begin{align}
-\min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
-= \Obj(\RL^*, \x, \y) \le \Obj(\RLB^*, \x, \y)
-= \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y).
-\end{align}
+See Appendix~\ref{appendix:equiv-supp} for the proof of Theorem~\ref{thm:equivalent}.
 \end{proof}
 \end{arxiv}
 
@@ -1532,7 +1284,7 @@ objective lower bounds of~$\RL$ and~$\RLB$, respectively.
 \end{theorem}
 
 \begin{proof}
-Appendix B.
+See Appendix~\ref{appendix:similar-supp} for the proof of Theorem~\ref{thm:similar}.
 \end{proof}
 
 Theorem~\ref{thm:similar} implies that if prefixes~$\Prefix$
@@ -1815,88 +1567,6 @@ b_0(\Prefix, \x, \y) = \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
 
 \begin{arxiv}
 \begin{proof}
-We derive a lower bound on the default rule
-misclassification error~$\Loss_0(\Prefix, \Default, \x, \y)$,
-analogous to the lower bound~\eqref{eq:lb-equiv-pts} on the misclassification
-error~$\Loss(\RL, \x, \y)$ in the proof of Proposition~\ref{prop:identical}.
-%
-As before, we sum over all sets of equivalent points, and then for each such set,
-we count differences between class labels and the minority class label of the set,
-instead of counting mistakes made by the default rule:
-\begin{align}
-\Loss_0(\Prefix, \Default, \x, \y)
-&= \frac{1}{N} \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [ q_0 \neq y_n ] \nn \\
-&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge
-  \one [ q_0 \neq y_n ]\, \one [ x_n \in e_u ] \nn \\
-&\ge \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge
-  \one [ y_n = q_u ]\, \one [ x_n \in e_u ] = b_0(\Prefix, \x, \y),
-\label{eq:lb-equiv-pts-uncap}
-\end{align}
-where the final equality comes from the definition of~$b_0(\Prefix, \x, \y)$ in~\eqref{eq:lb-b0}.
-%
-Since we can write the objective~$\Obj(\RL, \x, \y)$
-as the sum of the objective lower bound~$b(\Prefix, \x, \y)$ and
-default rule misclassification error~$\Loss_0(\Prefix, \Default, \x, \y)$,
-applying~\eqref{eq:lb-equiv-pts-uncap} gives a lower bound on~$\Obj(\RL, \x, \y)$:
-\begin{align}
-\Obj(\RL, \x, \y)
-= \Loss_p(\Prefix, \Labels, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) + \Reg K
-&= b(\Prefix, \x, \y) + \Loss_0(\Prefix, \Default, \x, \y) \nn \\
-&\ge b(\Prefix, \x, \y) + b_0(\Prefix, \x, \y).
-\label{eq:equiv-pts-base}
-\end{align}
-It follows that for any rule list~${\RL' \in \StartsWith(\RL)}$ whose prefix~$\Prefix'$
-starts with~$\Prefix$, we have
-\begin{align}
-\Obj(\RL', \x, \y) \ge b(\Prefix', \x, \y) + b_0(\Prefix', \x, \y).
-\label{eq:equiv-pts-extend}
-\end{align}
-
-Finally, we show that the lower bound
-on~${\Obj(\RL, \x, \y)}$ in~\eqref{eq:equiv-pts-base} is not greater than
-the lower bound on~${\Obj(\RL', \x, \y)}$ in~\eqref{eq:equiv-pts-extend}.
-%
-First, let us define
-\begin{align}
-\Upsilon(\Prefix', K, \x, \y) \equiv \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
-    \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ x_n \in e_u ]\, \one [ y_n = q_u ].
-\end{align}
-Now, we write a lower bound on~${b(\Prefix', \x, \y)}$ with respect to~${b(\Prefix, \x, \y)}$:
-\begin{align}
-&b(\Prefix', \x, \y) = \Loss_p(\Prefix', \Labels, \x, \y) + \Reg K'
-= \frac{1}{N} \sum_{n=1}^N \sum_{k=1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] + \Reg K' \nn \\
-&= \Loss_p(\Prefix, \Labels, \x, \y) + \Reg K + \frac{1}{N} \sum_{n=1}^N \sum_{k=K}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] + \Reg (K' - K) \nn \\
-&= b(\Prefix, \x, \y) + \frac{1}{N} \sum_{n=1}^N \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ q_k \neq y_n ] + \Reg (K' - K) \nn \\
-&= b(\Prefix, \x, \y) + \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix')
-  \wedge \one [ q_k \neq y_n ]\, \one [ x_n \in e_u ] + \Reg (K' - K) \nn \\
-&\ge b(\Prefix, \x, \y) + \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix')
-  \wedge \one [ y_n = q_u ]\, \one [ x_n \in e_u ] + \Reg (K' - K) \nn \\
-&= b(\Prefix, \x, \y) + \Upsilon(\Prefix', K, \x, \y) + \Reg (K' - K).
-\label{eq:equiv-pts-b}
-\end{align}
-Next, we write ${b_0(\Prefix, \x, \y)}$ with respect to~${b_0(\Prefix', \x, \y)}$,
-\begin{align}
-&b_0(\Prefix, \x, \y) = \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
-    \neg\, \Cap(x_n, \Prefix) \wedge \one [ x_n \in e_u ]\, \one [ y_n = q_u ] \nn \\
-&= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
-    \left(\neg\, \Cap(x_n, \Prefix')+ \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \right)
-    \wedge \one [ x_n \in e_u ]\, \one [ y_n = q_u ] \nn \\
-&= b_0(\Prefix', \x, \y) + \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N
-    \sum_{k=K+1}^{K'} \Cap(x_n, p_k \given \Prefix') \wedge \one [ x_n \in e_u ]\, \one [ y_n = q_u ],
-\end{align}
-thus rearranging gives
-\begin{align}
-b_0(\Prefix', \x, \y) &= b_0(\Prefix, \x, y) - \Upsilon(\Prefix', K, \x, \y).
-\label{eq:equiv-pts-b0}
-\end{align}
-Combining~\eqref{eq:equiv-pts-extend} with first~\eqref{eq:equiv-pts-b0}
-and then~\eqref{eq:equiv-pts-b} gives:
-\begin{align}
-\Obj(\RL', \x, \y) &\ge b(\Prefix', \x, \y) + b_0(\Prefix', \x, \y) \nn \\
-&= b(\Prefix', \x, \y) + b_0(\Prefix, \x, y) - \Upsilon(\Prefix', K, \x, \y) \nn \\
-&\ge b(\Prefix, \x, \y) + \Upsilon(\Prefix', K, \x, \y) + \Reg (K' - K) + b_0(\Prefix, \x, y) - \Upsilon(\Prefix', K, \x, \y) \nn \\
-&= b(\Prefix, \x, \y) + b_0(\Prefix, \x, y) + \Reg (K' - K)
-\ge b(\Prefix, \x, \y) + b_0(\Prefix, \x, \y).
-\end{align}
+See Appendix~\ref{appendix:equiv-pts} for the proof of Theorem~\ref{thm:identical}.
 \end{proof}
 \end{arxiv}
