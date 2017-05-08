@@ -3,13 +3,20 @@
 \section{Implementation}
 \label{sec:implementation}
 
-Our implementation of CORELS can be found at \\
+We implement our algorithm using a collection of optimized data structures
+that we describe in this section:
+a trie (prefix tree)~(\S\ref{sec:trie}), a queue~(\S\ref{sec:queue}),
+and a symmetry-aware map~(\S\ref{sec:pmap}).
+%
+We additionally highlight how our queue can be used to support
+custom scheduling policies designed to improve performance~(\S\ref{sec:scheduling}).
+%
+Our implementation of CORELS can be found at: \\
 
-\url{https://github.com/nlarusstone/corels}.\\
-
-We implement our algorithm using a collection of optimized data structures: a trie (prefix tree), a symmetry-aware map, and a queue.
+\centerline{\url{https://github.com/nlarusstone/corels}.}
 
 \subsection{Prefix tree}
+\label{sec:trie}
 
 The trie is a custom C++ class used as a cache to keep track of rule lists we have already evaluated. 
 Each node represents a rule that contains the id and prediction for the rule that the node represents.
@@ -30,7 +37,8 @@ The stochastic exploration process bypasses the use of a queue by performing ran
 Our other scheduling schemes use a STL C++ priority queue to hold and order all of the leaves of the trie that still need to be explored.
 We find that using an custom search strategy, such as ordering by lower bound, usually leads to a faster runtime than using BFS.
 
-\subsubsection{Custom scheduling policies}
+\subsection{Custom scheduling policies}
+\label{sec:scheduling}
 
 In our setting, an ideal scheduling policy would immediately identify an optimal
 rule list, and then certify its optimality by systematically eliminating the
@@ -140,6 +148,7 @@ When there are no more leaves to explore, we are able to return the optimal rule
 We can also choose to terminate
 
 \subsection{Garbage Collection}
+\label{sec:gc}
 
 During execution, we garbage collect the trie.
 %
