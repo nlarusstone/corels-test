@@ -246,44 +246,46 @@ For both problems, CORELS can learn short rule lists without sacrificing accurac
 For listings of example optimal rule lists that correspond to the results
 for CORELS summarized in Figure~\ref{fig:sparsity}, see Appendix~\ref{appendix:examples}.
 
-\subsection{CORELS with different regularization parameters}
+\subsection{CORELS execution traces, for different regularization parameters}
 \label{sec:reg-param}
 
-\begin{figure}[t!]
-\begin{center}
-% left lower right upper
-\includegraphics[trim={35mm 0mm 35mm 15mm},
-width=\textwidth]{figs/weapon_reg-execution.pdf}
-\end{center}
-\vspace{-5mm}
-\caption{Example executions of CORELS,
-for the NYCLU stop-and-frisk dataset (${M = 28}$),
-for same three regularization parameters as in Figure~\ref{fig:sparsity} (bottom).
+In this section, we illustrate several views of CORELS execution traces,
+for the NYCLU stop-and-frisk dataset with ${M = 28}$ antecedents,
+for the same three regularization parameters (${\Reg = 0.04, 0.01, 0.025}$)
+as in Figure~\ref{fig:sparsity} (bottom).
+
+Table~\ref{tab:weapon-reg} summarizes execution traces across all 10 cross-validation folds.
 %
-See also Table~\ref{tab:weapon-reg} and Figure~\ref{fig:queue-weapon-reg}.
+For each value of~$\Reg$, CORELS achieves the optimum in a small fraction of the total execution time.
 %
-Top: Objective value (thin line) and lower bound (thick line) for CORELS,
-as a function of wall clock time (log scale).
+As~$\Reg$ decreases, these times increase because the search problems become more difficult,
+as is summarized by the observation that CORELS must evaluate longer prefixes;
+as a consequence, our data structures grow in size.
 %
-Numbered points along the trace of the objective value
-indicate when the length of the best known rule list changes,
-and are labeled by the new length.
+We report the total number of elements inserted into the queue, and the maximum queue size;
+recall from~\S\ref{sec:implementation} that the queue elements correspond to the trie's leaves,
+and that the symmetry-aware map elements correspond to the trie's nodes.
+
+The upper panels in Figure~\ref{fig:weapon-reg-execution} plot example execution traces,
+from a single cross-validation fold, of both the current best objective value~$\CurrentObj$
+and the lower bound~$\b(\Prefix, \x, \y)$ of the prefix~$\Prefix$ being evaluated.
 %
-For each value of~$\Reg$, CORELS quickly achieves the optimal value (star markers),
-and certifies optimality when the lower bound matches the objective value;
-as~$\Reg$ decreases, execution time increases
+These plots clearly illustrate that CORELS certifies optimality
+when the lower bound matches the objective value.
 %
-Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
-as a function of wall clock time (log scale),
-where~$\Remaining(\CurrentObj, \Queue)$
-is the upper bound on remaining search space size
-(Theorem~\ref{thm:remaining-eval-fine}).
+The lower panels in Figure~\ref{fig:weapon-reg-execution} plot corresponding traces of
+an upper bound on the size of the remaining search space (Theorem~\ref{thm:remaining-eval-fine}),
+and illustrate that as~$\Reg$ decreases, it becomes more difficult to eliminate regions of the search space.
+
+Figure~\ref{fig:queue-weapon-reg} visualizes the elements in CORELS's logical queue,
+for each of the executions in Figure~\ref{fig:weapon-reg-execution}.
 %
-Rightmost panels: For visual comparison, we overlay the execution traces
-from the panels to the left, for the three different~$\Reg$.
-}
-\label{fig:weapon-reg-execution}
-\end{figure}
+Recall from~\S\ref{sec:gc} that the logical queue corresponds to elements in the
+(physical) queue that have not been garbage collected from the trie; these are prefixes that
+CORELS has already evaluated and whose children the algorithm plans to evaluate next.
+%
+As an execution progresses, longer prefixes are placed in the queue;
+as~$\Reg$ decreases, the algorithm must spend more time evaluating longer and longer prefixes.
 
 \begin{table}[t!]
 \begin{centering}
@@ -309,7 +311,7 @@ and total number of queue insertions (which is equal to the number of cache inse
 %
 We report means (and standard deviations) over 10 cross-validation folds.
 %
-See also Figure~\ref{fig:queue-weapon-reg}.
+See also Figures~\ref{fig:weapon-reg-execution} and~\ref{fig:queue-weapon-reg}.
 }
 \vspace{4mm}
 \label{tab:weapon-reg}
@@ -318,7 +320,40 @@ See also Figure~\ref{fig:queue-weapon-reg}.
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={30mm 0mm 15mm 15mm},
+\includegraphics[trim={35mm 0mm 35mm 15mm},
+width=\textwidth]{figs/weapon_reg-execution.pdf}
+\end{center}
+\vspace{-5mm}
+\caption{Example executions of CORELS, for the NYCLU stop-and-frisk dataset (${M = 28}$).
+%
+See also Table~\ref{tab:weapon-reg} and Figure~\ref{fig:queue-weapon-reg}.
+%
+Top: Objective value (thin line) and lower bound (thick line) for CORELS,
+as a function of wall clock time (log scale).
+%
+Numbered points along the trace of the objective value
+indicate when the length of the best known rule list changes,
+and are labeled by the new length.
+%
+For each value of~$\Reg$, a star marks the optimum objective value,
+and time at which it was achieved.
+%
+Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
+as a function of wall clock time (log scale),
+where~$\Remaining(\CurrentObj, \Queue)$
+is the upper bound on remaining search space size
+(Theorem~\ref{thm:remaining-eval-fine}).
+%
+Rightmost panels: For visual comparison, we overlay the execution traces
+from the panels to the left, for the three different~$\Reg$.
+}
+\label{fig:weapon-reg-execution}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+% left lower right upper
+\includegraphics[trim={30mm 0mm 15mm 5mm},
 width=\textwidth]{figs/weapon_reg-queue.pdf}
 \end{center}
 \vspace{-5mm}
