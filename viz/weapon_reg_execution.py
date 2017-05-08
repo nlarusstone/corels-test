@@ -52,19 +52,11 @@ ntot = len(log_root_list)
 
 num_rules = np.zeros(num_folds, int)
 
-t_tot = np.zeros((ntot, num_folds))
-t_opt = np.zeros((ntot, num_folds))
-max_prefix_length = np.zeros((ntot, num_folds), int)
-num_insertions = np.zeros((ntot, num_folds), int)
-max_queue = np.zeros((ntot, num_folds), int)
-min_obj = np.zeros((ntot, num_folds))
-lower_bound_num = np.zeros((ntot, num_folds), int)
-ablation_names = ['0.04', '0.01', '0.0025']
-
 c1 = ['pink', 'red', 'brown']
 c1 = ['lightgray', 'gray', 'black']
 #c1 = ['gray', 'coral', 'c']
 c2 = ['skyblue', 'c', 'blue']
+fold = 0
 
 for (ncomp, log_root) in enumerate(log_root_list):
     tname = '%s_%d_train.out' % (froot, fold)
@@ -145,4 +137,5 @@ for (ncomp, log_root) in enumerate(log_root_list):
     pylab.yticks(range(0, 40, 10), fontsize=fs)
     pylab.axis([x['total_time'][2], 10**3, 0, 32])
 
+#pylab.suptitle('Execution progress for different regularization parameters (NYCLU dataset)\n', fontsize=fs+2)
 pylab.savefig('../figs/%s-execution.pdf' % ftag)
