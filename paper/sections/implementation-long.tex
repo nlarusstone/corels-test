@@ -5,7 +5,7 @@
 
 We implement our algorithm using a collection of optimized data structures
 that we describe in this section:
-a trie (prefix tree)~(\S\ref{sec:trie}), a queue~(\S\ref{sec:queue}),
+a prefix trie (trie)~(\S\ref{sec:trie}), a queue~(\S\ref{sec:queue}),
 and a symmetry-aware map~(\S\ref{sec:pmap}).
 %
 We additionally highlight how our queue can be used to support
@@ -18,13 +18,26 @@ Our implementation of CORELS can be found at: \\
 \subsection{Prefix tree}
 \label{sec:trie}
 
-The trie is a custom C++ class used as a cache to keep track of rule lists we have already evaluated. 
-Each node represents a rule that contains the id and prediction for the rule that the node represents.
-Nodes in the trie also contain the metadata associated with that corresponding rule list.
-This metadata includes the following bookkeeping information: which child rule lists are viable, lower bound, objective, equivalent points misclassification, length, number of samples captured by this prefix, prediction for the default rule, and whether or not this node should be pruned.
-In addition to our base trie class, we also implemented a different node type that we use in our algorithm.
-This sub-class has an additional field that can hold custom metrics that we use to order the search space.
-Since this additional field is just a double, the memory overhead is minimal.
+The prefix tree acts like a cache to keep track of rule lists we have already evaluated.
+%
+Each node encodes an individual rule, represented by an index and binary value
+that correspond to an antecedent and label prediction, respectively.
+%
+Each path starting from the root represents a rule list such that the final node
+in the path also contains metadata associated with that corresponding rule list.
+%
+This metadata includes the following bookkeeping information:
+which child rule lists are viable (\ie  have not been pruned),
+lower bound, objective, equivalent points misclassification, length,
+number of samples captured by this prefix, prediction for the default rule,
+and whether or not this node should be pruned.
+%
+We implement the trie as a custom C++ class. % decouple artifact from design
+%
+% This might be a bit much detail for here
+%In addition to our base trie class, we also implemented a different node type that we use in our algorithm.
+%This sub-class has an additional field that can hold custom metrics that we use to order the search space.
+%Since this additional field is just a double, the memory overhead is minimal.
 
 \subsection{Queue}
 \label{sec:queue}
