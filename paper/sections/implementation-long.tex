@@ -26,12 +26,20 @@ that correspond to an antecedent and label prediction, respectively.
 Each path starting from the root represents a rule list such that the final node
 in the path also contains metadata associated with that corresponding rule list.
 %
-This metadata includes the following bookkeeping information:
-which child rule lists are viable (\ie  have not been pruned),
-lower bound, objective, equivalent points misclassification, length,
-number of samples captured by this prefix, prediction for the default rule,
-and whether or not this node should be pruned.
-%
+This metadata for a rule ${\RL = (\Prefix, \Labels, \Default, K)}$
+includes the following information:
+\begin{itemize}
+\item the length~$K$ (equivalently, the corresponding node's depth in the trie),
+\item the objective lower bound $b(\Prefix, \x, \y)$~\eqref{eq:lower-bound},
+\item the objective $\Obj(\RL, \x, \y)$~\eqref{eq:objective},
+\item the lower bound on the default rule misclassification error
+$b_0(\Prefix, \x, \y)$~\eqref{eq:lb-b0},
+from our equivalent points bound (Theorem~\ref{thm:identical}),
+\item the number of samples captured by this prefix,
+\item the prediction for the default rule,
+\item whether or not this node should be deleted (see~\S\ref{sec:gc} on garbage collection), and
+\item which child rule lists are viable (\ie have not been pruned).
+\end{itemize}
 We implement the trie as a custom C++ class. % decouple artifact from design
 %
 % This might be a bit much detail for here
