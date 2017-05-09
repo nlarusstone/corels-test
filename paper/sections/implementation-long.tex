@@ -50,7 +50,7 @@ we described in~\S\ref{sec:incremental}, and includes:
 \item A representation of viable extensions of~$\Prefix$,
   \ie length ${K+1}$ rule lists that start with~$\Prefix$ and have not been pruned.
 \end{itemize}
-We implement the prefix tree as a custom C++ class. % decouple artifact from design
+Note that we implement the prefix tree as a custom C++ class. % decouple artifact from design
 %
 % This might be a bit much detail for here
 %In addition to our base trie class, we also implemented a different node type that we use in our algorithm.
@@ -82,11 +82,11 @@ or prefix length, which corresponds to depth-first search (DFS).
 As we demonstrate in our experiments~(\S\ref{sec:ablation}),
 we find that using an custom search strategy,
 such as ordering by the lower bound, usually leads to a faster runtime than BFS.
-%
-We note that in preliminary work (not shown), we also experimented with
+
+In preliminary work (not shown), we also experimented with
 stochastic exploration processes that bypass the need for a queue
 by instead following random paths from the root to leaves;
-developing stochastic scheduling methods could be an interesting direction for future work.
+developing such methods could be an interesting direction for future work.
 
 \subsection{Custom scheduling policies}
 \label{sec:scheduling}
