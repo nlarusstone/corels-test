@@ -22,7 +22,7 @@ Our incremental computations (\S\ref{sec:incremental}) require a
 cache to keep track of rule lists we have already evaluated.
 %
 We implement this cache as a prefix tree, which allows us to efficiently
-represent shared structure between related rule lists.
+represent structure shared between related rule lists.
 %
 Each node in the prefix tree encodes an individual rule ${r_k = p_k \rightarrow q_k}$.
 %
