@@ -5,7 +5,7 @@
 
 We implement our algorithm using a collection of optimized data structures.
 %
-First, in~\S\ref{sec:trie}, we explain our choice of a prefix tree (trie)
+First, in~\S\ref{sec:trie}, we explain our choice of a prefix tree
 to support incremental computation~(\S\ref{sec:incremental}).
 %
 Second, in~\S\ref{sec:queue}, we describe several queue designs
@@ -30,8 +30,8 @@ Our implementation of CORELS can be found~at: \\
 Our incremental computations (\S\ref{sec:incremental}) require a
 cache to keep track of rule lists we have already evaluated.
 %
-We implement this cache as a prefix tree, which allows us to efficiently
-represent structure shared between related rule lists.
+We implement this cache as a prefix tree, a data structure also known as a trie,
+which allows us to efficiently represent structure shared between related rule lists.
 %
 Each node in the prefix tree encodes an individual rule ${r_k = p_k \rightarrow q_k}$.
 %
@@ -40,7 +40,7 @@ in the path also contains metadata associated with that corresponding rule list.
 %
 For a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$,
 with prefix ${\Prefix = (p_1, \dots, p_K)}$,
-let~$\varphi(\RL)$ denote the corresponding node in the prefix tree.
+let~$\varphi(\RL)$ denote the corresponding node in the trie.
 %
 The metadata at node~$\varphi(\RL)$ supports the incremental computations
 we described in~\S\ref{sec:incremental}, and includes:
@@ -82,8 +82,8 @@ incrementally evaluate the corresponding prefix's children.
 We order entries in the queue to implement several different policies.
 %
 A first-in-first-out (FIFO) queue implements breadth-first search (BFS),
-and a priority queue implements best-first search.\footnote{In our released code,
-we implement all scheduling policies, including BFS, using a STL C++ priority queue.}
+and a priority queue implements best-first search; in our released code,
+we implement all scheduling policies, including BFS, using a STL C++ priority queue.
 %
 Example priority queue policies include ordering
 by the lower bound, the objective, a custom metric that maps prefixes to real values,
@@ -101,41 +101,76 @@ developing such methods could be an interesting direction for future work.
 \subsection{Symmetry-aware map}
 \label{sec:pmap}
 
-The symmetry-aware map supports symmetry-aware pruning.
-We implement this using the C++ STL unordered\_map, to map all permutations of a set of antecedents to a key, whose value
-contains the best ordering of those antecedents (\ie the prefix with the smallest lower bound).
-Every antecedent is associated with an index, and we call the numerically sorted order of a set of antecedents its canonical order.
-Thus by querying a set of antecedents by its canonical order, all permutations map to the same key.
-The value stored in the map consists of the lower bound and the actual ordering of the rules that is best for that permutation.
-Before inserting permutation $P_i$ into the symmetry-aware map, we check if there exists a permutation $P_j$ of $P_i$ already in the map.
-If there is no permutation exists, then we insert $P_i$ in the map.
-Otherwise, if a permutation $P_j$ exists and the lower bound of $P_i$ is better than that of $P_j$, we update the map and remove $P_j$ and its subtree from the trie.
-Else, if $P_j$ exists and has a better lower bound than $P_i$, we do nothing  (\ie we do not insert $P_i$ into the symmetry-aware map or the trie).
+The symmetry-aware map supports symmetry-aware pruning~(\S\ref{sec:permutation}).
+%
+In our implementation, we specifically leverage our permutation bound
+(Corollary~\ref{thm:permutation}), though it is also possible to directly
+exploit the more general equivalent support bound (Theorem~\ref{thm:equivalent}).
+%
+We implement this symmetry-aware map using the C++ STL unordered\_map,
+to map all permutations of a set of antecedents to a key whose value contains
+the best ordering of those antecedents (\ie the prefix with the smallest lower bound).
+%
+Every antecedent is associated with an index, and we call the numerically
+sorted order of a set of antecedents its canonical order.
+%
+Thus by querying a set of antecedents by its canonical order,
+all permutations map to the same key.
+%
+The value stored in the map consists of the lower bound and the actual ordering
+of the rules that is best for that permutation.
+
+Before we consider adding a prefix~$\Prefix$ to the trie and queue, we check
+whether the map already contains a permutation~$\pi(\Prefix)$ of that prefix.
+%
+If no such permutation exists, then we insert~$\Prefix$ into the map, trie, and queue.
+%
+Otherwise, if a permutation~$\pi(\Prefix)$ exists and the lower bound of~$\Prefix$ is better
+than that of~$\pi(\Prefix)$, \ie ${b(\Prefix, \x, \y) <}$ ${b(\pi(\Prefix), \x, \y)}$,
+then we update the map and remove~$\pi(P_j)$ and its entire subtree from the trie;
+we also insert~$\Prefix$ into the trie and queue.
+%
+Otherwise, if there exists a permutation~$\pi(\Prefix)$ such that
+${b(\pi(\Prefix), \x, \y) \le}$ ${b(\Prefix, \x, \y)}$,
+then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
 
 \subsection{Incremental execution}
 \label{sec:execution}
 
 Mapping our algorithm to our data structures produces the following execution strategy.
 %
-While the trie contains unexplored leaves, a scheduling policy selects the next prefix to extend.
+We initialize the current best objective~$\CurrentObj$ and rule list~$\CurrentRL$.
 %
-Then, for every antecedent that is not already in this prefix, we calculate the lower bound,
-objective, and other metrics for the rule list formed by appending the antecedent to the prefix.
+While the trie contains unexplored leaves, a scheduling policy selects the next prefix~$\Prefix$
+to extend; in our implementation, we pop elements from a (priority) queue, until the queue is empty.
 %
-If the lower bound of the new rule list is less than the current minimum objective, we insert that
-rule list into the symmetry-aware map, trie, and queue, and, if relevant, update the
-current minimum objective.
+Then, for every antecedent~$s$ that is not in~$\Prefix$,
+we construct a new prefix~$\Prefix'$ by appending~$s$ to~$\Prefix$;
+we incrementally calculate the lower bound~$b(\Prefix', \x, \y)$,
+the objective~$\Obj(\RL', \x, \y)$, of the associated rule list~$\RL'$,
+and other quantities used by our algorithm, summarized by the metadata fields of
+the (potential) prefix tree node~$\varphi(\Prefix')$.
+
+If the objective~$\Obj(\RL', \x, \y)$ is less than the current best objective~$\CurrentObj$,
+then we update~$\CurrentObj$ and~$\RL$.
 %
-If the lower bound is greater than the minimum objective,
-then no extension of this rule list could possibly be optimal,
-thus we do not insert the new rule list into the tree or queue.
+If the lower bound of the new prefix~$\Prefix'$ is less than the current best objective,
+%\ie ${b(\Prefix', \x, \y) < \CurrentObj}$,
+then as described in~\S\ref{sec:pmap}, we query the symmetry-aware map for~$\Prefix'$;
+if we insert~$\Prefix'$ into the symmetry-aware map, then we also insert it into the trie and queue.
+%
+Otherwise, %\ie ${b(\Prefix', \x, \y) \ge \CurrentObj}$
+then by our hierarchical lower bound (Theorem~\ref{thm:bound}),
+no extension of~$\Prefix'$ could possibly lead to a rule list with objective
+better than~$\CurrentObj$, thus we do not insert~$\Prefix'$ into the tree or queue.
 %
 We also leverage our other bounds from~\S\ref{sec:framework}
 to aggressively prune the search space.
 %
-When there are no more leaves to explore, we are able to return the optimal rule list.
+When there are no more leaves to explore, \ie the queue is empty, we output the optimal rule list.
 %
-We can also choose to terminate
+We can also choose to terminate early according to an alternate condition,
+\eg when the size of the prefix tree exceeds some threshold.
 
 \subsection{Garbage collection}
 \label{sec:gc}
@@ -146,19 +181,28 @@ Each time we update the minimum objective,
 we traverse the trie in a depth-first manner, deleting all subtrees
 of any node with lower bound larger than the current minimum objective.
 %
-At other times, when we encounter a node with no children, we prune upwards--deleting that
-node and recursively traversing the tree towards the root, deleting any childless nodes.
+At other times, when we encounter a node with no children, we prune upwards,
+deleting that node and recursively traversing the tree towards the root,
+deleting any childless nodes.
 %
 This garbage collection allows us to constrain the trie's memory consumption, though in our
-experiments we observe the minimum objective to decrease only a
-small number of times.
+experiments we observe the minimum objective to decrease only a small number of times.
 
-When performing garbage collection, we have trouble deleting trie elements that are currently in the queue.
-In C++ the priority queue is a wrapper container that prevents access to the container underlying the queue.
-Therefore we cannot access elements in the middle of the queue, even if we have know the value that we're trying to access.
-Thus, we run into a problem where we want to delete something in the prefix tree that is currently in the queue, as we have no way to update the queue without iterating over every element.
-We address this by lazily marking nodes deleted in the prefix tree without deleting the physical node until it has been removed from the queue.
-We define two different queues: the collection of all leaves in the C++ queue is our physical queue while the collection of leaves that are not marked deleted is our logical queue.
+In our implementation, we cannot immediately garbage collect trie elements that are currently in the queue.
+%
+The STL C++ priority queue is a wrapper container that prevents access to the underlying data structure.
+%
+Therefore we cannot access elements in the middle of the queue,
+even know the relevant identifying information.
+%
+Thus, we have no way to update the queue without iterating over every element.
+%
+We address this by lazily marking nodes in the prefix tree as deleted~(\S\ref{sec:trie}),
+without deleting the physical node until it has been removed from the queue.
+%
+We define two different queues that we refer to in our experiments~(\S\ref{sec:experiments}):
+the physical queue corresponds to all elements in the C++ queue, and thus all prefix tree leaves,
+and the logical queue corresponds only to those prefix tree leaves that have not been marked deleted.
 
 \subsection{Custom scheduling policies}
 \label{sec:scheduling}
