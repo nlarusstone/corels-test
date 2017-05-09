@@ -3,18 +3,24 @@
 \section{Implementation}
 \label{sec:implementation}
 
-We implement our algorithm using a collection of optimized data structures
-that we describe in this section:
-a prefix trie (trie)~(\S\ref{sec:trie}), a queue~(\S\ref{sec:queue}),
-and a symmetry-aware map~(\S\ref{sec:pmap}).
+We implement our algorithm using a collection of optimized data structures.
 %
-In~\S\ref{sec:execution}, we summarize our incremental execution model,
+First, in~\S\ref{sec:trie}, we explain our choice of a prefix tree (trie)
+to support incremental computation~(\S\ref{sec:incremental}).
+%
+Second, in~\S\ref{sec:queue}, we describe several queue designs
+that implement different search policies.
+%
+Third, in~\S\ref{sec:pmap}, we introduce a symmetry-aware map to support
+symmetry-aware pruning~(Corollary~\ref{thm:permutation},~\S\ref{sec:permutation}).
+%
+Next, in~\S\ref{sec:execution}, we summarize our incremental execution model,
 and in~\S\ref{sec:gc}, we describe how we garbage collect our data structures.
 %
 We additionally highlight in~\S\ref{sec:scheduling} how our queue can be used to support
 custom scheduling policies designed to improve performance.
 %
-Our implementation of CORELS can be found at: \\
+Our implementation of CORELS can be found~at: \\
 
 \centerline{\url{https://github.com/nlarusstone/corels}.}
 
