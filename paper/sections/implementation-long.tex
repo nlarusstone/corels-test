@@ -18,45 +18,75 @@ Our implementation of CORELS can be found at: \\
 \subsection{Prefix tree}
 \label{sec:trie}
 
-The prefix tree acts like a cache to keep track of rule lists we have already evaluated.
+Our incremental computations (\S\ref{sec:incremental}) require a
+cache to keep track of rule lists we have already evaluated.
 %
-Each node encodes an individual rule, represented by an index and binary value
-that correspond to an antecedent and label prediction, respectively.
+We implement this cache as a prefix tree, which allows us to efficiently
+represent shared structure between related rule lists.
 %
-Each path starting from the root represents a rule list such that the final node
+Each node in the prefix tree encodes an individual rule ${r_k = p_k \rightarrow q_k}$.
+%
+Each path starting from the root represents a rule list, such that the final node
 in the path also contains metadata associated with that corresponding rule list.
 %
-This metadata for a rule ${\RL = (\Prefix, \Labels, \Default, K)}$
-includes the following information:
+For a rule list ${\RL = (\Prefix, \Labels, \Default, K)}$,
+with prefix ${\Prefix = (p_1, \dots, p_K)}$,
+let~$\varphi(\RL)$ denote the corresponding node in the prefix tree.
+%
+The metadata at node~$\varphi(\RL)$ supports the incremental computations
+we described in~\S\ref{sec:incremental}, and includes:
 \begin{itemize}
-\item the length~$K$ (equivalently, the corresponding node's depth in the trie),
-\item the objective lower bound $b(\Prefix, \x, \y)$~\eqref{eq:lower-bound},
-\item the objective $\Obj(\RL, \x, \y)$~\eqref{eq:objective},
-\item the lower bound on the default rule misclassification error
-$b_0(\Prefix, \x, \y)$~\eqref{eq:lb-b0},
-from our equivalent points bound (Theorem~\ref{thm:identical}),
-\item the number of samples captured by this prefix,
-\item the prediction for the default rule,
-\item whether or not this node should be deleted (see~\S\ref{sec:gc} on garbage collection), and
-\item which child rule lists are viable (\ie have not been pruned).
+\item An index encoding antecedent~$p_K$.
+\item The corresponding label prediction~$q_K$.
+%\item $\RL$'s length~$K$; equivalently, node~$\varphi(\RL)$'s depth in the trie. % <-- not strictly necessary
+\item The default rule label prediction~$\Default$.
+\item $\NCap$, the number of samples captured by prefix $\Prefix$, as in~\eqref{eq:num-cap}. % <-- not strictly necessary
+% \item The objective $\Obj(\RL, \x, \y)$~\eqref{eq:objective}. % <-- not strictly necessary
+\item The objective lower bound $b(\Prefix, \x, \y)$, defined in~\eqref{eq:lower-bound}.
+\item The lower bound on the default rule misclassification error
+  $b_0(\Prefix, \x, \y)$, defined in~\eqref{eq:lb-b0}
+  from our equivalent points bound (Theorem~\ref{thm:identical}).
+\item An indicator denoting whether or not this node should be deleted (see~\S\ref{sec:gc}).
+\item A representation of viable extensions of~$\Prefix$,
+  \ie length ${K+1}$ rule lists that start with~$\Prefix$ and have not been pruned.
 \end{itemize}
-We implement the trie as a custom C++ class. % decouple artifact from design
+We implement the prefix tree as a custom C++ class. % decouple artifact from design
 %
 % This might be a bit much detail for here
 %In addition to our base trie class, we also implemented a different node type that we use in our algorithm.
 %This sub-class has an additional field that can hold custom metrics that we use to order the search space.
 %Since this additional field is just a double, the memory overhead is minimal.
+%
+% Interesting trie-related subroutines besides garbage collection?
 
 \subsection{Queue}
 \label{sec:queue}
 
-The queue is a worklist that orders exploration over the search space of possible rule lists.
-We implement a number of different scheduling schemes including a stochastic exploration process, BFS, DFS, and priority metrics of curiosity, objective, or lower bound.
-Our queue contains pointers to leaves in the trie to leverage incremental computation.
-The search process involves selecting which leaf node to explore.
-The stochastic exploration process bypasses the use of a queue by performing random walks on the trie until a leaf is reached.
-Our other scheduling schemes use a STL C++ priority queue to hold and order all of the leaves of the trie that still need to be explored.
-We find that using an custom search strategy, such as ordering by lower bound, usually leads to a faster runtime than using BFS.
+The queue is a worklist that orders exploration over the search space of possible
+rule lists; every queue element corresponds to a prefix tree leaf, and vice versa.
+%
+In our implementation, each queue element points to a leaf;
+when we pop an element off the queue, we use the leaf's metadata to
+incrementally evaluate the corresponding prefix's children.
+
+We order entries in the queue to implement several different policies.
+%
+A first-in-first-out (FIFO) queue implements breadth-first search (BFS),
+and a priority queue implements best-first search.\footnote{In our released code,
+we implement all scheduling policies, including BFS, using a STL C++ priority queue.}
+%
+Example priority queue policies include ordering
+by the lower bound, the objective, a custom metric that maps prefixes to real values,
+or prefix length, which corresponds to depth-first search (DFS).
+%
+As we demonstrate in our experiments~(\S\ref{sec:ablation}),
+we find that using an custom search strategy,
+such as ordering by the lower bound, usually leads to a faster runtime than BFS.
+%
+We note that in preliminary work (not shown), we also experimented with
+stochastic exploration processes that bypass the need for a queue
+by instead following random paths from the root to leaves;
+developing stochastic scheduling methods could be an interesting direction for future work.
 
 \subsection{Custom scheduling policies}
 \label{sec:scheduling}
@@ -81,7 +111,8 @@ We introduce a custom function that we call \emph{curiosity}.
 %
 First, let~$\NCap$ denote the number of datapoints captured by~$\Prefix$, \ie
 \begin{align}
-\NCap \equiv \sum_{n=1}^N \Cap(x_n, \Prefix). \nn
+\NCap \equiv \sum_{n=1}^N \Cap(x_n, \Prefix).
+\label{eq:num-cap}
 \end{align}
 %
 Now consider a simple model for the expected objective value of a rule list
