@@ -145,8 +145,8 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
 \label{alg:bounds}
 \begin{algorithmic}
 \small
-\State Define $\mathbf{z} \in \{0, 1\}^N$, s.t. ${z_n = \sum_{u=1}^U \one [x_n \in e_u] [y_n = q_u]}$, where~$e_u$ and~$q_u$ are defined as in~\S\ref{sec:identical} \\
-
+\State Define $\mathbf{z} \in \{0, 1\}^N$, s.t. ${z_n = \sum_{u=1}^U \one [x_n \in e_u] [y_n = q_u]}$ \Comment{$e_u$ and~$q_u$ are defined as in~\S\ref{sec:identical}}
+%
 \For {$s$ in $\RuleSet$} \Comment{Evaluate all of $\Prefix$'s children}
     \If {$s$ not in $\Prefix$}
         \State $\PrefixB \gets (\Prefix, s)$ \Comment{\textbf{Branch}: Generate child $\PrefixB$}
@@ -179,12 +179,20 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
            \State $\delta\Obj \gets n_g / N$ \Comment{Misclassification error of the default label prediction $0$}
        \EndIf
        \State $\Obj(\RLB, \x, \y) \gets b(\PrefixB, \x, \y) + \delta\Obj$ \Comment{Incremental objective~\eqref{eq:inc-obj}}
+       %\State $\Obj(\RLB, \x, \y) \gets b(\PrefixB, \x, \y)~ + $ \Call{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$}  \Comment{Inc. objective~\eqref{eq:inc-lb}}
        \State $\RLB \gets (\PrefixB, \LabelsB, \DefaultB, K+1)$ \Comment{$\LabelsB, \DefaultB$ are set in the incremental functions}
        \If {$\Obj(\RLB, \x, \y) < \CurrentObj$}
            \State $(\CurrentRL, \CurrentObj) \gets (\RLB, \Obj(\RLB, \x, \y))$ \Comment{Update current best rule list and objective}
-       \EndIf
-       \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
-       \State $C$.insert$(\PrefixB, b(\PrefixB, \x, \y))$ \Comment{Add $\PrefixB$ and its lower bound to the cache}
+        \EndIf
+        \State $b_0(\PrefixB, \x, \y) \gets \Count(\mathbf{f} \wedge \mathbf{z})$ \Comment{Lower bound on the default rule}
+        \State $b \gets b(\PrefixB, \x, \y) + b_0(\PrefixB, \x, \y)$ \hfill misclassification error defined in~\eqref{eq:lb-b0}
+        \If {$b \ge \CurrentObj$}
+            \State \Continue \Comment{\textbf{Equivalent points bound (Theorem~\ref{thm:identical})}}
+        \EndIf
+        \If {\Call{CheckSymmetryAwareMap}{$\PrefixB, b$}} \Comment{\textbf{Permutation bound (Corollary~\ref{thm:permutation})}}
+            \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
+            \State $C$.insert$(\PrefixB, b(\PrefixB, \x, \y))$ \Comment{Add $\PrefixB$ and its lower bound to the cache}
+        \EndIf
     \EndIf
 \EndFor
 \end{algorithmic}
