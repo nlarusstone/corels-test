@@ -130,7 +130,7 @@ If no such permutation exists, then we insert~$\Prefix$ into the map, trie, and 
 %
 Otherwise, if a permutation~$\pi(\Prefix)$ exists and the lower bound of~$\Prefix$ is better
 than that of~$\pi(\Prefix)$, \ie ${b(\Prefix, \x, \y) <}$ ${b(\pi(\Prefix), \x, \y)}$,
-then we update the map and remove~$\pi(P_j)$ and its entire subtree from the trie;
+then we update the map and remove~$\pi(\Prefix)$ and its entire subtree from the trie;
 we also insert~$\Prefix$ into the trie and queue.
 %
 Otherwise, if there exists a permutation~$\pi(\Prefix)$ such that
@@ -141,15 +141,16 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
 \label{sec:execution}
 
 \begin{algorithm}[t!]
-  \caption{The inner loop of CORELS, which evaluates all children of a prefix~$\Prefix$.
-  For details about symmetry-aware map queries, see Algorithm~\ref{alg:pmap}.}
+  \caption{The inner loop of CORELS, which evaluates all children of a prefix~$\Prefix$.}
+%  For details about symmetry-aware map queries, see Algorithm~\ref{alg:pmap}.}
 \label{alg:bounds}
 \begin{algorithmic}
 \small
-\State Define $\mathbf{z} \in \{0, 1\}^N$, s.t. ${z_n = \sum_{u=1}^U \one [x_n \in e_u] [y_n = q_u]}$ \Comment{$e_u$ and~$q_u$ are defined as in~\S\ref{sec:identical}} \\
+\State Define $\mathbf{z} \in \{0, 1\}^N$, s.t. ${z_n = \sum_{u=1}^U \one [x_n \in e_u] [y_n = q_u]}$ \Comment{$e_u$ and~$q_u$ are defined as in~\S\ref{sec:identical}}
+\State Define $b(\Prefix, \x, \y)$ and $\mathbf{u} = \neg\,\Cap(\x, \Prefix)$ \Comment{$\mathbf{u}$ is a bit vector indicating data not captured by $\Prefix$} \\
 
-\For {$s$ in $\RuleSet$} \Comment{Evaluate all of $\Prefix$'s children}
-    \If {$s$ not in $\Prefix$}
+\For {$s$ in $\RuleSet$ \textbf{if} $s$ not in $\Prefix$ \textbf{then}} \Comment{Evaluate all of $\Prefix$'s children}
+%    \If {$s$ not in $\Prefix$}
         \State $\PrefixB \gets (\Prefix, s)$ \Comment{\textbf{Branch}: Generate child $\PrefixB$}
         \State $\mathbf{v} \gets \mathbf{u} \wedge \Cap(\x, s)$ \Comment{Bit vector indicating data captured by $s$ in $\PrefixB$}
         \State $n_v = \Count(\mathbf{v})$ \Comment{Number of data captured by $s$, the last antecedent in $\PrefixB$}
@@ -183,31 +184,53 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
        %\State $\Obj(\RLB, \x, \y) \gets b(\PrefixB, \x, \y)~ + $ \Call{IncrementalObjective}{$\mathbf{u}, \mathbf{v}, \y, N$}  \Comment{Inc. objective~\eqref{eq:inc-lb}}
        \State $\RLB \gets (\PrefixB, \LabelsB, \DefaultB, K+1)$ \Comment{$\LabelsB, \DefaultB$ are set in the incremental functions}
        \If {$\Obj(\RLB, \x, \y) < \CurrentObj$}
-           \State $(\CurrentRL, \CurrentObj) \gets (\RLB, \Obj(\RLB, \x, \y))$ \Comment{Update current best rule list and objective}
+            \State $(\CurrentRL, \CurrentObj) \gets (\RLB, \Obj(\RLB, \x, \y))$ \Comment{Update current best rule list and objective}
+            \State \Call{GarbageCollectPrefixTree}{$\CurrentObj$} \Comment{Delete nodes with lower bound $< \CurrentObj$ (\S\ref{sec:gc})}
         \EndIf
-        \State $b_0(\PrefixB, \x, \y) \gets \Count(\mathbf{f} \wedge \mathbf{z})$ \Comment{Lower bound on the default rule}
+        \State $b_0(\PrefixB, \x, \y) \gets \Count(\mathbf{f} \wedge \mathbf{z}) / N$ \Comment{Lower bound on the default rule}
         \State $b \gets b(\PrefixB, \x, \y) + b_0(\PrefixB, \x, \y)$ \hfill misclassification error defined in~\eqref{eq:lb-b0}
         \If {$b \ge \CurrentObj$}
             \State \Continue \Comment{\textbf{Equivalent points bound (Theorem~\ref{thm:identical})}}
         \EndIf
-        \State \Call{CheckSymmetryAwareMap}{$\PrefixB, b$} \Comment{\textbf{Permutation bound (Corollary~\ref{thm:permutation})}}
+        \State \Call{CheckMapAndInsert}{$\PrefixB, b$} \Comment{Check the \textbf{Permutation bound (Corollary~\ref{thm:permutation})}}
         %\If {\Call{CheckSymmetryAwareMap}{$\PrefixB, b$}} \Comment{\textbf{Permutation bound (Corollary~\ref{thm:permutation})}}
         %    \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
         %    \State $C$.insert$(\PrefixB, b(\PrefixB, \x, \y))$ \Comment{Add $\PrefixB$ and its lower bound to the cache}
         %\EndIf
-    \EndIf
-\EndFor
+%    \EndIf
+\EndFor \hfill {and possibly insert $\PrefixB$ into data structures}
 \end{algorithmic}
 \end{algorithm}
 
 
 \begin{algorithm}[t!]
-  \caption{Symmetry-aware map queries, to support search space pruning triggered by
-  the permutation bound (Corollary~\ref{thm:permutation}). For further context, see Algorithm~\ref{alg:bounds}.}
+  \caption{Possibly insert a prefix into CORELS's data structures, after first
+  checking the symmetry-aware map, which supports search space pruning
+  triggered by the permutation bound (Corollary~\ref{thm:permutation}).
+  For further context, see Algorithm~\ref{alg:bounds}.}
 \label{alg:pmap}
 \begin{algorithmic}
+\State $T$ is the prefix tree (\S\ref{sec:trie})
+\State $Q$ is the queue, for concreteness, a priority queue ordered by the lower bound (\S\ref{sec:queue})
+\State $\PMap$ is the symmetry-aware map (\S\ref{sec:pmap}) \\
 
-\Function{CheckSymmetryAwareMap}{$\PrefixB, b$}
+\Function{CheckMapAndInsert}{$\PrefixB, b$}
+    \State $\pi_0 \gets$ sort($\PrefixB$) \Comment{$\PrefixB$'s antecedents in canonical order}
+    \State $(D_\pi, b_\pi) \gets \PMap$.find($\pi_0$) \Comment{Look for a permutation of $\PrefixB$}
+    \If {$D_\pi$ exists}
+        \If {$b < b_\pi$} \Comment{$\PrefixB$ is better than $D_\pi$}
+            \State $\PMap$.update($\pi_0, (\PrefixB, b)$) \Comment{Replace $D_\pi$ with $\PrefixB$ in the map}
+            \State $T$.delete\_subtree($\pi(D_\pi)$) \Comment{Delete $D_\pi$ and its subtree from the prefix tree}
+            \State $T$.insert$(\varphi(\PrefixB))$ \Comment{Add node for $\PrefixB$ to the prefix tree}
+            \State $Q$.push$(\PrefixB, b)$ \Comment{Add $\PrefixB$ to the queue}
+        \Else
+            \State \textbf{pass} \Comment{$\PrefixB$ is inferior to $D_\pi$, so do not insert it into any data structures}
+        \EndIf
+    \Else
+        \State $\PMap$.insert($\pi_0, (\PrefixB, b)$) \Comment{Add $\PrefixB$ to the map}
+        \State $T$.insert$(\varphi(\PrefixB))$ \Comment{Add node for $\PrefixB$ to the prefix tree}
+        \State $Q$.push$(\PrefixB, b)$ \Comment{Add $\PrefixB$ to the queue}
+    \EndIf
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
