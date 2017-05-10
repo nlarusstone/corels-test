@@ -141,12 +141,13 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
 \label{sec:execution}
 
 \begin{algorithm}[t!]
-  \caption{CORELS's inner loop evaluates all of a prefix~$\Prefix$'s children.}
+  \caption{The inner loop of CORELS, which evaluates all children of a prefix~$\Prefix$.
+  For details about symmetry-aware map queries, see Algorithm~\ref{alg:pmap}.}
 \label{alg:bounds}
 \begin{algorithmic}
 \small
-\State Define $\mathbf{z} \in \{0, 1\}^N$, s.t. ${z_n = \sum_{u=1}^U \one [x_n \in e_u] [y_n = q_u]}$ \Comment{$e_u$ and~$q_u$ are defined as in~\S\ref{sec:identical}}
-%
+\State Define $\mathbf{z} \in \{0, 1\}^N$, s.t. ${z_n = \sum_{u=1}^U \one [x_n \in e_u] [y_n = q_u]}$ \Comment{$e_u$ and~$q_u$ are defined as in~\S\ref{sec:identical}} \\
+
 \For {$s$ in $\RuleSet$} \Comment{Evaluate all of $\Prefix$'s children}
     \If {$s$ not in $\Prefix$}
         \State $\PrefixB \gets (\Prefix, s)$ \Comment{\textbf{Branch}: Generate child $\PrefixB$}
@@ -196,6 +197,18 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
         %\EndIf
     \EndIf
 \EndFor
+\end{algorithmic}
+\end{algorithm}
+
+
+\begin{algorithm}[t!]
+  \caption{Symmetry-aware map queries, to support search space pruning triggered by
+  the permutation bound (Corollary~\ref{thm:permutation}). For further context, see Algorithm~\ref{alg:bounds}.}
+\label{alg:pmap}
+\begin{algorithmic}
+
+\Function{CheckSymmetryAwareMap}{$\PrefixB, b$}
+\EndFunction
 \end{algorithmic}
 \end{algorithm}
 
