@@ -189,10 +189,11 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
         \If {$b \ge \CurrentObj$}
             \State \Continue \Comment{\textbf{Equivalent points bound (Theorem~\ref{thm:identical})}}
         \EndIf
-        \If {\Call{CheckSymmetryAwareMap}{$\PrefixB, b$}} \Comment{\textbf{Permutation bound (Corollary~\ref{thm:permutation})}}
-            \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
-            \State $C$.insert$(\PrefixB, b(\PrefixB, \x, \y))$ \Comment{Add $\PrefixB$ and its lower bound to the cache}
-        \EndIf
+        \State \Call{CheckSymmetryAwareMap}{$\PrefixB, b$} \Comment{\textbf{Permutation bound (Corollary~\ref{thm:permutation})}}
+        %\If {\Call{CheckSymmetryAwareMap}{$\PrefixB, b$}} \Comment{\textbf{Permutation bound (Corollary~\ref{thm:permutation})}}
+        %    \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
+        %    \State $C$.insert$(\PrefixB, b(\PrefixB, \x, \y))$ \Comment{Add $\PrefixB$ and its lower bound to the cache}
+        %\EndIf
     \EndIf
 \EndFor
 \end{algorithmic}
