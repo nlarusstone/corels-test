@@ -15,9 +15,12 @@ Third, in~\S\ref{sec:pmap}, we introduce a symmetry-aware map to support
 symmetry-aware pruning~(Corollary~\ref{thm:permutation},~\S\ref{sec:permutation}).
 %
 Next, in~\S\ref{sec:execution}, we summarize our incremental execution model,
-and in~\S\ref{sec:gc}, we describe how we garbage collect our data structures.
+and summarize CORELS's inner computational loop in Algorithm~\ref{alg:bounds},
+where we highlight each of bounds from~\S\ref{sec:bounds} that we use to prune the search space.
 %
-We additionally highlight in~\S\ref{sec:scheduling} how our queue can be used to support
+We additionally describe in~\S\ref{sec:gc} how we garbage collect our data structures.
+%
+Finally, we explore in~\S\ref{sec:scheduling} how our queue can be used to support
 custom scheduling policies designed to improve performance.
 %
 Our implementation of CORELS can be found~at: \\
@@ -137,6 +140,56 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
 \subsection{Incremental execution}
 \label{sec:execution}
 
+\begin{algorithm}[t!]
+  \caption{CORELS's inner loop evaluates all of a prefix~$\Prefix$'s children.}
+\label{alg:bounds}
+\begin{algorithmic}
+\small
+\State Define $\mathbf{z} \in \{0, 1\}^N$, s.t. ${z_n = \sum_{u=1}^U \one [x_n \in e_u] [y_n = q_u]}$, where~$e_u$ and~$q_u$ are defined as in~\S\ref{sec:identical} \\
+
+\For {$s$ in $\RuleSet$} \Comment{Evaluate all of $\Prefix$'s children}
+    \If {$s$ not in $\Prefix$}
+        \State $\PrefixB \gets (\Prefix, s)$ \Comment{\textbf{Branch}: Generate child $\PrefixB$}
+        \State $\mathbf{v} \gets \mathbf{u} \wedge \Cap(\x, s)$ \Comment{Bit vector indicating data captured by $s$ in $\PrefixB$}
+        \State $n_v = \Count(\mathbf{v})$ \Comment{Number of data captured by $s$, the last antecedent in $\PrefixB$}
+        \If {$n_v < \Reg$}
+            \State \Continue \Comment{\textbf{Lower bound on antecedent support (Theorem\ref{thm:min-capture})}}
+        \EndIf
+        \State $\mathbf{w} \gets \mathbf{v} \wedge \y$ \Comment{Bit vector indicating data captured by $s$ with label $1$}
+        \State $n_w = \Count(\mathbf{w})$ \Comment{Number of data captured by $s$ with label $1$}
+       \If {$n_w < \Reg$}
+           \State \Continue \Comment{\textbf{Lower bound on accurate antecedent support (Theorem~\ref{thm:min-capture-correct})}}
+       \EndIf
+       \If {$n_w / n_v > 0.5$}
+           \State $\delta b \gets (n_v - n_w) / N$ \Comment{Misclassification error of the rule $s \rightarrow 1$}
+       \Else
+           \State $\delta b \gets n_w / N$ \Comment{Misclassification error of the rule $s \rightarrow 0$}
+       \EndIf
+       \State $b(\PrefixB, \x, \y) \gets b(\Prefix, \x, \y) + \Reg + \delta b$ \Comment{Incremental lower bound~\eqref{eq:inc-lb}}
+       \If {$b(\PrefixB, \x, \y) + \Reg \ge \CurrentObj$} \Comment{\textbf{Hierarchical objective lower bound (Theorem~\ref{thm:bound})}}
+           \State \Continue \hfill {combined with the \textbf{Lookahead bound (Lemma~\ref{lemma:lookahead})}}
+       \EndIf
+       \State $\mathbf{f} \gets \mathbf{u} \wedge \neg\,\mathbf{v} $ \Comment{Bit vector indicating data not captured by $\PrefixB$}
+       \State $n_f = \Count(\mathbf{f})$ \Comment{Number of data not captured by $\PrefixB$}
+       \State $\mathbf{g} \gets \mathbf{f} \wedge \y$ \Comment{Bit vector indicating data not captured by $\PrefixB$ with label $1$}
+       \State $n_g = \Count(\mathbf{g})$ \Comment{Number of data not captued by $\PrefixB$ with label $1$}
+       \If {$n_g / n_f > 0.5$}
+           \State $\delta\Obj \gets (n_f - n_g) / N$ \Comment{Misclassification error of the default label prediction $1$}
+       \Else
+           \State $\delta\Obj \gets n_g / N$ \Comment{Misclassification error of the default label prediction $0$}
+       \EndIf
+       \State $\Obj(\RLB, \x, \y) \gets b(\PrefixB, \x, \y) + \delta\Obj$ \Comment{Incremental objective~\eqref{eq:inc-obj}}
+       \State $\RLB \gets (\PrefixB, \LabelsB, \DefaultB, K+1)$ \Comment{$\LabelsB, \DefaultB$ are set in the incremental functions}
+       \If {$\Obj(\RLB, \x, \y) < \CurrentObj$}
+           \State $(\CurrentRL, \CurrentObj) \gets (\RLB, \Obj(\RLB, \x, \y))$ \Comment{Update current best rule list and objective}
+       \EndIf
+       \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
+       \State $C$.insert$(\PrefixB, b(\PrefixB, \x, \y))$ \Comment{Add $\PrefixB$ and its lower bound to the cache}
+    \EndIf
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
 Mapping our algorithm to our data structures produces the following execution strategy.
 %
 We initialize the current best objective~$\CurrentObj$ and rule list~$\CurrentRL$.
@@ -165,7 +218,8 @@ no extension of~$\Prefix'$ could possibly lead to a rule list with objective
 better than~$\CurrentObj$, thus we do not insert~$\Prefix'$ into the tree or queue.
 %
 We also leverage our other bounds from~\S\ref{sec:framework}
-to aggressively prune the search space.
+to aggressively prune the search space; we highlight each of these bounds
+in Algorithm~\ref{alg:bounds}, which summarize CORELS's inner computational loop.
 %
 When there are no more leaves to explore, \ie the queue is empty, we output the optimal rule list.
 %
