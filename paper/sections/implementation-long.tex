@@ -203,18 +203,18 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
             \State $(\CurrentRL, \CurrentObj) \gets (\RLB, \Obj(\RLB, \x, \y))$ \Comment{Update current best rule list and objective}
             \State \Call{GarbageCollectPrefixTree}{$\CurrentObj$} \Comment{Delete nodes with lower bound $< \CurrentObj$ (\S\ref{sec:gc})}
         \EndIf
-        \State $b_0(\PrefixB, \x, \y) \gets \Count(\mathbf{f} \wedge \mathbf{z}) / N$ \Comment{Lower bound on the default rule}
-        \State $b \gets b(\PrefixB, \x, \y) + b_0(\PrefixB, \x, \y)$ \hfill misclassification error defined in~\eqref{eq:lb-b0}
+        \State $b_0(\PrefixB, \x, \y) \gets \Count(\mathbf{f} \wedge \mathbf{z}) / N$ \Comment{Lower bound on the default rule misclassification}
+        \State $b \gets b(\PrefixB, \x, \y) + b_0(\PrefixB, \x, \y)$ \hfill error defined in~\eqref{eq:lb-b0}
         \If {$b \ge \CurrentObj$}
             \State \Continue \Comment{\textbf{Equivalent points bound (Theorem~\ref{thm:identical})}}
         \EndIf
-        \State \Call{CheckMapAndInsert}{$\PrefixB, b$} \Comment{Check the \textbf{Permutation bound (Corollary~\ref{thm:permutation})}}
+        \State \Call{CheckMapAndInsert}{$\PrefixB, b$} \Comment{Check the \textbf{Permutation bound (Corollary~\ref{thm:permutation})} and}
         %\If {\Call{CheckSymmetryAwareMap}{$\PrefixB, b$}} \Comment{\textbf{Permutation bound (Corollary~\ref{thm:permutation})}}
         %    \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
         %    \State $C$.insert$(\PrefixB, b(\PrefixB, \x, \y))$ \Comment{Add $\PrefixB$ and its lower bound to the cache}
         %\EndIf
 %    \EndIf
-\EndFor \hfill {and possibly insert $\PrefixB$ into data structures}
+\EndFor \hfill {possibly insert $\PrefixB$ into data structures (Algorithm~\ref{alg:pmap})}
 \end{algorithmic}
 \end{algorithm}
 
@@ -236,7 +236,7 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
     \If {$D_\pi$ exists}
         \If {$b < b_\pi$} \Comment{$\PrefixB$ is better than $D_\pi$}
             \State $\PMap$.update($\pi_0, (\PrefixB, b)$) \Comment{Replace $D_\pi$ with $\PrefixB$ in the map}
-            \State $T$.delete\_subtree($\pi(D_\pi)$) \Comment{Delete $D_\pi$ and its subtree from the prefix tree}
+            \State $T$.delete\_subtree($D_\pi$) \Comment{Delete $D_\pi$ and its subtree from the prefix tree}
             \State $T$.insert$(\varphi(\PrefixB))$ \Comment{Add node for $\PrefixB$ to the prefix tree}
             \State $Q$.push$(\PrefixB, b)$ \Comment{Add $\PrefixB$ to the queue}
         \Else
