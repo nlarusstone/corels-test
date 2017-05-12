@@ -315,11 +315,12 @@ even if we know the relevant identifying information.
 We therefore have no way to update the queue without iterating over every element.
 %
 We address this by marking prefix tree leaves that we wish to delete (see~\S\ref{sec:trie}),
-without deleting the physical nodes until they have been removed from the queue.
+and delete the physical nodes lazily, after they are popped from the queue.
 %
-We define two different queues that we refer to in our experiments~(\S\ref{sec:experiments}):
-the physical queue corresponds to all elements in the C++ queue, and thus all prefix tree leaves,
-and the logical queue corresponds only to those prefix tree leaves that have not been marked deleted.
+Later, in our section on experiments~(\S\ref{sec:experiments}),
+we refer to two different queues that we define here: the physical queue
+corresponds to the C++ queue, and thus all prefix tree leaves, and the logical queue
+corresponds only to those prefix tree leaves that have not been marked for deletion.
 
 \subsection{Custom scheduling policies}
 \label{sec:scheduling}
@@ -337,8 +338,8 @@ elements in the queue.
 This motivates designing functions that assign higher priorities to `better'
 prefixes that we believe are more likely to lead to optimal rule lists.
 %
-Note that we follow the convention that priority queue elements are ordered
-by keys, such that keys with smaller values correspond to higher priorities.
+We follow the convention that priority queue elements are ordered
+by keys, such that keys with smaller values have higher priorities.
 
 We introduce a custom class of functions that we call \emph{curiosity} functions.
 %
