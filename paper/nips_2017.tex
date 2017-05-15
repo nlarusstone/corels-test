@@ -10,6 +10,7 @@
 \usepackage{nips_2017}
 
 % to compile a camera-ready version, add the [final] option, e.g.:
+%\usepackage[final]{nips_2017}
 
 \usepackage[utf8]{inputenc} % allow utf-8 input
 \usepackage[T1]{fontenc}    % use 8-bit T1 fonts
@@ -21,6 +22,8 @@
 \usepackage{microtype}      % microtypography
 
 \usepackage{amsmath,amssymb,amsthm, amsfonts}
+\usepackage{natbib}
+\bibliographystyle{plainnat}
 
 \input{latex_front}
 \input{latex_macros}
@@ -39,26 +42,27 @@
   Elaine~Angelino\\
   EECS, UC Berkeley\\
   Berkeley, CA 94720\\
-  \texttt{elaine@eecs.berkeley.edu}\\
-  \AND
+  \texttt{elaine@eecs.berkeley.edu}
+  \And
   Nicholas Larus-Stone\\
   SEAS, Harvard University\\
   Cambridge, MA 02138\\
-  \texttt{nlarusstone@college.harvard.edu}\\
-  \AND
+  \texttt{nlarusstone@college.harvard.edu}
+  \And
   Daniel Alabi\\
   SEAS, Harvard University\\
   Cambridge, MA 02138\\
-  \texttt{alabid@g.harvard.edu}\\
-  \AND
+  \texttt{alabid@g.harvard.edu}
+  \And
   Margo Seltzer\\
   SEAS, Harvard University\\
   Cambridge, MA 02138\\
-  \texttt{margo@eecs.harvard.edu} \\
+  \texttt{margo@eecs.harvard.edu}
+  \And
   Cythia Rudin\\
   Duke University\\
   Durham, NC 27708\\
-  \texttt{cynthia@cs.duke.edu} \\
+  \texttt{cynthia@cs.duke.edu}
 }
 
 
@@ -96,9 +100,6 @@
 \input{sections/experiments}
 
 \input{sections/conclusion}
-
-\section*{References}
-\medskip
 
 \small
 
