@@ -1,7 +1,7 @@
 """
 See https://archive.ics.uci.edu/ml/datasets/US+Census+Data+(1990)
 
-Income fields from https://archive.ics.uci.edu/ml/machine-learning-databases/census1990-mld/USCensus1990raw.attributes.txt
+Income and earning fields from https://archive.ics.uci.edu/ml/machine-learning-databases/census1990-mld/USCensus1990raw.attributes.txt
 
 AINCOME1     C       X      1             Wages and Salary Inc. Allocation Flag
 AINCOME2     C       X      1             Nonfarm Self Employment Inc. Allocation
@@ -12,6 +12,33 @@ AINCOME6     C       X      1             Pub. Asst. Allocation Flag
 AINCOME7     C       X      1             Ret. Inc. Allocation Flag
 AINCOME8     C       X      1             All Other Inc. Allocation Flag
 RPINCOME     C       X      6             Total Pers. Inc. Signed
+REARNING     C       X      6             Total Pers. Earnings
+
+dRearning < dRincome about 18% of the time
+
+create function discRpincome( @arg varchar(255) )
+RETURNS int
+AS
+BEGIN
+  DECLARE @value bigint
+  DECLARE @ret int
+  SET @value = @arg
+
+  IF @value = 0             <-- Discard (32%) (1677761 with positive income)
+     SET @ret = 0
+  ELSE IF @value <0         <-- Discard (0.1 %) can be negative
+     SET @ret = 1
+  ELSE IF @value <15000     <-- (35%)
+     SET @ret = 2
+  ELSE IF @value <30000     <-- (19%)
+     SET @ret = 3
+  ELSE IF @value <60000     <-- (11%)
+     SET @ret = 4
+  ELSE                      <-- (3%)
+     SET @ret = 5
+RETURN(@ret)
+END
+
 
 We focus on Wages and Salary (Income 1).  Discretization function from
 
@@ -50,11 +77,11 @@ import utils
 seed = 81
 num_folds = 10
 max_cardinality = 1
-min_support = 0.001
+min_support = 0.01
 prefix = ''
 
 labels = ['<15K', '>=15K']
-minor = True
+minor = False
 
 din = os.path.join('..', 'data', 'census')
 dout = os.path.join('..', 'data', 'CrossValidation')
@@ -83,12 +110,14 @@ if not os.path.exists(fin):
     os.system('wget %s -O %s' % (ureadme, freadme))
     os.system('wget %s -O %s' % (uraw, fraw))
 
+label_name = 'dRpincome'
+
 ntot = 2458285
 np.random.seed(seed)
 fh = open(fin, 'rU')
 header = fh.readline()
 lines = [header]
-ind = header.strip().split(',').index('dIncome1')
+ind = header.strip().split(',').index(label_name)
 
 # select random subset so that 10-fold cross-validation training sets have
 # 1 million points, i.e., subset of size 1111112
@@ -104,14 +133,13 @@ for i in ii:
 
 """
 
-print 'selecting individuals with nonzero wages'
+print 'selecting individuals with positive total income'
 for i in range(ntot):
     line = fh.readline()
-    if (line.strip().split(',')[ind] == '0'):
+    if (line.strip().split(',')[ind] in ['0', '1']):
         continue
     lines.append(line)
 
-# 1220882 individuals with nonzero wages
 print 'printing subset file with', len(lines) - 1, 'records'
 fh.close()
 gh = open(fsub, 'w')
@@ -120,8 +148,6 @@ gh.close()
 
 print 'reading subset file'
 x = tb.tabarray(SVfile=fsub)
-
-frac (x['dIncome1']==1).sum() / float(len(x))
 
 d = dict()
 ncat = 0
@@ -136,12 +162,14 @@ print 'num categories:', ncat
 
 # ignore `caseid` field and use `dIncome1` as class labels
 # binarize labels s.t. 1 maps to 0 and >1 maps to 1
+# don't include other fields for income or earnings
 names = list(x.dtype.names)
-names = names[1:ind] + names[(ind + 1):] + ['dIncome1']
+names = [nn for nn in names[1:ind] + names[(ind + 1):] if ('income' not in nn.lower()) and ('earning' not in nn.lower())]
+names += [label_name]
 x = x[names]
 z = np.ones(len(x), int)
-z[x['dIncome1'] == 1] = 0
-x['dIncome1'] = z
+z[x[label_name] == 2] = 0
+x[label_name] = z
 
 print 'write categorical dataset', fout
 x.saveSV(fout)
@@ -159,7 +187,7 @@ print 'test size:', len(split_ind[0])
 num_rules = np.zeros(num_folds, int)
 for i in range(num_folds):
     print 'generate cross-validation split', i
-    cv_root = 'adult_%d' % i
+    cv_root = 'census_%d' % i
     test_root = '%s_test' % cv_root
     train_root = '%s_train' % cv_root
     ftest = os.path.join(dout, '%s.csv' % test_root)
@@ -176,6 +204,6 @@ for i in range(num_folds):
                                    max_cardinality=max_cardinality,
                                    min_support=min_support, labels=labels,
                                    minor=minor, prefix=prefix)
-    mine.apply_rules(din=dout, froot=cv_root, labels=labels, prefix=prefix)
+    mine.apply_rules(din=dout, froot=cv_root, labels=labels, prefix=prefix, numerical=True)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
