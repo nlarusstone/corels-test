@@ -206,7 +206,7 @@ def apply_binary(din='../data/compas', froot='compas', neg_names=None, prefix=''
                        for (l, r) in zip(labels, recs)]) + '\n')
     f.close()
 
-def apply_rules(din='../data/adult', froot='adult', labels=['<=50K', '>50K'], prefix=''):
+def apply_rules(din='../data/adult', froot='adult', labels=['<=50K', '>50K'], prefix='', numerical=False):
 
     ftrain = os.path.join(din, '%s%s_train.out' % (prefix, froot))
     ftest = os.path.join(din, '%s_test.csv' % froot)
@@ -227,6 +227,8 @@ def apply_rules(din='../data/adult', froot='adult', labels=['<=50K', '>50K'], pr
     out = []
     for descr in rule_descr:
         rule = [clause.split(':') for clause in descr.strip('{}').split(',')]
+        if numerical:
+            rule = [(name, int(value)) for (name, value) in rule]
         bv = np.cast[str](np.cast[int](np.array([(d[name] == value) for (name, value) in rule]).all(axis=0)))
         out.append('%s %s' % (descr, ' '.join(bv)))
 
