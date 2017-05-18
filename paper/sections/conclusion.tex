@@ -24,29 +24,44 @@ While our approach scales well to large numbers of observations,
 it could have difficulty proving optimality
 for problems with many possibly relevant features that are highly correlated,
 when large regions of the search space might be challenging to exclude.
-
-CORELS is not designed for raw image processing or other problems where the features
-themselves are not interpretable.
 %
-It also does not automatically choose the subgroup with the highest likelihood of a
+CORELS is not designed for raw image processing or other problems where the
+features themselves are not interpretable.
+%
+It could instead be used as a final classifier for image processing problems
+where the features were created beforehand; for instance, one could create classifiers
+for each part of an image, and use CORELS to create a final combined classifier.
+
+CORELS does not automatically choose the subgroup with the highest likelihood of a
 positive outcome; doing so would require an algorithm such as Falling Rule Lists \citep{WangRu15},
 which forces the estimated probabilities to decrease along the list.
 %
-While CORELS does not technically produce estimates of ${\P(Y=1 \given x)}$,
+Furthermore, while CORELS does not technically produce estimates of ${\P(Y=1 \given x)}$,
 one could form such an estimate by computing the empirical
 proportion ${\hat{\P}(Y=1 \given x \textrm{ obeys } p_k)}$ for each antecedent~$p_k$.
 %
-Furthermore, it is not designed to assist with causal inference applications, since
+It also is not designed to assist with causal inference applications, since
 it does not estimate the effect of a treatment via the conditional difference
-${\P(Y=1 \given \textrm{treatment} = \textrm{True}, x) -}$ ${\P(Y=1 \given \textrm{treatment} = \textrm{False}, x)}$.
+${\P(Y=1 \given \textrm{treatment} =}$ ${\textrm{True}, x) -}$
+${\P(Y=1 \given \textrm{treatment} =}$ ${\textrm{False}, x)}$.
 %
 Alternative algorithms that estimate conditional differences with interpretable
-rule lists include Causal Falling Rule Lists \citep{WangRu16}
-and Cost-Effective Interpretable Treatment Regimes (CITR) \citep{LakkarajuRu17}.
-
-Lastly, recall that a rule list is a form of decision tree,
-where in our setting, the leaves are conjunctions.
+rule lists include Causal Falling Rule Lists \citep{WangRu16},
+Cost-Effective Interpretable Treatment Regimes (CITR) \citep{LakkarajuRu17},
+and an approach by \citet{ZhangLaTsDa2015} for constructing
+interpretable and parsimonious treatment regimes.
 %
-It may be possible to generalize ideas from CORELS to handle decision trees of
-other forms, which could be an interesting project for future work.
+CORELS is not easy to adapt in its current form to similar problems,
+such as cost-sensitive learning or weighted regularization.
+%
+This could be remedied by creating more general versions of our theorems,
+which would be an extension of this work.
+
+Lastly, CORELS does not create generic single-variable-split decision trees.
+%
+CORELS optimizes over rule lists, which are one-sided decision trees;
+in our setting, the leaves of these `trees' are conjunctions.
+%
+It may be possible to generalize ideas from our approach to handle generic
+decision trees, which could be an interesting project for future work.
 \end{arxiv}
