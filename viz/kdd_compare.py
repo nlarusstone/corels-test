@@ -6,10 +6,14 @@ import numpy as np
 import pylab
 
 figure = True
+vertical = True
 
 if figure:
     pylab.ion()
-    pylab.figure(1, figsize=(10, 3.1))
+    if vertical:
+        pylab.figure(1, figsize=(5, 6))
+    else:
+        pylab.figure(1, figsize=(10, 3.1))
     pylab.clf()
 
 for dataset in ['compas', 'weapon']:
@@ -39,10 +43,16 @@ for dataset in ['compas', 'weapon']:
     print '\n'.join(['%s & %2.1f $\\pm$ %2.1f' % (n.strip(), m, s) for (n, m, s) in zip(names, y.mean(axis=0) * 100, y.std(axis=0) * 100)])
 
     if figure:
-        if dataset == 'compas':
-            pylab.subplot2grid((10, 40), (0, 0), colspan=18, rowspan=8)
-        elif dataset == 'weapon':
-            pylab.subplot2grid((10, 40), (0, 21), colspan=18, rowspan=8)
+        if not vertical:
+            if dataset == 'compas':
+                pylab.subplot2grid((10, 40), (0, 0), colspan=18, rowspan=8)
+            elif dataset == 'weapon':
+                pylab.subplot2grid((10, 40), (0, 21), colspan=18, rowspan=8)
+        else:
+            if dataset == 'compas':
+                pylab.subplot2grid((40, 10), (0, 1), colspan=10, rowspan=15)
+            elif dataset == 'weapon':
+                pylab.subplot2grid((40, 10), (23, 1), colspan=10, rowspan=15)
 
         fs=14
 
@@ -58,9 +68,12 @@ for dataset in ['compas', 'weapon']:
 
         pylab.plot(range(nmethods), y.mean(axis=0), 's', color='white', markeredgewidth=2, markersize=7)
 
-        pylab.xticks(range(nmethods), names, fontsize=fs, rotation=40)
+        if not vertical:
+            pylab.xticks(range(nmethods), names, fontsize=fs, rotation=40)
+        else:
+            pylab.xticks(range(nmethods), names, fontsize=fs-1, rotation=40)
         pylab.yticks(yticks, fontsize=fs)
-        if dataset == 'compas':
+        if (vertical) or (dataset == 'compas'):
             pylab.ylabel('Accuracy', fontsize=fs)
 
         a = list(pylab.axis())
@@ -69,4 +82,7 @@ for dataset in ['compas', 'weapon']:
         pylab.axis(a)
         pylab.title(title, fontsize=fs)
 
-    pylab.savefig('../figs/compare-compas-weapon.pdf')
+    if vertical:
+        pylab.savefig('../figs/compare-compas-weapon-vertical.pdf')
+    else:
+        pylab.savefig('../figs/compare-compas-weapon.pdf')
