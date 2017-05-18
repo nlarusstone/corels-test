@@ -39,11 +39,15 @@ followed by a default rule~$r_0$.
 %
 \begin{arxiv}
 Figure~\ref{fig:rule-list-symbols} illustrates
-a rule list, which for clarity, we sometimes call a $K$-rule list.
+a rule list, ${\RL =}$ ${(r_1, r_2, r_3, r_4, r_0)}$,
+which for clarity, we sometimes call a $K$-rule list.
 \end{arxiv}
 \begin{kdd}
-Figure~\ref{fig:rule-list} illustrates a 4-rule list.
+Figure~\ref{fig:rule-list} illustrates a 4-rule list,
+${\RL =}$ ${(r_1, r_2, r_3, r_4, r_0)}$.
 \end{kdd}
+%where each rule is of the form ${r_k = p_k \rightarrow q_k}$,
+%for all ${k = 0, \dots, 4}$.
 %
 An association rule~${r = p \rightarrow q}$ is an implication
 corresponding to the conditional statement, ``if~$p$, then~$q$.''
@@ -52,7 +56,7 @@ In our setting, an antecedent~$p$ is a Boolean assertion that
 evaluates to either true or false for each datum~$x_n$,
 and a consequent~$q$ is a label prediction.
 %
-For example, ${(x_{n, 1} = 0) \wedge (x_{n, 3} = 1) \rightarrow (y_n = 1)}$
+For example, ${(x_{n, 1} = 0) \wedge (x_{n, 3} = 1) \rightarrow}$ ${(y_n = 1)}$
 is an association rule.
 %
 %The number of conditions in an antecedent is its cardinality;
@@ -116,10 +120,12 @@ ${\Labels = (q_1, \dots, q_K) \in \{0, 1\}^K}$~gives
 the label predictions associated with~$\Prefix$,
 and ${\Default \in \{0, 1\}}$ is the default label prediction.
 %
-In Figure~\ref{fig:rule-list}, ${\RL =}$ ${(r_1, r_2, r_3, r_4, r_0)}$,
-and each rule is of the form ${r_k = p_k \rightarrow q_k}$,
-for all ${k = 0, \dots, 4}$;
-equivalently, ${\RL = (\Prefix, \Labels, \Default, K)}$,
+For
+\begin{arxiv}
+example, for
+\end{arxiv}
+the rule list in Figure~\ref{fig:rule-list},
+we would write ${\RL = (\Prefix, \Labels, \Default, K)}$,
 where ${\Prefix = (p_1, p_2, p_3, p_4)}$, ${\Labels = (1, 1, 1, 1)}$,
 ${\Default = 0}$, and ${K=4}$.
 
