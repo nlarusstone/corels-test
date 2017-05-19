@@ -40,9 +40,9 @@ Furthermore, while CORELS does not technically produce estimates of ${\P(Y=1 \gi
 one could form such an estimate by computing the empirical
 proportion ${\hat{\P}(Y=1 \given x \textrm{ obeys } p_k)}$ for each antecedent~$p_k$.
 %
-It also is not designed to assist with causal inference applications, since
+CORELS is also not designed to assist with causal inference applications, since
 it does not estimate the effect of a treatment via the conditional difference
-${\P(Y=1 \given \textrm{treatment} =}$ ${\textrm{True}, x) -}$
+${\P(Y=1 \given \textrm{treatment} =}$ ${\textrm{True}, x)}$ $-$
 ${\P(Y=1 \given \textrm{treatment} =}$ ${\textrm{False}, x)}$.
 %
 Alternative algorithms that estimate conditional differences with interpretable
@@ -50,13 +50,13 @@ rule lists include Causal Falling Rule Lists \citep{WangRu16},
 Cost-Effective Interpretable Treatment Regimes (CITR) \citep{LakkarajuRu17},
 and an approach by \citet{ZhangLaTsDa2015} for constructing
 interpretable and parsimonious treatment regimes.
-%
-CORELS is not easy to adapt in its current form to similar problems,
+
+In its current form, CORELS is not easy to adapt to similar problems,
 such as cost-sensitive learning or weighted regularization.
 %
 This could be remedied by creating more general versions of our theorems,
 which would be an extension of this work.
-
+%
 Lastly, CORELS does not create generic single-variable-split decision trees.
 %
 CORELS optimizes over rule lists, which are one-sided decision trees;
