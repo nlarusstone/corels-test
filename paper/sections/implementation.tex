@@ -42,7 +42,7 @@ The symmetry-aware map dominates memory usage for problems that explore longer p
 %
 Before inserting permutation $P_i$ into the symmetry-aware map, we check
 if there exists a permutation $P_j$ of $P_i$ already in the map.
-If there is no permutation exists, then we insert $P_i$ in the map.
+If no such permutation exists, then we insert $P_i$ in the map.
 Otherwise, if a permutation $P_j$ exists and the lower bound of $P_i$ is better than 
 that of $P_j$, we update the map and remove $P_j$ and its subtree from the trie.
 Else, if $P_j$ exists and has a better lower bound than $P_i$, we do nothing 
@@ -64,12 +64,12 @@ that maps prefixes to real values.
 We order entries in the queue to implement several different policies,
 including breadth-first search (BFS) and best-first search.
 %
-For best-first we use a priority queue, ordered by the lower bound, the objective,
+For best-first we use a priority queue, ordered by either the lower bound, the objective,
 or a custom priority metric.
 \end{kdd}
 %
-We also support a stochastic exploration process that bypasses
-the need for a queue by instead following random paths from the root to leaves.
+We also support a stochastic exploration process that doesn't require
+a queue; instead, it follows random paths from the root to leaves.
 %
 We find that ordering by the lower bound and other priority metrics
 often leads to a shorter runtime than using BFS.
@@ -99,7 +99,7 @@ Each time we update the minimum objective,
 we traverse the trie in a depth-first manner, deleting all subtrees
 of any node with lower bound larger than the current minimum objective.
 %
-At other times, when we encounter a node with no children, we prune upwards--deleting that
+At other times, when we encounter a node with no children, we prune upwards, deleting that
 node and recursively traversing the tree towards the root, deleting any childless nodes.
 %
 This garbage collection allows us to constrain the trie's memory consumption, though in our
