@@ -68,8 +68,11 @@ For best-first we use a priority queue, ordered by either the lower bound, the o
 or a custom priority metric.
 \end{kdd}
 %
-We also support a stochastic exploration process that doesn't require
-a queue; instead, it follows random paths from the root to leaves.
+In preliminary work (not shown), we also experimented with
+stochastic exploration processes that don't require a queue;
+instead, these follow random paths from the root to leaves.
+%
+Developing such methods could be an interesting direction for future work.
 %
 We find that ordering by the lower bound and other priority metrics
 often leads to a shorter runtime than using BFS.
