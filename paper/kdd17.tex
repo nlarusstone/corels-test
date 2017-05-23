@@ -7,7 +7,7 @@
 %\setcopyright{none}
 %\setcopyright{acmcopyright}
 %\setcopyright{acmlicensed}
-\setcopyright{rightsretained}
+\setcopyright{rightsretained} % <-- CHECK THIS
 %\setcopyright{usgov}
 %\setcopyright{usgovmixed}
 %\setcopyright{cagov}
@@ -15,17 +15,20 @@
 
 
 % DOI
-\acmDOI{10.475/123_4}
+\acmDOI{http://dx.doi.org/10.1145/XXXXXXX.XXXXXXX} % <-- DOI AFTER RIGHTSREVIEW
 
 % ISBN
-\acmISBN{123-4567-24-567/08/06}
+\acmISBN{978-1-4503-4887-4/17/08}
 
 %Conference
-\acmConference[KDD'17]{ACM Woodstock conference}{August 13 - 17, 2017}{Halifax, Nova Scotia, Canada} 
+\acmConference{KDD'17}{}{August 13--17, 2017, Halifax, NS, Canada.}
 \acmYear{2017}
 \copyrightyear{2017}
 
-\acmPrice{15.00}
+\acmPrice{15.00} % <-- CHECK THIS
+
+\fancyhead{}
+\settopmatter{printacmref=false}
 
 \input{latex_front}
 \input{latex_macros}
