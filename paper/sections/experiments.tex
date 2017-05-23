@@ -63,15 +63,14 @@ All timed results were executed on a server with two Intel Xeon E5-2699~v4
 (55~MB cache, 2.20~GHz) processors and 448~GB RAM.
 %
 Except where we mention a memory constraint, all experiments
-can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.\begin{kdd}
-~\footnote{Due to page constraints, we only present a subset of experiments from
-an extensive evaluation contained in a long version of this report~\citep{AngelinoLaAlSeRu17}.}
-\end{kdd}
+can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
 %
 We focus on two problems:
 using the ProPublica dataset~\citep{LarsonMaKiAn16} to predict two-year recidivism
 and using the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
-whether a weapon will be found on a stopped individual who is frisked or searched.
+whether a weapon will be found on a stopped individual who is frisked or searched.~\footnote{We
+present additional empirical results, and further implementation and data processing details
+in a long version of this report~\citep{AngelinoLaAlSeRu17}.}
 
 We first ran a 10-fold cross validation experiment using CORELS
 and eight other algorithms:~\footnote{We use standard R packages, with default
