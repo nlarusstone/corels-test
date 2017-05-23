@@ -240,7 +240,7 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
             \State $T$.insert$(\varphi(\PrefixB))$ \Comment{Add node for $\PrefixB$ to the prefix tree}
             \State $Q$.push$(\PrefixB, b)$ \Comment{Add $\PrefixB$ to the queue}
         \Else
-            \State \textbf{pass} \Comment{$\PrefixB$ is inferior to $D_\pi$, so do not insert it into any data structures}
+            \State \textbf{pass} \Comment{$\PrefixB$ is inferior to $D_\pi$, thus do not insert it into any data structures}
         \EndIf
     \Else
         \State $\PMap$.insert($\pi_0, (\PrefixB, b)$) \Comment{Add $\PrefixB$ to the map}
