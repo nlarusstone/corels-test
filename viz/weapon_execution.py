@@ -78,15 +78,13 @@ ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
 ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='gray', linewidth=lw)
 ax1.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '-', color='coral', linewidth=lw*2)
 ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='c', linewidth=lw*2)
-ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='gray', linewidth=lw)
-ax1.semilogx(tmin, opt - 0.035, 'k*', markersize=10)
-ax1.semilogx(tmin, opt, 'k|', markeredgewidth=lw)
+ax1.semilogx(tmin, opt, 'k*', markersize=18)
 
 ip = (x['tree_prefix_length'][1:] != x['tree_prefix_length'][:-1]).nonzero()[0] + 1
 for jj in ip:
     pl = x['tree_prefix_length'][jj]
     (tt, oo) = (x['total_time'][jj], x['tree_min_objective'][jj])
-    ax1.semilogx(tt, oo, 'k|', markeredgewidth=lw)
+    ax1.semilogx(tt, oo, 'o', color='coral', markersize=6, markeredgewidth=0)
     ax1.text(tt, oo + 0.015, str(pl), fontsize=fs)
 
 pylab.xticks(fontsize=fs)

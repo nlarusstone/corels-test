@@ -20,12 +20,12 @@ fs = 16 # fontsize
 
 # log files generated on beepboop
 # no-minor execution using just under 400GB RAM when halted
-log_dir = '../logs/keep/'
+log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=800000000-c=0.0050000-v=1-f=1000.txt']
 fold = 1
 
-large = True
+large = False
 
 if large:
     ftag = 'compas_execution_large'
@@ -82,14 +82,13 @@ ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='g
 ax1.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '-', color='coral', linewidth=lw*2)
 ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='mediumblue', linewidth=lw*2)
 ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='gray', linewidth=lw)
-ax1.semilogx(tmin, opt - 0.035, 'k*', markersize=10)
-ax1.semilogx(tmin, opt, 'k|', markeredgewidth=lw)
+ax1.semilogx(tmin, opt, 'k*', markersize=18)
 
 ip = (x['tree_prefix_length'][1:] != x['tree_prefix_length'][:-1]).nonzero()[0] + 1
 for jj in ip:
     pl = x['tree_prefix_length'][jj]
     (tt, oo) = (x['total_time'][jj], x['tree_min_objective'][jj])
-    ax1.semilogx(tt, oo, 'k|', markeredgewidth=lw)
+    ax1.semilogx(tt, oo, 'o', color='coral', markersize=6, markeredgecolor='gray')
     ax1.text(tt, oo + 0.015, str(pl), fontsize=fs)
 
 pylab.xticks(fontsize=fs)
