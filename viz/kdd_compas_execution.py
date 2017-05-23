@@ -25,7 +25,7 @@ log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=800000000-c=0.0050000-v=1-f=1000.txt']
 fold = 1
 
-large = False
+large = True
 
 if large:
     ftag = 'compas_execution_large'

@@ -94,7 +94,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
     for jj in ip:
         pl = x['tree_prefix_length'][jj]
         (tt, oo) = (x['total_time'][jj], x['tree_min_objective'][jj])
-        pylab.semilogx(tt, oo, 'o', color='coral', markersize=6, markeredgewidth=0)
+        pylab.semilogx(tt, oo, 'o', color='coral', markersize=6, markeredgecolor='gray')
         pylab.text(tt * 1.1, oo + 0.025, str(pl), fontsize=fs-2)
 
     pylab.xticks(fontsize=fs-1)

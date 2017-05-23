@@ -84,7 +84,7 @@ ip = (x['tree_prefix_length'][1:] != x['tree_prefix_length'][:-1]).nonzero()[0] 
 for jj in ip:
     pl = x['tree_prefix_length'][jj]
     (tt, oo) = (x['total_time'][jj], x['tree_min_objective'][jj])
-    ax1.semilogx(tt, oo, 'o', color='coral', markersize=6, markeredgewidth=0)
+    ax1.semilogx(tt, oo, 'o', color='coral', markersize=6, markeredgecolor='gray')
     ax1.text(tt, oo + 0.015, str(pl), fontsize=fs)
 
 pylab.xticks(fontsize=fs)
