@@ -122,6 +122,18 @@ diabetesMed 2 {'No', 'Yes'}
 readmitted 3 {'<30', '>30', 'NO'} (11%, 35%, 54%)
 
 """
+import os
+
+import numpy as np
+import tabular as tb
+
+import mine
+import utils
+
+
+def add_columns(tab, cols, names):
+    return tab.colstack(tb.tabarray(columns=columns, names=names))
+
 def chunk_to_dict(c):
     return dict([(int(i.split(',')[0]), i.split(',')[1].strip()) for i in c.split('\n')[1:]])
 
@@ -164,25 +176,25 @@ def admission_source_func(a):
 
 def quartiles_func(a, q):
     if (a <= q[1]):
-        return ('%d-%d' % (q[0], q[1])
+        return ('%d-%d' % (q[0], q[1]))
     elif (a <= q[2]):
-        return ('%d-%d' % (q[1] + 1, q[2])
+        return ('%d-%d' % (q[1] + 1, q[2]))
     elif (a <= q[3]):
-        return ('%d-%d' % (q[2] + 1, q[3])
+        return ('%d-%d' % (q[2] + 1, q[3]))
     else:
-        return ('%d-%d' % (q[3] + 1, q[4])
+        return ('%d-%d' % (q[3] + 1, q[4]))
 
 def quartiles(col):
     q = np.percentile(col, [0, 25, 50, 75, 100])
-    return [quartiles_func(a, q) for a in col]
+    return np.array([quartiles_func(a, q) for a in col])
 
-import os
-
-import numpy as np
-import tabular as tb
-
-import mine
-import utils
+def zero_one_more_func(a):
+    if (a == 0):
+        return '0'
+    elif (a == 1):
+        return '1'
+    else:
+        return '>1'
 
 seed = 65
 num_folds = 10
@@ -199,7 +211,7 @@ zin = os.path.join(din, 'dataset_diabetes.zip')
 zout = os.path.join(din, 'dataset_diabetes')
 fin = os.path.join(zout, 'diabetic_data.csv')
 fmap = os.path.join(zout, 'IDs_mapping.csv')
-fout = os.path.join(din, 'diabetes.txt')
+fout = os.path.join(din, 'diabetes.csv')
 bout = os.path.join('..', 'data', 'diabetes-binary.csv')
 
 if not os.path.exists(din):
@@ -211,22 +223,22 @@ if not os.path.exists(fin):
     os.system('unzip %s -d %s' % (zin, din))
 
 x = tb.tabarray(SVfile=fin)
-y = ['No' if (r == 'NO') else 'Yes' for r in x['readmitted']]
+
+# readmitted 3 {'<30', '>30', 'NO'} (11%, 35%, 54%)
+y = tb.tabarray(columns=[['No' if (r == 'NO') else 'Yes' for r in x['readmitted']]], names='readmitted')
 
 z = open(fmap, 'rU').read().strip().split('\n,\n')
 admission_dict = chunk_to_dict(z[0])
 discharge_dict = chunk_to_dict(z[1])
 admission_source_dict = chunk_to_dict(z[2])
 
-# 97% of records have '?' for weight
-exclude_list = ['encounter_id', 'patient_nbr', 'weight', 'diag_1', 'diag_2', 'diag_3']
-
 # skip: encounter_id, patient_nbr, weight (97% marked ?), payer_code
 
+print 'demographics'
 # use as is:  gender
 
 #race 6 {'?', 'AfricanAmerican', 'Asian', 'Caucasian', 'Hispanic', 'Other'} (group together ? = 2.2% and Other = 1.5%)
-race = [r if r not in ['?', 'Other'] else ['Unknown/Other'] for r in x['race']]
+race = [r if r not in ['?', 'Other'] else 'Unknown/Other' for r in x['race']]
 
 # age (group together 0-30 = 2.5%; 0-40 = 6%, 0-50 = 16%, 0-60 = 30%, 60-70 = 22%, 70-80 = 26%, 80-100 = 20%)
 age30 = ['[0-30)' if a in ['[0-10)', '[10-20)', '[20-30)'] else '[30-100)' for a in x['age']]
@@ -234,53 +246,104 @@ age40 = ['[0-40)' if a in ['[0-10)', '[10-20)', '[20-30)', '[30-40)'] else '[40-
 age50 = ['[0-50)' if a in ['[0-10)', '[10-20)', '[20-30)', '[30-40)', '[40-50)'] else '[50-100)' for a in x['age']]
 age = [age_func(a) for a in x['age']]
 
+columns = [x['gender'], race, age30, age40, age50, age]
+names = ['gender', 'race', 'age_', 'age__', 'age___', 'age']
+categorical = tb.tabarray(columns=columns, names=names)
+
+print 'admission/discharge info'
+# see IDs_mapping.csv
 admission_type = [admission_func(a) for a in x['admission_type_id']]
-discharge_type = [discharge_func(a) for a in x['discharge_type_id']]
+discharge_disposition = [discharge_func(a) for a in x['discharge_disposition_id']]
 admission_source = [admission_source_func(a) for a in x['admission_source_id']]
 
-"""
+columns = [admission_type, discharge_disposition, admission_source]
+names = ['admission_type', 'discharge_disposition', 'admission_source']
+categorical = add_columns(categorical, columns, names)
+
+print 'patient info'
 # quartiles
-time_in_hospital
-num_lab_procedures
-num_procedures
-num_medications
-number_diagnoses
+time_in_hospital = quartiles(x['time_in_hospital'])
+num_lab_procedures = quartiles(x['num_lab_procedures'])
+num_procedures = quartiles(x['num_procedures'])
+num_medications = quartiles(x['num_medications'])
+number_diagnoses = quartiles(x['number_diagnoses'])
+
+columns = [time_in_hospital, num_lab_procedures, num_procedures, num_medications, number_diagnoses]
+names = ['time_in_hospital', 'num_lab_procedures', 'num_procedures', 'num_medications', 'number_diagnoses']
+categorical = add_columns(categorical, columns, names)
 
 # 0, 1, >1
-number_outpatient
-number_emergency
-number_inpatient
+number_outpatient = [zero_one_more_func(a) for a in x['number_outpatient']]
+number_emergency = [zero_one_more_func(a) for a in x['number_emergency']]
+number_inpatient = [zero_one_more_func(a) for a in x['number_inpatient']]
 
-medical_specialty 73 {'?', 'AllergyandImmunology', 'Anesthesiology', 'Anesthesiology-Pediatric', ...} (? = 49%)
-diag_1 717 ... 916 distinct diagnoses => IGNORE for now but look for diagnoses with significant support
-diag_2 749
-diag_3 790
-max_glu_serum 4 {'>200', '>300', 'None', 'Norm'} (1.5%, 1.2%, 95%, 2.6%) => 200-300, >300, >200 OR >300 (call this > 200)
-A1Cresult 4 {'>7', '>8', 'None', 'Norm'}
-metformin 4 {'Down', 'No', 'Steady', 'Up'} (4%, 8%, 83%, 5%)
-repaglinide 4 {'Down', 'No', 'Steady', 'Up'}
-nateglinide 4 {'Down', 'No', 'Steady', 'Up'}
-chlorpropamide 4 {'Down', 'No', 'Steady', 'Up'}
-glimepiride 4 {'Down', 'No', 'Steady', 'Up'}
-acetohexamide 2 {'No', 'Steady'}
-glipizide 4 {'Down', 'No', 'Steady', 'Up'}
-glyburide 4 {'Down', 'No', 'Steady', 'Up'}
-tolbutamide 2 {'No', 'Steady'}
-pioglitazone 4 {'Down', 'No', 'Steady', 'Up'}
-rosiglitazone 4 {'Down', 'No', 'Steady', 'Up'}
-acarbose 4 {'Down', 'No', 'Steady', 'Up'}
-miglitol 4 {'Down', 'No', 'Steady', 'Up'}
-troglitazone 2 {'No', 'Steady'}
-tolazamide 3 {'No', 'Steady', 'Up'}
-examide 1 {'No'} => IGNORE
-citoglipton 1 {'No'} => IGNORE
-insulin 4 {'Down', 'No', 'Steady', 'Up'}
-glyburide-metformin 4 {'Down', 'No', 'Steady', 'Up'}
-glipizide-metformin 2 {'No', 'Steady'}
-glimepiride-pioglitazone 2 {'No', 'Steady'}
-metformin-rosiglitazone 2 {'No', 'Steady'}
-metformin-pioglitazone 2 {'No', 'Steady'}
-change 2 {'Ch', 'No'}
-diabetesMed 2 {'No', 'Yes'}
-readmitted 3 {'<30', '>30', 'NO'} (11%, 35%, 54%)
-"""
+columns = [number_outpatient, number_emergency, number_inpatient]
+names = ['number_outpatient', 'number_emergency', 'number_inpatient']
+categorical = add_columns(categorical, columns, names)
+
+print 'medical specialty'
+# medical_specialty 73 {'?', 'AllergyandImmunology', 'Anesthesiology', 'Anesthesiology-Pediatric', ...} (? = 49%)
+w = tb.tabarray(columns=[x['medical_specialty'], np.ones(len(x), int)], names=['specialty', 'count'])
+v = w.aggregate(On='specialty')
+v.sort(order=['count'])
+exclude_specialties = list(v[v['count'] < (min_support * len(x))]['specialty'])
+specialty = ['Other' if s in exclude_specialties else s for s in x['medical_specialty']]
+
+# Surgery-PlasticwithinHeadandNeck, Surgery-Pediatric, Surgery-Colon&Rectal, Surgery-Maxillofacial, Surgery-Plastic, Surgeon, Surgery-Cardiovascular, Surgery-Thoracic, Surgery-Neuro, Surgery-Vascular, Surgery-Cardiovascular/Thoracic, Surgery-General
+surgery_specialty = ['Yes' if 'surge' in s.lower() else 'No' for s in x['medical_specialty']] # 5076
+
+# Cardiology-Pediatric, Surgery-Cardiovascular, Surgery-Cardiovascular/Thoracic, Cardiology
+cardiology_specialty = ['Yes' if 'cardio' in s.lower() else 'No' for s in x['medical_specialty']] # 6109
+
+# Pediatrics-InfectiousDiseases, Pediatrics-AllergyandImmunology, Pediatrics-EmergencyMedicine, Pediatrics-Hematology-Oncology, Cardiology-Pediatric, Surgery-Pediatric, Pediatrics-Neurology, Anesthesiology-Pediatric, Pediatrics-Pulmonology, Pediatrics-CriticalCare, Pediatrics-Endocrinology, Pediatrics
+#pediatric_specialty = ['Yes' if 'pediatric' in s.lower() else 'No' for s in x['medical_specialty']] # 580
+
+# Obstetrics, Obsterics&Gynecology-GynecologicOnco, Gynecology, ObstetricsandGynecology
+#obgyn_specialty  = ['Yes' if ('gyn' in s.lower() or 'obs' in s.lower()) else 'No' for s in x['medical_specialty']] # 773
+
+# Pediatrics-Hematology-Oncology, Obsterics&Gynecology-GynecologicOnco, Hematology, Hematology/Oncology, Oncology
+#hemeonc_specialty = ['Yes' if ('hema' in s.lower() or 'onc' in s.lower()) else 'No' for s in x['medical_specialty']] # 666
+
+# Orthopedics-Reconstructive, Orthopedics
+orthopedic_specialty = ['Yes' if 'ortho' in s.lower() else 'No' for s in x['medical_specialty']] # 2633
+
+columns = [specialty, surgery_specialty, cardiology_specialty, orthopedic_specialty]
+names = ['specialty', 'surgery_specialty', 'cardiology_specialty', 'orthopedic_specialty']
+categorical = add_columns(categorical, columns, names)
+
+print 'diagnoses'
+# 916 distinct diagnoses => look for diagnoses with significant support
+# diag_1 717, diag_2 749, diag_3 790
+diagnoses = np.concatenate([x[n] for n in ['diag_1', 'diag_2', 'diag_3']])
+p = tb.tabarray(columns=[diagnoses, np.ones(len(diagnoses), int)], names=['diagnosis', 'count'])
+q = p.aggregate(On='diagnosis')
+q.sort(order=['count'])
+common_diagnoses = q[q['count'] >= (min_support * len(x))]['diagnosis'] # 62 when min_support = 0.01
+common_diagnoses = [c for c in common_diagnoses if c != '?']
+diagnoses = x[['diag_1', 'diag_2', 'diag_3']].extract()
+diagnoses = tb.tabarray(columns=[np.cast[str]((diagnoses == c).any(axis=1)) for c in common_diagnoses], names=common_diagnoses)
+categorical = categorical.colstack(diagnoses)
+
+print 'drugs/lab tests'
+# max_glu_serum 4 {'>200', '>300', 'None', 'Norm'} (1.5%, 1.2%, 95%, 2.6%)
+max_glu_serum = ['201-300' if m == '>200' else m for m in x['max_glu_serum']]
+max_glu_serum_200 = ['>200' if m in ['>200', '>300'] else '<=200' for m in x['max_glu_serum']]
+
+# A1Cresult 4 {'>7', '>8', 'None', 'Norm'} (4%, 8%, 83%, 5%)
+A1Cresult = ['7-8' if a == '>7' else a for a in x['A1Cresult']]
+A1Cresult_7 = ['>7' if a in ['>7', '>8'] else '<=7' for a in x['A1Cresult']]
+
+columns = [max_glu_serum, max_glu_serum_200, A1Cresult, A1Cresult_7]
+names = ['max_glu_serum', 'max_glu_serum_200', 'A1Cresult', 'A1Cresult_7']
+categorical = add_columns(categorical, columns, names)
+
+# include these categorical columns
+names_list = [n for n in x.dtype.names[24:-1] if n not in ['examide', 'citoglipton']]
+categorical = categorical.colstack(x[names_list]).colstack(y)
+
+print 'write categorical dataset', fout
+categorical.saveSV(fout)
+
+print 'write binary dataset', bout
+b = utils.to_binary(x)
+b.saveSV(bout)

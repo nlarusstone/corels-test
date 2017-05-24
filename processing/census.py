@@ -91,7 +91,7 @@ fsql = os.path.join(din, 'USCensus1990.mapping.sql')
 freadme = os.path.join(din, 'USCensus1990.readme.txt')
 fsub = os.path.join(din, 'USCensus1990.subset.txt')
 fraw = os.path.join(din, 'USCensus1990raw.attributes.txt')
-fout = os.path.join(din, 'census.txt')
+fout = os.path.join(din, 'census.csv')
 bout = os.path.join('..', 'data', 'census-binary.csv')
 
 if not os.path.exists(din):
