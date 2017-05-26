@@ -149,42 +149,71 @@ def add_columns(tab, cols, names):
 def chunk_to_dict(c):
     return dict([(int(i.split(',')[0]), i.split(',')[1].strip()) for i in c.split('\n')[1:]])
 
-def age_func(a):
-    if (a in ['[0-10)', '[10-20)', '[20-30)', '[30-40)', '[40-50)', '[50-60)']):
-        return '[0-60)'
-    elif (a in ['[60-70)', '[70-80)']):
+def race_func(a):
+    if (a in ['AfricanAmerican', 'Caucasian']):
         return a
-    else:
-        return '[80-100)'
-
-def admission_func(a):
-    descr = admission_dict[a]
-    if (a <= 3):
-        return descr
-    else:
-        return 'Unknown/Other'
-
-def discharge_func(a):
-    descr = discharge_dict[a]
-    if ('expired' in descr.lower()):
-        return 'Expired'
-    elif (a in [18, 25, 26]):
-        return 'Unknown'
-    elif (a <= 6):
-        return descr.replace(' ', '-')
+    elif (a == '?'):
+        return 'Missing'
     else:
         return 'Other'
 
-def admission_source_func(a):
-    descr = admission_source_dict[a]
-    if (a in [1, 7]):
-        return descr
-    elif (a <= 3):
-        return 'Clinic or HMO referral'
-    elif (a <= 6):
-        return 'Transfer from a health care facility'
+def age_func(a):
+    if (a in ['[0-10)', '[10-20)', '[20-30)']):
+        return '<30'
+    elif (a in ['[30-40)', '[40-50)', '[50-60)']):
+        return '30-60'
     else:
-        return 'Unknown/Other'
+        return '>=60'
+
+def discharge_func(a):
+    if (a == 1):
+        return 'Discharged-to-home'
+    else:
+        return 'Otherwise'
+
+def admission_source_func(a):
+    if (a in [1, 2]):
+        return 'Physician-or-clinic-referral'
+    elif (a == 7):
+        return 'Emergency-room'
+    else:
+        return 'Otherwise'
+
+def medical_specialty_func(a):
+    if (a in ['InternalMedicine', 'Family/GeneralPractice']):
+        return a
+    elif (a == '?'):
+        return 'Missing-or-unknown'
+    elif (a in ['Cardiology', 'Cardiology-Pediatric']):
+        return 'Cardiology'
+    elif (a in ['Surgery-General', 'Surgery-Cardiovascular/Thoracic', 'Surgery-Neuro', 'Surgery-Vascular', 'Surgery-Cardiovascular']):
+        return 'Surgery'
+    else:
+        return 'Other'
+
+def primary_diagnosis_func(a):
+    if (a.startswith('250')):
+        return 'Diabetes'
+    elif (a.isdigit()):
+        a = int(a)
+        if (((a >= 390) and (a <= 459)) or (a == 785)):
+            return 'Circulatory-system-disease'
+        elif (((a >= 460) and (a <= 519)) or (a == 786)):
+            return 'Respiratory-system-disease'
+        elif (((a >=520) and (a <= 579)) or (a == 787)):
+            return 'Digestive-system-diseases'
+        elif ((a >= 800) and (a <= 999)):
+            return 'Injury-and-poisoning'
+        elif ((a >= 710) and (a <= 739)):
+            return 'Musculoskeletal-system-and-connective-tissue-diseases'
+        elif (((a >= 580) and (a <= 629)) or (a == 788)):
+            return 'Genitourinary-system-diseases'
+        elif ((a >= 140) and (a <= 239)):
+            return 'Neoplasms'
+        else:
+            return 'Other'
+    else:
+        return 'Other'
 
 def quartiles_func(a, q):
     if (a <= q[1]):
@@ -200,22 +229,15 @@ def quartiles(col):
     q = np.percentile(col, [0, 25, 50, 75, 100])
     return np.array([quartiles_func(a, q) for a in col])
 
-def zero_one_more_func(a):
-    if (a == 0):
-        return '0'
-    elif (a == 1):
-        return '1'
-    else:
-        return '>1'
 
 seed = 65
 num_folds = 10
-max_cardinality = 1
+max_cardinality = 2
 min_support = 0.01
 prefix = ''
 
-labels = ['No', 'Yes']
-minor = False
+labels = ['<30', 'Other']
+minor = True
 
 din = os.path.join('..', 'data', 'diabetes')
 dout = os.path.join('..', 'data', 'CrossValidation')
@@ -223,8 +245,8 @@ zin = os.path.join(din, 'dataset_diabetes.zip')
 zout = os.path.join(din, 'dataset_diabetes')
 fin = os.path.join(zout, 'diabetic_data.csv')
 fmap = os.path.join(zout, 'IDs_mapping.csv')
-fout = os.path.join(din, 'diabetes.csv')
-bout = os.path.join(din, 'diabetes-binary.csv')
+fout = os.path.join(din, 'hospital.csv')
+bout = os.path.join(din, 'hospital-binary.csv')
 
 if not os.path.exists(din):
     os.mkdir(din)
@@ -236,8 +258,43 @@ if not os.path.exists(fin):
 
 x = tb.tabarray(SVfile=fin)
 
+"""
+"... we considered only the first encounter for each patient as the primary
+admission and determined whether or not they were readmitted within 30 days.
+Additionally, we removed all encounters that resulted in either discharge to a
+hospice or patient death, to avoid biasing our analysis. After performing the
+above-described operations, we were left with 69,984 encounters that constituted
+the final dataset for analysis."
+
+"""
+print 'original # records:', len(x) # 101,766
+unique_ids = set()
+bvec = np.zeros(len(x), bool)
+for (i, rec) in enumerate(x):
+    if (rec['patient_nbr'] in unique_ids):
+        continue
+    else:
+        unique_ids.add(rec['patient_nbr'])
+        bvec[i] = True
+
+print '# records after taking only first patient encounters', bvec.sum() # 71,518
+x = x[bvec]
+
+"""
+11,Expired (1.6%)
+13,Hospice / home (0.4%)
+14,Hospice / medical facility (0.4%)
+19,"Expired at home. Medicaid only, hospice." (0.008%)
+20,"Expired in a medical facility. Medicaid only, hospice." (0.002%)
+21,"Expired, place unknown. Medicaid only, hospice." (0%)
+"""
+bvec = np.array([False if a in [11, 13, 14, 19, 20, 21] else True for a in x['discharge_disposition_id']])
+
+print '# records after filtering w.r.t. hospice or death', bvec.sum() # 69,973
+x = x[bvec]
+
 # readmitted 3 {'<30', '>30', 'NO'} (11%, 35%, 54%)
-y = tb.tabarray(columns=[[0 if (r == 'NO') else 1 for r in x['readmitted']]], names='readmitted')
+y = tb.tabarray(columns=[[1 if (r == '<30') else 0 for r in x['readmitted']]], names='readmitted')
 
 z = open(fmap, 'rU').read().strip().split('\n,\n')
 admission_dict = chunk_to_dict(z[0])
@@ -250,108 +307,63 @@ print 'demographics'
 # use as is:  gender
 
 #race 6 {'?', 'AfricanAmerican', 'Asian', 'Caucasian', 'Hispanic', 'Other'} (group together ? = 2.2% and Other = 1.5%)
-race = [r if r not in ['?', 'Other'] else 'Unknown/Other' for r in x['race']]
+race = [race_func(a) for a in x['race']]
 
 # age (group together 0-30 = 2.5%; 0-40 = 6%, 0-50 = 16%, 0-60 = 30%, 60-70 = 22%, 70-80 = 26%, 80-100 = 20%)
-age30 = ['[0-30)' if a in ['[0-10)', '[10-20)', '[20-30)'] else '[30-100)' for a in x['age']]
-age40 = ['[0-40)' if a in ['[0-10)', '[10-20)', '[20-30)', '[30-40)'] else '[40-100)' for a in x['age']]
-age50 = ['[0-50)' if a in ['[0-10)', '[10-20)', '[20-30)', '[30-40)', '[40-50)'] else '[50-100)' for a in x['age']]
 age = [age_func(a) for a in x['age']]
 
-columns = [x['gender'], race, age30, age40, age50, age]
-names = ['gender', 'race', 'age_', 'age__', 'age___', 'age']
+columns = [x['gender'], race, age]
+names = ['gender', 'race', 'age']
 categorical = tb.tabarray(columns=columns, names=names)
 
 print 'admission/discharge info'
 # see IDs_mapping.csv
-admission_type = [admission_func(a) for a in x['admission_type_id']]
 discharge_disposition = [discharge_func(a) for a in x['discharge_disposition_id']]
 admission_source = [admission_source_func(a) for a in x['admission_source_id']]
 
-columns = [admission_type, discharge_disposition, admission_source]
-names = ['admission_type', 'discharge_disposition', 'admission_source']
+columns = [discharge_disposition, admission_source]
+names = ['discharge_disposition', 'admission_source']
 categorical = add_columns(categorical, columns, names)
 
 print 'patient info'
 # quartiles
 time_in_hospital = quartiles(x['time_in_hospital'])
-num_lab_procedures = quartiles(x['num_lab_procedures'])
-num_procedures = quartiles(x['num_procedures'])
-num_medications = quartiles(x['num_medications'])
-number_diagnoses = quartiles(x['number_diagnoses'])
 
-columns = [time_in_hospital, num_lab_procedures, num_procedures, num_medications, number_diagnoses]
-names = ['time_in_hospital', 'num_lab_procedures', 'num_procedures', 'num_medications', 'number_diagnoses']
+columns = [time_in_hospital]
+names = ['time_in_hospital']
 categorical = add_columns(categorical, columns, names)
 
-# 0, 1, >1
-number_outpatient = [zero_one_more_func(a) for a in x['number_outpatient']]
-number_emergency = [zero_one_more_func(a) for a in x['number_emergency']]
-number_inpatient = [zero_one_more_func(a) for a in x['number_inpatient']]
-
-columns = [number_outpatient, number_emergency, number_inpatient]
-names = ['number_outpatient', 'number_emergency', 'number_inpatient']
-categorical = add_columns(categorical, columns, names)
-
-print 'medical specialty'
+print 'medical specialty' # specialty of the admitting physician
 # medical_specialty 73 {'?', 'AllergyandImmunology', 'Anesthesiology', 'Anesthesiology-Pediatric', ...} (? = 49%)
-w = tb.tabarray(columns=[x['medical_specialty'], np.ones(len(x), int)], names=['specialty', 'count'])
-v = w.aggregate(On='specialty')
-v.sort(order=['count'])
-exclude_specialties = list(v[v['count'] < (min_support * len(x))]['specialty'])
-specialty = ['Other' if s in exclude_specialties else s for s in x['medical_specialty']]
+specialty = [medical_specialty_func(a) for a in x['medical_specialty']]
 
-# Surgery-PlasticwithinHeadandNeck, Surgery-Pediatric, Surgery-Colon&Rectal, Surgery-Maxillofacial, Surgery-Plastic, Surgeon, Surgery-Cardiovascular, Surgery-Thoracic, Surgery-Neuro, Surgery-Vascular, Surgery-Cardiovascular/Thoracic, Surgery-General
-surgery_specialty = ['Yes' if 'surge' in s.lower() else 'No' for s in x['medical_specialty']] # 5076
-
-# Cardiology-Pediatric, Surgery-Cardiovascular, Surgery-Cardiovascular/Thoracic, Cardiology
-cardiology_specialty = ['Yes' if 'cardio' in s.lower() else 'No' for s in x['medical_specialty']] # 6109
-
-# Pediatrics-InfectiousDiseases, Pediatrics-AllergyandImmunology, Pediatrics-EmergencyMedicine, Pediatrics-Hematology-Oncology, Cardiology-Pediatric, Surgery-Pediatric, Pediatrics-Neurology, Anesthesiology-Pediatric, Pediatrics-Pulmonology, Pediatrics-CriticalCare, Pediatrics-Endocrinology, Pediatrics
-#pediatric_specialty = ['Yes' if 'pediatric' in s.lower() else 'No' for s in x['medical_specialty']] # 580
-
-# Obstetrics, Obsterics&Gynecology-GynecologicOnco, Gynecology, ObstetricsandGynecology
-#obgyn_specialty  = ['Yes' if ('gyn' in s.lower() or 'obs' in s.lower()) else 'No' for s in x['medical_specialty']] # 773
-
-# Pediatrics-Hematology-Oncology, Obsterics&Gynecology-GynecologicOnco, Hematology, Hematology/Oncology, Oncology
-#hemeonc_specialty = ['Yes' if ('hema' in s.lower() or 'onc' in s.lower()) else 'No' for s in x['medical_specialty']] # 666
-
-# Orthopedics-Reconstructive, Orthopedics
-orthopedic_specialty = ['Yes' if 'ortho' in s.lower() else 'No' for s in x['medical_specialty']] # 2633
-
-columns = [specialty, surgery_specialty, cardiology_specialty, orthopedic_specialty]
-names = ['specialty', 'surgery_specialty', 'cardiology_specialty', 'orthopedic_specialty']
+columns = [specialty]
+names = ['specialty']
 categorical = add_columns(categorical, columns, names)
 
 print 'diagnoses'
 # 916 distinct diagnoses => look for diagnoses with significant support
 # diag_1 717, diag_2 749, diag_3 790
-diagnoses = np.concatenate([x[n] for n in ['diag_1', 'diag_2', 'diag_3']])
-p = tb.tabarray(columns=[diagnoses, np.ones(len(diagnoses), int)], names=['diagnosis', 'count'])
-q = p.aggregate(On='diagnosis')
-q.sort(order=['count'])
-common_diagnoses = q[q['count'] >= (min_support * len(x))]['diagnosis'] # 62 when min_support = 0.01
-common_diagnoses = [c for c in common_diagnoses if c != '?']
-diagnoses = x[['diag_1', 'diag_2', 'diag_3']].extract()
-diagnoses = tb.tabarray(columns=[np.cast[str]((diagnoses == c).any(axis=1)) for c in common_diagnoses], names=common_diagnoses)
-categorical = categorical.colstack(diagnoses)
+primary_diagnosis = [primary_diagnosis_func(a) for a in x['diag_1']]
 
-print 'drugs/lab tests'
-# max_glu_serum 4 {'>200', '>300', 'None', 'Norm'} (1.5%, 1.2%, 95%, 2.6%)
-max_glu_serum = ['201-300' if m == '>200' else m for m in x['max_glu_serum']]
-max_glu_serum_200 = ['>200' if m in ['>200', '>300'] else '<=200' for m in x['max_glu_serum']]
-
-# A1Cresult 4 {'>7', '>8', 'None', 'Norm'} (4%, 8%, 83%, 5%)
-A1Cresult = ['7-8' if a == '>7' else a for a in x['A1Cresult']]
-A1Cresult_7 = ['>7' if a in ['>7', '>8'] else '<=7' for a in x['A1Cresult']]
-
-columns = [max_glu_serum, max_glu_serum_200, A1Cresult, A1Cresult_7]
-names = ['max_glu_serum', 'max_glu_serum_200', 'A1Cresult', 'A1Cresult_7']
+columns = [primary_diagnosis]
+names = ['primary_diagnosis']
 categorical = add_columns(categorical, columns, names)
 
-# include these categorical columns
-names_list = [n for n in x.dtype.names[24:-1] if n not in ['examide', 'citoglipton']]
-categorical = categorical.colstack(x[names_list])
+print 'drugs/lab tests'
+# A1Cresult 4 {'>7', '>8', 'None', 'Norm'} (4%, 8%, 83%, 5%)
+# change 2 {'Ch', 'No'}
+# diabetesMed 2 {'No', 'Yes'}
+HbA1c_no_test = np.cast[str](x['A1Cresult'] == 'None')
+bvec = (x['A1Cresult'] == '>8') & (x['diabetesMed'] == 'Yes') & (x['change'] == 'Ch')
+HbA1c_high_changed = np.cast[str](bvec)
+bvec = (x['A1Cresult'] == '>8') & (x['diabetesMed'] == 'Yes') & (x['change'] == 'No')
+HbA1c_high_not_changed = np.cast[str](bvec)
+HbA1c_normal_test = np.cast[str](x['A1Cresult'] == 'Norm')
+
+columns = [HbA1c_no_test, HbA1c_high_changed, HbA1c_high_not_changed, HbA1c_normal_test]
+names = ['HbA1c-no-test', 'HbA1c-result-high-diabetic-medication-changed', 'HbA1c-result-high-diabetic-medication-not-changed', 'HbA1c-normal-test']
+categorical = add_columns(categorical, columns, names)
 
 x = categorical.colstack(y)
 
@@ -362,16 +374,23 @@ print 'write binary dataset', bout
 b = utils.to_binary(x)
 b.saveSV(bout)
 
+y0 = x[x['readmitted'] == 0]
+y1 = x[x['readmitted'] == 1]
+x = y0.rowstack(y1)
+s0 = np.split(np.random.permutation(len(y0) / num_folds * num_folds), num_folds)
+s1 = np.split(len(y0) + np.random.permutation(len(y1) / num_folds * num_folds), num_folds)
+s1 = [i1[np.random.randint(0, len(i1), len(s0[0]))] for i1 in s1]
+split_ind = [np.concatenate([i0, i1]) for (i0, i1) in zip(s0, s1)]
+
 print 'permute and partition dataset'
-split_ind = np.split(np.random.permutation(len(x) / num_folds * num_folds), num_folds)
 print 'number of folds:', num_folds
-print 'train size:', len(split_ind[0]) * (num_folds - 1)
-print 'test size:', len(split_ind[0])
+print 'train size:', len(split_ind[0]) * (num_folds - 1) # 114,642
+print 'test size:', len(split_ind[0]) # 12,738
 
 num_rules = np.zeros(num_folds, int)
 for i in range(num_folds):
     print 'generate cross-validation split', i
-    cv_root = 'diabetes_%d' % i
+    cv_root = 'hospital_%d' % i
     test_root = '%s_test' % cv_root
     train_root = '%s_train' % cv_root
     ftest = os.path.join(dout, '%s.csv' % test_root)

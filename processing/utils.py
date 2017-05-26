@@ -8,6 +8,7 @@ def to_binary(x):
     for n in x.dtype.names:
         dlist = list(set(x[n]))
         dlist.sort()
+        print n, dlist
         if (len(dlist) == 2):
             if hasattr(dlist[0], 'split'):
                 if ('=not-' in dlist[0]):
