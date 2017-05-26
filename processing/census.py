@@ -1,6 +1,8 @@
 """
 See https://archive.ics.uci.edu/ml/datasets/US+Census+Data+(1990)
 
+**Consider thresholds instead of ranges**
+
 Income and earning fields from https://archive.ics.uci.edu/ml/machine-learning-databases/census1990-mld/USCensus1990raw.attributes.txt
 
 AINCOME1     C       X      1             Wages and Salary Inc. Allocation Flag
@@ -64,6 +66,157 @@ BEGIN
      SET @ret = 4           <-- Class label 1 (4%)
 RETURN(@ret)
 END
+
+Example rule lists:
+
+if ({dHour89:1}) then ({dRpincome:<15K})        # objective: 0.28208
+else if ({dWeek89:2}) then ({dRpincome:>=15K})  # accuracy:  0.73792
+else ({dRpincome:<15K})
+
+if ({dHour89:1}) then ({dRpincome:<15K})        # objective: 0.27933
+else if ({dPoverty:1}) then ({dRpincome:<15K})  # accuracy:  0.75067
+else if ({dHours:0}) then ({dRpincome:<15K})
+else ({dRpincome:>=15K})
+
+if ({dHour89:1}) then ({dRpincome:<15K})        # objective: 0.27882
+else if ({dPoverty:1}) then ({dRpincome:<15K})  # accuracy:  0.76118
+else if ({dAge:2}) then ({dRpincome:<15K})
+else if ({iYearwrk:1}) then ({dRpincome:>=15K})
+else ({dRpincome:<15K})
+
+
+HOUR89       C       X      2             Usual Hrs. Worked Per Week Last Yr. 1989
+                                  00      N/a Less Than 16 Yrs. Old/did Not Work i
+                                  99      99 or More Usual Hrs.
+
+WEEK89       C       X      2             Wks. Worked Last Yr. 1989
+                                  00      N/a Less Than 16 Yrs. Old/did Not Work i
+
+POVERTY      C       X      3             Pers. Poverty Stat. Recode See Appendix
+                                  000     N/a
+                                  501     501% or More of Poverty Value
+
+HOURS        C       X      2             Hrs. Worked Last Week
+                                  00      N/a Less Than 16 Yrs. Old/not At Work/un
+                                  99      99 or More Hrs. Worked Last Week
+
+YEARWRK      C       X      1             Yr. Last Worked
+                                  0       N/a Less Than 16 Yrs. Old
+                                  1       1990
+                                  2       1989
+                                  3       1988
+                                  4       1985 to 1987
+                                  5       1980 to 1984
+                                  6       1979 or Earlier
+                                  7       Never Worked
+
+create function discHour89( @arg varchar(255) )
+RETURNS int
+AS
+BEGIN
+  DECLARE @value bigint
+  DECLARE @ret int
+  SET @value = @arg
+
+  IF @value = 0
+     SET @ret = 0
+  ELSE IF @value <30
+     SET @ret = 1
+  ELSE IF @value <40
+     SET @ret = 2
+  ELSE IF @value <41
+     SET @ret = 3
+  ELSE IF @value <50
+     SET @ret = 4
+  ELSE
+     SET @ret = 5
+RETURN(@ret)
+END
+
+create function discWeek89( @arg varchar(255) )
+RETURNS int
+AS
+BEGIN
+  DECLARE @value bigint
+  DECLARE @ret int
+  SET @value = @arg
+
+  IF @value = 0
+     SET @ret = 0
+  ELSE IF @value < 52
+     SET @ret = 1
+  ELSE
+     SET @ret = 2
+RETURN(@ret)
+END
+
+create function discPoverty( @arg varchar(255) )
+RETURNS int
+AS
+BEGIN
+  DECLARE @value bigint
+  DECLARE @ret int
+  SET @value = @arg
+
+  IF @value = 0
+     SET @ret = 0
+  ELSE IF @value <100
+     SET @ret = 1
+  ELSE
+     SET @ret = 2
+RETURN(@ret)
+END
+
+create function discHours( @arg varchar(255) )
+RETURNS int
+AS
+BEGIN
+  DECLARE @value bigint
+  DECLARE @ret int
+  SET @value = @arg
+
+  IF @value = 0
+     SET @ret = 0
+  ELSE IF @value <30
+     SET @ret = 1
+  ELSE IF @value <40
+     SET @ret = 2
+  ELSE IF @value <41
+     SET @ret = 3
+  ELSE IF @value <50
+     SET @ret = 4
+  ELSE
+     SET @ret = 5
+RETURN(@ret)
+END
+
+create function discAge( @arg varchar(255) )
+RETURNS int
+AS
+BEGIN
+  DECLARE @value bigint
+  DECLARE @ret int
+  SET @value = @arg
+
+  IF @value = 0
+     SET @ret = 0
+  ELSE IF @value <13
+     SET @ret = 1
+  ELSE IF @value <20
+     SET @ret = 2
+  ELSE IF @value <30
+     SET @ret = 3
+  ELSE IF @value <40
+     SET @ret = 4
+  ELSE IF @value <50
+     SET @ret = 5
+  ELSE IF @value <65
+     SET @ret = 6
+  ELSE
+     SET @ret = 7
+RETURN(@ret)
+END
+
 """
 import os
 

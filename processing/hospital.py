@@ -410,3 +410,5 @@ for i in range(num_folds):
     mine.apply_rules(din=dout, froot=cv_root, labels=labels, prefix=prefix)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
+
+# minimum error ~ 0.226
