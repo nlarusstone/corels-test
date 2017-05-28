@@ -253,6 +253,8 @@ threshold_dict = {'dAge': [0, 13, 20, 30, 40, 50, 65],
                   'dWeek89': [0, 52],
                   'dYrsserv': [0, 5]}
 
+# also consider:  iFertil, iRiders
+
 seed = 81
 num_folds = 10
 max_cardinality = 1
@@ -359,7 +361,8 @@ print 'get class labels'
 z = np.ones(len(x), int)
 z[x[label_name] == 2] = 0
 
-x = x[names].colstack(y).colstack(tb.tabarray(columns=[z], names=[label_name]))
+x = y.colstack(x[names]).colstack(tb.tabarray(columns=[z], names=[label_name]))
+print x.dtype.names
 
 print 'write categorical dataset', fout
 x.saveSV(fout)
