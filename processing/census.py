@@ -228,14 +228,18 @@ import mine
 import utils
 
 def threshold_func(col, vals, descr):
+    codes = list(set(col))
+    codes.sort()
     columns = []
     names = []
     if (vals[0] == 0):
+        assert codes[0] == 0
         columns += [np.cast[int](col == 0)]
         names += ['%s=0' % descr]
         vals = vals[1:]
-    for v in vals:
-        columns += [np.cast[int](col <= v)]
+        codes = codes[1:]
+    for (c, v) in zip(codes, vals):
+        columns += [np.cast[int](col <= c)]
         names += ['%s<%d' % (descr, v)]
     return tb.tabarray(columns=columns, names=names)
 
