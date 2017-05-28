@@ -346,7 +346,6 @@ names = list(x.dtype.names)
 names = [nn for nn in names[1:ind] + names[(ind + 1):] if (nn not in threshold_dict.keys())
          and ('income' not in nn.lower()) and ('earning' not in nn.lower())
          and ('poverty' not in nn.lower())]
-x = x[names]
 
 print 'compute thresholds'
 for (i, nn) in enumerate(threshold_dict.keys()):
@@ -356,12 +355,11 @@ for (i, nn) in enumerate(threshold_dict.keys()):
     else:
         y = y.colstack(threshold_func(x[nn], threshold_dict[nn], nn))
 
-x = x.colstack(y)
-
 print 'get class labels'
 z = np.ones(len(x), int)
 z[x[label_name] == 2] = 0
-x = x.colstack(tb.tabarray(columns=[z], names=[label_name]))
+
+x = x[names].colstack(y).colstack(tb.tabarray(columns=[z], names=[label_name]))
 
 print 'write categorical dataset', fout
 x.saveSV(fout)
