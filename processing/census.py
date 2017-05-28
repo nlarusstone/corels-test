@@ -15,6 +15,7 @@ AINCOME7     C       X      1             Ret. Inc. Allocation Flag
 AINCOME8     C       X      1             All Other Inc. Allocation Flag
 RPINCOME     C       X      6             Total Pers. Inc. Signed
 REARNING     C       X      6             Total Pers. Earnings
+POVERTY      C       X      3             Pers. Poverty Stat. Recode See Appendix
 
 dRearning < dRincome about 18% of the time
 
@@ -226,22 +227,31 @@ import tabular as tb
 import mine
 import utils
 
-def threshold_func(col, vals, name):
+def threshold_func(col, vals, descr):
+    columns = []
+    names = []
     if (vals[0] == 0):
-        pass
+        columns += [np.cast[int](col == 0)]
+        names += ['%s=0' % descr]
+        vals = vals[1:]
+    for v in vals:
+        columns += [np.cast[int](col <= v)]
+        names += ['%s<%d' % (descr, v)]
+    return tb.tabarray(columns=columns, names=names)
 
-dAge = [0, 13, 20, 30, 40, 50, 65]
-dDepart = [0, 600, 700, 800, 1000]
-dHour89 = [0, 30, 40, 41, 50]
-dHour = [0, 30, 40, 41, 50]
-dIncome1 = [0, 15000, 30000, 60000]
-dPoverty = [0, 100]
-dPWGT1 = [50, 125, 200]
-dRearning = [0, 15000, 30000, 60000]
-dTravtime = [0, 10, 15, 20, 30, 60]
-dWeek89 = [0, 52]
-dYrsserv = [0, 5]
-dRpincome = ['0', '<0', '<15000', '<30000', '<60000', '>=60000']
+# 'dIncome1': [0, 15000, 30000, 60000]
+# 'dPoverty': [0, 100]
+# 'dRearning': [0, 15000, 30000, 60000]
+# 'dRpincome': ['0', '<0', '<15000', '<30000', '<60000', '>=60000']
+
+threshold_dict: {'dAge': [0, 13, 20, 30, 40, 50, 65],
+                 'dDepart': [0, 600, 700, 800, 1000],
+                 'dHour89': [0, 30, 40, 41, 50],
+                 'dHour': [0, 30, 40, 41, 50],
+                 'dPWGT1': [50, 125, 200],
+                 'dTravtime': [0, 10, 15, 20, 30, 60],
+                 'dWeek89': [0, 52],
+                 'dYrsserv': [0, 5]}
 
 seed = 81
 num_folds = 10
@@ -333,12 +343,25 @@ print 'num categories:', ncat
 # binarize labels s.t. 1 maps to 0 and >1 maps to 1
 # don't include other fields for income or earnings
 names = list(x.dtype.names)
-names = [nn for nn in names[1:ind] + names[(ind + 1):] if ('income' not in nn.lower()) and ('earning' not in nn.lower())]
-names += [label_name]
+names = [nn for nn in names[1:ind] + names[(ind + 1):] if (nn not in threshold_dict.keys())
+         and ('income' not in nn.lower()) and ('earning' not in nn.lower())
+         and ('poverty' not in nn.lower()))]
 x = x[names]
+
+print 'compute thresholds'
+for (i, nn) in enumerate(threshold_dict.keys()):
+    print nn
+    if (i == 0):
+        y = threshold_func(x[nn], threshold_dict[nn], nn)
+    else:
+        y = y.colstack(threshold_func(x[nn], threshold_dict[nn], nn))
+
+x = x.colstack(y)
+
+print 'get class labels'
 z = np.ones(len(x), int)
 z[x[label_name] == 2] = 0
-x[label_name] = z
+x = x.colstack(tb.tabarray(columns=[z], names=[label_name]))
 
 print 'write categorical dataset', fout
 x.saveSV(fout)
