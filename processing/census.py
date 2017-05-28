@@ -345,7 +345,7 @@ print 'num categories:', ncat
 names = list(x.dtype.names)
 names = [nn for nn in names[1:ind] + names[(ind + 1):] if (nn not in threshold_dict.keys())
          and ('income' not in nn.lower()) and ('earning' not in nn.lower())
-         and ('poverty' not in nn.lower()))]
+         and ('poverty' not in nn.lower())]
 x = x[names]
 
 print 'compute thresholds'
