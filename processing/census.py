@@ -247,8 +247,8 @@ def threshold_func(col, vals, descr):
 threshold_dict = {'dAge': [0, 13, 20, 30, 40, 50, 65],
                   'dDepart': [0, 600, 700, 800, 1000],
                   'dHour89': [0, 30, 40, 41, 50],
-                  'dHour': [0, 30, 40, 41, 50],
-                  'dPWGT1': [50, 125, 200],
+                  'dHours': [0, 30, 40, 41, 50],
+                  'dPwgt1': [50, 125, 200],
                   'dTravtime': [0, 10, 15, 20, 30, 60],
                   'dWeek89': [0, 52],
                   'dYrsserv': [0, 5]}
