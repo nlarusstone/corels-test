@@ -331,7 +331,7 @@ gh.write(''.join(lines))
 gh.close()
 
 print 'reading subset file'
-x = tb.tabarray(SVfile=fsub)
+x = tb.tabarray(SVfile=fsub, uselines=(0, 10000))
 
 d = dict()
 ncat = 0
@@ -388,18 +388,17 @@ for i in range(num_folds):
     train_root = '%s_train' % cv_root
     ftest = os.path.join(dout, '%s.csv' % test_root)
     ftrain = os.path.join(dout, '%s.csv' % train_root)
-    btest = os.path.join(dout, '%s-binary.csv' % test_root)
-    btrain = os.path.join(dout, '%s-binary.csv' % train_root)
+    #btest = os.path.join(dout, '%s-binary.csv' % test_root)
+    #btrain = os.path.join(dout, '%s-binary.csv' % train_root)
     train_ind = np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])
-    x[split_ind[i]].saveSV(ftest)
-    x[train_ind].saveSV(ftrain)
-    b[split_ind[i]].saveSV(btest)
-    b[train_ind].saveSV(btrain)
+    b[split_ind[i]].saveSV(ftest)
+    b[train_ind].saveSV(ftrain)
+    #b[split_ind[i]].saveSV(btest)
+    #b[train_ind].saveSV(btrain)
     print 'mine rules from', ftrain
-    num_rules[i] = mine.mine_rules(din=dout, froot=train_root,
-                                   max_cardinality=max_cardinality,
-                                   min_support=min_support, labels=labels,
-                                   minor=minor, prefix=prefix)
-    mine.apply_rules(din=dout, froot=cv_root, labels=labels, prefix=prefix, numerical=True)
+    num_rules[i] = mine.mine_binary(din=dout, froot=train_root,
+                                    max_cardinality=max_cardinality,
+                                    min_support=min_support, prefix=prefix)
+    mine.apply_binary(din=dout, froot=cv_root, prefix=prefix)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
