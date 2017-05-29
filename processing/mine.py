@@ -38,7 +38,7 @@ def mine_binary(din='../data/compas', froot='compas', max_cardinality=2,
     udict = {}
     for n in features:
         ulist = tb.utils.uniqify(x[n])
-        assert (set(ulist) == set([0, 1]))
+        #assert (set(ulist) == set([0, 1]))
         udict[n] = []
         bvec = (x[n] == 1)
         supp = bvec.sum()
