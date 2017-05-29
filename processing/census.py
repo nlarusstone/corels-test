@@ -232,8 +232,7 @@ def threshold_func(col, vals, descr):
     codes.sort()
     columns = []
     names = []
-    if (vals[0] == 0):
-        assert codes[0] == 0
+    if (codes[0] == 0):
         columns += [np.cast[int](col == 0)]
         names += ['%s=0' % descr]
         vals = vals[1:]
