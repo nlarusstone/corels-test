@@ -330,7 +330,7 @@ gh.write(''.join(lines))
 gh.close()
 
 print 'reading subset file'
-x = tb.tabarray(SVfile=fsub, uselines=(0, 10000))
+x = tb.tabarray(SVfile=fsub)
 
 d = dict()
 ncat = 0
