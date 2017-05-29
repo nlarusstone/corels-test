@@ -68,16 +68,16 @@ can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
 We focus on two problems:
 using the ProPublica dataset~\citep{LarsonMaKiAn16} to predict two-year recidivism
 and using the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
-whether a weapon will be found on a stopped individual who is frisked or searched.~\footnote{We
+whether a weapon will be found on a stopped individual who is frisked or searched.\footnote{We
 present additional empirical results, and further implementation and data processing details
 in a long version of this report~\citep{AngelinoLaAlSeRu17}.}
 
 We first ran a 10-fold cross validation experiment using CORELS
-and eight other algorithms:~\footnote{We use standard R packages, with default
+and eight other algorithms:\footnote{We use standard R packages, with default
 parameter settings, for the first seven.}
 logistic regression, support vector machines, AdaBoost, CART, C4.5, random forests,
-RIPPER,~\footnote{We were unable to execute RIPPER for the NYCLU problem.}
-and scalable Bayesian rule lists (SBRL).~\footnote{Code for SBRL can be found at
+RIPPER,\footnote{We were unable to execute RIPPER for the NYCLU problem.}
+and scalable Bayesian rule lists (SBRL).\footnote{Code for SBRL can be found at
 \url{https://github.com/Hongyuy/sbrlmod}.}
 %
 Figure~\ref{fig:rule-list} shows an  optimal rule list that CORELS learns
