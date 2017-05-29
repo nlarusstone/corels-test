@@ -275,8 +275,8 @@ fsql = os.path.join(din, 'USCensus1990.mapping.sql')
 freadme = os.path.join(din, 'USCensus1990.readme.txt')
 fsub = os.path.join(din, 'USCensus1990.subset.txt')
 fraw = os.path.join(din, 'USCensus1990raw.attributes.txt')
-fout = os.path.join(din, 'census.csv')
-bout = os.path.join(din, 'census-binary.csv')
+fout = os.path.join(din, 'census-categorical.csv')
+bout = os.path.join(din, 'census.csv')
 
 if not os.path.exists(din):
     os.mkdir(din)
