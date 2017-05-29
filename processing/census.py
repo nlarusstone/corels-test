@@ -237,9 +237,9 @@ def threshold_func(col, vals, descr):
         names += ['%s=0' % descr]
         vals = vals[1:]
         codes = codes[1:]
-    for (c, v) in zip(codes, vals):
+    for c in codes:
         columns += [np.cast[int](col <= c)]
-        names += ['%s<%d' % (descr, v)]
+        names += ['%s<%d' % (descr, vals[c])]
     return tb.tabarray(columns=columns, names=names)
 
 # 'dIncome1': [0, 15000, 30000, 60000]
