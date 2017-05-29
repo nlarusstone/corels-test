@@ -276,7 +276,7 @@ freadme = os.path.join(din, 'USCensus1990.readme.txt')
 fsub = os.path.join(din, 'USCensus1990.subset.txt')
 fraw = os.path.join(din, 'USCensus1990raw.attributes.txt')
 fout = os.path.join(din, 'census.csv')
-bout = os.path.join('..', 'data', 'census-binary.csv')
+bout = os.path.join(din 'census-binary.csv')
 
 if not os.path.exists(din):
     os.mkdir(din)
@@ -396,10 +396,9 @@ for i in range(num_folds):
     b[split_ind[i]].saveSV(btest)
     b[train_ind].saveSV(btrain)
     print 'mine rules from', ftrain
-    num_rules[i] = mine.mine_rules(din=dout, froot=train_root,
+    num_rules[i] = mine.mine_binary(din=dout, froot='%s-binary' % train_root,
                                    max_cardinality=max_cardinality,
-                                   min_support=min_support, labels=labels,
-                                   minor=minor, prefix=prefix)
-    mine.apply_rules(din=dout, froot=cv_root, labels=labels, prefix=prefix, numerical=True)
+                                   min_support=min_support, prefix=prefix)
+    mine.apply_binary(din=dout, froot=cv_root, labels=labels, prefix=prefix)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
