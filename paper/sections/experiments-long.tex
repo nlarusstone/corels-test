@@ -2,8 +2,8 @@
 \label{sec:experiments}
 
 Our experimental analysis addresses five questions:
-(1) How does CORELS' accuracy compare to other algorithms?
-(2) How does CORELS' model size compare to other algorithms?
+(1) How does CORELS' accuracy compare to other algorithms'?
+(2) How does CORELS' model size compare to other algorithms'?
 (3) How rapidly does the objective function converge?
 (4) How rapidly does CORELS prune the search space?
 (5) How much does each of the implementation optimizations contribute to CORELS' performance?
@@ -584,15 +584,16 @@ using the ProPublica (left) and NYCLU (right) datasets.
 For CORELS (solid lines) with the ProPublica recidivism dataset (left),
 the objective drops quickly, achieving the optimal value within 10 seconds.
 CORELS certifies optimality in less than 6 minutes --
-the objective lower bound of the remaining search space
-steadily converges to the optimal objective as the search space shrinks.
+the objective lower bound steadily converges to the optimal objective
+as the search space shrinks.
 %
-In the same plots (left), we additionally highlight a separate execution of CORELS
-without the equivalent points bound (Theorem~\ref{thm:identical}) (dark blue dashed lines).
+In the same plots (left), we additionally highlight the objective lower bound
+from a separate execution of CORELS without the equivalent points bound
+(Theorem~\ref{thm:identical}) (dark blue dashed lines).
 %
 After nearly 3 hours, the execution is still far from complete;
 in particular, the lower bound is far from the optimum objective value (top)
-and much of the search space remains (bottom).
+and much of the search space remains unexplored (bottom).
 %
 For the NYCLU stop-and-frisk dataset (right),
 CORELS achieves the optimum objective in well under a second,
