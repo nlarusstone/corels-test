@@ -55,8 +55,7 @@ and dramatically overfits for all tested parameters.
 
 Our experimental analysis addresses four questions:
 (1)~How does CORELS' accuracy and model size compare to other algorithms'?
-(2)~How rapidly do the objective value and its lower bound converge,
-for different values of the regularization parameter~$\Reg$?
+(2)~How rapidly do the objective value and its lower bound converge, for different values of~$\Reg$?
 (3)~How much does each of the implementation optimizations contribute to CORELS' performance?
 (4)~How rapidly does CORELS prune the search space?
 
@@ -86,9 +85,8 @@ Figure~\ref{fig:rule-list} shows an  optimal rule list that CORELS learns
 for the ProPublica dataset.
 %
 Figure~\ref{fig:comparison} shows that there were no statistically significant
-differences in algorithm accuracies.
-%
-In fact, the difference between folds was far larger than the difference between algorithms.
+differences in algorithm accuracies --
+the difference between folds was far larger than the difference between algorithms.
 %
 We conclude that CORELS produces models whose accuracy is comparable to those found via other algorithms.
 %
@@ -140,6 +138,74 @@ from the panels to the left, for the three different~$\Reg$.
 \label{fig:weapon-reg-execution}
 \end{figure}
 
+\begin{figure}[t!]
+\begin{center}
+% left lower right upper
+\includegraphics[trim={20mm, 25mm, 24mm, 0mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
+\end{center}
+\caption{CORELS with (lines) and without
+(dashes) the equivalent points bound (Theorem~\ref{thm:identical}).
+%
+%Horizontal axes plot wall clock time (log scale).
+%
+Top: Objective value (thin line) and lower bound (thick line) for CORELS,
+and lower bound (dashes) for an execution without the equivalent points bound.
+%as a function of wall clock time (log scale).
+%
+Numbered points
+%along the objective
+indicate when the length of the best known rule list changes,
+and are labeled by the new length.
+%
+%CORELS quickly the optimal value (star marker),
+%and certifies optimality when the lower bound matches the objective value.
+A star marks the optimum.
+%
+% A separate execution of
+%CORELS without the equivalent points bound remains far from complete,
+%and its lower bound (dashed line) far from the optimum.
+%
+Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
+%as a function of wall clock time,
+where~$\Remaining(\CurrentObj, \Queue)$
+is the upper bound on remaining search space size
+(Theorem~\ref{thm:remaining-eval-fine}).
+}
+\label{fig:objective}
+\end{figure}
+
+\textit{Algorithm optimizations:}
+We determine the efficacy of each of our bounds and data structure optimizations.
+%
+In the remainder, we show results using the ProPublica dataset.
+%
+Table~\ref{tab:ablation} provides summary statistics for experiments using
+the full CORELS implementation and variants that each remove a specific optimization.
+%
+Figure~\ref{fig:queue} presents a view of the same experiments, focusing
+on three of our optimizations. These plots depict the number of
+prefixes of a given length in the queue during the algorithm's execution.
+
+\textit{State space pruning:}
+Figure~\ref{fig:objective} illustrates the effect of the most significant
+algorithm optimization, for the ProPublica dataset,
+on how quickly CORELS prunes the search space.
+%
+For CORELS, the objective (top, thin solid line) drops quickly,
+achieving the optimal value within 10 seconds.
+CORELS certifies optimality in less than 6 minutes --
+the objective lower bound (top, thick solid line) steadily
+converges to the optimal objective value as the search space shrinks
+(bottom, solid line).
+%
+In the same figure, we also plot the objective lower bound from
+a separate execution of CORELS without the equivalent points bound
+(Theorem~\ref{thm:identical}) (top, dashes).
+%
+After nearly 3 hours, the execution is still far from complete;
+in particular, the lower bound is far from the optimum objective value
+and much of the search space remains unexplored (bottom, dashes).
+
 \begin{table}[t!]
 \centering
 \resizebox{0.49\textwidth}{!}{
@@ -175,38 +241,6 @@ in the final row, we report the minimum values across folds.
 \label{tab:ablation}
 \end{table}
 
-\textit{Algorithm optimizations:}
-We determine the efficacy of each of our bounds and data structure optimizations.
-%
-In the remainder, we show results using the ProPublica dataset.
-%
-Table~\ref{tab:ablation} provides summary statistics for experiments using
-the full CORELS implementation and variants that each remove a specific optimization.
-%
-Figure~\ref{fig:queue} presents a view of the same experiments, focusing
-on three of our optimizations. These plots depict the number of
-prefixes of a given length in the queue during the algorithm's execution.
-
-\textit{State space pruning:}
-Figure~\ref{fig:objective} illustrates the effect of the most significant
-algorithm optimization, for the ProPublica dataset,
-on how quickly CORELS prunes the search space.
-%
-For CORELS, the objective (top, thin solid line) drops quickly,
-achieving the optimal value within 10 seconds.
-CORELS certifies optimality in less than 6 minutes --
-the objective lower bound (top, thick solid line) steadily
-converges to the optimal objective value as the search space shrinks
-(bottom, solid line).
-%
-In the same figure, we also plot the objective lower bound from
-a separate execution of CORELS without the equivalent points bound
-(Theorem~\ref{thm:identical}) (top, dashes).
-%
-After nearly 3 hours, the execution is still far from complete;
-in particular, the lower bound is far from the optimum objective value
-and much of the search space remains unexplored (bottom, dashes).
-
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
@@ -227,40 +261,4 @@ For comparison, we replicate the same gray region
 in the other three subfigures.
 }
 \label{fig:queue}
-\end{figure}
-
-\begin{figure}[t!]
-\begin{center}
-% left lower right upper
-\includegraphics[trim={20mm, 25mm, 24mm, 0mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
-\end{center}
-\caption{CORELS with (lines) and without
-(dashes) the equivalent points bound (Theorem~\ref{thm:identical}).
-%
-%Horizontal axes plot wall clock time (log scale).
-%
-Top: Objective value (thin line) and lower bound (thick line) for CORELS,
-and lower bound (dashes) for an execution without the equivalent points bound.
-%as a function of wall clock time (log scale).
-%
-Numbered points
-%along the objective
-indicate when the length of the best known rule list changes,
-and are labeled by the new length.
-%
-%CORELS quickly the optimal value (star marker),
-%and certifies optimality when the lower bound matches the objective value.
-A star marks the optimum.
-%
-% A separate execution of
-%CORELS without the equivalent points bound remains far from complete,
-%and its lower bound (dashed line) far from the optimum.
-%
-Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
-%as a function of wall clock time,
-where~$\Remaining(\CurrentObj, \Queue)$
-is the upper bound on remaining search space size
-(Theorem~\ref{thm:remaining-eval-fine}).
-}
-\label{fig:objective}
 \end{figure}
