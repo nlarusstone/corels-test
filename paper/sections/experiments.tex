@@ -4,8 +4,8 @@
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={10mm, 11mm, 25mm, 5mm},
-width=0.48\textwidth]{figs/compare-compas-weapon.pdf}
+\includegraphics[trim={12mm, 11mm, 25mm, 5mm},
+width=0.49\textwidth]{figs/compare-compas-weapon.pdf}
 \end{center}
 \caption{Test accuracy means (white squares),
 standard deviations (error bars),
@@ -101,7 +101,31 @@ For both problems, CORELS can learn short rule lists without sacrificing accurac
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={20mm, 25mm, 24mm, 15mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
+\includegraphics[trim={25mm 10mm 35mm 30mm},
+width=0.45\textwidth]{figs/weapon_reg_small-execution.pdf}
+\end{center}
+\caption{Example executions of CORELS, for the NYCLU stop-and-frisk dataset (${M = 28}$).
+%
+Objective value (thin line) and lower bound (thick line) for CORELS,
+as a function of wall clock time (log scale).
+%
+Numbered points along the trace of the objective value
+indicate when the length of the best known rule list changes,
+and are labeled by the new length.
+%
+For each value of~$\Reg$, a star marks the optimum objective value,
+and time at which it was achieved.
+%
+Rightmost panel: For visual comparison, we overlay the execution traces
+from the panels to the left, for the three different~$\Reg$.
+}
+\label{fig:reg}
+\end{figure}
+
+\begin{figure}[t!]
+\begin{center}
+% left lower right upper
+\includegraphics[trim={20mm, 25mm, 24mm, 0mm}, width=0.45\textwidth]{figs/compas_execution-remaining-space.pdf}
 \end{center}
 \caption{CORELS with (lines) and without
 (dashes) the equivalent points bound (Theorem~\ref{thm:identical}).
@@ -167,7 +191,7 @@ In all but the final row and column, we report means
 in the final row, we report the minimum values across folds.
 }
 \label{tab:ablation}
-\vspace{-8mm}
+\vspace{-1mm}
 \end{table}
 
 In the remainder, we show results using the ProPublica dataset.
