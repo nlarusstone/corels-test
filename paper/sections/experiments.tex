@@ -54,17 +54,18 @@ and dramatically overfits for all tested parameters.
 % RIPPER in R's caret
 
 Our experimental analysis addresses four questions:
-(1) How does CORELS' accuracy and model size compare to other algorithms'?
-(2) How rapidly does the objective function converge?
-(3) How rapidly does CORELS prune the search space?
-(4) How much does each of the implementation optimizations contribute to CORELS' performance?
-%
+(1)~How does CORELS' accuracy and model size compare to other algorithms'?
+(2)~How rapidly do the objective value and its lower bound converge,
+for different values of the regularization parameter~$\Reg$?
+(3)~How much does each of the implementation optimizations contribute to CORELS' performance?
+(4)~How rapidly does CORELS prune the search space?
+
 All timed results were executed on a server with two Intel Xeon E5-2699~v4
 (55~MB cache, 2.20~GHz) processors and 448~GB RAM.
 %
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
-%
+
 We focus on two problems:
 using the ProPublica dataset~\citep{LarsonMaKiAn16} to predict two-year recidivism
 and using the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
@@ -72,6 +73,7 @@ whether a weapon will be found on a stopped individual who is frisked or searche
 present additional empirical results, and further implementation and data processing details
 in a long version of this report~\citep{AngelinoLaAlSeRu17}.}
 
+\textit{Accuracy and model size:}
 We first ran a 10-fold cross validation experiment using CORELS
 and eight other algorithms:\footnote{We use standard R packages, with default
 parameter settings, for the first seven.}
@@ -85,18 +87,34 @@ for the ProPublica dataset.
 %
 Figure~\ref{fig:comparison} shows that there were no statistically significant
 differences in algorithm accuracies.
-\begin{arxiv}
-In fact, the difference between folds was far larger than the difference
-between algorithms.
-We conclude that CORELS produces models whose accuracy is comparable
-to those found via other algorithms.
-
-\end{arxiv}
+%
+In fact, the difference between folds was far larger than the difference between algorithms.
+%
+We conclude that CORELS produces models whose accuracy is comparable to those found via other algorithms.
 %
 Figure~\ref{fig:sparsity} summarizes differences in accuracy and model size
 for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
 %
 For both problems, CORELS can learn short rule lists without sacrificing accuracy.
+
+\textit{Convergence and regularization:}
+We illustrate several views of CORELS execution traces,
+for the NYCLU stop-and-frisk dataset with ${M = 28}$ antecedents,
+for the same three regularization parameters (${\Reg = 0.04}$, $0.01$, $0.025$)
+as in Figure~\ref{fig:sparsity} (bottom).
+%
+The panels in Figure~\ref{fig:weapon-reg-execution} plot example execution traces,
+from a single cross-validation fold, of both the current best objective value~$\CurrentObj$
+and the lower bound~$b(\Prefix, \x, \y)$ of the prefix~$\Prefix$ being evaluated.
+%
+These plots clearly illustrate that CORELS certifies optimality
+when the lower bound matches the objective value.
+%
+For each value of~$\Reg$, CORELS achieves the optimum in a small fraction of the total execution time.
+%
+As~$\Reg$ decreases, these times increase because the search problems become more difficult,
+as is summarized by the observation that CORELS must evaluate longer prefixes;
+as a consequence, our data structures grow in size.
 
 \begin{figure}[t!]
 \begin{center}
@@ -104,7 +122,7 @@ For both problems, CORELS can learn short rule lists without sacrificing accurac
 \includegraphics[trim={25mm 10mm 35mm 30mm},
 width=0.45\textwidth]{figs/weapon_reg_small-execution.pdf}
 \end{center}
-\caption{Example executions of CORELS, for the NYCLU stop-and-frisk dataset (${M = 28}$).
+\caption{Example executions of CORELS, for the NYCLU stop-and-frisk dataset ($M = 28$).
 %
 Objective value (thin line) and lower bound (thick line) for CORELS,
 as a function of wall clock time (log scale).
@@ -119,7 +137,96 @@ and time at which it was achieved.
 Rightmost panel: For visual comparison, we overlay the execution traces
 from the panels to the left, for the three different~$\Reg$.
 }
-\label{fig:reg}
+\label{fig:weapon-reg-execution}
+\end{figure}
+
+\begin{table}[t!]
+\centering
+\resizebox{0.49\textwidth}{!}{
+\begin{tabular}{l | c | c | c | c | c}
+ & $t_\text{total}$ & $t_\text{opt}$ & $i_\text{total}$ & $Q_\text{max}$ & $K_\text{max}$ \\
+Algorithm variant & (min) & (s) & ($\times 10^6$) & ($\times 10^6$) & \\
+\hline
+CORELS & 5.5 (1.6) & 8 (2) & 1.7 (0.4) & 1.3 (0.4) & 5-6 \\
+No priority queue (BFS) & 6.7 (2.2) & 4 (1) & 1.9 (0.6) & 1.5 (0.5) & 5-6 \\
+No support bounds & 10.2 (3.4) & 13 (4) & 2.7 (0.8) & 2.2 (0.7) & 5-6 \\
+No symmetry-aware map & 58.6 (23.3) & 23 (6) & 16.0 (5.9) & 14.5 (5.7) & 5-6 \\
+No lookahead bound & 71.9 (23.0) & 9 (2) & 18.5 (5.9) & 16.3 (5.3) & 6-7 \\
+%equiv. pts. bound & 188.6 (104.6) & 6178 (1840) & 803.8 (0.1) & 790.5 (0.4) & 10-10
+No equivalent pts bound & $>$134 & $>$7168 & $>$800 & $>$789 & $\ge$10
+\end{tabular}
+}
+\vspace{4mm}
+\caption{Per-component performance improvement.
+%
+The columns report total execution time,
+time to optimum, number of queue insertions,
+maximum queue size, and maximum evaluated prefix length.
+%
+The first row shows CORELS; subsequent rows show variants
+that each remove a specific implementation optimization or bound.
+%
+We terminated each experiment in the last row after consuming 390-410GB RAM.
+%
+In all but the final row and column, we report means
+(and standard deviations) over 10 cross-validation folds;
+in the final row, we report the minimum values across folds.
+}
+\label{tab:ablation}
+\end{table}
+
+\textit{Algorithm optimizations:}
+We determine the efficacy of each of our bounds and data structure optimizations.
+%
+In the remainder, we show results using the ProPublica dataset.
+%
+Table~\ref{tab:ablation} provides summary statistics for experiments using
+the full CORELS implementation and variants that each remove a specific optimization.
+%
+Figure~\ref{fig:queue} presents a view of the same experiments, focusing
+on three of our optimizations. These plots depict the number of
+prefixes of a given length in the queue during the algorithm's execution.
+
+\textit{State space pruning:}
+Figure~\ref{fig:objective} illustrates the effect of the most significant
+algorithm optimization, for the ProPublica dataset,
+on how quickly CORELS prunes the search space.
+%
+For CORELS, the objective (top, thin solid line) drops quickly,
+achieving the optimal value within 10 seconds.
+CORELS certifies optimality in less than 6 minutes --
+the objective lower bound (top, thick solid line) steadily
+converges to the optimal objective value as the search space shrinks
+(bottom, solid line).
+%
+In the same figure, we also plot the objective lower bound from
+a separate execution of CORELS without the equivalent points bound
+(Theorem~\ref{thm:identical}) (top, dashes).
+%
+After nearly 3 hours, the execution is still far from complete;
+in particular, the lower bound is far from the optimum objective value
+and much of the search space remains unexplored (bottom, dashes).
+
+\begin{figure}[t!]
+\begin{center}
+% left lower right upper
+\includegraphics[trim={30mm 15mm 35mm 30mm},
+width=0.45\textwidth]{figs/kdd_compas_ablation_small-queue.pdf}
+\end{center}
+\caption{Queue composition.
+%
+Numbers of prefixes in the queue (log scale), labeled and colored by length,
+as a function of wall clock time (log scale), for CORELS (top left),
+and without three specific implementation optimizations or bounds.
+%
+The gray shading fills in the area beneath the total number of
+queue elements for CORELS.
+\ie the sum over all lengths in the top left figure.
+%
+For comparison, we replicate the same gray region
+in the other three subfigures.
+}
+\label{fig:queue}
 \end{figure}
 
 \begin{figure}[t!]
@@ -156,84 +263,4 @@ is the upper bound on remaining search space size
 (Theorem~\ref{thm:remaining-eval-fine}).
 }
 \label{fig:objective}
-\end{figure}
-
-\begin{table}[t!]
-\centering
-\resizebox{0.49\textwidth}{!}{
-\begin{tabular}{l | c | c | c | c | c}
- & $t_\text{total}$ & $t_\text{opt}$ & $i_\text{total}$ & $Q_\text{max}$ & $K_\text{max}$ \\
-Algorithm variant & (min) & (s) & ($\times 10^6$) & ($\times 10^6$) & \\
-\hline
-CORELS & 5.5 (1.6) & 8 (2) & 1.7 (0.4) & 1.3 (0.4) & 5-6 \\
-No priority queue (BFS) & 6.7 (2.2) & 4 (1) & 1.9 (0.6) & 1.5 (0.5) & 5-6 \\
-No support bounds & 10.2 (3.4) & 13 (4) & 2.7 (0.8) & 2.2 (0.7) & 5-6 \\
-No symmetry-aware map & 58.6 (23.3) & 23 (6) & 16.0 (5.9) & 14.5 (5.7) & 5-6 \\
-No lookahead bound & 71.9 (23.0) & 9 (2) & 18.5 (5.9) & 16.3 (5.3) & 6-7 \\
-%equiv. pts. bound & 188.6 (104.6) & 6178 (1840) & 803.8 (0.1) & 790.5 (0.4) & 10-10
-No equivalent pts bound & $>$134 & $>$7168 & $>$800 & $>$789 & $\ge$10
-\end{tabular}
-}
-\vspace{4mm}
-\caption{Per-component performance improvement.
-%
-The columns report total execution time,
-time to optimum, number of queue insertions,
-maximum queue size, and maximum evaluated prefix length.
-%
-The first row shows CORELS; subsequent rows show variants
-that each remove a specific implementation optimization or bound.
-%
-We terminated each experiment in the last row after consuming 390-410GB RAM.
-%
-In all but the final row and column, we report means
-(and standard deviations) over 10 cross-validation folds;
-in the final row, we report the minimum values across folds.
-}
-\label{tab:ablation}
-\vspace{-1mm}
-\end{table}
-
-In the remainder, we show results using the ProPublica dataset.
-%
-Figure~\ref{fig:objective} illustrates how both the objective and the size of
-the remaining search space decrease as CORELS executes.
-The objective drops quickly, achieving the optimal value within 10 seconds.
-CORELS certifies optimality in less than 6 minutes --
-the objective lower bound of the remaining search space
-steadily converges to the optimal objective as the search space shrinks.
-
-Finally, we determine the efficacy of each of our bounds and data structure optimizations.
-%
-Figure~\ref{fig:objective} highlights how a separate execution of CORELS without
-the equivalent points bound remains far from complete,
-with its lower bound far from the optimum.
-%
-Table~\ref{tab:ablation} provides summary statistics for experiments using
-the full CORELS implementation and variants that each remove a specific optimization.
-%
-Figure~\ref{fig:queue} presents a view of the same experiments, focusing
-on three of our optimizations. These plots depict the number of
-prefixes of a given length in the queue during the algorithm's execution.
-
-\begin{figure}[t!]
-\begin{center}
-% left lower right upper
-\includegraphics[trim={30mm 15mm 35mm 30mm},
-width=0.45\textwidth]{figs/kdd_compas_ablation_small-queue.pdf}
-\end{center}
-\caption{Queue composition.
-%
-Numbers of prefixes in the queue (log scale), labeled and colored by length,
-as a function of wall clock time (log scale), for CORELS (top left),
-and without three specific implementation optimizations or bounds.
-%
-The gray shading fills in the area beneath the total number of
-queue elements for CORELS.
-\ie the sum over all lengths in the top left figure.
-%
-For comparison, we replicate the same gray region
-in the other three subfigures.
-}
-\label{fig:queue}
 \end{figure}
