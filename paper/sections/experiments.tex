@@ -10,6 +10,7 @@ width=0.49\textwidth]{figs/compare-compas-weapon.pdf}
 \caption{Test accuracy means (white squares),
 standard deviations (error bars),
 and values (colors correspond to folds).
+For CORELS, ${\Reg = 0.005}$ (left) and ${\Reg = 0.01}$ (right).
 }
 \label{fig:comparison}
 \end{figure}
@@ -58,6 +59,8 @@ Our experimental analysis addresses four questions:
 (2)~How rapidly do the objective value and its lower bound converge, for different values of~$\Reg$?
 (3)~How much does each of the implementation optimizations contribute to CORELS' performance?
 (4)~How rapidly does CORELS prune the search space?
+We present additional empirical results, and further implementation and data processing details
+in a long version of this report~\citep{AngelinoLaAlSeRu17}.
 
 All timed results were executed on a server with two Intel Xeon E5-2699~v4
 (55~MB cache, 2.20~GHz) processors and 448~GB RAM.
@@ -66,11 +69,20 @@ Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
 
 We focus on two problems:
-using the ProPublica dataset~\citep{LarsonMaKiAn16} to predict two-year recidivism
-and using the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
-whether a weapon will be found on a stopped individual who is frisked or searched.\footnote{We
-present additional empirical results, and further implementation and data processing details
-in a long version of this report~\citep{AngelinoLaAlSeRu17}.}
+%using the ProPublica dataset~\citep{LarsonMaKiAn16} to predict two-year recidivism
+%and using the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
+%whether a weapon will be found on a stopped individual who is frisked or searched.
+(1)~Predicting which individuals in the ProPublica COMPAS dataset~\citep{LarsonMaKiAn16}
+recidivate within two years (${N = 7,215}$).
+Our rule mining procedure yields ${M = 156}$ single- and two-clause antecedents.
+%
+(2)~Using the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014}
+to predict whether a weapon will be found on a stopped individual who is frisked or searched.
+We identify a subset of 29,595 records for stopped individuals who were frisked and/or searched.
+Of these, criminal possession of a weapon was identified in about 5\% of instances,
+thus we resampling due to class imbalance.
+In the first two subsections below, we use ${M =28}$ single-clause antecedents;
+in the latter two, we add negations of some, yielding ${M =46}$.
 
 \textit{Accuracy and model size:}
 We first ran a 10-fold cross validation experiment using CORELS
@@ -128,20 +140,18 @@ for ${\Reg = 0.04}$, $0.01$, and $0.025$, respectively.
 \includegraphics[trim={25mm 10mm 35mm 10mm},
 width=0.45\textwidth]{figs/weapon_reg_small-execution.pdf}
 \end{center}
-\caption{Example executions of CORELS, for the NYCLU stop-and-frisk dataset ($M = 28$).
+\caption{Example CORELS execution traces (NYCLU).
 %
-Objective value (thin line) and lower bound (thick line) for CORELS,
-as a function of wall clock time (log scale).
+Objective value (thin line) and lower bound (thick line) for CORELS.
 %
 Numbered points along the trace of the objective value
 indicate when the length of the best known rule list changes,
 and are labeled by the new length.
 %
-For each value of~$\Reg$, a star marks the optimum objective value,
+For each value of~$\Reg$, a star marks the optimum,
 and time at which it was achieved.
 %
-Rightmost panel: For visual comparison, we overlay the execution traces
-from the panels to the left, for the three different~$\Reg$.
+Bottom right: Overlay of the three traces.
 }
 \label{fig:weapon-reg-execution}
 \end{figure}
@@ -156,12 +166,15 @@ for ProPublica (${\Reg = 0.005}$, ${M = 155}$) (left)
 and NYCLU (${\Reg = 0.01}$, ${M = 46}$) (right).
 %
 Top: Objective value (thin solid lines) and lower bound (thick solid lines) for CORELS,
-as in Figure~\ref{fig:weapon-reg-execution}.
+as in Figure~\ref{fig:weapon-reg-execution},
+and lower bound (dashes) from separate executions without
+the equivalent points (left) and permutation (right) bounds.
 %
 Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
 where~$\Remaining(\CurrentObj, \Queue)$
 is the upper bound on remaining search space size
-(Theorem~\ref{thm:remaining-eval-fine}).
+(Theorem~\ref{thm:remaining-eval-fine}),
+for CORELS (lines) and separate executions without selected bounds (dashes).
 }
 \label{fig:objective}
 \end{figure}
@@ -222,15 +235,13 @@ width=0.45\textwidth]{figs/kdd_compas_ablation_small-queue.pdf}
 \caption{Queue composition.
 %
 Numbers of prefixes in the queue (log scale), labeled and colored by length,
-as a function of wall clock time (log scale), for CORELS (top left),
-and without three specific implementation optimizations or bounds.
+for CORELS (top left), and without three specific implementation optimizations or bounds.
 %
 The gray shading fills in the area beneath the total number of
 queue elements for CORELS.
 \ie the sum over all lengths in the top left figure.
 %
-For comparison, we replicate the same gray region
-in the other three subfigures.
+For comparison, we replicate the same gray region in all subfigures.
 }
 \label{fig:queue}
 \end{figure}
@@ -241,22 +252,22 @@ Figure~\ref{fig:objective} highlights the most significant
 algorithm optimizations for our prediction problems,
 using the ProPublica (left) and NYCLU (right) datasets.
 %
-For CORELS (solid lines) with the ProPublica dataset (left),
+On the left, for CORELS (solid lines),
 the objective drops quickly, achieving the optimal value within 10 seconds.
 %
 CORELS certifies optimality in less than 6 minutes:
 the objective lower bound steadily converges to the optimal objective (top)
 as the search space shrinks (bottom).
 %
-In the same plots (left), we additionally highlight
+In the same plots, we also show
 a separate execution of CORELS without the equivalent points bound
 (Theorem~\ref{thm:identical}) (dashes).
 %
-After nearly 3 hours, the execution is still far from complete;
-in particular, the lower bound is far from the optimum objective value (top)
+After nearly 3 hours, this execution is still far from complete:
+the lower bound is far from the optimum objective value (top)
 and much of the search space remains unexplored (bottom).
 %
-For the NYCLU dataset (right),
+On the right,
 CORELS achieves the optimum objective in well under a second,
 and certifies optimality in less than a minute.
 %
