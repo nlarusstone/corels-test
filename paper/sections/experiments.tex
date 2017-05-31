@@ -109,10 +109,18 @@ These plots clearly illustrate that CORELS certifies optimality
 when the lower bound matches the objective value.
 %
 For each value of~$\Reg$, CORELS achieves the optimum in a small fraction of the total execution time.
+
+As~$\Reg$ decreases, these times increase because the search problems become more difficult.
 %
-As~$\Reg$ decreases, these times increase because the search problems become more difficult,
-as is summarized by the observation that CORELS must evaluate longer prefixes;
-as a consequence, our data structures grow in size.
+This is summarized by our observation that CORELS must evaluate longer prefixes:
+across 10 cross-validation folds, the maximum evaluated prefix lengths are~6,
+11, and~16 or~17, for ${\Reg = 0.04}$, $0.01$, and $0.025$, respectively.
+%
+As a consequence, our data structures grow in size: \eg
+across 10 cross-validation folds, the mean number of queue elements are
+1,900 (100), 170,000 (1,300), and 2,400,000 (170,000),
+with standard deviations shown in parentheses,
+for ${\Reg = 0.04}$, $0.01$, and $0.025$, respectively.
 
 \begin{figure}[t!]
 \begin{center}
