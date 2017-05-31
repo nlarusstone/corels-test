@@ -24,17 +24,17 @@ log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_
 'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt']
 fold = 1
 
-large = True
+large = False
 
 if large:
     ftag = 'weapon_execution_large'
     fs_legend = fs - 1
-    legend_xloc = 10**-1.2
+    loc = 'lower right'
     wo = 'w/o'
 else:
     ftag = 'weapon_execution'
-    fs_legend = fs - 2
-    legend_xloc = 10**-0.6
+    fs_legend = fs - 3
+    loc = 'lower right'
     wo = 'w/o'
 
 ntot = len(log_root_list)
@@ -65,13 +65,16 @@ tmin = x['total_time'][imin]
 if large:
     pylab.figure(1, figsize=(14, 7.5))
 else:
-    pylab.figure(1, figsize=(9, 6))
-    pylab.clf()
+    #pylab.figure(1, figsize=(9, 6))
+    #pylab.clf()
+    pylab.figure(1, figsize=(12, 6))
 
 if large:
     ax1 = pylab.subplot2grid((24, 40), (0, 22), colspan=18, rowspan=11)
 else:
-    ax1 = pylab.subplot2grid((24, 20), (0, 1), colspan=19, rowspan=10)
+    #ax1 = pylab.subplot2grid((24, 20), (0, 1), colspan=19, rowspan=10)
+    #ax1 = pylab.subplot(2, 2, 2)
+    ax1 = pylab.subplot2grid((24, 40), (0, 21), colspan=19, rowspan=11)
 
 ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
 
@@ -88,17 +91,25 @@ for jj in ip:
     ax1.text(tt, oo + 0.015, str(pl), fontsize=fs)
 
 pylab.xticks(fontsize=fs)
-pylab.ylabel('Value', fontsize=fs)
-pylab.title('Execution progress (NYCLU dataset)', fontsize=fs)
+if large:
+    pylab.title('Execution progress (NYCLU dataset)', fontsize=fs)
+    pylab.ylabel('Value', fontsize=fs)
+else:
+    pylab.title('Execution progress (NYCLU)', fontsize=fs)
 pylab.xticks(fontsize=fs)
-pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
+if large:
+    pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
+else:
+    pylab.yticks(np.arange(0, 0.55, 0.1), ())
 pylab.axis([x['total_time'][2], 10**4.5, 0, 0.5])
-pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (%s map)' % wo], loc='lower right', fontsize=fs_legend, frameon=False, borderpad=0.01)
+pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (%s map)' % wo], loc=loc, fontsize=fs_legend, frameon=False, borderpad=0.01)
 
 if large:
     ax2 = pylab.subplot2grid((24, 40), (14, 22), colspan=18, rowspan=8)
 else:
-    ax2 = pylab.subplot2grid((24, 20), (13, 1), colspan=19, rowspan=8)
+    #ax2 = pylab.subplot2grid((24, 20), (13, 1), colspan=19, rowspan=8)
+    #ax2 = pylab.subplot(2, 2, 4)
+    ax2 = pylab.subplot2grid((24, 40), (14, 21), colspan=19, rowspan=8)
 
 yremaining = y['log_remaining_space_size'].copy()
 yremaining[yremaining > yremaining[0]] = yremaining[0]
@@ -114,11 +125,17 @@ ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*2, color='c
 
 pylab.title('Size of remaining search space', fontsize=fs)
 pylab.xlabel('Time (s)', fontsize=fs)
-pylab.ylabel('log10(Size)', fontsize=fs)
+if large:
+    pylab.ylabel('log10(Size)', fontsize=fs)
 pylab.xticks(fontsize=fs)
 pylab.yticks(range(0, 61, 20), fontsize=fs)
 
 pylab.legend(['%s symmetry-aware map' % wo, 'CORELS'], loc='upper right', fontsize=fs_legend, frameon=False)
-pylab.axis([x['total_time'][2], 10**4.5, 0, 60])
+if large:
+    pylab.axis([x['total_time'][2], 10**4.5, 0, 60])
+else:
+    #pylab.axis([x['total_time'][2], 10**4.5, 0, 60])
+    pylab.axis([x['total_time'][2], 10**4, 0, 170])
+    pylab.yticks(range(0, 160, 50), ())
 pylab.draw()
 pylab.savefig('../figs/%s-remaining-space.pdf' % ftag)

@@ -25,7 +25,7 @@ log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=800000000-c=0.0050000-v=1-f=1000.txt']
 fold = 1
 
-large = True
+large = False
 
 if large:
     ftag = 'compas_execution_large'
@@ -35,8 +35,8 @@ if large:
     wo = 'w/o'
 else:
     ftag = 'compas_execution'
-    fs_legend = fs - 2
-    legend_xloc = 10**-0.6
+    fs_legend = fs - 3
+    legend_xloc = 10**-2.2
     legend_yloc = 0.15
     wo = 'w/o'
 
@@ -68,13 +68,16 @@ tmin = x['total_time'][imin]
 if large:
     pylab.figure(1, figsize=(14, 7.5))
 else:
-    pylab.figure(1, figsize=(9, 6))
+    #pylab.figure(1, figsize=(9, 6))
+    pylab.figure(1, figsize=(12, 6))
 
 pylab.clf()
 if large:
     ax1 = pylab.subplot2grid((24, 40), (0, 1), colspan=18, rowspan=11)
 else:
-    ax1 = pylab.subplot2grid((24, 20), (0, 1), colspan=19, rowspan=10)
+    #ax1 = pylab.subplot2grid((24, 20), (0, 1), colspan=19, rowspan=10)
+    #ax1 = pylab.subplot(2, 2, 1)
+    ax1 = pylab.subplot2grid((24, 40), (0, 1), colspan=19, rowspan=11)
 
 ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
 
@@ -91,9 +94,11 @@ for jj in ip:
     ax1.semilogx(tt, oo, 'o', color='coral', markersize=6, markeredgecolor='gray')
     ax1.text(tt, oo + 0.015, str(pl), fontsize=fs)
 
-pylab.xticks(fontsize=fs)
 pylab.ylabel('Value', fontsize=fs)
-pylab.title('Execution progress (ProPublica dataset)', fontsize=fs)
+if large:
+    pylab.title('Execution progress (ProPublica dataset)', fontsize=fs)
+else:
+    pylab.title('Execution progress (ProPublica)', fontsize=fs)
 pylab.xticks(fontsize=fs)
 pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
 pylab.axis([x['total_time'][2], 10**4, 0, 0.50])
@@ -102,7 +107,9 @@ pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (%s equ
 if large:
     ax2 = pylab.subplot2grid((24, 40), (14, 1), colspan=18, rowspan=8)
 else:
-    ax2 = pylab.subplot2grid((24, 20), (13, 1), colspan=19, rowspan=8)
+    #ax2 = pylab.subplot2grid((24, 20), (13, 1), colspan=19, rowspan=8)
+    #ax2 = pylab.subplot(2, 2, 3)
+    ax2 = pylab.subplot2grid((24, 40), (14, 1), colspan=19, rowspan=8)
 
 yremaining = y['log_remaining_space_size'].copy()
 yremaining[yremaining > yremaining[0]] = yremaining[0]
