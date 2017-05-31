@@ -1287,8 +1287,7 @@ Computing Machinery]
   Association for Computing Machinery.
   \or % acmlicensed
   Copyright held by the owner/author(s). Publication rights licensed to
-  %Association for Computing Machinery.
-  ACM.
+  Association for Computing Machinery.
   \or % rightsretained
   Copyright held by the owner/author(s).
   \or % usgov
