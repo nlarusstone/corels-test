@@ -358,7 +358,7 @@ misclassification error and the expected regularization penalty of~$\RL'$:
 
 Next, we describe a simple curiosity function for a rule list~$\RL$ with prefix~$\Prefix$.
 %
-First, let~$\NCap$ denote the number of datapoints captured by~$\Prefix$, \ie
+First, let~$\NCap$ denote the number of observations captured by~$\Prefix$, \ie
 \begin{align}
 \NCap \equiv \sum_{n=1}^N \Cap(x_n, \Prefix).
 \label{eq:num-cap}
@@ -368,7 +368,7 @@ rule list~${\RL' = (\Prefix', \Labels', \Default', K')}$ from~$\Prefix$.
 %
 Assume that prefix~$\Prefix'$ starts with~$\Prefix$ and captures all the data,
 such that each additional antecedent in~$\Prefix'$
-captures as many `new' datapoints as each antecedent in~$\Prefix$, on average;
+captures as many `new' observations as each antecedent in~$\Prefix$, on average;
 then, the expected length of~$\Prefix'$ is:
 \begin{align}
 \E[ K' ] = \frac{N}{\NCap / K}.
