@@ -116,6 +116,8 @@ end with the same default rule, and contain the same prefix rules, up to a permu
 the prefix rules always predict the positive class label,
 and the default rule always predicts the negative class label.
 %
+Thus, these rule lists could be equivalently expressed as a DNF rule.
+%
 Note that our objective is not designed to enforce any of these properties,
 though some may be seen as desirable.
 }
@@ -262,7 +264,7 @@ As~$\Reg$ decreases, these times increase because the search problems become mor
 as is summarized by the observation that CORELS must evaluate longer prefixes;
 as a consequence, our data structures grow in size.
 %
-We report the total number of elements inserted into the queue, and the maximum queue size;
+We report the total number of elements inserted into the queue and the maximum queue size;
 recall from~\S\ref{sec:implementation} that the queue elements correspond to the trie's leaves,
 and that the symmetry-aware map elements correspond to the trie's nodes.
 
@@ -377,40 +379,52 @@ we also annotate the total time in seconds, marked with a dashed vertical line.
 \subsection{Efficacy of CORELS algorithm optimizations}
 \label{sec:ablation}
 
-We determine the efficacy of each of our bounds and data structure optimizations.
+This section examines the efficacy of each of our bounds and data structure optimizations.
 %
+We remove a single bound or data structure optimization from our final implementation and measure
+how the performance of our algorithm changes.
+%
+We examine these performance traces on both the NYCLU and the ProPublica datasets and show that
+different bounds are important depending on the structure of the dataset.
+
 Table~\ref{tab:ablation} provides summary statistics for experiments using the full
 CORELS implementation and five variants that each remove a specific optimization.
 %
-The time to optimum column marks the first time we encounter the optimal rule list, 
-which is much smaller than the time it takes to certify optimality.
+Each experiment was run under 10-fold cross validation---each entry in the table is the mean from those 
+runs while the standard deviation is reported in parentheses. 
 %
-The max evaluated prefix length column displays the longest prefix placed in the queue
-as well as the longest prefix considered, which is always one more due to our incremental
-computation.
+Not all components are equally important; as each component is removed the run time of the algorithm increases,
+but it increases by different amounts.
 %
-Due to our regularization constant, the longest prefix CORELS places in its queue is
-5 while an implementation without just the equivalent points bound looks at prefixes of over
-length 10.
+However, we can see that, similar to Table~\ref{tab:weapon-reg}, we always encounter the optimal rule list in far less
+time than it takes to certify optimality.
 %
-The number of lower bound evaluations is a proxy for the number of prefixes we examine in the 
-course of execution.
+We again note the longest prefix we place on the queue as well as the longest prefix for which we evaluate the bounds.
 %
-This number tracks quite well with the overall time and we can calculate how long it takes to 
-evaluate each prefix by taking the ratio of the number of lower bound evaluations and the time.
+Finally, we report the number of prefixes evaluated, the number of times we insert into the queue, and the maximum size
+of the logical queue.
 %
-Finally, the table tracks the total number of insertions in our queue and the maximum size of our queue.
+Since these metrics are all proxies for how much work our algorithm has to do, they all scale with the overall slowdown 
+of our algorithm.
+
+Figure~\ref{queue} records the execution trace of the 10-fold cross validation experiments detailed in Table~\ref{tab:ablation}.
 %
-The maximum queue size is a large fraction of the total number of elements we add to the queue, but is 
-only a small part of the total number of prefixes we evaluate.
+Panels correspond to different removed optimizations as seen in the table; each color represents a different prefix length,
+so the entire plot shows the number of prefixes of different lengths over the entire execution of the program.
 %
-Figure~\ref{fig:queue} presents a view of the same experiments.
+The gray area in each plot represents the cumulative number of prefixes in our queue at any given time during the mean execution
+of CORELS.
 %
-These plots depict the number of prefixes of a given length in the queue
-during the algorithm's execution.
+These plots demonstrate that our optimizations reduce the number of prefixes examined and are especially effective at 
+limiting the number of long prefixes that have to be evaluated.
 %
-Note that the gray area in Figure~\ref{fig:queue} is equivalent to the max queue size column for
-CORELS in Table~\ref{tab:ablation}.
+For the ProPublica dataset, the most important optimization is the equivalent points bound---without it we place prefixes of 
+length 9 in our queue, while every other optimization only prevents looking at prefixes of at worst length 6.
+
+Similarly, Figure~\ref{queue-weapon} provides a trace of the experiments from Table~\ref{tab:ablation-weapon} dealing with the NYCLU dataset.
+%
+Note that while the equivalent points bound proved to be the most important optimization for the ProPublica dataset,
+the symmetry-aware map is the crucial optimization for the NYCLU dataset.
 
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
 \begin{table}[t!]
