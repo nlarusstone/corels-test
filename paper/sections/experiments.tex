@@ -59,7 +59,7 @@ Our experimental analysis addresses four questions:
 (2)~How rapidly do the objective value and its lower bound converge, for different values of~$\Reg$?
 (3)~How much does each of the implementation optimizations contribute to CORELS' performance?
 (4)~How rapidly does CORELS prune the search space?
-We present additional empirical results, and further implementation and data processing details
+We present additional empirical results and further implementation and data processing details
 in a long version of this report~\citep{AngelinoLaAlSeRu17}.
 
 All timed results were executed on a server with two Intel Xeon E5-2699~v4
@@ -133,11 +133,11 @@ width=0.45\textwidth]{figs/weapon_reg_small-execution.pdf}
 Objective value (thin line) and lower bound (thick line) for CORELS.
 %
 Numbered points along the trace of the objective value
-indicate when the length of the best known rule list changes,
+indicate when the length of the best known rule list changes
 and are labeled by the new length.
 %
-For each value of~$\Reg$, a star marks the optimum,
-and time at which it was achieved.
+For each value of~$\Reg$, a star marks the optimum
+and the time at which it was achieved.
 %
 Bottom right: Overlay of the three traces.
 }
@@ -235,10 +235,10 @@ width=0.45\textwidth]{figs/kdd_compas_ablation_small-queue.pdf}
 \caption{Queue composition.
 %
 Numbers of prefixes in the queue (log scale), labeled and colored by length,
-for CORELS (top left), and without three specific implementation optimizations or bounds.
+for CORELS (top left) and without three specific implementation optimizations or bounds.
 %
 The gray shading fills in the area beneath the total number of
-queue elements for CORELS.
+queue elements for CORELS,
 \ie the sum over all lengths in the top left figure.
 %
 For comparison, we replicate the same gray region in all subfigures.
@@ -268,7 +268,7 @@ the lower bound is far from the optimum objective value (top)
 and much of the search space remains unexplored (bottom).
 %
 On the right,
-CORELS achieves the optimum objective in well under a second,
+CORELS achieves the optimum objective in well under a second
 and certifies optimality in less than a minute.
 %
 CORELS without the permutation bound (Corollary~\ref{thm:permutation}),
