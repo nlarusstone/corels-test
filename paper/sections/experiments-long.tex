@@ -407,7 +407,7 @@ of the logical queue.
 Since these metrics are all proxies for how much work our algorithm has to do, they all scale with the overall slowdown 
 of our algorithm.
 
-Figure~\ref{queue} records the execution trace of the 10-fold cross validation experiments detailed in Table~\ref{tab:ablation}.
+Figure~\ref{fig:queue} records the execution trace of the 10-fold cross validation experiments detailed in Table~\ref{tab:ablation}.
 %
 Panels correspond to different removed optimizations as seen in the table; each color represents a different prefix length,
 so the entire plot shows the number of prefixes of different lengths over the entire execution of the program.
@@ -421,7 +421,7 @@ limiting the number of long prefixes that have to be evaluated.
 For the ProPublica dataset, the most important optimization is the equivalent points bound---without it we place prefixes of 
 length 9 in our queue, while every other optimization only prevents looking at prefixes of at worst length 6.
 
-Similarly, Figure~\ref{queue-weapon} provides a trace of the experiments from Table~\ref{tab:ablation-weapon} dealing with the NYCLU dataset.
+Similarly, Figure~\ref{fig:queue-weapon} provides a trace of the experiments from Table~\ref{tab:ablation-weapon} dealing with the NYCLU dataset.
 %
 Note that while the equivalent points bound proved to be the most important optimization for the ProPublica dataset,
 the symmetry-aware map is the crucial optimization for the NYCLU dataset.
