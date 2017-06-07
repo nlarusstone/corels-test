@@ -334,10 +334,10 @@ Top: Objective value (thin line) and lower bound (thick line) for CORELS,
 as a function of wall clock time (log scale).
 %
 Numbered points along the trace of the objective value
-indicate when the length of the best known rule list changes,
+indicate when the length of the best known rule list changes
 and are labeled by the new length.
 %
-For each value of~$\Reg$, a star marks the optimum objective value,
+For each value of~$\Reg$, a star marks the optimum objective value
 and time at which it was achieved.
 %
 Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
@@ -347,7 +347,7 @@ is the upper bound on remaining search space size
 (Theorem~\ref{thm:remaining-eval-fine}).
 %
 Rightmost panels: For visual comparison, we overlay the execution traces
-from the panels to the left, for the three different~$\Reg$.
+from the panels to the left, for the three different values of~$\Reg$.
 }
 \label{fig:weapon-reg-execution}
 \end{figure}
@@ -419,7 +419,7 @@ These plots demonstrate that our optimizations reduce the number of prefixes exa
 limiting the number of long prefixes that have to be evaluated.
 %
 For the ProPublica dataset, the most important optimization is the equivalent points bound---without it we place prefixes of 
-length 9 in our queue, while every other optimization only prevents looking at prefixes of at worst length 6.
+length 9 in our queue, while every other optimization prevents looking at prefixes of at worst length 6.
 
 Similarly, Figure~\ref{fig:queue-weapon} provides a trace of the experiments from Table~\ref{tab:ablation-weapon} dealing with the NYCLU dataset.
 %
@@ -696,7 +696,7 @@ This is a period of 264 months, which means computing power has gone up by at le
 %
 Thus, even with our algorithmic and data structural improvements, CORELS would have run in over 3,600,000s in 1984---an unreasonable amount of time.
 %
-Our advances are only meaningful because we can run them on a modern system.
+Our advances are meaningful only because we can run them on a modern system.
 %
 Combining our algorithmic improvements with the increase in modern processor speeds, our algorithm runs more than $10^{18}$ times faster than a naive implementation would have in 1984.
 %
