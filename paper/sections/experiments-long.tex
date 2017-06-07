@@ -2,15 +2,15 @@
 \label{sec:experiments}
 
 Our experimental analysis addresses five questions:
-(1) How does CORELS' accuracy compare to other algorithms'?
-(2) How does CORELS' model size compare to other algorithms'?
+(1) How does CORELS' accuracy compare to that of other algorithms?
+(2) How does CORELS' model size compare to that of other algorithms?
 (3) How rapidly does the objective function converge?
 (4) How rapidly does CORELS prune the search space?
 (5) How much does each of the implementation optimizations contribute to CORELS' performance?
 
 \subsection{Computational environment}
 
-All timed results that we present were executed on a server with two Intel Xeon E5-2699~v4
+All timed results ran on a server with two Intel Xeon E5-2699~v4
 (55~MB cache, 2.20~GHz) processors and 448~GB RAM.
 %
 Except where we mention a memory constraint, all experiments
@@ -54,9 +54,9 @@ which gives a total of 46 antecedents.
 For further details about data preprocessing steps and antecedent mining,
 see Appendix~\ref{appendix:data}.
 %
-Our choice of and approach to the weapon prediction problem is inspired by the work
+Our choice of, and approach to, the weapon prediction problem is inspired by the work
 of~\citet{Goel16}, who develop regression models to analyze racial disparities
-in New York City's stop-and-frisk policy, for a similar, larger dataset.
+in New York City's stop-and-frisk policy for a similar, but larger, dataset.
 %
 In particular, the authors arrive at a simple and interpretable heuristic that
 could potentially help police officers more effectively decide when to
