@@ -5,7 +5,8 @@
 
 We implement our algorithm using a collection of optimized data structures:
 a trie (prefix tree), a symmetry-aware map, and a queue.
-The trie acts like a cache, keeping track of rule lists we have already evaluated.
+The trie acts like a cache, keeping track of prefixes that we have already
+evaluated and are still of interest.
 Each node in the trie contains metadata associated with that corresponding rule list;
 the metadata consists of bookkeeping information such as what child rule lists are feasible and
 the lower bound and accuracy for that rule list.
