@@ -80,7 +80,7 @@ for r in m:
     if r['C']:
         descr += ' (%s)' % ('%1.3f' % r['C']).strip('0')
     elif r['cp']:
-        descr += ' (%s)' % ('%1.3f' % r['cp']).strip('0')
+        descr += ' (%s)' % ('%1.3f' % r['cp']).strip('0').replace('.01', '.01, .03')
     elif r['R']:
         descr += ' (%s)' % ('%1.4f' % r['R']).strip('0')
     legend += [descr]
