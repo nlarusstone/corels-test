@@ -19,10 +19,11 @@ ms = 9  # markersize
 fs = 16 # fontsize
 
 # log files generated on beepboop
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep'
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
-'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt']
-fold = 1
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep'
+log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels'
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=999999999-c=0.0100000-v=10-f=1000.txt',
+'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=999999999-c=0.0100000-v=10-f=1000.txt']
+fold = 0
 
 large = False
 
@@ -30,12 +31,12 @@ if large:
     ftag = 'weapon_execution_large'
     fs_legend = fs - 1
     loc = 'lower right'
-    wo = 'w/o'
+    wo = 'No'
 else:
     ftag = 'weapon_execution'
     fs_legend = fs - 3
     loc = 'lower right'
-    wo = 'w/o'
+    wo = 'No'
 
 ntot = len(log_root_list)
 
@@ -43,7 +44,7 @@ pylab.ion()
 
 tname = 'weapon_%d_train.out' % fold
 log_fname_x = log_root_list[0] % tname
-log_fname_y = log_root_list[-1] % tname
+log_fname_y = log_root_list[1] % tname
 fname = os.path.join(data_dir, tname)
 
 c = float(log_fname_x.split('c=')[1].split('-')[0])
@@ -56,7 +57,8 @@ x = tb.tabarray(SVfile=log_fname_x)
 y = tb.tabarray(SVfile=log_fname_y)
 
 x = x[x['tree_min_objective'] > 0]
-y = y[y['tree_min_objective'] > 0]
+y = y[(y['tree_min_objective'] > 0)]
+y['current_lower_bound'][y['current_lower_bound'] > y['tree_min_objective']] = y['tree_min_objective'][-1]
 
 opt = x['tree_min_objective'][-1]
 imin = np.nonzero(x['tree_min_objective'] == opt)[0][0]
@@ -101,7 +103,7 @@ if large:
     pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
 else:
     pylab.yticks(np.arange(0, 0.55, 0.1), ())
-pylab.axis([x['total_time'][2], 10**4.5, 0, 0.5])
+pylab.axis([x['total_time'][2], y['total_time'][-1], 0, 0.5])
 pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (%s map)' % wo], loc=loc, fontsize=fs_legend, frameon=False, borderpad=0.01)
 
 if large:
@@ -135,7 +137,7 @@ if large:
     pylab.axis([x['total_time'][2], 10**4.5, 0, 60])
 else:
     #pylab.axis([x['total_time'][2], 10**4.5, 0, 60])
-    pylab.axis([x['total_time'][2], 10**4, 0, 170])
+    pylab.axis([x['total_time'][2], y['total_time'][-1], 0, 170])
     pylab.yticks(range(0, 160, 50), ())
 pylab.draw()
 pylab.savefig('../figs/%s-remaining-space.pdf' % ftag)
