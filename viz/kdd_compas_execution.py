@@ -135,10 +135,7 @@ if large:
 else:
     pylab.yticks(range(0, 160, 50), fontsize=fs)
 
-if large:
-    legend_text = '%s equivalent points bound' % wo
-else:
-    legend_text = '%s equiv. pts. bound' % wo
+legend_text = '%s equivalent points bound' % wo
 pylab.legend([legend_text, 'CORELS'], loc='center right', fontsize=fs_legend, frameon=False)
 pylab.axis([x['total_time'][2], 10**3, 0, 170])
 pylab.draw()
