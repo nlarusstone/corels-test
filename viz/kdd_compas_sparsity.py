@@ -27,27 +27,25 @@ ax = plt.subplot2grid((20, 1), (0, 1), colspan=1, rowspan=19)
 m.sort(order=['Method', 'C', 'cp', 'R'])
 s.sort(order=['Method', 'C', 'cp', 'R'])
 
-ind = range(10, 15) + range(5, 10) + range(5)
+ind = range(10, 15) + range(5, 10) + range(4)
 m = m[ind].copy()
 s = s[ind].copy()
 
 data = zip(m['Method'], m['leaves'], m['accuracy'],  s['leaves'], s['accuracy'], m['train_accuracy'], s['train_accuracy'])
 
 ms = 5
-cdict = {'CORELS': 'r', 'C4.5': 'c', 'CART': 'gray', 'RIPPER': 'mediumblue', 'SBRL': 'purple'}
-mdict = {'CORELS': 's', 'C4.5': '^', 'CART': 'd', 'RIPPER': 'v', 'SBRL': 'o'}
+cdict = {'CORELS': 'k', 'C4.5': 'k', 'CART': 'k', 'RIPPER': 'k', 'SBRL': 'k'}
+mdict = {'CORELS': 's', 'C4.5': 'o', 'CART': 'd', 'RIPPER': '^', 'SBRL': 'v'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
-mfcdict = {'CORELS': 'coral', 'C4.5': 'paleturquoise', 'CART': 'white', 'RIPPER': 'skyblue', 'SBRL': 'plum'}
-msvec = np.array([11, 9, 8, 10, 10, 10, 9, 8, 7, 7, 8, 7, 6, 5, 4]) * 2
-mew = 2
+mfcdict = {'CORELS': 'm', 'C4.5': 'c', 'CART': 'white', 'RIPPER': 'gray', 'SBRL': 'k'}
+#msvec = np.array([11, 9, 8, 10, 10, 10, 9, 8, 7, 7, 8, 7, 6, 5, 4]) * 2
+msvec = np.array([6, 8, 10, 10, 10, 4, 5, 6, 7, 8, 4, 5, 6, 7, 8]) + 4
+mew = 1
 
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:
     mfc = mfcdict[method]
-    if (w == 0):
-        plt.plot(xx, yy, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc)
-    else:
-        plt.errorbar(xx, yy, xerr=w, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc, capsize=4, elinewidth=2)
+    plt.plot(xx, yy, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc)
     i += 1
 
 i = 0
@@ -55,9 +53,8 @@ for (method, xx, yy, w, h, ty, th) in data:
     mfc = mfcdict[method]
     if (i == 2):
         xx -= 0.075
-    plt.errorbar(xx, yy, yerr=h, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc, capsize=4, elinewidth=2)
+    plt.errorbar(xx, yy, xerr=w, yerr=h, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc, capsize=0, elinewidth=1)
     i += 1
-
 
 if (with_training):
     i = 0
@@ -67,7 +64,7 @@ if (with_training):
         else:
             mfc = mfcdict[method]
         if ty:
-            plt.plot(xx, ty, 'o', markersize=5, color='white', markeredgewidth=2, markeredgecolor='k')
+            plt.plot(xx, ty, 'o', markersize=4, color='white', markeredgewidth=mew, markeredgecolor='k')
         i += 1
 
 legend = []
@@ -86,13 +83,13 @@ plt.xticks(fontsize=fs)
 plt.yticks(np.arange(0.60, 0.71, 0.02), fontsize=fs)
 plt.xlabel('Model size', fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
-plt.legend(legend, loc='lower right', fontsize=fs-3, numpoints=1, ncol=3, labelspacing=0.5, borderpad=.5, columnspacing=0.1, markerscale=0.6)
+plt.legend(legend, loc='lower right', fontsize=fs-3, numpoints=1, ncol=3, labelspacing=0.5, borderpad=0, columnspacing=0.1, markerscale=0.8, frameon=False)
 plt.title('Two-year recidivism prediction (ProPublica dataset)', fontsize=fs)
 
-ax.set_xlim(0, 36)
+ax.set_xlim(0, 31)
 
 if (with_training):
-    ax.set_ylim(0.60, 0.7)
+    ax.set_ylim(0.615, 0.7)
     plt.show()
     plt.savefig('../figs/compas-sparsity-training.pdf')
 else:

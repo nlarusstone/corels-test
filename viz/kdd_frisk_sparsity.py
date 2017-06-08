@@ -35,29 +35,19 @@ s = s[ind].copy()
 data = zip(m['Method'], m['leaves'], m['accuracy'], s['leaves'], s['accuracy'], m['train_accuracy'], s['train_accuracy'])
 
 ms = 5
-cdict = {'CORELS': 'r', 'C4.5': 'c', 'CART': 'gray', 'RIPPER': 'k', 'SBRL': 'purple'}
-mdict = {'CORELS': 's', 'C4.5': '^', 'CART': 'd', 'RIPPER': 'v', 'SBRL': 'o'}
+cdict = {'CORELS': 'k', 'C4.5': 'k', 'CART': 'k', 'RIPPER': 'k', 'SBRL': 'k'}
+mdict = {'CORELS': 's', 'C4.5': 'o', 'CART': 'd', 'RIPPER': '^', 'SBRL': 'v'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
-mfcdict = {'CORELS': 'coral', 'C4.5': 'paleturquoise', 'CART': 'white', 'RIPPER': 'lightgray', 'SBRL': 'plum'}
-msvec = np.array([11, 9, 8, 10, 10, 9, 8, 7, 12, 8, 4]) * 2
-mew = 2
+mfcdict = {'CORELS': 'm', 'C4.5': 'c', 'CART': 'white', 'RIPPER': 'gray', 'SBRL': 'k'}
+msvec = np.array([6, 8, 10, 10, 4, 5, 6, 8, 4, 8, 12]) + 4
+mew = 1
 
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:
     mfc = mfcdict[method]
     if (method == 'C4.5'):
         w = 0
-    if (w == 0):
-        if log2:
-            xx = np.log2(xx)
-        plt.plot(xx, yy, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc)
-    else:
-        if log2:
-            xerr = np.array([[np.log2(xx) - np.log2(xx-w)], [np.log2(xx+w) - np.log2(xx)]])
-            xx = np.log2
-        else:
-            xerr = w
-        plt.errorbar(xx, yy, xerr=xerr, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc, capsize=4, elinewidth=2)
+    plt.plot(xx, yy, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc)
     i += 1
 
 i = 0
@@ -65,7 +55,7 @@ for (method, xx, yy, w, h, ty, th) in data:
     mfc = mfcdict[method]
     if log2:
         xx = np.log2(xx)
-    plt.errorbar(xx, yy, yerr=h, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc, capsize=4, elinewidth=2)
+    plt.errorbar(xx, yy, xerr=w, yerr=h, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc, capsize=0, elinewidth=1)
     i += 1
 
 if (with_training):
@@ -81,7 +71,7 @@ if (with_training):
                 xx = np.log2(xx)
             if (np.abs(ty - yy) > 0.01):
                 plt.plot([xx, xx], [ty, yy+h], ':', color=cdict[method], linewidth=2)
-            plt.plot(xx, ty, 'o', markersize=5, color='white', markeredgewidth=2, markeredgecolor='k')
+            plt.plot(xx, ty, 'o', markersize=5, color='white', markeredgewidth=mew, markeredgecolor='k')
         i += 1
 
 legend = []
@@ -99,7 +89,7 @@ fs = 14
 plt.xticks(fontsize=fs)
 plt.yticks(fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
-plt.legend(legend, loc='lower right', fontsize=fs-3, numpoints=1, ncol=2, labelspacing=0.5, borderpad=.5, columnspacing=0.1, markerscale=0.6)
+plt.legend(legend, loc='lower right', fontsize=fs-3, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0, columnspacing=0.1, markerscale=0.8, frameon=False)
 plt.title('Weapon prediction (NYCLU stop-and-frisk dataset)', fontsize=fs)
 
 if log2:
@@ -112,7 +102,7 @@ else:
 if (with_training):
     plt.xticks(range(0, 56, 5), fontsize=fs)
     plt.yticks(np.arange(0.63, 0.76, 0.02), fontsize=fs)
-    ax.set_ylim(0.63, 0.75)
+    ax.set_ylim(0.64, 0.75)
     plt.show()
     plt.savefig('../figs/frisk-sparsity-training.pdf')
 else:
