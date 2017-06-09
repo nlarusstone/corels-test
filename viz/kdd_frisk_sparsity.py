@@ -21,7 +21,7 @@ x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(
 m = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
 s = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
 
-fig = plt.figure(2, figsize=(8, 3.6))
+fig = plt.figure(2, figsize=(8, 3.5))
 plt.clf()
 ax = plt.subplot2grid((20, 1), (0, 1), colspan=1, rowspan=18)
 

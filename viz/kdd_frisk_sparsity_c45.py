@@ -50,7 +50,7 @@ msvec = np.array([6, 8, 10, 10, 4, 5, 6, 8, 4, 7, 10]) + 4
 mew = 1
 
 fs = 14
-ax1 = plt.subplot2grid((20, 60), (0, 1), colspan=44, rowspan=18)
+ax1 = plt.subplot2grid((20, 60), (0, 1), colspan=48, rowspan=18)
 plt.xticks(fontsize=fs)
 plt.yticks(fontsize=fs)
 plt.xlabel('Model size', fontsize=fs)
@@ -61,7 +61,7 @@ ax1.set_ylim(0.64, 0.87)
 
 ax2 = plt.subplot2grid((20, 60), (0, 50), colspan=10, rowspan=18)
 plt.xticks([400, 700], fontsize=fs)
-plt.yticks(fontsize=fs)
+plt.yticks((), ())
 #plt.ylabel('Accuracy', fontsize=fs)
 ax2.set_xlim(320, 780)
 ax2.set_ylim(0.64, 0.87)
