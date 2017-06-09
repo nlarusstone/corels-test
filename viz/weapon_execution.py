@@ -34,7 +34,7 @@ if large:
     wo = 'No'
 else:
     ftag = 'weapon_execution'
-    fs_legend = fs - 3
+    fs_legend = fs - 1.5
     loc = 'lower right'
     wo = 'No'
 
@@ -69,7 +69,7 @@ if large:
 else:
     #pylab.figure(1, figsize=(9, 6))
     #pylab.clf()
-    pylab.figure(1, figsize=(12, 6))
+    pylab.figure(1, figsize=(12, 5.5))
 
 if large:
     ax1 = pylab.subplot2grid((24, 40), (0, 22), colspan=18, rowspan=11)
@@ -80,17 +80,18 @@ else:
 
 ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
 
-ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='gray', linewidth=lw)
-ax1.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '-', color='coral', linewidth=lw*2)
-ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='c', linewidth=lw*2)
-ax1.semilogx(tmin, opt, 'k*', markersize=18)
+ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='b', linewidth=lw*2)
+ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='k', linewidth=lw)
+ax1.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '-', color='gray', linewidth=lw*2)
+ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='b', linewidth=lw*2)
+ax1.semilogx(tmin, opt, '*', markerfacecolor='white', markeredgecolor='k', markeredgewidth=2, markersize=18)
 
 ip = (x['tree_prefix_length'][1:] != x['tree_prefix_length'][:-1]).nonzero()[0] + 1
 for jj in ip:
     pl = x['tree_prefix_length'][jj]
     (tt, oo) = (x['total_time'][jj], x['tree_min_objective'][jj])
-    ax1.semilogx(tt, oo, 'o', color='coral', markersize=6, markeredgecolor='gray')
-    ax1.text(tt, oo + 0.015, str(pl), fontsize=fs)
+    ax1.semilogx(tt, oo, 'o', color='white', markersize=6, markeredgecolor='k', markeredgewidth=2)
+    ax1.text(tt * 1.2, oo + 0.01, str(pl), fontsize=fs)
 
 pylab.xticks(fontsize=fs)
 if large:
@@ -104,7 +105,8 @@ if large:
 else:
     pylab.yticks(np.arange(0, 0.55, 0.1), ())
 pylab.axis([x['total_time'][2], y['total_time'][-1], 0, 0.5])
-pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (%s map)' % wo], loc=loc, fontsize=fs_legend, frameon=False, borderpad=0.01)
+#pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (%s map)' % wo], loc=loc, fontsize=fs_legend, frameon=False, borderpad=0.01)
+pylab.legend(['Lower bound (%s map)' % wo], loc=loc, fontsize=fs_legend, frameon=False)
 
 if large:
     ax2 = pylab.subplot2grid((24, 40), (14, 22), colspan=18, rowspan=8)
@@ -115,15 +117,11 @@ else:
 
 yremaining = y['log_remaining_space_size'].copy()
 yremaining[yremaining > yremaining[0]] = yremaining[0]
-ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*2, color='c')
+ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*2, color='b')
 
 xremaining = x['log_remaining_space_size'].copy()
 xremaining[xremaining > xremaining[0]] = xremaining[0]
-ax2.semilogx(x['total_time'][2:ii+1], xremaining[2:ii+1], '-', color='coral', linewidth=lw*2)
-
-yremaining = y['log_remaining_space_size'].copy()
-yremaining[yremaining > yremaining[0]] = yremaining[0]
-ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*2, color='c')
+ax2.semilogx(x['total_time'][2:ii+1], xremaining[2:ii+1], '-', color='k', linewidth=lw)
 
 pylab.title('Size of remaining search space', fontsize=fs)
 pylab.xlabel('Time (s)', fontsize=fs)
@@ -132,7 +130,8 @@ if large:
 pylab.xticks(fontsize=fs)
 pylab.yticks(range(0, 61, 20), fontsize=fs)
 
-pylab.legend(['%s symmetry-aware map' % wo, 'CORELS'], loc='upper right', fontsize=fs_legend, frameon=False)
+#pylab.legend(['%s symmetry-aware map' % wo, 'CORELS'], loc='upper right', fontsize=fs_legend, frameon=False)
+pylab.legend(['%s symmetry-aware map' % wo], loc='center right', fontsize=fs_legend, frameon=False)
 if large:
     pylab.axis([x['total_time'][2], 10**4.5, 0, 60])
 else:

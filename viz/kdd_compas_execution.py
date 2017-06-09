@@ -36,9 +36,9 @@ if large:
     wo = 'No'
 else:
     ftag = 'compas_execution'
-    fs_legend = fs - 3
+    fs_legend = fs - 1.5
     legend_xloc = 10**-2.2
-    legend_yloc = 0.15
+    legend_yloc = 0.1
     wo = 'No'
 
 ntot = len(log_root_list)
@@ -72,7 +72,7 @@ if large:
     pylab.figure(1, figsize=(14, 7.5))
 else:
     #pylab.figure(1, figsize=(9, 6))
-    pylab.figure(1, figsize=(12, 6))
+    pylab.figure(1, figsize=(12, 5.5))
 
 pylab.clf()
 if large:
@@ -84,18 +84,18 @@ else:
 
 ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
 
-ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='gray', linewidth=lw)
-ax1.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '-', color='coral', linewidth=lw*2)
-ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='mediumblue', linewidth=lw*2)
-ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='gray', linewidth=lw)
-ax1.semilogx(tmin, opt, 'k*', markersize=18)
+ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='k', linewidth=lw)
+ax1.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '-', color='gray', linewidth=lw*2)
+ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='m', linewidth=lw*2)
+ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='k', linewidth=lw)
+ax1.semilogx(tmin, opt, '*', markerfacecolor='white', markeredgecolor='k', markeredgewidth=2, markersize=18)
 
 ip = (x['tree_prefix_length'][1:] != x['tree_prefix_length'][:-1]).nonzero()[0] + 1
 for jj in ip:
     pl = x['tree_prefix_length'][jj]
     (tt, oo) = (x['total_time'][jj], x['tree_min_objective'][jj])
-    ax1.semilogx(tt, oo, 'o', color='coral', markersize=6, markeredgecolor='gray')
-    ax1.text(tt, oo + 0.015, str(pl), fontsize=fs)
+    ax1.semilogx(tt, oo, 'o', color='white', markersize=6, markeredgecolor='k', markeredgewidth=2)
+    ax1.text(tt * 1.2, oo + 0.01, str(pl), fontsize=fs)
 
 pylab.ylabel('Value', fontsize=fs)
 if large:
@@ -116,15 +116,15 @@ else:
 
 yremaining = y['log_remaining_space_size'].copy()
 yremaining[yremaining > yremaining[0]] = yremaining[0]
-ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*2, color='mediumblue')
+ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*2, color='m')
 
 xremaining = x['log_remaining_space_size'].copy()
 xremaining[xremaining > xremaining[0]] = xremaining[0]
-ax2.semilogx(x['total_time'][2:ii+1], xremaining[2:ii+1], '-', color='coral', linewidth=lw*2)
+ax2.semilogx(x['total_time'][2:ii+1], xremaining[2:ii+1], '-', color='k', linewidth=lw)
 
 yremaining = y['log_remaining_space_size'].copy()
 yremaining[yremaining > yremaining[0]] = yremaining[0]
-ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*2, color='mediumblue')
+ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*2, color='m')
 
 pylab.title('Size of remaining search space', fontsize=fs)
 pylab.xlabel('Time (s)', fontsize=fs)
