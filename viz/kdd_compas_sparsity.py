@@ -39,7 +39,7 @@ mdict = {'CORELS': 's', 'C4.5': 'o', 'CART': 'd', 'RIPPER': '^', 'SBRL': 'v'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
 mfcdict = {'CORELS': 'm', 'C4.5': 'c', 'CART': 'white', 'RIPPER': 'gray', 'SBRL': 'k'}
 #msvec = np.array([11, 9, 8, 10, 10, 10, 9, 8, 7, 7, 8, 7, 6, 5, 4]) * 2
-msvec = np.array([6, 8, 10, 10, 10, 4, 5, 6, 7, 8, 4, 5, 6, 7, 8]) + 4
+msvec = np.array([6, 8, 10, 6, 6, 1, 3, 5, 7, 9, 3, 5, 7, 9, 11]) + 6
 mew = 1
 
 i = 0

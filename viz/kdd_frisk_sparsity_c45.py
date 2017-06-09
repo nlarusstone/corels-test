@@ -46,7 +46,7 @@ cdict = {'CORELS': 'k', 'C4.5': 'k', 'CART': 'k', 'RIPPER': 'k', 'SBRL': 'k'}
 mdict = {'CORELS': 's', 'C4.5': 'o', 'CART': 'd', 'RIPPER': '^', 'SBRL': 'v'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
 mfcdict = {'CORELS': 'm', 'C4.5': 'c', 'CART': 'white', 'RIPPER': 'gray', 'SBRL': 'k'}
-msvec = np.array([6, 8, 10, 10, 4, 5, 6, 8, 4, 7, 10]) + 4
+msvec = np.array([6, 8, 10, 6, 1, 3, 5, 9, 0, 2, 4]) + 6
 mew = 1
 
 fs = 14
@@ -78,30 +78,21 @@ for (method, xx, yy, w, h, ty, th) in data:
     i += 1
 
 legend = []
-for r in m[:-4]:
+for r in m[:-3]:
     descr = r['Method']
-    if r['C']:
-        descr += ' (%s)' % ('%1.3f' % r['C']).strip('0')
-    elif r['cp']:
-        descr += ' (%s)' % ('%1.3f' % r['cp']).strip('0')
+    if r['cp']:
+        descr += ' (%s)' % ('%1.3f' % r['cp']).strip('0').replace('.01', '.01, .03')
     elif r['R']:
         descr += ' (%s)' % ('%1.4f' % r['R']).strip('0')
     legend += [descr]
-print legend
-ax1.legend(legend[:8], loc='upper left', fontsize=fs-3, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0, columnspacing=0.1, markerscale=0.8, frameon=False)
+ax1.legend(legend, loc='upper left', fontsize=fs-3, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0, columnspacing=0.1, markerscale=0.8, frameon=False)
 
 legend = []
 for r in m[-3:]:
     descr = r['Method']
-    if r['C']:
-        descr += ' (%s)' % ('%1.5f' % r['C']).strip('0')
-    elif r['cp']:
-        descr += ' (%s)' % ('%1.3f' % r['cp']).strip('0')
-    elif r['R']:
-        descr += ' (%s)' % ('%1.4f' % r['R']).strip('0')
+    descr += ' (%s)' % ('%1.5f' % r['C']).strip('0')
     legend += [descr]
-print legend
-ax2.legend(legend, loc=(-2, 0.73), fontsize=fs-3, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, columnspacing=0.1, markerscale=0.8, frameon=False)
+ax2.legend(legend, loc=(-1.7, 0.73), fontsize=fs-3, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, columnspacing=0.1, markerscale=0.8, frameon=False)
 
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:
