@@ -6,14 +6,14 @@ import numpy as np
 import pylab
 
 figure = True
-vertical = True
+vertical = False
 
 if figure:
     pylab.ion()
     if vertical:
         pylab.figure(1, figsize=(5, 6))
     else:
-        pylab.figure(1, figsize=(10, 3.1))
+        pylab.figure(1, figsize=(8.5, 3))
     pylab.clf()
 
 for dataset in ['compas', 'weapon']:
@@ -21,7 +21,7 @@ for dataset in ['compas', 'weapon']:
     if (dataset == 'compas'):
         names = ['GLM', 'SVM', 'AdaBoost\n\n', 'CART', 'C4.5', 'RF', 'RIPPER\n', 'SBRL', 'CORELS']
         title = 'Recidivism prediction (ProPublica)'
-        yticks = np.arange(0.63, 0.72, 0.02)
+        yticks = np.arange(0.62, 0.76, 0.03)
     elif (dataset == 'weapon'):
         names = ['GLM', 'SVM', 'AdaBoost\n\n', 'CART', 'C4.5', 'RF', 'SBRL', 'CORELS']
         title = 'Weapon prediction (NYCLU)'
@@ -45,9 +45,9 @@ for dataset in ['compas', 'weapon']:
     if figure:
         if not vertical:
             if dataset == 'compas':
-                pylab.subplot2grid((10, 40), (0, 0), colspan=18, rowspan=8)
+                pylab.subplot2grid((10, 77), (0, 0), colspan=40, rowspan=8)
             elif dataset == 'weapon':
-                pylab.subplot2grid((10, 40), (0, 21), colspan=18, rowspan=8)
+                pylab.subplot2grid((10, 77), (0, 41), colspan=36, rowspan=8)
         else:
             if dataset == 'compas':
                 pylab.subplot2grid((40, 10), (0, 1), colspan=10, rowspan=15)
@@ -64,7 +64,7 @@ for dataset in ['compas', 'weapon']:
         pylab.errorbar(range(nmethods), y.mean(axis=0), y.std(axis=0), fmt=None, ecolor='k', elinewidth=2, capsize=8, capthick=2)
 
         for (i, color) in zip(ii, color_vec):
-            pylab.plot(range(nmethods), y[i, :], 'D', color=color, markeredgewidth=0, markersize=5)
+            pylab.plot(range(nmethods), y[i, :], 'D', color=color, markeredgewidth=0, markersize=4.5)
 
         pylab.plot(range(nmethods), y.mean(axis=0), 's', color='white', markeredgewidth=2, markersize=7)
 
@@ -72,13 +72,20 @@ for dataset in ['compas', 'weapon']:
             pylab.xticks(range(nmethods), names, fontsize=fs, rotation=40)
         else:
             pylab.xticks(range(nmethods), names, fontsize=fs-1, rotation=40)
-        pylab.yticks(yticks, fontsize=fs)
+    
+        if (vertical) or (dataset == 'compas'):
+            pylab.yticks(yticks, fontsize=fs)
+        else:
+            pylab.yticks(yticks, (), fontsize=fs)
         if (vertical) or (dataset == 'compas'):
             pylab.ylabel('Accuracy', fontsize=fs)
 
         a = list(pylab.axis())
-        a[0] -= 1
-        a[1] += 1
+        a[0] -= 0.5
+        a[1] += 0.5
+        a[2] = 0.625
+        a[3] = 0.755
+        print a
         pylab.axis(a)
         pylab.title(title, fontsize=fs)
 
