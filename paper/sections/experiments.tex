@@ -159,14 +159,11 @@ for ProPublica (left) and NYCLU (right).
 %
 Top: Objective value (thin lines) and lower bound (thick lines) for CORELS,
 as in Figure~\ref{fig:weapon-reg-execution},
-and lower bound (dashes) from separate executions without
-the equivalent points (left) and permutation (right) bounds.
+and lower bound (dashes) for separate executions without
+equivalent points (left) and permutation (right) bounds.
 %
-Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
-where~$\Remaining(\CurrentObj, \Queue)$
-is the upper bound on remaining search space size
-(Theorem~\ref{thm:remaining-eval-fine}),
-for CORELS (lines) and separate executions without selected bounds (dashes).
+Bottom: Upper bound on remaining search space size,
+for CORELS (lines) and executions without optimizations (dashes).
 }
 \label{fig:objective}
 \end{figure}
@@ -267,6 +264,13 @@ CORELS certifies optimality in less than 6~minutes:
 the objective lower bound steadily converges to the optimal objective (top)
 as the search space shrinks (bottom).
 %
+We dynamically and incrementally
+calculate~$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
+where~$\Remaining(\CurrentObj, \Queue)$
+is the upper bound on remaining search space size
+(Theorem~\ref{thm:remaining-eval-fine});
+this adds some computational overhead.
+%
 In the same plots, we also show
 a separate execution of CORELS without the equivalent points bound
 (Theorem~\ref{thm:identical}) (dashes).
@@ -282,5 +286,5 @@ and certifies optimality in less than a minute.
 %
 CORELS without the permutation bound (Corollary~\ref{thm:permutation}),
 and thus the symmetry-aware map,
-requires orders of magnitude more time to complete (dashes).
+requires orders of magnitude more time to complete.
 
