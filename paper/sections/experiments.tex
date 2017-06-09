@@ -91,11 +91,16 @@ in the latter two, we add negations of some, yielding ${M =46}$.
 \textit{Accuracy and model size:}
 We first ran a 10-fold cross validation experiment using CORELS
 and eight other algorithms:\footnote{We use standard R packages, with default
-parameter settings, for the first seven.}
+parameter settings, for the first seven.
+By default, CART and C4.5 use complexity parameters ${cp = 0.01}$
+and ${C = 0.25}$, respectively.}
 logistic regression, support vector machines, AdaBoost, CART, C4.5, random forests,
 RIPPER,\footnote{We were unable to execute RIPPER for the NYCLU problem.}
 and scalable Bayesian rule lists (SBRL).\footnote{Code for SBRL can be found at
-\url{https://github.com/Hongyuy/sbrlmod}.}
+\url{https://github.com/Hongyuy/sbrlmod}.
+By default, SBRL sets ${\eta = 3}$, ${\lambda = 9}$,
+the number of chains to 11 and iterations to 1,000.
+}
 %
 Figure~\ref{fig:rule-list} shows an  optimal rule list that CORELS learns
 for the ProPublica dataset.
