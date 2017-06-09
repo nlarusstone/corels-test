@@ -18,8 +18,8 @@ For CORELS, ${\Reg = 0.005}$ (left) and ${\Reg = 0.01}$ (right).
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={12mm, 7mm, 24mm, 5mm}, width=0.45\textwidth]{figs/compas-sparsity-training.pdf}
-\includegraphics[trim={12mm, 12mm, 24mm, 1mm}, width=0.45\textwidth]{figs/frisk-sparsity-training.pdf}
+\includegraphics[trim={12mm, 7mm, 24mm, 5mm}, width=0.44\textwidth]{figs/compas-sparsity-training.pdf}
+\includegraphics[trim={15mm, 12mm, 24mm, 1mm}, width=0.44\textwidth]{figs/frisk-sparsity-training-c45.pdf}
 \end{center}
 \caption{Training and test accuracy as a function of model size.
 %
@@ -30,7 +30,7 @@ and complexity parameters~$cp$ and~$C$, respectively.
 Legend markers and error bars indicate means and standard deviations,
 respectively, of test accuracy across cross-validation folds.
 %
-Small circles mark associated training accuracy means.
+Small circles mark training accuracy means.
 %
 Top:  %Two-year recidivism prediction for the ProPublica COMPAS dataset.
 ProPublica dataset.
@@ -42,10 +42,14 @@ None of the models exhibit significant overfitting.
 Bottom:  %Weapon prediction for the NYCLU stop-and-frisk dataset.
 NYCLU dataset.
 %
-Only CART with ${cp = 0.001}$ significantly overfits.
+%Only CART with ${cp = 0.001}$ significantly overfits.
 %
-We do not depict C4.5, which finds large models (${>100}$ leaves)
-and dramatically overfits for all tested parameters.
+%We do not depict C4.5, which finds large models (${>100}$ leaves)
+%and dramatically overfits for all tested parameters.
+CART with ${cp = 0.001}$ significantly overfits, as does C4.5,
+which finds large models and dramatically overfits for all tested parameters.
+%
+Note the broken horizontal axis and change in scale.
 }
 \label{fig:sparsity}
 \end{figure}
