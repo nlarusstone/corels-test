@@ -1,149 +1,21 @@
-%\documentclass[aoas,preprint]{imsart}
-%\usepackage{fullpage}
-%\setattribute{journal}{name}{}
-%\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
-%
-%\usepackage{graphicx,verbatim}
-%\usepackage[round]{natbib}
-%\usepackage{url}
-%\usepackage{amsmath,amssymb,amsthm,amsfonts}
-%\usepackage{algorithm}
-%\usepackage{algpseudocode}
-%\usepackage{todonotes}
-%\usepackage{subfig}
-%\usepackage{dsfont}
-%\usepackage{listings}
-%\usepackage{comment}
-%
-%\usepackage{tikz}
-%\usetikzlibrary{arrows}
-%
-%\input{latex_macros}
-%\frenchspacing
-%\hyphenation{speed-up}
-%
-%\begin{document}
+Since every rule list is a decision tree and every decision tree can be expressed as an equivalent rule list, the problem we are solving is a version of the ``optimal decision tree" problem, though regularization changes the nature of the problem (as shown through our bounds). The optimal decision tree problem is computationally hard, though since the late 1990's, there has been research on building optimal decision trees using optimization techniques~\citep{Bennett96optimaldecision,dobkininduction,FarhangfarGZ08}. A particularly interesting paper along these lines is that of \citet{NijssenFromont2010}, who created a ``bottom-up" way to form optimal decision trees. Their method performs an expensive search step, mining all possible leaves (rather than all possible rules), and uses those leaves to form trees. Their method can lead to memory problems, but it is possible that these memory issues can be mitigated using the theorems in this paper.\footnote{There is no public version of their code for distribution as of this writing.} None of these methods used the tight bounds and data structures of CORELS.
 
-\section{Related Work}
+Because the optimal decision tree problem is hard, there are a huge number of algorithms like CART \citep{Breiman84} and C4.5 \citep{Quinlan93} that do not perform exploration of the search space beyond greedy splitting. Similarly, there are decision list and associative classification methods that construct rule lists iteratively in a greedy way
+\citep{Rivest87,Liu98,Li01,Yin03,Sokolova03,Marchand05,Vanhoof10,RudinLeMa13}.
+Some exploration of the search space is done by Bayesian decision tree methods~\citep{Dension:1998hl,Chipman:2002hc,Chipman10} and Bayesian rule-based methods \citep{LethamRuMcMa15,YangRuSe16}. The space of trees of a given depth is much larger than the space of
+rule lists of that same level of depth, and the trees within the Bayesian tree algorithms
+are grown in a top-down greedy way. Because of this, the authors of the Bayesian tree algorithms noted that their MCMC chains tend to reach only locally optimal solutions. 
+The 1995 RIPPER algorithm \citep{ripper} is similar to the Bayesian tree methods in that it grows, prunes, and then locally optimizes.
+Bayesian rule lists tend to be more successful escaping local minima because of their smaller search space and methods of exploring the search space, which is why we uses lists, but the tightest bounds for the Bayesian lists \citep[namely those of][whose work we build from]{YangRuSe16}, are not nearly as tight as those of CORELS.
 
-\begin{kdd}
-We discuss related literature in several subfields.
-\end{kdd}
-\begin{arxiv}
-We discuss related literature in several subfields, and highlight two recent works that this paper builds on.
-\end{arxiv}
+Tight bounds, on the other hand, have been developed for the (immense) literature on building disjunctive normal form (DNF) models. A good example of this is the work of ~\citet{Rijnbeek10} which learns DNF's using bounds similar to our equivalent points bound~(\S\ref{sec:identical}) to prune the search space.  For models of a given size, since the class of DNF's is a proper subset of decision lists, our framework can be restricted to learn optimal DNF's. The field of DNF learning includes work from the fields of rule learning/induction  \citep[e.g., early algorithms ][]{Michalski1969,ClarkNiblett1989,Frank1998} and associative classification \citep[][]{Vanhoof10}. Most papers in these fields aim to carefully guide the search through the space of models. If we were to place a restriction on our code to learn DNF's, which would require restricting predictions within the list to the positive class only, we could potentially use methods from rule learning and associative classification to help order CORELS' queue, which would in turn help us eliminate parts of the search space faster. 
 
-\textit{Interpretable models:} There is a growing interest in interpretable (transparent, comprehensible) models because of their societal importance~\citep[see ][]{ruping2006learning,bratko1997machine,dawes1979robust,VellidoEtAl12,Giraud98,Holte93,Schmueli10,Huysmans11,Freitas14}. There are now regulations on algorithmic decision-making in the European Union on the ``right to an explanation" \citep{Goodman2016EU} that would legally require interpretability in~predictions.
+Some of our bounds, including the minimum support bound (\S\ref{sec:lb-support}, Theorem~\ref{thm:min-capture}), come from \citep{RudinEr15}, who provide flexible mixed-integer programming formulations uses the same objective as we do; MIP solvers in general cannot compete with the speed of CORELS.
 
+CORELS depends on pre-mined rules. We use the FP-Growth algorithm here \cite{FP}, but the literature on association rule mining is huge, and any method for rule mining could be reasonably substituted.
 
-\textit{Optimal decision tree modeling}: The body of work closest to ours is possibly that of optimal decision tree modeling.
-%
-Since the late 1990's, there has been research on building optimal decision trees
-using optimization techniques~\citep{Bennett96optimaldecision,dobkininduction},
-continuing until the present~\citep{FarhangfarGZ08}.
-%
-A particularly interesting paper along these lines is that of \citet{NijssenFromont2010}, who created a ``bottom-up" way to form optimal decision trees. Their method performs an expensive search step, mining all possible leaves (rather than all possible rules), and uses those leaves to form trees. Their method can lead to memory problems, but it is possible that these memory issues can be mitigated using the theorems in this paper.\footnote{There is no public version of their code for distribution as of this writing.} Another work close to ours is that of \citet{GarofalakisHyRaSh00}, who introduce an algorithm to generate more interpretable decision trees by allowing constraints to be placed on the size of the decision tree. During tree construction, they bound the possible Minimum Description Length (MDL) cost of every different split at a given node. If every split at that node is more expensive than the actual cost of the current subtree, then that node can be pruned. In this way, they are able to prune the tree while constructing it instead of just constructing the tree and then pruning at the end. They do not aim for optimal trees; they build trees that obey constraints, and find optimal subtrees within the trees that were built during the building phase.
-%\textcolor{red}{Hm?} However, even with the added bounds, this approach does not generally yield globally optimal decision trees because they constrained the number of nodes in the tree.
-%\textit{Greedy splitting and pruning:}
-Unlike optimal decision tree methods, methods like
-CART \citep{Breiman84} and C4.5 \citep{Quinlan93} do not perform exploration of the search space beyond greedy splitting. There are a huge number of algorithms in this class.
+COREL's main use is for producing interpretable predictive models. There is a growing interest in interpretable (transparent, comprehensible) models because of their societal importance~\citep[see ][]{ruping2006learning,bratko1997machine,dawes1979robust,VellidoEtAl12,Giraud98,Holte93,Schmueli10,Huysmans11,Freitas14}. There are now regulations on algorithmic decision-making in the European Union on the ``right to an explanation" \citep{Goodman2016EU} that would legally require interpretability of predictions. There is work in both the DNF literature \citep{Ruckert}and decision tree literature \cite{GarofalakisHyRaSh00} on building interpretable models. Interpretable models must be so sparse that they need to be heavily optimized; heuristics tend to produce either inaccurate or non-sparse models.
 
-\textit{Bayesian tree and rule list methods}: Some of these approaches that aim to explore
-the space of trees~\citep{Dension:1998hl,Chipman:2002hc,Chipman10} use Monte Carlo methods.
-%
-However, the space of trees of a given depth is much larger than the space of
-rule lists of that same level of depth, and the trees within these algorithms
-are grown in a top-down greedy way.
-%
-Because of this, the authors noted that their MCMC chains tend to reach only
-locally optimal solutions.
-%
-This explains why Bayesian rule-based methods \citep{LethamRuMcMa15,YangRuSe16} have tended to be more successful in escaping local minima.
-%
-Our work builds specifically on that of \citet{YangRuSe16}.
-%
-In particular, we use their library for efficiently representing and
-operating on bit vectors, and build on their bounds.
-%
-\begin{kdd} % in longer paragraph below in arxiv version
-Our bounds also build directly on work by~\citet{RudinEr15}, who provide
-flexible mixed-integer programming formulations for the same problem.
-\end{kdd}
+Interpretability has many meanings, and it is possible to extend the ideas in this work to other definitions of interpretability; these rule lists may have exotic constraints that help with ease-of-use. For example, Falling Rule Lists \citep{WangRu15} are constrained to have decreasing probabilities down the list, and thus could be easier to use. We are currently working on bounds for Falling Rule Lists \citep{ChenRu17} similar to those presented here, but even CORELS' basic support bounds do not hold for the falling case. 
 
-\textit{Rule learning methods:}
-Most rule learning methods (and related works in \textit{inductive logic programming} \citep{muggleton1994inductive}) are not designed for optimality or interpretability, but for computational speed and/or accuracy. Note that the 
-\begin{kdd}
-1995
-\end{kdd}
-RIPPER algorithm \citep{ripper} is similar to the Bayesian tree methods in that it grows, prunes, and then locally optimizes.
-
-In \textit{associative classification} \citep{Vanhoof10,Liu98,Li01,Yin03}, classifiers are often formed greedily from the top down as rule lists, or they are formed by taking the simple union of pre-mined rules, whereby any observation that fits into any of the rules is classified as positive.
-
-Methods for \textit{decision list learning} construct rule lists iteratively in a greedy way
-\citep{Rivest87,Sokolova03,Marchand05,RudinLeMa13,Goessling2015};
-these too have no guarantee of optimality, and tend not to produce optimal rule lists in general.
-
-There is a tremendous amount of related work in other subfields that
-\begin{arxiv}
-are too numerous to discuss at length here.
-\end{arxiv}
-\begin{kdd}
-we do not discuss here.
-\end{kdd}
-We have not discussed \textit{rule mining} algorithms since they are part of an interchangeable preprocessing step for our algorithm and are deterministically fast (\ie they will not generally slow our algorithm down). There are many algorithms that find single interesting rules. There is a huge literature on disjunctive normal forms. Possibly the closest work to ours from that huge literature (and from the inductive rule learning literature) is that of~\citet{Rijnbeek10} which learns DNF's using bounds similar to our equivalent points bound~(\S\ref{sec:identical}) to prune the search space.  We note that for models of a given size, since the class of DNF's is a proper subset of decision lists, our framework can be restricted to learn optimal DNF's.
-
-\textit{Related problems with interpretable lists of rules:} Beyond trees that are optimized 
-for accuracy and sparsity, rule lists have been developed for various applications,
-and with exotic types of constraints.
-%
-For example, Falling Rule Lists \citep{WangRu15} are constrained to have decreasing probabilities down the list as are rule lists for dynamic treatment regimes \citep{ZhangEtAl15} and cost-sensitive dynamic treatment regimes \citep{LakkarajuRu17}. Both \citet{WangRu15} and \citet{LakkarajuRu17} use Monte Carlo searches to explore the space of rule lists. The method proposed in this paper could potentially be adapted to handle these kinds of interesting problems. We are currently working on bounds for Falling Rule Lists \citep{ChenRu17} similar to those presented here.
-
-\begin{arxiv}
-Two works that this paper builds on are those of~\citet{YangRuSe16}, and~\citet{RudinEr15}.
-%
-The work of Yang et al. provided the bit vector libraries and several ideas that were used here,
-and we used their code as a starting point.
-%
-Their scalable Bayesian rule lists (SBRL) method has uses beyond those of CORELS because SBRL models are probabilistic,
-producing an estimate of~${\P(Y=1 \given x)}$ for any~$x$, rather than a yes/no classification.
-%
-On the other hand, because the model is probabilistic, the bounds depend on approximations
-involving gamma functions.
-%
-Bounds for CORELS have no such approximations and are substantially tighter.
-%
-Yang et al. aim to find the optimal solution but do not aim to prove optimality.
-
-Both~\citet{YangRuSe16} and~\citet{RudinEr15} contributed bounds that we started from
-in this work, and in particular, the latter uses the same objective as we do and has
-some of the same bounds, including the minimum support bound (\S\ref{sec:lb-support}, Theorem~\ref{thm:min-capture}).
-%
-However, Ertekin and Rudin's work is for a different purpose,
-namely it is for building rule lists that can be customized;
-since the authors use mixed integer programming (MIP), users can easily
-add constraints to the MIP and create rule lists that obey these arbitrary constraints.
-%
-As in our framework, their rule lists are certifiably optimal.
-%
-However, since generic MIP software is used without efficient bounds and
-data structures like the ones introduced here,
-much more time can be required to prove optimality and to find the optimal solution.
-\end{arxiv}
-
-
-%	Recent work in the field of decision lists has focused on the creation of probabilistic decision lists that generate a posterior distribution over the space of potential decision lists\citep{LethamRuMcMa15,YangRuSe16}. These methods achieve good accuracy while maintaining a small execution time. In addition, these methods improve on existing methods such as CART or C5.0 by optimizing over the global space of decision lists as opposed to searching for rules greedily and getting stuck at local optima. We take the same approach towards optimizing over the global search space, though we don’t use probabilistic techniques. In addition, we use the rule mining framework from \citep{LethamRuMcMa15} to generate the rules for our data sets. \citep{YangRuSe16} builds on \citep{LethamRuMcMa15} by placing bounds on the search space and creating a high performance bit vector manipulation library. We use that bit vector manipulation library to perform our computations, and add additional bounds to further prune the search space.
-
-
-
-
-%Efficient Algorithms for Constructing Decision Trees with Constraints, Scalable Data Mining with Model Constraints, Building Decision Trees with Constraints
-
-%	Our use of a branch and bound technique has also been applied to decision tree generation methods. \citep{garofalakis:2000-kdd} created an algorithm to generate more interpretable decision trees by allowing one to constrain the size of the decision tree. \citep{garofalakis:2000-kdd} uses branch-and-bound to constrain the size of the search space and limit the eventual size of the decision tree. During tree construction, \citep{garofalakis:2000-kdd} bounds the possible MDL cost of every different split at a given node. If every split at that node is more expensive than the actual cost of the current subtree, then that node can be pruned. In this way, they were able to prune the tree while constructing it instead of just constructing the tree and then pruning at the end.
-
-%ProPublica
-%	Certain problems require that the model used to solve that problem be interpretable as well as accurate. \citep{LarsonMaKiAn16} examines the problem of predicting recidivism and shows that a black box model, specifically the COMPAS score from the company Northpointe, has racially biased prediction. Black defendants are misclassified at a higher risk for recidivism than in actuality, while white defendants are misclassified at a lower risk. The model which produces the COMPAS scores is a black box algorithm which is not interpretable, and therefore the model does not provide a way for human input to correct for these racial biases. Our model produces similar accuracies to the logistic regression and COMPAS scores from \citep{LarsonMaKiAn16} while maintaining its interpretability.
-
-%\bibliographystyle{abbrvnat}
-%\bibliography{refs}
-%
-%\end{document}
+The models produced by CORELS are predictive only; they cannot be used for policy-making. It is possible to adapt CORELS' framework for causal inference \cite{CFRL}, dynamic treatment regimes \citep{ZhangEtAl15}, or cost-sensitive dynamic treatment regimes \citep{LakkarajuRu17} to help with policy design. Both \citet{WangRu15} and \citet{LakkarajuRu17} use Monte Carlo searches to explore the space of rule lists. CORELS could potentially be adapted to handle these kinds of interesting problems. 
