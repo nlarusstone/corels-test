@@ -22,7 +22,7 @@ fs = 16 # fontsize
 num_folds = 10
 make_figure = True
 figure_fold = -1
-make_small = False
+make_small = True
 
 num_folds = 1
 figure_fold = 0
@@ -100,15 +100,15 @@ for (ncomp, log_root) in enumerate(log_root_list):
     else:
         pylab.subplot(2, 4, ncomp + 1)
 
-    pylab.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='gray', linewidth=lw)
-    pylab.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '-', color='coral', linewidth=lw*2)
+    pylab.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='k', linewidth=lw)
+    pylab.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '-', color='m', linewidth=lw*2)
     pylab.semilogx(tmin, opt, 'k*', markersize=18)
 
     ip = (x['tree_prefix_length'][1:] != x['tree_prefix_length'][:-1]).nonzero()[0] + 1
     for jj in ip:
         pl = x['tree_prefix_length'][jj]
         (tt, oo) = (x['total_time'][jj], x['tree_min_objective'][jj])
-        pylab.semilogx(tt, oo, 'o', color='coral', markersize=6, markeredgecolor='gray')
+        pylab.semilogx(tt, oo, 'o', markerfacecolor='white', markeredgewidth=2, markersize=6, markeredgecolor='k')
         pylab.text(tt * 1.1, oo + 0.025, str(pl), fontsize=fs-2)
 
     pylab.xticks(fontsize=fs-1)
