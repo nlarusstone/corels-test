@@ -60,15 +60,16 @@ data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
 lw = 2  # linewidth
 ms = 9  # markersize
-fs = 16 # fontsize
+fs = 18 # fontsize
 
 num_folds = 10
 make_figure = False
 
-#num_folds = 1
-#make_figure = True
+num_folds = 1
+make_figure = True
 
-make_small = False
+#make_small = False
+make_small = True
 
 # log files generated on beepboop
 # no-minor execution using ~350GB RAM when halted
@@ -88,7 +89,7 @@ if make_small:
     ftag += '_small'
     if (make_figure):
         pylab.ion()
-        pylab.figure(5, figsize=(12, 8))
+        pylab.figure(5, figsize=(12, 7))
 else:
     if (make_figure):
         pylab.ion()
@@ -243,16 +244,17 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 pylab.text(xloc, 10**8, descr, fontsize=fs)
             #pylab.suptitle('lengths of prefixes in the logical queue\n', fontsize=fs)
             pylab.title(labels[ncomp], fontsize=fs+2)
-            pylab.xticks(fontsize=fs-2)
-            pylab.yticks(fontsize=fs-2)
+            pylab.xticks(10.**np.array([-3, -1, 1, 3]), fontsize=fs)
+            pylab.yticks(10.**np.array([0, 2, 4, 6, 8]), fontsize=fs)
             #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
             ax = [10**-4, 5360, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()
             if (ncomp + 1 == ntot):
                 if make_small:
-                    pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.175, 1.7), handletextpad=0,
-                                 labelspacing=0.3,  borderaxespad=0.1, ncol=2, columnspacing=0.5)
+                    pylab.tight_layout()
+                    pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.11, 1.73), handletextpad=0,
+                                 labelspacing=0.3,  borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
                 else:
                     pylab.suptitle('\nExecution traces of queue contents (ProPublica dataset)', fontsize=fs+2)
                     pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.175, 2.93), handletextpad=0, labelspacing=0.3,  borderaxespad=0.1, ncol=2, columnspacing=0.5)
