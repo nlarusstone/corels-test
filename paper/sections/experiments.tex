@@ -212,14 +212,14 @@ No equivalent pts bound & $>$87 & $>$3744 & $>$1004 & $>$987 & $\ge$10
 \end{tabular}
 }
 \vspace{4mm}
-\caption{Per-component performance improvement.
+\caption{Per-component performance improvement (ProPublica).
 %
-The columns report total execution time,
+Columns report total execution time,
 time to optimum, number of queue insertions,
 maximum queue size, and maximum evaluated prefix length.
 %
 The first row shows CORELS; subsequent rows show variants
-that each remove a specific implementation optimization or bound.
+that each remove one implementation optimization or bound.
 %
 We terminated each experiment in the last row once the size of the
 trie reached ${10^9}$ nodes (each execution consumed $\sim$350GB RAM).
@@ -237,12 +237,12 @@ in the final row, we report the minimum values across folds.
 \includegraphics[trim={10mm 15mm 10mm 30mm},
 width=0.45\textwidth]{figs/kdd_compas_ablation_small-queue.pdf}
 \end{center}
-\caption{Queue composition.
+\caption{Queue composition (ProPublica).
 %
 Numbers of prefixes in the queue (log scale), labeled and colored by length,
 for CORELS (top left) and without three specific implementation optimizations or bounds.
 %
-The gray shading fills in the area beneath the total number of
+Gray shades the area beneath the total number of
 queue elements for CORELS,
 \ie the sum over all lengths in the top left figure.
 %
