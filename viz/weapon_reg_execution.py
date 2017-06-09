@@ -102,7 +102,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
 
     pylab.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='k', linewidth=lw)
     pylab.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '-', color='m', linewidth=lw*2)
-    pylab.semilogx(tmin, opt, 'k*', markersize=18)
+    pylab.semilogx(tmin, opt, '*', markerfacecolor='white', markeredgecolor='k', markeredgewidth=2, markersize=18)
 
     ip = (x['tree_prefix_length'][1:] != x['tree_prefix_length'][:-1]).nonzero()[0] + 1
     for jj in ip:
