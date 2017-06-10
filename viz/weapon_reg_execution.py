@@ -50,7 +50,7 @@ fs_legend = fs - 2
 if (make_figure):
     pylab.ion()
     if (make_small):
-        pylab.figure(5, figsize=(12, 6))
+        pylab.figure(5, figsize=(12, 6.4))
         ftag = '%s_small' % ftag
         fs += 3
         fs_legend += 3
