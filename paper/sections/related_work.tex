@@ -8,7 +8,15 @@ Some exploration of the search space is done by Bayesian decision tree methods~\
 rule lists of that same depth, and the trees within the Bayesian tree algorithms
 are grown in a top-down greedy way. Because of this, authors of Bayesian tree algorithms have noted that their MCMC chains tend to reach only locally optimal solutions. 
 The RIPPER algorithm \citep{ripper} is similar to the Bayesian tree methods in that it grows, prunes, and then locally optimizes.
-Bayesian rule lists tend to be more successful escaping local minima because of their smaller search space and methods of exploring the search space, which is why we uses lists, but the tightest bounds for the Bayesian lists (namely those of \citet{YangRuSe16} upon whose work we build), are not nearly as tight as those of CORELS.
+%
+The space of rule lists is smaller than that of trees, and has simpler structure.
+%
+Consequently, Bayesian rule list algorithms tend to be more successful at
+escaping local minima and can introduce methods of exploring the search space
+that exploit this structure---these properties motivate our focus on lists.
+%
+That said, the tightest bounds for the Bayesian lists (namely those of \citet{YangRuSe16},
+upon whose work we build), are not nearly as tight as those of CORELS.
 
 Tight bounds, on the other hand, have been developed for the (immense) literature on building disjunctive normal form (DNF) models, a good example of this is the work of \citet{Rijnbeek10}.
 %which learns DNF's using bounds similar to our equivalent points bound~(\S\ref{sec:identical}) to prune %the search space.
@@ -16,7 +24,7 @@ For models of a given size, since the class of DNF's is a proper subset of decis
 
 Some of our bounds, including the minimum support bound (\S\ref{sec:lb-support}, Theorem~\ref{thm:min-capture}), come from \citet{RudinEr15}, who provide flexible mixed-integer programming formulations using the same objective as we do; MIP solvers in general cannot compete with the speed of CORELS.
 
-CORELS depends on pre-mined rules, which we obtain in this work via straightforward enumeration.
+CORELS depends on pre-mined rules, which we obtain here via enumeration.
 The literature on association rule mining is huge, and any method for rule mining could be reasonably substituted.
 
 CORELS's main use is for producing interpretable predictive models. There is a growing interest in interpretable (transparent, comprehensible) models because of their societal importance (see \citep{ruping2006learning,bratko1997machine,dawes1979robust,VellidoEtAl12,Giraud98,Holte93,Schmueli10,Huysmans11,Freitas14}). There are now regulations on algorithmic decision-making in the European Union on the ``right to an explanation'' \citep{Goodman2016EU} that would legally require interpretability of predictions. There is work in both the DNF literature \citep{Ruckert2008} and decision tree literature \citep{GarofalakisHyRaSh00} on building interpretable models. Interpretable models must be so sparse that they need to be heavily optimized; heuristics tend to produce either inaccurate or non-sparse models.
