@@ -89,7 +89,7 @@ if make_small:
     ftag += '_small'
     if (make_figure):
         pylab.ion()
-        pylab.figure(5, figsize=(12, 7))
+        pylab.figure(5, figsize=(12, 9))
 else:
     if (make_figure):
         pylab.ion()
@@ -253,8 +253,8 @@ for (ncomp, log_root) in enumerate(log_root_list):
             if (ncomp + 1 == ntot):
                 if make_small:
                     pylab.tight_layout()
-                    pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.11, 1.73), handletextpad=0,
-                                 labelspacing=0.3,  borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
+                    pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.11, 1.77), handletextpad=0,
+                                 borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
                 else:
                     pylab.suptitle('\nExecution traces of queue contents (ProPublica dataset)', fontsize=fs+2)
                     pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.175, 2.93), handletextpad=0, labelspacing=0.3,  borderaxespad=0.1, ncol=2, columnspacing=0.5)

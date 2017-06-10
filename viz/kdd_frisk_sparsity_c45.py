@@ -27,7 +27,7 @@ x['lambda'][(x['Method'] == 'SBRL') & (x['lambda'] == 0)] = 9
 m = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
 s = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
 
-fig = plt.figure(2, figsize=(8, 3))
+fig = plt.figure(2, figsize=(8, 3.3))
 plt.clf()
 
 m.sort(order=['Method', 'C', 'cp', 'R', 'eta', 'lambda'])
@@ -95,7 +95,7 @@ for r in m[-3:]:
     descr = r['Method']
     descr += ' (%s)' % ('%1.5f' % r['C']).strip('0')
     legend += [descr]
-ax2.legend(legend, loc=(-1.55, 0.715), fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, markerscale=0.8, frameon=False)
+ax2.legend(legend, loc=(-1.55, 0.735), fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, markerscale=0.8, frameon=False)
 
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:

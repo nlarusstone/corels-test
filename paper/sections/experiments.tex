@@ -18,8 +18,8 @@ For CORELS, ${\Reg = 0.005}$ (left) and ${\Reg = 0.01}$ (right).
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={12mm, 5mm, 24mm, 10mm}, width=0.44\textwidth]{figs/compas-sparsity-training.pdf}
-\includegraphics[trim={15mm, 0mm, 24mm, 1mm}, width=0.44\textwidth]{figs/frisk-sparsity-training-c45.pdf}
+\includegraphics[trim={12mm, 5mm, 24mm, 10mm}, width=0.45\textwidth]{figs/compas-sparsity-training.pdf}
+\includegraphics[trim={15mm, 0mm, 24mm, 1mm}, width=0.45\textwidth]{figs/frisk-sparsity-training-c45.pdf}
 \end{center}
 \vspace{-5mm}
 \caption{Training and test accuracy as a function of model size.
@@ -168,12 +168,12 @@ for CORELS (lines) and executions without optimizations (dashes).
 
 As~$\Reg$ decreases, these times increase because the search problems become more difficult.
 %
-This is summarized by our observation that CORELS must evaluate longer prefixes:
+In particular, CORELS must evaluate longer prefixes:
 across 10 cross-validation folds, the maximum evaluated prefix lengths are~6,
 11, and~16-17, for ${\Reg = 0.04}$, $0.01$, and $0.025$, respectively.
 %
-As a consequence, our data structures grow in size: \eg
-across 10 cross-validation folds, the mean number of queue elements are
+Consequently, our data structures grow in size: \eg
+across folds, the mean number of queue elements are
 1,900 (100), 170,000 (1,300), and 2,400,000 (170,000),
 with standard deviations shown in parentheses,
 for ${\Reg = 0.04}$, $0.01$, and $0.025$, respectively.
@@ -232,7 +232,7 @@ in the final row, we report the minimum values across folds.
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={10mm 15mm 10mm 30mm},
+\includegraphics[trim={10mm 15mm 10mm 32mm},
 width=0.45\textwidth]{figs/kdd_compas_ablation_small-queue.pdf}
 \end{center}
 \caption{Queue composition (ProPublica).
@@ -252,11 +252,11 @@ For comparison, we replicate the same gray region in all subfigures.
 
 \textit{State space pruning:}
 Figure~\ref{fig:objective} highlights the most significant
-algorithm optimizations for our prediction problems:
+algorithm optimizations for our two problems:
 the equivalent points bound for the ProPublica dataset (left)
 and the symmetry-aware map for the NYCLU dataset (right).
 %
-On the left, for CORELS (solid lines),
+On the left, for CORELS (thin lines),
 the objective drops quickly, achieving the optimal value within 10~seconds.
 %
 CORELS certifies optimality in less than 6~minutes:
@@ -272,7 +272,7 @@ this adds some computational overhead.
 %
 In the same plots, we also show
 a separate execution of CORELS without the equivalent points bound
-(Theorem~\ref{thm:identical}) (dashes).
+(Theorem~\ref{thm:identical}) (thick dashes).
 %
 %After nearly 3~hours, this execution is still far from complete:
 This execution is far from complete:
@@ -283,7 +283,6 @@ On the right,
 CORELS achieves the optimum objective in well under a second
 and certifies optimality in less than a minute.
 %
-CORELS without the permutation bound (Corollary~\ref{thm:permutation}),
+Removing the permutation bound (Corollary~\ref{thm:permutation}),
 and thus the symmetry-aware map,
-requires orders of magnitude more time to complete.
-
+increases the execution time by orders of magnitude.
