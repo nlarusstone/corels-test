@@ -24,8 +24,8 @@ For CORELS, ${\Reg = 0.005}$ (left) and ${\Reg = 0.01}$ (right).
 \vspace{-5mm}
 \caption{Training and test accuracy as a function of model size.
 %
-In the legend, numbers in parentheses are algorithm parameters that we vary:
-CORELS~($\Reg$), CART~($cp$), C4.5~($C$), SBRL ($\eta$, $\lambda$, $i$),
+In the legend, numbers in parentheses are algorithm parameters that we vary
+for CORELS~($\Reg$), CART~($cp$), C4.5~($C$), and SBRL ($\eta$, $\lambda$, $i$),
 where~$i$ is the number of iterations.
 %
 Legend markers and error bars indicate means and standard deviations,
@@ -132,7 +132,7 @@ width=0.45\textwidth]{figs/weapon_reg_small-execution.pdf}
 \end{center}
 \caption{Example CORELS execution traces (NYCLU).
 %
-Objective value (thin line) and lower bound (thick line) for CORELS.
+Objective value (solid) and lower bound (dashes) for CORELS.
 %
 Numbered points along the trace of the objective value
 indicate when the length of the best known rule list changes
@@ -155,13 +155,13 @@ Bottom right: Overlay of the three traces.
 \caption{Significant algorithm optimizations
 for ProPublica (left) and NYCLU (right).
 %
-Top: Objective value (thin lines) and lower bound (thick lines) for CORELS,
+Top: Objective value (solid) and lower bound (thin dashes) for CORELS,
 as in Figure~\ref{fig:weapon-reg-execution},
-and lower bound (dashes) for separate executions without
+and lower bound (thick dashes) for separate executions of variants without
 equivalent points (left) and permutation (right) bounds.
 %
 Bottom: Upper bound on remaining search space size,
-for CORELS (lines) and executions without optimizations (dashes).
+for CORELS (lines) and variants (dashes).
 }
 \label{fig:objective}
 \end{figure}
