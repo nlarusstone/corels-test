@@ -367,10 +367,8 @@ This gives an upper bound on the number of remaining prefix evaluations:
 where~$P(m, k)$ denotes the number of $k$-permutations of~$m$.
 \end{arxiv}
 \begin{kdd}
-\begin{align}
-\Remaining(\CurrentObj, \Queue)
-\le \sum_{\Prefix \in Q} \sum_{k=0}^{U(\Prefix) - L(\Prefix)} P(M - L(\Prefix), k).
-\end{align}
+${\Remaining(\CurrentObj, \Queue)
+\le \sum_{\Prefix \in Q} \sum_{k=0}^{U(\Prefix) - L(\Prefix)} P(M - L(\Prefix), k)}$.
 \end{kdd}
 \end{proof}
 
