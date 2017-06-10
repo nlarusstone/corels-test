@@ -14,8 +14,9 @@ dataset = 'adult'
 descr = 'sparsity-sbrl'
 
 dataset = 'frisk'
-dataset = 'compas'
+#dataset = 'compas'
 descr = 'sparsity-sbrl-eta=15-lambda=5'
+descr = 'sparsity-sbrl-eta=500-lambda=5'
 
 folds = open('%s_%s.txt' % (dataset, descr), 'rU').read().strip().split('Initialize')[1:]
 out = []

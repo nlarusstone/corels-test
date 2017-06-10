@@ -1,0 +1,3052 @@
+Initialize time: Elapsed time  0.0081	 0.0003 per rule
+29 rules 50742 samples
+
+
+The best rule list is (#reject=726 #add=3340 #delete=3279 #swap=3381):
+max_log_posterior = -29047.926551
+max_log_posterior = -29047.926551
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4647, card=1:4647 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13176, card=1:12625 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2523, card=1:2196 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9765, card=1:7442 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2779, card=1:1017 captured; 
+RULE 26: ( {location:transit-authority} ), support=5861, card=1:4207 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=11032, card=1:5913 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5707, card=1:1948 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38571, card=1:8973 captured; 
+RULE 18: ( {ac_inves:circumstances=ongoing-investigation} ), support=7325, card=1:154 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16008, card=1:354 captured; 
+RULE 0: ( default ), support=50742, card=0:1266 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=876 #add=3418 #delete=3312 #swap=3270):
+max_log_posterior = -29204.751027
+max_log_posterior = -29204.751027
+14 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2779, card=1:2779 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5084, card=1:4425 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4647, card=1:4349 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2523, card=1:1848 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=11032, card=1:9319 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=10975, card=1:8090 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13176, card=1:3766 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9765, card=1:4006 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5707, card=1:1531 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38571, card=1:7365 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21163, card=1:920 captured; 
+RULE 26: ( {location:transit-authority} ), support=5861, card=1:1548 captured; 
+RULE 27: ( {inout:outside} ), support=39310, card=1:229 captured; 
+RULE 0: ( default ), support=50742, card=0:567 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=550 #add=3297 #delete=3338 #swap=3365):
+max_log_posterior = -29277.048688
+max_log_posterior = -29277.048688
+10 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2779, card=1:2779 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9765, card=1:8767 captured; 
+RULE 26: ( {location:transit-authority} ), support=5861, card=1:5536 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5084, card=1:1488 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4647, card=1:3118 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2523, card=1:1737 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=11032, card=1:6481 captured; 
+RULE 23: ( {city:Bronx} ), support=8883, card=1:4605 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38571, card=1:14076 captured; 
+RULE 0: ( default ), support=50742, card=0:2155 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=958 #add=3349 #delete=3309 #swap=3342):
+max_log_posterior = -29204.751027
+max_log_posterior = -29204.751027
+14 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2779, card=1:2779 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5084, card=1:4425 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4647, card=1:4349 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2523, card=1:1848 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=11032, card=1:9319 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=10975, card=1:8090 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13176, card=1:3766 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9765, card=1:4006 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5707, card=1:1531 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38571, card=1:7365 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21163, card=1:920 captured; 
+RULE 26: ( {location:transit-authority} ), support=5861, card=1:1548 captured; 
+RULE 27: ( {inout:outside} ), support=39310, card=1:229 captured; 
+RULE 0: ( default ), support=50742, card=0:567 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=52 #add=3361 #delete=3362 #swap=3277):
+max_log_posterior = -28985.587703
+max_log_posterior = -28985.587703
+10 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4647, card=1:4647 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13176, card=1:12625 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2523, card=1:2196 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9765, card=1:7442 captured; 
+RULE 26: ( {location:transit-authority} ), support=5861, card=1:4213 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=11032, card=1:6158 captured; 
+RULE 25: ( {location:housing-authority} ), support=6310, card=1:2061 captured; 
+RULE 20: ( {city:Manhattan} ), support=11272, card=1:1483 captured; 
+RULE 23: ( {city:Bronx} ), support=8883, card=1:2375 captured; 
+RULE 0: ( default ), support=50742, card=0:7542 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=47 #add=3375 #delete=3342 #swap=3283):
+max_log_posterior = -28985.587703
+max_log_posterior = -28985.587703
+10 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4647, card=1:4647 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13176, card=1:12625 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2523, card=1:2196 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9765, card=1:7442 captured; 
+RULE 26: ( {location:transit-authority} ), support=5861, card=1:4213 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=11032, card=1:6158 captured; 
+RULE 25: ( {location:housing-authority} ), support=6310, card=1:2061 captured; 
+RULE 20: ( {city:Manhattan} ), support=11272, card=1:1483 captured; 
+RULE 23: ( {city:Bronx} ), support=8883, card=1:2375 captured; 
+RULE 0: ( default ), support=50742, card=0:7542 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=45 #add=3359 #delete=3299 #swap=3342):
+max_log_posterior = -28985.587703
+max_log_posterior = -28985.587703
+10 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4647, card=1:4647 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13176, card=1:12625 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2523, card=1:2196 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9765, card=1:7442 captured; 
+RULE 26: ( {location:transit-authority} ), support=5861, card=1:4213 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=11032, card=1:6158 captured; 
+RULE 25: ( {location:housing-authority} ), support=6310, card=1:2061 captured; 
+RULE 20: ( {city:Manhattan} ), support=11272, card=1:1483 captured; 
+RULE 23: ( {city:Bronx} ), support=8883, card=1:2375 captured; 
+RULE 0: ( default ), support=50742, card=0:7542 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=710 #add=3364 #delete=3331 #swap=3305):
+max_log_posterior = -29228.830869
+max_log_posterior = -29228.830869
+13 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2779, card=1:2779 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4647, card=1:4489 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2523, card=1:2247 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=11032, card=1:9713 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13176, card=1:10678 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9765, card=1:6343 captured; 
+RULE 25: ( {location:housing-authority} ), support=6310, card=1:1983 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=10975, card=1:1333 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5707, card=1:1457 captured; 
+RULE 23: ( {city:Bronx} ), support=8883, card=1:1841 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38571, card=1:6155 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21163, card=1:172 captured; 
+RULE 0: ( default ), support=50742, card=0:1552 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=669 #add=3350 #delete=3358 #swap=3292):
+max_log_posterior = -29228.830869
+max_log_posterior = -29228.830869
+13 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2779, card=1:2779 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4647, card=1:4489 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2523, card=1:2247 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=11032, card=1:9713 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13176, card=1:10678 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9765, card=1:6343 captured; 
+RULE 25: ( {location:housing-authority} ), support=6310, card=1:1983 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=10975, card=1:1333 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5707, card=1:1457 captured; 
+RULE 23: ( {city:Bronx} ), support=8883, card=1:1841 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38571, card=1:6155 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21163, card=1:172 captured; 
+RULE 0: ( default ), support=50742, card=0:1552 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=479 #add=3320 #delete=3356 #swap=3324):
+max_log_posterior = -29176.188866
+max_log_posterior = -29176.188866
+14 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2779, card=1:2779 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5084, card=1:4425 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4647, card=1:4349 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2523, card=1:1848 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=11032, card=1:9319 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=10975, card=1:8090 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13176, card=1:3766 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9765, card=1:4006 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5707, card=1:1531 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21163, card=1:5537 captured; 
+RULE 26: ( {location:transit-authority} ), support=5861, card=1:1548 captured; 
+RULE 21: ( {city:Brooklyn} ), support=13295, card=1:1072 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38571, card=1:1877 captured; 
+RULE 0: ( default ), support=50742, card=0:595 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=314 #add=3358 #delete=3368 #swap=3274):
+max_log_posterior = -29195.993967
+max_log_posterior = -29195.993967
+16 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2779, card=1:2779 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4647, card=1:4489 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2523, card=1:2247 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=11032, card=1:9713 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=10975, card=1:8426 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13176, card=1:4015 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9765, card=1:6032 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5084, card=1:881 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5707, card=1:1531 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21163, card=1:5537 captured; 
+RULE 25: ( {location:housing-authority} ), support=6310, card=1:796 captured; 
+RULE 26: ( {location:transit-authority} ), support=5861, card=1:1548 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=19868, card=1:949 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11241, card=1:161 captured; 
+RULE 21: ( {city:Brooklyn} ), support=13295, card=1:589 captured; 
+RULE 0: ( default ), support=50742, card=0:1049 captured; 
+Total Captured: 50742
+n0=654, n1=3993, captured=4647, training accuracy = 0.85926404
+theta[0] = 0.85910949
+n0=7322, n1=5303, captured=12625, training accuracy = 0.57996040
+theta[1] = 0.42005227
+n0=1719, n1=477, captured=2196, training accuracy = 0.78278689
+theta[2] = 0.21747043
+n0=5935, n1=1507, captured=7442, training accuracy = 0.79750067
+theta[3] = 0.20257926
+n0=176, n1=4037, captured=4213, training accuracy = 0.95822454
+theta[4] = 0.95800712
+n0=1674, n1=4484, captured=6158, training accuracy = 0.72815849
+theta[5] = 0.72808442
+n0=1502, n1=559, captured=2061, training accuracy = 0.72877244
+theta[6] = 0.27144935
+n0=558, n1=925, captured=1483, training accuracy = 0.62373567
+theta[7] = 0.62356902
+n0=1145, n1=1230, captured=2375, training accuracy = 0.51789474
+theta[8] = 0.51787968
+n0=4686, n1=2856, captured=7542, training accuracy = 0.62132060
+theta[9] = 0.37871156
+Time to train: Elapsed time  4.2000	 4.2000 
+
+The best rulelist for 11 MCMC chains is: 10 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4647, card=1:4647 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13176, card=1:12625 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2523, card=1:2196 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9765, card=1:7442 captured; 
+RULE 26: ( {location:transit-authority} ), support=5861, card=1:4213 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=11032, card=1:6158 captured; 
+RULE 25: ( {location:housing-authority} ), support=6310, card=1:2061 captured; 
+RULE 20: ( {city:Manhattan} ), support=11272, card=1:1483 captured; 
+RULE 23: ( {city:Bronx} ), support=8883, card=1:2375 captured; 
+RULE 0: ( default ), support=50742, card=0:7542 captured; 
+Total Captured: 50742
+1, 0.85910949
+2, 0.42005227
+6, 0.21747043
+3, 0.20257926
+26, 0.95800712
+9, 0.72808442
+25, 0.27144935
+20, 0.62356902
+23, 0.51787968
+0, 0.37871156
+Lambda = 5.000000
+Eta = 500.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 10000
+Rule 1 captures 621 of 5638 samples
+Rule 2 captures 1456 of 5638 samples
+Rule 6 captures 313 of 5638 samples
+Rule 3 captures 856 of 5638 samples
+Rule 26 captures 312 of 5638 samples
+Rule 9 captures 530 of 5638 samples
+Rule 25 captures 246 of 5638 samples
+Rule 20 captures 183 of 5638 samples
+Rule 23 captures 346 of 5638 samples
+Rule 0 captures 775 of 5638 samples
+test accuracy = 0.692621 
+Initialize time: Elapsed time  0.0080	 0.0003 per rule
+29 rules 50742 samples
+
+
+The best rule list is (#reject=974 #add=3316 #delete=3276 #swap=3408):
+max_log_posterior = -29402.659127
+max_log_posterior = -29402.659127
+13 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2604, card=1:2604 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4723, card=1:4616 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2805, card=1:2471 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10675, card=1:9393 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13258, card=1:10898 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9762, card=1:6290 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5622, card=1:2048 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5000, card=1:745 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38792, card=1:8270 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21079, card=1:1019 captured; 
+RULE 26: ( {location:transit-authority} ), support=5607, card=1:1553 captured; 
+RULE 27: ( {inout:outside} ), support=39525, card=1:225 captured; 
+RULE 0: ( default ), support=50742, card=0:610 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=636 #add=3413 #delete=3307 #swap=3280):
+max_log_posterior = -29052.375804
+max_log_posterior = -29052.375804
+17 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4723, card=1:4723 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2805, card=1:2620 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13258, card=1:11837 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9762, card=1:7112 captured; 
+RULE 26: ( {location:transit-authority} ), support=5607, card=1:3985 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10675, card=1:5934 captured; 
+RULE 25: ( {location:housing-authority} ), support=6343, card=1:2455 captured; 
+RULE 28: ( {inout:inside} ), support=11217, card=1:983 captured; 
+RULE 21: ( {city:Manhattan} ), support=11372, card=1:1520 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5000, card=1:655 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13444, card=1:2460 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2604, card=1:551 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26661, card=1:3101 captured; 
+RULE 18: ( {ac_inves:circumstances=ongoing-investigation} ), support=7377, card=1:81 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15620, card=1:560 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13348, card=1:969 captured; 
+RULE 0: ( default ), support=50742, card=0:1196 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=215 #add=3297 #delete=3355 #swap=3348):
+max_log_posterior = -29214.041243
+max_log_posterior = -29214.041243
+16 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4723, card=1:4723 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2805, card=1:2620 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10675, card=1:9521 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13258, card=1:11032 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9762, card=1:6552 captured; 
+RULE 25: ( {location:housing-authority} ), support=6343, card=1:2455 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11293, card=1:3066 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5622, card=1:1399 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5000, card=1:441 captured; 
+RULE 26: ( {location:transit-authority} ), support=5607, card=1:1693 captured; 
+RULE 21: ( {city:Manhattan} ), support=11372, card=1:1157 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2604, card=1:566 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3524, card=1:267 captured; 
+RULE 23: ( {city:Bronx} ), support=8905, card=1:1630 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=19956, card=1:1339 captured; 
+RULE 0: ( default ), support=50742, card=0:2281 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=882 #add=3294 #delete=3376 #swap=3330):
+max_log_posterior = -29405.139978
+max_log_posterior = -29405.139978
+12 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2604, card=1:2604 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4723, card=1:4616 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2805, card=1:2471 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10675, card=1:9393 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13258, card=1:10898 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9762, card=1:6290 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5622, card=1:2048 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5000, card=1:745 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38792, card=1:8270 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21079, card=1:1019 captured; 
+RULE 25: ( {location:housing-authority} ), support=6343, card=1:835 captured; 
+RULE 0: ( default ), support=50742, card=0:1553 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=688 #add=3344 #delete=3361 #swap=3295):
+max_log_posterior = -29132.902654
+max_log_posterior = -29132.902654
+16 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2604, card=1:2604 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4723, card=1:4616 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13258, card=1:12588 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9762, card=1:7404 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2805, card=1:1005 captured; 
+RULE 26: ( {location:transit-authority} ), support=5607, card=1:3978 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10675, card=1:5833 captured; 
+RULE 25: ( {location:housing-authority} ), support=6343, card=1:1998 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5000, card=1:725 captured; 
+RULE 22: ( {city:Queens} ), support=12855, card=1:2727 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4262, card=1:747 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26661, card=1:3018 captured; 
+RULE 28: ( {inout:inside} ), support=11217, card=1:390 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15620, card=1:780 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13348, card=1:1161 captured; 
+RULE 0: ( default ), support=50742, card=0:1168 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=304 #add=3366 #delete=3356 #swap=3278):
+max_log_posterior = -29045.434909
+max_log_posterior = -29045.434909
+15 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4723, card=1:4723 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2805, card=1:2620 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13258, card=1:11837 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9762, card=1:7112 captured; 
+RULE 26: ( {location:transit-authority} ), support=5607, card=1:3985 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10675, card=1:5934 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5622, card=1:2109 captured; 
+RULE 28: ( {inout:inside} ), support=11217, card=1:2232 captured; 
+RULE 21: ( {city:Manhattan} ), support=11372, card=1:1671 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5000, card=1:607 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13444, card=1:2130 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2604, card=1:565 captured; 
+RULE 23: ( {city:Bronx} ), support=8905, card=1:1520 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=19956, card=1:1481 captured; 
+RULE 0: ( default ), support=50742, card=0:2216 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=298 #add=3371 #delete=3297 #swap=3332):
+max_log_posterior = -29045.434909
+max_log_posterior = -29045.434909
+15 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4723, card=1:4723 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2805, card=1:2620 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13258, card=1:11837 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9762, card=1:7112 captured; 
+RULE 26: ( {location:transit-authority} ), support=5607, card=1:3985 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10675, card=1:5934 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5622, card=1:2109 captured; 
+RULE 28: ( {inout:inside} ), support=11217, card=1:2232 captured; 
+RULE 21: ( {city:Manhattan} ), support=11372, card=1:1671 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5000, card=1:607 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13444, card=1:2130 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2604, card=1:565 captured; 
+RULE 23: ( {city:Bronx} ), support=8905, card=1:1520 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=19956, card=1:1481 captured; 
+RULE 0: ( default ), support=50742, card=0:2216 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=133 #add=3361 #delete=3330 #swap=3309):
+max_log_posterior = -29385.862341
+max_log_posterior = -29385.862341
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4723, card=1:4723 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2805, card=1:2620 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13258, card=1:11837 captured; 
+RULE 26: ( {location:transit-authority} ), support=5607, card=1:4176 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10675, card=1:6470 captured; 
+RULE 25: ( {location:housing-authority} ), support=6343, card=1:2960 captured; 
+RULE 21: ( {city:Manhattan} ), support=11372, card=1:2053 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2604, card=1:1281 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9762, card=1:5294 captured; 
+RULE 23: ( {city:Bronx} ), support=8905, card=1:2357 captured; 
+RULE 0: ( default ), support=50742, card=0:6971 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=407 #add=3351 #delete=3390 #swap=3259):
+max_log_posterior = -29094.787445
+max_log_posterior = -29094.787445
+17 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4723, card=1:4723 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13258, card=1:12787 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2604, card=1:2298 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9762, card=1:7404 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2805, card=1:1005 captured; 
+RULE 26: ( {location:transit-authority} ), support=5607, card=1:3978 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10675, card=1:5833 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11293, card=1:2991 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3524, card=1:639 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4262, card=1:563 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5622, card=1:1197 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5000, card=1:310 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13444, card=1:1337 captured; 
+RULE 22: ( {city:Queens} ), support=12855, card=1:1133 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13348, card=1:1784 captured; 
+RULE 27: ( {inout:outside} ), support=39525, card=1:2059 captured; 
+RULE 0: ( default ), support=50742, card=0:701 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=529 #add=3329 #delete=3332 #swap=3339):
+max_log_posterior = -29212.943622
+max_log_posterior = -29212.943622
+13 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2604, card=1:2604 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4723, card=1:4616 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2805, card=1:2471 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5622, card=1:4287 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5000, card=1:3136 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13258, card=1:10306 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9762, card=1:4069 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21079, card=1:8205 captured; 
+RULE 26: ( {location:transit-authority} ), support=5607, card=1:3762 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10675, card=1:3275 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13348, card=1:1207 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38792, card=1:2196 captured; 
+RULE 0: ( default ), support=50742, card=0:608 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=588 #add=3329 #delete=3355 #swap=3316):
+max_log_posterior = -29327.708771
+max_log_posterior = -29327.708771
+17 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2604, card=1:2604 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4723, card=1:4616 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2805, card=1:2471 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5000, card=1:3832 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13258, card=1:11186 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9762, card=1:4557 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3524, card=1:1276 captured; 
+RULE 23: ( {city:Bronx} ), support=8905, card=1:4008 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21079, card=1:6442 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10675, card=1:4625 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11293, card=1:410 captured; 
+RULE 25: ( {location:housing-authority} ), support=6343, card=1:502 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11052, card=1:474 captured; 
+RULE 26: ( {location:transit-authority} ), support=5607, card=1:1518 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26661, card=1:1043 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13348, card=1:540 captured; 
+RULE 0: ( default ), support=50742, card=0:638 captured; 
+Total Captured: 50742
+n0=667, n1=4056, captured=4723, training accuracy = 0.85877620
+theta[0] = 0.85862434
+n0=1378, n1=1242, captured=2620, training accuracy = 0.52595420
+theta[1] = 0.47406560
+n0=6969, n1=4868, captured=11837, training accuracy = 0.58874715
+theta[2] = 0.41126784
+n0=5750, n1=1362, captured=7112, training accuracy = 0.80849269
+theta[3] = 0.19159404
+n0=174, n1=3811, captured=3985, training accuracy = 0.95633626
+theta[4] = 0.95610735
+n0=1631, n1=4303, captured=5934, training accuracy = 0.72514324
+theta[5] = 0.72506739
+n0=1451, n1=658, captured=2109, training accuracy = 0.68800379
+theta[6] = 0.31217432
+n0=1626, n1=606, captured=2232, training accuracy = 0.72849462
+theta[7] = 0.27170994
+n0=580, n1=1091, captured=1671, training accuracy = 0.65290245
+theta[8] = 0.65271967
+n0=512, n1=95, captured=607, training accuracy = 0.84349259
+theta[9] = 0.15763547
+n0=1244, n1=886, captured=2130, training accuracy = 0.58403756
+theta[10] = 0.41604128
+n0=516, n1=49, captured=565, training accuracy = 0.91327434
+theta[11] = 0.08818342
+n0=545, n1=975, captured=1520, training accuracy = 0.64144737
+theta[12] = 0.64126150
+n0=770, n1=711, captured=1481, training accuracy = 0.51991897
+theta[13] = 0.48010789
+n0=1558, n1=658, captured=2216, training accuracy = 0.70306859
+theta[14] = 0.29711452
+Time to train: Elapsed time  5.0821	 5.0821 
+
+The best rulelist for 11 MCMC chains is: 15 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4723, card=1:4723 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2805, card=1:2620 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13258, card=1:11837 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9762, card=1:7112 captured; 
+RULE 26: ( {location:transit-authority} ), support=5607, card=1:3985 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10675, card=1:5934 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5622, card=1:2109 captured; 
+RULE 28: ( {inout:inside} ), support=11217, card=1:2232 captured; 
+RULE 21: ( {city:Manhattan} ), support=11372, card=1:1671 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5000, card=1:607 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13444, card=1:2130 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2604, card=1:565 captured; 
+RULE 23: ( {city:Bronx} ), support=8905, card=1:1520 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=19956, card=1:1481 captured; 
+RULE 0: ( default ), support=50742, card=0:2216 captured; 
+Total Captured: 50742
+1, 0.85862434
+5, 0.47406560
+2, 0.41126784
+3, 0.19159404
+26, 0.95610735
+9, 0.72506739
+8, 0.31217432
+28, 0.27170994
+21, 0.65271967
+4, 0.15763547
+13, 0.41604128
+6, 0.08818342
+23, 0.64126150
+15, 0.48010789
+0, 0.29711452
+Lambda = 5.000000
+Eta = 500.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 10000
+Rule 1 captures 545 of 5638 samples
+Rule 5 captures 308 of 5638 samples
+Rule 2 captures 1220 of 5638 samples
+Rule 3 captures 842 of 5638 samples
+Rule 26 captures 540 of 5638 samples
+Rule 9 captures 568 of 5638 samples
+Rule 8 captures 211 of 5638 samples
+Rule 28 captures 211 of 5638 samples
+Rule 21 captures 156 of 5638 samples
+Rule 4 captures 101 of 5638 samples
+Rule 13 captures 218 of 5638 samples
+Rule 6 captures 74 of 5638 samples
+Rule 23 captures 189 of 5638 samples
+Rule 15 captures 137 of 5638 samples
+Rule 0 captures 318 of 5638 samples
+test accuracy = 0.717453 
+Initialize time: Elapsed time  0.0134	 0.0005 per rule
+29 rules 50742 samples
+
+
+The best rule list is (#reject=422 #add=3350 #delete=3244 #swap=3406):
+max_log_posterior = -29145.688567
+max_log_posterior = -29145.688567
+15 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4695, card=1:4695 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13118, card=1:12571 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9866, card=1:7861 captured; 
+RULE 26: ( {location:transit-authority} ), support=5755, card=1:4076 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10688, card=1:6144 captured; 
+RULE 18: ( {ac_inves:circumstances=ongoing-investigation} ), support=7277, card=1:1612 captured; 
+RULE 25: ( {location:housing-authority} ), support=6516, card=1:2361 captured; 
+RULE 21: ( {city:Manhattan} ), support=11266, card=1:1558 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2463, card=1:881 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5009, card=1:548 captured; 
+RULE 23: ( {city:Bronx} ), support=9081, card=1:2281 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15901, card=1:1238 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26672, card=1:2285 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13304, card=1:1276 captured; 
+RULE 0: ( default ), support=50742, card=0:1355 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=527 #add=3413 #delete=3317 #swap=3270):
+max_log_posterior = -29318.259201
+max_log_posterior = -29318.259201
+15 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2463, card=1:2463 captured; 
+RULE 26: ( {location:transit-authority} ), support=5755, card=1:5746 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4695, card=1:3689 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5009, card=1:4210 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10688, card=1:7043 captured; 
+RULE 23: ( {city:Bronx} ), support=9081, card=1:5500 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13118, card=1:8503 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9866, card=1:3830 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21349, card=1:5845 captured; 
+RULE 28: ( {inout:inside} ), support=11368, card=1:757 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13407, card=1:512 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11275, card=1:197 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26672, card=1:1162 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13304, card=1:571 captured; 
+RULE 0: ( default ), support=50742, card=0:714 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=942 #add=3277 #delete=3360 #swap=3363):
+max_log_posterior = -29206.113994
+max_log_posterior = -29206.113994
+11 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2463, card=1:2463 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4695, card=1:4629 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2766, card=1:2441 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13118, card=1:11561 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9866, card=1:6961 captured; 
+RULE 26: ( {location:transit-authority} ), support=5755, card=1:4063 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10688, card=1:5781 captured; 
+RULE 23: ( {city:Bronx} ), support=9081, card=1:2947 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38471, card=1:8384 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15901, card=1:342 captured; 
+RULE 0: ( default ), support=50742, card=0:1170 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=467 #add=3317 #delete=3328 #swap=3355):
+max_log_posterior = -29222.927700
+max_log_posterior = -29222.927700
+15 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2463, card=1:2463 captured; 
+RULE 26: ( {location:transit-authority} ), support=5755, card=1:5746 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4695, card=1:3689 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5009, card=1:4210 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10688, card=1:7043 captured; 
+RULE 23: ( {city:Bronx} ), support=9081, card=1:5500 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13118, card=1:8503 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9866, card=1:3830 captured; 
+RULE 28: ( {inout:inside} ), support=11368, card=1:1388 captured; 
+RULE 21: ( {city:Manhattan} ), support=11266, card=1:1496 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26672, card=1:3725 captured; 
+RULE 18: ( {ac_inves:circumstances=ongoing-investigation} ), support=7277, card=1:126 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15901, card=1:480 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13304, card=1:1224 captured; 
+RULE 0: ( default ), support=50742, card=0:1319 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=779 #add=3327 #delete=3344 #swap=3329):
+max_log_posterior = -29358.771898
+max_log_posterior = -29358.771898
+14 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2463, card=1:2463 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4695, card=1:4629 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2766, card=1:2441 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5009, card=1:3840 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10688, card=1:9015 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=10968, card=1:8157 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13118, card=1:3746 captured; 
+RULE 23: ( {city:Bronx} ), support=9081, card=1:3007 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9866, card=1:3608 captured; 
+RULE 25: ( {location:housing-authority} ), support=6516, card=1:1346 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5616, card=1:1209 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38471, card=1:5578 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21349, card=1:144 captured; 
+RULE 0: ( default ), support=50742, card=0:1559 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=52 #add=3347 #delete=3354 #swap=3299):
+max_log_posterior = -29299.432684
+max_log_posterior = -29299.432684
+13 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2463, card=1:2463 captured; 
+RULE 26: ( {location:transit-authority} ), support=5755, card=1:5746 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4695, card=1:3689 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5009, card=1:4210 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10688, card=1:7043 captured; 
+RULE 23: ( {city:Bronx} ), support=9081, card=1:5500 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13118, card=1:8503 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9866, card=1:3830 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5616, card=1:1773 captured; 
+RULE 28: ( {inout:inside} ), support=11368, card=1:1240 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=19951, card=1:2705 captured; 
+RULE 21: ( {city:Manhattan} ), support=11266, card=1:909 captured; 
+RULE 0: ( default ), support=50742, card=0:3131 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=534 #add=3368 #delete=3307 #swap=3325):
+max_log_posterior = -29184.520721
+max_log_posterior = -29184.520721
+14 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2463, card=1:2463 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4695, card=1:4629 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13118, card=1:12390 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9866, card=1:7555 captured; 
+RULE 26: ( {location:transit-authority} ), support=5755, card=1:4069 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10688, card=1:6035 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4289, card=1:989 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13304, card=1:4042 captured; 
+RULE 18: ( {ac_inves:circumstances=ongoing-investigation} ), support=7277, card=1:836 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5009, card=1:402 captured; 
+RULE 22: ( {city:Queens} ), support=12802, card=1:2643 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38471, card=1:3575 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15901, card=1:224 captured; 
+RULE 0: ( default ), support=50742, card=0:890 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=946 #add=3358 #delete=3344 #swap=3298):
+max_log_posterior = -29202.547605
+max_log_posterior = -29202.547605
+11 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2766, card=1:2766 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2463, card=1:2316 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4695, card=1:4451 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13118, card=1:11561 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9866, card=1:6961 captured; 
+RULE 26: ( {location:transit-authority} ), support=5755, card=1:4063 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10688, card=1:5781 captured; 
+RULE 23: ( {city:Bronx} ), support=9081, card=1:2947 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38471, card=1:8384 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15901, card=1:342 captured; 
+RULE 0: ( default ), support=50742, card=0:1170 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=47 #add=3351 #delete=3382 #swap=3267):
+max_log_posterior = -29345.526511
+max_log_posterior = -29345.526511
+13 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2766, card=1:2766 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2463, card=1:2316 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4695, card=1:4451 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5009, card=1:3840 captured; 
+RULE 26: ( {location:transit-authority} ), support=5755, card=1:4601 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10688, card=1:6711 captured; 
+RULE 23: ( {city:Bronx} ), support=9081, card=1:5235 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13118, card=1:8014 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9866, card=1:3645 captured; 
+RULE 25: ( {location:housing-authority} ), support=6516, card=1:1443 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=19951, card=1:2773 captured; 
+RULE 21: ( {city:Manhattan} ), support=11266, card=1:936 captured; 
+RULE 0: ( default ), support=50742, card=0:4011 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=605 #add=3326 #delete=3383 #swap=3291):
+max_log_posterior = -29371.506391
+max_log_posterior = -29371.506391
+12 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2463, card=1:2463 captured; 
+RULE 26: ( {location:transit-authority} ), support=5755, card=1:5746 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4695, card=1:3689 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2766, card=1:2370 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5009, card=1:3706 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10688, card=1:6711 captured; 
+RULE 23: ( {city:Bronx} ), support=9081, card=1:5235 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13118, card=1:8014 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9866, card=1:3645 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38471, card=1:7720 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15901, card=1:316 captured; 
+RULE 0: ( default ), support=50742, card=0:1127 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=483 #add=3317 #delete=3369 #swap=3314):
+max_log_posterior = -29241.994737
+max_log_posterior = -29241.994737
+15 rules 50742 samples
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2463, card=1:2463 captured; 
+RULE 26: ( {location:transit-authority} ), support=5755, card=1:5746 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4695, card=1:3689 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5009, card=1:4210 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10688, card=1:7043 captured; 
+RULE 23: ( {city:Bronx} ), support=9081, card=1:5500 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13118, card=1:8503 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9866, card=1:3830 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26672, card=1:5130 captured; 
+RULE 18: ( {ac_inves:circumstances=ongoing-investigation} ), support=7277, card=1:168 captured; 
+RULE 22: ( {city:Queens} ), support=12802, card=1:1277 captured; 
+RULE 28: ( {inout:inside} ), support=11368, card=1:481 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15901, card=1:597 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13304, card=1:1224 captured; 
+RULE 0: ( default ), support=50742, card=0:881 captured; 
+Total Captured: 50742
+n0=639, n1=4056, captured=4695, training accuracy = 0.86389776
+theta[0] = 0.86374281
+n0=7290, n1=5281, captured=12571, training accuracy = 0.57990613
+theta[1] = 0.42010658
+n0=6213, n1=1648, captured=7861, training accuracy = 0.79035746
+theta[2] = 0.20971639
+n0=192, n1=3884, captured=4076, training accuracy = 0.95289500
+theta[3] = 0.95267288
+n0=1771, n1=4373, captured=6144, training accuracy = 0.71175130
+theta[4] = 0.71168240
+n0=946, n1=666, captured=1612, training accuracy = 0.58684864
+theta[5] = 0.41325898
+n0=1754, n1=607, captured=2361, training accuracy = 0.74290555
+theta[6] = 0.25730004
+n0=590, n1=968, captured=1558, training accuracy = 0.62130937
+theta[7] = 0.62115385
+n0=756, n1=125, captured=881, training accuracy = 0.85811578
+theta[8] = 0.14269536
+n0=432, n1=116, captured=548, training accuracy = 0.78832117
+theta[9] = 0.21272727
+n0=983, n1=1298, captured=2281, training accuracy = 0.56904866
+theta[10] = 0.56898817
+n0=592, n1=646, captured=1238, training accuracy = 0.52180937
+theta[11] = 0.52177419
+n0=1407, n1=878, captured=2285, training accuracy = 0.61575492
+theta[12] = 0.38434631
+n0=1074, n1=202, captured=1276, training accuracy = 0.84169279
+theta[13] = 0.15884194
+n0=732, n1=623, captured=1355, training accuracy = 0.54022140
+theta[14] = 0.45983788
+Time to train: Elapsed time  5.0662	 5.0662 
+
+The best rulelist for 11 MCMC chains is: 15 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4695, card=1:4695 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13118, card=1:12571 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9866, card=1:7861 captured; 
+RULE 26: ( {location:transit-authority} ), support=5755, card=1:4076 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10688, card=1:6144 captured; 
+RULE 18: ( {ac_inves:circumstances=ongoing-investigation} ), support=7277, card=1:1612 captured; 
+RULE 25: ( {location:housing-authority} ), support=6516, card=1:2361 captured; 
+RULE 21: ( {city:Manhattan} ), support=11266, card=1:1558 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2463, card=1:881 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5009, card=1:548 captured; 
+RULE 23: ( {city:Bronx} ), support=9081, card=1:2281 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15901, card=1:1238 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26672, card=1:2285 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13304, card=1:1276 captured; 
+RULE 0: ( default ), support=50742, card=0:1355 captured; 
+Total Captured: 50742
+1, 0.86374281
+2, 0.42010658
+3, 0.20971639
+26, 0.95267288
+9, 0.71168240
+18, 0.41325898
+25, 0.25730004
+21, 0.62115385
+6, 0.14269536
+4, 0.21272727
+23, 0.56898817
+10, 0.52177419
+14, 0.38434631
+20, 0.15884194
+0, 0.45983788
+Lambda = 5.000000
+Eta = 500.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 10000
+Rule 1 captures 573 of 5638 samples
+Rule 2 captures 1510 of 5638 samples
+Rule 3 captures 782 of 5638 samples
+Rule 26 captures 456 of 5638 samples
+Rule 9 captures 660 of 5638 samples
+Rule 18 captures 162 of 5638 samples
+Rule 25 captures 188 of 5638 samples
+Rule 21 captures 219 of 5638 samples
+Rule 6 captures 118 of 5638 samples
+Rule 4 captures 78 of 5638 samples
+Rule 23 captures 175 of 5638 samples
+Rule 10 captures 195 of 5638 samples
+Rule 14 captures 205 of 5638 samples
+Rule 20 captures 216 of 5638 samples
+Rule 0 captures 101 of 5638 samples
+test accuracy = 0.719936 
+Initialize time: Elapsed time  0.0091	 0.0003 per rule
+29 rules 50742 samples
+
+
+The best rule list is (#reject=75 #add=3327 #delete=3264 #swap=3409):
+max_log_posterior = -29510.966514
+max_log_posterior = -29510.966514
+11 rules 50742 samples
+RULE 26: ( {location:transit-authority} ), support=5726, card=1:5726 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4650, card=1:3706 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2608, card=1:2477 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10472, card=1:7326 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13140, card=1:11159 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9919, card=1:6688 captured; 
+RULE 25: ( {location:housing-authority} ), support=6321, card=1:2041 captured; 
+RULE 21: ( {city:Manhattan} ), support=11375, card=1:1550 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15909, card=1:2377 captured; 
+RULE 23: ( {city:Bronx} ), support=8883, card=1:1737 captured; 
+RULE 0: ( default ), support=50742, card=0:5955 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=118 #add=3449 #delete=3293 #swap=3258):
+max_log_posterior = -29207.141806
+max_log_posterior = -29207.141806
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4650, card=1:4650 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13140, card=1:12602 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2608, card=1:2310 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9919, card=1:7460 captured; 
+RULE 26: ( {location:transit-authority} ), support=5726, card=1:4078 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10472, card=1:5982 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4209, card=1:952 captured; 
+RULE 25: ( {location:housing-authority} ), support=6321, card=1:1985 captured; 
+RULE 22: ( {city:Queens} ), support=12997, card=1:3336 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15909, card=1:2228 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13278, card=1:2474 captured; 
+RULE 0: ( default ), support=50742, card=0:2685 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=116 #add=3281 #delete=3334 #swap=3385):
+max_log_posterior = -29482.700501
+max_log_posterior = -29482.700501
+12 rules 50742 samples
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13140, card=1:13140 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9919, card=1:8181 captured; 
+RULE 26: ( {location:transit-authority} ), support=5726, card=1:4967 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4650, card=1:2824 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2608, card=1:1988 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10472, card=1:5982 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4209, card=1:952 captured; 
+RULE 25: ( {location:housing-authority} ), support=6321, card=1:1985 captured; 
+RULE 22: ( {city:Queens} ), support=12997, card=1:3336 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15909, card=1:2228 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13278, card=1:2474 captured; 
+RULE 0: ( default ), support=50742, card=0:2685 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=186 #add=3337 #delete=3360 #swap=3303):
+max_log_posterior = -29382.703534
+max_log_posterior = -29382.703534
+17 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4650, card=1:4650 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2608, card=1:2485 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2876, card=1:2552 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10472, card=1:9271 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13140, card=1:10778 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9919, card=1:6368 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11365, card=1:3071 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3521, card=1:619 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4209, card=1:543 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5703, card=1:1206 captured; 
+RULE 26: ( {location:transit-authority} ), support=5726, card=1:1746 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13709, card=1:1437 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5078, card=1:225 captured; 
+RULE 22: ( {city:Queens} ), support=12997, card=1:1208 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13278, card=1:1832 captured; 
+RULE 28: ( {inout:inside} ), support=11389, card=1:649 captured; 
+RULE 0: ( default ), support=50742, card=0:2102 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=171 #add=3333 #delete=3381 #swap=3286):
+max_log_posterior = -29207.141806
+max_log_posterior = -29207.141806
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4650, card=1:4650 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13140, card=1:12602 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2608, card=1:2310 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9919, card=1:7460 captured; 
+RULE 26: ( {location:transit-authority} ), support=5726, card=1:4078 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10472, card=1:5982 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4209, card=1:952 captured; 
+RULE 25: ( {location:housing-authority} ), support=6321, card=1:1985 captured; 
+RULE 22: ( {city:Queens} ), support=12997, card=1:3336 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15909, card=1:2228 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13278, card=1:2474 captured; 
+RULE 0: ( default ), support=50742, card=0:2685 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=78 #add=3374 #delete=3348 #swap=3278):
+max_log_posterior = -29204.600311
+max_log_posterior = -29204.600311
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4650, card=1:4650 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13140, card=1:12602 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2608, card=1:2310 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9919, card=1:7460 captured; 
+RULE 26: ( {location:transit-authority} ), support=5726, card=1:4078 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10472, card=1:5982 captured; 
+RULE 25: ( {location:housing-authority} ), support=6321, card=1:2041 captured; 
+RULE 21: ( {city:Manhattan} ), support=11375, card=1:1550 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15909, card=1:2377 captured; 
+RULE 23: ( {city:Bronx} ), support=8883, card=1:1737 captured; 
+RULE 0: ( default ), support=50742, card=0:5955 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=78 #add=3330 #delete=3282 #swap=3388):
+max_log_posterior = -29204.600311
+max_log_posterior = -29204.600311
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4650, card=1:4650 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13140, card=1:12602 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2608, card=1:2310 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9919, card=1:7460 captured; 
+RULE 26: ( {location:transit-authority} ), support=5726, card=1:4078 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10472, card=1:5982 captured; 
+RULE 25: ( {location:housing-authority} ), support=6321, card=1:2041 captured; 
+RULE 21: ( {city:Manhattan} ), support=11375, card=1:1550 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15909, card=1:2377 captured; 
+RULE 23: ( {city:Bronx} ), support=8883, card=1:1737 captured; 
+RULE 0: ( default ), support=50742, card=0:5955 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=152 #add=3349 #delete=3331 #swap=3320):
+max_log_posterior = -29176.128370
+max_log_posterior = -29176.128370
+17 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4650, card=1:4650 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2608, card=1:2485 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2876, card=1:2552 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13140, card=1:11543 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9919, card=1:6884 captured; 
+RULE 26: ( {location:transit-authority} ), support=5726, card=1:4071 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10472, card=1:5694 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4209, card=1:878 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11365, card=1:2816 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5703, card=1:1347 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3521, card=1:369 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13709, card=1:1437 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5078, card=1:225 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13278, card=1:1832 captured; 
+RULE 22: ( {city:Queens} ), support=12997, card=1:1208 captured; 
+RULE 28: ( {inout:inside} ), support=11389, card=1:649 captured; 
+RULE 0: ( default ), support=50742, card=0:2102 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=429 #add=3377 #delete=3367 #swap=3256):
+max_log_posterior = -29272.634115
+max_log_posterior = -29272.634115
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4650, card=1:4650 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13140, card=1:12602 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2608, card=1:2310 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9919, card=1:7460 captured; 
+RULE 26: ( {location:transit-authority} ), support=5726, card=1:4078 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10472, card=1:5982 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13278, card=1:4079 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4209, card=1:952 captured; 
+RULE 22: ( {city:Queens} ), support=12997, card=1:3446 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38695, card=1:4037 captured; 
+RULE 0: ( default ), support=50742, card=0:1146 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=437 #add=3264 #delete=3385 #swap=3351):
+max_log_posterior = -29272.634115
+max_log_posterior = -29272.634115
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4650, card=1:4650 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13140, card=1:12602 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2608, card=1:2310 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9919, card=1:7460 captured; 
+RULE 26: ( {location:transit-authority} ), support=5726, card=1:4078 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10472, card=1:5982 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13278, card=1:4079 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4209, card=1:952 captured; 
+RULE 22: ( {city:Queens} ), support=12997, card=1:3446 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38695, card=1:4037 captured; 
+RULE 0: ( default ), support=50742, card=0:1146 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=93 #add=3337 #delete=3397 #swap=3266):
+max_log_posterior = -29589.072231
+max_log_posterior = -29589.072231
+10 rules 50742 samples
+RULE 26: ( {location:transit-authority} ), support=5726, card=1:5726 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4650, card=1:3706 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10472, card=1:7463 captured; 
+RULE 23: ( {city:Bronx} ), support=8883, card=1:6084 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13140, card=1:9162 captured; 
+RULE 28: ( {inout:inside} ), support=11389, card=1:2152 captured; 
+RULE 21: ( {city:Manhattan} ), support=11375, card=1:2334 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2608, card=1:1251 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9919, card=1:5325 captured; 
+RULE 0: ( default ), support=50742, card=0:7539 captured; 
+Total Captured: 50742
+n0=656, n1=3994, captured=4650, training accuracy = 0.85892473
+theta[0] = 0.85877042
+n0=1849, n1=636, captured=2485, training accuracy = 0.74406439
+theta[1] = 0.25613189
+n0=1314, n1=1238, captured=2552, training accuracy = 0.51489028
+theta[2] = 0.48512138
+n0=6861, n1=4682, captured=11543, training accuracy = 0.59438621
+theta[3] = 0.40563014
+n0=5524, n1=1360, captured=6884, training accuracy = 0.80244044
+theta[4] = 0.19764740
+n0=173, n1=3898, captured=4071, training accuracy = 0.95750430
+theta[5] = 0.95727965
+n0=1568, n1=4126, captured=5694, training accuracy = 0.72462241
+theta[6] = 0.72454354
+n0=605, n1=273, captured=878, training accuracy = 0.68906606
+theta[7] = 0.31136364
+n0=1622, n1=1194, captured=2816, training accuracy = 0.57599432
+theta[8] = 0.42405962
+n0=946, n1=401, captured=1347, training accuracy = 0.70230141
+theta[9] = 0.29799852
+n0=290, n1=79, captured=369, training accuracy = 0.78590786
+theta[10] = 0.21563342
+n0=654, n1=783, captured=1437, training accuracy = 0.54488518
+theta[11] = 0.54482279
+n0=225, n1=0, captured=225, training accuracy = 1.00000000
+theta[12] = 0.00440529
+n0=1295, n1=537, captured=1832, training accuracy = 0.70687773
+theta[13] = 0.29334787
+n0=657, n1=551, captured=1208, training accuracy = 0.54387417
+theta[14] = 0.45619835
+n0=499, n1=150, captured=649, training accuracy = 0.76887519
+theta[15] = 0.23195084
+n0=633, n1=1469, captured=2102, training accuracy = 0.69885823
+theta[16] = 0.69866920
+Time to train: Elapsed time  4.6347	 4.6347 
+
+The best rulelist for 11 MCMC chains is: 17 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4650, card=1:4650 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2608, card=1:2485 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2876, card=1:2552 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13140, card=1:11543 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9919, card=1:6884 captured; 
+RULE 26: ( {location:transit-authority} ), support=5726, card=1:4071 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10472, card=1:5694 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4209, card=1:878 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11365, card=1:2816 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5703, card=1:1347 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3521, card=1:369 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13709, card=1:1437 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5078, card=1:225 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13278, card=1:1832 captured; 
+RULE 22: ( {city:Queens} ), support=12997, card=1:1208 captured; 
+RULE 28: ( {inout:inside} ), support=11389, card=1:649 captured; 
+RULE 0: ( default ), support=50742, card=0:2102 captured; 
+Total Captured: 50742
+1, 0.85877042
+6, 0.25613189
+5, 0.48512138
+2, 0.40563014
+3, 0.19764740
+26, 0.95727965
+9, 0.72454354
+19, 0.31136364
+11, 0.42405962
+8, 0.29799852
+12, 0.21563342
+13, 0.54482279
+4, 0.00440529
+20, 0.29334787
+22, 0.45619835
+28, 0.23195084
+0, 0.69866920
+Lambda = 5.000000
+Eta = 500.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 10000
+Rule 1 captures 618 of 5638 samples
+Rule 6 captures 235 of 5638 samples
+Rule 5 captures 220 of 5638 samples
+Rule 2 captures 1361 of 5638 samples
+Rule 3 captures 771 of 5638 samples
+Rule 26 captures 447 of 5638 samples
+Rule 9 captures 696 of 5638 samples
+Rule 19 captures 0 of 5638 samples
+Rule 11 captures 337 of 5638 samples
+Rule 8 captures 137 of 5638 samples
+Rule 12 captures 81 of 5638 samples
+Rule 13 captures 109 of 5638 samples
+Rule 4 captures 40 of 5638 samples
+Rule 20 captures 158 of 5638 samples
+Rule 22 captures 85 of 5638 samples
+Rule 28 captures 98 of 5638 samples
+Rule 0 captures 245 of 5638 samples
+test accuracy = 0.713019 
+Initialize time: Elapsed time  0.0090	 0.0003 per rule
+29 rules 50742 samples
+
+
+The best rule list is (#reject=301 #add=3337 #delete=3298 #swap=3365):
+max_log_posterior = -29013.328869
+max_log_posterior = -29013.328869
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4626, card=1:4626 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13126, card=1:12667 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9814, card=1:7731 captured; 
+RULE 26: ( {location:transit-authority} ), support=5836, card=1:4167 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10846, card=1:6242 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4226, card=1:1258 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13218, card=1:4565 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5586, card=1:1356 captured; 
+RULE 22: ( {city:Queens} ), support=12984, card=1:2964 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2786, card=1:124 captured; 
+RULE 27: ( {inout:outside} ), support=39371, card=1:3763 captured; 
+RULE 0: ( default ), support=50742, card=0:1279 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=118 #add=3408 #delete=3327 #swap=3265):
+max_log_posterior = -29184.022772
+max_log_posterior = -29184.022772
+16 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4626, card=1:4626 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:2503 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10846, card=1:9944 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13126, card=1:11615 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9814, card=1:6809 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4226, card=1:919 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11282, card=1:2976 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2786, card=1:527 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5586, card=1:1372 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3530, card=1:384 captured; 
+RULE 26: ( {location:transit-authority} ), support=5836, card=1:1778 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5013, card=1:330 captured; 
+RULE 22: ( {city:Queens} ), support=12984, card=1:1569 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13218, card=1:2198 captured; 
+RULE 28: ( {inout:inside} ), support=11371, card=1:679 captured; 
+RULE 0: ( default ), support=50742, card=0:2513 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=732 #add=3289 #delete=3345 #swap=3366):
+max_log_posterior = -29254.666704
+max_log_posterior = -29254.666704
+13 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4626, card=1:4626 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:2503 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2786, card=1:2459 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10846, card=1:9547 captured; 
+RULE 23: ( {city:Bronx} ), support=8995, card=1:5467 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13126, card=1:8698 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9814, card=1:5724 captured; 
+RULE 25: ( {location:housing-authority} ), support=6405, card=1:1461 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=10953, card=1:1095 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5586, card=1:1246 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38501, card=1:6179 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21285, card=1:146 captured; 
+RULE 0: ( default ), support=50742, card=0:1591 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=126 #add=3355 #delete=3296 #swap=3349):
+max_log_posterior = -29227.230753
+max_log_posterior = -29227.230753
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4626, card=1:4626 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2786, card=1:2588 captured; 
+RULE 23: ( {city:Bronx} ), support=8995, card=1:7824 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13126, card=1:9376 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9814, card=1:6388 captured; 
+RULE 25: ( {location:housing-authority} ), support=6405, card=1:2311 captured; 
+RULE 26: ( {location:transit-authority} ), support=5836, card=1:4152 captured; 
+RULE 21: ( {city:Manhattan} ), support=11319, card=1:2246 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:1030 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10846, card=1:3117 captured; 
+RULE 0: ( default ), support=50742, card=0:7084 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=265 #add=3338 #delete=3361 #swap=3301):
+max_log_posterior = -29013.328869
+max_log_posterior = -29013.328869
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4626, card=1:4626 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13126, card=1:12667 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9814, card=1:7731 captured; 
+RULE 26: ( {location:transit-authority} ), support=5836, card=1:4167 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10846, card=1:6242 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13218, card=1:4565 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4226, card=1:1258 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5586, card=1:1356 captured; 
+RULE 22: ( {city:Queens} ), support=12984, card=1:2964 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2786, card=1:124 captured; 
+RULE 28: ( {inout:inside} ), support=11371, card=1:1279 captured; 
+RULE 0: ( default ), support=50742, card=0:3763 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=382 #add=3400 #delete=3327 #swap=3273):
+max_log_posterior = -29279.218817
+max_log_posterior = -29279.218817
+16 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4626, card=1:4626 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:2503 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10846, card=1:9944 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13126, card=1:11615 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9814, card=1:6809 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11282, card=1:3222 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5586, card=1:1645 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5013, card=1:526 captured; 
+RULE 25: ( {location:housing-authority} ), support=6405, card=1:1281 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3530, card=1:326 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13218, card=1:2013 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21285, card=1:2798 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2786, card=1:81 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=10953, card=1:359 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38501, card=1:1500 captured; 
+RULE 0: ( default ), support=50742, card=0:1494 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=579 #add=3325 #delete=3318 #swap=3357):
+max_log_posterior = -29070.136086
+max_log_posterior = -29070.136086
+19 rules 50742 samples
+RULE 26: ( {location:transit-authority} ), support=5836, card=1:5836 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4626, card=1:3644 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10846, card=1:7668 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13126, card=1:11355 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2786, card=1:1338 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9814, card=1:6389 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11282, card=1:3771 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5586, card=1:1532 captured; 
+RULE 28: ( {inout:inside} ), support=11371, card=1:1473 captured; 
+RULE 21: ( {city:Manhattan} ), support=11319, card=1:1296 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3530, card=1:460 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4226, card=1:572 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5013, card=1:252 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13415, card=1:1061 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:271 captured; 
+RULE 22: ( {city:Queens} ), support=12984, card=1:1110 captured; 
+RULE 23: ( {city:Bronx} ), support=8995, card=1:1259 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26622, card=1:594 captured; 
+RULE 0: ( default ), support=50742, card=0:861 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=166 #add=3372 #delete=3333 #swap=3295):
+max_log_posterior = -29010.257485
+max_log_posterior = -29010.257485
+14 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4626, card=1:4626 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:2503 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13126, card=1:12487 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9814, card=1:7405 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2786, card=1:1027 captured; 
+RULE 26: ( {location:transit-authority} ), support=5836, card=1:4154 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10846, card=1:5865 captured; 
+RULE 25: ( {location:housing-authority} ), support=6405, card=1:1962 captured; 
+RULE 28: ( {inout:inside} ), support=11371, card=1:884 captured; 
+RULE 22: ( {city:Queens} ), support=12984, card=1:3021 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5586, card=1:857 captured; 
+RULE 23: ( {city:Bronx} ), support=8995, card=1:1842 captured; 
+RULE 21: ( {city:Manhattan} ), support=11319, card=1:1148 captured; 
+RULE 0: ( default ), support=50742, card=0:2961 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=1145 #add=3354 #delete=3363 #swap=3283):
+max_log_posterior = -29270.850558
+max_log_posterior = -29270.850558
+13 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4626, card=1:4626 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:2503 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2786, card=1:2459 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10846, card=1:9547 captured; 
+RULE 23: ( {city:Bronx} ), support=8995, card=1:5467 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13126, card=1:8698 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9814, card=1:5724 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5586, card=1:1695 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38501, card=1:6941 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21285, card=1:802 captured; 
+RULE 26: ( {location:transit-authority} ), support=5836, card=1:1631 captured; 
+RULE 28: ( {inout:inside} ), support=11371, card=1:450 captured; 
+RULE 0: ( default ), support=50742, card=0:199 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=1045 #add=3272 #delete=3374 #swap=3354):
+max_log_posterior = -29136.722171
+max_log_posterior = -29136.722171
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4626, card=1:4626 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:2503 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2786, card=1:2459 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13126, card=1:11619 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9814, card=1:6841 captured; 
+RULE 26: ( {location:transit-authority} ), support=5836, card=1:4154 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10846, card=1:5865 captured; 
+RULE 23: ( {city:Bronx} ), support=8995, card=1:2761 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38501, card=1:8453 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=15998, card=1:331 captured; 
+RULE 0: ( default ), support=50742, card=0:1130 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=315 #add=3333 #delete=3361 #swap=3306):
+max_log_posterior = -29013.328869
+max_log_posterior = -29013.328869
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4626, card=1:4626 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13126, card=1:12667 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9814, card=1:7731 captured; 
+RULE 26: ( {location:transit-authority} ), support=5836, card=1:4167 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10846, card=1:6242 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4226, card=1:1258 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13218, card=1:4565 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5586, card=1:1356 captured; 
+RULE 22: ( {city:Queens} ), support=12984, card=1:2964 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2786, card=1:124 captured; 
+RULE 27: ( {inout:outside} ), support=39371, card=1:3763 captured; 
+RULE 0: ( default ), support=50742, card=0:1279 captured; 
+Total Captured: 50742
+n0=654, n1=3972, captured=4626, training accuracy = 0.85862516
+theta[0] = 0.85847018
+n0=1851, n1=652, captured=2503, training accuracy = 0.73951258
+theta[1] = 0.26067864
+n0=7197, n1=5290, captured=12487, training accuracy = 0.57635941
+theta[2] = 0.42365281
+n0=5953, n1=1452, captured=7405, training accuracy = 0.80391627
+theta[3] = 0.19616579
+n0=565, n1=462, captured=1027, training accuracy = 0.55014606
+theta[4] = 0.44995141
+n0=172, n1=3982, captured=4154, training accuracy = 0.95859413
+theta[5] = 0.95837344
+n0=1547, n1=4318, captured=5865, training accuracy = 0.73623188
+theta[6] = 0.73615136
+n0=1488, n1=474, captured=1962, training accuracy = 0.75840979
+theta[7] = 0.24185336
+n0=480, n1=404, captured=884, training accuracy = 0.54298643
+theta[8] = 0.45711061
+n0=1697, n1=1324, captured=3021, training accuracy = 0.56173452
+theta[9] = 0.43830632
+n0=666, n1=191, captured=857, training accuracy = 0.77712952
+theta[10] = 0.22351572
+n0=779, n1=1063, captured=1842, training accuracy = 0.57709012
+theta[11] = 0.57700651
+n0=357, n1=791, captured=1148, training accuracy = 0.68902439
+theta[12] = 0.68869565
+n0=1965, n1=996, captured=2961, training accuracy = 0.66362715
+theta[13] = 0.33648329
+Time to train: Elapsed time  4.7350	 4.7350 
+
+The best rulelist for 11 MCMC chains is: 14 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4626, card=1:4626 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:2503 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13126, card=1:12487 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9814, card=1:7405 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2786, card=1:1027 captured; 
+RULE 26: ( {location:transit-authority} ), support=5836, card=1:4154 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10846, card=1:5865 captured; 
+RULE 25: ( {location:housing-authority} ), support=6405, card=1:1962 captured; 
+RULE 28: ( {inout:inside} ), support=11371, card=1:884 captured; 
+RULE 22: ( {city:Queens} ), support=12984, card=1:3021 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5586, card=1:857 captured; 
+RULE 23: ( {city:Bronx} ), support=8995, card=1:1842 captured; 
+RULE 21: ( {city:Manhattan} ), support=11319, card=1:1148 captured; 
+RULE 0: ( default ), support=50742, card=0:2961 captured; 
+Total Captured: 50742
+1, 0.85847018
+6, 0.26067864
+2, 0.42365281
+3, 0.19616579
+5, 0.44995141
+26, 0.95837344
+9, 0.73615136
+25, 0.24185336
+28, 0.45711061
+22, 0.43830632
+8, 0.22351572
+23, 0.57700651
+21, 0.68869565
+0, 0.33648329
+Lambda = 5.000000
+Eta = 500.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 10000
+Rule 1 captures 642 of 5638 samples
+Rule 6 captures 217 of 5638 samples
+Rule 2 captures 1383 of 5638 samples
+Rule 3 captures 893 of 5638 samples
+Rule 5 captures 136 of 5638 samples
+Rule 26 captures 364 of 5638 samples
+Rule 9 captures 525 of 5638 samples
+Rule 25 captures 238 of 5638 samples
+Rule 28 captures 122 of 5638 samples
+Rule 22 captures 198 of 5638 samples
+Rule 8 captures 137 of 5638 samples
+Rule 23 captures 253 of 5638 samples
+Rule 21 captures 131 of 5638 samples
+Rule 0 captures 399 of 5638 samples
+test accuracy = 0.691380 
+Initialize time: Elapsed time  0.0083	 0.0003 per rule
+29 rules 50742 samples
+
+
+The best rule list is (#reject=486 #add=3344 #delete=3260 #swap=3396):
+max_log_posterior = -29438.418816
+max_log_posterior = -29438.418816
+19 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2862, card=1:2862 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2542, card=1:2395 captured; 
+RULE 26: ( {location:transit-authority} ), support=5643, card=1:5565 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4726, card=1:3442 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10638, card=1:7010 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13104, card=1:10457 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9904, card=1:6240 captured; 
+RULE 25: ( {location:housing-authority} ), support=6331, card=1:1977 captured; 
+RULE 22: ( {city:Queens} ), support=12899, card=1:3054 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3451, card=1:548 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4204, card=1:714 captured; 
+RULE 28: ( {inout:inside} ), support=11264, card=1:695 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11250, card=1:1176 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5504, card=1:432 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13462, card=1:808 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5144, card=1:110 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26916, card=1:1434 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13411, card=1:844 captured; 
+RULE 0: ( default ), support=50742, card=0:979 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=502 #add=3424 #delete=3299 #swap=3277):
+max_log_posterior = -29169.918739
+max_log_posterior = -29169.918739
+17 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4726, card=1:4726 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2862, card=1:2675 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13104, card=1:11685 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9904, card=1:7208 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2542, card=1:1898 captured; 
+RULE 26: ( {location:transit-authority} ), support=5643, card=1:3991 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10638, card=1:5788 captured; 
+RULE 22: ( {city:Queens} ), support=12899, card=1:3158 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3451, card=1:717 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4204, card=1:758 captured; 
+RULE 25: ( {location:housing-authority} ), support=6331, card=1:1660 captured; 
+RULE 28: ( {inout:inside} ), support=11264, card=1:695 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5504, card=1:596 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16004, card=1:1423 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26916, card=1:1736 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13411, card=1:1081 captured; 
+RULE 0: ( default ), support=50742, card=0:947 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=879 #add=3300 #delete=3336 #swap=3364):
+max_log_posterior = -29473.669058
+max_log_posterior = -29473.669058
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4726, card=1:4726 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2862, card=1:2675 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2542, card=1:2276 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10638, card=1:9276 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13104, card=1:10802 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9904, card=1:6428 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5504, card=1:1913 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4204, card=1:716 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38768, card=1:8446 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21442, card=1:1036 captured; 
+RULE 25: ( {location:housing-authority} ), support=6331, card=1:843 captured; 
+RULE 0: ( default ), support=50742, card=0:1605 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=543 #add=3318 #delete=3335 #swap=3347):
+max_log_posterior = -29253.791830
+max_log_posterior = -29253.791830
+13 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4726, card=1:4726 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2862, card=1:2675 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13104, card=1:11685 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9904, card=1:7208 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5504, card=1:2342 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2542, card=1:1775 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5144, card=1:970 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21442, card=1:8394 captured; 
+RULE 26: ( {location:transit-authority} ), support=5643, card=1:3780 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10638, card=1:3182 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13411, card=1:1211 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38768, card=1:2190 captured; 
+RULE 0: ( default ), support=50742, card=0:604 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=202 #add=3361 #delete=3340 #swap=3299):
+max_log_posterior = -29345.600818
+max_log_posterior = -29345.600818
+17 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4726, card=1:4726 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2862, card=1:2675 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10638, card=1:9383 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13104, card=1:10912 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9904, card=1:6671 captured; 
+RULE 25: ( {location:housing-authority} ), support=6331, card=1:2407 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5504, card=1:1771 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4204, card=1:974 captured; 
+RULE 26: ( {location:transit-authority} ), support=5643, card=1:1775 captured; 
+RULE 21: ( {city:Manhattan} ), support=11308, card=1:1556 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11250, card=1:1997 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3451, card=1:358 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5144, card=1:243 captured; 
+RULE 23: ( {city:Bronx} ), support=8920, card=1:1707 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2542, card=1:281 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=20187, card=1:1188 captured; 
+RULE 0: ( default ), support=50742, card=0:2118 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=816 #add=3371 #delete=3339 #swap=3290):
+max_log_posterior = -29473.669058
+max_log_posterior = -29473.669058
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4726, card=1:4726 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2862, card=1:2675 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2542, card=1:2276 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10638, card=1:9276 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13104, card=1:10802 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9904, card=1:6428 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5504, card=1:1913 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4204, card=1:716 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38768, card=1:8446 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21442, card=1:1036 captured; 
+RULE 25: ( {location:housing-authority} ), support=6331, card=1:843 captured; 
+RULE 0: ( default ), support=50742, card=0:1605 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=621 #add=3348 #delete=3285 #swap=3367):
+max_log_posterior = -29139.671811
+max_log_posterior = -29139.671811
+17 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4726, card=1:4726 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2862, card=1:2675 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13104, card=1:11685 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9904, card=1:7208 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2542, card=1:1898 captured; 
+RULE 26: ( {location:transit-authority} ), support=5643, card=1:3991 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10638, card=1:5788 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4204, card=1:878 captured; 
+RULE 25: ( {location:housing-authority} ), support=6331, card=1:1922 captured; 
+RULE 28: ( {inout:inside} ), support=11264, card=1:909 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5504, card=1:1384 captured; 
+RULE 21: ( {city:Manhattan} ), support=11308, card=1:1182 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5144, card=1:455 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16004, card=1:1333 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26916, card=1:2385 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13411, card=1:1027 captured; 
+RULE 0: ( default ), support=50742, card=0:1296 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=621 #add=3361 #delete=3308 #swap=3331):
+max_log_posterior = -29140.335364
+max_log_posterior = -29140.335364
+19 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4726, card=1:4726 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2862, card=1:2675 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13104, card=1:11685 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9904, card=1:7208 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2542, card=1:1898 captured; 
+RULE 26: ( {location:transit-authority} ), support=5643, card=1:3991 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10638, card=1:5788 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4204, card=1:878 captured; 
+RULE 25: ( {location:housing-authority} ), support=6331, card=1:1922 captured; 
+RULE 22: ( {city:Queens} ), support=12899, card=1:3054 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11250, card=1:1419 captured; 
+RULE 28: ( {inout:inside} ), support=11264, card=1:606 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5504, card=1:477 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3451, card=1:240 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13462, card=1:808 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5144, card=1:110 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26916, card=1:1434 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13411, card=1:844 captured; 
+RULE 0: ( default ), support=50742, card=0:979 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=611 #add=3352 #delete=3394 #swap=3254):
+max_log_posterior = -29157.944003
+max_log_posterior = -29157.944003
+17 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4726, card=1:4726 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2862, card=1:2675 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13104, card=1:11685 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9904, card=1:7208 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2542, card=1:1898 captured; 
+RULE 26: ( {location:transit-authority} ), support=5643, card=1:3991 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10638, card=1:5788 captured; 
+RULE 25: ( {location:housing-authority} ), support=6331, card=1:1977 captured; 
+RULE 22: ( {city:Queens} ), support=12899, card=1:3054 captured; 
+RULE 28: ( {inout:inside} ), support=11264, card=1:785 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5504, card=1:807 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3451, card=1:383 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4204, card=1:578 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16004, card=1:1423 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26916, card=1:1736 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13411, card=1:1081 captured; 
+RULE 0: ( default ), support=50742, card=0:947 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=1342 #add=3326 #delete=3331 #swap=3343):
+max_log_posterior = -29248.190859
+max_log_posterior = -29248.190859
+13 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4726, card=1:4726 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2862, card=1:2675 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13104, card=1:11685 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9904, card=1:7208 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2542, card=1:1898 captured; 
+RULE 26: ( {location:transit-authority} ), support=5643, card=1:3991 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10638, card=1:5788 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5504, card=1:1895 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38768, card=1:9115 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16004, card=1:412 captured; 
+RULE 27: ( {inout:outside} ), support=39478, card=1:513 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21442, card=1:353 captured; 
+RULE 0: ( default ), support=50742, card=0:483 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=231 #add=3348 #delete=3347 #swap=3305):
+max_log_posterior = -29393.433717
+max_log_posterior = -29393.433717
+17 rules 50742 samples
+RULE 26: ( {location:transit-authority} ), support=5643, card=1:5643 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4726, card=1:3746 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10638, card=1:7583 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2862, card=1:2138 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13104, card=1:10567 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9904, card=1:6483 captured; 
+RULE 25: ( {location:housing-authority} ), support=6331, card=1:2407 captured; 
+RULE 21: ( {city:Manhattan} ), support=11308, card=1:1679 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11250, card=1:2725 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5504, card=1:1187 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3451, card=1:474 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4204, card=1:573 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5144, card=1:243 captured; 
+RULE 23: ( {city:Bronx} ), support=8920, card=1:1707 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2542, card=1:281 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=20187, card=1:1188 captured; 
+RULE 0: ( default ), support=50742, card=0:2118 captured; 
+Total Captured: 50742
+n0=659, n1=4067, captured=4726, training accuracy = 0.86055861
+theta[0] = 0.86040609
+n0=1392, n1=1283, captured=2675, training accuracy = 0.52037383
+theta[1] = 0.47964139
+n0=6966, n1=4719, captured=11685, training accuracy = 0.59614891
+theta[2] = 0.40386755
+n0=5775, n1=1433, captured=7208, training accuracy = 0.80119312
+theta[3] = 0.19889043
+n0=1427, n1=471, captured=1898, training accuracy = 0.75184405
+theta[4] = 0.24842105
+n0=175, n1=3816, captured=3991, training accuracy = 0.95615134
+theta[5] = 0.95592287
+n0=1582, n1=4206, captured=5788, training accuracy = 0.72667588
+theta[6] = 0.72659758
+n0=612, n1=266, captured=878, training accuracy = 0.69703872
+theta[7] = 0.30340909
+n0=1421, n1=501, captured=1922, training accuracy = 0.73933403
+theta[8] = 0.26091476
+n0=473, n1=436, captured=909, training accuracy = 0.52035204
+theta[9] = 0.47969265
+n0=1007, n1=377, captured=1384, training accuracy = 0.72760116
+theta[10] = 0.27272727
+n0=344, n1=838, captured=1182, training accuracy = 0.70896785
+theta[11] = 0.70861486
+n0=344, n1=111, captured=455, training accuracy = 0.75604396
+theta[12] = 0.24507659
+n0=568, n1=765, captured=1333, training accuracy = 0.57389347
+theta[13] = 0.57378277
+n0=1169, n1=1216, captured=2385, training accuracy = 0.50985325
+theta[14] = 0.50984499
+n0=865, n1=162, captured=1027, training accuracy = 0.84225901
+theta[15] = 0.15840622
+n0=592, n1=704, captured=1296, training accuracy = 0.54320988
+theta[16] = 0.54314330
+Time to train: Elapsed time  5.2109	 5.2109 
+
+The best rulelist for 11 MCMC chains is: 17 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4726, card=1:4726 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2862, card=1:2675 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13104, card=1:11685 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9904, card=1:7208 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2542, card=1:1898 captured; 
+RULE 26: ( {location:transit-authority} ), support=5643, card=1:3991 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10638, card=1:5788 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4204, card=1:878 captured; 
+RULE 25: ( {location:housing-authority} ), support=6331, card=1:1922 captured; 
+RULE 28: ( {inout:inside} ), support=11264, card=1:909 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5504, card=1:1384 captured; 
+RULE 21: ( {city:Manhattan} ), support=11308, card=1:1182 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5144, card=1:455 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16004, card=1:1333 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26916, card=1:2385 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13411, card=1:1027 captured; 
+RULE 0: ( default ), support=50742, card=0:1296 captured; 
+Total Captured: 50742
+1, 0.86040609
+5, 0.47964139
+2, 0.40386755
+3, 0.19889043
+6, 0.24842105
+26, 0.95592287
+9, 0.72659758
+19, 0.30340909
+25, 0.26091476
+28, 0.47969265
+8, 0.27272727
+21, 0.70861486
+4, 0.24507659
+10, 0.57378277
+14, 0.50984499
+20, 0.15840622
+0, 0.54314330
+Lambda = 5.000000
+Eta = 500.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 10000
+Rule 1 captures 542 of 5638 samples
+Rule 5 captures 253 of 5638 samples
+Rule 2 captures 1372 of 5638 samples
+Rule 3 captures 746 of 5638 samples
+Rule 6 captures 214 of 5638 samples
+Rule 26 captures 527 of 5638 samples
+Rule 9 captures 602 of 5638 samples
+Rule 19 captures 0 of 5638 samples
+Rule 25 captures 223 of 5638 samples
+Rule 28 captures 75 of 5638 samples
+Rule 8 captures 260 of 5638 samples
+Rule 21 captures 97 of 5638 samples
+Rule 4 captures 52 of 5638 samples
+Rule 10 captures 128 of 5638 samples
+Rule 14 captures 263 of 5638 samples
+Rule 20 captures 114 of 5638 samples
+Rule 0 captures 170 of 5638 samples
+test accuracy = 0.697410 
+Initialize time: Elapsed time  0.0134	 0.0005 per rule
+29 rules 50742 samples
+
+
+The best rule list is (#reject=469 #add=3344 #delete=3258 #swap=3398):
+max_log_posterior = -29021.431651
+max_log_posterior = -29021.431651
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4772, card=1:4772 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13144, card=1:12607 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9655, card=1:7725 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:1997 captured; 
+RULE 26: ( {location:transit-authority} ), support=6029, card=1:4243 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10767, card=1:5977 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4171, card=1:921 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13196, card=1:3957 captured; 
+RULE 22: ( {city:Queens} ), support=12684, card=1:3315 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38383, card=1:3971 captured; 
+RULE 0: ( default ), support=50742, card=0:1257 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=461 #add=3398 #delete=3300 #swap=3302):
+max_log_posterior = -29021.431651
+max_log_posterior = -29021.431651
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4772, card=1:4772 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13144, card=1:12607 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9655, card=1:7725 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:1997 captured; 
+RULE 26: ( {location:transit-authority} ), support=6029, card=1:4243 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10767, card=1:5977 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13196, card=1:3957 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4171, card=1:921 captured; 
+RULE 22: ( {city:Queens} ), support=12684, card=1:3315 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38383, card=1:3971 captured; 
+RULE 0: ( default ), support=50742, card=0:1257 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=54 #add=3283 #delete=3361 #swap=3356):
+max_log_posterior = -29137.854953
+max_log_posterior = -29137.854953
+10 rules 50742 samples
+RULE 26: ( {location:transit-authority} ), support=6029, card=1:6029 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4772, card=1:3708 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10767, card=1:7561 captured; 
+RULE 23: ( {city:Bronx} ), support=9101, card=1:6129 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13144, card=1:9104 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9655, card=1:6215 captured; 
+RULE 28: ( {inout:inside} ), support=11760, card=1:1750 captured; 
+RULE 21: ( {city:Manhattan} ), support=11590, card=1:1916 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5011, card=1:662 captured; 
+RULE 0: ( default ), support=50742, card=0:7668 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=98 #add=3331 #delete=3329 #swap=3340):
+max_log_posterior = -28925.998605
+max_log_posterior = -28925.998605
+13 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4772, card=1:4772 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:2499 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11063, card=1:10030 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13144, card=1:4644 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9655, card=1:7014 captured; 
+RULE 26: ( {location:transit-authority} ), support=6029, card=1:4163 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10767, card=1:5695 captured; 
+RULE 23: ( {city:Bronx} ), support=9101, card=1:2710 captured; 
+RULE 28: ( {inout:inside} ), support=11760, card=1:1160 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5580, card=1:1411 captured; 
+RULE 21: ( {city:Manhattan} ), support=11590, card=1:1273 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=19998, card=1:2291 captured; 
+RULE 0: ( default ), support=50742, card=0:3080 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=291 #add=3350 #delete=3353 #swap=3297):
+max_log_posterior = -29186.164734
+max_log_posterior = -29186.164734
+16 rules 50742 samples
+RULE 26: ( {location:transit-authority} ), support=6029, card=1:6029 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4772, card=1:3708 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10767, card=1:7561 captured; 
+RULE 21: ( {city:Manhattan} ), support=11590, card=1:5067 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5011, card=1:3813 captured; 
+RULE 23: ( {city:Bronx} ), support=9101, card=1:5772 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13144, card=1:6692 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9655, card=1:3474 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:1072 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26605, card=1:4047 captured; 
+RULE 25: ( {location:housing-authority} ), support=6330, card=1:224 captured; 
+RULE 18: ( {ac_inves:circumstances=ongoing-investigation} ), support=7211, card=1:136 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16063, card=1:519 captured; 
+RULE 28: ( {inout:inside} ), support=11760, card=1:228 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13196, card=1:1197 captured; 
+RULE 0: ( default ), support=50742, card=0:1203 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=381 #add=3362 #delete=3342 #swap=3296):
+max_log_posterior = -28829.297294
+max_log_posterior = -28829.297294
+16 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4772, card=1:4772 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13144, card=1:12607 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9655, card=1:7725 captured; 
+RULE 26: ( {location:transit-authority} ), support=6029, card=1:4249 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10767, card=1:6087 captured; 
+RULE 28: ( {inout:inside} ), support=11760, card=1:2530 captured; 
+RULE 21: ( {city:Manhattan} ), support=11590, card=1:1916 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5011, card=1:744 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5580, card=1:1773 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13328, card=1:2288 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:587 captured; 
+RULE 23: ( {city:Bronx} ), support=9101, card=1:1587 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26605, card=1:2084 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13196, card=1:1070 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16063, card=1:90 captured; 
+RULE 0: ( default ), support=50742, card=0:633 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=320 #add=3307 #delete=3327 #swap=3366):
+max_log_posterior = -28829.297294
+max_log_posterior = -28829.297294
+16 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4772, card=1:4772 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13144, card=1:12607 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9655, card=1:7725 captured; 
+RULE 26: ( {location:transit-authority} ), support=6029, card=1:4249 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10767, card=1:6087 captured; 
+RULE 28: ( {inout:inside} ), support=11760, card=1:2530 captured; 
+RULE 21: ( {city:Manhattan} ), support=11590, card=1:1916 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5011, card=1:744 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5580, card=1:1773 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13328, card=1:2288 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:587 captured; 
+RULE 23: ( {city:Bronx} ), support=9101, card=1:1587 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26605, card=1:2084 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13196, card=1:1070 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16063, card=1:90 captured; 
+RULE 0: ( default ), support=50742, card=0:633 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=73 #add=3368 #delete=3349 #swap=3283):
+max_log_posterior = -28925.998605
+max_log_posterior = -28925.998605
+13 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4772, card=1:4772 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:2499 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11063, card=1:10030 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13144, card=1:4644 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9655, card=1:7014 captured; 
+RULE 26: ( {location:transit-authority} ), support=6029, card=1:4163 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10767, card=1:5695 captured; 
+RULE 23: ( {city:Bronx} ), support=9101, card=1:2710 captured; 
+RULE 28: ( {inout:inside} ), support=11760, card=1:1160 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5580, card=1:1411 captured; 
+RULE 21: ( {city:Manhattan} ), support=11590, card=1:1273 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=19998, card=1:2291 captured; 
+RULE 0: ( default ), support=50742, card=0:3080 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=596 #add=3338 #delete=3388 #swap=3274):
+max_log_posterior = -28842.721192
+max_log_posterior = -28842.721192
+18 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4772, card=1:4772 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13144, card=1:12607 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9655, card=1:7725 captured; 
+RULE 26: ( {location:transit-authority} ), support=6029, card=1:4249 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10767, card=1:6087 captured; 
+RULE 28: ( {inout:inside} ), support=11760, card=1:2530 captured; 
+RULE 21: ( {city:Manhattan} ), support=11590, card=1:1916 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11131, card=1:2805 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3570, card=1:734 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4171, card=1:669 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5011, card=1:294 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5580, card=1:989 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13328, card=1:1116 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:280 captured; 
+RULE 22: ( {city:Queens} ), support=12684, card=1:1108 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26605, card=1:1322 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13196, card=1:938 captured; 
+RULE 0: ( default ), support=50742, card=0:601 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=721 #add=3316 #delete=3370 #swap=3314):
+max_log_posterior = -29244.890653
+max_log_posterior = -29244.890653
+14 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4772, card=1:4772 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2741, card=1:2562 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5011, card=1:4228 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:1967 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10767, card=1:9115 captured; 
+RULE 23: ( {city:Bronx} ), support=9101, card=1:5257 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11063, card=1:6578 captured; 
+RULE 25: ( {location:housing-authority} ), support=6330, card=1:1828 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13144, card=1:2692 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9655, card=1:3392 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5580, card=1:1186 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38383, card=1:5485 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21222, card=1:142 captured; 
+RULE 0: ( default ), support=50742, card=0:1538 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=405 #add=3357 #delete=3334 #swap=3309):
+max_log_posterior = -28979.586008
+max_log_posterior = -28979.586008
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4772, card=1:4772 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13144, card=1:12607 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9655, card=1:7725 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:1997 captured; 
+RULE 26: ( {location:transit-authority} ), support=6029, card=1:4243 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10767, card=1:5977 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13196, card=1:3957 captured; 
+RULE 23: ( {city:Bronx} ), support=9101, card=1:3048 captured; 
+RULE 22: ( {city:Queens} ), support=12684, card=1:3315 captured; 
+RULE 28: ( {inout:inside} ), support=11760, card=1:612 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4171, card=1:886 captured; 
+RULE 0: ( default ), support=50742, card=0:1603 captured; 
+Total Captured: 50742
+n0=641, n1=4131, captured=4772, training accuracy = 0.86567477
+theta[0] = 0.86552158
+n0=7316, n1=5291, captured=12607, training accuracy = 0.58031252
+theta[1] = 0.41970021
+n0=6175, n1=1550, captured=7725, training accuracy = 0.79935275
+theta[2] = 0.20072473
+n0=194, n1=4055, captured=4249, training accuracy = 0.95434220
+theta[3] = 0.95412844
+n0=1737, n1=4350, captured=6087, training accuracy = 0.71463775
+theta[4] = 0.71456725
+n0=1785, n1=745, captured=2530, training accuracy = 0.70553360
+theta[5] = 0.29462875
+n0=696, n1=1220, captured=1916, training accuracy = 0.63674322
+theta[6] = 0.63660063
+n0=635, n1=109, captured=744, training accuracy = 0.85349462
+theta[7] = 0.14745308
+n0=1252, n1=521, captured=1773, training accuracy = 0.70614777
+theta[8] = 0.29408451
+n0=1378, n1=910, captured=2288, training accuracy = 0.60227273
+theta[9] = 0.39781659
+n0=519, n1=68, captured=587, training accuracy = 0.88415673
+theta[10] = 0.11714771
+n0=585, n1=1002, captured=1587, training accuracy = 0.63137996
+theta[11] = 0.63121460
+n0=1177, n1=907, captured=2084, training accuracy = 0.56477927
+theta[12] = 0.43528284
+n0=873, n1=197, captured=1070, training accuracy = 0.81588785
+theta[13] = 0.18470149
+n0=90, n1=0, captured=90, training accuracy = 1.00000000
+theta[14] = 0.01086957
+n0=318, n1=315, captured=633, training accuracy = 0.50236967
+theta[15] = 0.49763780
+Time to train: Elapsed time  4.4878	 4.4878 
+
+The best rulelist for 11 MCMC chains is: 16 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4772, card=1:4772 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13144, card=1:12607 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9655, card=1:7725 captured; 
+RULE 26: ( {location:transit-authority} ), support=6029, card=1:4249 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10767, card=1:6087 captured; 
+RULE 28: ( {inout:inside} ), support=11760, card=1:2530 captured; 
+RULE 21: ( {city:Manhattan} ), support=11590, card=1:1916 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5011, card=1:744 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5580, card=1:1773 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13328, card=1:2288 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2625, card=1:587 captured; 
+RULE 23: ( {city:Bronx} ), support=9101, card=1:1587 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26605, card=1:2084 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13196, card=1:1070 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16063, card=1:90 captured; 
+RULE 0: ( default ), support=50742, card=0:633 captured; 
+Total Captured: 50742
+1, 0.86552158
+2, 0.41970021
+3, 0.20072473
+26, 0.95412844
+9, 0.71456725
+28, 0.29462875
+21, 0.63660063
+4, 0.14745308
+8, 0.29408451
+13, 0.39781659
+6, 0.11714771
+23, 0.63121460
+14, 0.43528284
+20, 0.18470149
+10, 0.01086957
+0, 0.49763780
+Lambda = 5.000000
+Eta = 500.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 10000
+Rule 1 captures 496 of 5638 samples
+Rule 2 captures 1474 of 5638 samples
+Rule 3 captures 918 of 5638 samples
+Rule 26 captures 283 of 5638 samples
+Rule 9 captures 717 of 5638 samples
+Rule 28 captures 236 of 5638 samples
+Rule 21 captures 189 of 5638 samples
+Rule 4 captures 125 of 5638 samples
+Rule 8 captures 215 of 5638 samples
+Rule 13 captures 236 of 5638 samples
+Rule 6 captures 61 of 5638 samples
+Rule 23 captures 171 of 5638 samples
+Rule 14 captures 300 of 5638 samples
+Rule 20 captures 101 of 5638 samples
+Rule 10 captures 27 of 5638 samples
+Rule 0 captures 89 of 5638 samples
+test accuracy = 0.669564 
+Initialize time: Elapsed time  0.0086	 0.0003 per rule
+29 rules 50742 samples
+
+
+The best rule list is (#reject=1486 #add=3337 #delete=3262 #swap=3401):
+max_log_posterior = -29379.094898
+max_log_posterior = -29379.094898
+15 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2836, card=1:2836 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4796, card=1:4616 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9873, card=1:8469 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2013 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10537, card=1:8619 captured; 
+RULE 23: ( {city:Bronx} ), support=9089, card=1:4920 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11213, card=1:6095 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13286, card=1:2732 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5481, card=1:1342 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38795, card=1:6141 captured; 
+RULE 26: ( {location:transit-authority} ), support=5657, card=1:1773 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16119, card=1:244 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21347, card=1:479 captured; 
+RULE 28: ( {inout:inside} ), support=11361, card=1:318 captured; 
+RULE 0: ( default ), support=50742, card=0:145 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=56 #add=3429 #delete=3332 #swap=3239):
+max_log_posterior = -28977.827949
+max_log_posterior = -28977.827949
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4796, card=1:4796 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13286, card=1:12735 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9873, card=1:7791 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:1928 captured; 
+RULE 26: ( {location:transit-authority} ), support=5657, card=1:3941 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10537, card=1:6062 captured; 
+RULE 25: ( {location:housing-authority} ), support=6290, card=1:2006 captured; 
+RULE 23: ( {city:Bronx} ), support=9089, card=1:2513 captured; 
+RULE 21: ( {city:Manhattan} ), support=11319, card=1:1580 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16119, card=1:1582 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5481, card=1:939 captured; 
+RULE 0: ( default ), support=50742, card=0:4869 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=69 #add=3291 #delete=3326 #swap=3383):
+max_log_posterior = -28977.827949
+max_log_posterior = -28977.827949
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4796, card=1:4796 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13286, card=1:12735 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9873, card=1:7791 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:1928 captured; 
+RULE 26: ( {location:transit-authority} ), support=5657, card=1:3941 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10537, card=1:6062 captured; 
+RULE 25: ( {location:housing-authority} ), support=6290, card=1:2006 captured; 
+RULE 23: ( {city:Bronx} ), support=9089, card=1:2513 captured; 
+RULE 21: ( {city:Manhattan} ), support=11319, card=1:1580 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16119, card=1:1582 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5481, card=1:939 captured; 
+RULE 0: ( default ), support=50742, card=0:4869 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=77 #add=3299 #delete=3377 #swap=3324):
+max_log_posterior = -29048.965941
+max_log_posterior = -29048.965941
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4796, card=1:4796 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2423 captured; 
+RULE 23: ( {city:Bronx} ), support=9089, card=1:7952 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13286, card=1:10103 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9873, card=1:6720 captured; 
+RULE 26: ( {location:transit-authority} ), support=5657, card=1:3933 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10537, card=1:4369 captured; 
+RULE 25: ( {location:housing-authority} ), support=6290, card=1:1476 captured; 
+RULE 21: ( {city:Manhattan} ), support=11319, card=1:1580 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16119, card=1:1582 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5481, card=1:939 captured; 
+RULE 0: ( default ), support=50742, card=0:4869 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=887 #add=3328 #delete=3344 #swap=3328):
+max_log_posterior = -29129.364437
+max_log_posterior = -29129.364437
+14 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4796, card=1:4796 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13286, card=1:12735 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9873, card=1:7791 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5481, card=1:2751 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:1793 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5076, card=1:1019 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21347, card=1:8817 captured; 
+RULE 26: ( {location:transit-authority} ), support=5657, card=1:3679 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10537, card=1:3238 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13387, card=1:1279 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2836, card=1:93 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38795, card=1:2160 captured; 
+RULE 28: ( {inout:inside} ), support=11361, card=1:435 captured; 
+RULE 0: ( default ), support=50742, card=0:156 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=762 #add=3378 #delete=3347 #swap=3275):
+max_log_posterior = -29374.242310
+max_log_posterior = -29374.242310
+14 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4796, card=1:4796 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2423 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2836, card=1:2531 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10537, card=1:9184 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11213, card=1:8619 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3443, card=1:1316 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13286, card=1:3883 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9873, card=1:5675 captured; 
+RULE 23: ( {city:Bronx} ), support=9089, card=1:2434 captured; 
+RULE 25: ( {location:housing-authority} ), support=6290, card=1:1166 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5481, card=1:1103 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38795, card=1:5839 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21347, card=1:190 captured; 
+RULE 0: ( default ), support=50742, card=0:1583 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=1115 #add=3361 #delete=3290 #swap=3349):
+max_log_posterior = -29138.361527
+max_log_posterior = -29138.361527
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4796, card=1:4796 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11213, card=1:10392 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13286, card=1:4796 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9873, card=1:7374 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:1792 captured; 
+RULE 26: ( {location:transit-authority} ), support=5657, card=1:3862 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10537, card=1:5783 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5481, card=1:1794 captured; 
+RULE 27: ( {inout:outside} ), support=39381, card=1:8511 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21347, card=1:741 captured; 
+RULE 25: ( {location:housing-authority} ), support=6290, card=1:573 captured; 
+RULE 0: ( default ), support=50742, card=0:328 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=79 #add=3388 #delete=3326 #swap=3286):
+max_log_posterior = -28977.827949
+max_log_posterior = -28977.827949
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4796, card=1:4796 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13286, card=1:12735 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9873, card=1:7791 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:1928 captured; 
+RULE 26: ( {location:transit-authority} ), support=5657, card=1:3941 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10537, card=1:6062 captured; 
+RULE 25: ( {location:housing-authority} ), support=6290, card=1:2006 captured; 
+RULE 23: ( {city:Bronx} ), support=9089, card=1:2513 captured; 
+RULE 21: ( {city:Manhattan} ), support=11319, card=1:1580 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16119, card=1:1582 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5481, card=1:939 captured; 
+RULE 0: ( default ), support=50742, card=0:4869 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=64 #add=3325 #delete=3386 #swap=3289):
+max_log_posterior = -28977.827949
+max_log_posterior = -28977.827949
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4796, card=1:4796 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13286, card=1:12735 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9873, card=1:7791 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:1928 captured; 
+RULE 26: ( {location:transit-authority} ), support=5657, card=1:3941 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10537, card=1:6062 captured; 
+RULE 25: ( {location:housing-authority} ), support=6290, card=1:2006 captured; 
+RULE 23: ( {city:Bronx} ), support=9089, card=1:2513 captured; 
+RULE 21: ( {city:Manhattan} ), support=11319, card=1:1580 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16119, card=1:1582 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5481, card=1:939 captured; 
+RULE 0: ( default ), support=50742, card=0:4869 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=691 #add=3337 #delete=3351 #swap=3312):
+max_log_posterior = -29387.853467
+max_log_posterior = -29387.853467
+14 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2836, card=1:2836 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4796, card=1:4616 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2298 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10537, card=1:9184 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13286, card=1:10841 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9873, card=1:6410 captured; 
+RULE 25: ( {location:housing-authority} ), support=6290, card=1:1921 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3443, card=1:710 captured; 
+RULE 23: ( {city:Bronx} ), support=9089, card=1:2223 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11213, card=1:988 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5481, card=1:1103 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38795, card=1:5839 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21347, card=1:190 captured; 
+RULE 0: ( default ), support=50742, card=0:1583 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=96 #add=3336 #delete=3345 #swap=3319):
+max_log_posterior = -29322.521366
+max_log_posterior = -29322.521366
+14 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4796, card=1:4796 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2423 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2836, card=1:2531 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9873, card=1:8184 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10537, card=1:8619 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11213, card=1:7748 captured; 
+RULE 25: ( {location:housing-authority} ), support=6290, card=1:2275 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5481, card=1:1707 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13286, card=1:2668 captured; 
+RULE 23: ( {city:Bronx} ), support=9089, card=1:1877 captured; 
+RULE 26: ( {location:transit-authority} ), support=5657, card=1:1773 captured; 
+RULE 21: ( {city:Manhattan} ), support=11319, card=1:1070 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=19882, card=1:2078 captured; 
+RULE 0: ( default ), support=50742, card=0:2993 captured; 
+Total Captured: 50742
+n0=651, n1=4145, captured=4796, training accuracy = 0.86426188
+theta[0] = 0.86411005
+n0=7280, n1=5455, captured=12735, training accuracy = 0.57165293
+theta[1] = 0.42835833
+n0=6226, n1=1565, captured=7791, training accuracy = 0.79912720
+theta[2] = 0.20094957
+n0=1488, n1=440, captured=1928, training accuracy = 0.77178423
+theta[3] = 0.22849741
+n0=173, n1=3768, captured=3941, training accuracy = 0.95610251
+theta[4] = 0.95587116
+n0=1685, n1=4377, captured=6062, training accuracy = 0.72203893
+theta[5] = 0.72196570
+n0=1508, n1=498, captured=2006, training accuracy = 0.75174477
+theta[6] = 0.24850598
+n0=1122, n1=1391, captured=2513, training accuracy = 0.55352169
+theta[7] = 0.55347913
+n0=560, n1=1020, captured=1580, training accuracy = 0.64556962
+theta[8] = 0.64538559
+n0=827, n1=755, captured=1582, training accuracy = 0.52275601
+theta[9] = 0.47727273
+n0=783, n1=156, captured=939, training accuracy = 0.83386581
+theta[10] = 0.16684378
+n0=3068, n1=1801, captured=4869, training accuracy = 0.63010885
+theta[11] = 0.36994457
+Time to train: Elapsed time  4.5204	 4.5204 
+
+The best rulelist for 11 MCMC chains is: 12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4796, card=1:4796 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13286, card=1:12735 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9873, card=1:7791 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:1928 captured; 
+RULE 26: ( {location:transit-authority} ), support=5657, card=1:3941 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10537, card=1:6062 captured; 
+RULE 25: ( {location:housing-authority} ), support=6290, card=1:2006 captured; 
+RULE 23: ( {city:Bronx} ), support=9089, card=1:2513 captured; 
+RULE 21: ( {city:Manhattan} ), support=11319, card=1:1580 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16119, card=1:1582 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5481, card=1:939 captured; 
+RULE 0: ( default ), support=50742, card=0:4869 captured; 
+Total Captured: 50742
+1, 0.86411005
+2, 0.42835833
+3, 0.20094957
+6, 0.22849741
+26, 0.95587116
+9, 0.72196570
+25, 0.24850598
+23, 0.55347913
+21, 0.64538559
+10, 0.47727273
+8, 0.16684378
+0, 0.36994457
+Lambda = 5.000000
+Eta = 500.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 10000
+Rule 1 captures 472 of 5638 samples
+Rule 2 captures 1346 of 5638 samples
+Rule 3 captures 852 of 5638 samples
+Rule 6 captures 236 of 5638 samples
+Rule 26 captures 584 of 5638 samples
+Rule 9 captures 626 of 5638 samples
+Rule 25 captures 301 of 5638 samples
+Rule 23 captures 208 of 5638 samples
+Rule 21 captures 86 of 5638 samples
+Rule 10 captures 164 of 5638 samples
+Rule 8 captures 176 of 5638 samples
+Rule 0 captures 587 of 5638 samples
+test accuracy = 0.684108 
+Initialize time: Elapsed time  0.0084	 0.0003 per rule
+29 rules 50742 samples
+
+
+The best rule list is (#reject=114 #add=3327 #delete=3274 #swap=3399):
+max_log_posterior = -29183.809927
+max_log_posterior = -29183.809927
+12 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4862, card=1:4862 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13451, card=1:12892 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2232 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9804, card=1:7472 captured; 
+RULE 26: ( {location:transit-authority} ), support=5838, card=1:4076 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10513, card=1:5751 captured; 
+RULE 25: ( {location:housing-authority} ), support=6217, card=1:2036 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4188, card=1:928 captured; 
+RULE 22: ( {city:Queens} ), support=12856, card=1:3264 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16131, card=1:2153 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13247, card=1:2499 captured; 
+RULE 0: ( default ), support=50742, card=0:2577 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=389 #add=3407 #delete=3331 #swap=3262):
+max_log_posterior = -29177.164137
+max_log_posterior = -29177.164137
+15 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4862, card=1:4862 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13451, card=1:12892 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9804, card=1:7790 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5061, card=1:1392 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:1694 captured; 
+RULE 26: ( {location:transit-authority} ), support=5838, card=1:4004 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10513, card=1:5607 captured; 
+RULE 25: ( {location:housing-authority} ), support=6217, card=1:1935 captured; 
+RULE 22: ( {city:Queens} ), support=12856, card=1:2926 captured; 
+RULE 28: ( {inout:inside} ), support=11319, card=1:737 captured; 
+RULE 18: ( {ac_inves:circumstances=ongoing-investigation} ), support=7383, card=1:490 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16131, card=1:1773 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26374, card=1:1968 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13247, card=1:1209 captured; 
+RULE 0: ( default ), support=50742, card=0:1463 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=563 #add=3286 #delete=3348 #swap=3366):
+max_log_posterior = -29464.786752
+max_log_posterior = -29464.786752
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4862, card=1:4862 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2844, card=1:2665 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2278 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10513, card=1:9200 captured; 
+RULE 23: ( {city:Bronx} ), support=9002, card=1:5611 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13451, card=1:8886 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9804, card=1:5717 captured; 
+RULE 25: ( {location:housing-authority} ), support=6217, card=1:1408 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5699, card=1:1574 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38687, card=1:6831 captured; 
+RULE 0: ( default ), support=50742, card=0:1710 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=586 #add=3335 #delete=3315 #swap=3350):
+max_log_posterior = -29219.388149
+max_log_posterior = -29219.388149
+14 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4862, card=1:4862 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2844, card=1:2665 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2278 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5061, card=1:3839 captured; 
+RULE 23: ( {city:Bronx} ), support=9002, card=1:7056 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11171, card=1:7193 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13451, card=1:3361 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9804, card=1:3877 captured; 
+RULE 26: ( {location:transit-authority} ), support=5838, card=1:3920 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10513, card=1:3760 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21324, card=1:4765 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13247, card=1:1191 captured; 
+RULE 27: ( {inout:outside} ), support=39423, card=1:1649 captured; 
+RULE 0: ( default ), support=50742, card=0:326 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=520 #add=3342 #delete=3349 #swap=3309):
+max_log_posterior = -29260.321364
+max_log_posterior = -29260.321364
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4862, card=1:4862 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13451, card=1:12892 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2232 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9804, card=1:7472 captured; 
+RULE 26: ( {location:transit-authority} ), support=5838, card=1:4076 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5061, card=1:1100 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10513, card=1:5607 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13247, card=1:3756 captured; 
+RULE 23: ( {city:Bronx} ), support=9002, card=1:2860 captured; 
+RULE 27: ( {inout:outside} ), support=39423, card=1:5180 captured; 
+RULE 0: ( default ), support=50742, card=0:705 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=932 #add=3382 #delete=3338 #swap=3280):
+max_log_posterior = -29217.611938
+max_log_posterior = -29217.611938
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4862, card=1:4862 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2844, card=1:2665 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2278 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13451, card=1:11831 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9804, card=1:6871 captured; 
+RULE 26: ( {location:transit-authority} ), support=5838, card=1:4070 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10513, card=1:5490 captured; 
+RULE 23: ( {city:Bronx} ), support=9002, card=1:2881 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38687, card=1:8386 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16131, card=1:330 captured; 
+RULE 0: ( default ), support=50742, card=0:1078 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=368 #add=3327 #delete=3304 #swap=3369):
+max_log_posterior = -29490.031047
+max_log_posterior = -29490.031047
+13 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4862, card=1:4862 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2844, card=1:2665 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2278 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10513, card=1:9200 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13451, card=1:11007 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9804, card=1:6321 captured; 
+RULE 25: ( {location:housing-authority} ), support=6217, card=1:1934 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11021, card=1:2571 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5699, card=1:1358 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5061, card=1:441 captured; 
+RULE 23: ( {city:Bronx} ), support=9002, card=1:1733 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38687, card=1:4729 captured; 
+RULE 0: ( default ), support=50742, card=0:1643 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=454 #add=3356 #delete=3321 #swap=3323):
+max_log_posterior = -29217.542835
+max_log_posterior = -29217.542835
+18 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4862, card=1:4862 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2844, card=1:2665 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2278 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13451, card=1:11831 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9804, card=1:6871 captured; 
+RULE 26: ( {location:transit-authority} ), support=5838, card=1:4070 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10513, card=1:5490 captured; 
+RULE 25: ( {location:housing-authority} ), support=6217, card=1:1934 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13552, card=1:2706 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11021, card=1:1426 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3604, card=1:398 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5061, card=1:277 captured; 
+RULE 28: ( {inout:inside} ), support=11319, card=1:571 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13247, card=1:1554 captured; 
+RULE 21: ( {city:Manhattan} ), support=11449, card=1:737 captured; 
+RULE 23: ( {city:Bronx} ), support=9002, card=1:1292 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21324, card=1:831 captured; 
+RULE 0: ( default ), support=50742, card=0:949 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=923 #add=3370 #delete=3373 #swap=3257):
+max_log_posterior = -29217.611938
+max_log_posterior = -29217.611938
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4862, card=1:4862 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2844, card=1:2665 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2278 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13451, card=1:11831 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9804, card=1:6871 captured; 
+RULE 26: ( {location:transit-authority} ), support=5838, card=1:4070 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10513, card=1:5490 captured; 
+RULE 23: ( {city:Bronx} ), support=9002, card=1:2881 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38687, card=1:8386 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16131, card=1:330 captured; 
+RULE 0: ( default ), support=50742, card=0:1078 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=64 #add=3267 #delete=3383 #swap=3350):
+max_log_posterior = -29439.472361
+max_log_posterior = -29439.472361
+11 rules 50742 samples
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13451, card=1:13451 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2348 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5061, card=1:3828 captured; 
+RULE 26: ( {location:transit-authority} ), support=5838, card=1:5193 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4862, card=1:3050 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10513, card=1:6008 captured; 
+RULE 23: ( {city:Bronx} ), support=9002, card=1:3402 captured; 
+RULE 25: ( {location:housing-authority} ), support=6217, card=1:1636 captured; 
+RULE 21: ( {city:Manhattan} ), support=11449, card=1:1732 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9804, card=1:3251 captured; 
+RULE 0: ( default ), support=50742, card=0:6843 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=54 #add=3372 #delete=3359 #swap=3269):
+max_log_posterior = -29384.567870
+max_log_posterior = -29384.567870
+11 rules 50742 samples
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2844, card=1:2844 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:2395 captured; 
+RULE 26: ( {location:transit-authority} ), support=5838, card=1:5782 captured; 
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4862, card=1:3502 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10513, card=1:6775 captured; 
+RULE 23: ( {city:Bronx} ), support=9002, card=1:5563 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13451, card=1:8547 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9804, card=1:5540 captured; 
+RULE 25: ( {location:housing-authority} ), support=6217, card=1:1408 captured; 
+RULE 21: ( {city:Manhattan} ), support=11449, card=1:1349 captured; 
+RULE 0: ( default ), support=50742, card=0:7037 captured; 
+Total Captured: 50742
+n0=652, n1=4210, captured=4862, training accuracy = 0.86589881
+theta[0] = 0.86574836
+n0=7325, n1=5567, captured=12892, training accuracy = 0.56818182
+theta[1] = 0.43182876
+n0=6180, n1=1610, captured=7790, training accuracy = 0.79332478
+theta[2] = 0.20675051
+n0=915, n1=477, captured=1392, training accuracy = 0.65732759
+theta[3] = 0.34289813
+n0=1332, n1=362, captured=1694, training accuracy = 0.78630460
+theta[4] = 0.21403302
+n0=155, n1=3849, captured=4004, training accuracy = 0.96128871
+theta[5] = 0.96105841
+n0=1604, n1=4003, captured=5607, training accuracy = 0.71392902
+theta[6] = 0.71385274
+n0=1407, n1=528, captured=1935, training accuracy = 0.72713178
+theta[7] = 0.27310274
+n0=1698, n1=1228, captured=2926, training accuracy = 0.58031442
+theta[8] = 0.41974044
+n0=394, n1=343, captured=737, training accuracy = 0.53459973
+theta[9] = 0.46549391
+n0=342, n1=148, captured=490, training accuracy = 0.69795918
+theta[10] = 0.30284553
+n0=658, n1=1115, captured=1773, training accuracy = 0.62887761
+theta[11] = 0.62873239
+n0=1083, n1=885, captured=1968, training accuracy = 0.55030488
+theta[12] = 0.44974619
+n0=1001, n1=208, captured=1209, training accuracy = 0.82795699
+theta[13] = 0.17258464
+n0=625, n1=838, captured=1463, training accuracy = 0.57279563
+theta[14] = 0.57269625
+Time to train: Elapsed time  4.3338	 4.3338 
+
+The best rulelist for 11 MCMC chains is: 15 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4862, card=1:4862 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13451, card=1:12892 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9804, card=1:7790 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5061, card=1:1392 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2548, card=1:1694 captured; 
+RULE 26: ( {location:transit-authority} ), support=5838, card=1:4004 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10513, card=1:5607 captured; 
+RULE 25: ( {location:housing-authority} ), support=6217, card=1:1935 captured; 
+RULE 22: ( {city:Queens} ), support=12856, card=1:2926 captured; 
+RULE 28: ( {inout:inside} ), support=11319, card=1:737 captured; 
+RULE 18: ( {ac_inves:circumstances=ongoing-investigation} ), support=7383, card=1:490 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16131, card=1:1773 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26374, card=1:1968 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13247, card=1:1209 captured; 
+RULE 0: ( default ), support=50742, card=0:1463 captured; 
+Total Captured: 50742
+1, 0.86574836
+2, 0.43182876
+3, 0.20675051
+4, 0.34289813
+6, 0.21403302
+26, 0.96105841
+9, 0.71385274
+25, 0.27310274
+22, 0.41974044
+28, 0.46549391
+18, 0.30284553
+10, 0.62873239
+14, 0.44974619
+20, 0.17258464
+0, 0.57269625
+Lambda = 5.000000
+Eta = 500.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 10000
+Rule 1 captures 406 of 5638 samples
+Rule 2 captures 1189 of 5638 samples
+Rule 3 captures 853 of 5638 samples
+Rule 4 captures 134 of 5638 samples
+Rule 6 captures 235 of 5638 samples
+Rule 26 captures 449 of 5638 samples
+Rule 9 captures 889 of 5638 samples
+Rule 25 captures 258 of 5638 samples
+Rule 22 captures 326 of 5638 samples
+Rule 28 captures 81 of 5638 samples
+Rule 18 captures 72 of 5638 samples
+Rule 10 captures 218 of 5638 samples
+Rule 14 captures 290 of 5638 samples
+Rule 20 captures 103 of 5638 samples
+Rule 0 captures 135 of 5638 samples
+test accuracy = 0.725789 
+Initialize time: Elapsed time  0.0084	 0.0003 per rule
+29 rules 50742 samples
+
+
+The best rule list is (#reject=585 #add=3318 #delete=3276 #swap=3406):
+max_log_posterior = -28956.480498
+max_log_posterior = -28956.480498
+17 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4915, card=1:4915 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2902, card=1:2704 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13200, card=1:11699 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9828, card=1:7138 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2555, card=1:1894 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11010, card=1:1720 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11280, card=1:4108 captured; 
+RULE 26: ( {location:transit-authority} ), support=5729, card=1:3863 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3509, card=1:773 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10599, card=1:4070 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5113, card=1:379 captured; 
+RULE 28: ( {inout:inside} ), support=11423, card=1:1062 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5563, card=1:984 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26622, card=1:2833 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13333, card=1:570 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13264, card=1:799 captured; 
+RULE 0: ( default ), support=50742, card=0:1231 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=659 #add=3433 #delete=3308 #swap=3259):
+max_log_posterior = -29390.293011
+max_log_posterior = -29390.293011
+14 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4915, card=1:4915 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2902, card=1:2704 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2555, card=1:2289 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3509, card=1:2525 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10599, card=1:8758 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13200, card=1:10267 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9828, card=1:5866 captured; 
+RULE 23: ( {city:Bronx} ), support=9015, card=1:2709 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11010, card=1:1059 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5563, card=1:1196 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38554, card=1:5743 captured; 
+RULE 26: ( {location:transit-authority} ), support=5729, card=1:1591 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16186, card=1:226 captured; 
+RULE 0: ( default ), support=50742, card=0:894 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=416 #add=3303 #delete=3351 #swap=3346):
+max_log_posterior = -29007.290047
+max_log_posterior = -29007.290047
+16 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4915, card=1:4915 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13200, card=1:12661 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9828, card=1:7762 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2555, card=1:1941 captured; 
+RULE 26: ( {location:transit-authority} ), support=5729, card=1:3963 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10599, card=1:5961 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2902, card=1:781 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5563, card=1:2001 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13333, card=1:2601 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11280, card=1:1564 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3509, card=1:339 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5113, card=1:270 captured; 
+RULE 22: ( {city:Queens} ), support=12935, card=1:1148 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13264, card=1:1734 captured; 
+RULE 27: ( {inout:outside} ), support=39319, card=1:2445 captured; 
+RULE 0: ( default ), support=50742, card=0:656 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=681 #add=3296 #delete=3347 #swap=3357):
+max_log_posterior = -29002.112002
+max_log_posterior = -29002.112002
+16 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4915, card=1:4915 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2902, card=1:2704 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5113, card=1:4271 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2555, card=1:1906 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11010, card=1:8803 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13200, card=1:4157 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9828, card=1:4328 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5563, card=1:1831 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21472, card=1:7894 captured; 
+RULE 26: ( {location:transit-authority} ), support=5729, card=1:3673 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10599, card=1:2959 captured; 
+RULE 25: ( {location:housing-authority} ), support=6459, card=1:752 captured; 
+RULE 15: ( {ac_time:circumstances=time-of-day} ), support=19979, card=1:898 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11280, card=1:147 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13264, card=1:537 captured; 
+RULE 0: ( default ), support=50742, card=0:967 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=525 #add=3381 #delete=3330 #swap=3289):
+max_log_posterior = -28867.303724
+max_log_posterior = -28867.303724
+19 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4915, card=1:4915 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2902, card=1:2704 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13200, card=1:11699 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9828, card=1:7138 captured; 
+RULE 26: ( {location:transit-authority} ), support=5729, card=1:3963 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10599, card=1:5785 captured; 
+RULE 25: ( {location:housing-authority} ), support=6459, card=1:2455 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3509, card=1:1035 captured; 
+RULE 21: ( {city:Manhattan} ), support=11382, card=1:1567 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11280, card=1:2359 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5113, card=1:340 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2555, card=1:453 captured; 
+RULE 28: ( {inout:inside} ), support=11423, card=1:495 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5563, card=1:948 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13333, card=1:920 captured; 
+RULE 23: ( {city:Bronx} ), support=9015, card=1:1311 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21472, card=1:1329 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13264, card=1:638 captured; 
+RULE 0: ( default ), support=50742, card=0:688 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=904 #add=3385 #delete=3358 #swap=3257):
+max_log_posterior = -29122.253123
+max_log_posterior = -29122.253123
+11 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4915, card=1:4915 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2902, card=1:2704 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2555, card=1:2289 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13200, card=1:11557 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9828, card=1:6885 captured; 
+RULE 26: ( {location:transit-authority} ), support=5729, card=1:3956 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10599, card=1:5678 captured; 
+RULE 23: ( {city:Bronx} ), support=9015, card=1:2908 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38554, card=1:8387 captured; 
+RULE 10: ( {ac_proxm:circumstances=proximity-to-crime-scene} ), support=16186, card=1:343 captured; 
+RULE 0: ( default ), support=50742, card=0:1120 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=408 #add=3362 #delete=3317 #swap=3321):
+max_log_posterior = -29002.380641
+max_log_posterior = -29002.380641
+14 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4915, card=1:4915 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2902, card=1:2704 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13200, card=1:11699 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9828, card=1:7138 captured; 
+RULE 26: ( {location:transit-authority} ), support=5729, card=1:3963 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10599, card=1:5785 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4146, card=1:1171 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11280, card=1:3460 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5563, card=1:1403 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5113, card=1:424 captured; 
+RULE 22: ( {city:Queens} ), support=12935, card=1:1647 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13264, card=1:2571 captured; 
+RULE 27: ( {inout:outside} ), support=39319, card=1:3009 captured; 
+RULE 0: ( default ), support=50742, card=0:853 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=94 #add=3366 #delete=3332 #swap=3302):
+max_log_posterior = -28971.348952
+max_log_posterior = -28971.348952
+16 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4915, card=1:4915 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2902, card=1:2704 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2555, card=1:2289 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13200, card=1:11557 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9828, card=1:6885 captured; 
+RULE 26: ( {location:transit-authority} ), support=5729, card=1:3956 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10599, card=1:5678 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13333, card=1:3243 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11280, card=1:1757 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3509, card=1:471 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5113, card=1:308 captured; 
+RULE 28: ( {inout:inside} ), support=11423, card=1:1188 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13264, card=1:1657 captured; 
+RULE 22: ( {city:Queens} ), support=12935, card=1:1379 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5563, card=1:310 captured; 
+RULE 0: ( default ), support=50742, card=0:2445 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=494 #add=3338 #delete=3392 #swap=3270):
+max_log_posterior = -28946.895477
+max_log_posterior = -28946.895477
+17 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4915, card=1:4915 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2902, card=1:2704 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2555, card=1:2289 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11010, card=1:9184 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13200, card=1:4436 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9828, card=1:6542 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11280, card=1:4108 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3509, card=1:773 captured; 
+RULE 26: ( {location:transit-authority} ), support=5729, card=1:3863 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10599, card=1:4070 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5113, card=1:379 captured; 
+RULE 28: ( {inout:inside} ), support=11423, card=1:1062 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5563, card=1:984 captured; 
+RULE 14: ( {ac_incid:circumstances=high-crime-area} ), support=26622, card=1:2833 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13333, card=1:570 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13264, card=1:799 captured; 
+RULE 0: ( default ), support=50742, card=0:1231 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=908 #add=3316 #delete=3361 #swap=3323):
+max_log_posterior = -29372.165758
+max_log_posterior = -29372.165758
+14 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4915, card=1:4915 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2902, card=1:2704 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5113, card=1:4271 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2555, card=1:1906 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10599, card=1:8873 captured; 
+RULE 23: ( {city:Bronx} ), support=9015, card=1:5313 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13200, card=1:8322 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9828, card=1:3739 captured; 
+RULE 25: ( {location:housing-authority} ), support=6459, card=1:1388 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5563, card=1:1495 captured; 
+RULE 24: ( {location:neither-housing-nor-transit-authority} ), support=38554, card=1:6232 captured; 
+RULE 17: ( {ac_rept:circumstances=witness-report} ), support=11010, card=1:27 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21472, card=1:141 captured; 
+RULE 0: ( default ), support=50742, card=0:1416 captured; 
+Total Captured: 50742
+
+The best rule list is (#reject=400 #add=3347 #delete=3332 #swap=3321):
+max_log_posterior = -28996.827625
+max_log_posterior = -28996.827625
+14 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4915, card=1:4915 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2902, card=1:2704 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13200, card=1:11699 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9828, card=1:7138 captured; 
+RULE 26: ( {location:transit-authority} ), support=5729, card=1:3963 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10599, card=1:5785 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11280, card=1:3837 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5563, card=1:1550 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5113, card=1:483 captured; 
+RULE 19: ( {city:Staten-Island} ), support=4146, card=1:588 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13264, card=1:2571 captured; 
+RULE 22: ( {city:Queens} ), support=12935, card=1:1647 captured; 
+RULE 27: ( {inout:outside} ), support=39319, card=1:3009 captured; 
+RULE 0: ( default ), support=50742, card=0:853 captured; 
+Total Captured: 50742
+n0=643, n1=4272, captured=4915, training accuracy = 0.86917599
+theta[0] = 0.86902583
+n0=1357, n1=1347, captured=2704, training accuracy = 0.50184911
+theta[1] = 0.49815225
+n0=6979, n1=4720, captured=11699, training accuracy = 0.59654671
+theta[2] = 0.40346979
+n0=5771, n1=1367, captured=7138, training accuracy = 0.80848977
+theta[3] = 0.19159664
+n0=174, n1=3789, captured=3963, training accuracy = 0.95609387
+theta[4] = 0.95586381
+n0=1648, n1=4137, captured=5785, training accuracy = 0.71512532
+theta[5] = 0.71505098
+n0=1839, n1=616, captured=2455, training accuracy = 0.74908350
+theta[6] = 0.25111925
+n0=682, n1=353, captured=1035, training accuracy = 0.65893720
+theta[7] = 0.34136933
+n0=570, n1=997, captured=1567, training accuracy = 0.63624761
+theta[8] = 0.63607393
+n0=1449, n1=910, captured=2359, training accuracy = 0.61424332
+theta[9] = 0.38585345
+n0=340, n1=0, captured=340, training accuracy = 1.00000000
+theta[10] = 0.00292398
+n0=417, n1=36, captured=453, training accuracy = 0.92052980
+theta[11] = 0.08131868
+n0=261, n1=234, captured=495, training accuracy = 0.52727273
+theta[12] = 0.47283702
+n0=712, n1=236, captured=948, training accuracy = 0.75105485
+theta[13] = 0.24947368
+n0=431, n1=489, captured=920, training accuracy = 0.53152174
+theta[14] = 0.53145336
+n0=373, n1=938, captured=1311, training accuracy = 0.71548436
+theta[15] = 0.71515613
+n0=931, n1=398, captured=1329, training accuracy = 0.70052671
+theta[16] = 0.29977461
+n0=508, n1=130, captured=638, training accuracy = 0.79623824
+theta[17] = 0.20468750
+n0=286, n1=402, captured=688, training accuracy = 0.58430233
+theta[18] = 0.58405797
+Time to train: Elapsed time  5.1595	 5.1595 
+
+The best rulelist for 11 MCMC chains is: 19 rules 50742 samples
+RULE 1: ( {cs_objcs:stop-reason=suspicious-object} ), support=4915, card=1:4915 captured; 
+RULE 5: ( {cs_cloth:stop-reason=suspicious-clothing} ), support=2902, card=1:2704 captured; 
+RULE 2: ( {cs_descr:stop-reason=fits-description} ), support=13200, card=1:11699 captured; 
+RULE 3: ( {cs_casng:stop-reason=casing} ), support=9828, card=1:7138 captured; 
+RULE 26: ( {location:transit-authority} ), support=5729, card=1:3963 captured; 
+RULE 9: ( {cs_bulge:stop-reason=suspicious-bulge} ), support=10599, card=1:5785 captured; 
+RULE 25: ( {location:housing-authority} ), support=6459, card=1:2455 captured; 
+RULE 12: ( {ac_assoc:circumstances=associating-with-criminals} ), support=3509, card=1:1035 captured; 
+RULE 21: ( {city:Manhattan} ), support=11382, card=1:1567 captured; 
+RULE 11: ( {ac_evasv:circumstances=evasive-response} ), support=11280, card=1:2359 captured; 
+RULE 4: ( {cs_lkout:stop-reason=acting-as-lookout} ), support=5113, card=1:340 captured; 
+RULE 6: ( {cs_drgtr:stop-reason=drug-transaction} ), support=2555, card=1:453 captured; 
+RULE 28: ( {inout:inside} ), support=11423, card=1:495 captured; 
+RULE 8: ( {cs_vcrim:stop-reason=actions-of-violent-crime} ), support=5563, card=1:948 captured; 
+RULE 13: ( {ac_cgdir:circumstances=changed-direction} ), support=13333, card=1:920 captured; 
+RULE 23: ( {city:Bronx} ), support=9015, card=1:1311 captured; 
+RULE 7: ( {cs_furtv:stop-reason=furtive-movements} ), support=21472, card=1:1329 captured; 
+RULE 20: ( {city:Brooklyn} ), support=13264, card=1:638 captured; 
+RULE 0: ( default ), support=50742, card=0:688 captured; 
+Total Captured: 50742
+1, 0.86902583
+5, 0.49815225
+2, 0.40346979
+3, 0.19159664
+26, 0.95586381
+9, 0.71505098
+25, 0.25111925
+12, 0.34136933
+21, 0.63607393
+11, 0.38585345
+4, 0.00292398
+6, 0.08131868
+28, 0.47283702
+8, 0.24947368
+13, 0.53145336
+23, 0.71515613
+7, 0.29977461
+20, 0.20468750
+0, 0.58405797
+Lambda = 5.000000
+Eta = 500.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 10000
+Rule 1 captures 353 of 5638 samples
+Rule 5 captures 224 of 5638 samples
+Rule 2 captures 1358 of 5638 samples
+Rule 3 captures 816 of 5638 samples
+Rule 26 captures 562 of 5638 samples
+Rule 9 captures 717 of 5638 samples
+Rule 25 captures 233 of 5638 samples
+Rule 12 captures 74 of 5638 samples
+Rule 21 captures 176 of 5638 samples
+Rule 11 captures 265 of 5638 samples
+Rule 4 captures 82 of 5638 samples
+Rule 6 captures 95 of 5638 samples
+Rule 28 captures 107 of 5638 samples
+Rule 8 captures 92 of 5638 samples
+Rule 13 captures 97 of 5638 samples
+Rule 23 captures 64 of 5638 samples
+Rule 7 captures 125 of 5638 samples
+Rule 20 captures 123 of 5638 samples
+Rule 0 captures 75 of 5638 samples
+test accuracy = 0.694750 
