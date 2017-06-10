@@ -18,13 +18,15 @@ For CORELS, ${\Reg = 0.005}$ (left) and ${\Reg = 0.01}$ (right).
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={12mm, 7mm, 24mm, 10mm}, width=0.44\textwidth]{figs/compas-sparsity-training.pdf}
-\includegraphics[trim={15mm, 12mm, 24mm, 1mm}, width=0.44\textwidth]{figs/frisk-sparsity-training-c45.pdf}
+\includegraphics[trim={12mm, 5mm, 24mm, 10mm}, width=0.44\textwidth]{figs/compas-sparsity-training.pdf}
+\includegraphics[trim={15mm, 0mm, 24mm, 1mm}, width=0.44\textwidth]{figs/frisk-sparsity-training-c45.pdf}
 \end{center}
+\vspace{-5mm}
 \caption{Training and test accuracy as a function of model size.
 %
-For CORELS, CART, and C4.5, we vary the regularization parameter~$\Reg$
-and complexity parameters~$cp$ and~$C$, respectively.
+Numbers in parentheses are algorithm parameters:
+CORELS ($\Reg$), CART ($cp$), C4.5 ($C$), SBRL ($\eta$, $\lambda$, $i$),
+where $i$ is the number of iterations.
 % and are indicated within parentheses in the legend.
 %
 Legend markers and error bars indicate means and standard deviations,
@@ -35,7 +37,7 @@ Small circles mark training accuracy means.
 Top:  %Two-year recidivism prediction for the ProPublica COMPAS dataset.
 ProPublica dataset.
 %
-None of the models exhibit significant overfitting.
+No models exhibit significant overfitting.
 %mean training accuracy never exceeds mean test accuracy
 %by more than about 0.01.
 %
@@ -47,7 +49,7 @@ NYCLU dataset.
 %We do not depict C4.5, which finds large models (${>100}$ leaves)
 %and dramatically overfits for all tested parameters.
 CART with ${cp = 0.001}$ significantly overfits, as does C4.5,
-which finds large models and dramatically overfits for all tested parameters.
+which finds large models and dramatically overfits. % for all tested parameters.
 %
 Note the broken horizontal axis and change in scale.
 }

@@ -88,14 +88,14 @@ for r in m[:-3]:
         else:
             descr += ' (%d, %d, 10000)' % (r['eta'], r['lambda'])
     legend += [descr]
-ax1.legend(legend, loc='upper left', fontsize=fs-3, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0, columnspacing=0.1, markerscale=0.8, frameon=False)
+ax1.legend(legend, loc='upper left', fontsize=fs-3.6, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0, columnspacing=0., markerscale=0.8, frameon=False)
 
 legend = []
 for r in m[-3:]:
     descr = r['Method']
     descr += ' (%s)' % ('%1.5f' % r['C']).strip('0')
     legend += [descr]
-ax2.legend(legend, loc=(-1.55, 0.7), fontsize=fs-3, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, columnspacing=0.1, markerscale=0.8, frameon=False)
+ax2.legend(legend, loc=(-1.55, 0.715), fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, markerscale=0.8, frameon=False)
 
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:
