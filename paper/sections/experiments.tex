@@ -132,7 +132,7 @@ width=0.45\textwidth]{figs/weapon_reg_small-execution.pdf}
 \end{center}
 \caption{Example CORELS execution traces (NYCLU).
 %
-Objective value (solid) and lower bound (dashes) for CORELS.
+Objective value (lines) and lower bound (dashes) for CORELS.
 %
 Numbered points along the trace of the objective value
 indicate when the length of the best known rule list changes
@@ -155,13 +155,13 @@ Bottom right: Overlay of the three traces.
 \caption{Significant algorithm optimizations
 for ProPublica (left) and NYCLU (right).
 %
-Top: Objective value (solid) and lower bound (thin dashes) for CORELS,
+Top: Objective value (thin lines) and lower bound (dashes) for CORELS,
 as in Figure~\ref{fig:weapon-reg-execution},
-and lower bound (thick dashes) for separate executions of variants without
+and lower bound (thick lines) for separate executions of variants without
 equivalent points (left) and permutation (right) bounds.
 %
 Bottom: Upper bound on remaining search space size,
-for CORELS (lines) and variants (dashes).
+for CORELS (thin lines) and variants (thick lines).
 }
 \label{fig:objective}
 \end{figure}
@@ -272,7 +272,7 @@ this adds some computational overhead.
 %
 In the same plots, we also show
 a separate execution of CORELS without the equivalent points bound
-(Theorem~\ref{thm:identical}) (thick dashes).
+(Theorem~\ref{thm:identical}).
 %
 %After nearly 3~hours, this execution is still far from complete:
 This execution is far from complete:

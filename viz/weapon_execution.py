@@ -80,8 +80,8 @@ else:
 
 ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
 
-ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='gray', linewidth=lw*3)
-ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='r', linewidth=lw)
+ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '-', color='c', linewidth=5)
+ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='b', linewidth=lw)
 ax1.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '--', color='k', linewidth=lw)
 #ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='b', linewidth=lw*2)
 ax1.semilogx(tmin, opt, '*', markerfacecolor='white', markeredgecolor='k', markeredgewidth=2, markersize=20)
@@ -117,15 +117,11 @@ else:
 
 yremaining = y['log_remaining_space_size'].copy()
 yremaining[yremaining > yremaining[0]] = yremaining[0]
-ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*3, color='gray')
+ax2.semilogx(y['total_time'][1:], yremaining[1:], '-', linewidth=5, color='c')
 
 xremaining = x['log_remaining_space_size'].copy()
 xremaining[xremaining > xremaining[0]] = xremaining[0]
 ax2.semilogx(x['total_time'][2:ii+1], xremaining[2:ii+1], '-', color='k', linewidth=lw)
-
-yremaining = y['log_remaining_space_size'].copy()
-yremaining[yremaining > yremaining[0]] = yremaining[0]
-ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*3, color='gray')
 
 pylab.title('Size of remaining search space', fontsize=fs)
 pylab.xlabel('Time (s)', fontsize=fs)
@@ -140,7 +136,7 @@ if large:
     pylab.axis([x['total_time'][2], 10**4.5, 0, 60])
 else:
     #pylab.axis([x['total_time'][2], 10**4.5, 0, 60])
-    pylab.axis([x['total_time'][2], y['total_time'][-1], 0, 70])
+    pylab.axis([x['total_time'][2], y['total_time'][-1]*1.01, 0, 70])
     pylab.yticks(range(0, 70, 20))
 pylab.draw()
 pylab.savefig('../figs/%s-remaining-space.pdf' % ftag)

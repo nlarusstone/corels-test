@@ -84,10 +84,10 @@ else:
 
 ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
 
-ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='r', linewidth=lw)
+ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='b', linewidth=lw)
 ax1.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '--', color='k', linewidth=lw)
-ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '--', color='c', linewidth=lw*3)
-#ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='r', linewidth=lw)
+ax1.semilogx(y['total_time'][1:], y['current_lower_bound'][1:], '-', color='m', linewidth=5)
+#ax1.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='b', linewidth=lw)
 ax1.semilogx(tmin, opt, '*', markerfacecolor='white', markeredgecolor='k', markeredgewidth=2, markersize=20)
 
 ip = (x['tree_prefix_length'][1:] != x['tree_prefix_length'][:-1]).nonzero()[0] + 1
@@ -116,15 +116,11 @@ else:
 
 yremaining = y['log_remaining_space_size'].copy()
 yremaining[yremaining > yremaining[0]] = yremaining[0]
-ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*3, color='c')
+ax2.semilogx(y['total_time'][1:], yremaining[1:], '-', linewidth=5, color='m')
 
 xremaining = x['log_remaining_space_size'].copy()
 xremaining[xremaining > xremaining[0]] = xremaining[0]
 ax2.semilogx(x['total_time'][2:ii+1], xremaining[2:ii+1], '-', color='k', linewidth=lw)
-
-yremaining = y['log_remaining_space_size'].copy()
-yremaining[yremaining > yremaining[0]] = yremaining[0]
-ax2.semilogx(y['total_time'][1:], yremaining[1:], '--', linewidth=lw*3, color='c')
 
 pylab.title('Size of remaining search space', fontsize=fs)
 pylab.xlabel('Time (s)', fontsize=fs)
