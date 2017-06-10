@@ -102,7 +102,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
 
     pylab.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='r', linewidth=lw)
     pylab.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '--', color='k', linewidth=lw)
-    pylab.semilogx(tmin, opt, '*', markerfacecolor='white', markeredgecolor='k', markeredgewidth=2, markersize=18)
+    pylab.semilogx(tmin, opt, '*', markerfacecolor='white', markeredgecolor='k', markeredgewidth=2, markersize=20)
 
     ip = (x['tree_prefix_length'][1:] != x['tree_prefix_length'][:-1]).nonzero()[0] + 1
     for jj in ip:
@@ -118,7 +118,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
         pylab.title(labels[ncomp], fontsize=fs)
     pylab.xticks(fontsize=fs-2)
     pylab.yticks(np.arange(0, 0.59, 0.1), fontsize=fs)
-    pylab.axis([x['total_time'][2], 10**3, 0, 0.54])
+    pylab.axis([x['total_time'][2], 10**3, 0, 0.55])
     if (ncomp % 3 == 0):
         pylab.ylabel('Value', fontsize=fs)
         pylab.legend(['Objective', 'Lower bound', 'Optimum'], loc='lower right', fontsize=fs_legend, numpoints=1, frameon=False)
@@ -137,7 +137,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
     #pylab.semilogx(tmin, opt, 'k*', markersize=18)
     pylab.xticks(fontsize=fs-1)
     pylab.yticks(np.arange(0, 0.59, 0.1), fontsize=fs)
-    pylab.axis([x['total_time'][2], 10**3, 0, 0.54])
+    pylab.axis([x['total_time'][2], 10**3, 0, 0.55])
     if (make_small):
         pylab.text(10**-1.5, 0.45, ' Overlay', fontsize=fs)
     else:
