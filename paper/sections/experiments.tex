@@ -24,32 +24,23 @@ For CORELS, ${\Reg = 0.005}$ (left) and ${\Reg = 0.01}$ (right).
 \vspace{-5mm}
 \caption{Training and test accuracy as a function of model size.
 %
-Numbers in parentheses are algorithm parameters:
-CORELS ($\Reg$), CART ($cp$), C4.5 ($C$), SBRL ($\eta$, $\lambda$, $i$),
-where $i$ is the number of iterations.
-% and are indicated within parentheses in the legend.
+In the legend, numbers in parentheses are algorithm parameters that we vary:
+CORELS~($\Reg$), CART~($cp$), C4.5~($C$), SBRL ($\eta$, $\lambda$, $i$),
+where~$i$ is the number of iterations.
 %
 Legend markers and error bars indicate means and standard deviations,
 respectively, of test accuracy across cross-validation folds.
 %
 Small circles mark training accuracy means.
 %
-Top:  %Two-year recidivism prediction for the ProPublica COMPAS dataset.
-ProPublica dataset.
+Top: ProPublica dataset.
 %
 No models exhibit significant overfitting.
-%mean training accuracy never exceeds mean test accuracy
-%by more than about 0.01.
 %
-Bottom:  %Weapon prediction for the NYCLU stop-and-frisk dataset.
-NYCLU dataset.
+Bottom: NYCLU dataset.
 %
-%Only CART with ${cp = 0.001}$ significantly overfits.
-%
-%We do not depict C4.5, which finds large models (${>100}$ leaves)
-%and dramatically overfits for all tested parameters.
-CART with ${cp = 0.001}$ significantly overfits, as does C4.5,
-which finds large models and dramatically overfits. % for all tested parameters.
+CART with ${cp = 0.001}$ overfits;
+C4.5 finds large models and dramatically overfits. % for all tested parameters.
 %
 Note the broken horizontal axis and change in scale.
 }
