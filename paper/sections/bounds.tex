@@ -825,7 +825,7 @@ whose antecedents contains the set of antecedents in~$\Prefix$,
 in almost any order, with the constraint that all antecedents
 in ${\{p_1, \dots, p_{K-1}\}}$ precede~$p_K$.
 %
-Notice that these latter antecedents are also rejected
+These latter antecedents are also rejected
 directly by the bounds in Theorems~\ref{thm:min-capture},
 \ref{thm:min-capture-correct}, and~\ref{thm:ub-support};
 this is how our implementation works in practice.
@@ -866,22 +866,22 @@ set of antecedents in ${\Prefix^{K} = (p_1, \dots, p_{K})}$:
   \wedge \Cap(x_n, p_K) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
   \wedge \Cap(x_n, p_K)
-< \Reg.
+< \Reg. \nn
 \end{align}
 Similarly, the support of~$P_{K'}$ in~$\PrefixB$ depends only on
 the set of antecedents in ${\PrefixB^{K'} =}$ ${(P_1, \dots, P_{K'})}$:
 \begin{align}
 \Supp(P_{K'}, \x \given \PrefixB)
 &= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, P_{K'} \given \PrefixB) \nn \\
-&= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap(x_n, \PrefixB^{K'-1}) \right)
-  \wedge \Cap(x_n, P_{K'}) \nn \\
+%&= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap(x_n, \PrefixB^{K'-1}) \right)
+%  \wedge \Cap(x_n, P_{K'}) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K'-1} \neg\, \Cap(x_n, P_k) \right)
    \wedge \Cap(x_n, P_{K'}) \nn \\
 &\le \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
   \wedge \Cap(x_n, P_{K'}) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K-1} \neg\, \Cap(x_n, p_k) \right)
   \wedge \Cap(x_n, p_{K})
-= \Supp(p_K, \x \given \Prefix) < \Reg.
+= \Supp(p_K, \x \given \Prefix) < \Reg. \nn
 \label{ineq:supp}
 \end{align}
 The first inequality reflects the condition that
