@@ -2,21 +2,29 @@
 \label{sec:experiments}
 
 Our experimental analysis addresses five questions:
-(1) How does CORELS' accuracy compare to that of other algorithms?
-(2) How does CORELS' model size compare to that of other algorithms?
-(3) How rapidly does the objective function converge?
-(4) How rapidly does CORELS prune the search space?
-(5) How much does each of the implementation optimizations contribute to CORELS' performance?
+\begin{itemize}
+\item How does CORELS' accuracy compare to that of other algorithms? (\S\ref{sec:sparsity})
+\item How does CORELS' model size compare to that of other algorithms? (\S\ref{sec:sparsity})
+\item How rapidly do the objective value and its lower bound converge,
+for different values of the regularization parameter~$\Reg$? (\S\ref{sec:reg-param})
+\item How much does each of the implementation optimizations contribute to CORELS' performance? (\S\ref{sec:ablation})
+\item How rapidly does CORELS prune the search space? (\S\ref{sec:reg-param} and \S\ref{sec:ablation})
+\end{itemize}
+Below, we first describe our computational environment (\S\ref{sec:environment}),
+datasets we use and prediction problems for each (\S\ref{sec:datasets}),
+and example optimal rule lists found by CORELS (\S\ref{sec:examples}).
 
 \subsection{Computational environment}
+\label{sec:environment}
 
 All timed results ran on a server with two Intel Xeon E5-2699~v4
-(55~MB cache, 2.20~GHz) processors and 448~GB RAM.
+(55~MB cache, 2.20~GHz) processors and 756~GB RAM.
 %
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
 
 \subsection{Datasets and prediction problems}
+\label{sec:datasets}
 
 Our evaluation focuses on two socially-important prediction problems associated
 with recent, publicly-available datasets:
@@ -30,7 +38,7 @@ assessment.
 This dataset contains records for 7,215 individuals.
 %
 Our rule mining framework extracts 14 features and combines them into
-156 antecedents on average (folds ranged from containing 155 to 157 antecedents).
+${M=156}$ antecedents on average (folds ranged from containing 155 to 157 antecedents).
 %
 \item Using the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
 whether a weapon will be found on a stopped individual who is frisked or searched.
@@ -44,11 +52,11 @@ Of these, criminal possession of a weapon was identified in only about 5\% of in
 Resampling due to class imbalance, for 10-fold cross-validation, yields training sets
 that each contain 50,743 datapoints.
 %
-From a set of 5 categorical features, we form a set of~28 single-clause antecedents
+From a set of 5 categorical features, we form a set of ${M=28}$ single-clause antecedents
 that we use in our experiments below, through~\S\ref{sec:sparsity}.
 %
 For our experiments in~\S\ref{sec:ablation}, we add negations of 18 of these antecedents,
-which gives a total of 46 antecedents.
+which gives a total of ${M=46}$ antecedents.
 \end{itemize}
 %
 For further details about data preprocessing steps and antecedent mining,
@@ -63,14 +71,16 @@ could potentially help police officers more effectively decide when to
 frisk and/or search stopped individuals, \ie when such
 interventions are likely to discover criminal possession of a weapon.
 
-\subsection{Example rule lists}
+\subsection{Example optimal rule lists}
 \label{sec:examples}
 
 We first ran a 10-fold cross validation experiment using CORELS
 and eight other algorithms:
 logistic regression, support vector machines, AdaBoost, CART, C4.5,
 random forests, RIPPER, and scalable Bayesian rule lists (SBRL).\footnote{For
-SBRL, we use the C implementation at \url{https://github.com/Hongyuy/sbrlmod}.}
+SBRL, we use the C implementation at \url{https://github.com/Hongyuy/sbrlmod}.
+By default, SBRL sets ${\eta = 3}$, ${\lambda = 9}$,
+the number of chains to 11 and iterations to 1,000.}
 %
 We use standard R packages, with default parameter settings,
 for the first seven algorithms.\footnote{For CART, C4.5 (J48), and RIPPER,
@@ -144,7 +154,7 @@ folds; the others contain the same rules, up to a permutation.
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
-\includegraphics[trim={14mm, 5mm, 30mm, 5mm},
+\includegraphics[trim={10mm, 5mm, 15mm, 5mm},
 width=\textwidth]{figs/compare-compas-weapon.pdf}
 \end{center}
 \caption{Comparison of CORELS and a panel of eight other algorithms:
@@ -202,9 +212,9 @@ to those found via other algorithms.
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
 \includegraphics[trim={12mm, 0mm, 24mm, 5mm},
-width=0.9\textwidth]{figs/compas-sparsity-training.pdf}
-\includegraphics[trim={12mm, 0mm, 24mm, 1mm},
-width=0.9\textwidth]{figs/frisk-sparsity-training.pdf}
+width=0.93\textwidth]{figs/compas-sparsity-training.pdf}
+\includegraphics[trim={12mm, 0mm, 24mm, 0mm},
+width=0.93\textwidth]{figs/frisk-sparsity-training-c45.pdf}
 \end{center}
 \caption{Training and test accuracy as a function of model size.
 %
@@ -232,10 +242,8 @@ Bottom:  Weapon prediction for the NYCLU stop-and-frisk dataset.
 %
 %For CORELS and SBRL, we use ${M = 28}$ antecedents.
 %
-Only CART with ${cp = 0.001}$ significantly overfits.
-%
-We do not depict C4.5, which finds large models (${>100}$ leaves)
-and dramatically overfits for all tested parameters.
+CART with ${cp = 0.001}$ significantly overfits;
+C4.5 finds large models and dramatically overfits for all tested parameters.
 }
 \label{fig:sparsity}
 \end{figure}
@@ -596,15 +604,22 @@ algorithm optimizations for our prediction problems:
 the equivalent points bound for the ProPublica dataset (left)
 and the symmetry-aware map for the NYCLU dataset (right).
 %
-For CORELS (solid lines) with the ProPublica recidivism dataset (left),
+For CORELS (thin lines) with the ProPublica recidivism dataset (left),
 the objective drops quickly, achieving the optimal value within 10 seconds.
 CORELS certifies optimality in less than 6 minutes --
 the objective lower bound steadily converges to the optimal objective (top)
 as the search space shrinks (bottom).
 %
+We dynamically and incrementally
+calculate~$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
+where~$\Remaining(\CurrentObj, \Queue)$
+is the upper bound on remaining search space size
+(Theorem~\ref{thm:remaining-eval-fine});
+this adds some computational overhead.
+%
 In the same plots (left), we additionally highlight
 a separate execution of CORELS without the equivalent points bound
-(Theorem~\ref{thm:identical}) (dark blue dashed lines).
+(Theorem~\ref{thm:identical}) (thick lines).
 %
 After nearly 3 hours, the execution is still far from complete;
 in particular, the lower bound is far from the optimum objective value (top)
@@ -616,7 +631,7 @@ and certifies optimality in less than a minute.
 %
 CORELS without the permutation bound (Corollary~\ref{thm:permutation}),
 and thus the symmetry-aware map,
-requires orders of magnitude more time to complete (cyan dashed lines).
+requires orders of magnitude more time to complete (thick lines).
 
 \begin{figure}[t!]
 \begin{center}
@@ -624,14 +639,14 @@ requires orders of magnitude more time to complete (cyan dashed lines).
 % left lower right upper
 %\includegraphics[trim={13mm, 20mm, 0mm, 13mm},
 %width=0.495\textwidth]{figs/compas_execution_large-remaining-space.pdf}
-\includegraphics[trim={34mm, 20mm, 34mm, 10mm},
-width=\textwidth]{figs/weapon_execution_large-remaining-space.pdf}
+\includegraphics[trim={25mm, 20mm, 30mm, 10mm},
+width=\textwidth]{figs/weapon_execution-remaining-space.pdf}
 \end{center}
 \caption{Execution progress of CORELS and selected variants,
 for the ProPublica (${\Reg = 0.005}$, ${M = 155}$) (left)
 and NYCLU (${\Reg = 0.01}$, ${M = 46}$) (right) datasets.
 %
-Top: Objective value (thin solid lines) and lower bound (thick solid lines) for CORELS,
+Top: Objective value (thin solid lines) and lower bound (dashed lines) for CORELS,
 as a function of wall clock time (log scale).
 %
 Numbered points along the trace of the objective value
@@ -643,7 +658,7 @@ and certifies optimality when the lower bound matches the objective value.
 %
 On the left, a separate and significantly longer execution of CORELS
 without the equivalent points  (Theorem~\ref{thm:identical}) bound remains
-far from complete, and its lower bound (dashed line) far from the optimum.
+far from complete, and its lower bound (thick solid line) far from the optimum.
 %
 On the right, a separate execution of CORELS without the permutation bound
 (Corollary~\ref{thm:permutation}), and thus the symmetry-aware map,
@@ -657,8 +672,8 @@ is the upper bound on remaining search space size
 %
 For these problems, the equivalent points (left) and
 permutation (right) bounds are responsible for the ability of
-CORELS to quickly eliminate most of the search space (solid lines);
-the remaining search space decays much more slowly without this bound (dashed lines).
+CORELS to quickly eliminate most of the search space (thin solid lines);
+the remaining search space decays much more slowly without these bounds (thick solid lines).
 }
 \label{fig:objective}
 \end{figure}
