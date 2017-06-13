@@ -18,24 +18,22 @@ q = tb.tabarray(SVfile='../eval/frisk_sparsity-c45.csv')
 z = z.rowstack(q)
 b = tb.tabarray(SVfile='../eval/frisk_sparsity-sbrl.csv', names=z.dtype.names, namesinheader=False)
 y = tb.tabarray(SVfile='../eval/frisk_sparsity-CORELS.csv', names=z.dtype.names, namesinheader=False)
+p = tb.tabarray(SVfile='../eval/frisk_sparsity-sbrl-eta=500-lambda=5.csv', names=list(z.dtype.names) + ['eta', 'lambda'], namesinheader=False)
 
-x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(y)
+x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(y).rowstack(p)
+x['eta'][(x['Method'] == 'SBRL') & (x['eta'] == 0)] = 3
+x['lambda'][(x['Method'] == 'SBRL') & (x['lambda'] == 0)] = 9
 
-m = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
-s = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
+m = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
+s = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
 
-#c45 = z[z['Method'] == 'C4.5']
-#cm = c45.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
-#cs = c45.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
-
-fig = plt.figure(2, figsize=(8, 2.7))
+fig = plt.figure(2, figsize=(8, 3.3))
 plt.clf()
-#ax = plt.subplot2grid((20, 1), (0, 1), colspan=1, rowspan=18)
 
-m.sort(order=['Method', 'C', 'cp', 'R'])
-s.sort(order=['Method', 'C', 'cp', 'R'])
+m.sort(order=['Method', 'C', 'cp', 'R', 'eta', 'lambda'])
+s.sort(order=['Method', 'C', 'cp', 'R', 'eta', 'lambda'])
 
-ind = [-4, -3, -2] + [-1] + [4, 5, 6, 8] + [0, 1, 3]
+ind = [-5, -4, -3] + [-2, -1] + [4, 5, 6, 8] + [0, 1, 3]
 m = m[ind].copy()
 s = s[ind].copy()
 
@@ -43,10 +41,10 @@ data = zip(m['Method'], m['leaves'], m['accuracy'], s['leaves'], s['accuracy'], 
 
 ms = 5
 cdict = {'CORELS': 'k', 'C4.5': 'k', 'CART': 'k', 'RIPPER': 'k', 'SBRL': 'k'}
-mdict = {'CORELS': 's', 'C4.5': 'o', 'CART': 'd', 'RIPPER': '^', 'SBRL': 'v'}
+mdict = {'CORELS': 's', 'C4.5': 'o', 'CART': 'd', 'RIPPER': '^', 'SBRL': 'D'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
 mfcdict = {'CORELS': 'm', 'C4.5': 'c', 'CART': 'white', 'RIPPER': 'gray', 'SBRL': 'k'}
-msvec = np.array([3, 5, 7, 6, 1, 3, 5, 9, 0, 2, 4]) + 6
+msvec = np.array([3, 5, 7, 3, 8, 1, 3, 5, 9, 0, 2, 4]) + 6
 mew = 1
 
 fs = 14
@@ -84,15 +82,20 @@ for r in m[:-3]:
         descr += ' (%s)' % ('%1.3f' % r['cp']).strip('0').replace('.01', '.01, .03')
     elif r['R']:
         descr += ' (%s)' % ('%1.4f' % r['R']).strip('0')
+    elif r['eta']:
+        if r['eta'] == 3:
+            descr += ' (%d, %d, 1000)' % (r['eta'], r['lambda'])
+        else:
+            descr += ' (%d, %d, 10000)' % (r['eta'], r['lambda'])
     legend += [descr]
-ax1.legend(legend, loc='upper left', fontsize=fs-3, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0, columnspacing=0.1, markerscale=0.8, frameon=False)
+ax1.legend(legend, loc='upper left', fontsize=fs-3.6, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0, columnspacing=0., markerscale=0.8, frameon=False)
 
 legend = []
 for r in m[-3:]:
     descr = r['Method']
     descr += ' (%s)' % ('%1.5f' % r['C']).strip('0')
     legend += [descr]
-ax2.legend(legend, loc=(-1.7, 0.65), fontsize=fs-3, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, columnspacing=0.1, markerscale=0.8, frameon=False)
+ax2.legend(legend, loc=(-1.55, 0.735), fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, markerscale=0.8, frameon=False)
 
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:

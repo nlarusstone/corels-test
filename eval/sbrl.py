@@ -11,8 +11,14 @@ dataset = 'frisk'
 dataset = 'compas'
 dataset = 'adult'
 #dataset = '1adult'
+descr = 'sparsity-sbrl'
 
-folds = open('%s_sparsity-sbrl.txt' % dataset, 'rU').read().strip().split('Initialize')[1:]
+dataset = 'frisk'
+#dataset = 'compas'
+descr = 'sparsity-sbrl-eta=15-lambda=5'
+descr = 'sparsity-sbrl-eta=500-lambda=5'
+
+folds = open('%s_%s.txt' % (dataset, descr), 'rU').read().strip().split('Initialize')[1:]
 out = []
 
 for (i, f) in enumerate(folds):
@@ -24,6 +30,6 @@ for (i, f) in enumerate(folds):
     test_acc = float([line for line in f if line.startswith('test acc')][0].strip().split()[-1])
     out += ['%d,%s,0,0,0,%1.10f,%d,%1.10f' % (i, 'SBRL', test_acc, len(model), train_acc)]
 
-fh = open('%s_sparsity-sbrl.csv' % dataset, 'w')
+fh = open('%s_%s.csv' % (dataset, descr), 'w')
 fh.write('\n'.join(out) + '\n')
 fh.close()

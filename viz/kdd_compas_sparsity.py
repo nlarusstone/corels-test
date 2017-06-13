@@ -14,20 +14,23 @@ plt.ion()
 z = tb.tabarray(SVfile='../eval/compas_sparsity-train.csv')
 b = tb.tabarray(SVfile='../eval/compas_sparsity-sbrl.csv', names=z.dtype.names, namesinheader=False)
 y = tb.tabarray(SVfile='../eval/compas_sparsity-CORELS.csv', names=z.dtype.names, namesinheader=False)
+q = tb.tabarray(SVfile='../eval/compas_sparsity-sbrl-eta=15-lambda=5.csv', names=list(z.dtype.names) + ['eta', 'lambda'], namesinheader=False)
 
-x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(y)
+x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(y).rowstack(q)
+x['eta'][(x['Method'] == 'SBRL') & (x['eta'] == 0)] = 3
+x['lambda'][(x['Method'] == 'SBRL') & (x['lambda'] == 0)] = 9
 
-m = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
-s = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
+m = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
+s = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
 
 fig = plt.figure(1, figsize=(8, 3.5))
 plt.clf()
 ax = plt.subplot2grid((20, 1), (0, 1), colspan=1, rowspan=19)
 
-m.sort(order=['Method', 'C', 'cp', 'R'])
-s.sort(order=['Method', 'C', 'cp', 'R'])
+m.sort(order=['Method', 'C', 'cp', 'R', 'eta', 'lambda'])
+s.sort(order=['Method', 'C', 'cp', 'R', 'eta', 'lambda'])
 
-ind = range(10, 15) + range(5, 10) + range(4)
+ind = range(10, 13) + [-2, -1] + range(5, 10) + range(4) + [-3]
 m = m[ind].copy()
 s = s[ind].copy()
 
@@ -35,11 +38,11 @@ data = zip(m['Method'], m['leaves'], m['accuracy'],  s['leaves'], s['accuracy'],
 
 ms = 5
 cdict = {'CORELS': 'k', 'C4.5': 'k', 'CART': 'k', 'RIPPER': 'k', 'SBRL': 'k'}
-mdict = {'CORELS': 's', 'C4.5': 'o', 'CART': 'd', 'RIPPER': '^', 'SBRL': 'v'}
+mdict = {'CORELS': 's', 'C4.5': 'o', 'CART': 'd', 'RIPPER': '^', 'SBRL': 'D'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
 mfcdict = {'CORELS': 'm', 'C4.5': 'c', 'CART': 'white', 'RIPPER': 'gray', 'SBRL': 'k'}
 #msvec = np.array([11, 9, 8, 10, 10, 10, 9, 8, 7, 7, 8, 7, 6, 5, 4]) * 2
-msvec = np.array([4, 7, 10, 6, 6, 1, 3, 5, 7, 9, 3, 5, 7, 9, 11]) + 6
+msvec = np.array([4, 7, 10, 3, 8, 1, 3, 5, 7, 9, 4, 6, 8, 10, 8]) + 6
 mew = 1
 
 i = 0
@@ -74,6 +77,11 @@ for r in m:
         descr += ' (%s)' % ('%1.3f' % r['cp']).strip('0')
     elif r['R']:
         descr += ' (%s)' % ('%1.3f' % r['R']).strip('0')
+    elif r['eta']:
+        if r['eta'] == 3:
+            descr += ' (%d, %d, 1000)' % (r['eta'], r['lambda'])
+        else:
+            descr += ' (%d, %d, 10000)' % (r['eta'], r['lambda'])
     legend += [descr]
 
 fs = 14
