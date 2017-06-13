@@ -92,6 +92,7 @@ rules_init(const char *infile, int *nrules,
 	 */
 	rule_cnt = add_default_rule != 0 ? 1 : 0;
 	while (getline(&line, &len, fi) != -1) {
+        char* line_cpy = line;
 		if (rule_cnt >= rsize) {
 			rsize += RULE_INC;
                 	rules = realloc(rules, rsize * sizeof(rule_t));
@@ -100,7 +101,7 @@ rules_init(const char *infile, int *nrules,
 		}
 
 		/* Get the rule string; line will contain the bits. */
-		if ((rulestr = strsep(&line, " ")) == NULL)
+		if ((rulestr = strsep(&line_cpy, " ")) == NULL)
 			goto err;
 
 		rulelen = strlen(rulestr) + 1;
@@ -114,8 +115,8 @@ rules_init(const char *infile, int *nrules,
 		 * at line[len-1]; let's make it a NUL and shorten the line
 		 * length by one.
 		 */
-		line[len-1] = '\0';
-		if (ascii_to_vector(line, len, &sample_cnt, &ones,
+		line_cpy[len-1] = '\0';
+		if (ascii_to_vector(line_cpy, len, &sample_cnt, &ones,
 		    &rules[rule_cnt].truthtable) != 0)
 		    	goto err;
 		rules[rule_cnt].support = ones;
@@ -126,6 +127,7 @@ rules_init(const char *infile, int *nrules,
 			if (*cp == ',')
 				rules[rule_cnt].cardinality++;
 		rule_cnt++;
+        free(line);
         line = NULL;
 	}
 	/* All done! */
@@ -846,6 +848,31 @@ rule_vandnot(VECTOR dest,
 #endif
 }
 
+/*
+ * Doesn't handle two's complement
+ */
+void
+rule_not(VECTOR dest, VECTOR src, int nsamples, int *ret_cnt)
+{
+#ifdef GMP
+    mpz_com(dest, src);
+    *ret_cnt = 0;
+    *ret_cnt = mpz_popcount(dest);
+#else
+	int i, count, nentries;
+
+	nentries = (nsamples + BITS_PER_ENTRY - 1)/BITS_PER_ENTRY;
+	count = 0;
+	assert(dest != NULL);
+	for (i = 0; i < nentries; i++) {
+		dest[i] = ~src2[i];
+		count += count_ones(dest[i]);
+	}
+	*ret_cnt = count;
+    return;
+#endif
+}
+
 int
 count_ones_vector(VECTOR v, int len) {
 #ifdef GMP
@@ -945,4 +972,35 @@ rule_isset(VECTOR v, int e) {
 #else
 	return ((v[e/BITS_PER_ENTRY] & (1 << (e % BITS_PER_ENTRY))) != 0);
 #endif
+}
+
+int
+rule_vector_equal(const VECTOR v1, const VECTOR v2, short len1, short len2) {
+#ifdef GMP
+    return !mpz_cmp(v1, v2);
+#else
+    if (len1 != len2)
+        return 0;
+    size_t nentries = (len1 + BITS_PER_ENTRY - 1)/BITS_PER_ENTRY;
+    for (size_t i = 0; i < nentries; i++) {
+        if (v1[i] != v2[i])
+            return 0;
+    }
+    return 1;
+#endif
+}
+
+size_t
+rule_vector_hash(const VECTOR v, short len) {
+        unsigned long hash = 0;
+		size_t i;
+#ifdef GMP
+        for(i = 0; i < mpz_size(v); ++i)
+            hash = mpz_getlimbn(v, i) + (hash << 6) + (hash << 16) - hash;
+#else
+   		size_t nentries = (len + BITS_PER_ENTRY - 1)/BITS_PER_ENTRY;
+		for(i = 0; i < nentries; ++i)
+            hash = v[i] + (hash << 6) + (hash << 16) - hash;
+#endif
+        return hash;
 }

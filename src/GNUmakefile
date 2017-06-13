@@ -1,29 +1,26 @@
-CFLAGS := -g -W -Wall -O$(O) -I. -DGMP
+CFLAGS := -g -W -Wall -Wno-unused-parameter -I. -DGMP -O$(O)
 
-ifneq (,$(filter $(shell uname -n),elaines-MacBook-Pro.local Nicholass-MacBook-Air-5.local))
+ifneq (,$(filter $(shell uname -n),elaines-MacBook-Pro.local Nicholass-Air-5.wireless.yale.internal))
     LIBS := -L/usr/local/lib
     CFLAGS += -I/usr/local/include
 else
     LIBS :=
 endif
 
-LIBS += -L/usr/local/lib -lgmp
-#-lgmpxx 
+LIBS += -L/usr/local/lib -lgmpxx -lgmp
 
-ifeq (,$(findstring rc.fas.harvard.edu, $(shell uname -n)))
-    ifneq ($(shell uname -n),beepboop)
-		LDFLAGS := -Wl,-no_pie
-		CFLAGS += -fno-omit-frame-pointer
-        ifneq ($(shell uname -r),15.6.0)
-			LIBS += -lprofiler -ltcmalloc
-        endif
-    else
-		LDFLAGS :=
+ifneq ($(shell uname -n),beepboop)
+    LDFLAGS := -Wl,-no_pie
+    CFLAGS += -fno-omit-frame-pointer
+    ifneq ($(shell uname -r),15.6.0)
+        LIBS += -lprofiler -ltcmalloc
     endif
+else
+    LDFLAGS :=
+endif
 
-    ifneq ($(shell uname),Darwin)
-		LIBS += -lbsd
-    endif
+ifneq ($(shell uname),Darwin)
+    LIBS += -lbsd
 endif
 
 CC = gcc
@@ -31,18 +28,20 @@ CXX = g++ -std=c++11
 
 DEPSDIR := .deps
 
-CLEAN = bbcache *~ *.o *.so
+CLEAN = corels *~ *.o *.so
 
-all: bbcache
+all: corels
 
-#memtrack.o
-bbcache: main.o bbound.o cache.o rulelib.o utils.o 
+corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 main.o: main.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
-bbound.o: bbound.cc $(DEPSDIR)/stamp
+corels.o: corels.cc $(DEPSDIR)/stamp
+	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+
+pmap.o: pmap.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 utils.o: utils.cc $(DEPSDIR)/stamp
@@ -50,9 +49,6 @@ utils.o: utils.cc $(DEPSDIR)/stamp
 
 cache.o: cache.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
-
-#memtrack.o: memtrack.cc $(DEPSDIR)/stamp
-#	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 rulelib.o: rulelib.c $(DEPSDIR)/stamp
 	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
