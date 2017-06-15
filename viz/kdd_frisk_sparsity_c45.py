@@ -126,7 +126,7 @@ if (with_training):
                 xx = np.log2(xx)
             if (np.abs(ty - yy) > 0.01):
                 ax.plot([xx, xx], [ty, yy+h], ':', color=cdict[method], linewidth=2)
-            ax.plot(xx, ty, 'o', markersize=5, color='white', markeredgewidth=mew, markeredgecolor='k')
+            ax.plot(xx, ty, 'o', markersize=6, color='white', markeredgewidth=mew, markeredgecolor='k')
         i += 1
 
 plt.suptitle('Weapon prediction (NYCLU stop-and-frisk dataset)', fontsize=fs)

@@ -69,7 +69,7 @@ if (with_training):
         else:
             mfc = mfcdict[method]
         if ty:
-            plt.plot(xx, ty, 'o', markersize=4, color='white', markeredgewidth=mew, markeredgecolor='k')
+            plt.plot(xx, ty, 'o', markersize=6, color='white', markeredgewidth=mew, markeredgecolor='k')
         i += 1
 
 legend = []
