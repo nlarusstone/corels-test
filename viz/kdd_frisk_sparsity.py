@@ -7,6 +7,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tabular as tb
 
+# see:  http://phyletica.org/matplotlib-fonts/
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+
 with_training = True
 log2 = False
 

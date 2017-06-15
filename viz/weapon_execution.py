@@ -11,6 +11,10 @@ import pylab
 import tabular as tb
 
 
+# see:  http://phyletica.org/matplotlib-fonts/
+pylab.rcParams['pdf.fonttype'] = 42
+pylab.rcParams['ps.fonttype'] = 42
+
 froot = 'weapon'
 data_dir = '../data/CrossValidation/'
 num_folds = 1
@@ -34,7 +38,7 @@ if large:
     wo = 'No'
 else:
     ftag = 'weapon_execution'
-    fs_legend = fs - 1.5
+    fs_legend = fs - 2
     loc = 'lower right'
     wo = 'No'
 
@@ -104,7 +108,7 @@ if large:
     pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
 else:
     pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
-pylab.axis([x['total_time'][2], y['total_time'][-1], 0, 0.52])
+pylab.axis([x['total_time'][2], y['total_time'][-1]*1.2, 0, 0.52])
 #pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (%s map)' % wo], loc=loc, fontsize=fs_legend, frameon=False, borderpad=0.01)
 pylab.legend(['Lower bound (%s map)' % wo], loc=loc, fontsize=fs_legend, frameon=False)
 
@@ -121,7 +125,7 @@ ax2.semilogx(y['total_time'][1:], yremaining[1:], '-', linewidth=5, color='c')
 
 xremaining = x['log_remaining_space_size'].copy()
 xremaining[xremaining > xremaining[0]] = xremaining[0]
-ax2.semilogx(x['total_time'][2:ii+1], xremaining[2:ii+1], '-', color='k', linewidth=lw)
+ax2.semilogx(x['total_time'][2:], xremaining[2:], '-', color='k', linewidth=lw)
 
 pylab.title('Size of remaining search space', fontsize=fs)
 pylab.xlabel('Time (s)', fontsize=fs)
@@ -132,11 +136,8 @@ pylab.yticks(range(0, 61, 20), fontsize=fs)
 
 #pylab.legend(['%s symmetry-aware map' % wo, 'CORELS'], loc='upper right', fontsize=fs_legend, frameon=False)
 pylab.legend(['%s symmetry-aware map' % wo], loc='upper right', fontsize=fs_legend, frameon=False)
-if large:
-    pylab.axis([x['total_time'][2], 10**4.5, 0, 60])
-else:
-    #pylab.axis([x['total_time'][2], 10**4.5, 0, 60])
-    pylab.axis([x['total_time'][2], y['total_time'][-1]*1.01, 0, 70])
-    pylab.yticks(range(0, 70, 20))
+
+pylab.axis([x['total_time'][2], y['total_time'][-1]*1.2, 0, 70])
+pylab.yticks(range(0, 70, 20))
 pylab.draw()
 pylab.savefig('../figs/%s-remaining-space.pdf' % ftag)

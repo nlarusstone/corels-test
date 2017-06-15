@@ -5,9 +5,9 @@ For KDD 2017 Figure 2.
 import numpy as np
 import pylab
 
-pylab.rcParams['ps.useafm'] = True
-pylab.rcParams['pdf.use14corefonts'] = True
-pylab.rcParams['text.usetex'] = True
+# see:  http://phyletica.org/matplotlib-fonts/
+pylab.rcParams['pdf.fonttype'] = 42
+pylab.rcParams['ps.fonttype'] = 42
 
 figure = True
 vertical = False

@@ -11,6 +11,10 @@ import pylab
 import tabular as tb
 
 
+# see:  http://phyletica.org/matplotlib-fonts/
+pylab.rcParams['pdf.fonttype'] = 42
+pylab.rcParams['ps.fonttype'] = 42
+
 froot = 'compas'
 data_dir = '../data/CrossValidation/'
 num_folds = 1
@@ -36,7 +40,7 @@ if large:
     wo = 'No'
 else:
     ftag = 'compas_execution'
-    fs_legend = fs - 1.5
+    fs_legend = fs - 2
     legend_xloc = 10**-3
     legend_yloc = 0.12
     wo = 'No'
@@ -100,11 +104,12 @@ for jj in ip:
 pylab.ylabel('Value', fontsize=fs)
 if large:
     pylab.title('Execution progress (ProPublica dataset)', fontsize=fs)
+    pylab.axis([x['total_time'][2], 1100, 0, 0.52])
 else:
     pylab.title('Execution progress (ProPublica)', fontsize=fs)
+    pylab.axis([x['total_time'][2], 970, 0, 0.52])
 pylab.xticks(fontsize=fs)
 pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
-pylab.axis([x['total_time'][2], 1100, 0, 0.52])
 pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (%s equiv. pts. bound)' % wo], loc=(legend_xloc, legend_yloc), fontsize=fs_legend, frameon=False)
 
 if large:
@@ -120,19 +125,20 @@ ax2.semilogx(y['total_time'][1:], yremaining[1:], '-', linewidth=5, color='m')
 
 xremaining = x['log_remaining_space_size'].copy()
 xremaining[xremaining > xremaining[0]] = xremaining[0]
-ax2.semilogx(x['total_time'][2:ii+1], xremaining[2:ii+1], '-', color='k', linewidth=lw)
+ax2.semilogx(x['total_time'][2:], xremaining[2:], '-', color='k', linewidth=lw)
 
 pylab.title('Size of remaining search space', fontsize=fs)
 pylab.xlabel('Time (s)', fontsize=fs)
 pylab.ylabel('log10(Size)', fontsize=fs)
-pylab.xticks(fontsize=fs)
 if large:
     pylab.yticks(range(0, 160, 50), fontsize=fs)
+    pylab.axis([x['total_time'][2], 1100, 0, 175])
 else:
     pylab.yticks(range(0, 175, 50), fontsize=fs)
+    pylab.axis([x['total_time'][2], 970, 0, 175])
 
+pylab.xticks(fontsize=fs)
 legend_text = '%s equivalent points bound' % wo
 pylab.legend([legend_text, 'CORELS'], loc='center right', fontsize=fs_legend, frameon=False)
-pylab.axis([x['total_time'][2], 1100, 0, 170])
 pylab.draw()
 pylab.savefig('../figs/%s-remaining-space.pdf' % ftag)

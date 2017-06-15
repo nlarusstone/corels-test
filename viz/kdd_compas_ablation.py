@@ -55,6 +55,10 @@ import tabular as tb
 import utils
 
 
+# see:  http://phyletica.org/matplotlib-fonts/
+#pylab.rcParams['pdf.fonttype'] = 42
+#pylab.rcParams['ps.fonttype'] = 42
+
 froot = 'compas'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
@@ -253,8 +257,10 @@ for (ncomp, log_root) in enumerate(log_root_list):
             if (ncomp + 1 == ntot):
                 if make_small:
                     pylab.tight_layout()
-                    pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.11, 1.77), handletextpad=0,
-                                 borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
+                    #pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.11, 1.77), handletextpad=0,
+                    #             borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
+                    pylab.legend(['  %d' % ii for ii in range(1, 11)], loc=(-1.11, 1.75), handletextpad=0,
+                                 borderaxespad=0.1, ncol=2, columnspacing=1, frameon=False, fontsize=fs-3)
                 else:
                     pylab.suptitle('\nExecution traces of queue contents (ProPublica dataset)', fontsize=fs+2)
                     pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.175, 2.93), handletextpad=0, labelspacing=0.3,  borderaxespad=0.1, ncol=2, columnspacing=0.5)

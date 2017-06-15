@@ -12,6 +12,10 @@ import tabular as tb
 import utils
 
 
+# see:  http://phyletica.org/matplotlib-fonts/
+pylab.rcParams['pdf.fonttype'] = 42
+pylab.rcParams['ps.fonttype'] = 42
+
 froot = 'frisk'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
@@ -139,7 +143,8 @@ for (ncomp, log_root) in enumerate(log_root_list):
     pylab.yticks(np.arange(0, 0.59, 0.1), fontsize=fs)
     pylab.axis([x['total_time'][2], 10**3, 0, 0.55])
     if (make_small):
-        pylab.text(10**-1.5, 0.45, ' Overlay', fontsize=fs)
+        if (ncomp == 0):
+            pylab.text(10**-1.5, 0.45, ' Overlay', fontsize=fs)
     else:
         pylab.title('Overlay', fontsize=fs)
     pylab.xticks(fontsize=fs-1)
