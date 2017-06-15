@@ -41,7 +41,7 @@ if large:
 else:
     ftag = 'compas_execution'
     fs_legend = fs - 2
-    legend_xloc = 10**-3
+    legend_xloc = 10**-1.7
     legend_yloc = 0.12
     wo = 'No'
 

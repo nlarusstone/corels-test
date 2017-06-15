@@ -56,8 +56,8 @@ import utils
 
 
 # see:  http://phyletica.org/matplotlib-fonts/
-#pylab.rcParams['pdf.fonttype'] = 42
-#pylab.rcParams['ps.fonttype'] = 42
+pylab.rcParams['pdf.fonttype'] = 42
+pylab.rcParams['ps.fonttype'] = 42
 
 froot = 'compas'
 data_dir = '../data/CrossValidation/'
