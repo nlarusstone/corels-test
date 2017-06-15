@@ -136,8 +136,8 @@ for (ncomp, log_root) in enumerate(log_root_list):
     else:
         pylab.subplot(2, 4, 4)
 
-    pylab.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color=c1[ncomp], linewidth=lw)
-    pylab.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '--', color=c1[ncomp], linewidth=lw)
+    pylab.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='b', linewidth=lw)
+    pylab.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '--', color='k', linewidth=lw)
     #pylab.semilogx(tmin, opt, 'k*', markersize=18)
     pylab.xticks(fontsize=fs-1)
     pylab.yticks(np.arange(0, 0.59, 0.1), fontsize=fs)
