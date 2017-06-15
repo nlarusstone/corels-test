@@ -50,7 +50,7 @@ mew = 1
 fs = 14
 ax1 = plt.subplot2grid((20, 60), (0, 1), colspan=48, rowspan=18)
 plt.xticks(fontsize=fs)
-plt.yticks(fontsize=fs)
+plt.yticks(np.arange(0.65, 0.9, 0.05), fontsize=fs)
 plt.xlabel('Model size', fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
 ax1.set_xlim(0, 56)
@@ -59,7 +59,7 @@ ax1.set_ylim(0.64, 0.87)
 
 ax2 = plt.subplot2grid((20, 60), (0, 50), colspan=10, rowspan=18)
 plt.xticks([400, 700], fontsize=fs)
-plt.yticks((), ())
+plt.yticks(np.arange(0.65, 0.9, 0.05), ())
 #plt.ylabel('Accuracy', fontsize=fs)
 ax2.set_xlim(320, 780)
 ax2.set_ylim(0.64, 0.87)
