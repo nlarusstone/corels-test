@@ -5,6 +5,10 @@ For KDD 2017 Figure 2.
 import numpy as np
 import pylab
 
+pylab.rcParams['ps.useafm'] = True
+pylab.rcParams['pdf.use14corefonts'] = True
+pylab.rcParams['text.usetex'] = True
+
 figure = True
 vertical = False
 
