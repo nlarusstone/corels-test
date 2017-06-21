@@ -20,24 +20,26 @@ ms = 9  # markersize
 fs = 16 # fontsize
 
 num_folds = 10
-make_figure = True
+make_figure = False
 figure_fold = -1
 make_small = False
 
+make_figure = True
 num_folds = 1
 figure_fold = 0
 
 # log files generated on beepboop
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
+log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
 
 if make_figure:
-    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0400000-v=1-f=10.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=1-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0025000-v=1-f=1000.txt']
+    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0400000-v=10-f=10.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=2-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0025000-v=2-f=1000.txt']
 else:
-    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0400000-v=1-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=1-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0025000-v=1-f=1000.txt']
+    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0400000-v=2-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=2-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0025000-v=2-f=1000.txt']
 
 labels = ['$\lambda$ = 0.04', '$\lambda$ = 0.01', '$\lambda$ = 0.0025']
 ftag = "weapon_reg"
@@ -71,11 +73,6 @@ for (ncomp, log_root) in enumerate(log_root_list):
         fname = os.path.join(data_dir, tname)
 
         c = float(log_fname.split('c=')[1].split('-')[0])
-        nrules = len(open(fname, 'rU').read().strip().split('\n'))
-        if (ncomp == 0):
-            num_rules[fold] = nrules
-            print 'num rules:', nrules
-
         log_fname = os.path.join(log_dir, log_fname)
         try:
             print 'reading', log_fname
@@ -153,8 +150,6 @@ for (ncomp, log_root) in enumerate(log_root_list):
                     yy = np.array([1] + list(yy))
                     tt = np.array([tt[0]] + list(tt))
                 pylab.loglog(tt, yy, color=color_vec[length % len(color_vec)], linewidth=lw*2)
-                tx = 10**(np.log10(tt[0] + 0.1 * (np.log10(tt[-1] - np.log10(tt[0])))))
-                ix = np.nonzero(tt < tx)[0][-1]
                 if make_small:
                     if (length == 1):
                         txt = pylab.text(tt[0] * 0.47, 1.5, '%d ' % length, fontsize=fs+4)
@@ -164,7 +159,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 pylab.xlabel('Time (s)\n', fontsize=fs+2)
             if (ncomp % 3 == 0):
                 pylab.ylabel('Count', fontsize=fs+2)
-            (ymin, ymax) = (10**-0.1, 10**6.5)
+            (ymin, ymax) = (10**-0.1, 10**6.8)
             t_corels = t_comp[-1]
             tmax = np.round(tt[-1])
             pylab.plot([tt[-1], tt[-1]], [ymin, ymax], 'k--', linewidth=lw)
@@ -174,11 +169,9 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 descr = '%d s' % tmax
             descr = ' ' * 2 * (5 - len(descr)) + descr
             pylab.text(tt[-1] / 50, qc.max() * 1.1, descr, fontsize=fs+2)
-            #pylab.suptitle('lengths of prefixes in the logical queue\n', fontsize=fs)
             pylab.text(10**-3.7, 10**6.1, labels[ncomp], fontsize=fs+2)
             pylab.xticks(fontsize=fs-2)
             pylab.yticks(fontsize=fs-2)
-            #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
             ax = [10**-4, 10**3, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()

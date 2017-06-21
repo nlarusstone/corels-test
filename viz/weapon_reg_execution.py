@@ -24,9 +24,8 @@ ms = 9  # markersize
 fs = 16 # fontsize
 
 num_folds = 10
-make_figure = True
 figure_fold = -1
-make_small = True
+make_small = False
 
 num_folds = 1
 figure_fold = 0
@@ -35,37 +34,25 @@ figure_fold = 0
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
 log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
 
-if make_figure:
-    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0400000-v=1-f=10.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=1-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0025000-v=1-f=1000.txt']
-else:
-    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0400000-v=1-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=1-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0025000-v=1-f=1000.txt']
-
-if (log_dir.endswith('corels/')):
-    log_root_list = [lr.replace('v=1', 'v=2').replace('f=10.', 'f=1000.') for lr in log_root_list]
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=99999999-c=0.0400000-v=10-f=10.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=99999999-c=0.0100000-v=10-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=99999999-c=0.0025000-v=10-f=1000.txt']
 
 labels = ['$\lambda$ = 0.04', '$\lambda$ = 0.01', '$\lambda$ = 0.0025']
 ftag = "weapon_reg"
 fs_legend = fs - 2
 
-if (make_figure):
-    pylab.ion()
-    if (make_small):
-        pylab.figure(5, figsize=(12, 6.4))
-        ftag = '%s_small' % ftag
-        fs += 3
-        fs_legend += 3
-    else:
-        pylab.figure(6, figsize=(16, 5.8))
-    pylab.clf()
+pylab.ion()
+if (make_small):
+    pylab.figure(5, figsize=(12, 6.4))
+    ftag = '%s_small' % ftag
+    fs += 3
+    fs_legend += 3
+else:
+    pylab.figure(6, figsize=(16, 5.8))
+pylab.clf()
 
 ntot = len(log_root_list)
-
-num_rules = np.zeros(num_folds, int)
-
 c1 = ['pink', 'red', 'brown']
 c1 = ['lightgray', 'gray', 'black']
 #c1 = ['gray', 'coral', 'c']
@@ -79,10 +66,6 @@ for (ncomp, log_root) in enumerate(log_root_list):
     fname = os.path.join(data_dir, tname)
 
     c = float(log_fname.split('c=')[1].split('-')[0])
-    nrules = len(open(fname, 'rU').read().strip().split('\n'))
-    if (ncomp == 0):
-        num_rules[fold] = nrules
-        print 'num rules:', nrules
 
     log_fname = os.path.join(log_dir, log_fname)
     try:
@@ -166,7 +149,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
         pylab.yticks(range(0, 40, 10), fontsize=fs)
         pylab.axis([x['total_time'][2], 10**3, 0, 32])
         pylab.subplot(2, 4, 8)
-        pylab.semilogx(xtt, xrr, '-', color=c1[ncomp], linewidth=lw*2)
+        pylab.semilogx(xtt, xrr, '-', color='c', linewidth=lw*2)
         pylab.yticks(range(0, 40, 10), fontsize=fs)
         pylab.axis([x['total_time'][2], 10**3, 0, 32])
         pylab.xlabel('Time (s)', fontsize=fs)
