@@ -613,7 +613,7 @@ as the search space shrinks (bottom).
 We dynamically and incrementally
 calculate~$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
 where~$\Remaining(\CurrentObj, \Queue)$
-is the upper bound on remaining search space size
+is the upper bound~\eqref{eq:remaining} on remaining search space size
 (Theorem~\ref{thm:remaining-eval-fine});
 this adds some computational overhead.
 %
@@ -667,7 +667,7 @@ requires orders of magnitude more time to complete.
 Bottom: $\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
 as a function of wall clock time (log scale),
 where~$\Remaining(\CurrentObj, \Queue)$
-is the upper bound on remaining search space size
+is the upper bound~\eqref{eq:remaining} on remaining search space size
 (Theorem~\ref{thm:remaining-eval-fine}).
 %
 For these problems, the equivalent points (left) and
