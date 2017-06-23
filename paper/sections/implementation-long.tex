@@ -114,7 +114,7 @@ As we demonstrate in our experiments~(\S\ref{sec:ablation}),
 we find that using a custom search strategy,
 such as ordering by the lower bound, usually leads to a faster runtime than BFS.
 
-We motivate the design of additional custom search strategies in~\S\ref{sec:curiosity}.
+We motivate the design of additional custom search strategies in~\S\ref{sec:scheduling}.
 %
 In preliminary work (not shown), we also experimented with
 stochastic exploration processes that bypass the need for a queue
@@ -388,8 +388,8 @@ thus the expected misclassification error of~$\Prefix'$ is:
 Note that the default rule misclassification error~$\Loss_0(\Prefix', \Default', \x, \y)$
 is zero because we assume that~$\Prefix'$ captures all the data.
 %
-Combining~\eqref{eq:curiosity-length}~\eqref{eq:curiosity-error} and thus gives
-curiosity for this model:
+Inserting~\eqref{eq:curiosity-length} and~\eqref{eq:curiosity-error}
+into~\eqref{eq:curiosity} thus gives curiosity for this model:
 \begin{align*}
 \Curiosity(\Prefix, \x, \y)
 %= \E[\Loss_p(\Prefix', \Labels', \x, \y)] + \Reg \E[ K' ]
@@ -401,9 +401,9 @@ curiosity for this model:
 &= \left( \frac{1}{N} \sum_{n=1}^N \Cap(x_n, \Prefix) \right)^{-1} b(\Prefix, \x, \y)
 = \frac{b(\Prefix, \x, \y)}{\Supp(\Prefix, \x)},
 \end{align*}
-where for the second equality, we used the definitions of $\NCap$~\eqref{eq:num-cap}
-and $\Prefix$'s lower bound~\eqref{eq:lower-bound}, and for the last equality,
-we used the definition of $\Prefix$'s normalized support~\eqref{eq:support}.
+where for the second equality, we used the definitions in~\eqref{eq:num-cap} of~$\NCap$
+and in~\eqref{eq:lower-bound} of~$\Prefix$'s lower bound, and for the last equality,
+we used the definition in~\eqref{eq:support} of~$\Prefix$'s normalized support.
 
 The curiosity for a prefix~$\Prefix$ is thus also equal to its objective lower bound,
 scaled by the inverse of its normalized support.

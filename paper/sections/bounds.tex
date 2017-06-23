@@ -1089,7 +1089,7 @@ then the objective of the optimal rule list in~$\StartsWith(\Prefix)$ gives a
 lower bound on the objective of the optimal rule list in~$\StartsWith(\PrefixB)$:
 \begin{align}
 \min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
-\le \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y).
+\le \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y). \nn
 %\label{eq:permutation}
 \end{align}
 \end{corollary}
@@ -1150,7 +1150,7 @@ Define $\TotalRemaining(\RuleSet)$ to be the total number of prefixes evaluated.
 For any set~$\RuleSet$ of $M$ rules,
 \begin{align}
 \TotalRemaining(\RuleSet)
-\le  1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!},
+\le  1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}, \nn
 \end{align}
 where ${K = \min(\lfloor 1 / 2 \Reg \rfloor, M)}$.
 \end{theorem}
@@ -1177,10 +1177,10 @@ Propagating this forward gives
 \TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K C(M, k-1) (M - k + 1)
 %= 1 + \sum_{k=1}^K {M \choose k-1}(M - k + 1)
 %= 1 + \sum_{k=1}^K \frac{M! (M - k + 1)}{(k - 1)! (M - k + 1)!}
-= 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}.
+= 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}. \nn
 \end{align}
 \begin{align}
-\TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K C(M, k-1) (M - k + 1).
+\TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K C(M, k-1) (M - k + 1). \nn
 \end{align}
 \end{arxiv}
 \begin{kdd}
@@ -1302,7 +1302,7 @@ of rule lists starting with~$\Prefix$, then
 \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y)
 &\ge \min_{\RL' \in \StartsWith(\Prefix)} \Obj(\RL', \x, \y)
 + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \chi \nn \\
-&\ge \CurrentObj + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \chi,
+&\ge \CurrentObj + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \chi, \nn
 \end{align}
 where~$\CurrentObj$ is the current best objective,
 and~$\chi$ is the normalized support of the set of data captured
@@ -1311,7 +1311,7 @@ either exclusively by~$\Prefix$ or exclusively by~$\PrefixB$.
 It follows that
 \begin{align}
 \min_{\RLB' \in \StartsWith(\PrefixB)} \Obj(\RLB', \x, \y)
-\ge \CurrentObj + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \chi \ge \CurrentObj
+\ge \CurrentObj + b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) - \chi \ge \CurrentObj \nn
 \end{align}
 if ${b(\PrefixB, \x, \y) - b(\Prefix, \x, \y) \ge \chi}$.
 %
@@ -1324,7 +1324,7 @@ then we can prune all prefixes that start with any
 prefix~$\PrefixB'$ in the following set:
 \begin{align}
 \left\{ \PrefixB' : b(\PrefixB', \x, \y) + \Reg - b(\Prefix, \x, \y) \ge
-\frac{1}{N} \sum_{n=1}^N \Cap(x_n, \Prefix) \oplus \Cap(x_n, \PrefixB') \right\},
+\frac{1}{N} \sum_{n=1}^N \Cap(x_n, \Prefix) \oplus \Cap(x_n, \PrefixB') \right\}, \nn
 \end{align}
 where the symbol~$\oplus$ denotes the logical operation, exclusive or (XOR).
 
@@ -1376,7 +1376,7 @@ is at most~$2\Reg$:
 \left | \min_{\RL^\dagger \in \StartsWith(\Prefix')} \Obj(\RL^\dagger, \x, \y)
   - \min_{\RLB^\dagger \in \StartsWith(\PrefixB')} \Obj(\RLB^\dagger, \x, \y)
   \right | \le 2 \Reg.
-\label{eq:similar}
+\label{eq:very-similar}
 \end{align}
 \end{theorem}
 
@@ -1437,7 +1437,7 @@ ${\{s_m\}_{m=1}^M}$.
 Define distinct observations to be equivalent if they are captured by
 exactly the same antecedents, \ie ${x_i \neq x_j}$ are equivalent~if
 \begin{align}
-\frac{1}{M} \sum_{m=1}^M \one [ \Cap(x_i, s_m) = \Cap(x_j, s_m) ] = 1.
+\frac{1}{M} \sum_{m=1}^M \one [ \Cap(x_i, s_m) = \Cap(x_j, s_m) ] = 1. \nn
 \end{align}
 Notice that we can partition a dataset into sets of equivalent points;
 let~${\{e_u\}_{u=1}^U}$ enumerate these sets.
@@ -1448,7 +1448,7 @@ Now define~$\theta(e_u)$ to be the normalized support of the minority
 class label with respect to set~$e_u$, \eg let
 \begin{arxiv}
 \begin{align}
-{e_u = \{x_n : \forall m \in [M],\, \one [ \Cap(x_n, s_m) = \Cap(x_i, s_m) ] \}},
+{e_u = \{x_n : \forall m \in [M],\, \one [ \Cap(x_n, s_m) = \Cap(x_i, s_m) ] \}}, \nn
 \end{align}
 \end{arxiv}
 \begin{kdd}
@@ -1474,7 +1474,7 @@ this bound into our framework in Theorem~\ref{thm:identical}.
 Let ${\RL = (\Prefix, \Labels, \Default, K)}$ be a rule list, then
 \begin{arxiv}
 \begin{align}
-\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u) + \Reg K.
+\Obj(\RL, \x, \y) \ge \sum_{u=1}^U \theta(e_u) + \Reg K. \nn
 \end{align}
 \end{arxiv}
 \begin{kdd}
@@ -1489,7 +1489,7 @@ where the misclassification error~${\Loss(\RL, \x, \y)}$ is given by
 \begin{align}
 \Loss(\RL, \x, \y) &= \Loss_0(\Prefix, \Default, \x, \y) + \Loss_p(\Prefix, \Labels, \x, \y) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap(x_n, \Prefix) \wedge \one[q_0 \neq y_n]
-   + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [q_k \neq y_n] \right).
+   + \sum_{k=1}^K \Cap(x_n, p_k \given \Prefix) \wedge \one [q_k \neq y_n] \right). \nn
 \end{align}
 Any particular rule list uses a specific rule, and therefore a single class label,
 to classify all points within a set of equivalent points.
@@ -1525,7 +1525,7 @@ not captured by prefix~$\Prefix$.
    + \Cap(x_n, \Prefix) \right)
    \wedge \one [x_n \in e_u]\, \one[y_n = q_u] \nn \\
 &= \frac{1}{N} \sum_{u=1}^U \sum_{n=1}^N \one [ x_n \in e_u ]\, \one [ y_n = q_u ]
-= \sum_{u=1}^U \theta(e_u),
+= \sum_{u=1}^U \theta(e_u), \nn
 \end{align}
 where the final equality applies the definition of~$\theta(e_u)$ in~\eqref{eq:theta}.
 %
