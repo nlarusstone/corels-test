@@ -17,7 +17,7 @@ static std::function<bool(Node*, Node*)> base_cmp = [](Node* left, Node* right) 
 
 // orders based on curiosity metric.
 static std::function<bool(Node*, Node*)> curious_cmp = [](Node* left, Node* right) {
-    return left->get_curiosity() <= right->get_curiosity();
+    return left->get_curiosity() >= right->get_curiosity();
 };
 
 // orders based on lower bound.
