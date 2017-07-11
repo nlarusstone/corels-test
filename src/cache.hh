@@ -83,7 +83,7 @@ class CacheTree {
     CacheTree() {};
     CacheTree(size_t nsamples, size_t nrules, double c, rule_t *rules,
               rule_t *labels, rule_t *minority, int ablation,
-              bool calculate_size, char* type);
+              bool calculate_size, char const *type);
     ~CacheTree();
 
     Node* construct_node(unsigned short new_rule, size_t nrules,
@@ -144,7 +144,7 @@ class CacheTree {
     rule_t *labels_;
     rule_t *minority_;
 
-    char* type_;
+    char const *type_;
     void gc_helper(Node* node);
 };
 

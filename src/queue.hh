@@ -37,7 +37,7 @@ static std::function<bool(Node*, Node*)> dfs_cmp = [](Node* left, Node* right) {
 
 class Queue {
     public:
-        Queue(std::function<bool(Node*, Node*)> cmp, char* type); 
+        Queue(std::function<bool(Node*, Node*)> cmp, char const *type);
         // by default, initialize this as a BFS queue
         Queue() : Queue(base_cmp, "BFS") {};
         Node* front() {
@@ -55,7 +55,7 @@ class Queue {
         bool empty() {
             return q_->empty();
         }
-        inline char* type() {
+        inline char const * type() {
             return type_;
         }
 
@@ -102,7 +102,7 @@ class Queue {
 
     private:
         q* q_;
-        char* type_;
+        char const *type_;
 };
 
 extern int bbound(CacheTree* tree, size_t max_num_nodes, Queue* q, PermutationMap* p);

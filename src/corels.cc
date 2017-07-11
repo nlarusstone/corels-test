@@ -4,7 +4,7 @@
 #include <sys/resource.h>
 #include <stdio.h>
 
-Queue::Queue(std::function<bool(Node*, Node*)> cmp, char* type)
+Queue::Queue(std::function<bool(Node*, Node*)> cmp, char const *type)
     : q_(new q (cmp)), type_(type) {}
 
 /*
