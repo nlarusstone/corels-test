@@ -166,7 +166,7 @@ void CacheTree::gc_helper(Node* node) {
             lb = child->lower_bound();
         if (lb >= min_objective_) {
             node->delete_child(child->id());
-            delete_subtree(this, child, false, calculate_size());
+            delete_subtree(this, child, false, false);
         } else
             gc_helper(child);
     }
