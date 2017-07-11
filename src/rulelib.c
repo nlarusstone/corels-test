@@ -77,7 +77,6 @@ rules_init(const char *infile, int *nrules,
 	int rule_cnt, sample_cnt, rsize;
 	int i, ones, ret;
 	rule_t *rules=NULL;
-	rule_t default_rule;
 	size_t len = 0;
     size_t rulelen;
 
@@ -365,7 +364,7 @@ int
 ruleset_init(int nrules,
     int nsamples, int *idarray, rule_t *rules, ruleset_t **retruleset)
 {
-	int cnt, i, ret, tmp;
+	int cnt, i;
 	rule_t *cur_rule;
 	ruleset_t *rs;
 	ruleset_entry_t *cur_re;
@@ -902,9 +901,8 @@ count_ones(v_entry val)
 void
 ruleset_print(ruleset_t *rs, rule_t *rules, int detail)
 {
-	int i, j, n;
+	int i, n;
 	int total_support;
-	rule_t *r;
 
 	printf("%d rules %d samples\n", rs->n_rules, rs->n_samples);
 	n = (rs->n_samples + BITS_PER_ENTRY - 1) / BITS_PER_ENTRY;
