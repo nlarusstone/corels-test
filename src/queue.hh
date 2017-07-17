@@ -97,6 +97,7 @@ class Queue {
                 prefix.push_back(node->id());
                 node = node->parent();
             }
+            std::reverse(prefix.begin(), prefix.end());
             return std::make_pair(selected_node, prefix);
         }
 
