@@ -78,14 +78,14 @@ void CacheTree::insert_root() {
     d1 = nsamples_ - d0;
     if (d0 > d1) {
         default_prediction = 0;
-        objective = (float)(d1) / nsamples_;
+        objective = (double)(d1) / nsamples_;
     } else {
         default_prediction = 1;
-        objective = (float)(d0) / nsamples_;
+        objective = (double)(d0) / nsamples_;
     }
     double equivalent_minority = 0.;
     if (minority_ != NULL)
-        equivalent_minority = (float) count_ones_vector(minority_[0].truthtable, nsamples_) / nsamples_;
+        equivalent_minority = (double) count_ones_vector(minority_[0].truthtable, nsamples_) / nsamples_;
     root_ = new Node(nrules_, default_prediction, objective, equivalent_minority);
     min_objective_ = objective;
     logger->setTreeMinObj(objective);
