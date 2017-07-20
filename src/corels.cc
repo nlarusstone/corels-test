@@ -38,7 +38,7 @@ void evaluate_children(CacheTree* tree, Node* parent, tracking_vector<unsigned s
     parent_lower_bound = parent->lower_bound();
     parent_equivalent_minority = parent->equivalent_minority();
     double t0 = timestamp();
-    for (i = 1; i < nrules; i++) {
+    for (i = 1; i < nrules+1; i++) {
         double t1 = timestamp();
         // check if this rule is already in the prefix
         if (std::find(parent_prefix.begin(), parent_prefix.end(), i) != parent_prefix.end())
