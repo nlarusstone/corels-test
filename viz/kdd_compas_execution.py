@@ -25,12 +25,13 @@ fs = 16 # fontsize
 # log files generated on beepboop
 # no-minor execution using ~350GB RAM when halted
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=999999999-c=0.0050000-v=10-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=999999999-c=0.0050000-v=10-f=1000.txt']
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
+log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0050000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000002-c=0.0050000-v=10-f=1000.txt']
 fold = 0
 
-large = False
+large = True
 
 if large:
     ftag = 'compas_execution_large'
