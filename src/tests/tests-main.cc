@@ -22,5 +22,10 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    return 0;
+    int ret = Catch::Session.run(argc, argv);
+
+    rules_free(rules, nrules, 1);
+    rules_free(labels, nlabels, 0);
+
+    return (ret < 0xff ? ret : 0xff);
 }

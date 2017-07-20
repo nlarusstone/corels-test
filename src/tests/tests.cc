@@ -22,8 +22,9 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
     }
 
     SECTION("Insert with high lb") {
-        
+
     }
 
     delete pmap;
+    delete tree;
 }
