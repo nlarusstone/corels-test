@@ -304,24 +304,36 @@ as~$\Reg$ decreases, the algorithm must spend more time evaluating longer and lo
 CORELS with different regularization parameters (NYCLU stop-and-frisk dataset) \\
 \end{centering}
 \vspace{2mm}
-\begin{tabular}{l | c | c | c | c | c}
-& Total & Time to & Max evaluated & Total queue &  Max queue \\
-$\lambda$ & time (s) & optimum (s) & prefix length & insertions ($\times 10^6$) & size ($\times 10^3$) \\
+\begin{tabular}{l | c | c | c | c}
+& Total & Time to & Max evaluated & Optimal \\
+$\lambda$ & time (s) & optimum (s) & prefix length & prefix length \\
 \hline
-0.04 & 0.33 (0.03) & 0.001 (0.0004) & 6 & 0.033 (0.002) & 1.9 (0.1) \\
-0.01 & 32 (2) & 0.004 (0.001) & 11 & 3.2 (0.2) & 170 (13) \\
-0.0025 & 450 (30) & 21 (25) & 16-17 & 41 (2.7) & 2400 (170) \\
+0.04 & 0.36 (0.02) & 0.002 (0.00004) & 6 & 2 \\
+0.01 & 45 (4) & 0.006 (0.0002) & 11 & 3 \\
+0.0025 & 760 (50) & 30 (40) & 16-17 & 6-10 \\
+\hline
+\end{tabular}
+\begin{tabular}{l | c | c | c}
+\hline
+& Lower bound & Total queue &  Max queue \\
+$\lambda$ & evaluations ($\times 10^6$) & insertions ($\times 10^3$) & size ($\times 10^3$) \\
+\hline
+0.04 & 0.035 (0.002) & 2.2 (0.1) & 0.9 (0.1) \\
+0.01 & 4.3 (0.3) & 230 (20) & 140 (10) \\
+0.0025 & 65 (4) & 3700 (200) & 1900 (100) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Summary of CORELS executions, for the NYCLU stop-and-frisk dataset (${M = 28}$),
 for same three regularization parameters as in Figure~\ref{fig:sparsity} (bottom).
 %
 The columns report the total execution time,
-time to optimum, maximum evaluated prefix length,
+time to optimum, maximum evaluated prefix length, optimal prefix length,
 number of times we completely evaluate a prefix~$\Prefix$'s lower bound~$b(\Prefix, \x, \y)$,
-and total number of queue insertions (which is equal to the number of cache insertions).
+total number of queue insertions (which is equal to the number of cache insertions),
+and the maximum queue size.
 %
-We report means (and standard deviations) over 10 cross-validation folds.
+For prefix lengths, we report single values or ranges corresponding to the minimum and maximum observed values;
+in the other columns, we report means (and standard deviations) over 10 cross-validation folds.
 %
 See also Figures~\ref{fig:weapon-reg-execution} and~\ref{fig:queue-weapon-reg}.
 }
