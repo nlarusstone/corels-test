@@ -10,11 +10,10 @@ endif
 LIBS += -L/usr/local/lib -lgmpxx -lgmp
 
 ifneq ($(shell uname -n),beepboop)
-    LDFLAGS := -Wl,-no_pie
+#    LDFLAGS := -Wl,-no_pie
     CFLAGS += -fno-omit-frame-pointer
     ifneq ($(shell uname -r),15.6.0)
         LIBS += -lprofiler -ltcmalloc
-	CFLAGS += -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free
     endif
 else
     LDFLAGS :=
@@ -28,13 +27,20 @@ CC = gcc
 CXX = g++ -std=c++11
 
 DEPSDIR := .deps
+TESTSDIR := tests
 
-CLEAN = corels *~ *.o *.so
+CLEAN = corels $(TESTSDIR)/tests *~ *.o *.so
 
-all: corels
+all: corels tests
 
 corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+
+tests: $(TESTSDIR)/tests.o corels.o pmap.o cache.o rulelib.o utils.o
+	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+
+tests.o: tests.cc $(DEPSDIR)/stamp
+	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 main.o: main.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
