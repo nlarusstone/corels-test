@@ -14,6 +14,7 @@ ifneq ($(shell uname -n),beepboop)
     CFLAGS += -fno-omit-frame-pointer
     ifneq ($(shell uname -r),15.6.0)
         LIBS += -lprofiler -ltcmalloc
+	CFLAGS += -fno-builtin-malloc -fno-builtin-calloc -fno-builtin-realloc -fno-builtin-free
     endif
 else
     LDFLAGS :=
