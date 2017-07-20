@@ -15,14 +15,13 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
 
     SECTION("Insert into empty map") {
 
-    }
+        SECTION("Insert with lower lb") {
 
-    SECTION("Insert with lower lb") {
+        }
 
-    }
+        SECTION("Insert with high lb") {
 
-    SECTION("Insert with high lb") {
-
+        }
     }
 
     delete pmap;
