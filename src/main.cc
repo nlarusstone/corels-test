@@ -166,6 +166,7 @@ int main(int argc, char *argv[]) {
     double init = timestamp();
     char run_type[BUFSZ];
     Queue* q;
+    strcpy(run_type, "LEARNING RULE LIST via ");
     char const *type = "node";
     if (curiosity_policy == 1) {
         strcat(run_type, "CURIOUS");

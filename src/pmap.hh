@@ -128,7 +128,7 @@ class CapturedPermutationMap : public PermutationMap {
 
 class NullPermutationMap : public PermutationMap  {
     public:
-        size_t size() {return 0;}
+        size_t size() override {return 0;}
         Node* insert (unsigned short new_rule, size_t nrules, bool prediction, bool default_prediction, double lower_bound,
                         double objective, Node* parent, int num_not_captured, int nsamples, int len_prefix,
                         double c, double equivalent_minority, CacheTree* tree, VECTOR not_captured,

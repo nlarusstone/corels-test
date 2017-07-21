@@ -3,12 +3,12 @@ See also `kdd_compas_execution.py`
 
 #!/bin/bash
 
-# ./ablation.sh weapon 1000000000 none 0.01
-# ./ablation.sh weapon 1000000000 priority 0.01
-# ./ablation.sh weapon 1000000000 support 0.01
-# ./ablation.sh weapon 1000000000 pmap 0.01
-# ./ablation.sh weapon 1000000000 lookahead 0.01
-# ./ablation.sh weapon 800000000 identical 0.01
+# ./ablation.sh weapon 1000000001 none 0.01
+# ./ablation.sh weapon 1000000001 priority 0.01
+# ./ablation.sh weapon 1000000001 support 0.01
+# ./ablation.sh weapon 1000000001 pmap 0.01
+# ./ablation.sh weapon 1000000001 lookahead 0.01
+# ./ablation.sh weapon 1000000001 identical 0.01
 
 args=("$@")
 dataset=${args[0]}
@@ -18,7 +18,7 @@ r=${args[3]}
 
 for i in `seq 0 9`;
 do
-    bbcache=./../src/bbcache
+    bbcache=./../src/corels
     out=../data/CrossValidation/${dataset}_${i}_train.out
     label=../data/CrossValidation/${dataset}_${i}_train.label
     minor=../data/CrossValidation/${dataset}_${i}_train.minor
@@ -59,24 +59,27 @@ data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
 lw = 2  # linewidth
 ms = 9  # markersize
-fs = 16 # fontsize
+fs = 18 # fontsize
 
 num_folds = 10
 make_figure = False
 figure_fold = -1
 make_small = False
 
-#num_folds = 2
-#figure_fold = 1
+make_figure = True
+num_folds = 2
+figure_fold = 1
 
 # log files generated on beepboop
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
-'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
-'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=1-f=1000.txt']
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
+log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt',
+'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt',
+'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt']
 labels = ['CORELS', 'No priority queue (BFS)', 'No support bounds', 'No lookahead bound', 'No symmetry-aware map', 'No equivalent points bound']
 ftag = "weapon_ablation"
 
@@ -222,13 +225,13 @@ for (ncomp, log_root) in enumerate(log_root_list):
             if (make_small):
                 xloc = tmax / 5000
             else:
-                xloc = tmax / 10000
+                xloc = tmax / 50000
             if (ncomp == 0):
                 pylab.plot([t_corels, t_corels], [ymin, ymax], 'k--', linewidth=lw)
                 if (make_small):
                     xloc = 0.4
                 else:
-                    xloc = 0.1
+                    xloc = 0.02
                 pylab.text(xloc, 10**7, 'T $\\equiv$ %d s' % t_corels, fontsize=fs)
             else:
                 if (tmax / t_corels) < 10:
@@ -236,22 +239,22 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 else:
                     descr = '%d s $\\approx$ %d T' % (np.round(tmax), np.round(tmax / t_corels))
                 if (ncomp == 4):
-                    xloc = 0.02
+                    xloc = 0.001
                 else:
                     descr = (14 - (len(descr.split('$')[0] + descr.split('$')[-1]) + 1)) * ' ' + descr
                 pylab.plot([tmax, tmax], [ymin, ymax], 'k--', linewidth=lw)
                 pylab.text(xloc, 10**7, descr, fontsize=fs)
             #pylab.suptitle('lengths of prefixes in the logical queue\n', fontsize=fs)
             pylab.title(labels[ncomp], fontsize=fs+2)
-            pylab.xticks(fontsize=fs-2)
-            pylab.yticks(fontsize=fs-2)
+            pylab.xticks(10.**np.array([-3, -1, 1, 3]), fontsize=fs)
+            pylab.yticks(10.**np.array([1, 3, 5, 7]), fontsize=fs)
             #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
             ax = [10**-4, 10**4.9, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()
             if (ncomp + 1 == ntot):
                 if not (make_small):
-                    pylab.legend(['%d' % ii for ii in range(1, max_length + 1)], bbox_to_anchor=(1., 2.3), loc=2)
+                    pylab.legend(['%d' % ii for ii in range(1, max_length + 1)], loc=(-0.56, 2.6), handletextpad=0, borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
                     pylab.suptitle('\nExecution traces of queue contents (NYCLU stop-and-frisk dataset)', fontsize=fs+2)
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)
 
@@ -289,7 +292,7 @@ lb_s = lower_bound_num.std(axis=1) / 10**6
 print '& Total time & Slow- & Time to & Max evaluated \\\\'
 print 'Algorithm variant & (min) & down & optimum ($\mu$s) & prefix length \\\\'
 for rec in zip(labels, tt_m, tt_s, slow_m, to_m, to_s, km_min, km_max):
-    print '%s & %1.2f (%1.1f) & %1.2f$\\times$ & %1.2f (%1.1f) & %d-%d \\\\' % rec
+    print '%s & %1.2f (%1.1f) & %1.2f$\\times$ & %1.2f (%1.2f) & %d-%d \\\\' % rec
 
 print '& Lower bound & Total queue &  Max queue~~~~ \\\\'
 print 'Algorithm variant & computations ($\\times 10^6$) & insertions ($\\times 10^5$) & size ($\\times 10^5$) \\\\'
