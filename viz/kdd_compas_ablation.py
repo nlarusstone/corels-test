@@ -69,8 +69,8 @@ fs = 18 # fontsize
 num_folds = 10
 make_figure = False
 
-num_folds = 1
-make_figure = True
+#num_folds = 1
+#make_figure = True
 
 make_small = False
 #make_small = True
@@ -301,9 +301,9 @@ print 'folds that achieve min objective:', ((min_obj[-1] - min_obj[0]) < 10**-6)
 print 'total time >', t_tot[-1:].min() / 60
 print 'time to optimum >', t_opt[-1][((min_obj[-1] - min_obj[0]) < 10**-6)].min()
 print 'max prefix length >=', max_prefix_length[-1]
-print 'num lower bound evals >=', lower_bound_num[-1].min()
-print 'total queue insertions >', num_insertions[-1].min() / 10**6
-print 'max queue size >', max_queue[-1].min() / 10**6
+print 'num lower bound evals >=', lower_bound_num[-1].min() / 10.**6
+print 'total queue insertions >', num_insertions[-1].min() / 10.**6
+print 'max queue size >', max_queue[-1].min() / 10.**6
 
 print '& Total time & Slow- & Time to & Max evaluated \\\\'
 print 'Algorithm variant & (min) & down & optimum (s) & prefix length \\\\'
