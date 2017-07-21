@@ -27,19 +27,22 @@ CC = gcc
 CXX = g++ -std=c++11
 
 DEPSDIR := .deps
-TESTSDIR := tests
+TESTSDIR := testing
 
-CLEAN = corels $(TESTSDIR)/tests *~ *.o *.so
+CLEAN = corels tests $(TESTSDIR)/*.o *~ *.o *.so
 
 all: corels tests
 
 corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
-tests: $(TESTSDIR)/tests.o corels.o pmap.o cache.o rulelib.o utils.o
+tests: pmap.o cache.o rulelib.o utils.o $(TESTSDIR)/tests.o $(TESTSDIR)/tests-main.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
-tests.o: tests.cc $(DEPSDIR)/stamp
+$(TESTSDIR)/tests.o: $(TESTSDIR)/tests.cc
+	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+
+$(TESTSDIR)/tests-main.o: $(TESTSDIR)/tests-main.cc
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 main.o: main.cc $(DEPSDIR)/stamp
