@@ -19,7 +19,7 @@ class NullLogger {
     virtual void closeFile() {}
     NullLogger() {}
     NullLogger(double c, size_t nrules, int verbosity, char* log_fname, int freq) {}
-    ~NullLogger() {}
+    virtual ~NullLogger() {}
 
     virtual void setLogFileName(char *fname) {}
     virtual void dumpState() {}

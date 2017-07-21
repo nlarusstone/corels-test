@@ -1,3 +1,5 @@
+/** HELPER FILE FOR TESTS.CC ***/
+
 #include "../rule.h"
 #include "../utils.hh"
 
