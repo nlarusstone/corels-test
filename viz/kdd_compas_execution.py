@@ -105,7 +105,7 @@ for jj in ip:
 pylab.ylabel('Value', fontsize=fs)
 if large:
     pylab.title('Execution progress (ProPublica dataset)', fontsize=fs)
-    pylab.axis([x['total_time'][2], 1100, 0, 0.52])
+    pylab.axis([x['total_time'][2], 7750, 0, 0.52])
 else:
     pylab.title('Execution progress (ProPublica)', fontsize=fs)
     pylab.axis([x['total_time'][2], 970, 0, 0.52])
@@ -133,7 +133,7 @@ pylab.xlabel('Time (s)', fontsize=fs)
 pylab.ylabel('log10(Size)', fontsize=fs)
 if large:
     pylab.yticks(range(0, 160, 50), fontsize=fs)
-    pylab.axis([x['total_time'][2], 1100, 0, 175])
+    pylab.axis([x['total_time'][2], 7750, 0, 175])
 else:
     pylab.yticks(range(0, 175, 50), fontsize=fs)
     pylab.axis([x['total_time'][2], 970, 0, 175])
