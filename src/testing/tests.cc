@@ -13,23 +13,28 @@ extern int nsamples;
 
 TEST_CASE("Test prefix permutation map", "[prefixmap]") {
 
-    PrefixPermutationMap * pmap = new PrefixPermutationMap;
+    PrefixPermutationMap * pmap = new PrefixPermutationMap();
     CacheTree * tree = new CacheTree(nsamples, nrules, 0.01, rules, labels, NULL, 0, false, "node");
 
-    REQUIRE_NOT(pmap == NULL);
-    REQUIRE_NOT(tree == NULL);
+    REQUIRE_FALSE(pmap == NULL);
+    REQUIRE_FALSE(tree == NULL);
 
     SECTION("Insert into empty map") {
 
-        SECTION("Insert with lower lb") {
+        INFO("parent section");
 
+        SECTION("Insert with lower lb") {
+            INFO("first child section");
         }
 
         SECTION("Insert with high lb") {
-
+            INFO("second child section");
         }
     }
 
-    delete pmap;
-    delete tree;
+    if(pmap)
+        delete pmap;
+
+    if(tree)
+        delete tree;
 }

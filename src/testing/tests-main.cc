@@ -18,11 +18,11 @@ int main(int argc, char* argv[])
 
     int nlabels, nsamples_chk;
 
-    logger = new NullLogger;
+    logger = new NullLogger();
 
     if(!logger)
     {
-        printf("ERROR: Coult not create null logger\n");
+        printf("ERROR: Coult not create logger\n");
         return 1;
     }
 
@@ -32,6 +32,7 @@ int main(int argc, char* argv[])
     if(r != 0 || l != 0 || nsamples != nsamples_chk)
     {
         printf("ERROR: Could not load rules or samples\n");
+        delete logger;
         return 1;
     }
 
@@ -39,6 +40,8 @@ int main(int argc, char* argv[])
 
     rules_free(rules, nrules, 1);
     rules_free(labels, nlabels, 0);
+
+    delete logger;
 
     return (ret < 0xff ? ret : 0xff);
 }
