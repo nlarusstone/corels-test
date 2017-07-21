@@ -17,16 +17,16 @@ data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
 lw = 2  # linewidth
 ms = 9  # markersize
-fs = 16 # fontsize
+fs = 18 # fontsize
 
 num_folds = 10
 make_figure = False
 figure_fold = -1
 make_small = False
 
-#make_figure = True
-#num_folds = 1
-#figure_fold = 0
+make_figure = True
+num_folds = 1
+figure_fold = 0
 
 # log files generated on beepboop
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
@@ -47,7 +47,7 @@ ftag = "weapon_reg"
 
 if (make_figure):
     pylab.ion()
-    pylab.figure(6, figsize=(16, 5.8))
+    pylab.figure(6, figsize=(16, 6.55))
 
 ntot = len(log_root_list)
 
@@ -167,7 +167,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 pylab.xlabel('Time (s)\n', fontsize=fs+2)
             if (ncomp % 3 == 0):
                 pylab.ylabel('Count', fontsize=fs+2)
-            (ymin, ymax) = (10**-0.1, 10**6.8)
+            (ymin, ymax) = (10**-0.01, 10**6.8)
             t_corels = t_comp[-1]
             tmax = np.round(tt[-1])
             pylab.plot([tt[-1], tt[-1]], [ymin, ymax], 'k--', linewidth=lw)
@@ -180,12 +180,14 @@ for (ncomp, log_root) in enumerate(log_root_list):
             pylab.text(10**-3.7, 10**6.1, labels[ncomp], fontsize=fs+2)
             pylab.xticks(fontsize=fs-2)
             pylab.yticks(fontsize=fs-2)
+            pylab.xticks(10.**np.array([-3, -1, 1, 3]), fontsize=fs)
+            pylab.yticks(10.**np.array([0, 2, 4, 6]), fontsize=fs)
             ax = [10**-4, 10**3, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()
             if (ncomp + 1 == ntot):
                 if not (make_small):
-                    pylab.legend(['%d' % ii for ii in range(1, max_length + 1)], bbox_to_anchor=(1., 1.), loc=2, labelspacing=0.35)
+                    pylab.legend(['%d' % ii for ii in range(1, max_length + 1)], loc=(-1.83, 0.52), handletextpad=0, borderaxespad=0.1, ncol=2, frameon=False, columnspacing=0.5)
                     pylab.suptitle('Execution traces of queue contents (NYCLU stop-and-frisk dataset)', fontsize=fs+4)
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)
 

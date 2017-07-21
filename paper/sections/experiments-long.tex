@@ -344,8 +344,8 @@ See also Figures~\ref{fig:weapon-reg-execution} and~\ref{fig:queue-weapon-reg}.
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={35mm 0mm 35mm 15mm},
-width=\textwidth]{figs/weapon_reg-execution.pdf}
+\includegraphics[trim={35mm 0mm 35mm 20mm},
+width=0.95\textwidth]{figs/weapon_reg-execution.pdf}
 \end{center}
 \vspace{-5mm}
 \caption{Example executions of CORELS, for the NYCLU stop-and-frisk dataset (${M = 28}$).
@@ -377,8 +377,8 @@ from the panels to the left, for the three different values of~$\Reg$.
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={30mm 0mm 15mm 5mm},
-width=\textwidth]{figs/weapon_reg-queue.pdf}
+\includegraphics[trim={30mm 0mm 30mm 5mm},
+width=0.95\textwidth]{figs/weapon_reg-queue.pdf}
 \end{center}
 \vspace{-5mm}
 \caption{Summary of CORELS's logical queue,
@@ -458,12 +458,6 @@ Per-component performance improvement (ProPublica dataset) \\
 & Total & Slow- & Time to & Max evaluated~ \\
 Algorithm variant & time (min) & down & optimum (s) & prefix length \\
 \hline
-%CORELS & 5.5 (1.6) & --- & 8 (2) & 5-6 \\
-%No priority queue (BFS) & 6.8 (2.2) & 1.2$\times$ & 4 (1) & 5-6 \\
-%No support bounds & 10 (3.4) & 1.8$\times$ & 13 (4) & 5-6 \\
-%No lookahead bound & 72 (23) & 13$\times$ & 9 (2) & 6-7 \\
-%No symmetry-aware map & 59 (23) & 10$\times$ & 23 (6) & 5-6 \\
-%No equivalent points bound & $>$190 (100) & $>$39$\times$ & $>$7100~* & $\ge$10 \\
 CORELS & 4.9 (1.5) & --- & 7 (2) & 5-6 \\
 No priority queue (BFS) & 5.3 (1.6) & 1.1$\times$ & 29 (13) & 5-6 \\
 No support bounds & 8.8 (3.0) & 1.8$\times$ & 11 (3) & 5-6 \\
@@ -477,12 +471,6 @@ No equivalent points bound & $>$87 & $>$12$\times$ & $>$3400~* & $\ge$10 \\
  & Lower bound & Total queue &  Max queue \\
 Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^6$) & size ($\times 10^6$) \\
 \hline
-%CORELS & 180 (54) & 1.7 (0.4) & 1.3 (0.4) \\
-%No priority queue (BFS) & 230 (75) & 1.9 (0.6) & 1.5 (0.5) \\
-%No support bounds & 360 (120) & 2.7 (0.8) & 2.2 (0.7) \\
-%No lookahead bound & 2200 (710) & 19 (5.9) & 16 (5.3) \\
-%No symmetry-aware map & 2000 (770) & 16 (5.9) & 15 (5.7) \\
-%No equivalent points bound & $>$1490 & $>$800 & $>$790 \\
 CORELS & 160 (40) & 1.7 (0.4) & 1.2 (0.4) \\
 No priority queue (BFS) & 180 (50) & 3.1 (0.9) & 2.0 (0.7) \\
 No support bounds & 310 (100) & 2.7 (0.8) & 1.9 (0.6) \\
@@ -537,12 +525,6 @@ Per-component performance improvement (NYCLU stop-and-frisk dataset) \\
 & Total & Slow- & Time to & Max evaluated~ \\
 Algorithm variant & time (min) & down & optimum ($\mu$s) & prefix length \\
 \hline
-%CORELS & 0.8 (0.1) & --- & 6.9 (0.2) & 11 \\
-%No priority queue (BFS) & 2.4 (0.2) & 3.0$\times$ & 26 (0.6) & 11 \\
-%No support bounds & 1.5 (0.1) & 1.9$\times$ & 11 (0.3) & 11-12 \\
-%No lookahead bound & 1.3 (0.1) & 1.6$\times$ & 6.9 (0.3) & 11-12 \\
-%No symmetry-aware map & 610 (100) & 770$\times$ & 6.7 (0.1) & 11 \\
-%No equivalent points bound & 2.4 (0.5) & 3.0$\times$ & 6.4 (0.4) & 13 \\
 CORELS & 0.7 (0.1) & --- & 6.7 (0.1) & 11 \\
 No priority queue (BFS) & 1.5 (0.1) & 2.0$\times$ & 60 (20) & 11 \\
 No support bounds & 1.4 (0.1) & 1.9$\times$ & 10 (0.1) & 11-12 \\
@@ -556,14 +538,8 @@ No equivalent points bound & 2.4 (0.1) & 3.4$\times$ & 6.0 (0.4) & 13 \\
  & Lower bound & Total queue &  Max queue \\
 Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^5$) & size ($\times 10^5$) \\
 \hline
-%CORELS & 6.5 (0.5) & 1.7 (0.1) & 1.1 (0.1) \\
-%No priority queue (BFS) & 20 (1.7) & 5.4 (0.5) & 2.0 (0.1) \\
-%No support bounds & 12 (1.0) & 3.1 (0.3) & 1.9 (0.1) \\
-%No lookahead bound & 10 (0.7) & 2.8 (0.2) & 1.8 (0.1) \\
-%No symmetry-aware map & 5200 (850) & 1400 (240) & 1100 (180) \\
-%No equivalent points bound & 25 (5.4) & 7.5 (0.5) & 4.6 (0.2) \\
 CORELS & 6.0 (0.5) & 1.7 (0.1) & 1.0 (0.1) \\
-No priority queue (BFS) & 12.3 (1.0) & 3.6 (0.3) & 1.3 (0.1) \\
+No priority queue (BFS) & 12 (1) & 3.6 (0.3) & 1.3 (0.1) \\
 No support bounds & 11 (1) & 3.1 (0.3) & 1.8 (0.1) \\
 No lookahead bound & 9.6 (0.7) & 2.8 (0.2) & 1.7 (0.1) \\
 No symmetry-aware map & 5200 (800) & 1400 (200) & 1100 (200) \\
