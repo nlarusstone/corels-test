@@ -31,22 +31,22 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
         bool default_prediction = true;
         double lower_bound = 0.1;
         double objective = 0.5;
-        int len_prefix = 3;
+        int len_prefix = 4;
 
         /**
-            In this test, a canonical prefix of 1, 2, 4
-            is used, in three different permutations. For
-            ecah permutation, a random new rule is added,
-            and the behavior of the map is inspected.
+            In this test, a canonical prefix of 1, 2, 4, 5
+            is used, in three different permutations. Each
+            permutation contains three of the found numbers
+            in the parent_prefix, and the last as the added rule.
         **/
-        unsigned short correct_key[] = {3, 1, 2, 4};
-        unsigned char correct_indices[] = {3, 2, 1, 0};
-        unsigned char correct_new_indices[] = {3, 0, 2, 1};
+        unsigned short correct_key[] = {4, 1, 2, 4, 5};
+        unsigned char correct_indices[] = {4, 2, 1, 0, 3};
+        unsigned char correct_new_indices[] = {4, 0, 3, 1, 2};
 
         double l_bound = lower_bound - 0.02;
         double h_bound = lower_bound + 0.02;
 
-        Node * n = pmap->insert(3, nrules, prediction, default_prediction,
+        Node * n = pmap->insert(5, nrules, prediction, default_prediction,
                                 lower_bound, objective, tree->root(),
                                 0, nsamples, len_prefix, c, 0.0, tree, NULL,
                                 tracking_vector<unsigned short, DataStruct::Tree>{4,2,1});
@@ -69,7 +69,7 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
         REQUIRE(key[0] == len_prefix);
 
         // Check if the inserted key and indices are correct
-        for(int i = 1; i < len_prefix+1; i++) {
+        for(int i = 0; i < len_prefix+1; i++) {
             CAPTURE(i);
             CHECK(key[i] == correct_key[i]);
             CHECK(indices[i] == correct_indices[i]);
@@ -86,10 +86,10 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
 
             // Expected behavior is that the map remains unchanged, since h_bound
             // is greated than lower_bound
-            Node * n2 = pmap->insert(6, nrules, prediction, default_prediction,
+            Node * n2 = pmap->insert(2, nrules, prediction, default_prediction,
                                      h_bound, objective, tree->root(),
                                      0, nsamples, len_prefix, c, 0.0, tree, NULL,
-                                     tracking_vector<unsigned short, DataStruct::Tree>{1,2,4});
+                                     tracking_vector<unsigned short, DataStruct::Tree>{1,5,4});
 
             REQUIRE(pmap->getMap()->size() == 1);
 
@@ -102,7 +102,7 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
             REQUIRE(key_chk[0] == len_prefix);
 
             // Check if the key and indices are the same as before
-            for(int i = 1; i < len_prefix+1; i++) {
+            for(int i = 0; i < len_prefix+1; i++) {
                 CAPTURE(i);
                 CHECK(key_chk[i] == correct_key[i]);
                 CHECK(indices_chk[i] == correct_indices[i]);
@@ -115,11 +115,11 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
             SECTION("Insert with lower lower bound") {
 
                 // Expected behavior is that the map will change the indices
-                // and update the best permutation of [1,2,4] to [1,4,2]
-                Node * n3 = pmap->insert(5, nrules, prediction, default_prediction,
+                // and update the best permutation
+                Node * n3 = pmap->insert(4, nrules, prediction, default_prediction,
                                          l_bound, objective, tree->root(),
                                          0, nsamples, len_prefix, c, 0.0, tree, NULL,
-                                         tracking_vector<unsigned short, DataStruct::Tree>{1,4,2});
+                                         tracking_vector<unsigned short, DataStruct::Tree>{1,5,2});
 
                 REQUIRE(pmap->getMap()->size() == 1);
 
@@ -132,7 +132,7 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
                 REQUIRE(key_check[0] == len_prefix);
 
                 // Check if the indices are changed and are correct (new values)
-                for(int i = 1; i < len_prefix+1; i++) {
+                for(int i = 0; i < len_prefix+1; i++) {
                     CAPTURE(i);
                     CHECK(key_check[i] == correct_key[i]);
                     CHECK(indices_check[i] == correct_new_indices[i]);
