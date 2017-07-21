@@ -36,7 +36,7 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
         /**
             In this test, a canonical prefix of 1, 2, 4, 5
             is used, in three different permutations. Each
-            permutation contains three of the found numbers
+            permutation contains has three of its numbers
             in the parent_prefix, and the last as the added rule.
         **/
         unsigned short correct_key[] = {4, 1, 2, 4, 5};
