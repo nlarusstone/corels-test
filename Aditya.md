@@ -24,5 +24,5 @@ Or in more C++ style, a collection of booleans which are carried around in a glo
 ## Visualization
 - [ ] Come up with visualization to show progress of algorithm as it runs
 
-## Port code to R
+## R interface
 - [ ] Write an R interface for our code (or python if you want to swap with Vassilios)

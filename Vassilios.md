@@ -13,5 +13,5 @@
 - [ ] Output a .minor file
 - [ ] Integrate CSV parser with web frontend (allow the web interface to take either a csv or out/label files)
 
-## Port to python
-- [ ] Write a python interface for our corels code (or R if you swap with Aditya)
+## Python interface
+- [ ] Write a Python interface for our corels code (or R if you swap with Aditya)
