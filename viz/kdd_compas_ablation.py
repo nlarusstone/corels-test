@@ -73,17 +73,18 @@ num_folds = 1
 make_figure = True
 
 make_small = False
-make_small = True
+#make_small = True
 
 # log files generated on beepboop
 # no-minor execution using ~350GB RAM when halted
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=2-f=1000.txt',
-'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=2-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000000-c=0.0050000-v=2-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=1000000000-c=0.0050000-v=2-f=1000.txt',
-'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=2-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=2-f=1000.txt']
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
+log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0050000-v=10-f=1000.txt',
+'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0050000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000001-c=0.0050000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=1000000001-c=0.0050000-v=10-f=1000.txt',
+'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000001-c=0.0050000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000001-c=0.0050000-v=10-f=1000.txt']
 labels = ['CORELS', 'No priority queue (BFS)', 'No support bounds', 'No lookahead bound',  'No symmetry-aware map', 'No equivalent points bound']
 ftag = "kdd_compas_ablation"
 
@@ -251,7 +252,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
             pylab.xticks(10.**np.array([-3, -1, 1, 3]), fontsize=fs)
             pylab.yticks(10.**np.array([0, 2, 4, 6, 8]), fontsize=fs)
             #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
-            ax = [10**-4, 5360, ymin, ymax]
+            ax = [10**-4, 6814, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()
             if (ncomp + 1 == ntot):

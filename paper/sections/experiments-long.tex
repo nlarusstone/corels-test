@@ -35,7 +35,7 @@ This dataset contains records for all offenders in Broward County, Florida
 in 2013 and 2014 who were given a COMPAS score pre-trial.
 Recidivism is defined as committing a crime within 2 years of the COMPAS
 assessment.
-This dataset contains records for 7,215 individuals.
+This dataset contains records for 7,214 individuals.
 %
 Our rule mining framework extracts 14 features and combines them into
 ${M=156}$ antecedents on average (folds ranged from containing 155 to 157 antecedents).
@@ -287,7 +287,7 @@ when the lower bound matches the objective value.
 %
 The lower panels in Figure~\ref{fig:weapon-reg-execution} plot corresponding traces of
 an upper bound on the size of the remaining search space (Theorem~\ref{thm:remaining-eval-fine}),
-and illustrate that as~$\Reg$ decreases, it becomes more difficult to eliminate regions of the search space.
+and illustrate that as~$\Reg$ decreases, it becomes more difficult to eliminate regions of the search~space.
 
 Figure~\ref{fig:queue-weapon-reg} visualizes the elements in CORELS's logical queue,
 for each of the executions in Figure~\ref{fig:weapon-reg-execution}.
@@ -525,12 +525,18 @@ Per-component performance improvement (NYCLU stop-and-frisk dataset) \\
 & Total & Slow- & Time to & Max evaluated~ \\
 Algorithm variant & time (min) & down & optimum ($\mu$s) & prefix length \\
 \hline
-CORELS & 0.8 (0.1) & --- & 6.9 (0.2) & 11 \\
-No priority queue (BFS) & 2.4 (0.2) & 3.0$\times$ & 26 (0.6) & 11 \\
-No support bounds & 1.5 (0.1) & 1.9$\times$ & 11 (0.3) & 11-12 \\
-No lookahead bound & 1.3 (0.1) & 1.6$\times$ & 6.9 (0.3) & 11-12 \\
-No symmetry-aware map & 610 (100) & 770$\times$ & 6.7 (0.1) & 11 \\
-No equivalent points bound & 2.4 (0.5) & 3.0$\times$ & 6.4 (0.4) & 13 \\
+%CORELS & 0.8 (0.1) & --- & 6.9 (0.2) & 11 \\
+%No priority queue (BFS) & 2.4 (0.2) & 3.0$\times$ & 26 (0.6) & 11 \\
+%No support bounds & 1.5 (0.1) & 1.9$\times$ & 11 (0.3) & 11-12 \\
+%No lookahead bound & 1.3 (0.1) & 1.6$\times$ & 6.9 (0.3) & 11-12 \\
+%No symmetry-aware map & 610 (100) & 770$\times$ & 6.7 (0.1) & 11 \\
+%No equivalent points bound & 2.4 (0.5) & 3.0$\times$ & 6.4 (0.4) & 13 \\
+CORELS & 0.7 (0.1) & --- & 6.7 (0.1) & 11 \\
+No priority queue (BFS) & 1.5 (0.1) & 2.0$\times$ & 60 (20) & 11 \\
+No support bounds & 1.4 (0.1) & 1.9$\times$ & 10 (0.1) & 11-12 \\
+No lookahead bound & 1.2 (0.1) & 1.6$\times$ & 6.9 (0.3) & 11-12 \\
+No symmetry-aware map & 620 (100) & 850$\times$ & 6.6 (0.1) & 11 \\
+No equivalent points bound & 2.4 (0.1) & 3.4$\times$ & 6.0 (0.4) & 13 \\
 \hline
 \end{tabular}
 \begin{tabular}{l | c | c | c}
@@ -538,12 +544,18 @@ No equivalent points bound & 2.4 (0.5) & 3.0$\times$ & 6.4 (0.4) & 13 \\
  & Lower bound & Total queue &  Max queue \\
 Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^5$) & size ($\times 10^5$) \\
 \hline
-CORELS & 6.5 (0.5) & 1.7 (0.1) & 1.1 (0.1) \\
-No priority queue (BFS) & 20 (1.7) & 5.4 (0.5) & 2.0 (0.1) \\
-No support bounds & 12 (1.0) & 3.1 (0.3) & 1.9 (0.1) \\
-No lookahead bound & 10 (0.7) & 2.8 (0.2) & 1.8 (0.1) \\
-No symmetry-aware map & 5200 (850) & 1400 (240) & 1100 (180) \\
-No equivalent points bound & 25 (5.4) & 7.5 (0.5) & 4.6 (0.2) \\
+%CORELS & 6.5 (0.5) & 1.7 (0.1) & 1.1 (0.1) \\
+%No priority queue (BFS) & 20 (1.7) & 5.4 (0.5) & 2.0 (0.1) \\
+%No support bounds & 12 (1.0) & 3.1 (0.3) & 1.9 (0.1) \\
+%No lookahead bound & 10 (0.7) & 2.8 (0.2) & 1.8 (0.1) \\
+%No symmetry-aware map & 5200 (850) & 1400 (240) & 1100 (180) \\
+%No equivalent points bound & 25 (5.4) & 7.5 (0.5) & 4.6 (0.2) \\
+CORELS & 6.0 (0.5) & 1.7 (0.1) & 1.0 (0.1) \\
+No priority queue (BFS) & 12.3 (1.0) & 3.6 (0.3) & 1.3 (0.1) \\
+No support bounds & 11 (1) & 3.1 (0.3) & 1.8 (0.1) \\
+No lookahead bound & 9.6 (0.7) & 2.8 (0.2) & 1.7 (0.1) \\
+No symmetry-aware map & 5200 (800) & 1400 (200) & 1100 (200) \\
+No equivalent points bound & 26 (1) & 7.5 (0.4) & 4.5 (0.2) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Per-component performance improvement, as in Table~\ref{tab:ablation},
@@ -561,7 +573,7 @@ and also Figure~\ref{fig:queue-weapon}.
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={15mm 20mm 5mm 25mm},
+\includegraphics[trim={0mm 10mm 0mm 20mm},
 width=0.94\textwidth]{figs/kdd_compas_ablation-queue.pdf}
 \end{center}
 \vspace{-5mm}
@@ -589,7 +601,7 @@ For comparison, we replicate the same gray region
 in the other five subfigures.
 %
 For each execution, we indicate the total time in seconds,
-relative to the full CORELS implementation (T = 342 s),
+relative to the full CORELS implementation (T = 304 s),
 and with a dashed vertical line.
 %
 The execution without the equivalent points bound (bottom right) is incomplete.
@@ -600,7 +612,7 @@ The execution without the equivalent points bound (bottom right) is incomplete.
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={15mm 20mm 5mm 25mm},
+\includegraphics[trim={0mm 10mm 0mm 20mm},
 width=0.94\textwidth]{figs/weapon_ablation-queue.pdf}
 \end{center}
 \vspace{-5mm}
