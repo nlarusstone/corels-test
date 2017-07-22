@@ -100,13 +100,13 @@ c_charge_degree = np.array(['Misdemeanor' if (i == 'M') else 'Felony' for i in x
 
 race_list = list(set(x['race']))
 
-columns = [x['sex'], age]
-columns += [(x['race'] == n) for n in race_list]
+columns = [x['sex'], age, x['race']]
+#columns += [(x['race'] == n) for n in race_list]
 columns += [juvenile_felonies, juvenile_misdemeanors, juvenile_crimes,
            priors_count, c_charge_degree, x['two_year_recid']]
 
-cnames = ['sex', 'age']
-cnames += ['Race=%s' % r for r in race_list]
+cnames = ['sex', 'age', 'race']
+#cnames += ['Race=%s' % r for r in race_list]
 cnames += ['juvenile-felonies', 'juvenile-misdemeanors', 'juvenile-crimes',
           'priors', 'current-charge-degree', 'recidivate-within-two-years']
  
