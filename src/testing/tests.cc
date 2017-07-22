@@ -14,9 +14,9 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
 
     double c = 0.01;
     PrefixPermutationMap * pmap = new PrefixPermutationMap();
-    CacheTree * tree = new CacheTree(nsamples, nrules, c, rules, labels, NULL, 0, false, "node");
-
     REQUIRE_FALSE(pmap == NULL);
+
+    CacheTree * tree = new CacheTree(nsamples, nrules, c, rules, labels, NULL, 0, false, "node");
     REQUIRE_FALSE(tree == NULL);
 
     tree->insert_root();
@@ -184,7 +184,38 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
 
 TEST_CASE("Test queue", "[queue]") {
 
-    Queue * queue = new Queue(lb_cmp, )
+    Queue * queue = new Queue(lb_cmp, "LOWER BOUND");
+    REQUIRE_FALSE(queue == NULL);
+    CHECK(queue->type() == "LOWER BOUND");
+
+    CacheTree * tree = new CacheTree(nsamples, nrules, c, rules, labels, NULL, 0, false, "node");
+    REQUIRE_FALSE(tree == NULL);
+
+    tree->insert_root();
+    REQUIRE_FALSE(tree->root() == NULL);
+
+    SECTION("Push") {
+        queue->push(tree->root());
+
+        REQUIRE_FALSE(queue->empty());
+        REQUIRE(queue->size() == 1);
+        REQUIRE(queue->front() == tree->root());
+    }
+
+    SECTION("Pop") {
+        queue->push(tree->root());
+        REQUIRE(queue->size() == 1);
+
+        queue->pop();
+        REQUIRE(queue->empty());
+        REQUIE(queue->size() == 0);
+    }
+
+    if(queue)
+        delete queue;
+
+    if(tree)
+        delete tree;
 }
 
 TEST_CASE("Test trie", "[trie]") {
