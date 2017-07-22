@@ -36,7 +36,7 @@ all: corels tests
 corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
-tests: pmap.o cache.o rulelib.o utils.o $(TESTSDIR)/tests.o $(TESTSDIR)/tests-main.o
+tests: pmap.o corels.o cache.o rulelib.o utils.o $(TESTSDIR)/tests.o $(TESTSDIR)/tests-main.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 $(TESTSDIR)/tests.o: $(TESTSDIR)/tests.cc
