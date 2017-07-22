@@ -180,7 +180,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
             pylab.text(10**-3.7, 10**6.1, labels[ncomp], fontsize=fs+2)
             pylab.xticks(fontsize=fs-2)
             pylab.yticks(fontsize=fs-2)
-            pylab.xticks(10.**np.array([-3, -1, 1, 3]), fontsize=fs)
+            pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs)
             pylab.yticks(10.**np.array([0, 2, 4, 6]), fontsize=fs)
             ax = [10**-4, 10**3, ymin, ymax]
             pylab.axis(ax)
