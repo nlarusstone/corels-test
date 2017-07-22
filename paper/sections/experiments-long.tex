@@ -309,19 +309,19 @@ CORELS with different regularization parameters (NYCLU stop-and-frisk dataset) \
 & Total & Time to & Max evaluated & Optimal \\
 $\lambda$ & time (s) & optimum (s) & prefix length & prefix length \\
 \hline
-0.04 & 0.36 (.02) & 0.002 ($<$.001) & 6 & 2 \\
-0.01 & 45 (4) & 0.006 ($<$.001) & 11 & 3 \\
-0.0025 & 760 (50) & 30 (40) & 16-17 & 6-10 \\
+.04 & .36 (.02) & .002 ($<$.001) & 6 & 2 \\
+.01 & 45 (4) & .006 ($<$.001) & 11 & 3 \\
+.0025 & 760 (50) & 30 (40) & 16-17 & 6-10 \\
 \hline
 \end{tabular}
 \begin{tabular}{l | c | c | c}
 \hline
 & Lower bound & Total queue &  Max queue \\
-$\lambda$ ~&~ evaluations ($\times 10^6$) ~&~ insertions ($\times 10^3$) ~&~ size ($\times 10^3$) \\
+$\lambda$ & evaluations ($\times 10^6$) &~ insertions ($\times 10^3$) ~&~ size ($\times 10^3$) \\
 \hline
-0.04 & 0.035 (.002) & 2.2 (.1) & 0.9 (.1) \\
-0.01 & 4.3 (.3) & 230 (20) & 140 (10) \\
-0.0025 & 65 (4) & 3700 (200) & 1900 (100) \\
+.04 & .035 (.002) & 2.2 (.1) & .9 (.1) \\
+.01 & 4.3 (.3) & 230 (20) & 140 (10) \\
+.0025 & 65 (4) & 3700 (200) & 1900 (100) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Summary of CORELS executions, for the NYCLU stop-and-frisk dataset (${M = 28}$),
@@ -473,9 +473,9 @@ No equivalent points bound & $>$87 & $>$12$\times$ & $>$3400~* & $\ge$10 \\
  & Lower bound & Total queue &  Max queue \\
 Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^6$) & size ($\times 10^6$) \\
 \hline
-CORELS & 160 (40) & 1.7 (0.4) & 1.2 (0.4) \\
-No priority queue (BFS) & 180 (50) & 3.1 (0.9) & 2.0 (0.7) \\
-No support bounds & 310 (100) & 2.7 (0.8) & 1.9 (0.6) \\
+CORELS & 160 (40) & 1.7 (.4) & 1.2 (.4) \\
+No priority queue (BFS) & 180 (50) & 3.1 (.9) & 2.0 (.7) \\
+No support bounds & 310 (100) & 2.7 (.8) & 1.9 (.6) \\
 No lookahead bound & 2200 (700) & 19 (6) & 16 (5) \\
 No symmetry-aware map & 2000 (800) & 16 (6) & 15 (6) \\
 No equivalent points bound & $>$1800 & $>$1000 & $>$990 \\
@@ -528,12 +528,12 @@ Per-component performance improvement (NYCLU stop-and-frisk dataset) \\
 & Total & Slow- & Time to & Max evaluated \\
 Algorithm variant & time (min) & down & optimum ($\mu$s) & prefix length \\
 \hline
-CORELS & 0.7 (0.1) & --- & 6.7 (0.1) & 11 \\
-No priority queue (BFS) & 1.5 (0.1) & 2.0$\times$ & 60 (20) & 11 \\
-No support bounds & 1.4 (0.1) & 1.9$\times$ & 10 (0.1) & 11-12 \\
-No lookahead bound & 1.2 (0.1) & 1.6$\times$ & 6.9 (0.3) & 11-12 \\
-No symmetry-aware map & 620 (100) & 850$\times$ & 6.6 (0.1) & 11 \\
-No equivalent points bound & 2.4 (0.1) & 3.4$\times$ & 6.0 (0.4) & 13 \\
+CORELS & .7 (.1) & --- & 6.7 (.1) & 11 \\
+No priority queue (BFS) & 1.5 (.1) & 2.0$\times$ & 60 (20) & 11 \\
+No support bounds & 1.4 (.1) & 1.9$\times$ & 10 (.1) & 11-12 \\
+No lookahead bound & 1.2 (.1) & 1.6$\times$ & 6.9 (.3) & 11-12 \\
+No symmetry-aware map & 620 (100) & 850$\times$ & 6.6 (.1) & 11 \\
+No equivalent points bound & 2.4 (.1) & 3.4$\times$ & 6.0 (.4) & 13 \\
 \hline
 \end{tabular}
 \begin{tabular}{l | c | c | c}
@@ -541,12 +541,12 @@ No equivalent points bound & 2.4 (0.1) & 3.4$\times$ & 6.0 (0.4) & 13 \\
  & Lower bound & Total queue &  Max queue \\
 Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^5$) & size ($\times 10^5$) \\
 \hline
-CORELS & 6.0 (0.5) & 1.7 (0.1) & 1.0 (0.1) \\
-No priority queue (BFS) & 12 (1) & 3.6 (0.3) & 1.3 (0.1) \\
-No support bounds & 11 (1) & 3.1 (0.3) & 1.8 (0.1) \\
-No lookahead bound & 9.6 (0.7) & 2.8 (0.2) & 1.7 (0.1) \\
+CORELS & 6.0 (.5) & 1.7 (.1) & 1.0 (.1) \\
+No priority queue (BFS) & 12 (1) & 3.6 (.3) & 1.3 (.1) \\
+No support bounds & 11 (1) & 3.1 (.3) & 1.8 (.1) \\
+No lookahead bound & 9.6 (.7) & 2.8 (.2) & 1.7 (.1) \\
 No symmetry-aware map & 5200 (800) & 1400 (200) & 1100 (200) \\
-No equivalent points bound & 26 (1) & 7.5 (0.4) & 4.5 (0.2) \\
+No equivalent points bound & 26 (1) & 7.5 (.4) & 4.5 (.2) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Per-component performance improvement, as in Table~\ref{tab:ablation},
