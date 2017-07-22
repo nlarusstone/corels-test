@@ -1,9 +1,7 @@
 /***  MAIN FILE WITH THE ACTUAL TESTS ***/
 
 #define PREFIX_MAP_TESTS
-#include "../pmap.hh"
-
-#include "../alloc.hh"
+#include "../queue.hh"
 
 #include "catch.hpp"
 
@@ -25,31 +23,37 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
 
     REQUIRE_FALSE(tree->root() == NULL);
 
+    /**
+        In these tests, a canonical prefix of 1, 2, 4, 5
+        is used, in three different permutations. Each
+        permutation contains has three of its numbers
+        in the parent_prefix, and the last as the added rule.
+    **/
+
+    bool prediction = true;
+    bool default_prediction = true;
+    double lower_bound = 0.1;
+    double objective = 0.5;
+    int len_prefix = 4;
+
+    unsigned short correct_key[] = {4, 1, 2, 4, 5};
+
+    tracking_vector<unsigned short, DataStruct::Tree> parent_prefix = {4, 2, 1};
+    int new_rule = 5;
+    unsigned char correct_indices[] = {4, 2, 1, 0, 3};
+
+    // For second and third tests
+    tracking_vector<unsigned short, DataStruct::Tree> parent_prefix_2 = {1, 4, 5};
+    int new_rule_2 = 2;
+    unsigned char correct_indices_2[] = {4, 0, 2, 3, 1};
+
+    /** TEST 1 **/
     SECTION("Insert into empty map") {
 
-        bool prediction = true;
-        bool default_prediction = true;
-        double lower_bound = 0.1;
-        double objective = 0.5;
-        int len_prefix = 4;
-
-        /**
-            In this test, a canonical prefix of 1, 2, 4, 5
-            is used, in three different permutations. Each
-            permutation contains has three of its numbers
-            in the parent_prefix, and the last as the added rule.
-        **/
-        unsigned short correct_key[] = {4, 1, 2, 4, 5};
-        unsigned char correct_indices[] = {4, 2, 1, 0, 3};
-        unsigned char correct_new_indices[] = {4, 0, 3, 1, 2};
-
-        double l_bound = lower_bound - 0.02;
-        double h_bound = lower_bound + 0.02;
-
-        Node * n = pmap->insert(5, nrules, prediction, default_prediction,
+        Node * n = pmap->insert(new_rule, nrules, prediction, default_prediction,
                                 lower_bound, objective, tree->root(),
                                 0, nsamples, len_prefix, c, 0.0, tree, NULL,
-                                tracking_vector<unsigned short, DataStruct::Tree>{4,2,1});
+                                parent_prefix);
 
         REQUIRE_FALSE(n == NULL);
         REQUIRE(pmap->getMap()->size() == 1);
@@ -81,69 +85,94 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
         REQUIRE(n->default_prediction() == default_prediction);
         REQUIRE(n->lower_bound() == lower_bound);
         REQUIRE(n->objective() == objective);
+    }
 
-        SECTION("Insert with higher lower bound") {
+    /** TEST 2 **/
+    SECTION("Insert with higher lower bound") {
 
-            // Expected behavior is that the map remains unchanged, since h_bound
-            // is greated than lower_bound
-            Node * n2 = pmap->insert(2, nrules, prediction, default_prediction,
-                                     h_bound, objective, tree->root(),
-                                     0, nsamples, len_prefix, c, 0.0, tree, NULL,
-                                     tracking_vector<unsigned short, DataStruct::Tree>{1,5,4});
+        Node * n = pmap->insert(new_rule, nrules, prediction, default_prediction,
+                                lower_bound, objective, tree->root(),
+                                0, nsamples, len_prefix, c, 0.0, tree, NULL,
+                                parent_prefix);
 
-            REQUIRE(pmap->getMap()->size() == 1);
+        REQUIRE_FALSE(n == NULL);
+        REQUIRE(pmap->getMap()->size() == 1);
 
-            PrefixMap::iterator inserted_chk = pmap->getMap()->begin();
+        double h_bound = lower_bound + 0.02;
 
-            unsigned short* key_chk = inserted_chk->first.key;
-            unsigned char* indices_chk = inserted_chk->second.second;
+        // Expected behavior is that the map remains unchanged, since h_bound
+        // is greated than lower_bound
+        Node * n2 = pmap->insert(new_rule_2, nrules, prediction, default_prediction,
+                                 h_bound, objective, tree->root(),
+                                 0, nsamples, len_prefix, c, 0.0, tree, NULL,
+                                 parent_prefix_2);
 
-            REQUIRE(key_chk[0] == indices_chk[0]);
-            REQUIRE(key_chk[0] == len_prefix);
+        REQUIRE(pmap->getMap()->size() == 1);
 
-            // Check if the key and indices are the same as before
-            for(int i = 0; i < len_prefix+1; i++) {
-                CAPTURE(i);
-                CHECK(key_chk[i] == correct_key[i]);
-                CHECK(indices_chk[i] == correct_indices[i]);
-            }
+        PrefixMap::iterator inserted = pmap->getMap()->begin();
 
-            // Check if the lower bound is unchanged
-            CHECK(n2 == NULL);
-            CHECK(pmap->getMap()->begin()->second.first == lower_bound);
+        unsigned short* key = inserted->first.key;
+        unsigned char* indices = inserted->second.second;
 
-            SECTION("Insert with lower lower bound") {
+        REQUIRE(key[0] == indices[0]);
+        REQUIRE(key[0] == len_prefix);
 
-                // Expected behavior is that the map will change the indices
-                // and update the best permutation
-                Node * n3 = pmap->insert(4, nrules, prediction, default_prediction,
-                                         l_bound, objective, tree->root(),
-                                         0, nsamples, len_prefix, c, 0.0, tree, NULL,
-                                         tracking_vector<unsigned short, DataStruct::Tree>{1,5,2});
-
-                REQUIRE(pmap->getMap()->size() == 1);
-
-                PrefixMap::iterator inserted_check = pmap->getMap()->begin();
-
-                unsigned short* key_check = inserted_check->first.key;
-                unsigned char* indices_check = inserted_check->second.second;
-
-                REQUIRE(key_check[0] == indices_check[0]);
-                REQUIRE(key_check[0] == len_prefix);
-
-                // Check if the indices are changed and are correct (new values)
-                for(int i = 0; i < len_prefix+1; i++) {
-                    CAPTURE(i);
-                    CHECK(key_check[i] == correct_key[i]);
-                    CHECK(indices_check[i] == correct_new_indices[i]);
-                }
-
-                CHECK_FALSE(n3 == NULL);
-
-                // Check if the lower bound is the new correct lower bound
-                CHECK(pmap->getMap()->begin()->second.first == l_bound);
-            }
+        // Check if the key and indices are unchanged (same as the ones inserted with n instead of n2)
+        for(int i = 0; i < len_prefix+1; i++) {
+            CAPTURE(i);
+            CHECK(key[i] == correct_key[i]);
+            CHECK(indices[i] == correct_indices[i]);
         }
+
+        // Check if the node wasn't inserted (it should not have, since the permutation bound should block it)
+        CHECK(n2 == NULL);
+
+        // Check if the lower bound is unchanged
+        CHECK(pmap->getMap()->begin()->second.first == lower_bound);
+    }
+
+    /** TEST 3 **/
+    SECTION("Insert with lower lower bound") {
+
+        Node * n = pmap->insert(new_rule, nrules, prediction, default_prediction,
+                                lower_bound, objective, tree->root(),
+                                0, nsamples, len_prefix, c, 0.0, tree, NULL,
+                                parent_prefix);
+
+        REQUIRE_FALSE(n == NULL);
+        REQUIRE(pmap->getMap()->size() == 1);
+
+        double l_bound = lower_bound - 0.02;
+
+        // Expected behavior is that the map will change the indices
+        // and update the best permutation
+        Node * n2 = pmap->insert(new_rule_2, nrules, prediction, default_prediction,
+                                 l_bound, objective, tree->root(),
+                                 0, nsamples, len_prefix, c, 0.0, tree, NULL,
+                                 parent_prefix_2);
+
+        REQUIRE(pmap->getMap()->size() == 1);
+
+        PrefixMap::iterator inserted = pmap->getMap()->begin();
+
+        unsigned short* key = inserted->first.key;
+        unsigned char* indices = inserted->second.second;
+
+        REQUIRE(key[0] == indices[0]);
+        REQUIRE(key[0] == len_prefix);
+
+        // Check if the indices are changed and are correct (new values)
+        for(int i = 0; i < len_prefix+1; i++) {
+            CAPTURE(i);
+            CHECK(key[i] == correct_key[i]);
+            CHECK(indices[i] == correct_indices_2[i]);
+        }
+
+        // Check if the node was inserted
+        CHECK_FALSE(n2 == NULL);
+
+        // Check if the lower bound is the new correct lower bound
+        CHECK(pmap->getMap()->begin()->second.first == l_bound);
     }
 
     if(pmap)
@@ -151,6 +180,11 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
 
     if(tree)
         delete tree;
+}
+
+TEST_CASE("Test queue", "[queue]") {
+
+    Queue * queue = new Queue(lb_cmp, )
 }
 
 TEST_CASE("Test trie", "[trie]") {
