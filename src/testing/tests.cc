@@ -3,18 +3,93 @@
 #define PREFIX_MAP_TESTS
 #include "../queue.hh"
 
+#ifdef GMP
+#include <gmp.h>
+#endif
+
 #include "catch.hpp"
 
 extern rule_t * rules;
 extern rule_t * labels;
+extern rule_t * minority;
 extern int nrules;
 extern int nsamples;
+extern int nlabels;
+extern int nminority;
 
 TEST_CASE("Test trie", "[trie]") {
     double c = 0.01;
-    CacheTree * tree = new CacheTree(nsamples, nrules, c, rules, labels, NULL, 0, false, "node");
+    const char * type = "node";
+    int ablation = 0;
+    bool calculate_size = false;
+    CacheTree * tree = new CacheTree(nsamples, nrules, c, rules, labels,
+                                     minority, ablation, calculate_size, type);
 
     REQUIRE_FALSE(tree == NULL);
+
+    SECTION("Test tree initialization") {
+
+        REQUIRE(tree->num_nodes() == 0);
+        REQUIRE(tree->num_evaluated() == 0);
+        REQUIRE(tree->c() == c);
+        REQUIRE(tree->nsamples() == nsamples);
+        REQUIRE(tree->nrules() == nrules);
+        REQUIRE(tree->ablation() == ablation);
+        REQUIRE(tree->has_minority() == (bool)minority);
+        REQUIRE(tree->calculate_size() == calculate_size);
+
+        for(int i = 0; i < nrules; i++) {
+            CAPTURE(i);
+            REQUIRE(tree->rule(i).support == rules[i].support);
+            REQUIRE(tree->rule(i).cardinality == rules[i].cardinality);
+            REQUIRE(strcmp(tree->rule(i).features, rules[i].features) == 0);
+            REQUIRE(strcmp(tree->rule_features(i), rules[i].features) == 0);
+
+#ifdef GMP
+            REQUIRE(mpz_cmp(tree->rule(i).truthtable, rules[i].truthtable) == 0);
+#else
+            for(int j = 0; j < nsamples; j++) {
+                CAPTURE(j);
+                REQUIRE(tree->rule(i).truthtable[j] == rules[i].truthtable[j]);
+            }
+#endif
+        }
+
+        for(int i = 0; i < nlabels; i++) {
+            CAPTURE(i);
+            REQUIRE(tree->label(i).support == labels[i].support);
+            REQUIRE(tree->label(i).cardinality == labels[i].cardinality);
+            REQUIRE(strcmp(tree->label(i).features, labels[i].features) == 0);
+
+#ifdef GMP
+            REQUIRE(mpz_cmp(tree->label(i).truthtable, labels[i].truthtable) == 0);
+#else
+            for(int j = 0; j < nsamples; j++) {
+                CAPTURE(j);
+                REQUIRE(tree->label(i).truthtable[j] == label[i].truthtable[j]);
+            }
+#endif
+        }
+
+        // TODO: Fix minority checks
+        if(minority != NULL) {
+            for(int i = 0; i < nminority; i++) {
+                CAPTURE(i);
+                REQUIRE(tree->minority(i).support == minority[i].support);
+                REQUIRE(tree->minority(i).cardinality == minority[i].cardinality);
+                REQUIRE(strcmp(tree->minority(i).features, minority[i].features) == 0);
+
+#ifdef GMP
+                REQUIRE(mpz_cmp(tree->minority(i).truthtable, minority[i].truthtable) == 0);
+#else
+                for(int j = 0; j < nsamples; j++) {
+                    CAPTURE(j);
+                    REQUIRE(tree->minority(i).truthtable[j] == minority[i].truthtable[j]);
+                }
+#endif
+            }
+        }
+    }
 
     SECTION("Insert root") {
 
@@ -22,7 +97,102 @@ TEST_CASE("Test trie", "[trie]") {
         Node * r = tree->root();
 
         REQUIRE_FALSE(r == NULL);
+        REQUIRE(tree->num_nodes() == 1);
     }
+
+    SECTION("Construct and insert node") {
+
+        tree->insert_root();
+        Node * parent = tree->root();
+
+        REQUIRE_FALSE(parent == NULL);
+
+        unsigned short rule_id = 1;
+        bool prediction = true;
+        bool default_prediction = true;
+        double lower_bound = 0.1;
+        double objective = 0.12;
+        int num_not_captured = 5;
+        int len_prefix = 0;
+        double equivalent_minority = 0.1;
+
+        Node * n = tree->construct_node(rule_id, nrules, prediction, default_prediction,
+                                        lower_bound, objective, parent,
+                                        num_not_captured, nsamples, len_prefix,
+                                        c, equivalent_minority);
+
+        REQUIRE_FALSE(n == NULL);
+
+        REQUIRE(n->id() == rule_id);
+        REQUIRE(n->prediction() == prediction);
+        REQUIRE(n->default_prediction() == default_prediction);
+        REQUIRE(n->lower_bound() == lower_bound);
+        REQUIRE(n->objective() == objective);
+        REQUIRE(n->num_captured() == (nsamples - num_not_captured));
+        REQUIRE(n->depth() == (len_prefix + 1));
+        REQUIRE(n->equivalent_minority() == equivalent_minority);
+
+        tree->insert(n);
+
+        REQUIRE(parent->children_begin()->second == n);
+        REQUIRE(parent->num_children() == 1);
+        REQUIRE(tree->num_nodes() == 2);
+    }
+
+    SECTION("Increment num evaluated") {
+
+        size_t num = tree->num_evaluated();
+        tree->increment_num_evaluated();
+
+        REQUIRE(tree->num_evaluated() == (num + 1));
+    }
+
+    SECTION("Decrement num nodes") {
+
+        tree->insert_root();
+        Node * r = tree->root();
+
+        REQUIRE_FALSE(r == NULL);
+
+        Node * n = tree->construct_node(1, nrules, true, true, 0.1, 0.12, r, 3, nsamples, 0, 0.01, 0.0);
+
+        REQUIRE_FALSE(n == NULL);
+
+        tree->insert(n);
+
+        REQUIRE(tree->num_nodes() == 2);
+
+        tree->decrement_num_nodes();
+
+        REQUIRE(tree->num_nodes() == 1);
+    }
+
+    SECTION("Update minimum objective") {
+
+        double min0 = tree->min_objective();
+        double min1 = min0 + 0.01;
+
+        tree->update_min_objective(min1);
+
+        REQUIRE(tree->min_objective() == min1);
+    }
+
+    SECTION("Update optimal rulelist") {
+
+        tracking_vector<unsigned short, DataStruct::Tree> rule_list = {0, 2, 1, 3};
+        unsigned short new_rule = 5;
+        tree->update_opt_rulelist(rule_list, new_rule);
+
+        rule_list.push_back(new_rule);
+
+        REQUIRE(tree->opt_rulelist() == rule_list);
+    }
+
+    /** TODO
+    SECTION("Update optimal predictions") {
+
+    }
+    **/
 
     if(tree)
         delete tree;
