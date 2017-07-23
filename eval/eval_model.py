@@ -24,7 +24,7 @@ parser.add_argument('-s', action='store_true')
 parser.add_argument('-b', action='store_true')
 parser.add_argument('-n', type=str, metavar='max_num_nodes', default='100000')
 parser.add_argument('-r', type=str, metavar='regularization', default='0.01')
-parser.add_argument('-v', type=str, metavar='verbosity', default='1')
+parser.add_argument('-v', type=str, metavar='verbosity', default='2')
 parser.add_argument('-c', type=str, metavar='(1|2|3|4)')
 parser.add_argument('-a', type=str, metavar='(1|2)')
 parser.add_argument('-p', type=str, metavar='(0|1|2)')
@@ -106,7 +106,7 @@ if __name__ == '__main__':
     log_list = []
     for i in range(num_folds):
         print args
-        fxn = ['../src/bbcache']
+        fxn = ['../src/corels']
         fname = args.fname + '_' + str(i) + '_train'
         out = '../data/CrossValidation/' + fname + '.out'
         label = '../data/CrossValidation/' + fname + '.label'
@@ -159,6 +159,7 @@ if __name__ == '__main__':
         if args.minor:
             minor = '../data/CrossValidation/' + fname + '.minor'
             fxn.append(minor)
+        print ' '.join(fxn)
         if (not args.parallel):
             proc = subprocess.check_call(fxn)
 	    #proc.wait()
