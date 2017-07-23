@@ -46,7 +46,7 @@ def race_func(r):
         return r.replace(' ', '-')
 
 ftag = 'propublica' # coarse age categories, with race
-ftag = 'propublica_ours' # our age categories, with race
+#ftag = 'propublica_ours' # our age categories, with race
 
 fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
 fout = os.path.join('..', 'data', '%s.csv' % ftag)
