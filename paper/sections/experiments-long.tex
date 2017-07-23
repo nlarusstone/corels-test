@@ -77,8 +77,9 @@ interventions are likely to discover criminal possession of a weapon.
 \subsection{Example optimal rule lists}
 \label{sec:examples}
 
-To motivate the feature set we used in our analysis of the ProPublica dataset,
-we first show example rule lists using slightly different feature set (Figure~\ref{fig:propublica}).
+To motivate the feature set we used in most of our analysis of the ProPublica dataset,
+we first show example rule lists using slightly different feature set (Figure~\ref{fig:propublica}),
+found by CORELS (${\Reg = 0.005}$).
 %
 Here, the age categories ($<$25, 25-45, $>$45) come directly from the ProPublica dataset,
 and we include race categories (African American, Asian, Caucasian, Hispanic,
@@ -185,7 +186,7 @@ folds; the others contain the same rules, up to a permutation.
 
 Figures~\ref{fig:recidivism-all-folds} and~\ref{fig:weapon-rule-list}
 show example optimal rule lists that CORELS learns
-for the ProPublica and NYCLU datasets, respectively,
+for the ProPublica (${\Reg = 0.005}$) and NYCLU (${\Reg = 0.01}$) datasets, respectively,
 using 10-fold cross validation and the antecedent sets described
 at the beginning of~\S\ref{sec:experiments}.
 %
@@ -323,10 +324,10 @@ at predicting two-year recidivism for the ProPublica dataset.
 %
 Across the 10 cross-validation folds, the optimal rule lists learned by CORELS
 (${\Reg = 0.005}$, Figure~\ref{fig:recidivism-all-folds}),
-have mean test accuracy~0.68, with standard deviation~0.02.
+have mean test accuracy~0.676, with standard deviation~0.020.
 %
 For comparison, the optimal rule lists in Figure~\ref{fig:propublica}
-achieve a similar mean test accuracy of~0.66, with standard deviation~0.02.
+achieve a similar mean test accuracy of~0.659, with standard deviation~0.016.
 
 The COMPAS algorithm outputs scores between~1 and~10,
 representing low (1-4), medium (5-7), and high (8-10) risk for recidivism.
@@ -335,7 +336,7 @@ As in the analysis by~\citep{LarsonMaKiAn16}, we interpret a medium or high scor
 as a positive prediction for two-year recidivism, and a low score as a negative prediction.
 %
 Across the 10 folds, the COMPAS algorithm scores obtain
-mean test accuracy of~0.66, with standard deviation~0.02.
+mean test accuracy of~0.654, with standard deviation~0.015.
 
 \subsection{CORELS execution traces, for different regularization parameters}
 \label{sec:reg-param}
