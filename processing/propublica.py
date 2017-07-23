@@ -39,6 +39,9 @@ def age_cat_func(c):
         assert (c == 'Less than 25')
         return '<25'
 
+def race_func(r):
+    return r.replace(' ', '-')
+
 fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
 fout = os.path.join('..', 'data', 'propublica.csv')
 bout = os.path.join('..', 'data', 'propublica-binary.csv')
@@ -84,6 +87,8 @@ columns = [(x['sex'] == 'Male'),
 #age = np.array([age_func(i) for i in x['age']])
 age = np.array([age_cat_func(i) for i in x['age_cat']])
 
+race = np.array([race_func(i) for i in x['race']])
+
 juvenile_felonies = np.array(['>0' if (i > 0) else '=0' for i in x['juv_fel_count']])   # support = 282
 
 juvenile_misdemeanors = np.array(['>0' if (i > 0) else '=0' for i in x['juv_misd_count']])  # support = 415
@@ -98,9 +103,9 @@ c_charge_degree = np.array(['Misdemeanor' if (i == 'M') else 'Felony' for i in x
 
 # see `c_jail_in` and `c_jail_out` for time in jail?
 
-race_list = list(set(x['race']))
+#race_list = list(set(x['race']))
 
-columns = [x['sex'], age, x['race']]
+columns = [x['sex'], age, race]
 #columns += [(x['race'] == n) for n in race_list]
 columns += [juvenile_felonies, juvenile_misdemeanors, juvenile_crimes,
            priors_count, c_charge_degree, x['two_year_recid']]
