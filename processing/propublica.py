@@ -42,9 +42,12 @@ def age_cat_func(c):
 def race_func(r):
     return r.replace(' ', '-')
 
+ftag = 'propublica' # coarse age categories, with race
+ftag = 'propublica_ours' # our age categories, with race
+
 fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
-fout = os.path.join('..', 'data', 'propublica.csv')
-bout = os.path.join('..', 'data', 'propublica-binary.csv')
+fout = os.path.join('..', 'data', '%s.csv' % ftag)
+bout = os.path.join('..', 'data', '%s-binary.csv' % ftag)
 din = os.path.join('..', 'data')
 dout = os.path.join('..', 'data', 'CrossValidation')
 
@@ -84,8 +87,10 @@ columns = [(x['sex'] == 'Male'),
            ((x['age'] >= 45) & (x['age'] <= 59))]
 """
 
-#age = np.array([age_func(i) for i in x['age']])
-age = np.array([age_cat_func(i) for i in x['age_cat']])
+if (ftag == 'propublica'):
+    age = np.array([age_cat_func(i) for i in x['age_cat']])
+elif (ftag == 'propublica_ours'):
+    age = np.array([age_func(i) for i in x['age']])
 
 race = np.array([race_func(i) for i in x['race']])
 
@@ -141,7 +146,7 @@ num_rules = np.zeros(num_folds, int)
 mine_time = np.zeros(num_folds)
 for i in range(num_folds):
     print 'generate cross-validation split', i
-    cv_root = 'propublica_%d' % i
+    cv_root = '%s_%d' % (ftag, i)
     test_root = '%s_test' % cv_root
     train_root = '%s_train' % cv_root
     ftest = os.path.join(dout, '%s.csv' % test_root)
@@ -163,7 +168,7 @@ for i in range(num_folds):
     mine_time[i] = time.time() - t0
     mine.apply_rules(din=dout, froot=cv_root, labels=labels)
 
-print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
+print '(min, max, mean) # rules mined per fold:', (num_rules.min(), num_rules.max(), num_rules.mean())
 print 'mining times:', mine_time
 print 'average, std:', mine_time.mean(), mine_time.std()
 
