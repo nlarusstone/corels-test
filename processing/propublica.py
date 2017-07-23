@@ -45,8 +45,15 @@ def race_func(r):
     else:
         return r.replace(' ', '-')
 
+def score_func(s):
+    if (s < 5):
+        return 0            # Low = 1-4
+    else:
+        return 1            # Medium = 5-7, High = 8-10
+
 ftag = 'propublica' # coarse age categories, with race
 #ftag = 'propublica_ours' # our age categories, with race
+ftag = 'score' # learn COMPAS scores
 
 fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
 fout = os.path.join('..', 'data', '%s.csv' % ftag)
@@ -90,10 +97,10 @@ columns = [(x['sex'] == 'Male'),
            ((x['age'] >= 45) & (x['age'] <= 59))]
 """
 
-if (ftag == 'propublica'):
-    age = np.array([age_cat_func(i) for i in x['age_cat']])
-elif (ftag == 'propublica_ours'):
+if (ftag in ['propublica_ours']):
     age = np.array([age_func(i) for i in x['age']])
+else:
+    age = np.array([age_cat_func(i) for i in x['age_cat']])
 
 race = np.array([race_func(i) for i in x['race']])
 
@@ -116,14 +123,20 @@ c_charge_degree = np.array(['Misdemeanor' if (i == 'M') else 'Felony' for i in x
 columns = [x['sex'], age, race]
 #columns += [(x['race'] == n) for n in race_list]
 columns += [juvenile_felonies, juvenile_misdemeanors, juvenile_crimes,
-           priors_count, c_charge_degree, x['two_year_recid']]
+           priors_count, c_charge_degree]
 
 cnames = ['sex', 'age', 'race']
 #cnames += ['Race=%s' % r for r in race_list]
 cnames += ['juvenile-felonies', 'juvenile-misdemeanors', 'juvenile-crimes',
-          'priors', 'current-charge-degree', 'recidivate-within-two-years']
+          'priors', 'current-charge-degree']
  
-
+if (ftag == 'score'):
+    score = np.array([score_func(i) for i in x['decile_score']])
+    columns += [score]
+    cnames += ['score']
+else:
+    columns += [x['two_year_recid']]
+    cnames += ['recidivate-within-two-years']
 
 """
 cnames = ['Gender=Male', 'Age=18-20', 'Age=18-22', 'Age=18-25',
@@ -144,6 +157,8 @@ split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_
 print 'number of folds:', num_folds
 print 'train size:', len(split_ind[0]) * (num_folds - 1)
 print 'test size:', len(split_ind[0])
+
+score_accuracy = np.zeros(num_folds)
 
 num_rules = np.zeros(num_folds, int)
 mine_time = np.zeros(num_folds)
@@ -171,8 +186,14 @@ for i in range(num_folds):
     mine_time[i] = time.time() - t0
     mine.apply_rules(din=dout, froot=cv_root, labels=labels)
 
+    sc = x['decile_score'][split_ind[i]]
+    r2 = x['two_year_recid'][split_ind[i]]
+    score_accuracy[i] = (((sc > 4) & (r2 == 1)) | ((sc < 5) & (r2 == 0))).sum() / float(len(split_ind[i]))
+
 print '(min, max, mean) # rules mined per fold:', (num_rules.min(), num_rules.max(), num_rules.mean())
 print 'mining times:', mine_time
 print 'average, std:', mine_time.mean(), mine_time.std()
+print 'score accuracy:', score_accuracy
+print 'mean, std:', score_accuracy.mean(), score_accuracy.std()
 
 # rule mining is fast, about 0.51 seconds
