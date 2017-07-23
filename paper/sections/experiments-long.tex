@@ -10,22 +10,20 @@ for different values of the regularization parameter~$\Reg$? (\S\ref{sec:reg-par
 \item How much does each of the implementation optimizations contribute to CORELS' performance? (\S\ref{sec:ablation})
 \item How rapidly does CORELS prune the search space? (\S\ref{sec:reg-param} and \S\ref{sec:ablation})
 \end{itemize}
-Below, we first describe our computational environment (\S\ref{sec:environment}),
-datasets we use and prediction problems for each (\S\ref{sec:datasets}),
-and example optimal rule lists found by CORELS (\S\ref{sec:examples}).
+Below, we first describe our computational environment, as well as
+datasets we use and prediction problems for each, and then in the next section,
+we show example optimal rule lists found by CORELS (\S\ref{sec:examples}). \\
 
-\subsection{Computational environment}
-\label{sec:environment}
-
+\textbf{Computational environment.}
+%\label{sec:environment}
 All timed results ran on a server with two Intel Xeon E5-2699~v4
 (55~MB cache, 2.20~GHz) processors and 756~GB RAM.
 %
 Except where we mention a memory constraint, all experiments
-can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
+can run comfortably on smaller machines, \eg a laptop with 16GB~RAM. \\
 
-\subsection{Datasets and prediction problems}
-\label{sec:datasets}
-
+\textbf{Datasets and prediction problems.}
+%\label{sec:datasets}
 Our evaluation focuses on two socially-important prediction problems associated
 with recent, publicly-available datasets:
 \begin{itemize}
@@ -73,23 +71,6 @@ interventions are likely to discover criminal possession of a weapon.
 
 \subsection{Example optimal rule lists}
 \label{sec:examples}
-
-We first ran a 10-fold cross validation experiment using CORELS
-and eight other algorithms:
-logistic regression, support vector machines, AdaBoost, CART, C4.5,
-random forests, RIPPER, and scalable Bayesian rule lists (SBRL).\footnote{For
-SBRL, we use the C implementation at \url{https://github.com/Hongyuy/sbrlmod}.
-By default, SBRL sets ${\eta = 3}$, ${\lambda = 9}$,
-the number of chains to 11 and iterations to 1,000.}
-%
-We use standard R packages, with default parameter settings,
-for the first seven algorithms.\footnote{For CART, C4.5 (J48), and RIPPER,
-\ie the tree and rule list learning algorithms, we use the implementations
-from the R packages rpart, RWeka, and caret, respectively.
-%
-By default, CART uses complexity parameter ${cp = 0.01}$,
-and C4.5 uses complexity parameter ${C = 0.25}$.
-}
 
 \begin{figure}[t]
 \begin{algorithmic}
@@ -182,7 +163,7 @@ Note that we were unable to execute RIPPER for the NYCLU problem.
 
 Figures~\ref{fig:recidivism-all-folds} and~\ref{fig:weapon-rule-list}
 show example optimal rule lists that CORELS learns
-for the ProPublica and NYCLU datasets, respectively.
+for the ProPublica and NYCLU datasets, respectively, using 10-fold cross validation.
 %
 While our goal is to provide illustrative examples, and not to provide a
 detailed analysis nor to advocate for the use of these specific models,
@@ -199,6 +180,27 @@ for different values of the regularization parameter~$\Reg$.
 
 \subsection{Comparison of accuracy and model size for CORELS and other algorithms}
 \label{sec:sparsity}
+
+We ran a 10-fold cross validation experiment using CORELS
+and eight other algorithms:
+logistic regression, support vector machines, AdaBoost, CART, C4.5,
+random forests, RIPPER, and scalable Bayesian rule lists (SBRL).\footnote{For
+SBRL, we use the C implementation at \url{https://github.com/Hongyuy/sbrlmod}.
+By default, SBRL sets ${\eta = 3}$, ${\lambda = 9}$,
+the number of chains to 11 and iterations to 1,000.}
+%
+We use standard R packages, with default parameter settings,
+for the first seven algorithms.\footnote{For CART, C4.5 (J48), and RIPPER,
+\ie the tree and rule list learning algorithms, we use the implementations
+from the R packages rpart, RWeka, and caret, respectively.
+%
+By default, CART uses complexity parameter ${cp = 0.01}$,
+and C4.5 uses complexity parameter ${C = 0.25}$.
+}
+%
+We use the same antecedent sets as input to the two rule list learning algorithms, CORELS and SBRL;
+for the other algorithms, the inputs are binary feature sets corresponding to the
+single clause antecedents in the aforementioned antecedent sets (see Appendix~\ref{appendix:data}).
 
 Figure~\ref{fig:comparison} shows that there were no statistically significant
 differences in algorithm accuracies.
@@ -252,6 +254,8 @@ C4.5 finds large models and dramatically overfits for all tested parameters.
 
 Figure~\ref{fig:sparsity} summarizes differences in accuracy and model size
 for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
+%
+Here, we vary different algorithm parameters, and increase the number of iterations for SBRL to 10,000.
 %
 For both problems, CORELS can learn short rule lists without sacrificing accuracy.
 %
