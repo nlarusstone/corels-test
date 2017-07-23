@@ -40,7 +40,10 @@ def age_cat_func(c):
         return '<25'
 
 def race_func(r):
-    return r.replace(' ', '-')
+    if (r in ['Native American', 'Other']):
+        return 'Other'
+    else:
+        return r.replace(' ', '-')
 
 ftag = 'propublica' # coarse age categories, with race
 ftag = 'propublica_ours' # our age categories, with race
