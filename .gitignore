@@ -97,6 +97,8 @@ figs/*png
 logs/
 cache/
 bbcache
+corels
+tests
 profiles/
 eval/tdata_R.label
 eval/tdata_R.out
