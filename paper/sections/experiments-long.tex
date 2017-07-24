@@ -67,7 +67,7 @@ that we use in our experiments below, through~\S\ref{sec:sparsity}.
 For our experiments in~\S\ref{sec:ablation}, we add negations of 18 of these antecedents,
 which gives a total of ${M=46}$ antecedents.
 
-For further details about data preprocessing steps and antecedent mining,
+For further details about these datasets, preprocessing steps, and antecedent mining,
 see Appendix~\ref{appendix:data}.
 %
 Our choice of, and approach to, the weapon prediction problem is inspired by the work
@@ -83,7 +83,7 @@ interventions are likely to discover criminal possession of a weapon.
 \label{sec:examples}
 
 To motivate the feature set we used in most of our analysis of the ProPublica dataset,
-we first show example rule lists found by CORELS, for a slightly different feature set.
+described in Appendix~\ref{appendix:data}, we first consider a slightly different feature set.
 %
 \begin{figure}[t!]
 \begin{algorithmic}
@@ -159,8 +159,9 @@ though some may be seen as desirable.
 \label{fig:recidivism-all-folds}
 \end{figure}
 %
-In Figure~\ref{fig:propublica}, the age categories ($<$25, 25-45, $>$45) come directly from the ProPublica dataset,
-and we include race categories (African American, Asian, Caucasian, Hispanic,
+Figure~\ref{fig:propublica} shows optimal rule lists learned by CORELS,
+using a feature set that includes age categories ($<$25, 25-45, $>$45) from the ProPublica dataset,
+as well as race categories (African American, Asian, Caucasian, Hispanic,
 Other\footnote{We grouped together the original Native American ($<$0.003) and Other ($>$0.05) categories.}).
 %
 For this feature set, our antecedent mining procedure generated an average
@@ -169,7 +170,7 @@ of~197 antecedents, across folds.
 Notice that none of these rule lists contain antecedents that directly depend on race;
 this motivated our choice to exclude race in our subsequent analysis.
 %
-Also, to explore the effect of a different discretization of the age category,
+To explore the effect of a different discretization of the age attribute,
 in our subsequent analysis, we chose a set of age ranges that was fine-grained
 for younger individuals (18-20, 21-22, 23-25, 26-45, $>$45).
 
@@ -194,12 +195,16 @@ show example optimal rule lists that CORELS learns
 for the ProPublica (${\Reg = 0.005}$) and NYCLU (${\Reg = 0.01}$) datasets, respectively,
 using 10-fold cross validation and the antecedent sets described
 at the beginning of~\S\ref{sec:experiments}.
-%
+
 While our goal is to provide illustrative examples, and not to provide a
 detailed analysis nor to advocate for the use of these specific models,
 we note that these rule lists are short and easy to understand.
 %
-In particular, the three-rule list for weapon prediction
+Furthermore, as we demonstrate in~\S\ref{sec:sparsity},
+optimal rule lists learned by CORELS achieve accuracies that are competitive
+with a suite of other models, including black box COMPAS scores.
+%
+We also note that the three-rule list for weapon prediction
 in Figure~\ref{fig:weapon-rule-list} has the spirit of the heuristic
 strategy presented by~\citet{Goel16} that combines three stop criteria
 and is based on a reduced version of their full regression model.
