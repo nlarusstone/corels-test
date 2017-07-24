@@ -161,7 +161,7 @@ TEST_CASE("Test trie", "[trie]") {
 
     SECTION("Node get prefix and predictions") {
         Node * n = root;
-        int depth = 3;
+        int depth = nrules;
 
         tracking_vector<unsigned short, DataStruct::Tree> prefix;
         tracking_vector<bool, DataStruct::Tree> predictions;
@@ -221,7 +221,7 @@ TEST_CASE("Test trie", "[trie]") {
     SECTION("Prune up") {
 
         Node * n = root;
-        int depth = 3;
+        int depth = nrules;
 
         for(int i = 0; i < depth; i++) {
             n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
@@ -240,7 +240,7 @@ TEST_CASE("Test trie", "[trie]") {
     SECTION("Check prefix") {
 
         Node * n = root;
-        int depth = 3;
+        int depth = nrules;
 
         tracking_vector<unsigned short, DataStruct::Tree> prefix;
 
@@ -265,7 +265,7 @@ TEST_CASE("Test trie", "[trie]") {
     SECTION("Delete subtree") {
 
         Node * n = root;
-        int depth = 3;
+        int depth = nrules;
 
         tracking_vector<unsigned short, DataStruct::Tree> prefix;
 
