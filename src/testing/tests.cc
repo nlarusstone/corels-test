@@ -17,6 +17,8 @@ extern int nsamples;
 extern int nlabels;
 extern int nminority;
 
+// TODO: Add curiosity checks
+
 TEST_CASE("Test trie", "[trie]") {
     double c = 0.01;
     const char * type = "node";
@@ -27,46 +29,51 @@ TEST_CASE("Test trie", "[trie]") {
 
     REQUIRE_FALSE(tree == NULL);
 
+    tree->insert_root();
+    Node * root = tree->root();
+
+    REQUIRE_FALSE(root == NULL);
+
     SECTION("Test tree initialization") {
 
-        REQUIRE(tree->num_nodes() == 0);
-        REQUIRE(tree->num_evaluated() == 0);
-        REQUIRE(tree->c() == c);
-        REQUIRE(tree->nsamples() == nsamples);
-        REQUIRE(tree->nrules() == nrules);
-        REQUIRE(tree->ablation() == ablation);
-        REQUIRE(tree->has_minority() == (bool)minority);
-        REQUIRE(tree->calculate_size() == calculate_size);
+        CHECK(tree->num_nodes() == 1);
+        CHECK(tree->num_evaluated() == 0);
+        CHECK(tree->c() == c);
+        CHECK(tree->nsamples() == nsamples);
+        CHECK(tree->nrules() == nrules);
+        CHECK(tree->ablation() == ablation);
+        CHECK(tree->has_minority() == (bool)minority);
+        CHECK(tree->calculate_size() == calculate_size);
 
         for(int i = 0; i < nrules; i++) {
             CAPTURE(i);
-            REQUIRE(tree->rule(i).support == rules[i].support);
-            REQUIRE(tree->rule(i).cardinality == rules[i].cardinality);
-            REQUIRE(strcmp(tree->rule(i).features, rules[i].features) == 0);
-            REQUIRE(strcmp(tree->rule_features(i), rules[i].features) == 0);
+            CHECK(tree->rule(i).support == rules[i].support);
+            CHECK(tree->rule(i).cardinality == rules[i].cardinality);
+            CHECK(std::string(tree->rule(i).features) == std::string(rules[i].features));
+            CHECK(std::string(tree->rule_features(i)) == std::string(rules[i].features));
 
 #ifdef GMP
-            REQUIRE(mpz_cmp(tree->rule(i).truthtable, rules[i].truthtable) == 0);
+            CHECK(mpz_cmp(tree->rule(i).truthtable, rules[i].truthtable) == 0);
 #else
             for(int j = 0; j < nsamples; j++) {
                 CAPTURE(j);
-                REQUIRE(tree->rule(i).truthtable[j] == rules[i].truthtable[j]);
+                CHECK(tree->rule(i).truthtable[j] == rules[i].truthtable[j]);
             }
 #endif
         }
 
         for(int i = 0; i < nlabels; i++) {
             CAPTURE(i);
-            REQUIRE(tree->label(i).support == labels[i].support);
-            REQUIRE(tree->label(i).cardinality == labels[i].cardinality);
-            REQUIRE(strcmp(tree->label(i).features, labels[i].features) == 0);
+            CHECK(tree->label(i).support == labels[i].support);
+            CHECK(tree->label(i).cardinality == labels[i].cardinality);
+            CHECK(std::string(tree->label(i).features) == std::string(labels[i].features));
 
 #ifdef GMP
-            REQUIRE(mpz_cmp(tree->label(i).truthtable, labels[i].truthtable) == 0);
+            CHECK(mpz_cmp(tree->label(i).truthtable, labels[i].truthtable) == 0);
 #else
             for(int j = 0; j < nsamples; j++) {
                 CAPTURE(j);
-                REQUIRE(tree->label(i).truthtable[j] == label[i].truthtable[j]);
+                CHECK(tree->label(i).truthtable[j] == label[i].truthtable[j]);
             }
 #endif
         }
@@ -75,35 +82,25 @@ TEST_CASE("Test trie", "[trie]") {
         if(minority != NULL) {
             for(int i = 0; i < nminority; i++) {
                 CAPTURE(i);
-                REQUIRE(tree->minority(i).support == minority[i].support);
-                REQUIRE(tree->minority(i).cardinality == minority[i].cardinality);
-                REQUIRE(strcmp(tree->minority(i).features, minority[i].features) == 0);
+                CHECK(tree->minority(i).support == minority[i].support);
+                CHECK(tree->minority(i).cardinality == minority[i].cardinality);
+                CHECK(std::string(tree->minority(i).features) == std::string(minority[i].features));
 
 #ifdef GMP
-                REQUIRE(mpz_cmp(tree->minority(i).truthtable, minority[i].truthtable) == 0);
+                CHECK(mpz_cmp(tree->minority(i).truthtable, minority[i].truthtable) == 0);
 #else
                 for(int j = 0; j < nsamples; j++) {
                     CAPTURE(j);
-                    REQUIRE(tree->minority(i).truthtable[j] == minority[i].truthtable[j]);
+                    CHECK(tree->minority(i).truthtable[j] == minority[i].truthtable[j]);
                 }
 #endif
             }
         }
     }
 
-    SECTION("Insert root") {
-
-        tree->insert_root();
-        Node * r = tree->root();
-
-        REQUIRE_FALSE(r == NULL);
-        REQUIRE(tree->num_nodes() == 1);
-    }
-
     SECTION("Construct and insert node") {
 
-        tree->insert_root();
-        Node * parent = tree->root();
+        Node * parent = root;
 
         REQUIRE_FALSE(parent == NULL);
 
@@ -123,20 +120,68 @@ TEST_CASE("Test trie", "[trie]") {
 
         REQUIRE_FALSE(n == NULL);
 
-        REQUIRE(n->id() == rule_id);
-        REQUIRE(n->prediction() == prediction);
-        REQUIRE(n->default_prediction() == default_prediction);
-        REQUIRE(n->lower_bound() == lower_bound);
-        REQUIRE(n->objective() == objective);
-        REQUIRE(n->num_captured() == (nsamples - num_not_captured));
-        REQUIRE(n->depth() == (len_prefix + 1));
-        REQUIRE(n->equivalent_minority() == equivalent_minority);
+        CHECK(n->id() == rule_id);
+        CHECK(n->prediction() == prediction);
+        CHECK(n->default_prediction() == default_prediction);
+        CHECK(n->lower_bound() == lower_bound);
+        CHECK(n->objective() == objective);
+        CHECK(n->num_captured() == (nsamples - num_not_captured));
+        CHECK(n->depth() == (len_prefix + 1));
+        CHECK(n->equivalent_minority() == equivalent_minority);
+        CHECK_FALSE(n->deleted());
+        CHECK(n->depth() == 1);
 
         tree->insert(n);
 
-        REQUIRE(parent->children_begin()->second == n);
-        REQUIRE(parent->num_children() == 1);
-        REQUIRE(tree->num_nodes() == 2);
+        CHECK(tree->num_nodes() == 2);
+
+        CHECK(n->parent() == parent);
+        CHECK(parent->children_begin()->second == n);
+        CHECK(parent->num_children() == 1);
+        CHECK(parent->child(rule_id) == n);
+    }
+
+    SECTION("Check node delete behavior") {
+
+        Node * n = tree->construct_node(1, nrules, true, true, 0.1, 0.12, root, 3, nsamples, 0, 0.01, 0.0);
+
+        REQUIRE_FALSE(n == NULL);
+
+        tree->insert(n);
+
+        n->set_deleted();
+        CHECK(n->deleted());
+
+        root->delete_child(1);
+
+        CHECK(root->num_children() == 0);
+
+        CHECK(tree->num_nodes() == 1);
+    }
+
+    SECTION("Node get prefix and predictions") {
+        Node * n = root;
+        int depth = 3;
+
+        tracking_vector<unsigned short, DataStruct::Tree> prefix;
+        tracking_vector<bool, DataStruct::Tree> predictions;
+
+        for(int i = 0; i < depth; i++) {
+            n = tree->construct_node(i+1, nrules, (bool)(i % 2), true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+            tree->insert(n);
+
+            prefix.push_back(i+1);
+            predictions.push_back((bool)(i % 2));
+        }
+
+        REQUIRE(tree->num_nodes() == (depth + 1));
+        REQUIRE(n->depth() == depth);
+
+        std::pair<tracking_vector<unsigned short, DataStruct::Tree>, tracking_vector<bool, DataStruct::Tree>> p =
+            n->get_prefix_and_predictions();
+
+        CHECK(p.first == prefix);
+        CHECK(p.second == predictions);
     }
 
     SECTION("Increment num evaluated") {
@@ -149,12 +194,7 @@ TEST_CASE("Test trie", "[trie]") {
 
     SECTION("Decrement num nodes") {
 
-        tree->insert_root();
-        Node * r = tree->root();
-
-        REQUIRE_FALSE(r == NULL);
-
-        Node * n = tree->construct_node(1, nrules, true, true, 0.1, 0.12, r, 3, nsamples, 0, 0.01, 0.0);
+        Node * n = tree->construct_node(1, nrules, true, true, 0.1, 0.12, root, 3, nsamples, 0, 0.01, 0.0);
 
         REQUIRE_FALSE(n == NULL);
 
@@ -175,6 +215,89 @@ TEST_CASE("Test trie", "[trie]") {
         tree->update_min_objective(min1);
 
         REQUIRE(tree->min_objective() == min1);
+    }
+
+    /** TODO: Check if the expected behavior of prune up is this **/
+    SECTION("Prune up") {
+
+        Node * n = root;
+        int depth = 3;
+
+        for(int i = 0; i < depth; i++) {
+            n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+            tree->insert(n);
+        }
+
+        REQUIRE(tree->num_nodes() == (depth + 1));
+        REQUIRE(n->depth() == depth);
+
+        tree->prune_up(n);
+
+        CHECK_FALSE(tree->root() == NULL);
+        CHECK(tree->num_nodes() == 1);
+    }
+
+    SECTION("Check prefix") {
+
+        Node * n = root;
+        int depth = 3;
+
+        tracking_vector<unsigned short, DataStruct::Tree> prefix;
+
+        for(int i = 0; i < depth; i++) {
+            n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+            tree->insert(n);
+            prefix.push_back(i+1);
+        }
+
+        REQUIRE(tree->num_nodes() == (depth + 1));
+        REQUIRE(n->depth() == depth);
+
+        CHECK(tree->check_prefix(prefix) == n);
+
+        prefix[depth - 1] += 1;
+        CHECK(tree->check_prefix(prefix) == NULL);
+
+        n->parent()->delete_child(prefix[depth - 1]);
+        CHECK(tree->check_prefix(prefix) == NULL);
+    }
+
+    SECTION("Delete subtree") {
+
+        Node * n = root;
+        int depth = 3;
+
+        tracking_vector<unsigned short, DataStruct::Tree> prefix;
+
+        for(int i = 0; i < depth; i++) {
+            Node * n1 = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+            Node * n2 = tree->construct_node(i+2, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+            tree->insert(n1);
+            tree->insert(n2);
+
+            n = n1;
+
+            prefix.push_back(i+1);
+        }
+
+        REQUIRE(tree->num_nodes() == (2 * depth + 1));
+        REQUIRE(n->depth() == depth);
+
+        Node * t = root->child(1);
+        REQUIRE_FALSE(t == NULL);
+
+        REQUIRE(tree->check_prefix(prefix) == n);
+
+        delete_subtree(tree, t, false, false);
+
+        CHECK(n->deleted());
+        CHECK(tree->check_prefix(prefix) == NULL);
+        // TODO: Check if num_nodes should actually be 2
+        CHECK(tree->num_nodes() == 2);
+
+        delete_subtree(tree, n, true, false);
+
+        CHECK(tree->num_nodes() == 1);
     }
 
     SECTION("Update optimal rulelist") {
@@ -374,7 +497,7 @@ TEST_CASE("Test queue", "[queue]") {
 
     Queue * queue = new Queue(lb_cmp, "LOWER BOUND");
     REQUIRE_FALSE(queue == NULL);
-    CHECK(strcmp(queue->type(), "LOWER BOUND") == 0);
+    CHECK(std::string(queue->type()) == "LOWER BOUND");
 
     CacheTree * tree = new CacheTree(nsamples, nrules, 0.01, rules, labels, NULL, 0, false, "node");
     REQUIRE_FALSE(tree == NULL);
@@ -382,7 +505,7 @@ TEST_CASE("Test queue", "[queue]") {
     tree->insert_root();
     REQUIRE_FALSE(tree->root() == NULL);
 
-    SECTION("Push") {
+    SECTION("Push and Front") {
         queue->push(tree->root());
 
         REQUIRE_FALSE(queue->empty());
@@ -398,6 +521,8 @@ TEST_CASE("Test queue", "[queue]") {
         REQUIRE(queue->empty());
         REQUIRE(queue->size() == 0);
     }
+
+    // TODO: Chcek select function
 
     if(queue)
         delete queue;
