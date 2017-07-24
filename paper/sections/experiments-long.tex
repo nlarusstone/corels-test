@@ -794,8 +794,8 @@ the remaining search space decays much more slowly without these bounds (thick s
 We calculate the overall speed-up of CORELS compared to a naive implementation and determine the feasibility of running
 our algorithm 30 years ago.
 %
-On the COMPAS dataset, where the number of rules is $M = 156$, naively evaluating all prefixes of up to length 5 would
-require examining $8.7 \times 10^{10}$ different prefixes.
+On the COMPAS dataset, with ${M = 156}$ antecedents, naively evaluating all prefixes of up to length~5 would
+require evaluating $8.7 \times 10^{10}$ different prefixes.
 %
 However, while CORELS only examines prefixes up to length 5 in order to certify optimality, a naive implementation 
 would have to look at even longer prefixes. 
