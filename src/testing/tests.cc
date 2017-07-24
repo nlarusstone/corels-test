@@ -378,7 +378,7 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
     // For second and third tests
     tracking_vector<unsigned short, DataStruct::Tree> parent_prefix_2 = {1, 4, 5};
     int new_rule_2 = 2;
-    unsigned char correct_indices_2[] = {4, 0, 2, 3, 1};
+    unsigned char correct_indices_2[] = {4, 0, 3, 1, 2};
 
     /** TEST 1 **/
     SECTION("Insert into empty map") {
