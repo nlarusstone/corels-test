@@ -459,7 +459,7 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
         CHECK(n2 == NULL);
 
         // Check if the lower bound is unchanged
-        CHECK(pmap->getMap()->begin()->second.first == lower_bound);
+        CHECK(inserted->second.first == lower_bound);
     }
 
     /** TEST 3 **/
@@ -503,7 +503,7 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
         CHECK_FALSE(n2 == NULL);
 
         // Check if the lower bound is the new correct lower bound
-        CHECK(pmap->getMap()->begin()->second.first == l_bound);
+        CHECK(inserted->second.first == l_bound);
     }
 
     if(pmap)
