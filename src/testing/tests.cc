@@ -515,6 +515,8 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
         delete tree;
 }
 
+// TODO: Check captured permutation map
+
 TEST_CASE("Test queue", "[queue]") {
 
     Queue * queue = new Queue(lb_cmp, "LOWER BOUND");
@@ -544,7 +546,7 @@ TEST_CASE("Test queue", "[queue]") {
         REQUIRE(queue->size() == 0);
     }
 
-    // TODO: Chcek select function
+    // TODO: Check select function
 
     if(queue)
         delete queue;

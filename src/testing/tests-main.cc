@@ -43,6 +43,15 @@ int main(int argc, char* argv[])
         return 1;
     }
 
+    printf("\n/********** RULE DUMP **********/\n\n");
+    printf("Printing rules:\n");
+    rule_print_all(rules, nrules, nsamples);
+    printf("\n\nPrinting labels:\n");
+    rule_print_all(labels, nlabels, nsamples);
+    printf("\n\nPrinting minority:\n");
+    rule_print_all(minority, nminority, nsamples);
+    printf("\n\n/******** END RULE DUMP ********/\n\n\n");
+
     int ret = Catch::Session().run(argc, argv);
 
     rules_free(rules, nrules, 1);
