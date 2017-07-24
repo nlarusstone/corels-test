@@ -311,11 +311,31 @@ TEST_CASE("Test trie", "[trie]") {
         REQUIRE(tree->opt_rulelist() == rule_list);
     }
 
-    /** TODO
+
     SECTION("Update optimal predictions") {
 
+        tracking_vector<bool, DataStruct::Tree> predictions = {false, true, false};
+        bool new_pred = false;
+        bool new_default_pred = true;
+
+        Node * n = root;
+        int depth = predictions.size();
+
+        for(int i = 0; i < depth; i++) {
+            n = tree->construct_node(i+1, nrules, predictions[i], true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+            tree->insert(n);
+        }
+
+        REQUIRE(tree->num_nodes() == (depth + 1));
+        REQUIRE(n->depth() == depth);
+
+        tree->update_opt_predictions(n, new_pred, new_default_pred);
+
+        predictions.push_back(new_pred);
+        predictions.push_back(new_default_pred);
+
+        REQUIRE(tree->opt_predictions() == predictions);
     }
-    **/
 
     if(tree)
         delete tree;
