@@ -8,8 +8,11 @@
 
 rule_t * rules;
 rule_t * labels;
+rule_t * minority;
 int nrules;
 int nsamples;
+int nlabels;
+int nminority;
 
 NullLogger * logger;
 
@@ -18,7 +21,7 @@ int main(int argc, char* argv[])
     rules = NULL;
     labels = NULL;
 
-    int nlabels, nsamples_chk;
+    int nsamples_chk, nsamples_check;
 
     logger = new NullLogger();
 
@@ -30,8 +33,10 @@ int main(int argc, char* argv[])
 
     int r = rules_init("testing/tests.out", &nrules, &nsamples, &rules, 1);
     int l = rules_init("testing/tests.label", &nlabels, &nsamples_chk, &labels, 0);
+    int m = rules_init("testing/tests.minor", &nminority, &nsamples_check, &minority, 0);
 
-    if(r != 0 || l != 0 || nsamples != nsamples_chk)
+    // TODO: fix minority check
+    if(r != 0 || l != 0 || m != 0 || nsamples != nsamples_chk)
     {
         printf("ERROR: Could not load rules or samples\n");
         delete logger;
