@@ -1,6 +1,6 @@
 /***  MAIN FILE WITH THE ACTUAL TESTS ***/
 
-#define PREFIX_MAP_TESTS
+#define PERM_MAP_TESTS
 #include "../queue.hh"
 
 #ifdef GMP
@@ -16,8 +16,6 @@ extern int nrules;
 extern int nsamples;
 extern int nlabels;
 extern int nminority;
-
-// TODO: Add curiosity checks
 
 TEST_CASE("Test trie", "[trie]") {
     double c = 0.01;
@@ -155,8 +153,6 @@ TEST_CASE("Test trie", "[trie]") {
         root->delete_child(1);
 
         CHECK(root->num_children() == 0);
-
-        CHECK(tree->num_nodes() == 1);
     }
 
     SECTION("Node get prefix and predictions") {
@@ -217,24 +213,29 @@ TEST_CASE("Test trie", "[trie]") {
         REQUIRE(tree->min_objective() == min1);
     }
 
-    /** TODO: Check if the expected behavior of prune up is this **/
     SECTION("Prune up") {
 
         Node * n = root;
         int depth = nrules;
+
+        Node * s = tree->construct_node(2, nrules, true, true, 0.1, 0.12, n, 3, nsamples, 0, 0.01, 0.0);
+        tree->insert(s);
 
         for(int i = 0; i < depth; i++) {
             n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
             tree->insert(n);
         }
 
-        REQUIRE(tree->num_nodes() == (depth + 1));
+        REQUIRE(tree->num_nodes() == (depth + 2));
         REQUIRE(n->depth() == depth);
 
         tree->prune_up(n);
 
-        CHECK_FALSE(tree->root() == NULL);
-        CHECK(tree->num_nodes() == 1);
+        CHECK(tree->num_nodes() == 2);
+
+        tree->prune_up(s);
+
+        CHECK(tree->num_nodes() == 0);
     }
 
     SECTION("Check prefix") {
@@ -262,6 +263,7 @@ TEST_CASE("Test trie", "[trie]") {
         CHECK(tree->check_prefix(prefix) == NULL);
     }
 
+    // TODO: Check behavior
     SECTION("Delete subtree") {
 
         Node * n = root;
@@ -292,7 +294,7 @@ TEST_CASE("Test trie", "[trie]") {
 
         CHECK(n->deleted());
         CHECK(tree->check_prefix(prefix) == NULL);
-        // TODO: Check if num_nodes should actually be 2
+
         CHECK(tree->num_nodes() == 2);
 
         delete_subtree(tree, n, true, false);

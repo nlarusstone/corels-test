@@ -110,7 +110,7 @@ class PrefixPermutationMap : public PermutationMap {
             CacheTree* tree, VECTOR not_captured, tracking_vector<unsigned short,
             DataStruct::Tree> parent_prefix) override;
 
-#ifdef PREFIX_MAP_TESTS
+#ifdef PERM_MAP_TESTS
         inline PrefixMap* getMap() const {
             return pmap;
         }
@@ -129,7 +129,12 @@ class CapturedPermutationMap : public PermutationMap {
                 double lower_bound, double objective, Node* parent, int num_not_captured, int nsamples,
                 int len_prefix, double c, double equivalent_minority, CacheTree* tree, VECTOR not_captured,
                  tracking_vector<unsigned short, DataStruct::Tree> parent_prefix) override;
-	private:
+#ifdef PERM_MAP_TESTS
+        inline CapturedMap* getMap() const {
+            return pmap;
+        }
+#endif
+    private:
 		CapturedMap* pmap;
 };
 
