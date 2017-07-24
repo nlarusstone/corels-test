@@ -41,7 +41,7 @@ TEST_CASE("Test prefix permutation map", "[prefixmap]") {
         **/
         unsigned short correct_key[] = {4, 1, 2, 4, 5};
         unsigned char correct_indices[] = {4, 2, 1, 0, 3};
-        unsigned char correct_new_indices[] = {4, 0, 3, 1, 2};
+        unsigned char correct_new_indices[] = {4, 0, 2, 3, 1};
 
         double l_bound = lower_bound - 0.02;
         double h_bound = lower_bound + 0.02;
