@@ -95,13 +95,15 @@ def run_model(fname, log_fname):
     print 'True Positive  | False Negative || %d | %d' % (true_positive, false_negative)
     print 'False Positive | True Negative  || %d | %d' % (false_positive, true_negative)
 
-    return len(opt), acc
+    return (len(opt), acc, [true_positive, false_negative, false_positive, true_negative])
 
 if __name__ == '__main__':
     args = parser.parse_args()
     num_folds = args.k
     accuracies = []
     test_accuracies = []
+    ctables = []
+    test_ctables = []
     plist = []
     log_list = []
     for i in range(num_folds):
@@ -165,13 +167,15 @@ if __name__ == '__main__':
 	    #proc.wait()
             print
             train_name = args.fname + '_' + str(i) + '_train'
-            len_opt, train_acc = run_model(train_name, log_list[i])
+            (len_opt, train_acc, ct) = run_model(train_name, log_list[i])
             accuracies.append(train_acc)
+            ctables.append(ct)
             print '---- Calculating Validation Accuracy For Fold {0} -----'.format(i)
             print
             test_name = args.fname + '_' + str(i) + '_test'
-            len_opt, acc = run_model(test_name, log_list[i])
+            (len_opt, acc, ct) = run_model(test_name, log_list[i])
             test_accuracies.append(acc)
+            test_ctables.append(ct)
             if args.sparsity:
                 cv_fold = args.fname + '_' + str(i)
                 with open(args.sparsity, 'a') as f:
@@ -191,12 +195,20 @@ if __name__ == '__main__':
                 with open(args.sparsity, 'a') as f:
                     f.write("{0},CORELS,0,0,{1},{2},{3},{4}\n".format(cv_fold, args.r, acc, len_opt, train_acc))
 
-
-    if (len(accuracies) > 0):
-        print
-        print 'Train accuracies', accuracies
-        print 'Train accuracies mean, std', np.mean(accuracies), np.std(accuracies)
-
+    print
+    print 'Train contingency tables', ctables
+    print 'Test ccontingency tables', test_ctables
+    ctables = np.array(ctables)
+    test_ctables = np.array(test_ctables)
+    print 'True Positive, False Negative, False Positive, True Negative'
+    print 'Train contingency table means', np.round(np.mean(ctables, axis=0).reshape(2, 2))
+    print 'Train contingency table std', np.round(np.std(ctables, axis=0).reshape(2, 2))
+    print
+    print 'Test contingency table means', np.round(np.mean(test_ctables, axis=0).reshape(2, 2))
+    print 'Test contingency table std', np.round(np.std(test_ctables, axis=0).reshape(2, 2))
+    print
+    print 'Train accuracies', accuracies
+    print 'Train accuracies mean, std', np.mean(accuracies), np.std(accuracies)
     print
     print 'Test accuracies', test_accuracies
     print 'Test accuracies mean, std', np.mean(test_accuracies), np.std(test_accuracies)
