@@ -8,7 +8,7 @@
 #include <gmp.h>
 #endif
 
-TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_initialization]") {
+TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init]") {
 
     REQUIRE_FALSE(tree == NULL);
     REQUIRE_FALSE(root == NULL);
@@ -168,7 +168,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Node get prefix and predictions", "[trie][no
     CHECK(p.second == predictions);
 }
 
-TEST_CASE_METHOD(TrieFixture, "Trie/Increment num evaluated", "[trie][num_evaluated]") {
+TEST_CASE_METHOD(TrieFixture, "Trie/Increment num evaluated", "[trie][num_eval]") {
 
     REQUIRE_FALSE(tree == NULL);
 
@@ -196,7 +196,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Decrement num nodes", "[trie][num_nodes]") {
     REQUIRE(tree->num_nodes() == 1);
 }
 
-TEST_CASE_METHOD(TrieFixture, "Trie/Update minimum objective", "[trie][minimum_objective]") {
+TEST_CASE_METHOD(TrieFixture, "Trie/Update minimum objective", "[trie][min_obj]") {
 
     REQUIRE_FALSE(tree == NULL);
 
@@ -306,7 +306,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
     CHECK(tree->num_nodes() == 1);
 }
 
-TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal rulelist", "[trie][optimal_rulelist]") {
+TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal rulelist", "[trie][optimal_list]") {
 
     tracking_vector<unsigned short, DataStruct::Tree> rule_list = {0, 2, 1, 3};
     unsigned short new_rule = 5;
@@ -318,7 +318,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal rulelist", "[trie][optimal_ru
 }
 
 
-TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal_predictions]") {
+TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal_pred]") {
 
     REQUIRE_FALSE(tree == NULL);
     REQUIRE_FALSE(root == NULL);
