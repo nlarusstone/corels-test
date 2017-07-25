@@ -802,14 +802,21 @@ the remaining search space decays much more slowly without these bounds (thick s
 We calculate the overall speed-up of CORELS compared to a naive implementation and determine the feasibility of running
 our algorithm 30 years ago.
 %
-On the COMPAS dataset, with ${M = 156}$ antecedents, naively evaluating all prefixes of up to length~5 would
-require evaluating $8.7 \times 10^{10}$ different prefixes.
+Consider an execution of CORELS for the ProPublica dataset, with ${M = 156}$ antecedents,
+that evaluates prefixes up to length~5 in order to certify optimality (Table~\ref{tab:ablation}).
 %
-However, while CORELS only examines prefixes up to length 5 in order to certify optimality, a naive implementation 
-would have to look at even longer prefixes. 
+A brute force implementation that naively considers all prefixes of up to length~5
+would evaluate ${8.7 \times 10^{10}}$ prefixes.
 %
-Without our equivalent points bound, but with all of our other optimizations, we evaluate prefixes up to at least length 10 (see 
-Table~\ref{tab:ablation} and Figure~\ref{fig:queue})---thus a naive algorithm would have to evaluate prefixes of length 10 or longer.
+As shown in Figure~\ref{fig:recidivism-all-folds}, the optimal rule list has prefix length~4,
+thus the brute force algorithm would identify the optimal rule list.
+%
+However, for this approach certify optimality, it would have consider far longer prefixes.
+%
+Without our equivalent points bound, but with all of our other optimizations,
+we evaluate prefixes up to at least length 10
+(see Table~\ref{tab:ablation} and Figure~\ref{fig:queue})---thus a brute force algorithm
+would have to evaluate prefixes of length 10 or longer.
 %
 Naively evaluating all prefixes up to length 10 would require looking at $6.4 \times 10^{21}$ different prefixes.
 %
