@@ -88,7 +88,7 @@ def mine_binary(din='../data/compas', froot='compas', max_cardinality=2,
 
 def mine_rules(din='../data/adult', froot='adult', max_cardinality=2,
                min_support=0.01, labels=['<=50K', '>50K'], minor=True,
-               verbose=False, prefix=''):
+               verbose=False, prefix='', exclude_not=False):
     """
     This doesn't do negations of features so it's not complete.
 
@@ -136,12 +136,14 @@ def mine_rules(din='../data/adult', froot='adult', max_cardinality=2,
     print len(names), 'rules mined'
     print 'writing', fout
     f = open(fout, 'w')
-    if ('frisk' not in froot):
-        f.write('\n'.join(['%s %s' % (n, ' '.join(np.cast[str](np.cast[int](r))))
-                        for (n, r) in zip(names, records)]) + '\n')
-    else:
+    if (exclude_not):
+        print 'excluding "-not-" rules'
         f.write('\n'.join(['%s %s' % (n, ' '.join(np.cast[str](np.cast[int](r))))
                             for (n, r) in zip(names, records) if ('not' not in n)]) + '\n')
+        print len(names), 'rules'
+    else:
+        f.write('\n'.join(['%s %s' % (n, ' '.join(np.cast[str](np.cast[int](r))))
+                        for (n, r) in zip(names, records)]) + '\n')
     f.close()
 
     print 'writing', flabel
