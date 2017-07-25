@@ -296,10 +296,15 @@ slow_m = (t_tot / t_tot[0]).mean(axis=1) # slowdown
 lb_m = lower_bound_num.mean(axis=1) / 10**6
 lb_s = lower_bound_num.std(axis=1) / 10**6
 
+mm = min_obj[-1]
+ivec = (min_obj[-1] - min_obj[0]) > 10**-6
+topt = t_opt[-1]
+topt[ivec] = t_tot[-1][ivec]
+
 print 'for no equiv pts:'
 print 'folds that achieve min objective:', ((min_obj[-1] - min_obj[0]) < 10**-6).sum()
 print 'total time >', t_tot[-1:].min() / 60
-print 'time to optimum >', t_opt[-1][((min_obj[-1] - min_obj[0]) < 10**-6)].min()
+print 'time to optimum (lower bound on mean) >', topt.mean() #t_opt[-1][((min_obj[-1] - min_obj[0]) < 10**-6)].min()
 print 'max prefix length >=', max_prefix_length[-1]
 print 'num lower bound evals >=', lower_bound_num[-1].min() / 10.**6
 print 'total queue insertions >', num_insertions[-1].min() / 10.**6
