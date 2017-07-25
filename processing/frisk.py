@@ -91,11 +91,20 @@ def age_func(a):
 
 predict_frisked = False
 predict_weapon = True
+small = True
+
+# for the weapon prediction problem, we resample due to class imbalance
+resample_test = False   # if True, will resample the test set, otherwise only resample the train set
 
 if predict_frisked:
-    ftag = 'frisk'
+    ftag = 'stop'
 else:
-    ftag = 'weapon'
+    if small:
+        ftag = 'frisk'  # single clauses (M = 28)
+        exclude_not = True
+    else:
+        ftag = 'weapon' # with negations (M = 46)
+        exclude_not = False
 
 din = os.path.join('..', 'data', 'frisk')
 dout = os.path.join('..', 'data', 'CrossValidation')
@@ -256,6 +265,7 @@ if (not predict_weapon):
 else:
     s0 = np.split(np.random.permutation(len(y0) / num_folds * num_folds), num_folds)
     s1 = np.split(len(y0) + np.random.permutation(len(y1) / num_folds * num_folds), num_folds)
+    test_split_ind = [np.concatenate([i0, i1]) for (i0, i1) in zip(s0, s1)]
     s1 = [i1[np.random.randint(0, len(i1), len(s0[0]))] for i1 in s1]
     split_ind = [np.concatenate([i0, i1]) for (i0, i1) in zip(s0, s1)]
 
@@ -275,16 +285,20 @@ for i in range(num_folds):
     btest = os.path.join(dout, '%s-binary.csv' % test_root)
     btrain = os.path.join(dout, '%s-binary.csv' % train_root)
     train_ind = np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])
-    y[split_ind[i]].saveSV(ftest)
     y[train_ind].saveSV(ftrain)
-    b[split_ind[i]].saveSV(btest)
     b[train_ind].saveSV(btrain)
+    if resample_test:
+        y[split_ind[i]].saveSV(ftest)
+        b[split_ind[i]].saveSV(btest)
+    else:
+        y[test_split_ind[i]].saveSV(ftest)
+        b[test_split_ind[i]].saveSV(btest)
 
     print 'mine rules from', ftrain
     num_rules[i] = mine.mine_rules(din=dout, froot=train_root,
                                     max_cardinality=max_cardinality,
                                     min_support=min_support, labels=labels,
-                                    minor=minor)
+                                    minor=minor, exclude_not=exclude_not)
     mine.apply_rules(din=dout, froot=cv_root, labels=labels)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
