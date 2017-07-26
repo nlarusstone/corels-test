@@ -5,7 +5,9 @@
 #include "fixtures.hh"
 
 #ifdef GMP
-#include <gmp.h>
+    #include <gmp.h>
+#else
+    #define NENTRIES  ((nsamples + BITS_PER_ENTRY - 1) / BITS_PER_ENTRY)
 #endif
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init]") {
@@ -32,7 +34,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init
 #ifdef GMP
         CHECK(mpz_cmp(tree->rule(i).truthtable, rules[i].truthtable) == 0);
 #else
-        for(int j = 0; j < nsamples; j++) {
+        for(int j = 0; j < NENTRIES; j++) {
             CAPTURE(j);
             CHECK(tree->rule(i).truthtable[j] == rules[i].truthtable[j]);
         }
@@ -45,18 +47,16 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init
         CHECK(tree->label(i).cardinality == labels[i].cardinality);
         CHECK(std::string(tree->label(i).features) == std::string(labels[i].features));
 
-        // TODO: Fix truthtable checks
 #ifdef GMP
         CHECK(mpz_cmp(tree->label(i).truthtable, labels[i].truthtable) == 0);
 #else
-        for(int j = 0; j < nsamples; j++) {
+        for(int j = 0; j < NENTRIES; j++) {
             CAPTURE(j);
             CHECK(tree->label(i).truthtable[j] == labels[i].truthtable[j]);
         }
 #endif
     }
 
-    // TODO: Fix minority checks
     if(minority != NULL) {
         for(int i = 0; i < nminority; i++) {
             CAPTURE(i);
@@ -67,7 +67,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init
 #ifdef GMP
             CHECK(mpz_cmp(tree->minority(i).truthtable, minority[i].truthtable) == 0);
 #else
-            for(int j = 0; j < nsamples; j++) {
+            for(int j = 0; j < NENTRIES; j++) {
                 CAPTURE(j);
                 CHECK(tree->minority(i).truthtable[j] == minority[i].truthtable[j]);
             }
@@ -168,7 +168,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Node get prefix and predictions", "[trie][no
     CHECK(p.second == predictions);
 }
 
-TEST_CASE_METHOD(TrieFixture, "Trie/Increment num evaluated", "[trie][num_eval]") {
+TEST_CASE_METHOD(TrieFixture, "Trie/Increment num evaluated", "[trie][num_evaluated]") {
 
     REQUIRE_FALSE(tree == NULL);
 
@@ -196,7 +196,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Decrement num nodes", "[trie][num_nodes]") {
     REQUIRE(tree->num_nodes() == 1);
 }
 
-TEST_CASE_METHOD(TrieFixture, "Trie/Update minimum objective", "[trie][min_obj]") {
+TEST_CASE_METHOD(TrieFixture, "Trie/Update minimum objective", "[trie][minimum_objective]") {
 
     REQUIRE_FALSE(tree == NULL);
 
@@ -306,7 +306,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
     CHECK(tree->num_nodes() == 1);
 }
 
-TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal rulelist", "[trie][optimal_list]") {
+TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal rulelist", "[trie][optimal_rulelist]") {
 
     tracking_vector<unsigned short, DataStruct::Tree> rule_list = {0, 2, 1, 3};
     unsigned short new_rule = 5;
@@ -318,7 +318,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal rulelist", "[trie][optimal_li
 }
 
 
-TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal_pred]") {
+TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal_predictions]") {
 
     REQUIRE_FALSE(tree == NULL);
     REQUIRE_FALSE(root == NULL);
@@ -488,29 +488,86 @@ TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with lower lower bound", "
 
 TEST_CASE_METHOD(QueueFixture, "Queue/Push and Front", "[queue][push]") {
 
-    REQUIRE_FALSE(queue == NULL);
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(queue != NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
 
     queue->push(root);
 
-    REQUIRE_FALSE(queue->empty());
-    REQUIRE(queue->size() == 1);
-    REQUIRE(queue->front() == root);
+    CHECK_FALSE(queue->empty());
+    CHECK(queue->size() == 1);
+    CHECK(queue->front() == root);
 }
 
 TEST_CASE_METHOD(QueueFixture, "Queue/Pop", "[queue][pop]") {
 
-    REQUIRE_FALSE(queue == NULL);
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(queue != NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
 
     queue->push(root);
-    REQUIRE(queue->size() == 1);
+    CHECK(queue->size() == 1);
 
     queue->pop();
-    REQUIRE(queue->empty());
-    REQUIRE(queue->size() == 0);
+    CHECK(queue->empty());
+    CHECK(queue->size() == 0);
 }
 
-// TODO: Check select function
+TEST_CASE_METHOD(QueueFixture, "Queue/Select", "[queue][select]") {
+
+    REQUIRE(queue != NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
+
+    REQUIRE(tree->nsamples() == nsamples);
+    REQUIRE(tree->nrules() == nrules);
+
+    Node * n = root;
+    int depth = nrules;
+
+    tracking_vector<unsigned short, DataStruct::Tree> prefix;
+
+    VECTOR captured_key;
+    rule_vinit(nsamples, &captured_key);
+
+    for(int i = 0; i < depth; i++) {
+        n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+        tree->insert(n);
+
+        prefix.push_back(i+1);
+
+#ifdef GMP
+        mpz_ior(captured_key, captured_key, tree->rule(i+1).truthtable);
+#else
+        for(int j = 0; j < NENTRIES; j++) {
+            captured_key[j] = captured_key[j] | tree->rule(i+1).truthtable[j];
+        }
+#endif
+    }
+
+    REQUIRE(tree->num_nodes() == (depth + 1));
+    REQUIRE(n->depth() == depth);
+
+    queue->push(n);
+    REQUIRE(queue->front() == n);
+
+    VECTOR captured;
+    rule_vinit(nsamples, &captured);
+
+    std::pair<Node*, tracking_vector<unsigned short, DataStruct::Tree>> prefix_node = queue->select(tree, captured);
+
+    CHECK(prefix_node.first == n);
+
+    CHECK(prefix_node.second == prefix);
+
+#ifdef GMP
+    CHECK(mpz_cmp(captured, captured_key) == 0);
+#else
+    for(int i = 0; i < NENTRIES; i++) {
+        CHECK(captured[i] == captured_key[i]);
+    }
+#endif
+
+    rule_vfree(&captured);
+    rule_vfree(&captured_key);
+}
