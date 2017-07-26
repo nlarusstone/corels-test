@@ -294,6 +294,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
 
     REQUIRE(tree->check_prefix(prefix) == n);
 
+    root->delete_child(t->id());
     delete_subtree(tree, t, false, false);
 
     CHECK(n->deleted());
@@ -301,6 +302,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
 
     CHECK(tree->num_nodes() == 2);
 
+    n->parent()->delete_child(n->id());
     delete_subtree(tree, n, true, false);
 
     CHECK(tree->num_nodes() == 1);
