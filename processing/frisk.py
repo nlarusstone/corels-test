@@ -97,8 +97,13 @@ small = True
 resample_test = False   # if True, will resample the test set, otherwise only resample the train set
 
 if predict_frisked:
+    max_cardinality = 1
+    min_support = 0.001
     ftag = 'stop'
+    exclude_not = False
 else:
+    max_cardinality = 1
+    min_support = 0.001
     if small:
         ftag = 'frisk'  # single clauses (M = 28)
         exclude_not = True
@@ -116,8 +121,6 @@ fout = os.path.join(din, '%s.csv' % ftag)
 
 seed = sum([1, 4, 21, 12, 20]) # f:6, r:18, i:09, s:19, k:11
 num_folds = 10
-max_cardinality = 1
-min_support = 0.001
 labels = ['no', 'yes']
 minor = True
 
@@ -287,7 +290,7 @@ for i in range(num_folds):
     train_ind = np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])
     y[train_ind].saveSV(ftrain)
     b[train_ind].saveSV(btrain)
-    if resample_test:
+    if (predict_frisked or resample_test):
         y[split_ind[i]].saveSV(ftest)
         b[split_ind[i]].saveSV(btest)
     else:
