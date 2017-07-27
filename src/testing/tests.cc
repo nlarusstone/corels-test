@@ -147,13 +147,14 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Node get prefix and predictions", "[trie][no
     REQUIRE(root != NULL);
 
     Node * n = root;
-    int depth = nrules;
+    int depth = nrules - 1;
 
     tracking_vector<unsigned short, DataStruct::Tree> prefix;
     tracking_vector<bool, DataStruct::Tree> predictions;
 
     // Create a nrules-deep tree and store its prefix and predictions
     for(int i = 0; i < depth; i++) {
+        CAPTURE(i);
         n = tree->construct_node(i+1, nrules, (bool)(i % 2), true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
         tree->insert(n);
 
@@ -220,7 +221,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Prune up", "[trie][prune_up]") {
     REQUIRE(root != NULL);
 
     Node * n = root;
-    int depth = nrules;
+    int depth = nrules - 1;
 
     // Create one childless child of the root
     Node * s = tree->construct_node(2, nrules, true, true, 0.1, 0.12, n, 3, nsamples, 0, 0.01, 0.0);
@@ -228,6 +229,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Prune up", "[trie][prune_up]") {
 
     // Then create a deep line of nodes from another child of the root
     for(int i = 0; i < depth; i++) {
+        CAPTURE(i);
         n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
         tree->insert(n);
     }
@@ -258,6 +260,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Check prefix", "[trie][check_prefix]") {
     tracking_vector<unsigned short, DataStruct::Tree> prefix;
 
     for(int i = 0; i < depth; i++) {
+        CAPTURE(i);
         n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
         tree->insert(n);
         prefix.push_back(i+1);
@@ -290,13 +293,15 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
     REQUIRE(root != NULL);
 
     Node * n = root;
-    int depth = nrules;
+    int depth = nrules - 1;
 
     tracking_vector<unsigned short, DataStruct::Tree> prefix;
 
     // This time, make two children of root, then from the left child make
     // two more, and from the left of those two make two more, etc for a certain depth
     for(int i = 0; i < depth; i++) {
+        CAPTURE(i);
+
         // delete subtree requires the done information (interior nodes are 'done')
         n->set_done();
 
@@ -386,6 +391,8 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal
     int depth = predictions.size();
 
     for(int i = 0; i < depth; i++) {
+        CAPTURE(i);
+
         n = tree->construct_node(i+1, nrules, predictions[i], true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
         tree->insert(n);
     }
@@ -402,6 +409,85 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal
     predictions.push_back(new_default_pred);
 
     REQUIRE(tree->opt_predictions() == predictions);
+}
+
+
+TEST_CASE_METHOD(TrieFixture, "Trie/Garbage collect", "[trie][garbage_collect]") {
+
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
+
+    double minobj = 0.5;
+    tree->update_min_objective(minobj);
+    REQUIRE(tree->min_objective() == minobj);
+
+    // We create three children from the root node. In order:
+    // higher, equal, and lower lower bound than the minimum objective (0.5).
+    // Each one has two children.
+
+    Node * nodes[3][3];
+
+    nodes[0][0] = tree->construct_node(1, nrules, true, true, minobj + 0.2, 0.12, root, 3, nsamples, 0, 0.01, 0.0);
+    nodes[1][0] = tree->construct_node(2, nrules, true, true, minobj, 0.12, root, 3, nsamples, 0, 0.01, 0.0);
+    nodes[2][0] = tree->construct_node(3, nrules, true, true, minobj - 0.2, 0.12, root, 3, nsamples, 0, 0.01, 0.0);
+
+    root->set_done();
+
+    for(int i = 0; i < 3; i++) {
+        CAPTURE(i);
+
+        nodes[i][0]->set_done();
+        tree->insert(nodes[i][0]);
+
+        nodes[i][1] = tree->construct_node(4, nrules, true, true, minobj - 0.1, 0.12, nodes[i][0], 3, nsamples, 1, 0.01, 0.0);
+        nodes[i][2] = tree->construct_node(5, nrules, true, true, minobj - 0.15, 0.12, nodes[i][0], 3, nsamples, 1, 0.01, 0.0);
+
+        tree->insert(nodes[i][1]);
+        tree->insert(nodes[i][2]);
+    }
+
+    // Check if all the nodes were counted
+    CHECK(tree->num_nodes() == 10);
+
+    tree->garbage_collect();
+
+    // The first and second nodes (higher and equal lower bounds) should have been deleted
+    CHECK(tree->num_nodes() == 8);
+
+    // And their childeren lazily marked
+    CHECK(nodes[0][1]->deleted());
+    CHECK(nodes[0][2]->deleted());
+    CHECK(nodes[1][1]->deleted());
+    CHECK(nodes[1][2]->deleted());
+
+    // But not the third node's children (lower lower bound)
+    CHECK_FALSE(nodes[2][1]->deleted());
+    CHECK_FALSE(nodes[2][2]->deleted());
+
+    // Just for fun, add a test for the queue lazy cleanup (where it deletes nodes marked for deletion)
+    Queue * queue = new Queue(lb_cmp, "LOWER BOUND");
+
+    REQUIRE(queue != NULL);
+
+    // Add all the leaf nodes that need to be deleted to the queue
+    for(int i = 0; i < 2; i++) {
+        queue->push(nodes[i][1]);
+        queue->push(nodes[i][2]);
+    }
+
+    VECTOR captured;
+    rule_vinit(nsamples, &captured);
+
+    std::pair<Node*, tracking_vector<unsigned short, DataStruct::Tree>> prefix_node = queue->select(tree, captured);
+
+    // Were all the nodes found to be lazily marked deleted?
+    // Only the root, the root's third child and its two children should remain
+    CHECK(tree->num_nodes() == 4);
+
+    // Since all the nodes in the queue were deleted
+    CHECK(prefix_node.first == NULL);
+
+    rule_vfree(&captured);
 }
 
 
@@ -740,16 +826,20 @@ TEST_CASE_METHOD(QueueFixture, "Queue/Select", "[queue][select]") {
 
     // As before, create a line of nodes
     for(int i = 0; i < depth; i++) {
+        CAPTURE(i);
+
+        n->set_done();
         n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
         tree->insert(n);
 
         prefix.push_back(i+1);
 
-// Here, we generated the vector of captured samples to then test against what the queue calculates
+        // Here, we generated the vector of captured samples to then test against what the queue calculates
 #ifdef GMP
         mpz_ior(captured_key, captured_key, rules[i+1].truthtable);
 #else
         for(int j = 0; j < NENTRIES; j++) {
+            CAPTURE(j);
             captured_key[j] = captured_key[j] | rules[i+1].truthtable[j];
         }
 #endif
@@ -765,22 +855,65 @@ TEST_CASE_METHOD(QueueFixture, "Queue/Select", "[queue][select]") {
     VECTOR captured;
     rule_vinit(nsamples, &captured);
 
-    std::pair<Node*, tracking_vector<unsigned short, DataStruct::Tree>> prefix_node = queue->select(tree, captured);
+    // Test if selected a node returns it and its data correctly
+    SECTION("Test select normal") {
 
-    // Did it get the correct node from the queue?
-    CHECK(prefix_node.first == n);
+        std::pair<Node*, tracking_vector<unsigned short, DataStruct::Tree>> prefix_node = queue->select(tree, captured);
 
-    // Did it get the node's correct prefix?
-    CHECK(prefix_node.second == prefix);
+        // Did it get the correct node from the queue?
+        CHECK(prefix_node.first == n);
 
-    // Did it get the correct captured vector?
+        // Did it get the node's correct prefix?
+        CHECK(prefix_node.second == prefix);
+
+        // Did it get the correct captured vector?
 #ifdef GMP
-    CHECK(mpz_cmp(captured, captured_key) == 0);
+        CHECK(mpz_cmp(captured, captured_key) == 0);
 #else
-    for(int i = 0; i < NENTRIES; i++) {
-        CHECK(captured[i] == captured_key[i]);
-    }
+        for(int i = 0; i < NENTRIES; i++) {
+            CAPTURE(i);
+            CHECK(captured[i] == captured_key[i]);
+        }
 #endif
+    }
+
+    // Test if selecting a node that is lazily marked deletes it and returns null
+    SECTION("Test select lazy delete cleanup") {
+
+        Node * t = root->child(1);
+        REQUIRE(t != NULL);
+        REQUIRE(t->done());
+
+        // Instead of just setting n to deleted, make it with the delete_subtree function (as an extra check for the trie)
+        root->delete_child(t->id());
+        delete_subtree(tree, t, false, false);
+
+        CHECK(tree->num_nodes() == 2);
+
+        // Leaf nodes should be lazily marked, not deleted
+        CHECK(n->deleted());
+
+        std::pair<Node*, tracking_vector<unsigned short, DataStruct::Tree>> prefix_node = queue->select(tree, captured);
+
+        // Was the node found to be lazily marked and deleted?
+        CHECK(prefix_node.first == NULL);
+        CHECK(tree->num_nodes() == 1);
+
+        // Is captured empty?
+#ifdef GMP
+        mpz_t temp;
+        mpz_init2(temp, nsamples);
+
+        CHECK(mpz_cmp(captured, temp) == 0);
+
+        mpz_clear(temp);
+#else
+        for(int i = 0; i < NENTRIES; i++) {
+            CAPTURE(i);
+            CHECK(captured[i] == 0);
+        }
+#endif
+    }
 
     rule_vfree(&captured);
     rule_vfree(&captured_key);

@@ -43,7 +43,6 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-
     printf("\n/********** RULE DUMP **********/\n\n");
     printf("Printing rules:\n");
     rule_print_all(rules, nrules, nsamples);
