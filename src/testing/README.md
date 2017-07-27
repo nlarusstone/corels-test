@@ -20,11 +20,17 @@ To compile the tests, simply run 'make tests' from the /src folder (not this fol
     -   optimal_list    Test the trie's storing of the optimal rule list
     -   optimal_pred    Test the trie's storing of the optimal predictions
 
-    -   insert_empty    Test inserting into an empty prefix permutation map
-    -   insert_higher   Test inserting a prefix with a higher lower bound than
+    -   prefix_empty    Test inserting into an empty prefix permutation map
+    -   prefix_higher   Test inserting a prefix with a higher lower bound than
                         previously stored into the prefix permutation map
-    -   insert_lower    Test inserting a prefix with a lower lower bound than
+    -   prefix_lower    Test inserting a prefix with a lower lower bound than
                         previously stored into the prefix permutation map
+
+    -   capture_empty   Test inserting into an empty captured permutation map
+    -   capture_higher  Test inserting a prefix with a higher lower bound than
+                        previously stored into the captured permutation map
+    -   capture_lower   Test inserting a prefix with a lower lower bound than
+                        previously stored into the captured permutation map
 
     -   push            Test pushing to the priority queue
     -   pop             Test popping the priority queue
