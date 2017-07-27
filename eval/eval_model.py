@@ -188,8 +188,9 @@ if __name__ == '__main__':
             plist[i].wait()
             train_name = args.fname + '_' + str(i) + '_train'
             test_name = args.fname + '_' + str(i) + '_test'
-            len_opt, acc = run_model(test_name, log_list[i])
+            (len_opt, acc, ct) = run_model(test_name, log_list[i])
             test_accuracies.append(acc)
+            test_ctables.append(ct)
             if args.sparsity:
                 cv_fold = args.fname + '_' + str(i)
                 with open(args.sparsity, 'a') as f:
