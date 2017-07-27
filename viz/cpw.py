@@ -11,7 +11,7 @@ ct = []
 reg = np.array([0.01, 0.01, 0.005, 0.005, 0, 0, 0, 0])
 loc = np.array([0, 1, 0, 1, 0, 0, 0, 0])
 thresh = np.array([0, 0, 0, 0, 4, 3, 2, 1])
-cvec = ['m'] * 4 + ['gray'] * 4
+cvec = ['m'] * 4 + ['w'] * 4
 ms = [12, 12, 8, 8] + [10, 8, 6, 4] 
 marker = ['s', 'd', 's', 'd'] + ['o'] * 4
 legend = ['CORELS (.01) w/loc', 'CORELS (.01)', 'CORELS (.005) w/loc', 'CORELS (.005)'] + ['Heuristic (>=%d)' % i for i in [4, 3, 2, 1]]
@@ -69,7 +69,7 @@ print 'tpr:', tpr
 print 'fpr:', fpr
 
 for i in range(len(tp)):
-    pylab.plot(pos[i], tpr[i], marker=marker[i], markersize=ms[i], color=cvec[i])
+    pylab.plot(pos[i], tpr[i], marker=marker[i], markersize=ms[i], color=cvec[i], markeredgecolor='k')
     print pos[i], tpr[i]
 
 pylab.axis([0, 0.4, 0, 1])
