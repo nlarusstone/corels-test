@@ -197,19 +197,23 @@ if __name__ == '__main__':
                     f.write("{0},CORELS,0,0,{1},{2},{3},{4}\n".format(cv_fold, args.r, acc, len_opt, train_acc))
 
     print
-    print 'Train contingency tables', ctables
-    print 'Test ccontingency tables', test_ctables
-    ctables = np.array(ctables)
+    if (not args.parallel):
+        print 'Train contingency tables', ctables
+    print 'Test contingency tables', test_ctables
+    if (not args.parallel):
+        ctables = np.array(ctables)
     test_ctables = np.array(test_ctables)
     print 'True Positive, False Negative, False Positive, True Negative'
-    print 'Train contingency table means', np.round(np.mean(ctables, axis=0).reshape(2, 2))
-    print 'Train contingency table std', np.round(np.std(ctables, axis=0).reshape(2, 2))
+    if (not args.parallel):
+        print 'Train contingency table means', np.round(np.mean(ctables, axis=0).reshape(2, 2))
+        print 'Train contingency table std', np.round(np.std(ctables, axis=0).reshape(2, 2))
     print
     print 'Test contingency table means', np.round(np.mean(test_ctables, axis=0).reshape(2, 2))
     print 'Test contingency table std', np.round(np.std(test_ctables, axis=0).reshape(2, 2))
     print
-    print 'Train accuracies', accuracies
-    print 'Train accuracies mean, std', np.mean(accuracies), np.std(accuracies)
+    if (not args.parallel):
+        print 'Train accuracies', accuracies
+        print 'Train accuracies mean, std', np.mean(accuracies), np.std(accuracies)
     print
     print 'Test accuracies', test_accuracies
     print 'Test accuracies mean, std', np.mean(test_accuracies), np.std(test_accuracies)
