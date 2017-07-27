@@ -4,6 +4,7 @@ To compile the tests, simply run 'make tests' from the /src folder (not this fol
 
             Name                Description
     -   prefixmap       Test the prefix permutation map
+    -   capturemap      Test the captured permutation map
     -   trie            Test the rulelist trie
     -   queue           Test the priority queue
 

@@ -62,13 +62,15 @@ public:
             root = tree->root();
         }
 
+        // Canonical prefix, also the prefix map key
         correct_key = {4, 1, 2, 4, 5};
 
+        // First insertion
         parent_prefix = {4, 2, 1};
         new_rule = 5;
         correct_indices = {4, 2, 1, 0, 3};
 
-        // For second and third tests
+        // Second insertion, for second and third tests
         parent_prefix_2 = {1, 4, 5};
         new_rule_2 = 2;
         correct_indices_2 = {4, 0, 3, 1, 2};
@@ -127,24 +129,30 @@ public:
             root = tree->root();
         }
 
+        // First insertion
         parent_prefix = {4, 2, 1};
         new_rule = 5;
 
-        // For second and third tests
+        // Second insertion, for second and third tests
         parent_prefix_2 = {1, 4, 5};
         new_rule_2 = 2;
 
+        // Canonical prefix
         std::vector<unsigned short> ordered_prefix = {1, 2, 4, 5};
 
         rule_vinit(nsamples, &not_captured);
 
+        // Generate the not_captured vector, for use as the key in the captured map
 #ifdef GMP
+        // First find the captured vector, then take its complement
         for(size_t i = 0; i < ordered_prefix.size(); i++) {
             mpz_ior(not_captured, not_captured, rules[ordered_prefix.at(i)].truthtable);
         }
 
         mpz_com(not_captured, not_captured);
 #else
+        // Set all bits to 1 (since we won't be taking the complement as with GMP, initially
+        // having all bits as one means it initializes the vector to all being not_captured)
         for(int i = 0; i < NENTRIES; i++) {
             not_captured[i] = ~(not_captured[i] & 0);
         }

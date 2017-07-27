@@ -7,7 +7,7 @@
 TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init]") {
 
     REQUIRE(tree != NULL);
-    REQUIRE(root != NULL); 
+    REQUIRE(root != NULL);
 
     CHECK(tree->num_nodes() == 1);
     CHECK(tree->num_evaluated() == 0);
@@ -18,6 +18,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init
     CHECK(tree->has_minority() == (bool)minority);
     CHECK(tree->calculate_size() == calculate_size);
 
+    // Test that the rules are correctly stored by the tree
     for(int i = 0; i < nrules; i++) {
         CAPTURE(i);
         CHECK(tree->rule(i).support == rules[i].support);
@@ -35,6 +36,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init
 #endif
     }
 
+    // Check that the labels are correctly stored by the tree
     for(int i = 0; i < nlabels; i++) {
         CAPTURE(i);
         CHECK(tree->label(i).support == labels[i].support);
@@ -51,6 +53,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init
 #endif
     }
 
+    // Check that the minority info is correctly stored by the tree
     if(minority != NULL) {
         for(int i = 0; i < nminority; i++) {
             CAPTURE(i);
@@ -91,6 +94,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Construct and insert node", "[trie][construc
                                     num_not_captured, nsamples, len_prefix,
                                     c, equivalent_minority);
 
+    // Was node inserted?
     REQUIRE(n != NULL);
 
     CHECK(n->id() == rule_id);
@@ -106,8 +110,10 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Construct and insert node", "[trie][construc
 
     tree->insert(n);
 
+    // Root + this node = 2
     CHECK(tree->num_nodes() == 2);
 
+    // Check heirarchy of tree
     CHECK(n->parent() == parent);
     CHECK(parent->children_begin()->second == n);
     CHECK(parent->num_children() == 1);
@@ -125,9 +131,11 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Check node delete behavior", "[trie][delete_
 
     tree->insert(n);
 
+    // Check if the deleted behavior actually works
     n->set_deleted();
     CHECK(n->deleted());
 
+    // Check if delete_child alters the tree correctly
     root->delete_child(1);
 
     CHECK(root->num_children() == 0);
@@ -144,6 +152,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Node get prefix and predictions", "[trie][no
     tracking_vector<unsigned short, DataStruct::Tree> prefix;
     tracking_vector<bool, DataStruct::Tree> predictions;
 
+    // Create a nrules-deep tree and store its prefix and predictions
     for(int i = 0; i < depth; i++) {
         n = tree->construct_node(i+1, nrules, (bool)(i % 2), true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
         tree->insert(n);
@@ -152,12 +161,14 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Node get prefix and predictions", "[trie][no
         predictions.push_back((bool)(i % 2));
     }
 
+    // depth is the number of nodes added, then add root
     REQUIRE(tree->num_nodes() == (depth + 1));
     REQUIRE(n->depth() == depth);
 
     std::pair<tracking_vector<unsigned short, DataStruct::Tree>, tracking_vector<bool, DataStruct::Tree>> p =
         n->get_prefix_and_predictions();
 
+    // Check that the node correctly determines its prefix and predictions
     CHECK(p.first == prefix);
     CHECK(p.second == predictions);
 }
@@ -183,6 +194,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Decrement num nodes", "[trie][num_nodes]") {
 
     tree->insert(n);
 
+    // Node + root
     REQUIRE(tree->num_nodes() == 2);
 
     tree->decrement_num_nodes();
@@ -210,9 +222,11 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Prune up", "[trie][prune_up]") {
     Node * n = root;
     int depth = nrules;
 
+    // Create one childless child of the root
     Node * s = tree->construct_node(2, nrules, true, true, 0.1, 0.12, n, 3, nsamples, 0, 0.01, 0.0);
     tree->insert(s);
 
+    // Then create a deep line of nodes from another child of the root
     for(int i = 0; i < depth; i++) {
         n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
         tree->insert(n);
@@ -223,10 +237,13 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Prune up", "[trie][prune_up]") {
 
     tree->prune_up(n);
 
+    // Prune up should have deleted all the nodes with one child that are
+    // ancestors of n, which does not include root (multiple children) or s (not an ancestor)
     CHECK(tree->num_nodes() == 2);
 
     tree->prune_up(s);
 
+    // Pruning up s should have deleted s and root, so no more nodes
     CHECK(tree->num_nodes() == 0);
 }
 
@@ -249,15 +266,19 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Check prefix", "[trie][check_prefix]") {
     REQUIRE(tree->num_nodes() == (depth + 1));
     REQUIRE(n->depth() == depth);
 
+    // Check if the tree correctly finds a prefix
     CHECK(tree->check_prefix(prefix) == n);
 
     SECTION("Wrong rule") {
 
+        // What if one of the prefix has a rule that isn't in the tree where it should be?
         prefix[depth - 1] += 1;
         CHECK(tree->check_prefix(prefix) == NULL);
     }
 
     SECTION("Not enough rules") {
+
+        // What if the tree's not deep enough?
         n->parent()->delete_child(prefix[depth - 1]);
         CHECK(tree->check_prefix(prefix) == NULL);
     }
@@ -273,7 +294,10 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
 
     tracking_vector<unsigned short, DataStruct::Tree> prefix;
 
+    // This time, make two children of root, then from the left child make
+    // two more, and from the left of those two make two more, etc for a certain depth
     for(int i = 0; i < depth; i++) {
+        // delete subtree requires the done information (interior nodes are 'done')
         n->set_done();
 
         Node * n1 = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
@@ -286,22 +310,29 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
         prefix.push_back(i+1);
     }
 
+    // each iteration of the for loop creates two nodes, and root
     REQUIRE(tree->num_nodes() == (2 * depth + 1));
     REQUIRE(tree->check_prefix(prefix) == n);
 
     REQUIRE(n->depth() == depth);
+
+    // n is a leaf node
     REQUIRE_FALSE(n->done());
 
+    // Get the child of root that has a big subtree under it
     Node * t = root->child(1);
     REQUIRE(t != NULL);
     REQUIRE(t->done());
 
     SECTION("Not destructive") {
 
+        // Have to delete the node from its parent, since it isn't removed by delete_subtree
         root->delete_child(t->id());
         delete_subtree(tree, t, false, false);
 
+        // Leaf nodes should be lazily marked, not deleted
         CHECK(n->deleted());
+        // check_prefix should no longer find it, since most of it has been deleted
         CHECK(tree->check_prefix(prefix) == NULL);
 
         CHECK(tree->num_nodes() == (depth + 2));
@@ -312,6 +343,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
         root->delete_child(t->id());
         delete_subtree(tree, t, true, false);
 
+        // All deleted except root and its one childless child
         CHECK(tree->num_nodes() == 2);
     }
 
@@ -319,8 +351,10 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
 
         delete_subtree(tree, root, true, false);
 
+        // Everything's been deleted!
         CHECK(tree->num_nodes() == 0);
 
+        // So the destructor of this fixture doesn't segfault
         tree->insert_root();
     }
 }
@@ -342,6 +376,8 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal
     REQUIRE(tree != NULL);
     REQUIRE(root != NULL);
 
+    // Array of predictions for the line of nodes about to be created
+    // (first child has false, child of that has true, child of that has false, etc.)
     tracking_vector<bool, DataStruct::Tree> predictions = {false, true, false};
     bool new_pred = false;
     bool new_default_pred = true;
@@ -357,8 +393,11 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal
     REQUIRE(tree->num_nodes() == (depth + 1));
     REQUIRE(n->depth() == depth);
 
+    // This function should find the predictions of all its ancestors, plus new_pred (its prediction) and the default rule
+    // Therefore it should get the same result as the predictions array used to create is ancestors
     tree->update_opt_predictions(n, new_pred, new_default_pred);
 
+    // Plus these
     predictions.push_back(new_pred);
     predictions.push_back(new_default_pred);
 
@@ -583,7 +622,7 @@ TEST_CASE_METHOD(CapturedMapFixture, "Captured Map/Insert with higher lower boun
 
     CHECK(inserted != pmap->getMap()->end());
 
-    // Check if the key is the same
+    // Check if the key is the same as always
 #ifdef GMP
     CHECK(mpz_cmp(inserted->first.key, not_captured) == 0);
 #else
@@ -593,6 +632,7 @@ TEST_CASE_METHOD(CapturedMapFixture, "Captured Map/Insert with higher lower boun
     }
 #endif
 
+    // Check if the prefix is the same as the first node, since the second node should have been blocked by the permutation bound
     parent_prefix.push_back(new_rule);
     CHECK(inserted->second.second == parent_prefix);
 
@@ -642,6 +682,7 @@ TEST_CASE_METHOD(CapturedMapFixture, "Captured Map/Insert with lower lower bound
     }
 #endif
 
+    // Check if the prefix has been updated to the new best lower bound (the second prefix)
     parent_prefix_2.push_back(new_rule_2);
     CHECK(inserted->second.second == parent_prefix_2);
 
@@ -693,15 +734,18 @@ TEST_CASE_METHOD(QueueFixture, "Queue/Select", "[queue][select]") {
 
     tracking_vector<unsigned short, DataStruct::Tree> prefix;
 
+    // Vector of captured samples
     VECTOR captured_key;
     rule_vinit(nsamples, &captured_key);
 
+    // As before, create a line of nodes
     for(int i = 0; i < depth; i++) {
         n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
         tree->insert(n);
 
         prefix.push_back(i+1);
 
+// Here, we generated the vector of captured samples to then test against what the queue calculates
 #ifdef GMP
         mpz_ior(captured_key, captured_key, rules[i+1].truthtable);
 #else
@@ -714,6 +758,7 @@ TEST_CASE_METHOD(QueueFixture, "Queue/Select", "[queue][select]") {
     REQUIRE(tree->num_nodes() == (depth + 1));
     REQUIRE(n->depth() == depth);
 
+    // Add n to the queue so we can select it
     queue->push(n);
     REQUIRE(queue->front() == n);
 
@@ -722,10 +767,13 @@ TEST_CASE_METHOD(QueueFixture, "Queue/Select", "[queue][select]") {
 
     std::pair<Node*, tracking_vector<unsigned short, DataStruct::Tree>> prefix_node = queue->select(tree, captured);
 
+    // Did it get the correct node from the queue?
     CHECK(prefix_node.first == n);
 
+    // Did it get the node's correct prefix?
     CHECK(prefix_node.second == prefix);
 
+    // Did it get the correct captured vector?
 #ifdef GMP
     CHECK(mpz_cmp(captured, captured_key) == 0);
 #else
