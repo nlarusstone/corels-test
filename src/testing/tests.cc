@@ -4,12 +4,6 @@
 
 #include "fixtures.hh"
 
-#ifdef GMP
-    #include <gmp.h>
-#else
-    #define NENTRIES  ((nsamples + BITS_PER_ENTRY - 1) / BITS_PER_ENTRY)
-#endif
-
 TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init]") {
 
     REQUIRE_FALSE(tree == NULL);
@@ -242,7 +236,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Check prefix", "[trie][check_prefix]") {
     REQUIRE_FALSE(root == NULL);
 
     Node * n = root;
-    int depth = nrules;
+    int depth = nrules - 1;
 
     tracking_vector<unsigned short, DataStruct::Tree> prefix;
 
@@ -257,14 +251,18 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Check prefix", "[trie][check_prefix]") {
 
     CHECK(tree->check_prefix(prefix) == n);
 
-    prefix[depth - 1] += 1;
-    CHECK(tree->check_prefix(prefix) == NULL);
+    SECTION("Wrong rule") {
 
-    n->parent()->delete_child(prefix[depth - 1]);
-    CHECK(tree->check_prefix(prefix) == NULL);
+        prefix[depth - 1] += 1;
+        CHECK(tree->check_prefix(prefix) == NULL);
+    }
+
+    SECTION("Not enough rules") {
+        n->parent()->delete_child(prefix[depth - 1]);
+        CHECK(tree->check_prefix(prefix) == NULL);
+    }
 }
 
-// TODO: Check behavior
 TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
 
     REQUIRE_FALSE(tree == NULL);
@@ -276,6 +274,8 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
     tracking_vector<unsigned short, DataStruct::Tree> prefix;
 
     for(int i = 0; i < depth; i++) {
+        n->set_done();
+
         Node * n1 = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
         Node * n2 = tree->construct_node(i+2, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
         tree->insert(n1);
@@ -287,25 +287,42 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
     }
 
     REQUIRE(tree->num_nodes() == (2 * depth + 1));
-    REQUIRE(n->depth() == depth);
-
-    Node * t = root->child(1);
-    REQUIRE_FALSE(t == NULL);
-
     REQUIRE(tree->check_prefix(prefix) == n);
 
-    root->delete_child(t->id());
-    delete_subtree(tree, t, false, false);
+    REQUIRE(n->depth() == depth);
+    REQUIRE_FALSE(n->done());
 
-    CHECK(n->deleted());
-    CHECK(tree->check_prefix(prefix) == NULL);
+    Node * t = root->child(1);
+    REQUIRE(t != NULL);
+    REQUIRE(t->done());
 
-    CHECK(tree->num_nodes() == 2);
+    SECTION("Not destructive") {
 
-    n->parent()->delete_child(n->id());
-    delete_subtree(tree, n, true, false);
+        root->delete_child(t->id());
+        delete_subtree(tree, t, false, false);
 
-    CHECK(tree->num_nodes() == 1);
+        CHECK(n->deleted());
+        CHECK(tree->check_prefix(prefix) == NULL);
+
+        CHECK(tree->num_nodes() == (depth + 2));
+    }
+
+    SECTION("Destructive") {
+
+        root->delete_child(t->id());
+        delete_subtree(tree, t, true, false);
+
+        CHECK(tree->num_nodes() == 2);
+    }
+
+    SECTION("Full destructive") {
+
+        delete_subtree(tree, root, true, false);
+
+        CHECK(tree->num_nodes() == 0);
+
+        tree->insert_root();
+    }
 }
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal rulelist", "[trie][optimal_rulelist]") {
@@ -349,33 +366,33 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal
 }
 
 
-TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert into empty map", "[prefixmap][insert_empty]") {
+TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert into empty map", "[prefixmap][insert_empty][prefix_empty]") {
 
-    REQUIRE_FALSE(pmap == NULL);
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(pmap != NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
 
     Node * n = pmap->insert(new_rule, nrules, prediction, default_prediction,
-                            lower_bound, objective, root,
-                            0, nsamples, len_prefix, c, 0.0, tree, NULL,
-                            parent_prefix);
+                            lower_bound, objective, root, num_not_captured,
+                            nsamples, len_prefix, c, equivalent_minority, tree,
+                            NULL, parent_prefix);
 
-    REQUIRE_FALSE(n == NULL);
+    REQUIRE(n != NULL);
     REQUIRE(pmap->getMap()->size() == 1);
 
     PrefixMap::iterator inserted = pmap->getMap()->begin();
 
     // Is inserted a valid pointer?
-    REQUIRE_FALSE(inserted == pmap->getMap()->end());
+    REQUIRE(inserted != pmap->getMap()->end());
 
     // Check if the lower bound was recorded correctly
-    REQUIRE(inserted->second.first == lower_bound);
+    CHECK(inserted->second.first == lower_bound);
 
     unsigned short* key = inserted->first.key;
     unsigned char* indices = inserted->second.second;
 
-    REQUIRE(key[0] == indices[0]);
-    REQUIRE(key[0] == len_prefix);
+    CHECK(key[0] == indices[0]);
+    CHECK(key[0] == len_prefix);
 
     // Check if the inserted key and indices are correct
     for(int i = 0; i < len_prefix+1; i++) {
@@ -385,25 +402,27 @@ TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert into empty map", "[prefixm
     }
 
     // Check if the node was created correctly
-    REQUIRE(n->parent() == root);
-    REQUIRE(n->prediction() == prediction);
-    REQUIRE(n->default_prediction() == default_prediction);
-    REQUIRE(n->lower_bound() == lower_bound);
-    REQUIRE(n->objective() == objective);
+    CHECK(n->parent() == root);
+    CHECK(n->prediction() == prediction);
+    CHECK(n->default_prediction() == default_prediction);
+    CHECK(n->lower_bound() == lower_bound);
+    CHECK(n->objective() == objective);
+    CHECK(n->num_captured() == (nsamples - num_not_captured));
+    CHECK(n->equivalent_minority() == equivalent_minority);
 }
 
-TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with higher lower bound", "[prefixmap][insert_higher]") {
+TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with higher lower bound", "[prefixmap][insert_higher][prefix_higher]") {
 
-    REQUIRE_FALSE(pmap == NULL);
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(pmap != NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
 
     Node * n = pmap->insert(new_rule, nrules, prediction, default_prediction,
-                            lower_bound, objective, root,
-                            0, nsamples, len_prefix, c, 0.0, tree, NULL,
-                            parent_prefix);
+                            lower_bound, objective, root, num_not_captured,
+                            nsamples, len_prefix, c, equivalent_minority, tree,
+                            NULL, parent_prefix);
 
-    REQUIRE_FALSE(n == NULL);
+    REQUIRE(n != NULL);
     REQUIRE(pmap->getMap()->size() == 1);
 
     double h_bound = lower_bound + 0.02;
@@ -411,19 +430,22 @@ TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with higher lower bound", 
     // Expected behavior is that the map remains unchanged, since h_bound
     // is greated than lower_bound
     Node * n2 = pmap->insert(new_rule_2, nrules, prediction, default_prediction,
-                             h_bound, objective, root,
-                             0, nsamples, len_prefix, c, 0.0, tree, NULL,
-                             parent_prefix_2);
+                             h_bound, objective, root, num_not_captured,
+                             nsamples, len_prefix, c, equivalent_minority, tree,
+                             NULL, parent_prefix_2);
 
+    REQUIRE(n2 == NULL);
     REQUIRE(pmap->getMap()->size() == 1);
 
     PrefixMap::iterator inserted = pmap->getMap()->begin();
 
+    REQUIRE(inserted != pmap->getMap()->end());
+
     unsigned short* key = inserted->first.key;
     unsigned char* indices = inserted->second.second;
 
-    REQUIRE(key[0] == indices[0]);
-    REQUIRE(key[0] == len_prefix);
+    CHECK(key[0] == indices[0]);
+    CHECK(key[0] == len_prefix);
 
     // Check if the key and indices are unchanged (same as the ones inserted with n instead of n2)
     for(int i = 0; i < len_prefix+1; i++) {
@@ -439,18 +461,18 @@ TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with higher lower bound", 
     CHECK(inserted->second.first == lower_bound);
 }
 
-TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with lower lower bound", "[prefixmap][insert_lower]") {
+TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with lower lower bound", "[prefixmap][insert_lower][prefix_lower]") {
 
-    REQUIRE_FALSE(pmap == NULL);
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(pmap != NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
 
     Node * n = pmap->insert(new_rule, nrules, prediction, default_prediction,
                             lower_bound, objective, root,
                             0, nsamples, len_prefix, c, 0.0, tree, NULL,
                             parent_prefix);
 
-    REQUIRE_FALSE(n == NULL);
+    REQUIRE(n != NULL);
     REQUIRE(pmap->getMap()->size() == 1);
 
     double l_bound = lower_bound - 0.02;
@@ -458,19 +480,22 @@ TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with lower lower bound", "
     // Expected behavior is that the map will change the indices
     // and update the best permutation
     Node * n2 = pmap->insert(new_rule_2, nrules, prediction, default_prediction,
-                             l_bound, objective, root,
-                             0, nsamples, len_prefix, c, 0.0, tree, NULL,
-                             parent_prefix_2);
+                             l_bound, objective, root, num_not_captured,
+                             nsamples, len_prefix, c, equivalent_minority, tree,
+                             NULL, parent_prefix_2);
 
+    REQUIRE(n2 != NULL);
     REQUIRE(pmap->getMap()->size() == 1);
 
     PrefixMap::iterator inserted = pmap->getMap()->begin();
 
+    REQUIRE(inserted != pmap->getMap()->end());
+
     unsigned short* key = inserted->first.key;
     unsigned char* indices = inserted->second.second;
 
-    REQUIRE(key[0] == indices[0]);
-    REQUIRE(key[0] == len_prefix);
+    CHECK(key[0] == indices[0]);
+    CHECK(key[0] == len_prefix);
 
     // Check if the indices are changed and are correct (new values)
     for(int i = 0; i < len_prefix+1; i++) {
@@ -479,14 +504,153 @@ TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with lower lower bound", "
         CHECK(indices[i] == correct_indices_2.at(i));
     }
 
-    // Check if the node was inserted
-    CHECK_FALSE(n2 == NULL);
-
     // Check if the lower bound is the new correct lower bound
     CHECK(inserted->second.first == l_bound);
 }
 
-// TODO: Check captured permutation map
+TEST_CASE_METHOD(CapturedMapFixture, "Captured Map/Insert into empty map", "[capturemap][insert_empty][capture_empty]") {
+
+    REQUIRE(pmap != NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
+
+    Node * n = pmap->insert(new_rule, nrules, prediction, default_prediction,
+                            lower_bound, objective, root, num_not_captured,
+                            nsamples, len_prefix, c, equivalent_minority, tree,
+                            not_captured, parent_prefix);
+
+    REQUIRE(n != NULL);
+    REQUIRE(pmap->getMap()->size() == 1);
+
+    CapturedMap::iterator inserted = pmap->getMap()->begin();
+
+    // Is inserted a valid pointer?
+    CHECK(inserted != pmap->getMap()->end());
+
+    // Check if the lower bound was recorded correctly
+    CHECK(inserted->second.first == lower_bound);
+
+    // Check if the key is correct
+#ifdef GMP
+    CHECK(mpz_cmp(inserted->first.key, not_captured) == 0);
+#else
+    for(int i = 0; i < NENTRIES; i++) {
+        CAPTURE(i);
+        CHECK(inserted->first.key[i] == not_captured[i]);
+    }
+#endif
+
+    parent_prefix.push_back(new_rule);
+    CHECK(inserted->second.second == parent_prefix);
+
+    // Check if the node was created correctly
+    CHECK(n->parent() == root);
+    CHECK(n->prediction() == prediction);
+    CHECK(n->default_prediction() == default_prediction);
+    CHECK(n->lower_bound() == lower_bound);
+    CHECK(n->objective() == objective);
+    CHECK(n->num_captured() == (nsamples - num_not_captured));
+    CHECK(n->equivalent_minority() == equivalent_minority);
+
+}
+
+TEST_CASE_METHOD(CapturedMapFixture, "Captured Map/Insert with higher lower bound", "[capturemap][insert_higher][capture_higher]") {
+
+    REQUIRE(pmap != NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
+
+    Node * n = pmap->insert(new_rule, nrules, prediction, default_prediction,
+                            lower_bound, objective, root, num_not_captured,
+                            nsamples, len_prefix, c, equivalent_minority, tree,
+                            not_captured, parent_prefix);
+
+    REQUIRE(n != NULL);
+    REQUIRE(pmap->getMap()->size() == 1);
+
+    double h_bound = lower_bound + 0.02;
+
+    // Expected behavior is that the map remains unchanged, since h_bound
+    // is greated than lower_bound
+    Node * n2 = pmap->insert(new_rule_2, nrules, prediction, default_prediction,
+                             h_bound, objective, root, num_not_captured,
+                             nsamples, len_prefix, c, equivalent_minority, tree,
+                             not_captured, parent_prefix_2);
+
+    REQUIRE(pmap->getMap()->size() == 1);
+
+    CapturedMap::iterator inserted = pmap->getMap()->begin();
+
+    CHECK(inserted != pmap->getMap()->end());
+
+    // Check if the key is the same
+#ifdef GMP
+    CHECK(mpz_cmp(inserted->first.key, not_captured) == 0);
+#else
+    for(int i = 0; i < NENTRIES; i++) {
+        CAPTURE(i);
+        CHECK(inserted->first.key[i] == not_captured[i]);
+    }
+#endif
+
+    parent_prefix.push_back(new_rule);
+    CHECK(inserted->second.second == parent_prefix);
+
+    // Check if the node wasn't inserted (it should not have, since the permutation bound should block it)
+    CHECK(n2 == NULL);
+
+    // Check if the lower bound is unchanged
+    CHECK(inserted->second.first == lower_bound);
+}
+
+TEST_CASE_METHOD(CapturedMapFixture, "Captured Map/Insert with lower lower bound", "[capturemap][insert_lower][capture_lower]") {
+
+    REQUIRE(pmap != NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
+
+    Node * n = pmap->insert(new_rule, nrules, prediction, default_prediction,
+                            lower_bound, objective, root, num_not_captured,
+                            nsamples, len_prefix, c, equivalent_minority, tree,
+                            not_captured, parent_prefix);
+
+    REQUIRE(n != NULL);
+    REQUIRE(pmap->getMap()->size() == 1);
+
+    double l_bound = lower_bound - 0.02;
+
+    // Expected behavior is that the map will change the indices
+    // and update the best permutation
+    Node * n2 = pmap->insert(new_rule_2, nrules, prediction, default_prediction,
+                             l_bound, objective, root, num_not_captured,
+                             nsamples, len_prefix, c, equivalent_minority, tree,
+                             not_captured, parent_prefix_2);
+
+    REQUIRE(pmap->getMap()->size() == 1);
+
+    CapturedMap::iterator inserted = pmap->getMap()->begin();
+
+    CHECK(inserted != pmap->getMap()->end());
+
+    // Check if the key is the same
+#ifdef GMP
+    CHECK(mpz_cmp(inserted->first.key, not_captured) == 0);
+#else
+    for(int i = 0; i < NENTRIES; i++) {
+        CAPTURE(i);
+        CHECK(inserted->first.key[i] == not_captured[i]);
+    }
+#endif
+
+    parent_prefix_2.push_back(new_rule_2);
+    CHECK(inserted->second.second == parent_prefix_2);
+
+    // Check if the node was inserted
+    CHECK(n2 != NULL);
+
+    // Check if the lower bound is the new correct lower bound
+    CHECK(inserted->second.first == l_bound);
+}
 
 TEST_CASE_METHOD(QueueFixture, "Queue/Push and Front", "[queue][push]") {
 
@@ -539,10 +703,10 @@ TEST_CASE_METHOD(QueueFixture, "Queue/Select", "[queue][select]") {
         prefix.push_back(i+1);
 
 #ifdef GMP
-        mpz_ior(captured_key, captured_key, tree->rule(i+1).truthtable);
+        mpz_ior(captured_key, captured_key, rules[i+1].truthtable);
 #else
         for(int j = 0; j < NENTRIES; j++) {
-            captured_key[j] = captured_key[j] | tree->rule(i+1).truthtable[j];
+            captured_key[j] = captured_key[j] | rules[i+1].truthtable[j];
         }
 #endif
     }
