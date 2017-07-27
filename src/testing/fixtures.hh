@@ -6,7 +6,7 @@
 #ifdef GMP
     #include <gmp.h>
 #else
-    #define NENTRIES  ((nsamples + BITS_PER_ENTRY - 1) / BITS_PER_ENTRY)
+    #define NENTRIES  ((nsamples + (int)BITS_PER_ENTRY - 1) / (int)BITS_PER_ENTRY)
 #endif
 
 extern rule_t * rules;
@@ -142,10 +142,16 @@ public:
         for(size_t i = 0; i < ordered_prefix.size(); i++) {
             mpz_ior(not_captured, not_captured, rules[ordered_prefix.at(i)].truthtable);
         }
+
+        mpz_com(not_captured, not_captured);
 #else
+        for(int i = 0; i < NENTRIES; i++) {
+            not_captured[i] = ~(not_captured[i] & 0);
+        }
+
         for(size_t i = 0; i < ordered_prefix.size(); i++) {
             for(int j = 0; j < NENTRIES; j++) {
-                not_captured[j] = not_captured[j] | rules[ordered_prefix.at(i)].truthtable[j];
+                not_captured[j] = not_captured[j] & ~(rules[ordered_prefix.at(i)].truthtable[j]);
             }
         }
 #endif

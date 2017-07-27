@@ -39,10 +39,10 @@ corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
 tests: pmap.o corels.o cache.o rulelib.o utils.o $(TESTSDIR)/tests.o $(TESTSDIR)/tests-main.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
-$(TESTSDIR)/tests.o: $(TESTSDIR)/tests.cc
+$(TESTSDIR)/tests.o: $(TESTSDIR)/tests.cc $(TESTSDIR)/fixtures.hh $(TESTSDIR)/catch.hpp $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
-$(TESTSDIR)/tests-main.o: $(TESTSDIR)/tests-main.cc
+$(TESTSDIR)/tests-main.o: $(TESTSDIR)/tests-main.cc $(TESTSDIR)/catch.hpp $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 main.o: main.cc $(DEPSDIR)/stamp

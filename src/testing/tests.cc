@@ -6,8 +6,8 @@
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init]") {
 
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL); 
 
     CHECK(tree->num_nodes() == 1);
     CHECK(tree->num_evaluated() == 0);
@@ -74,8 +74,8 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Construct and insert node", "[trie][construc
 
     Node * parent = root;
 
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(parent == NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(parent != NULL);
 
     unsigned short rule_id = 1;
     bool prediction = true;
@@ -91,7 +91,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Construct and insert node", "[trie][construc
                                     num_not_captured, nsamples, len_prefix,
                                     c, equivalent_minority);
 
-    REQUIRE_FALSE(n == NULL);
+    REQUIRE(n != NULL);
 
     CHECK(n->id() == rule_id);
     CHECK(n->prediction() == prediction);
@@ -116,12 +116,12 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Construct and insert node", "[trie][construc
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Check node delete behavior", "[trie][delete_node]") {
 
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
 
     Node * n = tree->construct_node(1, nrules, true, true, 0.1, 0.12, root, 3, nsamples, 0, 0.01, 0.0);
 
-    REQUIRE_FALSE(n == NULL);
+    REQUIRE(n != NULL);
 
     tree->insert(n);
 
@@ -135,8 +135,8 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Check node delete behavior", "[trie][delete_
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Node get prefix and predictions", "[trie][node_prefix]") {
 
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
 
     Node * n = root;
     int depth = nrules;
@@ -164,7 +164,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Node get prefix and predictions", "[trie][no
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Increment num evaluated", "[trie][num_evaluated]") {
 
-    REQUIRE_FALSE(tree == NULL);
+    REQUIRE(tree != NULL);
 
     size_t num = tree->num_evaluated();
     tree->increment_num_evaluated();
@@ -174,12 +174,12 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Increment num evaluated", "[trie][num_evalua
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Decrement num nodes", "[trie][num_nodes]") {
 
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
 
     Node * n = tree->construct_node(1, nrules, true, true, 0.1, 0.12, root, 3, nsamples, 0, 0.01, 0.0);
 
-    REQUIRE_FALSE(n == NULL);
+    REQUIRE(n != NULL);
 
     tree->insert(n);
 
@@ -192,7 +192,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Decrement num nodes", "[trie][num_nodes]") {
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Update minimum objective", "[trie][minimum_objective]") {
 
-    REQUIRE_FALSE(tree == NULL);
+    REQUIRE(tree != NULL);
 
     double min0 = tree->min_objective();
     double min1 = min0 + 0.01;
@@ -204,8 +204,8 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update minimum objective", "[trie][minimum_o
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Prune up", "[trie][prune_up]") {
 
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
 
     Node * n = root;
     int depth = nrules;
@@ -232,8 +232,8 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Prune up", "[trie][prune_up]") {
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Check prefix", "[trie][check_prefix]") {
 
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
 
     Node * n = root;
     int depth = nrules - 1;
@@ -265,8 +265,8 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Check prefix", "[trie][check_prefix]") {
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
 
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
 
     Node * n = root;
     int depth = nrules;
@@ -339,8 +339,8 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal rulelist", "[trie][optimal_ru
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal_predictions]") {
 
-    REQUIRE_FALSE(tree == NULL);
-    REQUIRE_FALSE(root == NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
 
     tracking_vector<bool, DataStruct::Tree> predictions = {false, true, false};
     bool new_pred = false;
