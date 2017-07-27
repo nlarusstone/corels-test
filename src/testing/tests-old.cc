@@ -1,4 +1,6 @@
-/***  MAIN FILE WITH THE ACTUAL TESTS ***/
+/***  OLD VERSION WITH SECTIONS INSTEAD OF ALL TEST_CASES ***/
+
+// For the current version, go to tests.cc (this version will soon be deleted)
 
 #define PERM_MAP_TESTS
 #include "../queue.hh"
