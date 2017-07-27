@@ -42,11 +42,16 @@ e.g., [install libmpc](http://brewformulas.org/Libmpc) via [homewbrew](https://b
 
     brew install libmpc
 
+### Compilation
+
+Simply run the following from the `src/` directory:
+
+    make [disable-gmp=1]
+
 ### Sample command
 
 Run the following from the `src/` directory.
 
-    make
     ./corels -r 0.015 -c 2 -p 1 ../data/compas_train.out ../data/compas_train.label ../data/compas_train.minor
 
 ### Usage
@@ -56,7 +61,7 @@ Run the following from the `src/` directory.
 
 ### Data format
 
-For examples, see `compas.out` and `compas.label` in `data/`.  Also see `compas.minor` (optional). 
+For examples, see `compas.out` and `compas.label` in `data/`.  Also see `compas.minor` (optional).
 
 * The input data files must be space-delimited text.
 * Each line contains `N + 1` fields, where `N` is the number of observations, and ends with `\n` (including the last line).
@@ -150,7 +155,7 @@ There are four training data files:
 
 * `compas_train.out` : `155` mined antecedents (binary features and length-2 conjunctions of binary features with support in `[0.005, 0.995]`), e.g.,
 
-    {sex:Female}, {age:18-20}, {sex:Male,current-charge-degree:Misdemeanor}, {age:26-45,juvenile-felonies:>0} 
+    {sex:Female}, {age:18-20}, {sex:Male,current-charge-degree:Misdemeanor}, {age:26-45,juvenile-felonies:>0}
 
 * `compas_train.labels` : class labels
 
