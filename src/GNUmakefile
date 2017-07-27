@@ -1,5 +1,9 @@
 CFLAGS := -g -W -Wall -Wno-unused-parameter -I. -O$(O)
 
+ifndef disable-gmp
+	CFLAGS += -DGMP
+endif
+
 ifneq (,$(filter $(shell uname -n),elaines-MacBook-Pro.local Nicholass-Air-5.wireless.yale.internal))
     LIBS := -L/usr/local/lib
     CFLAGS += -I/usr/local/include

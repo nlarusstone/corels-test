@@ -877,8 +877,10 @@ count_ones_vector(VECTOR v, int len) {
 #ifdef GMP
 	return mpz_popcount(v);
 #else
-    int cnt = 0;
-    for (unsigned int i=0; i < (len+BITS_PER_ENTRY-1)/BITS_PER_ENTRY; i++) {
+    int i, nentries, cnt = 0;
+    nentries = (len + BITS_PER_ENTRY - 1)/BITS_PER_ENTRY;
+
+    for (i=0; i < nentries; i++) {
         cnt += count_ones(v[i]);
     }
     return cnt;
