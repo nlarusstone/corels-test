@@ -864,7 +864,7 @@ rule_not(VECTOR dest, VECTOR src, int nsamples, int *ret_cnt)
 	count = 0;
 	assert(dest != NULL);
 	for (i = 0; i < nentries; i++) {
-		dest[i] = ~src2[i];
+		dest[i] = ~src[i];
 		count += count_ones(dest[i]);
 	}
 	*ret_cnt = count;
@@ -878,7 +878,7 @@ count_ones_vector(VECTOR v, int len) {
 	return mpz_popcount(v);
 #else
     int cnt = 0;
-    for (int i=0; i < (len+BITS_PER_ENTRY-1)/BITS_PER_ENTRY; i++) {
+    for (unsigned int i=0; i < (len+BITS_PER_ENTRY-1)/BITS_PER_ENTRY; i++) {
         cnt += count_ones(v[i]);
     }
     return cnt;

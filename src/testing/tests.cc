@@ -730,7 +730,7 @@ TEST_CASE_METHOD(QueueFixture, "Queue/Select", "[queue][select]") {
     REQUIRE(tree->nrules() == nrules);
 
     Node * n = root;
-    int depth = nrules;
+    int depth = nrules - 1;
 
     tracking_vector<unsigned short, DataStruct::Tree> prefix;
 
