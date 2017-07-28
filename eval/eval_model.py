@@ -24,7 +24,7 @@ parser.add_argument('-s', action='store_true')
 parser.add_argument('-b', action='store_true')
 parser.add_argument('-n', type=str, metavar='max_num_nodes', default='100000')
 parser.add_argument('-r', type=str, metavar='regularization', default='0.01')
-parser.add_argument('-v', type=str, metavar='verbosity', default='1')
+parser.add_argument('-v', type=str, metavar='verbosity', default='2')
 parser.add_argument('-c', type=str, metavar='(1|2|3|4)')
 parser.add_argument('-a', type=str, metavar='(1|2)')
 parser.add_argument('-p', type=str, metavar='(0|1|2)')
@@ -95,18 +95,20 @@ def run_model(fname, log_fname):
     print 'True Positive  | False Negative || %d | %d' % (true_positive, false_negative)
     print 'False Positive | True Negative  || %d | %d' % (false_positive, true_negative)
 
-    return len(opt), acc
+    return (len(opt), acc, [true_positive, false_negative, false_positive, true_negative])
 
 if __name__ == '__main__':
     args = parser.parse_args()
     num_folds = args.k
     accuracies = []
     test_accuracies = []
+    ctables = []
+    test_ctables = []
     plist = []
     log_list = []
     for i in range(num_folds):
         print args
-        fxn = ['../src/bbcache']
+        fxn = ['../src/corels']
         fname = args.fname + '_' + str(i) + '_train'
         out = '../data/CrossValidation/' + fname + '.out'
         label = '../data/CrossValidation/' + fname + '.label'
@@ -159,18 +161,21 @@ if __name__ == '__main__':
         if args.minor:
             minor = '../data/CrossValidation/' + fname + '.minor'
             fxn.append(minor)
+        print ' '.join(fxn)
         if (not args.parallel):
             proc = subprocess.check_call(fxn)
 	    #proc.wait()
             print
             train_name = args.fname + '_' + str(i) + '_train'
-            len_opt, train_acc = run_model(train_name, log_list[i])
+            (len_opt, train_acc, ct) = run_model(train_name, log_list[i])
             accuracies.append(train_acc)
+            ctables.append(ct)
             print '---- Calculating Validation Accuracy For Fold {0} -----'.format(i)
             print
             test_name = args.fname + '_' + str(i) + '_test'
-            len_opt, acc = run_model(test_name, log_list[i])
+            (len_opt, acc, ct) = run_model(test_name, log_list[i])
             test_accuracies.append(acc)
+            test_ctables.append(ct)
             if args.sparsity:
                 cv_fold = args.fname + '_' + str(i)
                 with open(args.sparsity, 'a') as f:
@@ -183,19 +188,32 @@ if __name__ == '__main__':
             plist[i].wait()
             train_name = args.fname + '_' + str(i) + '_train'
             test_name = args.fname + '_' + str(i) + '_test'
-            len_opt, acc = run_model(test_name, log_list[i])
+            (len_opt, acc, ct) = run_model(test_name, log_list[i])
             test_accuracies.append(acc)
+            test_ctables.append(ct)
             if args.sparsity:
                 cv_fold = args.fname + '_' + str(i)
                 with open(args.sparsity, 'a') as f:
                     f.write("{0},CORELS,0,0,{1},{2},{3},{4}\n".format(cv_fold, args.r, acc, len_opt, train_acc))
 
-
-    if (len(accuracies) > 0):
-        print
+    print
+    if (not args.parallel):
+        print 'Train contingency tables', ctables
+    print 'Test contingency tables', test_ctables
+    if (not args.parallel):
+        ctables = np.array(ctables)
+    test_ctables = np.array(test_ctables)
+    print 'True Positive, False Negative, False Positive, True Negative'
+    if (not args.parallel):
+        print 'Train contingency table means', np.round(np.mean(ctables, axis=0).reshape(2, 2))
+        print 'Train contingency table std', np.round(np.std(ctables, axis=0).reshape(2, 2))
+    print
+    print 'Test contingency table means', np.round(np.mean(test_ctables, axis=0).reshape(2, 2))
+    print 'Test contingency table std', np.round(np.std(test_ctables, axis=0).reshape(2, 2))
+    print
+    if (not args.parallel):
         print 'Train accuracies', accuracies
         print 'Train accuracies mean, std', np.mean(accuracies), np.std(accuracies)
-
     print
     print 'Test accuracies', test_accuracies
     print 'Test accuracies mean, std', np.mean(test_accuracies), np.std(test_accuracies)

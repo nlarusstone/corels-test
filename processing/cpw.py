@@ -1,35 +1,12 @@
 """
-http://www.nyclu.org/content/stop-and-frisk-data
-
-
-https://5harad.com/papers/frisky.pdf
-
-"we model the likelihood of recovering a weapon in a CPW stop via
-logistic regression ... we use only the 18 stop circumstances officers already
-consider (listed in Table 1, excluding the two 'other' categories), indicator
-variables for each of the 77 precincts and indicator variables for the three
-location types (public housing, transit and 'neither'); we do not include
-interactions.  To further reduce model complexity and increase interpretability,
-we constrain the 18 coefficients corresponding to stop reasons to be non-negative."
-
-Table 1, primary stop circumstance(s):
-
-    Suspicious object, fits description, casing, acting as lookout,
-    suspicious clothing, drug transaction, furtive movements, actions
-    of violent crime, suspicious bulge and/or other
-
-Table 1, additional stop circumstance(s):
-
-    Witness report, ongoing investigation, proximity to crime
-    scene, evasive response, associating with criminals, changed
-    direction, high crime area, time of day, sights and sounds of
-    criminal activity and/or other
+http://www1.nyc.gov/site/nypd/stats/reports-analysis/stopfrisk.page
+http://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2008-csv.zip
 
 """
 import os
 
 import numpy as np
-import tabular as tb
+import pandas as pd
 
 import mine
 import utils
@@ -134,11 +111,11 @@ if not os.path.exists(dout):
 
 if not os.path.exists(fdata):
     print 'downloading data'
-    uroot = 'http://www.nyclu.org/files/2014%20SQF.zip'
+    uroot = 'http://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2012-csv.zip'
     os.system('wget %s -O %s' % (uroot, zdata))
     print 'unzipping data'
     os.system('unzip %s' % zdata)
-    os.system('mv 2014\ SQF/* %s' % din)
+    os.system('mv 2012\ SQF/* %s' % din)
     print 'renaming files'
     for f in os.listdir(din):
         f1 = os.path.join(din, f)
