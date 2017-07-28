@@ -8,16 +8,16 @@
 
 /*
  * Logs statistics about the execution of the algorithm and dumps it to a file.
- * To turn off, pass verbosity <= 1
+ * To turn off, do not pass "log" as verbosity parameter
  */
 NullLogger* logger;
 
 int main(int argc, char *argv[]) {
     const char usage[] = "USAGE: %s [-b] "
-        "[-n max_num_nodes] [-r regularization] [-v verbosity] "
-        "-c (1|2|3|4) -p (0|1|2) [-f logging_frequency]"
-        "-a (0|1|2) [-s] [-L latex_out]"
-        "data.out data.label\n\n"
+        "[-n max_num_nodes] [-r regularization] [-v (rule|label|samples|progress|log)] "
+        "-c (1|2|3|4) -p (0|1|2) [-f logging_frequency] "
+        "-a (0|1|2) [-s] [-L latex_out] "
+        "data.out data.label [data.minor]\n\n"
         "%s\n";
 
     extern char *optarg;
@@ -27,7 +27,10 @@ int main(int argc, char *argv[]) {
     bool latex_out = false;
     bool use_prefix_perm_map = false;
     bool use_captured_sym_map = false;
-    int verbosity = 0;
+    char *vopt;
+    std::set<std::string> verbosity;
+    bool verr = false;
+    const char *vstr = "rule|label|samples|progress|log";
     int map_type = 0;
     int max_num_nodes = 100000;
     double c = 0.01;
@@ -59,7 +62,14 @@ int main(int argc, char *argv[]) {
             use_captured_sym_map = map_type == 2;
             break;
         case 'v':
-            verbosity = atoi(optarg);
+            vopt = strtok(optarg, ",");
+            while (vopt != NULL) {
+                if (!strstr(vstr, vopt)) {
+                    verr = true;
+                }
+                verbosity.insert(vopt);
+                vopt = strtok(NULL, ",");
+            }
             break;
         case 'n':
             max_num_nodes = atoi(optarg);
@@ -93,7 +103,7 @@ int main(int argc, char *argv[]) {
     if ((run_bfs + run_curiosity) != 1) {
         error = true;
         snprintf(error_txt, BUFSZ,
-                "you must use at least and at most one of (-b | -c)");
+                "you must use exactly one of (-b | -c)");
     }
     if (argc < 2 + optind) {
         error = true;
@@ -104,6 +114,16 @@ int main(int argc, char *argv[]) {
         error = true;
         snprintf(error_txt, BUFSZ,
                 "you must specify a curiosity type (1|2|3|4)");
+    }
+    if (verr) {
+        error = true;
+        snprintf(error_txt, BUFSZ,
+                 "verbosity options must be one or more of (rule|label|samples|progress|log)");
+    }
+    if (verbosity.count("samples") && !(verbosity.count("rule") || verbosity.count("label"))) {
+        error = true;
+        snprintf(error_txt, BUFSZ,
+                 "verbosity 'samples' option must be combined with at least one of (rule|label)");
     }
 
     if (error) {
@@ -133,33 +153,35 @@ int main(int argc, char *argv[]) {
     else
         meta = NULL;
 
-    if (verbosity >= 10)
+    if (verbosity.count("log"))
         print_machine_info();
     char froot[BUFSZ];
     char log_fname[BUFSZ];
     char opt_fname[BUFSZ];
     const char* pch = strrchr(argv[0], '/');
-    snprintf(froot, BUFSZ, "../logs/for-%s-%s%s-%s-%s-removed=%s-max_num_nodes=%d-c=%.7f-v=%d-f=%d",
+    snprintf(froot, BUFSZ, "../logs/for-%s-%s%s-%s-%s-removed=%s-max_num_nodes=%d-c=%.7f-f=%d",
             pch ? pch + 1 : "",
             run_bfs ? "bfs" : "",
             run_curiosity ? curiosity_map[curiosity_policy].c_str() : "",
-            use_prefix_perm_map ? "with_prefix_perm_map" : 
+            use_prefix_perm_map ? "with_prefix_perm_map" :
                 (use_captured_sym_map ? "with_captured_symmetry_map" : "no_pmap"),
             meta ? "minor" : "no_minor",
             ablation ? ((ablation == 1) ? "support" : "lookahead") : "none",
-            max_num_nodes, c, verbosity, freq);
+            max_num_nodes, c, freq);
     snprintf(log_fname, BUFSZ, "%s.txt", froot);
     snprintf(opt_fname, BUFSZ, "%s-opt.txt", froot);
 
-    if (verbosity >= 1000) {
+    if (verbosity.count("rule")) {
         printf("\n%d rules %d samples\n\n", nrules, nsamples);
-        rule_print_all(rules, nrules, nsamples);
-
-        printf("\nLabels (%d) for %d samples\n\n", nlabels, nsamples);
-        rule_print_all(labels, nlabels, nsamples);
+        rule_print_all(rules, nrules, nsamples, (verbosity.count("samples")));
     }
 
-    if (verbosity > 1)
+    if (verbosity.count("label")) {
+        printf("\nLabels (%d) for %d samples\n\n", nlabels, nsamples);
+        rule_print_all(labels, nlabels, nsamples, (verbosity.count("samples")));
+    }
+
+    if (verbosity.count("log"))
         logger = new Logger(c, nrules, verbosity, log_fname, freq);
     else
         logger = new NullLogger();
@@ -202,30 +224,42 @@ int main(int argc, char *argv[]) {
     }
 
     CacheTree* tree = new CacheTree(nsamples, nrules, c, rules, labels, meta, ablation, calculate_size, type);
-    printf("%s", run_type);
+    if (verbosity.count("progress"))
+        printf("%s", run_type);
     // runs our algorithm
     bbound(tree, max_num_nodes, q, p);
 
-    printf("final num_nodes: %zu\n", tree->num_nodes());
-    printf("final num_evaluated: %zu\n", tree->num_evaluated());
-    printf("final min_objective: %1.5f\n", tree->min_objective());
     const tracking_vector<unsigned short, DataStruct::Tree>& r_list = tree->opt_rulelist();
-    printf("final accuracy: %1.5f\n",
-       1 - tree->min_objective() + c*r_list.size());
-    print_final_rulelist(r_list, tree->opt_predictions(),
-                     latex_out, rules, labels, opt_fname);
 
-    printf("final total time: %f\n", time_diff(init));
+    if (verbosity.count("progress")) {
+        printf("final num_nodes: %zu\n", tree->num_nodes());
+        printf("final num_evaluated: %zu\n", tree->num_evaluated());
+        printf("final min_objective: %1.5f\n", tree->min_objective());
+        printf("final accuracy: %1.5f\n",
+           1 - tree->min_objective() + c*r_list.size());
+   }
+
+    print_final_rulelist(r_list, tree->opt_predictions(),
+                     latex_out, rules, labels, opt_fname, verbosity.count("progress"));
+
+    if (verbosity.count("progress"))
+        printf("final total time: %f\n", time_diff(init));
+
     logger->dumpState();
     logger->closeFile();
+
     if (meta) {
-        printf("\ndelete identical points indicator");
+        if (verbosity.count("progress"))
+            printf("\ndelete identical points indicator");
         rules_free(meta, nmeta, 0);
     }
-    printf("\ndelete rules\n");
+    if (verbosity.count("progress"))
+        printf("\ndelete rules\n");
     rules_free(rules, nrules, 1);
-    printf("delete labels\n");
+    if (verbosity.count("progress"))
+        printf("delete labels\n");
     rules_free(labels, nlabels, 0);
-    printf("tree destructors\n");
+    if (verbosity.count("progress"))
+        printf("tree destructors\n");
     return 0;
 }
