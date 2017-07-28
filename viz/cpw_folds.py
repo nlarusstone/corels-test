@@ -6,18 +6,19 @@ pylab.ion()
 pylab.figure(2, figsize=(8, 3.6))
 pylab.clf()
 ax = pylab.subplot2grid((20, 1), (0, 1), colspan=1, rowspan=19)
+pylab.figure(3, figsize=(8, 3.6))
+pylab.clf()
 
 #True Positive, False Negative, False Positive, True Negative
 ct = []
-reg = np.array([0.01, 0.005, 0.01, 0.005, 0, 0, 0, 0])
-loc = np.array([1, 1, 0, 0, 0, 0, 0, 0])
+reg = np.array([0.01, 0.01, 0.005, 0.005, 0, 0, 0, 0])
 thresh = np.array([0, 0, 0, 0, 4, 3, 2, 1])
-cvec = ['m', 'purple', 'c', 'b'] + ['brown', 'k', 'gray', 'g']
-ms = [13, 9, 13, 9] + [12, 10, 8, 6] 
-marker = ['s', 's', '^', '^'] + ['o'] * 4
-legend = ['CORELS (.01, location)', 'CORELS (.005, location)', 'CORELS (.01)', 'CORELS (.005)'] + [u'Heuristic (\u2265%d)' % i for i in [4, 3, 2, 1]]
+cvec = ['darkred'] * 2 + ['r'] * 2 + ['blue', 'c'] * 2
+marker = ['s', '^', 's', '^'] + ['o', 'o', 'd', 'd']
+legend = ['CORELS (.01, location)', 'CORELS (.01)',  'CORELS (.005, location)', 'CORELS (.005)'] + [u'Heuristic (\u2265%d)' % i for i in [4, 3, 2, 1]]
 fs = 14
 nfolds = 10
+imap = [3, 4, 5, 6, 0, 1, 2, 7]
 
 for fold in range(nfolds):
     ct = []
@@ -26,12 +27,12 @@ for fold in range(nfolds):
     ctables = np.array([[435, 653, 1001, 30490], [439, 649, 990, 30501], [437, 651, 970, 30521], [471, 617, 949, 30542], [438, 650, 1031, 30460], [454, 634, 1026, 30465], [435, 653, 988, 30503], [438, 650, 1014, 30477], [423, 665, 1002, 30489], [457, 631, 946, 30545]])
     ct += [ctables[fold]]
 
-    # python2 eval_model.py cpw -n 10000 -r 0.005 -c 2 -p 1 -v 10 --minor --parallel
-    ctables = np.array([[565, 523, 3724, 27767], [541, 547, 3734, 27757], [555, 533, 3753, 27738], [575, 513, 3604, 27887], [549, 539, 3663, 27828], [559, 529, 3669, 27822], [569, 519, 3757, 27734], [545, 543, 3641, 27850], [550, 538, 3706, 27785], [648, 440, 5567, 25924]])
-    ct += [ctables[fold]]
-
     # python2 eval_model.py cpw-noloc -n 10000 -r 0.01 -c 2 -p 1 -v 10 --minor --parallel
     ctables = np.array([[490, 598, 3870, 27621], [508, 580, 3871, 27620], [508, 580, 3828, 27663], [534, 554, 3775, 27716], [505, 583, 3910, 27581], [508, 580, 3850, 27641], [503, 585, 3761, 27730], [503, 585, 3932, 27559], [493, 595, 3885, 27606], [522, 566, 3806, 27685]])
+    ct += [ctables[fold]]
+
+    # python2 eval_model.py cpw -n 10000 -r 0.005 -c 2 -p 1 -v 10 --minor --parallel
+    ctables = np.array([[565, 523, 3724, 27767], [541, 547, 3734, 27757], [555, 533, 3753, 27738], [575, 513, 3604, 27887], [549, 539, 3663, 27828], [559, 529, 3669, 27822], [569, 519, 3757, 27734], [545, 543, 3641, 27850], [550, 538, 3706, 27785], [648, 440, 5567, 25924]])
     ct += [ctables[fold]]
 
     # python2 eval_model.py cpw-noloc -n 10000 -r 0.005 -c 2 -p 1 -v 10 --minor --parallel
@@ -65,10 +66,19 @@ for fold in range(nfolds):
     print 'tpr:', tpr
     print 'fpr:', fpr
 
+    pylab.figure(2)
     for i in range(len(tp)):
-        pylab.plot(pos[i], tpr[i], markersize=5, marker=marker[i], markerfacecolor='white', markeredgecolor=cvec[i], markeredgewidth=1.5, linestyle="None")
+        pylab.plot(pos[i], tpr[i], markersize=7, marker=marker[i], markerfacecolor='white', markeredgecolor=cvec[i], markeredgewidth=1, linestyle="None")
         print pos[i], tpr[i]
 
+    pylab.figure(3)
+    for i in range(len(tp)):
+        #pylab.subplot(1, 2, 1)
+        pylab.plot(imap[i] + 0.5, tpr[i], markersize=7, marker=marker[i], markerfacecolor='white', markeredgecolor=cvec[i], markeredgewidth=1, linestyle="None")
+        #pylab.subplot(1, 2, 2)
+        pylab.plot(imap[i] + 0.5, fpr[i], markersize=7, marker=marker[i], color=cvec[i], markeredgewidth=0, linestyle="None")
+
+pylab.figure(2)
 pylab.axis([0, 0.4, 0, 0.65])
 pylab.plot([0, 0.4], [0.5, 0.5], 'k:')
 pylab.xlabel('Fraction of stops', fontsize=fs)
@@ -78,3 +88,18 @@ pylab.xticks(fontsize=fs)
 pylab.yticks(fontsize=fs)
 pylab.legend(legend, loc='lower right', fontsize=fs-2, frameon=False, numpoints=1, ncol=2)
 pylab.savefig('../figs/cpw_folds.pdf')
+
+pylab.figure(3)
+#pylab.subplot(1, 2, 1)
+pylab.axis([0, 8.5, 0, 0.7])
+pylab.plot([0, 8.5], [0.5, 0.5], 'k:')
+#pylab.xticks(np.arange(0.5, 8, 1), ())
+#pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
+#pylab.title('True positive rate', fontsize=fs)
+#pylab.subplot(1, 2, 2)
+#pylab.axis([0, 8.5, 0, 0.7])
+pylab.xticks(np.arange(0.5, 8, 1), [u'\u22654', u'\u22653', u'\u22652', '.01*', '.01', '.005*', '.005', u'\u22651'], rotation=25)
+pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
+pylab.ylabel('Rate', fontsize=fs)
+pylab.title('TPR (open) and FPR (solid) for weapon prediction', fontsize=fs)
+pylab.savefig('../figs/cpw_tpr_fpr.pdf')

@@ -12,7 +12,7 @@ ct = []
 reg = np.array([0.01, 0.005, 0.01, 0.005, 0, 0, 0, 0])
 loc = np.array([1, 1, 0, 0, 0, 0, 0, 0])
 thresh = np.array([0, 0, 0, 0, 4, 3, 2, 1])
-cvec = ['m'] * 4 + ['w'] * 4
+cvec = ['m', 'm', 'c', 'c'] + ['w'] * 4
 ms = [13, 9, 13, 9] + [12, 10, 8, 6] 
 marker = ['s', 's', '^', '^'] + ['o'] * 4
 legend = ['CORELS (.01, location)', 'CORELS (.005, location)', 'CORELS (.01)', 'CORELS (.005)'] + [u'Heuristic (\u2265%d)' % i for i in [4, 3, 2, 1]]
@@ -76,8 +76,8 @@ pylab.plot([0, 0.4], [0.5, 0.5], 'k:')
 pylab.xlabel('Fraction of stops', fontsize=fs)
 pylab.ylabel('Fraction recovered', fontsize=fs)
 pylab.title('Fraction of weapons recovered', fontsize=fs)
-pylab.xticks(fontsize=fs)
-pylab.yticks(fontsize=fs)
+pylab.xticks(np.arange(0, 0.5, 0.1), fontsize=fs)
+pylab.yticks(np.arange(0, 0.7, 0.2), fontsize=fs)
 pylab.legend(legend, loc='lower right', fontsize=fs-2, frameon=False, numpoints=1, ncol=2)
 pylab.savefig('../figs/cpw.pdf')
 
