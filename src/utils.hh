@@ -29,7 +29,7 @@ class NullLogger {
     virtual inline void setVerbosity(int verbosity) {}
     virtual inline int getVerbosity() { return 0; }
     virtual inline void setFrequency(int frequency) {}
-    virtual inline int getFrequency() { return 0; }
+    virtual inline int getFrequency() { return 1000; }
     virtual inline void addToLowerBoundTime(double t) {}
     virtual inline void incLowerBoundNum() {}
     virtual inline void addToObjTime(double t) {}
