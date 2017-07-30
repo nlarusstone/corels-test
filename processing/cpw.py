@@ -2,24 +2,62 @@
 http://www1.nyc.gov/site/nypd/stats/reports-analysis/stopfrisk.page
 http://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2008-csv.zip
 
+ntot: 2941390
+cpw: 376488
+cpw & weapon: 11531
+cpw & (stopped/frisked): 325800
+cpw & (stopped/frisked) & weapon: 10885
+train size: 566839
+
+cpwf & (stopped/frisked): 382030
+cpwf & (stopped/frisked) & weapon: 14061
+
 """
 import os
 
 import numpy as np
-import pandas as pd
+import tabular as tb
 
 import mine
 import utils
 
+def cpw_func(c):
+    c = c.lower()
+    if ('cpw' in c) or ('c.p.w.' in c):  #or ('gun' in c) or ('weapon' in c):
+        return True
+    return False
 
 city_dict = {1: 'Manhattan', 2: 'Brooklyn', 3: 'Bronx', 4: 'Queens', 5: 'Staten-Island'}
 
 sex_dict = {0: 'female', 1: 'male'}
+def sex_func(s):
+    if (s == 'M'):
+        return 'male'
+    elif (s == 'F'):
+        return 'female'
+    else:
+        return 'other'  # not listed or unknown
 
-race_dict = {1: 'black', 2: 'black Hispanic', 3: 'white Hispanic', 4: 'white',
-             5: 'Asian/Pacific Islander', 6: 'Am. Indian/Native'}
+race_dict = {1: 'black', 2: 'black-Hispanic', 3: 'white-Hispanic', 4: 'white',
+             5: 'Asian-Pacific-Islander', 6: 'Am-Indian-Native'}
 
-build_dict = {1: 'heavy', 2: 'muscular', 3: 'medium', 4: 'thin'}
+race_dict = {'A': 'Asian/Pacific Islander', 'B': 'Black',
+             'I': 'American-Indian-or-Alaskan-Native',
+             'P': 'Black-Hispanic', 'Q': 'White-Hispanic', 'W': 'White',
+             'X': 'Unknown', 'Z': 'Other', ' ': 'Not Listed'}
+
+# Table 1:  White, black, Hispanic, Asian or other
+def race_func(r):
+    if (r == 'A'):
+        return 'Asian'  # Asian or Pacific Islander
+    elif (r == 'B'):
+        return 'Black'
+    elif (r == 'W'):
+        return 'White'
+    elif (r in ['P', 'Q']):
+        return 'Hispanic'
+    else:
+        return 'other'  # American Indian or Alaskan Native, Unknown, Other, Not Listed
 
 stop_dict = {'cs_objcs': 'reason for stop - suspicious object',
              'cs_descr': 'reason for stop - fits description',
@@ -42,8 +80,15 @@ stop_dict = {'cs_objcs': 'reason for stop - suspicious object',
              'ac_inves': 'additional circumstances - ongoing investigation',
              'ac_other': 'additional circumstances - other'}
 
-inout_dict = {0: 'outside', 1: 'inside'}
-trhsloc_dict = {0: 'neither-housing-nor-transit-authority', 1: 'housing-authority', 2: 'transit-authority'}
+inout_dict = {'O': 'outside', 'I': 'inside'}
+
+def trhsloc_func(t):
+    if (t == 'H'):
+        return 'housing-authority'
+    elif (t == 'T'):
+        return 'transit-authority'
+    else:
+        return 'neither'
 
 def rename_pos(s):
     return s.replace(' - ', '=').replace('reason for stop', 'stop-reason').replace('additional circumstances', 'circumstances').replace(' ', '-')
@@ -65,199 +110,194 @@ def age_func(a):
     else:
         return '>40'    # support = 6776
 
-
-predict_frisked = False
-predict_weapon = True
-small = True
+def check_binary(c):
+    if (c.dtype.str[1] == 'S'):
+        if (c.dtype == np.dtype('S1')):
+            sc = set(c)
+            if (sc == set(['Y', 'N'])):
+                return np.cast[int](c == 'Y')
+            elif (sc == set(['N'])):
+                return np.zeros(len(c))
+        #c[c == ' '] = '_'   # missing string data --> will filter these
+        return c
+    else:
+        return c
 
 # for the weapon prediction problem, we resample due to class imbalance
 resample_test = False   # if True, will resample the test set, otherwise only resample the train set
 
-if predict_frisked:
-    max_cardinality = 1
-    min_support = 0.001
-    ftag = 'stop'
-    exclude_not = False
-else:
-    max_cardinality = 1
-    min_support = 0.001
-    if small:
-        ftag = 'frisk'  # single clauses (M = 28)
-        exclude_not = True
-    else:
-        ftag = 'weapon' # with negations (M = 46)
-        exclude_not = False
+max_cardinality = 1
+min_support = 0.001
+exclude_not = True
+froot = 'cpw'
+use_cpw_func = True
+include_loc = False
+filter_frisk = True
 
-din = os.path.join('..', 'data', 'frisk')
+din = os.path.join('..', 'data', froot)
 dout = os.path.join('..', 'data', 'CrossValidation')
-zdata = os.path.join('..', 'data', '2014-20SQF.zip')
-fdata = os.path.join(din, '2014-SQF-web.csv')
-fout = os.path.join(din, '%s.csv' % ftag)
-bout = os.path.join('..', 'data', '%s-binary.csv' % ftag)
-fout = os.path.join(din, '%s.csv' % ftag)
+if not os.path.exists(din):
+    os.mkdir(din)
+if not os.path.exists(dout):
+    os.mkdir(dout)
 
-seed = sum([1, 4, 21, 12, 20]) # f:6, r:18, i:09, s:19, k:11
+if use_cpw_func:
+    froot = '%sf' % froot
+if not include_loc:
+    froot = '%s-noloc' % froot
+if not filter_frisk:
+    froot = '%s-nofilter' % froot
+
+fout = os.path.join(din, '%s.csv' % froot)
+bout = os.path.join('..', 'data', '%s-binary.csv' % froot)
+
+seed = 42
 num_folds = 10
 labels = ['no', 'yes']
 minor = True
 
 np.random.seed(seed)
 
-if not os.path.exists(din):
-    os.mkdir(din)
+ntot = 0
+ncpw = 0
 
-if not os.path.exists(dout):
-    os.mkdir(dout)
+for year in range(2008, 2013):
 
-if not os.path.exists(fdata):
-    print 'downloading data'
-    uroot = 'http://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-2012-csv.zip'
-    os.system('wget %s -O %s' % (uroot, zdata))
-    print 'unzipping data'
-    os.system('unzip %s' % zdata)
-    os.system('mv 2012\ SQF/* %s' % din)
-    print 'renaming files'
-    for f in os.listdir(din):
-        f1 = os.path.join(din, f)
-        f2 = f1.replace(' ', '-').replace('_', '-')
-        f1 = f1.replace(' ', '\\ ')
-        os.system('mv %s %s' % (f1, f2))
+    fdata = os.path.join(din, '%d.csv' % year)
+    zdata = os.path.join('..', 'data', 'sqf-%d-csv.zip' % year)
 
-print 'lightly process data (e.g., to make binary features)'
-x = tb.tabarray(SVfile=fdata)
-assert (len(x) == 45787)
+    if not os.path.exists(fdata):
+        print 'downloading data'
+        uroot = 'http://www1.nyc.gov/assets/nypd/downloads/zip/analysis_and_planning/stop-question-frisk/sqf-%d-csv.zip' % year
+        os.system('wget %s -O %s' % (uroot, zdata))
+        print 'unzipping data'
+        os.system('unzip %s' % zdata)
+        os.system('mv %d.csv %s' % (year, din))
 
-assert not np.isnan(x['frisked']).any()
-assert x['frisked'].sum() == 30345  # 66% frisked
 
-assert not np.isnan(x['searched']).any()
-assert x['searched'].sum() == 7283  # 16% searched
+    weapon_list = ['pistol', 'riflshot', 'asltweap', 'knifcuti', 'machgun', 'othrweap']
+    usecols = ['pct', 'inout', 'trhsloc', 'crimsusp', 'frisked', 'searched'] + weapon_list + stop_dict.keys() + ['city'] #['sex', 'race', 'age', 'city']
 
-assert (x['frisked'] & x['searched']).sum() == 6667
-assert (x['searched'] & np.invert(x['frisked'])).sum() == 616
+    #usecols = [1,  6,  7,  9, 22, 23, 26, 27, 28, 29, 30, 31, 42, 43, 46, 48,
+    #       49, 50, 51, 53, 54, 55, 56, 57, 59, 61, 62, 63, 64, 65, 67, 68, 99]
+           #79, 80, 82, 99]
 
-weapon_list = ['pistol', 'riflshot', 'asltweap', 'knifcuti', 'machgun', 'othrweap']
-w = x[weapon_list].extract()
-(ii, jj) = np.isnan(w).nonzero()
-w[ii, jj] = 0
-weapon = w.any(axis=1)
-assert weapon.sum() == 1520
-assert (x['searched'] & weapon).sum() == 1081   # 15% of searches yield weapon
-assert (x['frisked'] & weapon).sum() == 1414    # 4.7% of frisks lead to weapon (possibly via search)
-assert (x['searched'] | x['frisked']).sum() == 30961
-assert ((x['searched'] | x['frisked']) & weapon).sum() == 1445
+    #if (year >= 2011):
+    #    usecols[-1] += 1
 
-assert not np.isnan(x['arstmade']).any()
-assert x['arstmade'].sum() == 6898  # 15% arrested
+    print 'reading data'
+    x = tb.tabarray(SVfile=fdata)#, usecols=usecols)
+    print 'original:', len(x)
+    ntot += len(x)
+    print 'filter for columns of interest'
+    x = x[usecols]
+    print 'filter for records with CPW'
+    if (use_cpw_func):
+        ind = np.array([cpw_func(c) for c in x['crimsusp']])
+        x = x[ind]
+    else:
+        x = x[x['crimsusp'] == 'CPW']
+    print 'lightly process data (e.g., to make binary features)'
+    x = tb.tabarray(columns=[check_binary(x[n]) for n in x.dtype.names], names=x.dtype.names)
 
-assert len(set(x['year'])) == 1     # year of stop
+    print 'CPW:', len(x)
+    ncpw += len(x)
+    print 'frisked:', x['frisked'].sum()
+    print 'searched:', x['searched'].sum()
+    print 'frisked & searched:', (x['frisked'] & x['searched']).sum()
+    print 'searched & not frisked:', (x['searched'] & np.invert(x['frisked'])).sum() 
 
-assert len(set(x['pct'])) == 77     # precinct of stop
-assert (x['pct'].min() >= 1) and (x['pct'].max() <= 123)
+    w = x[weapon_list].extract()
+    (ii, jj) = np.isnan(w).nonzero()
+    w[ii, jj] = 0
+    weapon = w.any(axis=1)
+    print 'weapon:', weapon.sum()
+    print 'searched & weapon:', (x['searched'] & weapon).sum()
+    print 'frisked & weapon:', (x['frisked'] & weapon).sum()
+    print 'searched | frisked:', (x['searched'] | x['frisked']).sum()
+    assert '(searched | frisked) & weapon', ((x['searched'] | x['frisked']) & weapon).sum()
 
-assert len(set(x['ser_num'])) == 2281   # UF-250 serial number
+    #print 'arrest:', x['arstmade'].sum()
 
-# datestop, timestop
+    stop_reasons = [n for n in x.dtype.names if (n.startswith('cs') or n.startswith('ac'))
+                                          and ('other' not in n)] # or n.startswith('ac'))
+    for sr in stop_reasons:
+        x[sr][np.isnan(x[sr]).nonzero()[0]] = 0
 
-assert set(x['city']) == set(range(1, 6))
+    if filter_frisk:
+        ikeep = (x['searched'] == 1) | (x['frisked'] == 1)
+        x = x[ikeep]
+        weapon = weapon[ikeep]
 
-assert np.isnan(x['sex']).sum() == 394
-assert np.isnan(x['race']).sum() == 1039
+    weapon = np.cast[int](weapon)
+    #sex = np.array([sex_func(i) for i in x['sex']])
+    #race = np.array([race_func(i) for i in x['race']])
+    #age = np.array([age_func(i) for i in x['age']])
+    inout = np.array([inout_dict[i] for i in x['inout']])
 
-# dob
+    if include_loc:
+        city = x['city']
+        city[city == 'STATEN ISLAND'] = 'STATEN-ISLAND'
+        city[city == 'STATEN IS'] = 'STATEN-ISLAND'
+        city[city == ' '] = '-'
+        location = np.array([trhsloc_func(i) for i in x['trhsloc']])
 
-assert np.isnan(x['age']).sum() == 107
-assert (x['age'] >= 100).sum() == 27
-assert x[x['age']==366]['dob']==6161978
-x[x['age']==366]['age'] = 36
-assert (x['age'] >= 90).sum() == 29     # the two entries in the 90s are ambiguous (see dob)
-assert (x['age'] < 12).sum() == 99      # the single digit / younger ages seem like typos (see height, weight)
+    stop_reasons_list = []
+    for sr in stop_reasons:
+        stop_reasons_list += [[rename_pos(stop_dict[sr]) if s else rename_neg(stop_dict[sr]) for s in x[sr]]]
 
-assert not np.isnan(x['height']).any()
-assert not np.isnan(x['weight']).any()
+    if include_loc:
+        columns = stop_reasons_list + [city, location, inout, weapon]
+        cnames = stop_reasons + ['city', 'location', 'inout', 'weapon']
+    else:
+        columns = stop_reasons_list + [inout, weapon]
+        cnames = stop_reasons + ['inout', 'weapon']
 
-assert np.isnan(x['haircolr']).sum() == 492
-assert np.isnan(x['eyecolor']).sum() == 286
-assert np.isnan(x['build']).sum() == 721
+    fyear = fout.replace('.csv', ('-%d.csv' % year))
+    print 'write categorical dataset', fyear
+    y = tb.tabarray(columns=columns, names=cnames)
+    y.saveSV(fyear)
 
-assert len(set(x['othfeatr'])) == 220
+print 'ntot:', ntot
+print 'ncpw:', ncpw
+print 'concatenate files'
+fy = fout.replace('.csv', '-2008.csv')
+cmd = 'head -1 %s > %s' % (fy, fout)
+print cmd
+os.system(cmd)
+ff = fout.replace('.csv', '-*.csv')
+cmd = 'ls %s' % ff
+print cmd
+os.system(cmd)
+cmd = 'tail -n +2 -q %s >> %s' % (ff, fout)
+print cmd
+os.system(cmd)
 
-assert set(x['inout']) == set([0, 1])
-assert set(x['trhsloc']) == set([0, 1, 2])
-
-stop_reasons = [n for n in x.dtype.names if (n.startswith('cs') or n.startswith('ac'))
-                                      and ('other' not in n)] # or n.startswith('ac'))
-for sr in stop_reasons:
-    x[sr][np.isnan(x[sr]).nonzero()[0]] = 0
-
-names = ['city', 'sex', 'race', 'age', 'build']
-
-keep = np.invert(np.isnan(x[names].extract()).any(axis=1))
-x = x[keep]
-weapon = weapon[keep]
-assert len(x) == 43858  # throw out 1929 records with missing data
-ikeep = (x['age'] > 11) & (x['age'] < 90)
-x = x[ikeep]     # throw out age extremes
-weapon = weapon[ikeep]
-assert len(x) == 43747
-
-if (predict_weapon):
-    ikeep = (x['searched'] == 1) | (x['frisked'] == 1)
-    x = x[ikeep]
-    weapon = np.cast[int](weapon[ikeep])
-    assert (len(x) == 29595)
-
-city = [city_dict[i] for i in x['city']]
-sex = [sex_dict[i] for i in x['sex']]
-race = [race_dict[i] for i in x['race']]
-age = [age_func(i) for i in x['age']]
-build = [build_dict[i] for i in x['build']]
-inout = [inout_dict[i] for i in x['inout']]
-location = [trhsloc_dict[i] for i in x['trhsloc']]
-
-stop_reasons_list = []
-for sr in stop_reasons:
-    stop_reasons_list += [[rename_pos(stop_dict[sr]) if s else rename_neg(stop_dict[sr]) for s in x[sr]]]
-
-if (predict_frisked):
-    columns = [city, sex, race, age, build, inout, location] + stop_reasons_list + [x['frisked']]
-    cnames = names + ['inout', 'location'] + stop_reasons + ['frisked']
-elif (predict_weapon):
-    columns = stop_reasons_list + [city, location, inout, weapon]
-    cnames = stop_reasons + ['city', 'location', 'inout', 'weapon']
-
-print 'write categorical dataset', fout
-y = tb.tabarray(columns=columns, names=cnames)
-
-if (predict_weapon):
-    y0 = y[y['weapon'] == 0]
-    y1 = y[y['weapon'] == 1]
-    y = y0.rowstack(y1)
-
-y.saveSV(fout)
+print 'read categorical dataset'
+y = tb.tabarray(SVfile=fout)
+print 'total:', len(y)
+y0 = y[y['weapon'] == 0]
+y1 = y[y['weapon'] == 1]
+y = y0.rowstack(y1)
+print 'weapon:', len(y1)
 
 print 'write binary dataset', bout
 b = utils.to_binary(y)
 b.saveSV(bout)
 
-if (not predict_weapon):
-    split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_folds)
-else:
-    s0 = np.split(np.random.permutation(len(y0) / num_folds * num_folds), num_folds)
-    s1 = np.split(len(y0) + np.random.permutation(len(y1) / num_folds * num_folds), num_folds)
-    test_split_ind = [np.concatenate([i0, i1]) for (i0, i1) in zip(s0, s1)]
-    s1 = [i1[np.random.randint(0, len(i1), len(s0[0]))] for i1 in s1]
-    split_ind = [np.concatenate([i0, i1]) for (i0, i1) in zip(s0, s1)]
+s0 = np.split(np.random.permutation(len(y0) / num_folds * num_folds), num_folds)
+s1 = np.split(len(y0) + np.random.permutation(len(y1) / num_folds * num_folds), num_folds)
+test_split_ind = [np.concatenate([i0, i1]) for (i0, i1) in zip(s0, s1)]
+s1 = [i1[np.random.randint(0, len(i1), len(s0[0]))] for i1 in s1]
+split_ind = [np.concatenate([i0, i1]) for (i0, i1) in zip(s0, s1)]
 
 print 'permute and partition dataset'
 print 'number of folds:', num_folds
-print 'train size:', len(split_ind[0]) * (num_folds - 1)
-print 'test size:', len(split_ind[0])
 
 num_rules = np.zeros(num_folds, int)
 for i in range(num_folds):
     print 'generate cross-validation split', i
-    cv_root = '%s_%d' % (ftag, i)
+    cv_root = '%s_%d' % (froot, i)
     test_root = '%s_test' % cv_root
     train_root = '%s_train' % cv_root
     ftest = os.path.join(dout, '%s.csv' % test_root)
@@ -267,7 +307,7 @@ for i in range(num_folds):
     train_ind = np.concatenate([split_ind[j] for j in range(num_folds) if (j != i)])
     y[train_ind].saveSV(ftrain)
     b[train_ind].saveSV(btrain)
-    if (predict_frisked or resample_test):
+    if resample_test:
         y[split_ind[i]].saveSV(ftest)
         b[split_ind[i]].saveSV(btest)
     else:
@@ -282,3 +322,7 @@ for i in range(num_folds):
     mine.apply_rules(din=dout, froot=cv_root, labels=labels)
 
 print '(min, max) # rules mined per fold:', (num_rules.min(), num_rules.max())
+
+print 'train size:', len(train_ind)
+print 'test size:', len(test_split_ind[0])
+print 'resampled test size:', len(split_ind[0])
