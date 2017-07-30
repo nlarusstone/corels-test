@@ -3,77 +3,104 @@
 #include "catch.hpp"
 
 #include "fixtures.hh"
+/**
+                            TEST TREE INITIALIZATION
 
+    This test simply tests whether or not the initialization of the tree
+    was successful: first by checking if all of the attributes that were passed
+    to its constructor were correctly stored by the tree, and then by checking
+    that it has the correct rule, label, and minority info by simply looping
+    through all the rules, labels and minorities that the tree thinks there are
+    and comparing them to the actual data that was loaded and stored in tests-main.cc
+**/
 TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init]") {
 
     REQUIRE(tree != NULL);
     REQUIRE(root != NULL);
 
-    CHECK(tree->num_nodes() == 1);
-    CHECK(tree->num_evaluated() == 0);
-    CHECK(tree->c() == c);
-    CHECK(tree->nsamples() == nsamples);
-    CHECK(tree->nrules() == nrules);
-    CHECK(tree->ablation() == ablation);
-    CHECK(tree->has_minority() == (bool)minority);
-    CHECK(tree->calculate_size() == calculate_size);
+    SECTION("Check initialization") {
 
-    // Test that the rules are correctly stored by the tree
-    for(int i = 0; i < nrules; i++) {
-        CAPTURE(i);
-        CHECK(tree->rule(i).support == rules[i].support);
-        CHECK(tree->rule(i).cardinality == rules[i].cardinality);
-        CHECK(std::string(tree->rule(i).features) == std::string(rules[i].features));
-        CHECK(std::string(tree->rule_features(i)) == std::string(rules[i].features));
-
-#ifdef GMP
-        CHECK(mpz_cmp(tree->rule(i).truthtable, rules[i].truthtable) == 0);
-#else
-        for(int j = 0; j < NENTRIES; j++) {
-            CAPTURE(j);
-            CHECK(tree->rule(i).truthtable[j] == rules[i].truthtable[j]);
-        }
-#endif
+        CHECK(tree->num_nodes() == 1);
+        CHECK(tree->num_evaluated() == 0);
+        CHECK(tree->c() == c);
+        CHECK(tree->nsamples() == nsamples);
+        CHECK(tree->nrules() == nrules);
+        CHECK(tree->ablation() == ablation);
+        CHECK(tree->has_minority() == (bool)minority);
+        CHECK(tree->calculate_size() == calculate_size);
     }
 
-    // Check that the labels are correctly stored by the tree
-    for(int i = 0; i < nlabels; i++) {
-        CAPTURE(i);
-        CHECK(tree->label(i).support == labels[i].support);
-        CHECK(tree->label(i).cardinality == labels[i].cardinality);
-        CHECK(std::string(tree->label(i).features) == std::string(labels[i].features));
+    SECTION("Test rules") {
 
-#ifdef GMP
-        CHECK(mpz_cmp(tree->label(i).truthtable, labels[i].truthtable) == 0);
-#else
-        for(int j = 0; j < NENTRIES; j++) {
-            CAPTURE(j);
-            CHECK(tree->label(i).truthtable[j] == labels[i].truthtable[j]);
-        }
-#endif
-    }
-
-    // Check that the minority info is correctly stored by the tree
-    if(minority != NULL) {
-        for(int i = 0; i < nminority; i++) {
+        for(int i = 0; i < nrules; i++) {
             CAPTURE(i);
-            CHECK(tree->minority(i).support == minority[i].support);
-            CHECK(tree->minority(i).cardinality == minority[i].cardinality);
-            CHECK(std::string(tree->minority(i).features) == std::string(minority[i].features));
+            CHECK(tree->rule(i).support == rules[i].support);
+            CHECK(tree->rule(i).cardinality == rules[i].cardinality);
+            CHECK(std::string(tree->rule(i).features) == std::string(rules[i].features));
+            CHECK(std::string(tree->rule_features(i)) == std::string(rules[i].features));
 
 #ifdef GMP
-            CHECK(mpz_cmp(tree->minority(i).truthtable, minority[i].truthtable) == 0);
+            CHECK(mpz_cmp(tree->rule(i).truthtable, rules[i].truthtable) == 0);
 #else
             for(int j = 0; j < NENTRIES; j++) {
                 CAPTURE(j);
-                CHECK(tree->minority(i).truthtable[j] == minority[i].truthtable[j]);
+                CHECK(tree->rule(i).truthtable[j] == rules[i].truthtable[j]);
             }
 #endif
         }
     }
+
+    SECTION("Test labels") {
+
+        for(int i = 0; i < nlabels; i++) {
+            CAPTURE(i);
+            CHECK(tree->label(i).support == labels[i].support);
+            CHECK(tree->label(i).cardinality == labels[i].cardinality);
+            CHECK(std::string(tree->label(i).features) == std::string(labels[i].features));
+
+#ifdef GMP
+            CHECK(mpz_cmp(tree->label(i).truthtable, labels[i].truthtable) == 0);
+#else
+            for(int j = 0; j < NENTRIES; j++) {
+                CAPTURE(j);
+                CHECK(tree->label(i).truthtable[j] == labels[i].truthtable[j]);
+            }
+#endif
+        }
+    }
+
+    SECTION("Test minority") {
+
+        if(minority != NULL) {
+            for(int i = 0; i < nminority; i++) {
+                CAPTURE(i);
+                CHECK(tree->minority(i).support == minority[i].support);
+                CHECK(tree->minority(i).cardinality == minority[i].cardinality);
+                CHECK(std::string(tree->minority(i).features) == std::string(minority[i].features));
+
+#ifdef GMP
+                CHECK(mpz_cmp(tree->minority(i).truthtable, minority[i].truthtable) == 0);
+#else
+                for(int j = 0; j < NENTRIES; j++) {
+                    CAPTURE(j);
+                    CHECK(tree->minority(i).truthtable[j] == minority[i].truthtable[j]);
+                }
+#endif
+            }
+        }
+    }
 }
 
-TEST_CASE_METHOD(TrieFixture, "Trie/Construct and insert node", "[trie][construct_node]") {
+/**
+                            CONSTRUCT AND INSERT NODE
+
+    This test constructs a node (with the root as a parent), checks if the node
+    has all of its attributes stored correctly, inserts it into the tree, and
+    checks if the insertion was succesful and the heirachy is correctly stored
+    (the root knows it has it a child, the node knows it has the root as parent)
+**/
+
+TEST_CASE_METHOD(TrieFixture, "Trie/Construct node", "[trie][construct_node]") {
 
     Node * parent = root;
 
@@ -94,30 +121,36 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Construct and insert node", "[trie][construc
                                     num_not_captured, nsamples, len_prefix,
                                     c, equivalent_minority);
 
-    // Was node inserted?
+    // Was node created?
     REQUIRE(n != NULL);
 
-    CHECK(n->id() == rule_id);
-    CHECK(n->prediction() == prediction);
-    CHECK(n->default_prediction() == default_prediction);
-    CHECK(n->lower_bound() == lower_bound);
-    CHECK(n->objective() == objective);
-    CHECK(n->num_captured() == (nsamples - num_not_captured));
-    CHECK(n->depth() == (len_prefix + 1));
-    CHECK(n->equivalent_minority() == equivalent_minority);
-    CHECK_FALSE(n->deleted());
-    CHECK(n->depth() == 1);
+    SECTION("Test attributes") {
 
-    tree->insert(n);
+        CHECK(n->id() == rule_id);
+        CHECK(n->prediction() == prediction);
+        CHECK(n->default_prediction() == default_prediction);
+        CHECK(n->lower_bound() == lower_bound);
+        CHECK(n->objective() == objective);
+        CHECK(n->num_captured() == (nsamples - num_not_captured));
+        CHECK(n->depth() == (len_prefix + 1));
+        CHECK(n->equivalent_minority() == equivalent_minority);
+        CHECK_FALSE(n->deleted());
+        CHECK(n->depth() == 1);
+    }
 
-    // Root + this node = 2
-    CHECK(tree->num_nodes() == 2);
+    SECTION("Test insert (hierachy)") {
 
-    // Check heirarchy of tree
-    CHECK(n->parent() == parent);
-    CHECK(parent->children_begin()->second == n);
-    CHECK(parent->num_children() == 1);
-    CHECK(parent->child(rule_id) == n);
+        tree->insert(n);
+
+        // Root + this node = 2
+        CHECK(tree->num_nodes() == 2);
+
+        // Check heirarchy of tree
+        CHECK(n->parent() == parent);
+        CHECK(parent->children_begin()->second == n);
+        CHECK(parent->num_children() == 1);
+        CHECK(parent->child(rule_id) == n);
+    }
 }
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Check node delete behavior", "[trie][delete_node]") {
@@ -141,6 +174,17 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Check node delete behavior", "[trie][delete_
     CHECK(root->num_children() == 0);
 }
 
+/**
+            NODE GET PREFIX AND PREDICTIONS
+
+    Creates a artificial tree with nrules - 1 (the actual number of rules) nodes
+    (not including root, and each being the child of the last), with ids 1, 2, 3, etc.,
+    and alternating predictions (first has false, second has true, etc.) and
+    random data for the rest. As it is created, the prefix and predictions are
+    stored in arrays which are then checked against what the last node's
+    get_prefix_and_predictions function gets, to see if the function has the
+    expected behavior.
+**/
 TEST_CASE_METHOD(TrieFixture, "Trie/Node get prefix and predictions", "[trie][node_prefix]") {
 
     REQUIRE(tree != NULL);
@@ -189,18 +233,12 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Decrement num nodes", "[trie][num_nodes]") {
     REQUIRE(tree != NULL);
     REQUIRE(root != NULL);
 
-    Node * n = tree->construct_node(1, nrules, true, true, 0.1, 0.12, root, 3, nsamples, 0, 0.01, 0.0);
-
-    REQUIRE(n != NULL);
-
-    tree->insert(n);
-
-    // Node + root
-    REQUIRE(tree->num_nodes() == 2);
+    // Root
+    REQUIRE(tree->num_nodes() == 1);
 
     tree->decrement_num_nodes();
 
-    REQUIRE(tree->num_nodes() == 1);
+    REQUIRE(tree->num_nodes() == 0);
 }
 
 TEST_CASE_METHOD(TrieFixture, "Trie/Update minimum objective", "[trie][minimum_objective]") {
@@ -215,6 +253,11 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update minimum objective", "[trie][minimum_o
     REQUIRE(tree->min_objective() == min1);
 }
 
+/**
+            PRUNE UP
+
+    Creates an artificial tree, where the root has one childless child and
+**/
 TEST_CASE_METHOD(TrieFixture, "Trie/Prune up", "[trie][prune_up]") {
 
     REQUIRE(tree != NULL);
@@ -451,43 +494,48 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Garbage collect", "[trie][garbage_collect]")
 
     tree->garbage_collect();
 
-    // The first and second nodes (higher and equal lower bounds) should have been deleted
-    CHECK(tree->num_nodes() == 8);
+    SECTION("Check if correctly deleted") {
 
-    // And their childeren lazily marked
-    CHECK(nodes[0][1]->deleted());
-    CHECK(nodes[0][2]->deleted());
-    CHECK(nodes[1][1]->deleted());
-    CHECK(nodes[1][2]->deleted());
+        // The first and second nodes (higher and equal lower bounds) should have been deleted
+        CHECK(tree->num_nodes() == 8);
 
-    // But not the third node's children (lower lower bound)
-    CHECK_FALSE(nodes[2][1]->deleted());
-    CHECK_FALSE(nodes[2][2]->deleted());
+        // And their childeren lazily marked
+        CHECK(nodes[0][1]->deleted());
+        CHECK(nodes[0][2]->deleted());
+        CHECK(nodes[1][1]->deleted());
+        CHECK(nodes[1][2]->deleted());
 
-    // Just for fun, add a test for the queue lazy cleanup (where it deletes nodes marked for deletion)
-    Queue * queue = new Queue(lb_cmp, "LOWER BOUND");
-
-    REQUIRE(queue != NULL);
-
-    // Add all the leaf nodes that need to be deleted to the queue
-    for(int i = 0; i < 2; i++) {
-        queue->push(nodes[i][1]);
-        queue->push(nodes[i][2]);
+        // But not the third node's children (lower lower bound)
+        CHECK_FALSE(nodes[2][1]->deleted());
+        CHECK_FALSE(nodes[2][2]->deleted());
     }
 
-    VECTOR captured;
-    rule_vinit(nsamples, &captured);
+    SECTION("Test deletion of lazily marked nodes") {
 
-    std::pair<Node*, tracking_vector<unsigned short, DataStruct::Tree>> prefix_node = queue->select(tree, captured);
+        Queue * queue = new Queue(lb_cmp, "LOWER BOUND");
 
-    // Were all the nodes found to be lazily marked deleted?
-    // Only the root, the root's third child and its two children should remain
-    CHECK(tree->num_nodes() == 4);
+        REQUIRE(queue != NULL);
 
-    // Since all the nodes in the queue were deleted
-    CHECK(prefix_node.first == NULL);
+        // Add all the leaf nodes that need to be deleted to the queue
+        queue->push(nodes[0][1]);
+        queue->push(nodes[0][2]);
+        queue->push(nodes[1][1]);
+        queue->push(nodes[1][2]);
 
-    rule_vfree(&captured);
+        VECTOR captured;
+        rule_vinit(nsamples, &captured);
+
+        std::pair<Node*, tracking_vector<unsigned short, DataStruct::Tree>> prefix_node = queue->select(tree, captured);
+
+        // Were all the nodes found to be lazily marked deleted?
+        // Only the root, the root's third child and its two children should remain
+        CHECK(tree->num_nodes() == 4);
+
+        // Since all the nodes in the queue were deleted
+        CHECK(prefix_node.first == NULL);
+
+        rule_vfree(&captured);
+    }
 }
 
 
