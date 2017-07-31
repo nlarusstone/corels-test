@@ -38,6 +38,8 @@ void evaluate_children(CacheTree* tree, Node* parent, tracking_vector<unsigned s
     parent_lower_bound = parent->lower_bound();
     parent_equivalent_minority = parent->equivalent_minority();
     double t0 = timestamp();
+    // nrules is actually the number of rules + 1 (since it includes the default rule), so the maximum
+    // value of i is nrules - 1 instead of nrules
     for (i = 1; i < nrules; i++) {
         double t1 = timestamp();
         // check if this rule is already in the prefix
