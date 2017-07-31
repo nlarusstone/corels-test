@@ -14,7 +14,7 @@ endif
 LIBS += -L/usr/local/lib -lgmpxx -lgmp
 
 ifneq ($(shell uname -n),beepboop)
-	LDFLAGS :=
+    LDFLAGS :=
     CFLAGS += -fno-omit-frame-pointer
     ifneq ($(shell uname -r),15.6.0)
         LIBS += -lprofiler -ltcmalloc
