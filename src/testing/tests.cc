@@ -11,7 +11,8 @@
     to its constructor were correctly stored by the tree, and then by checking
     that it has the correct rule, label, and minority info by simply looping
     through all the rules, labels and minorities that the tree thinks there are
-    and comparing them to the actual data that was loaded and stored in tests-main.cc
+    and comparing them to the actual data that was loaded and stored in tests-main.cc.
+    Also, some attributes of the root node are checked.
 **/
 TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init]") {
 
@@ -28,6 +29,15 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Test trie initialization", "[trie][trie_init
         CHECK(tree->ablation() == ablation);
         CHECK(tree->has_minority() == (bool)minority);
         CHECK(tree->calculate_size() == calculate_size);
+    }
+
+    SECTION("Test root initialization") {
+
+        // In the labels file, the majority has label 1, so the default prediction should be true
+        CHECK(root->default_prediction());
+
+        CHECK(root->objective() == (double)labels[0].support / (double)nsamples);
+        CHECK(root->equivalent_minority() == Approx((double)minority[0].support / (double)nsamples));
     }
 
     SECTION("Test rules") {
