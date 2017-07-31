@@ -13,14 +13,16 @@ endif
 
 LIBS += -L/usr/local/lib -lgmpxx -lgmp
 
-LDFLAGS :=
-
 ifneq ($(shell uname -n),beepboop)
+	LDFLAGS :=
     CFLAGS += -fno-omit-frame-pointer
     ifneq ($(shell uname -r),15.6.0)
         LIBS += -lprofiler -ltcmalloc
     endif
+else
+    LDFLAGS :=
 endif
+
 
 ifneq ($(shell uname),Darwin)
     LIBS += -lbsd
