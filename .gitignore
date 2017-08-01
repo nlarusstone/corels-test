@@ -93,6 +93,8 @@ src/tags
 
 # Specific to bbcache
 *.txt
+corels
+tests
 figs/*png
 logs/
 cache/
