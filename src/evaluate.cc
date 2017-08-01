@@ -1,4 +1,4 @@
-#include "evaluate.h"
+#include "evaluate.hh"
 
 /**
 
@@ -49,8 +49,8 @@ double evaluate(char * model, char * out, char * label, double c, int v)
         rules_free(labels, nlabels, 0);
     }
 
-    rulelist_ids = malloc(sizeof(unsigned short) * (nrules - 1));
-    rulelist_predictions = malloc(sizeof(int) * (nrules - 1));
+    //rulelist_ids = malloc(sizeof(unsigned short) * (nrules - 1));
+    //rulelist_predictions = malloc(sizeof(int) * (nrules - 1));
 
     // Load model
 
