@@ -246,7 +246,7 @@ double evaluate(model_t model, int v)
 
     if(v > 1) {
         printf("\nFinal results:\n" \
-               "    objective: %.8f    total captured (excluding default): %d    total incorrect: %d (%.1f%%)    accuracy: %.1f%%\n",
+               "    objective: %.10f    total captured (excluding default): %d    total incorrect: %d (%.3f%%)    accuracy: %.3f%%\n",
                objective, total_ncaptured, total_nincorrect, 100.0 * incorrect_frac, 100.0 - 100.0 * incorrect_frac);
     }
 
