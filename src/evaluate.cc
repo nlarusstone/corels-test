@@ -44,7 +44,7 @@ int model_init_model(model_t * out, const char * model_file, int ntotal_rules, i
 
         int feature_len = (rule_loc - feature_start);
 
-        if(strncmp("default", prev_rule_loc + 3, feature_len) == 0) {
+        if(strncmp("default", feature_start, feature_len) == 0) {
             default_pred = *(rule_loc + 1) - '0';
             break;
         }
@@ -52,7 +52,7 @@ int model_init_model(model_t * out, const char * model_file, int ntotal_rules, i
             int found = 0;
 
             for(int i = 1; i < ntotal_rules; i++) {
-                if(strncmp(out->rules[i].features, prev_rule_loc + 3, feature_len) == 0) {
+                if(strncmp(out->rules[i].features, feature_start, feature_len) == 0) {
                     if(++nrules >= ntotal_rules) {
                         if(v > 0)
                             printf("Error: rule number overflow\n");
@@ -78,7 +78,7 @@ int model_init_model(model_t * out, const char * model_file, int ntotal_rules, i
 
             if(!found) {
                 if(v > 0)
-                    printf("Error: could not find rule with features '%.*s'\n", feature_len, prev_rule_loc + 3);
+                    printf("Error: could not find rule with features '%.*s'\n", feature_len, feature_start);
                 free(out->ids);
                 out->ids = NULL;
                 free(out->predictions);
@@ -222,7 +222,7 @@ double evaluate(model_t model, int v)
             printf("Rule #%d (id: %d, prediction: %s) processed:\n" \
                    "    ncaptured: %d    ncaptured correctly: %d (%.1f%%)    lower bound: %.6f    objective: %.6f\n",
                    i+1, model.ids[i], pred ? "true" : "false",
-                   ncaptured, ncorrect, (double)ncorrect / (double)ncaptured, lower_bound, objective);
+                   ncaptured, ncorrect, 100.0 * (double)ncorrect / (double)ncaptured, lower_bound, objective);
 
             rule_vfree(&default_correct);
         }
@@ -247,7 +247,7 @@ double evaluate(model_t model, int v)
     if(v > 1) {
         printf("\nFinal results:\n" \
                "    objective: %.8f    total captured (excluding default): %d    total incorrect: %d (%.1f%%)    accuracy: %.1f%%\n",
-               objective, total_ncaptured, total_nincorrect, incorrect_frac, 1.0 - incorrect_frac);
+               objective, total_ncaptured, total_nincorrect, 100.0 * incorrect_frac, 100.0 - 100.0 * incorrect_frac);
     }
 
     return objective;
