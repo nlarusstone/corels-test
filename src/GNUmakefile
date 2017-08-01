@@ -53,6 +53,9 @@ cache.o: cache.cc $(DEPSDIR)/stamp
 rulelib.o: rulelib.c $(DEPSDIR)/stamp
 	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
+evaluate.o: evaluate.c $(DEPSDIR)/stamp
+	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+
 $(DEPSDIR)/stamp:
 	mkdir -p $(dir $@)
 	touch $@
@@ -68,4 +71,3 @@ endif
 
 .PHONY: all clean
 .SUFFIXES:
-
