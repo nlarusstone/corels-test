@@ -66,8 +66,8 @@ int model_init_model(model_t * out, const char * model_file, int ntotal_rules, i
 
                     found = 1;
 
-                    out->ids = (unsigned short*)realloc(out->ids, nrules);
-                    out->predictions = (int*)realloc(out->predictions, nrules);
+                    out->ids = (unsigned short*)realloc(out->ids, sizeof(unsigned short) * nrules);
+                    out->predictions = (int*)realloc(out->predictions, sizeof(int) * nrules);
 
                     out->ids[nrules-1] = i;
                     out->predictions[nrules-1] = *(rule_loc + 1) - '0';
@@ -190,6 +190,7 @@ double evaluate(model_t model, int v)
     for(int i = 0; i < model.nrules; i++) {
         rule_t rule = model.rules[model.ids[i]];
         int pred = model.predictions[i];
+
         int len = i + 1;
 
         VECTOR captured, captured_correct;
@@ -220,7 +221,7 @@ double evaluate(model_t model, int v)
             double objective = lower_bound + (double)(model.nsamples - total_ncaptured - ndefault_correct) / (double)model.nsamples;
 
             printf("Rule #%d (id: %d, prediction: %s) processed:\n" \
-                   "    ncaptured: %d    ncaptured correctly: %d (%.1f%%)    lower bound: %.6f    objective: %.6f\n",
+                   "    ncaptured: %d    ncaptured correctly: %d (%.1f%%)    lower bound: %.6f    objective: %.6f\n\n",
                    i+1, model.ids[i], pred ? "true" : "false",
                    ncaptured, ncorrect, 100.0 * (double)ncorrect / (double)ncaptured, lower_bound, objective);
 
@@ -245,9 +246,15 @@ double evaluate(model_t model, int v)
     double objective = incorrect_frac + (double)model.nrules * model.c;
 
     if(v > 1) {
+        int ndefault_captured = model.nsamples - total_ncaptured;
+        printf("Default rule (prediction: %s) processed:\n" \
+               "    ncaptured: %d    ncaptured correctly: %d (%.1f%%)\n\n",
+               model.default_prediction ? "true" : "false",
+               ndefault_captured, ndefault_correct, 100.0 * (double)ndefault_correct / (double)ndefault_captured);
+
         printf("\nFinal results:\n" \
-               "    objective: %.10f    total captured (excluding default): %d    total incorrect: %d (%.3f%%)    accuracy: %.3f%%\n",
-               objective, total_ncaptured, total_nincorrect, 100.0 * incorrect_frac, 100.0 - 100.0 * incorrect_frac);
+               "    objective: %.10f    nsamples: %d    total captured (excluding default): %d    total incorrect: %d (%.3f%%)    accuracy: %.3f%%\n",
+               objective, model.nsamples, total_ncaptured, total_nincorrect, 100.0 * incorrect_frac, 100.0 - 100.0 * incorrect_frac);
     }
 
     return objective;
