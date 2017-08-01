@@ -95,6 +95,7 @@ src/tags
 *.txt
 corels
 tests
+evaluate-test
 figs/*png
 logs/
 cache/
