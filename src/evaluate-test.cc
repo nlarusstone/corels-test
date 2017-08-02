@@ -25,7 +25,7 @@ int main(int argc, char ** argv)
     double m_obj = evaluate(model, v);
 
     // Run brute force
-    double obj = obj_brute(model, c, v);
+    double obj = obj_brute(model, v);
 
     if(m_obj == -1.0 || obj == -1.0) {
         if(v > 0)

@@ -6,14 +6,14 @@ double obj_brute(const char * out_file, const char * label_file, double c, int v
 
     model_init(&model, NULL, out_file, label_file, NULL, c, v);
 
-    double min_obj = obj_brute(model, c, v);
+    double min_obj = obj_brute(model, v);
 
     model_free(model);
 
     return min_obj;
 }
 
-double obj_brute(model_t model, double c, int v)
+double obj_brute(model_t model, int v)
 {
     double min_obj = 1.0;
 
@@ -250,22 +250,6 @@ void model_free(model_t model)
 }
 
 
-/**
-
-    Parameters:
-        model - file containing optimal rule list and predictions
-        out - .out file containing data
-        label - .label file
-        c - length constant
-
-    Returns:
-        On success:
-            (double) objective of rule list evaluated with given data
-
-        On failure:
-            -1.0
-
-**/
 double evaluate(const char * model_file, const char * out_file, const char * label_file, double c, int v)
 {
     model_t model;
