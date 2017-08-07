@@ -11,7 +11,7 @@ void randomize_rule(rule_t * rule, int nsamples, gmp_randstate_t state)
 
 void randomize_rule(rule_t * rule, int nsamples)
 {
-    int nentries = (len + BITS_PER_ENTRY - 1)/BITS_PER_ENTRY;
+    int nentries = (nsamples + BITS_PER_ENTRY - 1)/BITS_PER_ENTRY;
 
     for(int i = 0; i < nentries; i++) {
         rule->truthtable[i] = (double)(~(v_entry)0) * (double)rand() / (double)RAND_MAX;
@@ -20,31 +20,25 @@ void randomize_rule(rule_t * rule, int nsamples)
 
 #endif
 
-double obj_brute(const char * out_file, const char * label_file, double c, int v) {
-    model_t model;
-
-    model_init(&model, NULL, out_file, label_file, NULL, c, v);
-
-    double min_obj = obj_brute(model, v);
-
-    model_free(model);
-
-    return min_obj;
-}
-
-double obj_brute(model_t model, int v)
+double obj_brute(model_t * model, int v)
 {
     double min_obj = 1.0;
 
-    model.ids = (unsigned short*)malloc(sizeof(unsigned short) * (model.ntotal_rules - 1));
-    model.predictions = (int*)malloc(sizeof(int) * (model.ntotal_rules - 1));
-    model.nrules = 0;
+    // Temp info, used when calculating each rule list
+    model->ids = (unsigned short*)malloc(sizeof(unsigned short) * (model->ntotal_rules - 1));
+    model->predictions = (int*)malloc(sizeof(int) * (model->ntotal_rules - 1));
+    model->nrules = 0;
 
-    for(int i = 0; i < model.nlabels; i++) {
-        model.default_prediction = i;
+    unsigned short * opt_ids = (unsigned short*)malloc(sizeof(unsigned short) * (model->ntotal_rules - 1));
+    int * opt_predictions = (int*)malloc(sizeof(int) * (model->ntotal_rules - 1));
+    int opt_default_prediction = 0;
+    int opt_nrules = 0;
 
-        model.nrules = 0;
-        double obj = evaluate(model, v ? 1 : 0);
+    for(int i = 0; i < model->nlabels; i++) {
+        model->default_prediction = i;
+
+        model->nrules = 0;
+        double obj = evaluate(*model, v ? 1 : 0);
 
         if(obj == -1.0)
             continue;
@@ -53,23 +47,31 @@ double obj_brute(model_t model, int v)
             if(v > 2)
                 printf("[obj_brute] min obj:  %f -> %f\n", min_obj, obj);
 
+            opt_nrules = 0;
+            opt_default_prediction = model->default_prediction;
             min_obj = obj;
         }
 
-        _obj_brute_helper(model, 0, &min_obj, v);
+        _obj_brute_helper(*model, 0, &min_obj, opt_ids, opt_predictions, &opt_default_prediction, &opt_nrules, v);
     }
 
     if(v > 1) {
         printf("[obj_brute]: Optimal objective: %f\n", min_obj);
     }
 
-    free(model.ids);
-    free(model.predictions);
+    free(model->ids);
+    free(model->predictions);
+
+    model->ids = opt_ids;
+    model->predictions = opt_predictions;
+    model->default_prediction = opt_default_prediction;
+    model->nrules = opt_nrules;
 
     return min_obj;
 }
 
-void _obj_brute_helper(model_t model, int prefix_len, double * min_obj, int v) {
+void _obj_brute_helper(model_t model, int prefix_len, double * min_obj, unsigned short * opt_ids,
+                       int * opt_predictions, int * opt_default_prediction, int * opt_nrules, int v) {
     for(int rule_id = 1; rule_id < model.ntotal_rules; rule_id++) {
         int found = 0;
 
@@ -90,18 +92,26 @@ void _obj_brute_helper(model_t model, int prefix_len, double * min_obj, int v) {
 
             double obj = evaluate(model, v ? 1 : 0);
 
-            if(obj == -1.0)
+            if(obj == -1.0) {
+                if(v > 0)
+                    printf("[obj_brute_helper] Error evaluating a rule list!\n");
                 return;
+            }
 
             if(obj < *min_obj) {
                 if(v > 2)
                     printf("[obj_brute_helper] min obj:  %f -> %f\n", *min_obj, obj);
 
+                memcpy(opt_ids, model.ids, sizeof(unsigned short) * model.nrules);
+                memcpy(opt_predictions, model.predictions, sizeof(int) * model.nrules);
+                *opt_default_prediction = model.default_prediction;
+                *opt_nrules = model.nrules;
+
                 *min_obj = obj;
             }
 
             if(prefix_len < model.ntotal_rules-2)
-                _obj_brute_helper(model, prefix_len + 1, min_obj, v);
+                _obj_brute_helper(model, prefix_len + 1, min_obj, opt_ids, opt_predictions, opt_default_prediction, opt_nrules, v);
         }
     }
 }
