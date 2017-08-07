@@ -1,3 +1,7 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
 #include "queue.hh"
 #include "evaluate.hh"
 
@@ -25,44 +29,109 @@ int output_error(model_t model, tracking_vector<unsigned short, DataStruct::Tree
     printf("\n\nOptimal rule list determined by CORELS:\n");
     print_final_rulelist(corels_opt_list, corels_opt_preds, NULL, model.rules, model.labels, NULL);
 
-    printf("\nOptimal rule list determined by brute force:\n");
-    print_final_rulelist(brute_opt_list, brute_opt_preds, NULL, model.rules, model.labels, NULL);
+    if(brute_opt_preds.size()) {
+        printf("\nOptimal rule list determined by brute force:\n");
+        print_final_rulelist(brute_opt_list, brute_opt_preds, NULL, model.rules, model.labels, NULL);
 
-    printf("\nOptimal objective determined by CORELS: %f\n" \
-            "Objective of optimal rule list determined by CORELS: %f\n" \
-            "Optimal objective determined by brute-force: %f\n\n",
-            corels_obj, eval_check_obj, brute_obj);
+        printf("\nOptimal objective determined by CORELS: %f\n" \
+               "Objective of optimal rule list determined by CORELS: %f\n" \
+               "Optimal objective determined by brute-force: %f\n\n",
+               corels_obj, eval_check_obj, brute_obj);
+    }
+    else {
+        printf("\nOptimal objective determined by CORELS: %f\n" \
+               "Objective of optimal rule list determined by CORELS: %f\n\n",
+               corels_obj, eval_check_obj);
+    }
 
     return 0;
 }
 
 int main(int argc, char ** argv)
 {
-    const char * model_file = NULL; //"../logs/for-evaluate.out-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=100000-c=0.0150000-v=0-f=1000-opt.txt";
-    const char * out_file = "../data/evaluate-data/evaluate.out";
-    const char * label_file = "../data/evaluate-data/evaluate.label";
-    const char * minor_file = NULL; //"../data/evaluate-data/evaluate.minor";
-    double c = 0.015;
+    model_t model;
+
+    /** TWEAKING PARAMETERS **/
+
+    model.ntotal_rules = 200;
+    model.nlabels = 2;
+    model.nsamples = 1000;
+    model.c = 0.015;
+
     double v = 5;
 
+    int b_max_list_len = 2;
+
+    // CORELS stuff
     int ablation = 2;
     std::function<bool(Node*, Node*)> q_cmp = lb_cmp;
     bool useCapturedPMap = false;
 
     size_t max_num_nodes = 1000000;
+
+    // General stuff
     size_t num_iters = 1000000;
+
+    double epsilon = 0.000000001;
+
+    unsigned long seed = time(NULL);
+
+    /************************/
+
+    model.nrules = 0;
+    model.default_prediction = 0;
+    model.ids = NULL;
+    model.predictions = NULL;
+    model.minority = NULL;
+    model.nminority = 0;
+    model.rules = (rule_t*)malloc(sizeof(rule_t) * model.ntotal_rules);
+    model.labels = (rule_t*)malloc(sizeof(rule_t) * model.nlabels);
+
+    for(int i = 1; i < model.ntotal_rules; i++) {
+        rule_vinit(model.nsamples, &model.rules[i].truthtable);
+        model.rules[i].support = 0;
+        model.rules[i].cardinality = 1;
+
+        char number[64];
+        sprintf(number, "%d", i);
+
+        int numlen = strlen(number);
+        model.rules[i].features = (char*)malloc(sizeof(char) * (numlen + 7));
+
+        strcpy(model.rules[i].features, "{rule");
+        strcat(model.rules[i].features, number);
+        strcat(model.rules[i].features, "}");
+    }
+
+    // Default rule
+    rule_vinit(model.nsamples, &model.rules[0].truthtable);
+    make_default(&model.rules[0].truthtable, model.nsamples);
+
+    model.rules[0].support = model.nsamples;
+    model.rules[0].cardinality = 1;
+
+    model.rules[0].features = (char*)malloc(sizeof(char) * 8);
+    strcpy(model.rules[0].features, "default");
+
+
+    for(int i = 0; i < model.nlabels; i++) {
+        rule_vinit(model.nsamples, &model.labels[i].truthtable);
+        model.labels[i].support = 0;
+        model.labels[i].cardinality = 1;
+
+        char number[64];
+        sprintf(number, "%d", i);
+
+        int numlen = strlen(number);
+        model.labels[i].features = (char*)malloc(sizeof(char) * (numlen + 9));
+
+        strcpy(model.labels[i].features, "{label=");
+        strcat(model.labels[i].features, number);
+        strcat(model.labels[i].features, "}");
+    }
 
     int returnCode = 0;
     logger = new NullLogger();
-
-
-    model_t model;
-    if(model_init(&model, model_file, out_file, label_file, minor_file, c, v) != 0) {
-        delete logger;
-        return 1;
-    }
-
-    unsigned long seed = time(NULL);
 
 #ifdef GMP
     gmp_randstate_t rand_state;
@@ -131,12 +200,15 @@ int main(int argc, char ** argv)
 
         double e_obj = evaluate(model, v);
 
-        // Run brute force
-        double b_obj = obj_brute(&model, v);
+
+        tracking_vector<unsigned short, DataStruct::Tree> b_opt_list;
+        tracking_vector<bool, DataStruct::Tree> b_opt_preds;
+
+        double b_obj = obj_brute(&model, b_max_list_len, v);
 
         // Get optimal rule list info generated by brute force
-        tracking_vector<unsigned short, DataStruct::Tree> b_opt_list(model.ids, model.ids + model.nrules);
-        tracking_vector<bool, DataStruct::Tree> b_opt_preds(model.predictions, model.predictions + model.nrules);
+        b_opt_list.assign(model.ids, model.ids + model.nrules);
+        b_opt_preds.assign(model.predictions, model.predictions + model.nrules);
         b_opt_preds.push_back(model.default_prediction);
 
         if(e_obj == -1.0) {
@@ -146,6 +218,7 @@ int main(int argc, char ** argv)
             returnCode = 2;
             exit = true;
         }
+
 
         if(b_obj == -1.0) {
             if(v > 0)
@@ -157,9 +230,9 @@ int main(int argc, char ** argv)
 
         double d = c_obj - e_obj;
         double d1 = c_obj - b_obj;
-        double e = 0.0000001;
+        double e = epsilon;
 
-        if(d1 > e || d1 < -e || d > e || d < -e) {
+        if(d1 > e || d > e || d < -e) {
             if(v > 1) {
                 printf("[main] Mismatch detected, logging and exiting\n");
             }
@@ -175,7 +248,7 @@ int main(int argc, char ** argv)
 
         if(c_obj == 0.0)
             tree->insert_root();
-            
+
         delete tree;
         delete q;
     }

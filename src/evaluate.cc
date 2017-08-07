@@ -25,7 +25,7 @@ void randomize_rule(rule_t * rule, int nsamples)
 
 #endif
 
-double obj_brute(model_t * model, int v)
+double obj_brute(model_t * model, int max_list_len, int v)
 {
     double min_obj = 1.0;
 
@@ -38,6 +38,8 @@ double obj_brute(model_t * model, int v)
     int * opt_predictions = (int*)malloc(sizeof(int) * (model->ntotal_rules - 1));
     int opt_default_prediction = 0;
     int opt_nrules = 0;
+
+    max_list_len = max_list_len > model->ntotal_rules-1 ? model->ntotal_rules-1 : max_list_len;
 
     for(int i = 0; i < model->nlabels; i++) {
         model->default_prediction = i;
@@ -57,7 +59,8 @@ double obj_brute(model_t * model, int v)
             min_obj = obj;
         }
 
-        _obj_brute_helper(*model, 0, &min_obj, opt_ids, opt_predictions, &opt_default_prediction, &opt_nrules, v);
+        if(max_list_len)
+            _obj_brute_helper(*model, 0, &min_obj, opt_ids, opt_predictions, &opt_default_prediction, &opt_nrules, max_list_len, v);
     }
 
     if(v > 1) {
@@ -76,7 +79,7 @@ double obj_brute(model_t * model, int v)
 }
 
 void _obj_brute_helper(model_t model, int prefix_len, double * min_obj, unsigned short * opt_ids,
-                       int * opt_predictions, int * opt_default_prediction, int * opt_nrules, int v) {
+                       int * opt_predictions, int * opt_default_prediction, int * opt_nrules, int max_list_len, int v) {
     for(int rule_id = 1; rule_id < model.ntotal_rules; rule_id++) {
         int found = 0;
 
@@ -115,8 +118,8 @@ void _obj_brute_helper(model_t model, int prefix_len, double * min_obj, unsigned
                 *min_obj = obj;
             }
 
-            if(prefix_len < model.ntotal_rules-2)
-                _obj_brute_helper(model, prefix_len + 1, min_obj, opt_ids, opt_predictions, opt_default_prediction, opt_nrules, v);
+            if(prefix_len < max_list_len-1)
+                _obj_brute_helper(model, prefix_len + 1, min_obj, opt_ids, opt_predictions, opt_default_prediction, opt_nrules, max_list_len, v);
         }
     }
 }

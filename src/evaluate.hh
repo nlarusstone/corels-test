@@ -120,6 +120,7 @@ void model_free(model_t model);
 
     Parameters:
         model - contains info about the rule data and is where the optimal rule list is stored
+        max_list_len - Max length of rule lists checked
         v - verbosity
 
     Returns:
@@ -130,7 +131,7 @@ void model_free(model_t model);
             -1.0
 **/
 double
-obj_brute(model_t * model, int v);
+obj_brute(model_t * model, int max_list_len, int v);
 
 
 
@@ -139,7 +140,7 @@ obj_brute(model_t * model, int v);
 **/
 void
 _obj_brute_helper(model_t model, int prefix_len, double * min_obj, unsigned short * opt_ids,
-                  int * opt_predictions, int * opt_default_prediction, int * opt_nrules, int v);
+                  int * opt_predictions, int * opt_default_prediction, int * opt_nrules, int max_list_len, int v);
 
 
 
