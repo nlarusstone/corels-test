@@ -9,7 +9,8 @@ int output_error(model_t model, tracking_vector<unsigned short, DataStruct::Tree
                   tracking_vector<bool, DataStruct::Tree> brute_opt_preds, double corels_obj,
                   double eval_check_obj, double brute_obj, int v)
 {
-    printf("\n\n\n\nErrors were detected in the following set of data:\n\n");
+    printf("\n\n\n\n/***************************************************************/\n\n");
+    printf("Errors were detected in the following set of data:\n\n");
 
     printf("Dumping rule data:\n");
     for(int i = 0; i < model.ntotal_rules; i++) {
@@ -24,10 +25,10 @@ int output_error(model_t model, tracking_vector<unsigned short, DataStruct::Tree
     printf("\n\nOptimal rule list determined by CORELS:\n");
     print_final_rulelist(corels_opt_list, corels_opt_preds, NULL, model.rules, model.labels, NULL);
 
-    printf("Optimal rule list determined by brute force:\n");
+    printf("\nOptimal rule list determined by brute force:\n");
     print_final_rulelist(brute_opt_list, brute_opt_preds, NULL, model.rules, model.labels, NULL);
 
-    printf("Optimal objective determined by CORELS: %f\n" \
+    printf("\nOptimal objective determined by CORELS: %f\n" \
             "Objective of optimal rule list determined by CORELS: %f\n" \
             "Optimal objective determined by brute-force: %f\n\n",
             corels_obj, eval_check_obj, brute_obj);
@@ -49,7 +50,7 @@ int main(int argc, char ** argv)
     bool useCapturedPMap = false;
 
     size_t max_num_nodes = 1000000;
-    size_t num_iters = 100;
+    size_t num_iters = 1000000;
 
     int returnCode = 0;
     logger = new NullLogger();
@@ -92,6 +93,17 @@ int main(int argc, char ** argv)
 
         int temp = 0;
         rule_not(model.labels[1].truthtable, model.labels[0].truthtable, model.nsamples, &temp);
+
+#ifdef GMP
+        VECTOR tmp;
+        rule_vinit(model.nsamples, &tmp);
+        mpz_ui_pow_ui(tmp, 2, model.nsamples);
+        mpz_sub_ui(tmp, tmp, 1);
+
+        rule_vand(model.labels[1].truthtable, model.labels[1].truthtable, tmp, model.nsamples, &temp);
+
+        rule_vfree(&tmp);
+#endif
 
         PermutationMap * p;
         if(useCapturedPMap)
@@ -152,13 +164,18 @@ int main(int argc, char ** argv)
                 printf("[main] Mismatch detected, logging and exiting\n");
             }
 
+            output_error(model, opt_list, opt_preds, b_opt_list, b_opt_preds, c_obj, e_obj, b_obj, v);
+
             returnCode = 1;
             exit = true;
         }
 
-        output_error(model, opt_list, opt_preds, b_opt_list, b_opt_preds, c_obj, e_obj, b_obj, v);
 
         delete p;
+
+        if(c_obj == 0.0)
+            tree->insert_root();
+            
         delete tree;
         delete q;
     }
