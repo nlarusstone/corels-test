@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 
+#include <gmp.h>
+
 #include "rule.h"
 
 
@@ -45,8 +47,20 @@ typedef struct model {
 
 **/
 
+// These functions randomize the truthtable of a rule, and for the non-GMP function to work correctly the number of rules
+// must be a multiple of BITS_PER_ENTRY
 
+#ifdef GMP
 
+void
+randomize_rule(rule_t * rule, int nsamples, gmp_randstate_t state);
+
+#else
+
+void
+randomize_rule(rule_t * rule, int nsamples);
+
+#endif
 
 /**
     Loads the data from a model, out, label, and minor file into a model struct

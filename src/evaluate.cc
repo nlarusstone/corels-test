@@ -1,5 +1,24 @@
 #include "evaluate.hh"
 
+#ifdef GMP
+
+void randomize_rule(rule_t * rule, int nsamples, gmp_randstate_t state)
+{
+    mpz_rrandomb(rule->truthtable, state, nsamples);
+}
+
+#else
+
+void randomize_rule(rule_t * rule, int nsamples)
+{
+    int nentries = (len + BITS_PER_ENTRY - 1)/BITS_PER_ENTRY;
+
+    for(int i = 0; i < nentries; i++) {
+        rule->truthtable[i] = (double)(~(v_entry)0) * (double)rand() / (double)RAND_MAX;
+    }
+}
+
+#endif
 
 double obj_brute(const char * out_file, const char * label_file, double c, int v) {
     model_t model;
@@ -17,12 +36,26 @@ double obj_brute(model_t model, int v)
 {
     double min_obj = 1.0;
 
-    model.ids = (unsigned short*)malloc(sizeof(unsigned short) * model.ntotal_rules);
-    model.predictions = (int*)malloc(sizeof(int) * model.ntotal_rules);
+    model.ids = (unsigned short*)malloc(sizeof(unsigned short) * (model.ntotal_rules - 1));
+    model.predictions = (int*)malloc(sizeof(int) * (model.ntotal_rules - 1));
     model.nrules = 0;
 
     for(int i = 0; i < model.nlabels; i++) {
         model.default_prediction = i;
+
+        model.nrules = 0;
+        double obj = evaluate(model, v ? 1 : 0);
+
+        if(obj == -1.0)
+            continue;
+
+        if(obj < min_obj) {
+            if(v > 2)
+                printf("[obj_brute] min obj:  %f -> %f\n", min_obj, obj);
+
+            min_obj = obj;
+        }
+
         _obj_brute_helper(model, 0, &min_obj, v);
     }
 
