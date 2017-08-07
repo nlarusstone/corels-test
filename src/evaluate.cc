@@ -5,6 +5,7 @@
 void randomize_rule(rule_t * rule, int nsamples, gmp_randstate_t state)
 {
     mpz_rrandomb(rule->truthtable, state, nsamples);
+    rule->support = mpz_popcount(rule->truthtable);
 }
 
 #else
@@ -13,9 +14,13 @@ void randomize_rule(rule_t * rule, int nsamples)
 {
     int nentries = (nsamples + BITS_PER_ENTRY - 1)/BITS_PER_ENTRY;
 
+    int count = 0;
     for(int i = 0; i < nentries; i++) {
         rule->truthtable[i] = (double)(~(v_entry)0) * (double)rand() / (double)RAND_MAX;
+        count += count_ones(rule->truthtable[i]);
     }
+
+    rule->support = count;
 }
 
 #endif

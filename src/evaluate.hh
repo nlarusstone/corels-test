@@ -48,7 +48,7 @@ typedef struct model {
 **/
 
 // These functions randomize the truthtable of a rule, and for the non-GMP function to work correctly the number of rules
-// must be a multiple of BITS_PER_ENTRY
+// must be a multiple of BITS_PER_ENTRY (currently, it actually doesn't work, so only use GMP for now)
 
 #ifdef GMP
 

@@ -84,14 +84,14 @@ int main(int argc, char ** argv)
 #endif
         }
 
-/*#ifdef GMP
+#ifdef GMP
         randomize_rule(&model.labels[0], model.nsamples, rand_state);
 #else
         randomize_rule(&model.labels[0], model.nsamples);
-#endif*/
+#endif
 
-        //int temp = 0;
-        //rule_not(model.labels[1].truthtable, model.labels[0].truthtable, model.nsamples, &temp);
+        int temp = 0;
+        rule_not(model.labels[1].truthtable, model.labels[0].truthtable, model.nsamples, &temp);
 
         PermutationMap * p;
         if(useCapturedPMap)
