@@ -12,18 +12,9 @@
 
 
 /**
-    A model is simply a struct to store the roptimal ule list that is outputted by CORELS so it can be tested
+    Stores an optimal rule list, need to be paired with a data_t that contains all the rule data
 **/
-typedef struct model {
-    rule_t * rules; // All rules
-    rule_t * labels; // All labels
-    rule_t * minority; // All minority data (mostly redundant)
-
-    int ntotal_rules;
-    int nlabels;
-    int nsamples;
-    int nrules; // Number of rules in the optimal list
-    int nminority;
+typedef struct rulelist {
 
     unsigned short * ids; // ids of the optimal rule list
     int * predictions; // predictions of the optimal rule list
@@ -31,7 +22,7 @@ typedef struct model {
     int default_prediction;
 
     double c;
-} model_t;
+} rulelist_t;
 
 int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c, int b_max_list_len,
                      int ablation, std::function<bool(Node*, Node*)> q_cmp, bool useCapturedPMap,

@@ -2,6 +2,17 @@
 
 #ifdef GMP
 
+void randomize_data(data_t data, gmp_randstate_t state)
+{
+    for(int i = 1; i < data.nrules; i++) {
+        randomize_rule(data.rules + i, data.nsamples, state);
+    }
+
+    for(int i = 0; i < 2; i++) {
+        randomize_rule(data.labels + i, data.nsamples, state);
+    }
+}
+
 void randomize_rule(rule_t * rule, int nsamples, gmp_randstate_t state)
 {
     mpz_rrandomb(rule->truthtable, state, nsamples);
@@ -9,6 +20,17 @@ void randomize_rule(rule_t * rule, int nsamples, gmp_randstate_t state)
 }
 
 #else
+
+void randomize_data(data_t data)
+{
+    for(int i = 1; i < data.nrules; i++) {
+        randomize_rule(data.rules + i, data.nsamples);
+    }
+
+    for(int i = 0; i < 2; i++) {
+        randomize_rule(data.labels + i, data.nsamples);
+    }
+}
 
 void randomize_rule(rule_t * rule, int nsamples)
 {

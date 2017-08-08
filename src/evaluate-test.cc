@@ -6,8 +6,8 @@ int main(int argc, char ** argv)
 {
     logger = new NullLogger();
 
-    int r = run_random_tests(10, 20, 100, 0.15, 4, 2, lb_cmp, true,
-                             100000, 0.0000001, time(NULL), 5);
+    int r = run_random_tests(1000, 30, 701, 0.15, 3, 2, lb_cmp, false,
+                             100000, 0.0000001, time(NULL), 3);
 
     delete logger;
 
