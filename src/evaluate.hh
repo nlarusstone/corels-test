@@ -27,7 +27,7 @@ typedef struct rulelist {
 } rulelist_t;
 
 int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c, int b_max_list_len,
-                     int ablation, std::function<bool(Node*, Node*)> q_cmp, bool useCapturedPMap,
+                     int ablation, std::function<bool(Node*, Node*)> q_cmp, const char* node_type, bool useCapturedPMap,
                      size_t max_num_nodes, double epsilon, unsigned long seed, int v);
 
 int output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> corels_opt_list,

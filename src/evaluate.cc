@@ -461,7 +461,7 @@ int output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> 
 }
 
 int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c, int b_max_list_len,
-                     int ablation, std::function<bool(Node*, Node*)> q_cmp, bool useCapturedPMap,
+                     int ablation, std::function<bool(Node*, Node*)> q_cmp, const char* node_type, bool useCapturedPMap,
                      size_t max_num_nodes, double epsilon, unsigned long seed, int v)
 {
     data_t data;
@@ -542,7 +542,7 @@ int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c,
         else
             p = new PrefixPermutationMap();
 
-        CacheTree* tree = new CacheTree(data.nsamples, data.nrules, c, data.rules, data.labels, NULL, ablation, false, "node");
+        CacheTree* tree = new CacheTree(data.nsamples, data.nrules, c, data.rules, data.labels, NULL, ablation, false, node_type);
         Queue* q = new Queue(q_cmp, "run type");
 
         // Run CORELS
