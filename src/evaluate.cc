@@ -304,67 +304,69 @@ void rulelist_free(rulelist_t rulelist)
 
 double evaluate(const char * model_file, const char * out_file, const char * label_file, double c, int v)
 {
-    model_t model;
+    data_t data;
+    rulelist_t opt_list;
 
-    if(model_init(&model, model_file, out_file, label_file, NULL, c, v) != 0) {
+    if(data_init(&data, &opt_list, model_file, out_file, label_file, v) != 0) {
         printf("[evaluate] Error loading model, exiting\n");
         return -1.0;
     }
 
-    double r = evaluate(model, v);
+    double r = evaluate_data(data, opt_list, c, v);
 
-    model_free(model);
+    model_free(data);
+    rulelist_free(opt_list);
 
     return r;
 }
 
-double evaluate_data(model_t model, int v)
+double evaluate_data(data_t data, rulelist_t list, double c, int v)
 {
     //printf("%d\n", model.nrules);
 
     VECTOR total_captured;
-    rule_vinit(model.nsamples, &total_captured);
+    rule_vinit(data.nsamples, &total_captured);
 
     int total_ncaptured = 0;
     int total_nincorrect = 0;
 
     // model.nrules doesn't include the default rule
-    for(int i = 0; i < model.nrules; i++) {
-        rule_t rule = model.rules[model.ids[i]];
-        int pred = model.predictions[i];
+    for(int i = 0; i < list.nrules; i++) {
+        rule_t rule = data.rules[list.ids[i]];
+        int pred = list.predictions[i];
 
         int len = i + 1;
 
         VECTOR captured, captured_correct;
-        rule_vinit(model.nsamples, &captured);
-        rule_vinit(model.nsamples, &captured_correct);
+        rule_vinit(data.nsamples, &captured);
+        rule_vinit(data.nsamples, &captured_correct);
 
         int ncaptured, ncorrect, temp;
 
         // Get which ones are captured by the current rule
-        rule_vandnot(captured, rule.truthtable, total_captured, model.nsamples, &ncaptured);
-        rule_vor(total_captured, total_captured, captured, model.nsamples, &temp);
+        rule_vandnot(captured, rule.truthtable, total_captured, data.nsamples, &ncaptured);
+        rule_vor(total_captured, total_captured, captured, data.nsamples, &temp);
 
         total_ncaptured += ncaptured;
 
-        rule_vand(captured_correct, captured, model.labels[pred].truthtable, model.nsamples, &ncorrect);
+        rule_vand(captured_correct, captured, data.labels[pred].truthtable, data.nsamples, &ncorrect);
 
         total_nincorrect += (ncaptured - ncorrect);
 
         if(v > 2) {
             VECTOR default_correct;
             int ndefault_correct;
-            rule_vinit(model.nsamples, &default_correct);
+            rule_vinit(data.nsamples, &default_correct);
 
-            double lower_bound = (double)total_nincorrect / (double)model.nsamples + (double)len * model.c;
+            double lower_bound = (double)total_nincorrect / (double)data.nsamples + (double)len * c;
 
-            rule_vandnot(default_correct, model.labels[model.default_prediction].truthtable, total_captured, model.nsamples, &ndefault_correct);
+            rule_vandnot(default_correct, data.labels[list.default_prediction].truthtable, total_captured, data.nsamples, &ndefault_correct);
 
-            double objective = lower_bound + (double)(model.nsamples - total_ncaptured - ndefault_correct) / (double)model.nsamples;
+            double objective = lower_bound + (double)(data.nsamples - total_ncaptured - ndefault_correct) / (double)data.nsamples;
 
             printf("[evaluate] Rule #%d (id: %d, prediction: %s) processed:\n" \
                    "[evaluate]     ncaptured: %d    ncaptured correctly: %d (%.1f%%)    lower bound: %.6f    objective: %.6f\n\n",
-                   i+1, model.ids[i], pred ? "true" : "false",
+                   i+1, list.ids[i], pred ? "true" : "false",
                    ncaptured, ncorrect, 100.0 * (double)ncorrect / (double)ncaptured, lower_bound, objective);
 
             rule_vfree(&default_correct);
@@ -377,32 +379,32 @@ double evaluate_data(model_t model, int v)
     VECTOR default_correct;
     int ndefault_correct;
 
-    rule_vinit(model.nsamples, &default_correct);
-    rule_vandnot(default_correct, model.labels[model.default_prediction].truthtable, total_captured, model.nsamples, &ndefault_correct);
+    rule_vinit(data.nsamples, &default_correct);
+    rule_vandnot(default_correct, data.labels[list.default_prediction].truthtable, total_captured, data.nsamples, &ndefault_correct);
     rule_vfree(&default_correct);
 
-    total_nincorrect += (model.nsamples - total_ncaptured - ndefault_correct);
+    total_nincorrect += (data.nsamples - total_ncaptured - ndefault_correct);
 
-    double incorrect_frac = (double)total_nincorrect / (double)model.nsamples;
+    double incorrect_frac = (double)total_nincorrect / (double)data.nsamples;
 
-    double objective = incorrect_frac + (double)model.nrules * model.c;
+    double objective = incorrect_frac + (double)list.nrules * c;
 
     if(v > 1) {
-        int ndefault_captured = model.nsamples - total_ncaptured;
+        int ndefault_captured = data.nsamples - total_ncaptured;
         printf("[evaluate] Default rule (prediction: %s) processed:\n" \
                "[evaluate]     ncaptured: %d    ncaptured correctly: %d (%.1f%%)\n\n",
-               model.default_prediction ? "true" : "false",
+               list.default_prediction ? "true" : "false",
                ndefault_captured, ndefault_correct, 100.0 * (double)ndefault_correct / (double)ndefault_captured);
 
         printf("\n[evaluate] Final results:\n" \
                "[evaluate]     objective: %.10f    nsamples: %d    total captured (excluding default): %d    total incorrect: %d (%.3f%%)    accuracy: %.3f%%\n",
-               objective, model.nsamples, total_ncaptured, total_nincorrect, 100.0 * incorrect_frac, 100.0 - 100.0 * incorrect_frac);
+               objective, data.nsamples, total_ncaptured, total_nincorrect, 100.0 * incorrect_frac, 100.0 - 100.0 * incorrect_frac);
     }
 
     return objective;
 }
 
-int output_error(model_t model, tracking_vector<unsigned short, DataStruct::Tree> corels_opt_list,
+int output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> corels_opt_list,
                   tracking_vector<bool, DataStruct::Tree> corels_opt_preds,
                   tracking_vector<unsigned short, DataStruct::Tree> brute_opt_list,
                   tracking_vector<bool, DataStruct::Tree> brute_opt_preds, double corels_obj,
