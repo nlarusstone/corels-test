@@ -76,10 +76,13 @@ randomize_data(data_t * data);
        has the objective that is also outputted by CORELS as the optimal objective. This is done
        with the evaluate_data function.
     4) The optimal rule list is determined by the below brute force algorithm, that checks all
-       possible rule lists and predictions.
+       possible rule lists and predictions (up to a certain rulelist length).
     5) The objective determined by brute force is checked to see if it is greater than or equal to that
        determined by CORELS (it could be greater than CORELS because you can set the the brute force algorithm
-       to only check rule lists up to a certain length [otherwise the time needed gets ridiculous]).
+       to only check rule lists up to a certain length [otherwise the time needed gets ridiculous]). If
+       max_num_nodes is set to a small value, CORELS could get a higher objective than brute force even if
+       brute force checked only small length rulelists, and this would trigger an error and exit the loop
+       (possibly needs improvement here).
 
     Parameters:
         num_iters - number of tests
