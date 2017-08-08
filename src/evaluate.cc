@@ -19,7 +19,7 @@ void randomize_data(data_t * data, gmp_randstate_t state)
 
     mpz_and(data->labels[1].truthtable, data->labels[1].truthtable, tmp);
 
-    mpz_free(tmp);
+    mpz_clear(tmp);
 }
 
 void randomize_rule(rule_t * rule, int nsamples, gmp_randstate_t state)
@@ -82,7 +82,7 @@ double obj_brute(data_t data, rulelist_t * opt_list, int max_list_len, double c,
         temp_list.default_prediction = i;
 
         temp_list.nrules = 0;
-        double obj = evaluate(data, temp_list, c, v ? 1 : 0);
+        double obj = evaluate_data(data, temp_list, c, v ? 1 : 0);
 
         if(obj == -1.0)
             continue;
@@ -130,7 +130,7 @@ void _obj_brute_helper(data_t data, double * min_obj, rulelist_t * opt_list, rul
             prefix.predictions[prefix.nrules] = label;
             prefix.nrules = prefix.nrules + 1;
 
-            double obj = evaluate(data, prefix, c, v ? 1 : 0);
+            double obj = evaluate_data(data, prefix, c, v ? 1 : 0);
 
             if(obj == -1.0) {
                 if(v > 0)
@@ -145,13 +145,13 @@ void _obj_brute_helper(data_t data, double * min_obj, rulelist_t * opt_list, rul
                 if(opt_list) {
                     memcpy(opt_list->ids, prefix.ids, sizeof(unsigned short) * prefix.nrules);
                     memcpy(opt_list->predictions, prefix.predictions, sizeof(int) * prefix.nrules);
-                    *opt_list->default_prediction = prefix.default_prediction;
-                    *opt_list->nrules = prefix.nrules;
+                    opt_list->default_prediction = prefix.default_prediction;
+                    opt_list->nrules = prefix.nrules;
                 }
                 *min_obj = obj;
             }
 
-            if(prefix_len < max_list_len-1)
+            if(prefix.nrules < max_list_len)
                 _obj_brute_helper(data, min_obj, opt_list, prefix, max_list_len, c, v);
         }
     }
@@ -162,7 +162,7 @@ int data_init_model(rulelist_t * out, data_t data, const char * model_file, int 
     FILE * model_p = NULL;
     if((model_p = fopen(model_file, "r")) == NULL) {
         if(v > 0)
-            printf("[model_init_model] Error opening model file at path '%s'\n", model_file);
+            printf("[data_init_model] Error opening model file at path '%s'\n", model_file);
         return 1;
     }
 
@@ -175,7 +175,7 @@ int data_init_model(rulelist_t * out, data_t data, const char * model_file, int 
     long r = fread(buffer, sizeof(char), size, model_p);
     if(r != size) {
         if(v > 0)
-            printf("[model_init_model] Error reading model file at path '%s'\n", model_file);
+            printf("[data_init_model] Error reading model file at path '%s'\n", model_file);
         free(buffer);
         fclose(model_p);
         return 1;
@@ -211,7 +211,7 @@ int data_init_model(rulelist_t * out, data_t data, const char * model_file, int 
                 if(strncmp(data.rules[i].features, feature_start, feature_len) == 0) {
                     if(++nrules >= data.nrules) {
                         if(v > 0)
-                            printf("[model_init_model] Error: rule number overflow\n");
+                            printf("[data_init_model] Error: rule number overflow\n");
                         free(out->ids);
                         out->ids = NULL;
                         free(out->predictions);
@@ -234,7 +234,7 @@ int data_init_model(rulelist_t * out, data_t data, const char * model_file, int 
 
             if(!found) {
                 if(v > 0)
-                    printf("[model_init_model] Error: could not find rule with features '%.*s'\n", feature_len, feature_start);
+                    printf("[data_init_model] Error: could not find rule with features '%.*s'\n", feature_len, feature_start);
                 free(out->ids);
                 out->ids = NULL;
                 free(out->predictions);
@@ -255,7 +255,7 @@ int data_init_model(rulelist_t * out, data_t data, const char * model_file, int 
     return 0;
 }
 
-int data_init(data_t * out, rulelist_t * opt_out, const char * model_file, const char * out_file, const char * label_file, double c, int v)
+int data_init(data_t * out, rulelist_t * opt_out, const char * model_file, const char * out_file, const char * label_file, int v)
 {
     if(rules_init(out_file, &out->nrules, &out->nsamples, &out->rules, 1) != 0) {
         if(v > 0)
@@ -289,7 +289,7 @@ int data_init(data_t * out, rulelist_t * opt_out, const char * model_file, const
     }
 
     if(model_file != NULL) {
-        return data_init_model(out_opt, *out, model_file, out->nrules, v);
+        return data_init_model(opt_out, *out, model_file, v);
     }
 
     return 0;
@@ -298,7 +298,7 @@ int data_init(data_t * out, rulelist_t * opt_out, const char * model_file, const
 void data_free(data_t data)
 {
     if(data.rules)
-        rules_free(data.rules, data.ntotal_rules, 1);
+        rules_free(data.rules, data.nrules, 1);
 
     if(data.labels)
         rules_free(data.labels, 2, 0);
@@ -326,7 +326,7 @@ double evaluate(const char * model_file, const char * out_file, const char * lab
 
     double r = evaluate_data(data, opt_list, c, v);
 
-    model_free(data);
+    data_free(data);
     rulelist_free(opt_list);
 
     return r;
@@ -376,8 +376,8 @@ double evaluate_data(data_t data, rulelist_t list, double c, int v)
 
             double objective = lower_bound + (double)(data.nsamples - total_ncaptured - ndefault_correct) / (double)data.nsamples;
 
-            printf("[evaluate] Rule #%d (id: %d, prediction: %s) processed:\n" \
-                   "[evaluate]     ncaptured: %d    ncaptured correctly: %d (%.1f%%)    lower bound: %.6f    objective: %.6f\n\n",
+            printf("[evaluate_data] Rule #%d (id: %d, prediction: %s) processed:\n" \
+                   "[evaluate_data]     ncaptured: %d    ncaptured correctly: %d (%.1f%%)    lower bound: %.6f    objective: %.6f\n\n",
                    i+1, list.ids[i], pred ? "true" : "false",
                    ncaptured, ncorrect, 100.0 * (double)ncorrect / (double)ncaptured, lower_bound, objective);
 
@@ -403,13 +403,13 @@ double evaluate_data(data_t data, rulelist_t list, double c, int v)
 
     if(v > 1) {
         int ndefault_captured = data.nsamples - total_ncaptured;
-        printf("[evaluate] Default rule (prediction: %s) processed:\n" \
-               "[evaluate]     ncaptured: %d    ncaptured correctly: %d (%.1f%%)\n\n",
+        printf("[evaluate_data] Default rule (prediction: %s) processed:\n" \
+               "[evaluate_data]     ncaptured: %d    ncaptured correctly: %d (%.1f%%)\n\n",
                list.default_prediction ? "true" : "false",
                ndefault_captured, ndefault_correct, 100.0 * (double)ndefault_correct / (double)ndefault_captured);
 
-        printf("\n[evaluate] Final results:\n" \
-               "[evaluate]     objective: %.10f    nsamples: %d    total captured (excluding default): %d    total incorrect: %d (%.3f%%)    accuracy: %.3f%%\n",
+        printf("\n[evaluate_data] Final results:\n" \
+               "[evaluate_data]     objective: %.10f    nsamples: %d    total captured (excluding default): %d    total incorrect: %d (%.3f%%)    accuracy: %.3f%%\n",
                objective, data.nsamples, total_ncaptured, total_nincorrect, 100.0 * incorrect_frac, 100.0 - 100.0 * incorrect_frac);
     }
 
@@ -460,14 +460,13 @@ int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c,
                      int ablation, std::function<bool(Node*, Node*)> q_cmp, bool useCapturedPMap,
                      size_t max_num_nodes, double epsilon, unsigned long seed, int v)
 {
-    data_t model;
+    data_t data;
 
     data.nrules = num_rules;
-    data.nlabels = 2;
     data.nsamples = num_samples;
 
     data.rules = (rule_t*)malloc(sizeof(rule_t) * data.nrules);
-    data.labels = (rule_t*)malloc(sizeof(rule_t) * data.nlabels);
+    data.labels = (rule_t*)malloc(sizeof(rule_t) * 2);
 
     for(int i = 1; i < data.nrules; i++) {
         rule_vinit(data.nsamples, &data.rules[i].truthtable);
@@ -496,7 +495,7 @@ int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c,
     strcpy(data.rules[0].features, "default");
 
 
-    for(int i = 0; i < data.nlabels; i++) {
+    for(int i = 0; i < 2; i++) {
         rule_vinit(data.nsamples, &data.labels[i].truthtable);
         data.labels[i].support = 0;
         data.labels[i].cardinality = 1;
@@ -528,9 +527,9 @@ int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c,
     for(size_t i = 0; i < num_iters && !exit; i++)
     {
 #ifdef GMP
-        randomize_data(data, rand_state);
+        randomize_data(&data, rand_state);
 #else
-        randomize_data(data);
+        randomize_data(&data);
 #endif
 
         PermutationMap * p;
@@ -557,14 +556,14 @@ int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c,
         rlist.predictions = &opt_preds_int[0];
         rlist.default_prediction = opt_preds_int[rlist.nrules];
 
-        double e_obj = evaluate(data, rlist, c, v);
+        double e_obj = evaluate_data(data, rlist, c, v);
 
         tracking_vector<unsigned short, DataStruct::Tree> b_opt_list;
         tracking_vector<bool, DataStruct::Tree> b_opt_preds;
 
         rulelist_t b_rlist;
 
-        double b_obj = obj_brute(data, &b_rlist, b_max_list_len, v);
+        double b_obj = obj_brute(data, &b_rlist, b_max_list_len, c, v);
 
         // Get optimal rule list info generated by brute force
         b_opt_list.assign(b_rlist.ids, b_rlist.ids + b_rlist.nrules);

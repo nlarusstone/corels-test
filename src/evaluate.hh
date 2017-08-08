@@ -16,6 +16,8 @@
 **/
 typedef struct rulelist {
 
+    int nrules;
+
     unsigned short * ids; // ids of the optimal rule list
     int * predictions; // predictions of the optimal rule list
 
@@ -28,7 +30,7 @@ int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c,
                      int ablation, std::function<bool(Node*, Node*)> q_cmp, bool useCapturedPMap,
                      size_t max_num_nodes, double epsilon, unsigned long seed, int v);
 
-int output_error(model_t model, tracking_vector<unsigned short, DataStruct::Tree> corels_opt_list,
+int output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> corels_opt_list,
                  tracking_vector<bool, DataStruct::Tree> corels_opt_preds,
                  tracking_vector<unsigned short, DataStruct::Tree> brute_opt_list,
                  tracking_vector<bool, DataStruct::Tree> brute_opt_preds, double corels_obj,
@@ -56,10 +58,16 @@ int output_error(model_t model, tracking_vector<unsigned short, DataStruct::Tree
 void
 randomize_rule(rule_t * rule, int nsamples, gmp_randstate_t state);
 
+void
+randomize_data(data_t * data, gmp_randstate_t state);
+
 #else
 
 void
 randomize_rule(rule_t * rule, int nsamples);
+
+void
+randomize_data(data_t * data);
 
 #endif
 
@@ -83,7 +91,7 @@ randomize_rule(rule_t * rule, int nsamples);
             1
 **/
 int
-model_init(model_t * out, const char * model_file, const char * out_file, const char * label_file, const char * minor_file, double c, int v);
+data_init(data_t * out, rulelist_t * opt_out, const char * model_file, const char * out_file, const char * label_file, int v);
 
 
 
@@ -105,12 +113,13 @@ model_init(model_t * out, const char * model_file, const char * out_file, const 
             1
 **/
 int
-model_init_model(model_t * out, const char * model_file, int ntotal_rules, int v);
+data_init_model(rulelist_t * out, data_t data, const char * model_file, int v);
 
 
 
 // Frees allocated memory
-void model_free(model_t model);
+void data_free(data_t model);
+void rulelist_free(rulelist_t rulelist);
 
 
 
@@ -132,7 +141,7 @@ void model_free(model_t model);
             -1.0
 **/
 double
-obj_brute(model_t * model, int max_list_len, int v);
+obj_brute(data_t data, rulelist_t * opt_list, int max_list_len, double c, int v);
 
 
 
@@ -140,8 +149,7 @@ obj_brute(model_t * model, int max_list_len, int v);
     Recursive helper function for finding all the possible rule lists
 **/
 void
-_obj_brute_helper(model_t model, int prefix_len, double * min_obj, unsigned short * opt_ids,
-                  int * opt_predictions, int * opt_default_prediction, int * opt_nrules, int max_list_len, int v);
+_obj_brute_helper(data_t data, double * min_obj, rulelist_t * opt_list, rulelist_t prefix, int max_list_len, double c, int v);
 
 
 
@@ -172,4 +180,4 @@ evaluate(const char * model_file, const char * out_file, const char * label_file
         Same as before, except it takes a model_t object preloaded
 **/
 double
-evaluate(model_t model, int v);
+evaluate_data(data_t data, rulelist_t list, double c, int v);
