@@ -2,15 +2,24 @@
 
 #ifdef GMP
 
-void randomize_data(data_t data, gmp_randstate_t state)
+void randomize_data(data_t * data, gmp_randstate_t state)
 {
-    for(int i = 1; i < data.nrules; i++) {
-        randomize_rule(data.rules + i, data.nsamples, state);
+    for(int i = 1; i < data->nrules; i++) {
+        randomize_rule(&data->rules[i], data->nsamples, state);
     }
 
-    for(int i = 0; i < 2; i++) {
-        randomize_rule(data.labels + i, data.nsamples, state);
-    }
+    randomize_rule(&data->labels[0], data->nsamples, state);
+
+    mpz_com(data->labels[1].truthtable, data->labels[0].truthtable);
+
+    mpz_t tmp;
+    mpz_init2(tmp, data->nsamples);
+    mpz_ui_pow_ui(tmp, 2, data->nsamples);
+    mpz_sub_ui(tmp, tmp, 1);
+
+    mpz_and(data->labels[1].truthtable, data->labels[1].truthtable, tmp);
+
+    mpz_free(tmp);
 }
 
 void randomize_rule(rule_t * rule, int nsamples, gmp_randstate_t state)
@@ -21,21 +30,24 @@ void randomize_rule(rule_t * rule, int nsamples, gmp_randstate_t state)
 
 #else
 
-void randomize_data(data_t data)
+void randomize_data(data_t * data)
 {
-    for(int i = 1; i < data.nrules; i++) {
-        randomize_rule(data.rules + i, data.nsamples);
+    for(int i = 1; i < data->nrules; i++) {
+        randomize_rule(&data->rules[i], data->nsamples);
     }
 
-    for(int i = 0; i < 2; i++) {
-        randomize_rule(data.labels + i, data.nsamples);
-    }
+    randomize_rule(&data->labels[0], data->nsamples, state);
+
+    // TODO: Fix so that extra bits in the last v_entriy don't get set
+    int temp;
+    rule_not(data->labels[1].truthtable, data->labels[0].truthtable, data->nsamples, &temp);
 }
 
 void randomize_rule(rule_t * rule, int nsamples)
 {
     int nentries = (nsamples + BITS_PER_ENTRY - 1)/BITS_PER_ENTRY;
 
+    // TODO: Fix so that extra bits don't get set
     int count = 0;
     for(int i = 0; i < nentries; i++) {
         rule->truthtable[i] = (double)(~(v_entry)0) * (double)rand() / (double)RAND_MAX;
@@ -414,21 +426,21 @@ int output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> 
     printf("Errors were detected in the following set of data:\n\n");
 
     printf("Dumping rule data:\n");
-    for(int i = 0; i < model.ntotal_rules; i++) {
-        rule_print(model.rules, i, model.nsamples, 1);
+    for(int i = 0; i < data.nrules; i++) {
+        rule_print(data.rules, i, data.nsamples, 1);
     }
 
     printf("\nDumping label data:\n");
-    for(int i = 0; i < model.nlabels; i++) {
-        rule_print(model.labels, i, model.nsamples, 1);
+    for(int i = 0; i < 2; i++) {
+        rule_print(data.labels, i, data.nsamples, 1);
     }
 
     printf("\n\nOptimal rule list determined by CORELS:\n");
-    print_final_rulelist(corels_opt_list, corels_opt_preds, NULL, model.rules, model.labels, NULL);
+    print_final_rulelist(corels_opt_list, corels_opt_preds, NULL, data.rules, data.labels, NULL);
 
     if(brute_opt_preds.size()) {
         printf("\nOptimal rule list determined by brute force:\n");
-        print_final_rulelist(brute_opt_list, brute_opt_preds, NULL, model.rules, model.labels, NULL);
+        print_final_rulelist(brute_opt_list, brute_opt_preds, NULL, data.rules, data.labels, NULL);
 
         printf("\nOptimal objective determined by CORELS: %f\n" \
                "Objective of optimal rule list determined by CORELS: %f\n" \
@@ -448,63 +460,56 @@ int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c,
                      int ablation, std::function<bool(Node*, Node*)> q_cmp, bool useCapturedPMap,
                      size_t max_num_nodes, double epsilon, unsigned long seed, int v)
 {
-    model_t model;
+    data_t model;
 
-    model.ntotal_rules = num_rules;
-    model.nlabels = 2;
-    model.nsamples = num_samples;
-    model.c = c;
+    data.nrules = num_rules;
+    data.nlabels = 2;
+    data.nsamples = num_samples;
 
-    model.nrules = 0;
-    model.default_prediction = 0;
-    model.ids = NULL;
-    model.predictions = NULL;
-    model.minority = NULL;
-    model.nminority = 0;
-    model.rules = (rule_t*)malloc(sizeof(rule_t) * model.ntotal_rules);
-    model.labels = (rule_t*)malloc(sizeof(rule_t) * model.nlabels);
+    data.rules = (rule_t*)malloc(sizeof(rule_t) * data.nrules);
+    data.labels = (rule_t*)malloc(sizeof(rule_t) * data.nlabels);
 
-    for(int i = 1; i < model.ntotal_rules; i++) {
-        rule_vinit(model.nsamples, &model.rules[i].truthtable);
-        model.rules[i].support = 0;
-        model.rules[i].cardinality = 1;
+    for(int i = 1; i < data.nrules; i++) {
+        rule_vinit(data.nsamples, &data.rules[i].truthtable);
+        data.rules[i].support = 0;
+        data.rules[i].cardinality = 1;
 
         char number[64];
         sprintf(number, "%d", i);
 
         int numlen = strlen(number);
-        model.rules[i].features = (char*)malloc(sizeof(char) * (numlen + 7));
+        data.rules[i].features = (char*)malloc(sizeof(char) * (numlen + 7));
 
-        strcpy(model.rules[i].features, "{rule");
-        strcat(model.rules[i].features, number);
-        strcat(model.rules[i].features, "}");
+        strcpy(data.rules[i].features, "{rule");
+        strcat(data.rules[i].features, number);
+        strcat(data.rules[i].features, "}");
     }
 
     // Default rule
-    rule_vinit(model.nsamples, &model.rules[0].truthtable);
-    make_default(&model.rules[0].truthtable, model.nsamples);
+    rule_vinit(data.nsamples, &data.rules[0].truthtable);
+    make_default(&data.rules[0].truthtable, data.nsamples);
 
-    model.rules[0].support = model.nsamples;
-    model.rules[0].cardinality = 1;
+    data.rules[0].support = data.nsamples;
+    data.rules[0].cardinality = 1;
 
-    model.rules[0].features = (char*)malloc(sizeof(char) * 8);
-    strcpy(model.rules[0].features, "default");
+    data.rules[0].features = (char*)malloc(sizeof(char) * 8);
+    strcpy(data.rules[0].features, "default");
 
 
-    for(int i = 0; i < model.nlabels; i++) {
-        rule_vinit(model.nsamples, &model.labels[i].truthtable);
-        model.labels[i].support = 0;
-        model.labels[i].cardinality = 1;
+    for(int i = 0; i < data.nlabels; i++) {
+        rule_vinit(data.nsamples, &data.labels[i].truthtable);
+        data.labels[i].support = 0;
+        data.labels[i].cardinality = 1;
 
         char number[64];
         sprintf(number, "%d", i);
 
         int numlen = strlen(number);
-        model.labels[i].features = (char*)malloc(sizeof(char) * (numlen + 9));
+        data.labels[i].features = (char*)malloc(sizeof(char) * (numlen + 9));
 
-        strcpy(model.labels[i].features, "{label=");
-        strcat(model.labels[i].features, number);
-        strcat(model.labels[i].features, "}");
+        strcpy(data.labels[i].features, "{label=");
+        strcat(data.labels[i].features, number);
+        strcat(data.labels[i].features, "}");
     }
 
     int returnCode = 0;
