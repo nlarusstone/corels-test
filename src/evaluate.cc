@@ -2,7 +2,7 @@
 
 #ifdef GMP
 
-void randomize_data(data_t * data, gmp_randstate_t state)
+void randomize_data(data_t* data, gmp_randstate_t state)
 {
     for(int i = 1; i < data->nrules; i++) {
         randomize_rule(&data->rules[i], data->nsamples, state);
@@ -22,7 +22,7 @@ void randomize_data(data_t * data, gmp_randstate_t state)
     mpz_clear(tmp);
 }
 
-void randomize_rule(rule_t * rule, int nsamples, gmp_randstate_t state)
+void randomize_rule(rule_t* rule, int nsamples, gmp_randstate_t state)
 {
     mpz_rrandomb(rule->truthtable, state, nsamples);
     rule->support = mpz_popcount(rule->truthtable);
@@ -30,7 +30,7 @@ void randomize_rule(rule_t * rule, int nsamples, gmp_randstate_t state)
 
 #else
 
-void randomize_data(data_t * data)
+void randomize_data(data_t* data)
 {
     for(int i = 1; i < data->nrules; i++) {
         randomize_rule(&data->rules[i], data->nsamples);
@@ -43,7 +43,7 @@ void randomize_data(data_t * data)
     rule_not(data->labels[1].truthtable, data->labels[0].truthtable, data->nsamples, &temp);
 }
 
-void randomize_rule(rule_t * rule, int nsamples)
+void randomize_rule(rule_t* rule, int nsamples)
 {
     int nentries = (nsamples + BITS_PER_ENTRY - 1)/BITS_PER_ENTRY;
 
@@ -59,7 +59,7 @@ void randomize_rule(rule_t * rule, int nsamples)
 
 #endif
 
-double obj_brute(data_t data, rulelist_t * opt_list, int max_list_len, double c, int v)
+double obj_brute(data_t data, rulelist_t* opt_list, int max_list_len, double c, int v)
 {
     double min_obj = 1.0;
 
@@ -115,7 +115,7 @@ double obj_brute(data_t data, rulelist_t * opt_list, int max_list_len, double c,
     return min_obj;
 }
 
-void _obj_brute_helper(data_t data, double * min_obj, rulelist_t * opt_list, rulelist_t prefix, int max_list_len, double c, int v) {
+void _obj_brute_helper(data_t data, double* min_obj, rulelist_t* opt_list, rulelist_t prefix, int max_list_len, double c, int v) {
     for(int rule_id = 1; rule_id < data.nrules; rule_id++) {
         int found = 0;
 
@@ -161,9 +161,9 @@ void _obj_brute_helper(data_t data, double * min_obj, rulelist_t * opt_list, rul
     }
 }
 
-int data_init_model(rulelist_t * out, data_t data, const char * model_file, int v)
+int data_init_model(rulelist_t* out, data_t data, const char* model_file, int v)
 {
-    FILE * model_p = NULL;
+    FILE* model_p = NULL;
     if((model_p = fopen(model_file, "r")) == NULL) {
         if(v > 0)
             printf("[data_init_model] Error opening model file at path '%s'\n", model_file);
@@ -174,7 +174,7 @@ int data_init_model(rulelist_t * out, data_t data, const char * model_file, int 
     long size = ftell(model_p);
     rewind(model_p);
 
-    char * buffer = (char*)malloc(sizeof(char) * (size + 1));
+    char* buffer = (char*)malloc(sizeof(char) * (size + 1));
 
     long r = fread(buffer, sizeof(char), size, model_p);
     if(r != size) {
@@ -188,8 +188,8 @@ int data_init_model(rulelist_t * out, data_t data, const char * model_file, int 
 
     fclose(model_p);
 
-    char * prev_rule_loc = buffer - 1;
-    char * rule_loc = NULL;
+    char* prev_rule_loc = buffer - 1;
+    char* rule_loc = NULL;
     int nrules = 0;
     int default_pred = 0;
 
@@ -198,7 +198,7 @@ int data_init_model(rulelist_t * out, data_t data, const char * model_file, int 
 
     while((rule_loc = strchr(prev_rule_loc + 1, '~')) != NULL) {
 
-        char * feature_start = prev_rule_loc + 3;
+        char* feature_start = prev_rule_loc + 3;
         if(prev_rule_loc == (buffer - 1))
             feature_start = buffer;
 
@@ -259,7 +259,7 @@ int data_init_model(rulelist_t * out, data_t data, const char * model_file, int 
     return 0;
 }
 
-int data_init(data_t * out, rulelist_t * opt_out, const char * model_file, const char * out_file, const char * label_file, int v)
+int data_init(data_t* out, rulelist_t* opt_out, const char* model_file, const char* out_file, const char* label_file, int v)
 {
     if(rules_init(out_file, &out->nrules, &out->nsamples, &out->rules, 1) != 0) {
         if(v > 0)
@@ -318,7 +318,7 @@ void rulelist_free(rulelist_t rulelist)
 }
 
 
-double evaluate(const char * model_file, const char * out_file, const char * label_file, double c, int v)
+double evaluate(const char * model_file, const char *out_file, const char *label_file, double c, int v)
 {
     data_t data;
     rulelist_t opt_list;
@@ -536,14 +536,14 @@ int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c,
         randomize_data(&data);
 #endif
 
-        PermutationMap * p;
+        PermutationMap* p;
         if(useCapturedPMap)
             p = new CapturedPermutationMap();
         else
             p = new PrefixPermutationMap();
 
-        CacheTree * tree = new CacheTree(data.nsamples, data.nrules, c, data.rules, data.labels, NULL, ablation, false, "node");
-        Queue * q = new Queue(q_cmp, "run type");
+        CacheTree* tree = new CacheTree(data.nsamples, data.nrules, c, data.rules, data.labels, NULL, ablation, false, "node");
+        Queue* q = new Queue(q_cmp, "run type");
 
         // Run CORELS
         bbound(tree, max_num_nodes, q, p);
