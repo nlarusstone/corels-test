@@ -47,7 +47,7 @@ void randomize_rule(rule_t * rule, int nsamples)
 
 #endif
 
-double obj_brute(data_t data, rulelist_t * opt_list, int max_list_len, int v)
+double obj_brute(data_t data, rulelist_t * opt_list, int max_list_len, double c, int v)
 {
     double min_obj = 1.0;
 
@@ -70,7 +70,7 @@ double obj_brute(data_t data, rulelist_t * opt_list, int max_list_len, int v)
         temp_list.default_prediction = i;
 
         temp_list.nrules = 0;
-        double obj = evaluate(data, temp_list, v ? 1 : 0);
+        double obj = evaluate(data, temp_list, c, v ? 1 : 0);
 
         if(obj == -1.0)
             continue;
@@ -87,20 +87,19 @@ double obj_brute(data_t data, rulelist_t * opt_list, int max_list_len, int v)
         }
 
         if(max_list_len)
-            _obj_brute_helper(data, &min_obj, opt_list, temp_list, max_list_len, v);
+            _obj_brute_helper(data, &min_obj, opt_list, temp_list, max_list_len, c, v);
     }
 
     if(v > 1) {
         printf("[obj_brute]: Optimal objective: %f\n", min_obj);
     }
 
-    free(temp_list.ids);
-    free(temp_list.predictions);
+    rulelist_free(temp_list);
 
     return min_obj;
 }
 
-void _obj_brute_helper(data_t data, double * min_obj, rulelist_t * opt_list, rulelist_t prefix, int max_list_len, int v) {
+void _obj_brute_helper(data_t data, double * min_obj, rulelist_t * opt_list, rulelist_t prefix, int max_list_len, double c, int v) {
     for(int rule_id = 1; rule_id < data.nrules; rule_id++) {
         int found = 0;
 
@@ -119,7 +118,7 @@ void _obj_brute_helper(data_t data, double * min_obj, rulelist_t * opt_list, rul
             prefix.predictions[prefix.nrules] = label;
             prefix.nrules = prefix.nrules + 1;
 
-            double obj = evaluate(data, prefix, v ? 1 : 0);
+            double obj = evaluate(data, prefix, c, v ? 1 : 0);
 
             if(obj == -1.0) {
                 if(v > 0)
@@ -141,12 +140,12 @@ void _obj_brute_helper(data_t data, double * min_obj, rulelist_t * opt_list, rul
             }
 
             if(prefix_len < max_list_len-1)
-                _obj_brute_helper(data, min_obj, opt_list, prefix, max_list_len, v);
+                _obj_brute_helper(data, min_obj, opt_list, prefix, max_list_len, c, v);
         }
     }
 }
 
-int model_init_model(model_t * out, const char * model_file, int ntotal_rules, int v)
+int data_init_model(rulelist_t * out, data_t data, const char * model_file, int v)
 {
     FILE * model_p = NULL;
     if((model_p = fopen(model_file, "r")) == NULL) {
@@ -196,9 +195,9 @@ int model_init_model(model_t * out, const char * model_file, int ntotal_rules, i
         else {
             int found = 0;
 
-            for(int i = 1; i < ntotal_rules; i++) {
-                if(strncmp(out->rules[i].features, feature_start, feature_len) == 0) {
-                    if(++nrules >= ntotal_rules) {
+            for(int i = 1; i < data.nrules; i++) {
+                if(strncmp(data.rules[i].features, feature_start, feature_len) == 0) {
+                    if(++nrules >= data.nrules) {
                         if(v > 0)
                             printf("[model_init_model] Error: rule number overflow\n");
                         free(out->ids);
@@ -244,82 +243,62 @@ int model_init_model(model_t * out, const char * model_file, int ntotal_rules, i
     return 0;
 }
 
-int model_init(model_t * out, const char * model_file, const char * out_file, const char * label_file, const char * minor_file, double c, int v)
+int data_init(data_t * out, rulelist_t * opt_out, const char * model_file, const char * out_file, const char * label_file, double c, int v)
 {
-    if(rules_init(out_file, &out->ntotal_rules, &out->nsamples, &out->rules, 1) != 0) {
+    if(rules_init(out_file, &out->nrules, &out->nsamples, &out->rules, 1) != 0) {
         if(v > 0)
-            printf("[model_init] Error reading .out file at path '%s'\n", out_file);
+            printf("[data_init] Error reading .out file at path '%s'\n", out_file);
         return 1;
     }
 
-    int nsamples_chk;
-    if(rules_init(label_file, &out->nlabels, &nsamples_chk, &out->labels, 0) != 0) {
+    int nsamples_chk, nlabels;
+    if(rules_init(label_file, &nlabels, &nsamples_chk, &out->labels, 0) != 0) {
         if(v > 0)
-            printf("[model_init] Error reading .label file at path '%s'\n", label_file);
-        rules_free(out->rules, out->ntotal_rules, 1);
+            printf("[data_init] Error reading .label file at path '%s'\n", label_file);
+        rules_free(out->rules, out->nrules, 1);
         return 1;
+    }
+
+    if(nlabels != 2) {
+        if(v > 0)
+            printf("[data_init] Error: The .label file at path '%s' does not contain exactly 2 labels", label_file);
+
+        rules_free(out->rules, out->nrules, 1);
+        rules_free(out->labels, nlabels, 0);
     }
 
     if(out->nsamples != nsamples_chk) {
         if(v > 0)
-            printf("[model_init] Error: Nsamples mismatch between .out and .label files\n");
+            printf("[data_init] Error: Nsamples mismatch between .out and .label files\n");
 
+        rules_free(out->rules, out->nrules, 1);
+        rules_free(out->labels, 2, 0);
         return 1;
     }
 
-    if(minor_file != NULL) {
-        int nsamples_check;
-        if(rules_init(minor_file, &out->nminority, &nsamples_check, &out->minority, 0) != 0) {
-            if(v > 0)
-                printf("model_init] Error reading .minor file at path '%s'\n", minor_file);
-            rules_free(out->rules, out->ntotal_rules, 1);
-            rules_free(out->labels, out->nlabels, 0);
-            return 1;
-        }
-
-        if(out->nsamples != nsamples_check) {
-            if(v > 0)
-                printf("[model_init] Error: Nsamples mismatch between .out and .minor files\n");
-
-            return 1;
-        }
-    }
-    else {
-        out->minority = NULL;
-        out->nminority = 0;
-    }
-
     if(model_file != NULL) {
-        if(model_init_model(out, model_file, out->ntotal_rules, v) != 0)
-            return 1;
+        return data_init_model(out_opt, *out, model_file, out->nrules, v);
     }
-    else {
-        out->ids = NULL;
-        out->predictions = NULL;
-        out->default_prediction = 0;
-    }
-
-    out->c = c;
 
     return 0;
 }
 
-void model_free(model_t model)
+void data_free(data_t data)
 {
-    if(model.ids)
-        free(model.ids);
+    if(data.rules)
+        rules_free(data.rules, data.ntotal_rules, 1);
 
-    if(model.predictions)
-        free(model.predictions);
+    if(data.labels)
+        rules_free(data.labels, 2, 0);
+}
 
-    if(model.rules)
-        rules_free(model.rules, model.ntotal_rules, 1);
+void rulelist_free(rulelist_t rulelist)
+{
+    if(rulelist.ids)
+        free(rulelist.ids);
 
-    if(model.labels)
-        rules_free(model.labels, model.nlabels, 0);
-
-    if(model.minority)
-        rules_free(model.minority, model.nminority, 0);
+    if(rulelist.predictions)
+        free(rulelist.predictions);
 }
 
 
@@ -339,7 +318,7 @@ double evaluate(const char * model_file, const char * out_file, const char * lab
     return r;
 }
 
-double evaluate(model_t model, int v)
+double evaluate_data(model_t model, int v)
 {
     //printf("%d\n", model.nrules);
 
