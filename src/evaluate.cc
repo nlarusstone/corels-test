@@ -63,20 +63,24 @@ double obj_brute(data_t data, rulelist_t * opt_list, int max_list_len, double c,
 {
     double min_obj = 1.0;
 
+    max_list_len = max_list_len > data.nrules-1 ? data.nrules-1 : max_list_len;
+
+    int max_len = (int)(1.0 / c);
+
+    max_list_len = max_list_len > max_len ? max_list_len : max_len;
+
     rulelist_t temp_list;
     // Temp info, used when calculating each rule list
-    temp_list.ids = (unsigned short*)malloc(sizeof(unsigned short) * (data.nrules - 1));
-    temp_list.predictions = (int*)malloc(sizeof(int) * (data.nrules - 1));
+    temp_list.ids = (unsigned short*)malloc(sizeof(unsigned short) * max_list_len);
+    temp_list.predictions = (int*)malloc(sizeof(int) * max_list_len);
     temp_list.nrules = 0;
 
     if(opt_list) {
-        opt_list->ids = (unsigned short*)malloc(sizeof(unsigned short) * (data.nrules - 1));
-        opt_list->predictions = (int*)malloc(sizeof(int) * (data.nrules - 1));
+        opt_list->ids = (unsigned short*)malloc(sizeof(unsigned short) * max_list_len);
+        opt_list->predictions = (int*)malloc(sizeof(int) * max_list_len);
         opt_list->default_prediction = 0;
         opt_list->nrules = 0;
     }
-
-    max_list_len = max_list_len > data.nrules-1 ? data.nrules-1 : max_list_len;
 
     for(int i = 0; i < 2; i++) {
         temp_list.default_prediction = i;
@@ -419,7 +423,7 @@ double evaluate_data(data_t data, rulelist_t list, double c, int v)
 int output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> corels_opt_list,
                   tracking_vector<bool, DataStruct::Tree> corels_opt_preds,
                   tracking_vector<unsigned short, DataStruct::Tree> brute_opt_list,
-                  tracking_vector<bool, DataStruct::Tree> brute_opt_preds, double corels_obj,
+                  tracking_vector<bool, DataStruct::Tree> brute_opt_preds, bool output_brute, double corels_obj,
                   double eval_check_obj, double brute_obj, int v)
 {
     printf("\n\n\n\n/***************************************************************/\n\n");
@@ -438,7 +442,7 @@ int output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> 
     printf("\n\nOptimal rule list determined by CORELS:\n");
     print_final_rulelist(corels_opt_list, corels_opt_preds, NULL, data.rules, data.labels, NULL);
 
-    if(brute_opt_preds.size()) {
+    if(output_brute) {
         printf("\nOptimal rule list determined by brute force:\n");
         print_final_rulelist(brute_opt_list, brute_opt_preds, NULL, data.rules, data.labels, NULL);
 
@@ -601,7 +605,7 @@ int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c,
                 printf("[main] Mismatch detected, logging and exiting\n");
             }
 
-            output_error(data, opt_list, opt_preds, b_opt_list, b_opt_preds, c_obj, e_obj, b_obj, v);
+            output_error(data, opt_list, opt_preds, b_opt_list, b_opt_preds, (bool)b_max_list_len, c_obj, e_obj, b_obj, v);
 
             returnCode = 1;
             exit = true;
