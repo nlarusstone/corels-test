@@ -79,7 +79,7 @@ randomize_data(data_t * data);
        possible rule lists and predictions.
     5) The objective determined by brute force is checked to see if it is greater than or equal to that
        determined by CORELS (it could be greater than CORELS because you can set the the brute force algorithm
-       to only check rule lists up to a certain length [otherwise the time needed get ridiculous]).
+       to only check rule lists up to a certain length [otherwise the time needed gets ridiculous]).
 
     Parameters:
         num_iters - number of tests
@@ -88,10 +88,10 @@ randomize_data(data_t * data);
         c - length constant
         b_max_list_len - maximum length of rulelists checked by the brute force algorithm. Set this to 0 to completely
                          skip (disable) any brute force calculations
-        ablation - ablation used by the trie when running CORELS
+        ablation - ablation used when running CORELS
         q_cmp - comparison function used by the queue when running CORELS
         node_type - the type of node used by the tree (if using curious_cmp for the comparison function,
-                    this must be set to "curious" in order for the tree to actually use curiosity)
+                    this must be set to "curious" in order for the tree to actually use curiosity, otherwise usually it's "node")
         useCapturedPMap - whether the captured permutation map should be used as opposed to the prefix permutation map
         max_num_nodes - maximum number of nodes allowed by CORELS when running
         epsilon - tolerance for floating-point comparisons
@@ -113,7 +113,7 @@ run_random_tests(size_t num_iters, int num_rules, int num_samples, double c, int
 
 /**
     Used by run_random_tests, outputs a reader-friendly error dump when one of the tests in run_random_tests fails
-    and it stops running. It prints the optimal rule list determined by CORELS and brute force, and the objectives
+    and the loop stops running. It prints the optimal rule list determined by CORELS and brute force, and the objectives
     determined by CORELS, the evaluate function when checking the rule list outputted by CORELS, and brute force
 
     Paramters:
@@ -209,7 +209,19 @@ obj_brute(data_t data, rulelist_t * opt_list, int max_list_len, double c, int v)
 
 
 /**
-    Recursive helper function for finding all the possible rule lists
+    Recursive helper function for finding all the possible rule lists, simply takes a prefix and adds every
+    possible rule to it (excluding the ones already in the prefix) and evaluates the rulelists created by adding each
+    rule with every possible prediction and default prediction as well. If a rulelist with an objective smaller than
+    the current minimum objective is found, the minimum objective and optimal rulelist are updated.
+
+    Parameters:
+        data - contains rule and label info for the dataset being searched
+        min_obj - current minumum objective
+        opt_list - current optimal rulelist
+        prefix - rulelist prefix to which every remaning rule is added and the subsequently created rulelists evaluated
+        max_list_len - maximum length of rulelists that are checked
+        c - length constant
+        v - verbosity
 **/
 void
 _obj_brute_helper(data_t data, double * min_obj, rulelist_t * opt_list, rulelist_t prefix, int max_list_len, double c, int v);
