@@ -420,7 +420,7 @@ double evaluate_data(data_t data, rulelist_t list, double c, int v)
     return objective;
 }
 
-int output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> corels_opt_list,
+void output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> corels_opt_list,
                   tracking_vector<bool, DataStruct::Tree> corels_opt_preds,
                   tracking_vector<unsigned short, DataStruct::Tree> brute_opt_list,
                   tracking_vector<bool, DataStruct::Tree> brute_opt_preds, bool output_brute, double corels_obj,
@@ -456,8 +456,6 @@ int output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> 
                "Objective of optimal rule list determined by CORELS: %f\n\n",
                corels_obj, eval_check_obj);
     }
-
-    return 0;
 }
 
 int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c, int b_max_list_len,

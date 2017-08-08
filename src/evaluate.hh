@@ -26,15 +26,7 @@ typedef struct rulelist {
     double c;
 } rulelist_t;
 
-int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c, int b_max_list_len,
-                     int ablation, std::function<bool(Node*, Node*)> q_cmp, const char* node_type, bool useCapturedPMap,
-                     size_t max_num_nodes, double epsilon, unsigned long seed, int v);
 
-int output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> corels_opt_list,
-                 tracking_vector<bool, DataStruct::Tree> corels_opt_preds,
-                 tracking_vector<unsigned short, DataStruct::Tree> brute_opt_list,
-                 tracking_vector<bool, DataStruct::Tree> brute_opt_preds, bool output_brute, double corels_obj,
-                 double eval_check_obj, double brute_obj, int v);
 
 /**
     Verbosity usage is common, so explained here:
@@ -50,8 +42,13 @@ int output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> 
 
 **/
 
-// These functions randomize the truthtable of a rule, and for the non-GMP function to work correctly the number of rules
-// must be a multiple of BITS_PER_ENTRY (currently, it actually doesn't work, so only use GMP for now)
+
+
+/**
+    randomize_rule randomizes the truthtable of a rule for a given number of bits, and
+    randomize_data randomizes all the rules in a data object and the labels, by first randomizing
+    the 0 label and then setting the 1 label to the complement of that
+**/
 
 #ifdef GMP
 
@@ -72,15 +69,33 @@ randomize_data(data_t * data);
 #endif
 
 /**
-    Loads the data from a model, out, label, and minor file into a model struct
+    Runs a number of tests, where for each test the following happens:
+    1) A random dataset is generated
+    2) Its optimal rule list is determined with CORELS
+    3) The objective of the optimal rule list determined by CORELS is checked to see if it indeed
+       has the objective that is also outputted by CORELS as the optimal objective. This is done
+       with the evaluate_data function.
+    4) The optimal rule list is determined by the below brute force algorithm, that checks all
+       possible rule lists and predictions.
+    5) The objective determined by brute force is checked to see if it is greater than or equal to that
+       determined by CORELS (it could be greater than CORELS because you can set the the brute force algorithm
+       to only check rule lists up to a certain length [otherwise the time needed get ridiculous]).
 
     Parameters:
-        out - pointer to struct in which to store info from files
-        model_file - file containing optimal rule list and predictions
-        out_file - .out file containing data
-        label_file - .label file
-        minor_file - .minor file
+        num_iters - number of tests
+        num_rules - number of rules for the random datasets
+        num_samples - number of samples for the random datasets
         c - length constant
+        b_max_list_len - maximum length of rulelists checked by the brute force algorithm. Set this to 0 to completely
+                         skip (disable) any brute force calculations
+        ablation - ablation used by the trie when running CORELS
+        q_cmp - comparison function used by the queue when running CORELS
+        node_type - the type of node used by the tree (if using curious_cmp for the comparison function,
+                    this must be set to "curious" in order for the tree to actually use curiosity)
+        useCapturedPMap - whether the captured permutation map should be used as opposed to the prefix permutation map
+        max_num_nodes - maximum number of nodes allowed by CORELS when running
+        epsilon - tolerance for floating-point comparisons
+        seed - random seed for generating the random datasets
         v - verbosity
 
     Returns:
@@ -91,18 +106,62 @@ randomize_data(data_t * data);
             1
 **/
 int
+run_random_tests(size_t num_iters, int num_rules, int num_samples, double c, int b_max_list_len,
+                     int ablation, std::function<bool(Node*, Node*)> q_cmp, const char* node_type, bool useCapturedPMap,
+                     size_t max_num_nodes, double epsilon, unsigned long seed, int v);
+
+
+/**
+    Used by run_random_tests, outputs a reader-friendly error dump when one of the tests in run_random_tests fails
+    and it stops running. It prints the optimal rule list determined by CORELS and brute force, and the objectives
+    determined by CORELS, the evaluate function when checking the rule list outputted by CORELS, and brute force
+
+    Paramters:
+        data - contains info about rules and labels for the dataset that caused the error
+        corels_opt_list - rule ids of optimal rulelist determined by CORELS
+        corels_opt_preds - predictions of optimal rulelist determined by CORELS
+        brute_opt_list - rule ids of optimal rulelist determined by brute force
+        brute_opt_preds - predictions of optimal rulelist determined by brute force
+        output_brute - whether the brute force info should be outputted
+                       (set to false by run_random_tests when it is given b_max_list_len = 0)
+        corels_obj - optimal objective determined by CORELS
+        eval_check_obj - objective of optimal rulelist determined by CORELS, calculated by evaluate_data
+        brute_obj - optimal objective determined by brute force
+        v - verbosity
+**/
+void
+output_error(data_t data, tracking_vector<unsigned short, DataStruct::Tree> corels_opt_list,
+                 tracking_vector<bool, DataStruct::Tree> corels_opt_preds,
+                 tracking_vector<unsigned short, DataStruct::Tree> brute_opt_list,
+                 tracking_vector<bool, DataStruct::Tree> brute_opt_preds, bool output_brute, double corels_obj,
+                 double eval_check_obj, double brute_obj, int v);
+
+
+/**
+    Loads the data from a model, out, label, and minor file into a data and rulelist struct
+
+    Parameters:
+        out - pointer to struct in which to store data info about all the rules
+        opt_out - pointer to struct in which to store the rulelist indicated by the model file
+        model_file - file containing optimal rule list and predictions
+                     if NULL, only the general data is loaded and not the optimal rule list
+        out_file - .out file containing data
+        label_file - .label file
+        v - verbosity
+**/
+int
 data_init(data_t * out, rulelist_t * opt_out, const char * model_file, const char * out_file, const char * label_file, int v);
 
 
 
 /**
-    Called in model_init, loads the ids, predictions, nrules, and default prediction information
+    Called in data_init, loads the ids, predictions, nrules, and default prediction information
     of an optimal rule list stored in model_file
 
     Parameters:
-        out - pointer to struct in which to store info from files
+        out - pointer to struct in which to store rule list
+        data - information about all the rules and labels
         model_file - file containing optimal rule list and predictions
-        ntotal_rules - total number of rules
         v - verbosity
 
     Returns:
@@ -117,8 +176,10 @@ data_init_model(rulelist_t * out, data_t data, const char * model_file, int v);
 
 
 
-// Frees allocated memory
+// Frees rules and labels arrays
 void data_free(data_t model);
+
+// Frees ids and predictions arrays
 void rulelist_free(rulelist_t rulelist);
 
 
@@ -126,11 +187,13 @@ void rulelist_free(rulelist_t rulelist);
 
 /**
     Calculates the optimal objective from given data by checking every possible rule list and prediction permutation
-    Then, it stores the information of the optimal rule list in model
+    Then, it stores the information of the optimal rule list in opt_list
 
     Parameters:
-        model - contains info about the rule data and is where the optimal rule list is stored
+        data - contains info about the rule and label data
+        opt_list - where the optimal rule list is stored
         max_list_len - Max length of rule lists checked
+        c - length constant
         v - verbosity
 
     Returns:
@@ -155,6 +218,7 @@ _obj_brute_helper(data_t data, double * min_obj, rulelist_t * opt_list, rulelist
 
 
 /**
+    Finds the objective of the rule list stored in the given model file when evaluated with the given data files
 
     Parameters:
         model_file - file containing optimal rule list and predictions
@@ -177,7 +241,8 @@ evaluate(const char * model_file, const char * out_file, const char * label_file
 
 
 /**
-        Same as before, except it takes a model_t object preloaded
+        Same as before, except it takes a data_t object preloaded with the rule and label info
+        and a rulelist_t preloaded with the rulelist being evaluated
 **/
 double
 evaluate_data(data_t data, rulelist_t list, double c, int v);
