@@ -23,15 +23,11 @@ int main(int argc, char* argv[])
 
     int verbosity = 0;
 
-    for(int i = 1; i < argc; i++) {
-        if(strcmp(argv[i], "-v") == 0) {
-            verbosity = 1;
+    if(argc > 1 && strcmp(argv[argc-1], "-v") == 0) {
+        verbosity = 1;
 
-            // Because we don't want Catch to get tripped up on the -v, we remove it
-            strcpy(argv[i], "");
-
-            break;
-        }
+        // Because we don't want Catch to get tripped up on the -v, we remove it
+        argc--;
     }
 
     int nsamples_chk, nsamples_check;

@@ -19,7 +19,9 @@ To compile the tests, simply run 'make tests' from the /src folder (not this fol
     -   check_prefix    Test the ability of the trie to check a prefix
     -   delete_subtree  Test the trie's delete_subtree function
     -   optimal_list    Test the trie's storing of the optimal rule list
-    -   optimal_pred    Test the trie's storing of the optimal predictions
+    -   optimal_preds   Test the trie's storing of the optimal predictions
+
+    -   garbage_collect Test the garbage collection function
 
     -   prefix_empty    Test inserting into an empty prefix permutation map
     -   prefix_higher   Test inserting a prefix with a higher lower bound than
@@ -35,5 +37,15 @@ To compile the tests, simply run 'make tests' from the /src folder (not this fol
 
     -   push            Test pushing to the priority queue
     -   pop             Test popping the priority queue
+    -   select          Test the priority queue's select function
 
 For example, './tests [prefixmap]' would only run the tests for the prefix permutation map.
+
+Further options controlling the behavior of Catch, the testing framework used for these tests, can be
+passed after the tags specifying one part of the suite to run. To view these options, run './tests --help'
+
+A small dataset, found in the files tests.out, tests.label and tests.minor, all in the src/evaluate
+folder, is used across many of the tests. To print the contents of this dataset, simply append '-v'
+to the end of the other options (it must be at the very end of argv). The total command is thus:
+
+        ./tests [tags] [options] -v
