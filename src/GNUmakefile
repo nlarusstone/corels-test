@@ -23,7 +23,6 @@ else
     LDFLAGS :=
 endif
 
-
 ifneq ($(shell uname),Darwin)
     LIBS += -lbsd
 endif

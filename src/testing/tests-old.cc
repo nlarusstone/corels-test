@@ -2,7 +2,6 @@
 
 // For the current version, go to tests.cc (this version will soon be deleted)
 
-#define PERM_MAP_TESTS
 #include "../queue.hh"
 
 #ifdef GMP

@@ -1,6 +1,5 @@
 #pragma once
 
-#define PERM_MAP_TESTS
 #include "../queue.hh"
 
 #ifdef GMP

@@ -21,6 +21,19 @@ int main(int argc, char* argv[])
     rules = NULL;
     labels = NULL;
 
+    int verbosity = 0;
+
+    for(int i = 1; i < argc; i++) {
+        if(strcmp(argv[i], "-v") == 0) {
+            verbosity = 1;
+
+            // Because we don't want Catch to get tripped up on the -v, we remove it
+            strcpy(argv[i], "");
+
+            break;
+        }
+    }
+
     int nsamples_chk, nsamples_check;
 
     logger = new NullLogger();
@@ -35,7 +48,6 @@ int main(int argc, char* argv[])
     int l = rules_init("testing/tests.label", &nlabels, &nsamples_chk, &labels, 0);
     int m = rules_init("testing/tests.minor", &nminority, &nsamples_check, &minority, 0);
 
-    // TODO: fix minority check
     if(r != 0 || l != 0 || m != 0 || nsamples != nsamples_chk)
     {
         printf("ERROR: Could not load rules or samples\n");
@@ -43,14 +55,16 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    printf("\n/********** RULE DUMP **********/\n\n");
-    printf("Printing rules:\n");
-    rule_print_all(rules, nrules, nsamples);
-    printf("\n\nPrinting labels:\n");
-    rule_print_all(labels, nlabels, nsamples);
-    printf("\n\nPrinting minority:\n");
-    rule_print_all(minority, nminority, nsamples);
-    printf("\n\n/******** END RULE DUMP ********/\n\n\n");
+    if(verbosity) {
+        printf("\n/********** RULE DUMP **********/\n\n");
+        printf("Printing rules:\n");
+        rule_print_all(rules, nrules, nsamples);
+        printf("\n\nPrinting labels:\n");
+        rule_print_all(labels, nlabels, nsamples);
+        printf("\n\nPrinting minority:\n");
+        rule_print_all(minority, nminority, nsamples);
+        printf("\n\n/******** END RULE DUMP ********/\n\n\n");
+    }
 
     int ret = Catch::Session().run(argc, argv);
 
