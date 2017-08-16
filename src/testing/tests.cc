@@ -358,6 +358,14 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Check prefix", "[trie][check_prefix]") {
     }
 }
 
+/**
+                            DELETE subtree
+
+    Creates an artificial tree fand then deletes it, first non-destructively,
+    so we can check if it labels the correct nodes for destruction, and then
+    destructively, to see if it deletes the correct nodes, and then deletes
+    everything up to the root node as well.
+**/
 TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
 
     REQUIRE(tree != NULL);
@@ -446,7 +454,14 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal rulelist", "[trie][optimal_li
     REQUIRE(tree->opt_rulelist() == rule_list);
 }
 
+/**
+                        UPDATE OPTIMAL PREDICTIONS
 
+    Creates a simple artificial tree of depth 3 and assigns the nodes particular
+    predictions, then gives the tree the deepest node as the end of the optimal
+    rule list and sees if the tree then determines the list of predictions of said
+    rule list correctly.
+**/
 TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal_preds]") {
 
     REQUIRE(tree != NULL);
@@ -482,7 +497,17 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal
     REQUIRE(tree->opt_predictions() == predictions);
 }
 
+/**
+                                GARBAGE COLLECT
 
+    Creates 3 children of the root node, each with 2 children of its own. The three
+    children have higher, equal, and lower lower bounds than the minimum objective,
+    respectively, and then the tree is garbage collected to see if the correct nodes
+    (the first and second of the three children) are deleted, along with their
+    children. Then, for fun, we run the queue's select function to see if it
+    correctly cleans up the nodes marked for deletion (the children of those
+    two nodes that were deleted).
+**/
 TEST_CASE_METHOD(TrieFixture, "Trie/Garbage collect", "[trie][garbage_collect]") {
 
     REQUIRE(tree != NULL);
@@ -566,7 +591,16 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Garbage collect", "[trie][garbage_collect]")
     }
 }
 
+/**
+                                INSERT INTO EMPTY MAP
 
+    Tests correct insertion (all attributed are recored correctly and the map is updated
+    accordingly) into an empty prefix permutation map. Simply inserts a node into the map
+    and checks if all the attributes of the node that were passed to the map's insert function
+    are stored correctly in the created node, and if the map now has a new entry that
+    has the correct key and value (canonical prefix, lower bound and indices) that were
+    passed to the map's insert function.
+**/
 TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert into empty map", "[prefixmap][insert_empty][prefix_empty]") {
 
     REQUIRE(pmap != NULL);
@@ -618,6 +652,14 @@ TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert into empty map", "[prefixm
     }
 }
 
+/**
+                            INSERT WITH HIGHER LOWER BOUND
+
+    Inserts a node into the prefix permutation map, then tries to insert another
+    with the same prefix but a higher lower bound. Then, it checks if the second
+    insertion is blocked by the map, and the information for that prefix is not
+    updated but remains what it was from the first node.
+**/
 TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with higher lower bound", "[prefixmap][insert_higher][prefix_higher]") {
 
     REQUIRE(pmap != NULL);
@@ -668,6 +710,15 @@ TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with higher lower bound", 
     CHECK(inserted->second.first == lower_bound);
 }
 
+/**
+                            INSERT WITH LOWER LOWER BOUND
+
+    Inserts a node into the prefix permutation map, then tries to insert another
+    with the same prefix but a lower lower bound. Then, it checks if the second
+    insertion updates the map correctly to the new lowest lower bound (the lower
+    bound of the second insertion) and the corresponding new prefix (indices of the
+    second insertion).
+**/
 TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with lower lower bound", "[prefixmap][insert_lower][prefix_lower]") {
 
     REQUIRE(pmap != NULL);
@@ -715,6 +766,16 @@ TEST_CASE_METHOD(PrefixMapFixture, "Prefix Map/Insert with lower lower bound", "
     CHECK(inserted->second.first == l_bound);
 }
 
+/**
+                                INSERT INTO EMPTY MAP
+
+    Tests correct insertion (all attributed are recored correctly and the map is updated
+    accordingly) into an empty captured permutation map. Simply inserts a node into the map
+    and checks if all the attributes of the node that were passed to the map's insert function
+    are stored correctly in the created node, and if the map now has a new entry that
+    has the correct key and value (captured vector, lower bound and prefix) that were
+    passed to the map's insert function.
+**/
 TEST_CASE_METHOD(CapturedMapFixture, "Captured Map/Insert into empty map", "[capturemap][insert_empty][capture_empty]") {
 
     REQUIRE(pmap != NULL);
@@ -766,6 +827,14 @@ TEST_CASE_METHOD(CapturedMapFixture, "Captured Map/Insert into empty map", "[cap
     }
 }
 
+/**
+                            INSERT WITH HIGHER LOWER BOUND
+
+    Inserts a node into the captured permutation map, then tries to insert another
+    with the same captured vector but a higher lower bound. Then, it checks if the second
+    insertion is blocked by the map, and the information for that captured vector key is not
+    updated but remains what it was from the first node.
+**/
 TEST_CASE_METHOD(CapturedMapFixture, "Captured Map/Insert with higher lower bound", "[capturemap][insert_higher][capture_higher]") {
 
     REQUIRE(pmap != NULL);
@@ -816,6 +885,14 @@ TEST_CASE_METHOD(CapturedMapFixture, "Captured Map/Insert with higher lower boun
     CHECK(inserted->second.first == lower_bound);
 }
 
+/**
+                            INSERT WITH LOWER LOWER BOUND
+
+    Inserts a node into the captured permutation map, then tries to insert another
+    with the same captured vector but a lower lower bound. Then, it checks if the second
+    insertion updates the map correctly to the new lowest lower bound (the lower
+    bound of the second insertion) and the corresponding new prefix.
+**/
 TEST_CASE_METHOD(CapturedMapFixture, "Captured Map/Insert with lower lower bound", "[capturemap][insert_lower][capture_lower]") {
 
     REQUIRE(pmap != NULL);
@@ -866,7 +943,7 @@ TEST_CASE_METHOD(CapturedMapFixture, "Captured Map/Insert with lower lower bound
     CHECK(inserted->second.first == l_bound);
 }
 
-TEST_CASE_METHOD(QueueFixture, "Queue/Push and Front", "[queue][push]") {
+TEST_CASE_METHOD(QueueFixture, "Queue/Push", "[queue][push]") {
 
     REQUIRE(queue != NULL);
     REQUIRE(tree != NULL);
@@ -876,6 +953,16 @@ TEST_CASE_METHOD(QueueFixture, "Queue/Push and Front", "[queue][push]") {
 
     CHECK_FALSE(queue->empty());
     CHECK(queue->size() == 1);
+}
+
+TEST_CASE_METHOD(QueueFixture, "Queue/Front", "[queue][front]") {
+
+    REQUIRE(queue != NULL);
+    REQUIRE(tree != NULL);
+    REQUIRE(root != NULL);
+
+    queue->push(root);
+
     CHECK(queue->front() == root);
 }
 
@@ -893,14 +980,27 @@ TEST_CASE_METHOD(QueueFixture, "Queue/Pop", "[queue][pop]") {
     CHECK(queue->size() == 0);
 }
 
+/**
+                                SELECT
+
+    Tests the queue's select function. First, it creates an artificial tree, where
+    each node is the child of the last, and records what samples a prefix composed
+    of all the nodes created would capture in a vector. Then, it adds the last node
+    to the queue and calls select, which should return that node. It then checks
+    that select returns all the necessary data correctly: the node, its prefix
+    (including itself) and its prefix's captured vector.
+    Afterwards, in order to test the select function's deletion of lazily marked
+    nodes, the test calls delete subtree from the root's only child (whose descendants
+    are the rest of the tree), and checks if all the nodes have been deleted except root, which
+    should be unchanged, and the last node, which is a leaf node and should only be
+    lazily marked for deletion. Then, it calls the queue'e select again, and
+    checks if it deletes the leaf node marked for deletion and returns blank data.
+**/
 TEST_CASE_METHOD(QueueFixture, "Queue/Select", "[queue][select]") {
 
     REQUIRE(queue != NULL);
     REQUIRE(tree != NULL);
     REQUIRE(root != NULL);
-
-    REQUIRE(tree->nsamples() == nsamples);
-    REQUIRE(tree->nrules() == nrules);
 
     Node * n = root;
     int depth = nrules - 1;
@@ -975,16 +1075,19 @@ TEST_CASE_METHOD(QueueFixture, "Queue/Select", "[queue][select]") {
         root->delete_child(t->id());
         delete_subtree(tree, t, false, false);
 
-        CHECK(tree->num_nodes() == 2);
+        REQUIRE(tree->num_nodes() == 2);
 
         // Leaf nodes should be lazily marked, not deleted
-        CHECK(n->deleted());
+        REQUIRE(n->deleted());
 
         std::pair<Node*, tracking_vector<unsigned short, DataStruct::Tree>> prefix_node = queue->select(tree, captured);
 
         // Was the node found to be lazily marked and deleted?
         CHECK(prefix_node.first == NULL);
         CHECK(tree->num_nodes() == 1);
+
+        // No node was returned, so no prefix
+        CHECK(prefix_node.second.size() == 0);
 
         // Is captured empty?
 #ifdef GMP

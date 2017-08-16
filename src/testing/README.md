@@ -36,6 +36,7 @@ To compile the tests, simply run 'make tests' from the /src folder (not this fol
                         previously stored into the captured permutation map
 
     -   push            Test pushing to the priority queue
+    -   front           Test the queue's front function, that gets the top queue element
     -   pop             Test popping the priority queue
     -   select          Test the priority queue's select function
 
