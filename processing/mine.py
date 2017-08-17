@@ -137,7 +137,7 @@ def mine_rules(din='../data/adult', froot='adult', max_cardinality=2,
     print 'writing', fout
     f = open(fout, 'w')
     if (exclude_not):
-        print 'excluding "-not-" rules'
+        print 'excluding "not" rules'
         f.write('\n'.join(['%s %s' % (n, ' '.join(np.cast[str](np.cast[int](r))))
                             for (n, r) in zip(names, records) if ('not' not in n)]) + '\n')
         print len(names), 'rules'
