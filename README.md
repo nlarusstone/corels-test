@@ -77,14 +77,17 @@ The default value corresponds to `-r 0.01` and can be thought of as adding a
 penalty equivalent to misclassifying 1% of data when increasing a rule list's
 length by one association rule.
 
-**[-v (rule|label|samples|progress|log)]** Verbosity.
+**[-v (rule|label|samples|progress|log|silent)]** Verbosity.
 * Use `rule` to print inputted rules.
 * Use `label` to print inputted labels.
 * Use `samples` to print a truth table of samples captured by each rule (this option produces debugging output that is very long)
-* Use `progress` to continuously print the algorithm's status (recommended).
+* Use `progress` to continuously print the algorithm's status (default).
 * Use `log` to turn on logging to files.
+* Use `silent` without any other options to only print the optimal rule list at the end.
 
-Options may be combined with each other, and the `samples` option must be combined with at least one of `rule` and `label`. Default value (passing in nothing) will only print the optimal rule list at the end.
+Options may be combined with each other (except for `silent`), and the `samples` option must be combined with at least one of `rule` and `label`.
+Use commas to separate options, i.e., `-v progress,log`
+Defaults to `-v progress`.
 
 **-c (1|2|3|4)** Best-first search policy.
 You must specify a search policy; use exactly one of `(-b | -c)`.

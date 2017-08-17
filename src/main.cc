@@ -14,7 +14,7 @@ NullLogger* logger;
 
 int main(int argc, char *argv[]) {
     const char usage[] = "USAGE: %s [-b] "
-        "[-n max_num_nodes] [-r regularization] [-v (rule|label|samples|progress|log)] "
+        "[-n max_num_nodes] [-r regularization] [-v (rule|label|samples|progress|log|silent)] "
         "-c (1|2|3|4) -p (0|1|2) [-f logging_frequency] "
         "-a (0|1|2) [-s] [-L latex_out] "
         "data.out data.label [data.minor]\n\n"
@@ -118,17 +118,30 @@ int main(int argc, char *argv[]) {
     if (verr) {
         error = true;
         snprintf(error_txt, BUFSZ,
-                 "verbosity options must be one or more of (rule|label|samples|progress|log)");
+                 "verbosity options must be one or more of (rule|label|samples|progress|log|silent), separated with commas (i.e. -v progress,log)");
     }
     if (verbosity.count("samples") && !(verbosity.count("rule") || verbosity.count("label"))) {
         error = true;
         snprintf(error_txt, BUFSZ,
                  "verbosity 'samples' option must be combined with at least one of (rule|label)");
     }
+    if (verbosity.size() > 2 && verbosity.count("silent")) {
+        snprintf(error_txt, BUFSZ,
+                 "verbosity 'silent' option must be passed without any additional verbosity parameters");
+    }
 
     if (error) {
         fprintf(stderr, usage, argv[0], error_txt);
         exit(1);
+    }
+
+    // default: show progress
+    if (verbosity.size() == 0) {
+        verbosity.insert("progress");
+    }
+
+    if (verbosity.count("silent")) {
+        verbosity.clear();
     }
 
     std::map<int, std::string> curiosity_map;
@@ -181,10 +194,12 @@ int main(int argc, char *argv[]) {
         rule_print_all(labels, nlabels, nsamples, (verbosity.count("samples")));
     }
 
-    if (verbosity.count("log"))
+    if (verbosity.count("log")) {
         logger = new Logger(c, nrules, verbosity, log_fname, freq);
-    else
+    } else {
         logger = new NullLogger();
+        logger->setVerbosity(verbosity);
+    }
     double init = timestamp();
     char run_type[BUFSZ];
     Queue* q;

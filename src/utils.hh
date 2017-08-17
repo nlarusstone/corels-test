@@ -19,7 +19,7 @@ class NullLogger {
   public:
     virtual void closeFile() {}
     NullLogger() {}
-    NullLogger(double c, size_t nrules, int verbosity, char* log_fname, int freq) {}
+    NullLogger(double c, size_t nrules, std::set<std::string> verbosity, char* log_fname, int freq) {}
     ~NullLogger() {}
 
     virtual void setLogFileName(char *fname) {}
@@ -27,8 +27,8 @@ class NullLogger {
     virtual std::string dumpPrefixLens() { return ""; }
     virtual std::string dumpRemainingSpaceSize() { return ""; }
 
-    virtual inline void setVerbosity(std::set<std::string> verbosity) {}
-    virtual inline std::set<std::string> getVerbosity() { return std::set<std::string>(); }
+    virtual inline void setVerbosity(std::set<std::string> verbosity) { _v = verbosity; }
+    virtual inline std::set<std::string> getVerbosity() { return _v; }
     virtual inline void setFrequency(int frequency) {}
     virtual inline int getFrequency() { return 1000; }
     virtual inline void addToLowerBoundTime(double t) {}
