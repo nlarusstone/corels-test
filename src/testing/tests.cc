@@ -3,6 +3,8 @@
 #include "catch.hpp"
 
 #include "fixtures.hh"
+
+
 /**
                             TEST TREE INITIALIZATION
 
@@ -168,7 +170,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Check node delete behavior", "[trie][delete_
     REQUIRE(tree != NULL);
     REQUIRE(root != NULL);
 
-    Node * n = tree->construct_node(1, nrules, true, true, 0.1, 0.12, root, 3, nsamples, 0, 0.01, 0.0);
+    Node * n = tree->construct_node(T_NEW_RULE, T_NRULES, T_PRED, T_DEF_PRED, T_LOWER, T_OBJ, T_PARENT, T_NNC, T_NSAMPLES, T_LPREFIX, T_C, T_MINOR);
 
     REQUIRE(n != NULL);
 
@@ -209,7 +211,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Node get prefix and predictions", "[trie][no
     // Create a nrules-deep tree and store its prefix and predictions
     for(int i = 0; i < depth; i++) {
         CAPTURE(i);
-        n = tree->construct_node(i+1, nrules, (bool)(i % 2), true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+        n = tree->construct_node(i+1, T_NRULES, (bool)(i % 2), T_DEF_PRED, T_LOWER, T_OBJ, n, T_NNC, T_NSAMPLES, i, T_C, T_MINOR);
         tree->insert(n);
 
         prefix.push_back(i+1);
@@ -281,13 +283,13 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Prune up", "[trie][prune_up]") {
     int depth = nrules - 1;
 
     // Create one childless child of the root
-    Node * s = tree->construct_node(2, nrules, true, true, 0.1, 0.12, n, 3, nsamples, 0, 0.01, 0.0);
+    Node * s = tree->construct_node(2, T_NRULES, T_PRED, T_DEF_PRED, T_LOWER, T_OBJ, n, T_NNC, T_NSAMPLES, T_LPREFIX, T_C, T_MINOR);
     tree->insert(s);
 
     // Then create a deep line of nodes from another child of the root
     for(int i = 0; i < depth; i++) {
         CAPTURE(i);
-        n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+        n = tree->construct_node(i+1, T_NRULES, T_PRED, T_DEF_PRED, T_LOWER, T_OBJ, n, T_NNC, T_NSAMPLES, i, T_C, T_MINOR);
         tree->insert(n);
     }
 
@@ -332,7 +334,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Check prefix", "[trie][check_prefix]") {
 
     for(int i = 0; i < depth; i++) {
         CAPTURE(i);
-        n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+        n = tree->construct_node(i+1, T_NRULES, T_PRED, T_DEF_PRED, T_LOWER, T_OBJ, n, T_NNC, T_NSAMPLES, i, T_C, T_MINOR);
         tree->insert(n);
         prefix.push_back(i+1);
     }
@@ -384,8 +386,8 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Delete subtree", "[trie][delete_subtree]") {
         // delete subtree requires the done information (interior nodes are 'done')
         n->set_done();
 
-        Node * n1 = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
-        Node * n2 = tree->construct_node(i+2, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+        Node * n1 = tree->construct_node(i+1, T_NRULES, T_PRED, T_DEF_PRED, T_LOWER, T_OBJ, n, T_NNC, T_NSAMPLES, i, T_C, T_MINOR);
+        Node * n2 = tree->construct_node(i+2, T_NRULES, T_PRED, T_DEF_PRED, T_LOWER, T_OBJ, n, T_NNC, T_NSAMPLES, i, T_C, T_MINOR);
         tree->insert(n1);
         tree->insert(n2);
 
@@ -479,7 +481,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Update optimal predictions", "[trie][optimal
     for(int i = 0; i < depth; i++) {
         CAPTURE(i);
 
-        n = tree->construct_node(i+1, nrules, predictions[i], true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+        n = tree->construct_node(i+1, T_NRULES, predictions[i], T_DEF_PRED, T_LOWER, T_OBJ, n, T_NNC, T_NSAMPLES, i, T_C, T_MINOR);
         tree->insert(n);
     }
 
@@ -523,9 +525,9 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Garbage collect", "[trie][garbage_collect]")
 
     Node * nodes[3][3];
 
-    nodes[0][0] = tree->construct_node(1, nrules, true, true, minobj + 0.2, 0.12, root, 3, nsamples, 0, 0.01, 0.0);
-    nodes[1][0] = tree->construct_node(2, nrules, true, true, minobj, 0.12, root, 3, nsamples, 0, 0.01, 0.0);
-    nodes[2][0] = tree->construct_node(3, nrules, true, true, minobj - 0.2, 0.12, root, 3, nsamples, 0, 0.01, 0.0);
+    nodes[0][0] = tree->construct_node(1, T_NRULES, T_PRED, T_DEF_PRED, minobj + 0.2, 0.12, root, T_NNC, T_NSAMPLES, 0, T_C, T_MINOR);
+    nodes[1][0] = tree->construct_node(2, T_NRULES, T_PRED, T_DEF_PRED, minobj, 0.12, root, T_NNC, T_NSAMPLES, 0, T_C, T_MINOR);
+    nodes[2][0] = tree->construct_node(3, T_NRULES, T_PRED, T_DEF_PRED, minobj - 0.2, 0.12, root, T_NNC, T_NSAMPLES, 0, T_C, T_MINOR);
 
     root->set_done();
 
@@ -535,8 +537,8 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Garbage collect", "[trie][garbage_collect]")
         nodes[i][0]->set_done();
         tree->insert(nodes[i][0]);
 
-        nodes[i][1] = tree->construct_node(4, nrules, true, true, minobj - 0.1, 0.12, nodes[i][0], 3, nsamples, 1, 0.01, 0.0);
-        nodes[i][2] = tree->construct_node(5, nrules, true, true, minobj - 0.15, 0.12, nodes[i][0], 3, nsamples, 1, 0.01, 0.0);
+        nodes[i][1] = tree->construct_node(4, T_NRULES, T_PRED, T_DEF_PRED, minobj - 0.1, 0.12, nodes[i][0], T_NNC, T_NSAMPLES, 1, T_C, T_MINOR);
+        nodes[i][2] = tree->construct_node(5, T_NRULES, T_PRED, T_DEF_PRED, minobj - 0.15, 0.12, nodes[i][0], T_NNC, T_NSAMPLES, 1, T_C, T_MINOR);
 
         tree->insert(nodes[i][1]);
         tree->insert(nodes[i][2]);
@@ -1016,7 +1018,7 @@ TEST_CASE_METHOD(QueueFixture, "Queue/Select", "[queue][select]") {
         CAPTURE(i);
 
         n->set_done();
-        n = tree->construct_node(i+1, nrules, true, true, 0.1, 0.12, n, 3, nsamples, i, 0.01, 0.0);
+        n = tree->construct_node(i+1, T_NRULES, T_PRED, T_DEF_PRED, T_LOWER, T_OBJ, n, T_NNC, T_NSAMPLES, i, T_C, T_MINOR);
         tree->insert(n);
 
         prefix.push_back(i+1);

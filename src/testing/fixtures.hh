@@ -16,13 +16,34 @@ extern int nsamples;
 extern int nlabels;
 extern int nminority;
 
+/**
+   These are the default values of the arguments passed to the tree's contruct_node
+   function when constructing a new node (used when the values don't really matter).
+**/
+#define T_NEW_RULE  1
+#define T_NRULES    nrules
+#define T_PRED      true
+#define T_DEF_PRED  true
+#define T_LOWER     0.1
+#define T_OBJ       0.5
+#define T_PARENT    root
+#define T_NNC       0
+#define T_NSAMPLES  nsamples
+#define T_LPREFIX   0
+#define T_MINOR     0.0
+#define T_TYPE      "node"
+
+// Some more value that are used throughout the code: length constant, tree ablation
+#define T_C         0.01
+#define T_ABLATION  0
+
 
 class TrieFixture {
 
 public:
-    TrieFixture() : c(0.01), type("node"), ablation(0), calculate_size(false),
+    TrieFixture() : c(T_C), type(T_TYPE), ablation(T_ABLATION), calculate_size(false),
                     tree(NULL), root(NULL) {
-        tree = new CacheTree(nsamples, nrules, c, rules, labels,
+        tree = new CacheTree(T_NSAMPLES, T_NRULES, T_C, rules, labels,
                                  minority, ablation, calculate_size, type);
 
         if(tree) {
@@ -49,12 +70,12 @@ protected:
 class PrefixMapFixture {
 
 public:
-    PrefixMapFixture() : pmap(NULL), tree(NULL), root(NULL), num_not_captured(0),
-                         c(0.01), prediction(true), default_prediction(true),
-                         lower_bound(0.1), objective(0.5), len_prefix(4), equivalent_minority(0.0) {
+    PrefixMapFixture() : pmap(NULL), tree(NULL), root(NULL), num_not_captured(T_NNC),
+                         c(T_C), prediction(T_PRED), default_prediction(T_DEF_PRED),
+                         lower_bound(T_LOWER), objective(T_OBJ), len_prefix(4), equivalent_minority(T_MINOR) {
         pmap = new PrefixPermutationMap();
 
-        tree = new CacheTree(nsamples, nrules, c, rules, labels, NULL, 0, false, "node");
+        tree = new CacheTree(T_NSAMPLES, T_NRULES, T_C, rules, labels, NULL, T_ABLATION, false, T_TYPE);
 
         if(tree) {
             tree->insert_root();
@@ -116,12 +137,12 @@ protected:
 class CapturedMapFixture {
 
 public:
-    CapturedMapFixture() : pmap(NULL), tree(NULL), root(NULL), num_not_captured(0),
-                         c(0.01), prediction(true), default_prediction(true),
-                         lower_bound(0.1), objective(0.5), len_prefix(4), equivalent_minority(0.0) {
+    CapturedMapFixture() : pmap(NULL), tree(NULL), root(NULL), num_not_captured(T_NNC),
+                         c(T_C), prediction(T_PRED), default_prediction(T_DEF_PRED),
+                         lower_bound(T_LOWER), objective(T_OBJ), len_prefix(4), equivalent_minority(T_MINOR) {
         pmap = new CapturedPermutationMap();
 
-        tree = new CacheTree(nsamples, nrules, c, rules, labels, NULL, 0, false, "node");
+        tree = new CacheTree(T_NSAMPLES, T_NRULES, T_C, rules, labels, NULL, T_ABLATION, false, T_TYPE);
 
         if(tree) {
             tree->insert_root();
@@ -208,7 +229,7 @@ public:
     QueueFixture() : queue(NULL), tree(NULL), root(NULL) {
         queue = new Queue(lb_cmp, "LOWER BOUND");
 
-        tree = new CacheTree(nsamples, nrules, 0.01, rules, labels, NULL, 0, false, "node");
+        tree = new CacheTree(T_NSAMPLES, T_NRULES, T_C, rules, labels, NULL, T_ABLATION, false, T_TYPE);
 
         if(tree) {
             tree->insert_root();
