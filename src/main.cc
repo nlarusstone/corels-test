@@ -30,7 +30,7 @@ int main(int argc, char *argv[]) {
     char *vopt;
     std::set<std::string> verbosity;
     bool verr = false;
-    const char *vstr = "rule|label|samples|progress|log";
+    const char *vstr = "rule|label|samples|progress|log|silent";
     int map_type = 0;
     int max_num_nodes = 100000;
     double c = 0.01;
