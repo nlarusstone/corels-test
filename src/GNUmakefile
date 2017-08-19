@@ -43,6 +43,9 @@ corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
 evaluate-test: evaluate-test.o evaluate.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
+tests: pmap.o corels.o cache.o rulelib.o utils.o $(TESTSDIR)/tests.o $(TESTSDIR)/tests-main.o
+	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+
 main.o: main.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
@@ -61,8 +64,11 @@ cache.o: cache.cc $(DEPSDIR)/stamp
 rulelib.o: rulelib.c $(DEPSDIR)/stamp
 	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
-tests: pmap.o corels.o cache.o rulelib.o utils.o $(TESTSDIR)/tests.o $(TESTSDIR)/tests-main.o
-	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+evaluate-test.o: evaluate-test.cc $(DEPSDIR)/stamp
+	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+
+evaluate.o: evaluate.cc $(DEPSDIR)/stamp
+	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 $(TESTSDIR)/tests.o: $(TESTSDIR)/tests.cc $(TESTSDIR)/fixtures.hh $(TESTSDIR)/catch.hpp $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
