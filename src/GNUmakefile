@@ -70,12 +70,6 @@ evaluate-test.o: evaluate-test.cc $(DEPSDIR)/stamp
 evaluate.o: evaluate.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
-$(TESTSDIR)/tests.o: $(TESTSDIR)/tests.cc $(TESTSDIR)/fixtures.hh $(TESTSDIR)/catch.hpp $(DEPSDIR)/stamp
-	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
-
-$(TESTSDIR)/tests-main.o: $(TESTSDIR)/tests-main.cc $(TESTSDIR)/catch.hpp $(DEPSDIR)/stamp
-	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
-
 $(DEPSDIR)/stamp:
 	mkdir -p $(dir $@)
 	touch $@
