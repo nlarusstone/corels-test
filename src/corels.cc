@@ -66,13 +66,8 @@ void evaluate_children(CacheTree* tree, Node* parent, tracking_vector<unsigned s
         lower_bound = parent_lower_bound - parent_equivalent_minority + (double)(num_captured - captured_correct) / nsamples + c;
         logger->addToLowerBoundTime(time_diff(t1));
         logger->incLowerBoundNum();
-	    if (tree->ablation() != 2) {
-            if ((lower_bound + c) >= tree->min_objective()) // hierarchical objective lower bound with lookahead bound
-                continue;
-        } else {
-            if (lower_bound >= tree->min_objective()) // hierarchical objective lower bound
-	            continue;
-	    }
+        if (lower_bound >= tree->min_objective()) // hierarchical objective lower bound
+	        continue;
         double t2 = timestamp();
         rule_vandnot(not_captured, parent_not_captured, captured, nsamples, &num_not_captured);
         rule_vand(not_captured_zeros, not_captured, tree->label(0).truthtable, nsamples, &d0);

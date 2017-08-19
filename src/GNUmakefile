@@ -40,6 +40,9 @@ all: corels tests
 corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
+evaluate-test: evaluate-test.o evaluate.o corels.o pmap.o cache.o rulelib.o utils.o
+	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+
 tests: pmap.o corels.o cache.o rulelib.o utils.o $(TESTSDIR)/tests.o $(TESTSDIR)/tests-main.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
