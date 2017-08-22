@@ -39,7 +39,7 @@ evaluate-test: evaluate-test.o evaluate.o corels.o pmap.o cache.o rulelib.o util
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 cli.o: cli.cc run.cc $(DEPSDIR)/stamp
-	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -
 
 corels.o: corels.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@

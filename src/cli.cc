@@ -56,6 +56,7 @@ int main(int argc, char *argv[]) {
             while (vopt != NULL) {
                 if (!strstr(vstr, vopt)) {
                     verr = true;
+                    break;
                 }
                 verbosity.insert(vopt);
                 vopt = strtok(NULL, ",");
@@ -122,7 +123,7 @@ int main(int argc, char *argv[]) {
 
     if (error) {
         fprintf(stderr, usage, argv[0], error_txt);
-        exit(1);
+        return 1;
     }
 
     // default: show progress
@@ -133,12 +134,6 @@ int main(int argc, char *argv[]) {
     if (verbosity.count("silent")) {
         verbosity.clear();
     }
-
-    std::map<int, std::string> curiosity_map;
-    curiosity_map[1] = "curiosity";
-    curiosity_map[2] = "curious_lb";
-    curiosity_map[3] = "curious_obj";
-    curiosity_map[4] = "dfs";
 
     argc -= optind;
     argv += optind;
@@ -156,7 +151,41 @@ int main(int argc, char *argv[]) {
     else
         meta = NULL;
 
-    run_corels(run_bfs, max_num_nodes, c, verbosity, curiosity_policy, map_type,
+    char froot[BUFSZ];
+    char log_fname[BUFSZ];
+    char opt_fname[BUFSZ];
+    const char* pch = strrchr(argv[0], '/');
+    snprintf(froot, BUFSZ, "../logs/for-%s-%s%s-%s-%s-removed=%s-max_num_nodes=%d-c=%.7f-f=%d",
+            pch ? pch + 1 : "",
+            run_bfs ? "bfs" : "",
+            run_curiosity ? curiosity_map[curiosity_policy].c_str() : "",
+            (map_type == 1) ? "with_prefix_perm_map" :
+                (map_type == 2 ? "with_captured_symmetry_map" : "no_pmap"),
+            meta ? "minor" : "no_minor",
+            ablation ? ((ablation == 1) ? "support" : "lookahead") : "none",
+            max_num_nodes, c, freq);
+    snprintf(log_fname, BUFSZ, "%s.txt", froot);
+    snprintf(opt_fname, BUFSZ, "%s-opt.txt", froot);
+
+    run_corels(opt_fname, log_fname, max_num_nodes, c, verbosity, curiosity_policy, map_type,
                     freq, ablation, calculate_size, latex_out, nrules, nlabels,
                     nsamples, rules, labels, meta);
+
+    if (meta) {
+        if (verbosity.count("progress"))
+            printf("\ndelete identical points indicator");
+        rules_free(meta, nmeta, 0);
+    }
+
+    if (verbosity.count("progress")) {
+        printf("\ndelete rules\n");
+    }
+    rules_free(rules, nrules, 1);
+
+    if (verbosity.count("progress")) {
+        printf("delete labels\n");
+    }
+    rules_free(labels, nlabels, 0);
+
+    return 0;
 }

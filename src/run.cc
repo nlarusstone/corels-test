@@ -5,27 +5,12 @@
 
 #define BUFSZ 512
 
-void run_corels (bool run_bfs, int max_num_nodes, double c, std::set<std::string> verbosity,
+void run_corels (const char* opt_file, const char* log_file, int max_num_nodes, double c, std::set<std::string> verbosity,
                     int curiosity_policy, int map_type, int freq, int ablation, bool calculate_size,
                     bool latex_out, int nrules, int nlabels, int nsamples, rule_t *rules,
                     rule_t *labels, rule_t *meta) {
     if (verbosity.count("log"))
         print_machine_info();
-    char froot[BUFSZ];
-    char log_fname[BUFSZ];
-    char opt_fname[BUFSZ];
-    const char* pch = strrchr(argv[0], '/');
-    snprintf(froot, BUFSZ, "../logs/for-%s-%s%s-%s-%s-removed=%s-max_num_nodes=%d-c=%.7f-f=%d",
-            pch ? pch + 1 : "",
-            run_bfs ? "bfs" : "",
-            run_curiosity ? curiosity_map[curiosity_policy].c_str() : "",
-            (map_type == 1) ? "with_prefix_perm_map" :
-                (map_type == 2 ? "with_captured_symmetry_map" : "no_pmap"),
-            meta ? "minor" : "no_minor",
-            ablation ? ((ablation == 1) ? "support" : "lookahead") : "none",
-            max_num_nodes, c, freq);
-    snprintf(log_fname, BUFSZ, "%s.txt", froot);
-    snprintf(opt_fname, BUFSZ, "%s-opt.txt", froot);
 
     if (verbosity.count("rule")) {
         printf("\n%d rules %d samples\n\n", nrules, nsamples);
@@ -38,7 +23,7 @@ void run_corels (bool run_bfs, int max_num_nodes, double c, std::set<std::string
     }
 
     if (verbosity.count("log")) {
-        logger = new Logger(c, nrules, verbosity, log_fname, freq);
+        logger = new Logger(c, nrules, verbosity, log_file, freq);
     } else {
         logger = new NullLogger();
         logger->setVerbosity(verbosity);
@@ -98,7 +83,7 @@ void run_corels (bool run_bfs, int max_num_nodes, double c, std::set<std::string
    }
 
     print_final_rulelist(r_list, tree->opt_predictions(),
-                     latex_out, rules, labels, opt_fname, verbosity.count("progress"));
+                     latex_out, rules, labels, opt_file, verbosity.count("progress"));
 
     if (verbosity.count("progress"))
         printf("final total time: %f\n", time_diff(init));
@@ -106,18 +91,23 @@ void run_corels (bool run_bfs, int max_num_nodes, double c, std::set<std::string
     logger->dumpState();
     logger->closeFile();
 
-    if (meta) {
-        if (verbosity.count("progress"))
-            printf("\ndelete identical points indicator");
-        rules_free(meta, nmeta, 0);
+    if (verbosity.count("progress")) {
+        printf("\ndelete tree\n");
     }
-    if (verbosity.count("progress"))
-        printf("\ndelete rules\n");
-    rules_free(rules, nrules, 1);
-    if (verbosity.count("progress"))
-        printf("delete labels\n");
-    rules_free(labels, nlabels, 0);
-    if (verbosity.count("progress"))
-        printf("tree destructors\n");
-    return 0;
+    delete tree;
+
+    if (verbosity.count("progress")) {
+        printf("\ndelete symmetry-aware map\n");
+    }
+    delete p;
+
+    if (verbosity.count("progress")) {
+        printf("\ndelete priority queue\n");
+    }
+    delete q;
+
+    if (verbosity.count("progress")) {
+        printf("\ndelete logger\n");
+    }
+    delete logger;
 }
