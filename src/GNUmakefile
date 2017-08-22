@@ -32,13 +32,13 @@ CLEAN = corels *~ *.o *.so
 
 all: corels
 
-corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
+corels: cli.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 evaluate-test: evaluate-test.o evaluate.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
-main.o: main.cc $(DEPSDIR)/stamp
+cli.o: cli.cc run.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 corels.o: corels.cc $(DEPSDIR)/stamp
@@ -77,4 +77,3 @@ endif
 
 .PHONY: all clean
 .SUFFIXES:
-
