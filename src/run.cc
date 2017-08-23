@@ -1,14 +1,52 @@
-#include "run.hh"
-#include "queue.hh"
 #include <stdio.h>
 #include <iostream>
+#include <set>
+
+#include "queue.hh"
+#include "run.hh"
 
 #define BUFSZ 512
 
-void run_corels (const char* opt_file, const char* log_file, int max_num_nodes, double c, std::set<std::string> verbosity,
-                    int curiosity_policy, int map_type, int freq, int ablation, bool calculate_size,
-                    bool latex_out, int nrules, int nlabels, int nsamples, rule_t *rules,
-                    rule_t *labels, rule_t *meta) {
+NullLogger* logger;
+
+extern "C" {
+
+int run_corels (char* opt_file, char* log_file,
+                 int max_num_nodes, double c, char* vstring, int curiosity_policy, int map_type,
+                 int freq, int ablation, int calculate_size, int latex_out, int nrules, int nlabels, int nsamples,
+                 rule_t * rules, rule_t * labels, rule_t * meta) {
+
+    std::set<std::string> verbosity;
+
+    const char* voptions = "rule|label|samples|progress|log|silent";
+
+    char* vopt = strtok(vstring, ",");
+    while (vopt != NULL) {
+        if (!strstr(voptions, vopt)) {
+            fprintf(stderr, "verbosity options must be one or more of (rule|label|samples|progress|log|silent), separated with commas (i.e. -v progress,log)");
+            return 1;
+        }
+        verbosity.insert(vopt);
+        vopt = strtok(NULL, ",");
+    }
+
+    if (verbosity.count("samples") && !(verbosity.count("rule") || verbosity.count("label"))) {
+        fprintf(stderr, "verbosity 'samples' option must be combined with at least one of (rule|label)");
+        return 1;
+    }
+    if (verbosity.size() > 2 && verbosity.count("silent")) {
+        fprintf(stderr, "verbosity 'silent' option must be passed without any additional verbosity parameters");
+        return 1;
+    }
+
+    if (verbosity.size() == 0) {
+        verbosity.insert("progress");
+    }
+
+    if (verbosity.count("silent")) {
+        verbosity.clear();
+    }
+
     if (verbosity.count("log"))
         print_machine_info();
 
@@ -106,8 +144,12 @@ void run_corels (const char* opt_file, const char* log_file, int max_num_nodes, 
     }
     delete q;
 
-    if (verbosity.count("progress")) {
+    /*if (verbosity.count("progress")) {
         printf("\ndelete logger\n");
     }
-    delete logger;
+    delete logger;*/
+
+    return 0;
 }
+
+} // end extern C

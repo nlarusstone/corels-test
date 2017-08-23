@@ -1,9 +1,8 @@
 #include <Python.h>
 
-#include "../queue.hh"
 #include "../run.hh"
 
-#define BUFSZ 512s
+#define BUFSZ 512
 
 static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
 {
@@ -18,14 +17,12 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
     int curiosity_policy = 0;
     int latex_out = 0;
     int map_type = 0;
-    char* vstring = "silent";
+    char* vstring = "progress";
     int log_freq = 0;
     int max_num_nodes = 10000;
     double c = 0.01;
     int ablation = 0;
-    int calculate_size = false;
-
-    const char* voptions = "rule|label|samples|progress|log|silent";
+    int calculate_size = 0;
 
     static char* kwlist[] = {"out_file", "label_file", "minor_file", "opt_file", "log_file", "curiosity_policy", "latex_out", "map_type",
                              "verbosity", "log_freq", "max_num_nodes", "c", "ablation", "calculate_size"};
@@ -37,19 +34,8 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         return NULL;
     }
 
-    int verr = 0;
-    char* vopt = strtok(vstring, ",");
-    while (vopt != NULL) {
-        if (!strstr(voptions, vopt)) {
-            verr = 1;
-            break;
-        }
-        verbosity.insert(vopt);
-        vopt = strtok(NULL, ",");
-    }
-
     int error = 0;
-    char* error_txt[BUFSZ];
+    char error_txt[BUFSZ];
 
     if(!out_file || !strlen(out_file)) {
         error = 1;
@@ -83,41 +69,21 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         error = 1;
         snprintf(error_txt, BUFSZ, "you must specify a curiosity type (0|1|2|3|4)");
     }
-    if (verr) {
-        error = 1;
-        snprintf(error_txt, BUFSZ, "verbosity options must be one or more of (%s), separated with commas (i.e. -v progress,log)", voptions);
-    }
-    if (verbosity.count("samples") && !(verbosity.count("rule") || verbosity.count("label"))) {
-        error = 1;
-        snprintf(error_txt, BUFSZ, "verbosity 'samples' option must be combined with at least one of (rule|label)");
-    }
-    if (verbosity.size() > 2 && verbosity.count("silent")) {
-        error = 1;
-        snprintf(error_txt, BUFSZ, "verbosity 'silent' option must be passed without any additional verbosity parameters");
-    }
 
     if (error) {
         PyErr_SetString(PyExc_ValueError, error_txt);
         return NULL;
     }
 
-    if (verbosity.size() == 0) {
-        verbosity.insert("progress");
-    }
-
-    if (verbosity.count("silent")) {
-        verbosity.clear();
-    }
-
     int nrules, nsamples, nlabels, nsamples_chk;
     rule_t *rules, *labels;
     if(rules_init(out_file, &nrules, &nsamples, &rules, 1) != 0) {
-        PyErr_SetString(PyExc_ValueError, "could not load out file at path '%s'", out_file);
+        PyErr_SetString(PyExc_ValueError, "could not load out file");
         return NULL;
     }
     if(rules_init(label_file, &nlabels, &nsamples_chk, &labels, 0) != 0) {
         rules_free(rules, nrules, 1);
-        PyErr_SetString(PyExc_ValueError, "could not load label file at path '%s'", label_file);
+        PyErr_SetString(PyExc_ValueError, "could not load label file");
         return NULL;
     }
 
@@ -128,40 +94,58 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         if(rules_init(minor_file, &nmeta, &nsamples_check, &meta, 0) != 0) {
             rules_free(rules, nrules, 1);
             rules_free(labels, nlabels, 0);
-            PyErr_SetString(PyExc_ValueError, "could not load minor file at path '%s'", minor_file);
+            PyErr_SetString(PyExc_ValueError, "could not load minority file");
             return NULL;
         }
     }
 
     if(nsamples != nsamples_chk) {
-        PyErr_SetString(PyExc_ValueError, "rule and label data must contain the same number of samples");
+        rules_free(rules, nrules, 1);
+        rules_free(labels, nlabels, 0);
+        if(meta)
+            rules_free(meta, nmeta, 0);
+
+        PyErr_SetString(PyExc_ValueError, "the number of samples in the out and label files must match");
         return NULL;
     }
 
     if(meta && nsamples != nsamples_check) {
-        PyErr_SetString(PyExc_ValueError, "rule and minority data must contain the same number of samples");
+        rules_free(rules, nrules, 1);
+        rules_free(labels, nlabels, 0);
+        if(meta)
+            rules_free(meta, nmeta, 0);
+
+        PyErr_SetString(PyExc_ValueError, "the number of samples in the out and label files must match");
         return NULL;
     }
 
-    run_corels(opt_file, log_file, max_num_nodes, c, verbosity, curiosity_policy, map_type,
-                    log_freq, ablation, calculate_size, latex_out, nrules, nlabels,
-                    nsamples, rules, labels, meta);
+    run_corels(opt_file, log_file, max_num_nodes, c, vstring, curiosity_policy, map_type,
+                log_freq, ablation, calculate_size, latex_out, nrules, nlabels, nsamples, rules, labels, meta);
 
     rules_free(rules, nrules, 1);
     rules_free(labels, nlabels, 0);
 
-    if(meta)
+    if(meta) {
         rules_free(meta, nmeta, 0);
+    }
 
     return Py_None;
 }
 
 static PyMethodDef pycorelsMethods[] = {
-    {"run", pycorels_run, METH_VARARGS | METH_KEYWORDS },
+    {"run", (PyCFunction)pycorels_run, METH_VARARGS | METH_KEYWORDS },
     {NULL, NULL, 0, NULL}
 };
 
-PyMODINITFUNC initpycorels(void)
+static struct PyModuleDef pycorelsModule = {
+    PyModuleDef_HEAD_INIT,
+    "pycorels",
+    "Python binding to CORELS algorithm",
+    -1,
+    pycorelsMethods
+};
+
+PyMODINIT_FUNC Pyinit_pycorels(void)
 {
-    Py_InitModule("pycorels", pycorelsMethods);
+    return PyModule_Create(&pycorelsModule);
 }

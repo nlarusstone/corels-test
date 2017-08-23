@@ -1,8 +1,10 @@
-#include "run.hh"
 #include <stdio.h>
 #include <getopt.h>
 #include <string.h>
 #include <map>
+#include <set>
+
+#include "run.hh"
 
 #define BUFSZ 512
 
@@ -19,10 +21,7 @@ int main(int argc, char *argv[]) {
     bool run_curiosity = false;
     int curiosity_policy = 0;
     bool latex_out = false;
-    char *vopt;
-    std::set<std::string> verbosity;
-    bool verr = false;
-    const char *vstr = "rule|label|samples|progress|log|silent";
+    char* vstring = NULL;
     int map_type = 0;
     int max_num_nodes = 100000;
     double c = 0.01;
@@ -52,15 +51,8 @@ int main(int argc, char *argv[]) {
             map_type = atoi(optarg);
             break;
         case 'v':
-            vopt = strtok(optarg, ",");
-            while (vopt != NULL) {
-                if (!strstr(vstr, vopt)) {
-                    verr = true;
-                    break;
-                }
-                verbosity.insert(vopt);
-                vopt = strtok(NULL, ",");
-            }
+            vstring = (char*)malloc(sizeof(char) * strlen(optarg));
+            strcpy(vstring, optarg);
             break;
         case 'n':
             max_num_nodes = atoi(optarg);
@@ -106,33 +98,10 @@ int main(int argc, char *argv[]) {
         snprintf(error_txt, BUFSZ,
                 "you must specify a curiosity type (1|2|3|4)");
     }
-    if (verr) {
-        error = true;
-        snprintf(error_txt, BUFSZ,
-                 "verbosity options must be one or more of (rule|label|samples|progress|log|silent), separated with commas (i.e. -v progress,log)");
-    }
-    if (verbosity.count("samples") && !(verbosity.count("rule") || verbosity.count("label"))) {
-        error = true;
-        snprintf(error_txt, BUFSZ,
-                 "verbosity 'samples' option must be combined with at least one of (rule|label)");
-    }
-    if (verbosity.size() > 2 && verbosity.count("silent")) {
-        snprintf(error_txt, BUFSZ,
-                 "verbosity 'silent' option must be passed without any additional verbosity parameters");
-    }
 
     if (error) {
         fprintf(stderr, usage, argv[0], error_txt);
         return 1;
-    }
-
-    // default: show progress
-    if (verbosity.size() == 0) {
-        verbosity.insert("progress");
-    }
-
-    if (verbosity.count("silent")) {
-        verbosity.clear();
     }
 
     argc -= optind;
@@ -151,6 +120,12 @@ int main(int argc, char *argv[]) {
     else
         meta = NULL;
 
+    std::map<int, std::string> curiosity_map;
+    curiosity_map[1] = "curiosity";
+    curiosity_map[2] = "curious_lb";
+    curiosity_map[3] = "curious_obj";
+    curiosity_map[4] = "dfs";
+
     char froot[BUFSZ];
     char log_fname[BUFSZ];
     char opt_fname[BUFSZ];
@@ -167,24 +142,18 @@ int main(int argc, char *argv[]) {
     snprintf(log_fname, BUFSZ, "%s.txt", froot);
     snprintf(opt_fname, BUFSZ, "%s-opt.txt", froot);
 
-    run_corels(opt_fname, log_fname, max_num_nodes, c, verbosity, curiosity_policy, map_type,
+    run_corels(opt_fname, log_fname, max_num_nodes, c, vstring, curiosity_policy, map_type,
                     freq, ablation, calculate_size, latex_out, nrules, nlabels,
                     nsamples, rules, labels, meta);
 
+    if(vstring)
+        free(vstring);
+
     if (meta) {
-        if (verbosity.count("progress"))
-            printf("\ndelete identical points indicator");
         rules_free(meta, nmeta, 0);
     }
 
-    if (verbosity.count("progress")) {
-        printf("\ndelete rules\n");
-    }
     rules_free(rules, nrules, 1);
-
-    if (verbosity.count("progress")) {
-        printf("delete labels\n");
-    }
     rules_free(labels, nlabels, 0);
 
     return 0;
