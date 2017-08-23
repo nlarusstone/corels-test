@@ -16,6 +16,8 @@ int run_corels (char* opt_file, char* log_file,
                  int freq, int ablation, int calculate_size, int latex_out, int nrules, int nlabels, int nsamples,
                  rule_t * rules, rule_t * labels, rule_t * meta) {
 
+    printf("ran\n");
+
     std::set<std::string> verbosity;
 
     const char* voptions = "rule|label|samples|progress|log|silent";
@@ -60,12 +62,15 @@ int run_corels (char* opt_file, char* log_file,
         rule_print_all(labels, nlabels, nsamples, (verbosity.count("samples")));
     }
 
+    printf("verbosity\n");
+
     if (verbosity.count("log")) {
         logger = new Logger(c, nrules, verbosity, log_file, freq);
     } else {
         logger = new NullLogger();
         logger->setVerbosity(verbosity);
     }
+    printf("logger\n");   
     double init = timestamp();
     char run_type[BUFSZ];
     Queue* q;

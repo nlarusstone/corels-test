@@ -115,7 +115,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         if(meta)
             rules_free(meta, nmeta, 0);
 
-        PyErr_SetString(PyExc_ValueError, "the number of samples in the out and label files must match");
+        PyErr_SetString(PyExc_ValueError, "the number of samples in the out and minor files must match");
         return NULL;
     }
 
@@ -145,7 +145,7 @@ static struct PyModuleDef pycorelsModule = {
     pycorelsMethods
 };
 
-PyMODINIT_FUNC Pyinit_pycorels(void)
+PyMODINIT_FUNC PyInit_pycorels(void)
 {
     return PyModule_Create(&pycorelsModule);
 }
