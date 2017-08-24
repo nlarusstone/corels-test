@@ -5,6 +5,7 @@
 #include <set>
 
 #include "run.hh"
+#include "params.h"
 
 #define BUFSZ 512
 
@@ -17,69 +18,67 @@ int main(int argc, char *argv[]) {
         "%s\n";
 
     extern char *optarg;
-    bool run_bfs = false;
-    bool run_curiosity = false;
-    int curiosity_policy = 0;
-    bool latex_out = false;
-    char* vstring = NULL;
-    int map_type = 0;
-    int max_num_nodes = 100000;
-    double c = 0.01;
+
+    run_params_t params;
+    set_default_params(&params);
+
     char ch;
     bool error = false;
     char error_txt[BUFSZ];
-    int freq = 1000;
-    int ablation = 0;
-    bool calculate_size = false;
+
+    bool run_bfs = false;
+    bool run_curiosity = false;
+
     /* only parsing happens here */
     while ((ch = getopt(argc, argv, "bsLc:p:v:n:r:f:a:")) != -1) {
         switch (ch) {
         case 'b':
             run_bfs = true;
+            params.curiosity_policy = 0;
             break;
         case 's':
-            calculate_size = true;
+            params.calculate_size = true;
             break;
         case 'c':
             run_curiosity = true;
-            curiosity_policy = atoi(optarg);
+            params.curiosity_policy = atoi(optarg);
             break;
         case 'L':
-            latex_out = true;
+            params.latex_out = true;
             break;
         case 'p':
-            map_type = atoi(optarg);
+            params.map_type = atoi(optarg);
             break;
         case 'v':
-            vstring = (char*)malloc(sizeof(char) * strlen(optarg));
-            strcpy(vstring, optarg);
+            params.vstring = (char*)malloc(sizeof(char) * strlen(optarg));
+            strcpy(params.vstring, optarg);
             break;
         case 'n':
-            max_num_nodes = atoi(optarg);
+            params.max_num_nodes = atoi(optarg);
             break;
         case 'r':
-            c = atof(optarg);
+            params.c = atof(optarg);
             break;
         case 'f':
-            freq = atoi(optarg);
+            params.freq = atoi(optarg);
             break;
         case 'a':
-            ablation = atoi(optarg);
+            params.ablation = atoi(optarg);
             break;
         default:
             error = true;
             snprintf(error_txt, BUFSZ, "unknown option: %c", ch);
         }
     }
-    if (max_num_nodes < 0) {
+    if (params.max_num_nodes < 0) {
         error = true;
         snprintf(error_txt, BUFSZ, "number of nodes must be positive");
     }
-    if (c < 0) {
+    if (params.c < 0) {
         error = true;
         snprintf(error_txt, BUFSZ, "regularization constant must be postitive");
     }
-    if (map_type > 2 || map_type < 0) {
+    if (params.map_type > 2 || params.map_type < 0) {
         error = true;
         snprintf(error_txt, BUFSZ, "symmetry-aware map must be (0|1|2)");
     }
@@ -93,7 +92,7 @@ int main(int argc, char *argv[]) {
         snprintf(error_txt, BUFSZ,
                 "you must specify data files for rules and labels");
     }
-    if (run_curiosity && !((curiosity_policy >= 1) && (curiosity_policy <= 4))) {
+    if (run_curiosity && !((params.curiosity_policy >= 1) && (params.curiosity_policy <= 4))) {
         error = true;
         snprintf(error_txt, BUFSZ,
                 "you must specify a curiosity type (1|2|3|4)");
@@ -107,18 +106,42 @@ int main(int argc, char *argv[]) {
     argc -= optind;
     argv += optind;
 
-    int nrules, nsamples, nlabels, nsamples_chk;
-    rule_t *rules, *labels;
-    rules_init(argv[0], &nrules, &nsamples, &rules, 1);
-    rules_init(argv[1], &nlabels, &nsamples_chk, &labels, 0);
+    int nsamples_chk;
+    if(rules_init(argv[0], &params.nrules, &params.nsamples, &params.rules, 1) != 0) {
+        fprintf(stderr, "could not load out file at path '%s'\n", argv[0]);
+        return 1;
+    }
+    if(rules_init(argv[1], &params.nlabels, &nsamples_chk, &params.labels, 0) != 0) {
+        fprintf(stderr, "could not load label file at path '%s'\n", argv[1]);
+        rules_free(params.rules, params.nrules, 1);
+        return 1;
+    }
 
     int nmeta, nsamples_check;
-    // Equivalent points information is precomputed, read in from file, and stored in meta
-    rule_t *meta;
-    if (argc == 3)
-        rules_init(argv[2], &nmeta, &nsamples_check, &meta, 0);
-    else
-        meta = NULL;
+    if (argc == 3) {
+        if(rules_init(argv[2], &nmeta, &nsamples_check, &params.meta, 0) != 0) {
+            fprintf(stderr, "could not load minority file at path '%s'\n", argv[2]);
+            rules_free(params.rules, params.nrules, 1);
+            rules_free(params.labels, params.nlabels, 0);
+            return 1;
+        }
+    }
+
+    if(params.nsamples != nsamples_chk) {
+        fprintf(stderr, "number of samples in out file (%d) and label file (%d) must match\n", params.nsamples, nsamples_chk);
+        rules_free(params.rules, params.nrules, 1);
+        rules_free(params.labels, params.nlabels, 0);
+        rules_free(params.meta, nmeta, 0);
+        return 1;
+    }
+
+    if(params.meta && params.nsamples != nsamples_check) {
+        fprintf(stderr, "number of samples in out file (%d) and minority file (%d) must match\n", params.nsamples, nsamples_check);
+        rules_free(params.rules, params.nrules, 1);
+        rules_free(params.labels, params.nlabels, 0);
+        rules_free(params.meta, nmeta, 0);
+        return 1;
+    }
 
     std::map<int, std::string> curiosity_map;
     curiosity_map[1] = "curiosity";
@@ -127,34 +150,35 @@ int main(int argc, char *argv[]) {
     curiosity_map[4] = "dfs";
 
     char froot[BUFSZ];
-    char log_fname[BUFSZ];
-    char opt_fname[BUFSZ];
+    params.opt_fname = (char*)malloc(sizeof(char) * BUFSZ);
+    params.log_fname = (char*)malloc(sizeof(char) * BUFSZ);
     const char* pch = strrchr(argv[0], '/');
     snprintf(froot, BUFSZ, "../logs/for-%s-%s%s-%s-%s-removed=%s-max_num_nodes=%d-c=%.7f-f=%d",
             pch ? pch + 1 : "",
             run_bfs ? "bfs" : "",
-            run_curiosity ? curiosity_map[curiosity_policy].c_str() : "",
-            (map_type == 1) ? "with_prefix_perm_map" :
-                (map_type == 2 ? "with_captured_symmetry_map" : "no_pmap"),
-            meta ? "minor" : "no_minor",
-            ablation ? ((ablation == 1) ? "support" : "lookahead") : "none",
-            max_num_nodes, c, freq);
-    snprintf(log_fname, BUFSZ, "%s.txt", froot);
-    snprintf(opt_fname, BUFSZ, "%s-opt.txt", froot);
+            run_curiosity ? curiosity_map[params.curiosity_policy].c_str() : "",
+            (params.map_type == 1) ? "with_prefix_perm_map" :
+                (params.map_type == 2 ? "with_captured_symmetry_map" : "no_pmap"),
+            params.meta ? "minor" : "no_minor",
+            params.ablation ? ((params.ablation == 1) ? "support" : "lookahead") : "none",
+            params.max_num_nodes, params.c, params.freq);
+    snprintf(params.log_fname, BUFSZ, "%s.txt", froot);
+    snprintf(params.opt_fname, BUFSZ, "%s-opt.txt", froot);
 
-    run_corels(opt_fname, log_fname, max_num_nodes, c, vstring, curiosity_policy, map_type,
-                    freq, ablation, calculate_size, latex_out, nrules, nlabels,
-                    nsamples, rules, labels, meta);
+    run_corels(params);
 
-    if(vstring)
-        free(vstring);
+    if(params.vstring)
+        free(params.vstring);
 
-    if (meta) {
-        rules_free(meta, nmeta, 0);
+    free(params.opt_fname);
+    free(params.log_fname);
+
+    if (params.meta) {
+        rules_free(params.meta, nmeta, 0);
     }
 
-    rules_free(rules, nrules, 1);
-    rules_free(labels, nlabels, 0);
+    rules_free(params.rules, params.nrules, 1);
+    rules_free(params.labels, params.nlabels, 0);
 
     return 0;
 }

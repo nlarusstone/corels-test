@@ -32,13 +32,13 @@ CLEAN = corels *~ *.o *.so
 
 all: corels
 
-corels: cli.o run.o corels.o pmap.o cache.o rulelib.o utils.o
+corels: cli.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
-libcorels.so: run.o corels.o pmap.o cache.o rulelib.o utils.o
+libcorels.so: run.o params.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) -shared  -Wl,-soname,$@ -o $@ $^
 
-evaluate-test: evaluate-test.o evaluate.o corels.o pmap.o cache.o rulelib.o utils.o
+evaluate-test: evaluate-test.o evaluate.o cli.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 cli.o: cli.cc $(DEPSDIR)/stamp
@@ -60,6 +60,9 @@ cache.o: cache.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 rulelib.o: rulelib.c $(DEPSDIR)/stamp
+	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+
+params.o: params.c $(DEPSDIR)/stamp
 	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 evaluate-test.o: evaluate-test.cc $(DEPSDIR)/stamp
