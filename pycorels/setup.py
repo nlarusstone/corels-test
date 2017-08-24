@@ -3,7 +3,7 @@ from distutils.core import setup, Extension
 pycorels = Extension('pycorels',
                     sources = ['pycorels.c'],
                     libraries = ['corels', 'gmpxx', 'gmp'],
-                    library_dirs = ['../src/'])
+                    library_dirs = ['../src'])
 
 setup (name = 'pycorels',
        version = '0.1',

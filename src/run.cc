@@ -11,7 +11,7 @@ NullLogger* logger;
 
 extern "C" {
 
-int run_corels (run_params_t& params) {
+int run_corels (run_params_t params) {
 
     std::set<std::string> verbosity;
 

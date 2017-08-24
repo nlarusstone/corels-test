@@ -1,7 +1,7 @@
 #include <Python.h>
 
-#include "../run.hh"
-#include "../run.h"
+#include "../src/run.hh"
+#include "../src/params.h"
 
 #define BUFSZ 512
 
@@ -20,12 +20,11 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
 
     if(!PyArg_ParseTupleAndKeywords(args, keywds, "ss|sssibisiidibb", kwlist, &out_fname, &label_fname, &minor_fname,
                                     &params.opt_fname, &params.log_fname, &params.curiosity_policy, &params.latex_out, &params.map_type, &params.vstring,
-                                    &params.log_freq, &params.max_num_nodes, &params.c, &params.ablation, &params.calculate_size))
+                                    &params.freq, &params.max_num_nodes, &params.c, &params.ablation, &params.calculate_size))
     {
         return NULL;
     }
 
-    int error = 0;
     char error_txt[BUFSZ];
 
     if(!out_fname || !strlen(out_fname)) {

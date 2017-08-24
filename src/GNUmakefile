@@ -28,9 +28,9 @@ CXX = g++ -std=c++11
 
 DEPSDIR := .deps
 
-CLEAN = corels *~ *.o *.so
+CLEAN = corels evaluate-test *~ *.o *.so
 
-all: corels
+all: corels libcorels.so evaluate-test
 
 corels: cli.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
