@@ -31,9 +31,8 @@ CC = gcc
 CXX = g++ -std=c++11
 
 DEPSDIR := .deps
-TESTSDIR := testing
 
-CLEAN = corels tests $(TESTSDIR)/*.o *~ *.o *.so
+CLEAN = corels *~ *.o *.so
 
 all: corels tests
 
@@ -63,12 +62,6 @@ cache.o: cache.cc $(DEPSDIR)/stamp
 
 rulelib.o: rulelib.c $(DEPSDIR)/stamp
 	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
-
-$(TESTSDIR)/tests.o: $(TESTSDIR)/tests.cc $(TESTSDIR)/fixtures.hh $(TESTSDIR)/catch.hpp $(DEPSDIR)/stamp
-        $(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
-
-$(TESTSDIR)/tests-main.o: $(TESTSDIR)/tests-main.cc $(TESTSDIR)/catch.hpp $(DEPSDIR)/stamp
-        $(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 evaluate-test.o: evaluate-test.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
