@@ -28,6 +28,7 @@ int main(int argc, char *argv[]) {
 
     bool run_bfs = false;
     bool run_curiosity = false;
+    bool vstring_malloc = false;
 
     /* only parsing happens here */
     while ((ch = getopt(argc, argv, "bsLc:p:v:n:r:f:a:")) != -1) {
@@ -50,6 +51,7 @@ int main(int argc, char *argv[]) {
             params.map_type = atoi(optarg);
             break;
         case 'v':
+            vstring_malloc = true;
             params.vstring = (char*)malloc(sizeof(char) * strlen(optarg));
             strcpy(params.vstring, optarg);
             break;
@@ -167,7 +169,7 @@ int main(int argc, char *argv[]) {
 
     run_corels(params);
 
-    if(params.vstring)
+    if(vstring_malloc)
         free(params.vstring);
 
     free(params.opt_fname);
