@@ -81,11 +81,13 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         PyErr_SetString(PyExc_ValueError, "could not load out file");
         return NULL;
     }
+    printf("loaded out file\n");
     if(rules_init(label_file, &nlabels, &nsamples_chk, &labels, 0) != 0) {
         rules_free(rules, nrules, 1);
         PyErr_SetString(PyExc_ValueError, "could not load label file");
         return NULL;
     }
+    printf("loaded label file\n");
 
     int nmeta, nsamples_check;
 
@@ -97,6 +99,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
             PyErr_SetString(PyExc_ValueError, "could not load minority file");
             return NULL;
         }
+        printf("loaded minor file");
     }
 
     if(nsamples != nsamples_chk) {
@@ -108,8 +111,10 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         PyErr_SetString(PyExc_ValueError, "the number of samples in the out and label files must match");
         return NULL;
     }
-
+    printf("checked nsamples_chk\n");
+    printf("%d %d\n")
     if(meta && nsamples != nsamples_check) {
+        printf("Problem with nsamples_check");
         rules_free(rules, nrules, 1);
         rules_free(labels, nlabels, 0);
         if(meta)
@@ -118,6 +123,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         PyErr_SetString(PyExc_ValueError, "the number of samples in the out and minor files must match");
         return NULL;
     }
+    printf("checked nsamples_check");
 
     run_corels(opt_file, log_file, max_num_nodes, c, vstring, curiosity_policy, map_type,
                 log_freq, ablation, calculate_size, latex_out, nrules, nlabels, nsamples, rules, labels, meta);
