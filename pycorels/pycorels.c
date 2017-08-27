@@ -5,6 +5,68 @@
 
 #define BUFSZ 512
 
+PyObject* load_array(PyListObject* list, rule_t** out_rules, int* nrules)
+{
+    Py_ssize_t len = PyList_Size(list);
+
+    *out_rules = malloc(sizeof(rule_t) * len);
+
+    PyTupleObject* tuple;
+    PyArrayObject* vector;
+    for(Py_ssize_t i = 0; i < len; i++) {
+        if(!(tuple = PyList_GetItem(list, i)))
+            goto error;
+
+        if(!PyTuple_Check(tuple)) {
+            PyErr_SetString(PyExc_ValueError, "Array members must be tuples");
+            goto error;
+        }
+
+        if(!(tuple = PyList_GetItem(list, i)))
+            goto error;
+
+        if(!(bitvector = PyTuple_GetItem(tuple, 2)))
+            goto error;
+
+        if(!PyArray_Check(vector)) {
+            PyErr_SetString(PyExc_ValueError, "The third argument of every tuple must be a numpy array");
+            goto error;
+        }
+
+        if(PyArray_DIMS(vector) != 1 || PyArray_TYPE(vector) != NPY_BOOL) {
+            PyErr_SetString(PyExc_ValueError, "Each rule truthable must be a 1-d array of booleans");
+            goto error;
+        }
+
+        PyArrayObject* clean = PyArray_NewCopy(vector, NPY_CORDER);
+
+        char* data = PyArray_BYTES(clean);
+        npy_intp nsamples = PyArray_SIZE(clean);
+
+        for(npy_intp j = 0; j < nsamples; j++) {
+            data[j] += '0';
+        }
+        data[nsamples] = '\0';
+
+        rule_t* rule = (*out_rules + i);
+
+        if(ascii_to_vector(data, (int)nsamples, (int*)&nsamples, &rule->support, rule->truthtable) != 0) {
+            PyErr_SetString(PyExc_ValueError, "Could not load bit vector");
+            goto error;
+        }
+    }
+
+    *nrules = len;
+
+    return Py_None;
+
+error:
+    free(*out_rules);
+    *out_rules = NULL;
+    *nrules = 0;
+    return NULL;
+}
+
 static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
 {
     const char* out_fname;
