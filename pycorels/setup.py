@@ -1,9 +1,11 @@
 from distutils.core import setup, Extension
+import numpy as np
 
 pycorels = Extension('pycorels',
                     sources = ['pycorels.c'],
                     libraries = ['corels', 'gmpxx', 'gmp'],
-                    library_dirs = ['../src'])
+                    library_dirs = ['../src'],
+                    include_dirs = [np.get_include()])
 
 setup (name = 'pycorels',
        version = '0.1',

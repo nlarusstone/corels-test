@@ -2,9 +2,9 @@
 P2 := python2
 P3 := python3
 
-BUILD := ./build
+BUILD := build
 
-CLEAN := ./build
+CLEAN := build
 
 python2: setup.py
 	$(P2) setup.py $(BUILD)
