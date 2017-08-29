@@ -1,7 +1,5 @@
 #include "evaluate.hh"
 
-NullLogger * logger;
-
 int main(int argc, char ** argv)
 {
     logger = new NullLogger();

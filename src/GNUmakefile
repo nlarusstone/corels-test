@@ -38,7 +38,7 @@ corels: cli.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
 libcorels.so: run.o params.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) -shared  -Wl,-soname,$@ -o $@ $^
 
-evaluate-test: evaluate-test.o evaluate.o cli.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
+evaluate-test: evaluate-test.o evaluate.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 cli.o: cli.cc $(DEPSDIR)/stamp

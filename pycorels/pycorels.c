@@ -18,12 +18,12 @@ int CheckString(PyObject** string)
         return 1;
 
     if(unicode)
-        *string = PyUnicode_AsUTF8String(*string);
+        *string = PyUnicode_AsASCIIString(*string);
 
     return 0;
 }
 
-int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, int add_default_rule)
+/*int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, int add_default_rule)
 {
     char *rulestr;
 	int rule_cnt, sample_cnt, rsize;
@@ -42,10 +42,6 @@ int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, in
 
     int ntotal_rules = list_len + (add_default_rule != 0 ? 1 : 0);
 
-	/*
-	 * Leave a space for the 0th (default) rule, which we'll add at
-	 * the end.
-	 */
     PyObject* tuple;
     PyObject* vector;
     PyObject* features;
@@ -67,7 +63,6 @@ int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, in
 				goto err;
 		}
 
-		/* Get the rule string; line will contain the bits. */
         if(!(features = PyTuple_GetItem(tuple, 0)))
             goto err;
 
@@ -103,16 +98,23 @@ int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, in
 
         char* data = PyArray_BYTES(clean);
         len = (int)PyArray_SIZE(clean);
+
+        for(int j = 0; j < len; j++)
+            data[j] = '0' + !!data[j];
+
 		data[len] = '\0';
 
-		if (ascii_to_vector(data, len+1, &sample_cnt, &ones,
+		if (ascii_to_vector(data, len, &sample_cnt, &ones,
 		    &rules[rule_cnt].truthtable) != 0)
 		    	goto err;
 		rules[rule_cnt].support = ones;
 
+        printf("%s nsamples: %d\n", rulestr, sample_cnt);
+
+        //printf("%d\n", mpz_sizeinbase(rules[rule_cnt].truthtable, 2));
+
         Py_DECREF(clean);
 
-		/* Now compute the number of clauses in the rule. */
 		rules[rule_cnt].cardinality = 1;
 		for (char *cp = rulestr; *cp != '\0'; cp++)
 			if (*cp == ',')
@@ -120,7 +122,6 @@ int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, in
 		rule_cnt++;
 	}
 
-	/* Now create the 0'th (default) rule. */
 	if (add_default_rule) {
 		rules[0].support = sample_cnt;
 		rules[0].features = "default";
@@ -138,7 +139,6 @@ int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, in
 err:
 	ret = errno;
 
-	/* Reclaim space. */
 	if (rules != NULL) {
 		for (i = 1; i < rule_cnt; i++) {
 			free(rules[i].features);
@@ -151,9 +151,9 @@ err:
 		free(rules);
 	}
 	return (ret);
-}
+}*/
 
-/*int load_list(PyObject* list, int* nrules, int* nsamples, rule_t** rules_ret, int add_default_rule)
+int load_list(PyObject* list, int* nrules, int* nsamples, rule_t** rules_ret, int add_default_rule)
 {
     rule_t* rules = NULL;
 
@@ -163,7 +163,6 @@ err:
     }
 
     Py_ssize_t list_len = PyList_Size(list);
-    //printf("%ld\n", len);
 
     int ntotal_rules = list_len + (add_default_rule ? 1 : 0);
 
@@ -220,7 +219,6 @@ err:
 
         PyArrayObject* clean = (PyArrayObject*)PyArray_FromAny(vector, PyArray_DescrFromType(NPY_BYTE), 0, 0, NPY_ARRAY_CARRAY | NPY_ARRAY_ENSURECOPY | NPY_ARRAY_FORCECAST, NULL);
         if(clean == NULL) {
-            //printf("%ld\n", i);
             PyErr_SetString(PyExc_Exception, "Could not cast array to byte carray");
             goto error;
         }
@@ -228,23 +226,17 @@ err:
         char* data = PyArray_BYTES(clean);
         npy_intp b_len = PyArray_SIZE(clean);
 
-        for(npy_intp j = 0; j < b_len; j++) {
-            data[j] = '0' + data[j];
-            //printf("%ld %ld: %c\n", i, j, data[j]);
-        }
+        for(npy_intp j = 0; j < b_len; j++)
+            data[j] = '0' + !!data[j];
 
         data[b_len] = '\0';
 
-        //printf("data: %s, b_len: %ld\n", data, b_len);
-
-        if(ascii_to_vector(data, b_len+1, &samples_cnt, &rules[rule_idx].support, &rules[rule_idx].truthtable) != 0) {
+        if(ascii_to_vector(data, b_len, &samples_cnt, &rules[rule_idx].support, &rules[rule_idx].truthtable) != 0) {
             PyErr_SetString(PyExc_Exception, "Could not load bit vector");
             goto error;
         }
 
         Py_DECREF(clean);
-
-        printf("rules[1].features = %s\n", rules[1].features);
 
         rule_idx++;
     }
@@ -259,14 +251,9 @@ err:
         }
     }
 
-    printf("final: rules[1].features = %s\n", rules[1].features);
-    //rule_print_all(rules, ntotal_rules, samples_cnt, 1);
-
     *nrules = ntotal_rules;
     *rules_ret = rules;
     *nsamples = samples_cnt;
-
-    //printf("%d\n", *nrules);
 
     return 0;
 
@@ -286,7 +273,7 @@ error:
     *nrules = 0;
     *nsamples = 0;
     return 1;
-}*/
+}
 
 static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
 {
@@ -315,7 +302,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
     char error_txt[BUFSZ];
     PyObject* error_type = PyExc_ValueError;
 
-    if(PyBytes_Check(out_data)) {
+    if(CheckString(&out_data)) {
         out_fname = PyBytes_AsString(out_data);
         if(!out_fname || !strlen(out_fname)) {
             snprintf(error_txt, BUFSZ, "out file must be a valid file path");
@@ -334,7 +321,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         goto error;
     }
 
-    if(PyBytes_Check(label_data)) {
+    if(CheckString(&label_data)) {
         label_fname = PyBytes_AsString(label_data);
         if(!label_fname || !strlen(label_fname)) {
             snprintf(error_txt, BUFSZ, "label file must be a valid file path");
@@ -354,7 +341,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
     }
 
     if(minor_data) {
-        if(PyBytes_Check(minor_data)) {
+        if(CheckString(&minor_data)) {
             minor_fname = PyBytes_AsString(minor_data);
             if(!minor_fname || !strlen(minor_fname)) {
                 snprintf(error_txt, BUFSZ, "minor file must be a valid file path");

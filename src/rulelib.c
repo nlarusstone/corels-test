@@ -937,7 +937,7 @@ void
 rule_vector_print(VECTOR v, int n)
 {
 #ifdef GMP
-	mpz_out_str(stdout, 2, v);
+	mpz_out_str(stdout, 16, v);
 	printf("\n");
 #else
 	for (int i = 0; i < n; i++)
