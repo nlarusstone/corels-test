@@ -931,6 +931,8 @@ rule_print(rule_t *rules, int ndx, int n, int detail)
 	    ndx, r->features, r->support, r->cardinality);
 	if (detail)
 		rule_vector_print(r->truthtable, n);
+    else
+        printf("\n");
 }
 
 void

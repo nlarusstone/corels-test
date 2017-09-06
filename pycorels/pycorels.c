@@ -11,149 +11,79 @@
 #define BUFSZ  512
 #define RULE_INC  100
 
-int CheckString(PyObject** string)
+// returns 1 if obj is a string object
+int CheckString(PyObject **obj)
 {
-    int unicode = 0;
-    if(!PyBytes_Check(*string) && !(unicode = PyUnicode_Check(*string)))
-        return 1;
-
-    if(unicode)
-        *string = PyUnicode_AsASCIIString(*string);
-
-    return 0;
+    return PyUnicode_Check(*obj);
 }
 
-/*int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, int add_default_rule)
+PyObject* generate_list(rule_t *rules, int nrules, int nsamples)
 {
-    char *rulestr;
-	int rule_cnt, sample_cnt, rsize;
-	int i, ones, ret;
-	rule_t *rules=NULL;
-	size_t len = 0;
+    PyObject *obj, *vector, *tuple;
 
-	sample_cnt = rsize = 0;
+    obj = PyList_New(nrules);
 
-    if(!PyList_Check(list)) {
-        PyErr_SetString(PyExc_TypeError, "Data must be a python list");
-        goto err;
+    for(int i = 0; i < nrules; i++)
+    {
+#ifdef GMP
+        int leading_zeros = nsamples - mpz_sizeinbase(rules[i].truthtable, 2);
+        char* bits = malloc(nsamples + 1);
+
+        mpz_get_str(bits + leading_zeros, 2, rules[i].truthtable);
+
+        for(int j = 0; j < leading_zeros; j++)
+            bits[j] = 0;
+
+        for(int j = leading_zeros; j < nsamples; j++)
+            bits[j] = bits[j] - '0';
+
+        int num_bits = nsamples;
+#else
+        char* bits = malloc(nsamples + 1);
+
+        int nentry = (nsamples + BITS_PER_ENTRY - 1) / BITS_PER_ENTRY;
+        v_entry mask;
+        for(int j = 0; j < nentry; j++) {
+            mask = 1;
+
+            for(int k = 0; k < BITS_PER_ENTRY; k++) {
+                bits[j * BITS_PER_ENTRY + k] = !!(rules[i].truthtable[j] & mask);
+                mask <<= 1;
+            }
+        }
+
+        bits[nsamples] = '\0';
+
+        int num_bits = nsamples;
+#endif
+
+        //rule_print(rules, i, nsamples, 1);
+        //printf("%s\n", bits);
+
+        if(!(vector = PyArray_FromString(bits, num_bits, PyArray_DescrFromType(NPY_BOOL), -1, NULL))) {
+            PyErr_SetString(PyExc_ValueError, "Could not load bitvector");
+            Py_DECREF(obj);
+            return NULL;
+        }
+
+        free(bits);
+
+        if(!(tuple = Py_BuildValue("sO", rules[i].features, vector))) {
+            Py_DECREF(obj);
+            return NULL;
+        }
+
+        if(PyList_SetItem(obj, i, tuple) != 0) {
+            PyErr_SetString(PyExc_Exception, "Could not insert tuple into list");
+            Py_XDECREF(obj);
+            return NULL;
+        }
     }
 
-    Py_ssize_t list_len = PyList_Size(list);
+    return obj;
+}
 
-    int ntotal_rules = list_len + (add_default_rule != 0 ? 1 : 0);
-
-    PyObject* tuple;
-    PyObject* vector;
-    PyObject* features;
-
-	rule_cnt = add_default_rule != 0 ? 1 : 0;
-	while (rule_cnt < ntotal_rules) {
-        if(!(tuple = PyList_GetItem(list, rule_cnt - (add_default_rule != 0 ? 1 : 0))))
-            goto err;
-
-        if(!PyTuple_Check(tuple)) {
-            PyErr_SetString(PyExc_TypeError, "Array members must be tuples");
-            goto err;
-        }
-
-		if (rule_cnt >= rsize) {
-			rsize += RULE_INC;
-            rules = realloc(rules, rsize * sizeof(rule_t));
-			if (rules == NULL)
-				goto err;
-		}
-
-        if(!(features = PyTuple_GetItem(tuple, 0)))
-            goto err;
-
-        if(CheckString(&features) != 0) {
-            PyErr_SetString(PyExc_TypeError, "The first argument of every tuple must be a string or unicode object");
-            goto err;
-        }
-
-        rulestr = PyBytes_AsString(features);
-
-		if ((rules[rule_cnt].features = strdup(rulestr)) == NULL)
-			goto err;
-
-        if(!(vector = PyTuple_GetItem(tuple, 1)))
-            goto err;
-
-        if(!PyArray_Check(vector)) {
-            PyErr_SetString(PyExc_TypeError, "The second argument of every tuple must be a numpy array");
-            goto err;
-        }
-
-        int type = PyArray_TYPE((PyArrayObject*)vector);
-        if(PyArray_NDIM((PyArrayObject*)vector) != 1 && (PyTypeNum_ISINTEGER(type) || PyTypeNum_ISBOOL(type))) {
-            PyErr_SetString(PyExc_TypeError, "Each rule truthable must be a 1-d array of integers or booleans");
-            goto err;
-        }
-
-        PyArrayObject* clean = (PyArrayObject*)PyArray_FromAny(vector, PyArray_DescrFromType(NPY_BYTE), 0, 0, NPY_ARRAY_CARRAY | NPY_ARRAY_ENSURECOPY | NPY_ARRAY_FORCECAST, NULL);
-        if(clean == NULL) {
-            PyErr_SetString(PyExc_Exception, "Could not cast array to byte carray");
-            goto err;
-        }
-
-        char* data = PyArray_BYTES(clean);
-        len = (int)PyArray_SIZE(clean);
-
-        for(int j = 0; j < len; j++)
-            data[j] = '0' + !!data[j];
-
-		data[len] = '\0';
-
-		if (ascii_to_vector(data, len, &sample_cnt, &ones,
-		    &rules[rule_cnt].truthtable) != 0)
-		    	goto err;
-		rules[rule_cnt].support = ones;
-
-        printf("%s nsamples: %d\n", rulestr, sample_cnt);
-
-        //printf("%d\n", mpz_sizeinbase(rules[rule_cnt].truthtable, 2));
-
-        Py_DECREF(clean);
-
-		rules[rule_cnt].cardinality = 1;
-		for (char *cp = rulestr; *cp != '\0'; cp++)
-			if (*cp == ',')
-				rules[rule_cnt].cardinality++;
-		rule_cnt++;
-	}
-
-	if (add_default_rule) {
-		rules[0].support = sample_cnt;
-		rules[0].features = "default";
-		rules[0].cardinality = 0;
-		if (make_default(&rules[0].truthtable, sample_cnt) != 0)
-		    goto err;
-	}
-
-	*nsamples = sample_cnt;
-	*nrules = rule_cnt;
-	*rules_ret = rules;
-
-	return (0);
-
-err:
-	ret = errno;
-
-	if (rules != NULL) {
-		for (i = 1; i < rule_cnt; i++) {
-			free(rules[i].features);
-#ifdef GMP
-			mpz_clear(rules[i].truthtable);
-#else
-			free(rules[i].truthtable);
-#endif
-		}
-		free(rules);
-	}
-	return (ret);
-}*/
-
-int load_list(PyObject* list, int* nrules, int* nsamples, rule_t** rules_ret, int add_default_rule)
+int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, int add_default_rule)
 {
     rule_t* rules = NULL;
 
@@ -176,7 +106,7 @@ int load_list(PyObject* list, int* nrules, int* nsamples, rule_t** rules_ret, in
 
     PyObject* tuple;
     PyObject* vector;
-    PyObject* features;
+    char* features;
 
     int rule_idx = ntotal_rules - list_len;
     for(Py_ssize_t i = 0; i < list_len; i++) {
@@ -188,26 +118,18 @@ int load_list(PyObject* list, int* nrules, int* nsamples, rule_t** rules_ret, in
             goto error;
         }
 
-        if(!(features = PyTuple_GetItem(tuple, 0)))
+        if(!PyArg_ParseTuple(tuple, "sO", &features, &vector))
             goto error;
 
-        if(CheckString(&features) != 0) {
-            PyErr_SetString(PyExc_TypeError, "The first argument of every tuple must be a string or unicode object");
-            goto error;
-        }
-
-        Py_ssize_t features_len = PyBytes_Size(features);
+        int features_len = strlen(features);
         rules[rule_idx].features = malloc(features_len + 1);
-        strcpy(rules[rule_idx].features, PyBytes_AsString(features));
+        strcpy(rules[rule_idx].features, features);
         //rule[rule_idx].features[features_len] = '\0';
 
         rules[rule_idx].cardinality = 1;
 
-        if(!(vector = PyTuple_GetItem(tuple, 1)))
-            goto error;
-
         if(!PyArray_Check(vector)) {
-            PyErr_SetString(PyExc_TypeError, "The second argument of every tuple must be a numpy array");
+            PyErr_SetString(PyExc_TypeError, "The second element of each tuple must be a numpy array");
             goto error;
         }
 
@@ -275,6 +197,28 @@ error:
     return 1;
 }
 
+static PyObject* pycorels_tolist(PyObject *self, PyObject *args)
+{
+    const char *fname;
+
+    if(!PyArg_ParseTuple(args, "si", &fname))
+        return NULL;
+
+    rule_t *rules;
+    int nrules, nsamples;
+
+    if(rules_init(fname, &nrules, &nsamples, &rules, 0) != 0) {
+        PyErr_SetString(PyExc_ValueError, "Could not load rule file");
+        return NULL;
+    }
+
+    PyObject *res = generate_list(rules, nrules, nsamples);
+
+    rules_free(rules, nrules, 0);
+
+    return res;
+}
+
 static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
 {
     PyObject* out_data;
@@ -302,12 +246,10 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
     char error_txt[BUFSZ];
     PyObject* error_type = PyExc_ValueError;
 
-    if(CheckString(&out_data)) {
-        out_fname = PyBytes_AsString(out_data);
-        if(!out_fname || !strlen(out_fname)) {
-            snprintf(error_txt, BUFSZ, "out file must be a valid file path");
-            goto error;
-        }
+    if(PyUnicode_Check(out_data)) {
+        out_fname = PyUnicode_AsUTF8(out_data);
+        if(!out_fname)
+            return NULL;
     }
     else if(PyList_Check(out_data)) {
         if(!PyList_Size(out_data)) {
@@ -321,12 +263,10 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         goto error;
     }
 
-    if(CheckString(&label_data)) {
-        label_fname = PyBytes_AsString(label_data);
-        if(!label_fname || !strlen(label_fname)) {
-            snprintf(error_txt, BUFSZ, "label file must be a valid file path");
-            goto error;
-        }
+    if(PyUnicode_Check(label_data)) {
+        label_fname = PyUnicode_AsUTF8(label_data);
+        if(!label_fname)
+            return NULL;
     }
     else if(PyList_Check(label_data)) {
         if(!PyList_Size(label_data)) {
@@ -341,12 +281,10 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
     }
 
     if(minor_data) {
-        if(CheckString(&minor_data)) {
-            minor_fname = PyBytes_AsString(minor_data);
-            if(!minor_fname || !strlen(minor_fname)) {
-                snprintf(error_txt, BUFSZ, "minor file must be a valid file path");
-                goto error;
-            }
+        if(PyUnicode_Check(minor_data)) {
+            minor_fname = PyUnicode_AsUTF8(minor_data);
+            if(!minor_fname)
+                return NULL;
         }
         else if(PyList_Check(minor_data)) {
             if(!PyList_Size(minor_data)) {
@@ -430,11 +368,6 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         }
     }
 
-    for(int i = 1; i < params.nrules; i++) {
-        printf("params.rules[%d].features = %s\n", i, params.rules[i].features);
-    }
-    rule_print_all(params.rules + 1, params.nrules - 1, params.nsamples, 1);
-
     if(params.nsamples != nsamples_chk) {
         rules_free(params.rules, params.nrules, 1);
         rules_free(params.labels, params.nlabels, 0);
@@ -450,6 +383,15 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         rules_free(params.meta, nmeta, 0);
 
         snprintf(error_txt, BUFSZ, "the number of samples in the out file (%d) and minority file (%d) must match", params.nsamples, nsamples_check);
+        goto error;
+    }
+
+    if(params.nlabels != 2) {
+        rules_free(params.rules, params.nrules, 1);
+        rules_free(params.labels, params.nlabels, 0);
+        rules_free(params.meta, nmeta, 0);
+
+        snprintf(error_txt, BUFSZ, "the number of labels in the label file must be 2, not %d", params.nlabels);
         goto error;
     }
 
@@ -472,6 +414,7 @@ error:
 
 static PyMethodDef pycorelsMethods[] = {
     {"run", (PyCFunction)pycorels_run, METH_VARARGS | METH_KEYWORDS },
+    {"tolist", (PyCFunction)pycorels_tolist, METH_VARARGS },
     {NULL, NULL, 0, NULL}
 };
 

@@ -1,4 +1,3 @@
-
 P2 := python2
 P3 := python3
 
@@ -13,10 +12,12 @@ python3: setup.py
 	$(P3) setup.py $(BUILD)
 
 install2: setup.py ../src/libcorels.so
+	$(MAKE) -C ../src libcorels.so
 	sudo cp ../src/libcorels.so /usr/local/lib
 	$(P2) setup.py install
 
 install3: setup.py ../src/libcorels.so
+	$(MAKE) -C ../src libcorels.so
 	sudo cp ../src/libcorels.so /usr/local/lib
 	$(P3) setup.py install
 

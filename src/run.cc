@@ -15,17 +15,18 @@ int run_corels (run_params_t params) {
 
     std::set<std::string> verbosity;
 
-    const char* voptions = "rule|label|samples|progress|log|silent";
+    const char *voptions = "rule|label|samples|progress|log|silent";
 
-    char* vopt = strsep(&params.vstring, ",");
-    while (vopt != NULL) {
+    char *vopt = NULL;
+    char *vcopy = strdup(params.vstring);
+    while ((vopt = strsep(&vcopy, ",")) != NULL) {
         if (!strstr(voptions, vopt)) {
-            fprintf(stderr, "verbosity options must be one or more of (rule|label|samples|progress|log|silent), separated with commas (i.e. -v progress,log)\n");
+            fprintf(stderr, "verbosity options must be one or more of (%s), separated with commas (i.e. -v progress,log)\n", voptions);
             return 1;
         }
         verbosity.insert(vopt);
-        vopt = strtok(NULL, ",");
     }
+    free(vcopy);
 
     if (verbosity.count("samples") && !(verbosity.count("rule") || verbosity.count("label"))) {
         fprintf(stderr, "verbosity 'samples' option must be combined with at least one of (rule|label)\n");
@@ -48,13 +49,15 @@ int run_corels (run_params_t params) {
         print_machine_info();
 
     if (verbosity.count("rule")) {
-        printf("\n%d rules %d samples\n\n", params.nrules, params.nsamples);
+        printf("%d rules %d samples\n\n", params.nrules, params.nsamples);
         rule_print_all(params.rules, params.nrules, params.nsamples, (verbosity.count("samples")));
+        printf("\n\n");
     }
 
     if (verbosity.count("label")) {
-        printf("\nLabels (%d) for %d samples\n\n", params.nlabels, params.nsamples);
+        printf("Labels (%d) for %d samples\n\n", params.nlabels, params.nsamples);
         rule_print_all(params.labels, params.nlabels, params.nsamples, (verbosity.count("samples")));
+        printf("\n\n");
     }
 
     if (verbosity.count("log")) {

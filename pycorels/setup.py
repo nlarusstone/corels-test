@@ -6,7 +6,7 @@ pycorels = Extension('pycorels',
                     libraries = ['corels', 'gmpxx', 'gmp'],
                     library_dirs = ['../src'],
                     include_dirs = [np.get_include()],
-		    extra_compile_args = ["-DGMP"])
+		            extra_compile_args = ["-DGMP"])
 
 setup (name = 'pycorels',
        version = '0.1',
