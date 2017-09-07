@@ -49,8 +49,7 @@ class Node {
     }
 
   protected:
-    std::map<unsigned short, Node*, std::less<unsigned short>,
-        track_alloc<std::pair<unsigned short, Node*>, DataStruct::Tree> > children_;
+    std::map<unsigned short, Node*, std::less<unsigned short>, track_alloc<const Node*, DataStruct::Tree> > children_;
     Node* parent_;
     double lower_bound_;
     double objective_;
