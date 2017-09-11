@@ -1,6 +1,6 @@
-## Python binding of CORELS
+# Python binding of CORELS
 
-### Installation
+## Installation
 
 First, go to the src/ directory and run `make libcorels.so`
 
@@ -10,16 +10,16 @@ your linker search path (such as /usr/local/lib on Linux).
 Then, run `python setup.py install` or `python3 setup.py install` in this directory
 (pycorels) depending on what version of python you wish to use pycorels with.
 
-### Usage
+## Usage
 
 First, you have to include the module:
 `import pycorels`
 
 There are currently only two functions in the module: `pycorels.run` and `pycorels.tolist`
 
-## pycorels.run
+### pycorels.run
 
-# Parameters
+#### Parameters
 
 `pycorels.run` is the most important function, which runs the actual algorithm. Its usage is as follows:
 
@@ -45,27 +45,28 @@ The optional keywords are:
 - ablation (integer)                dictates what kind of bounds to use (greater than 1 uses the lower bound on antecedent bound, and greater than 2 uses the lookahead bound)
 - calculate_size (bool)             whether or not the logger should keep track of memory usage
 
-# Return value
+#### Return value
 
 Currently, pycorels.run returns none
 
 
-## pycorels.tolist
+### pycorels.tolist
 
-# Parameters
+#### Parameters
 
 This function only takes one required argument: a string for the path to
 the rule file
 
-# Return value
+#### Return value
 
 returns a list of tuples (in the format detailed above) describing the rules
 
 ## Example
-Run this from the this directory (pycorels)
 
 ~~~~
 import pycorels
 
 pycorels.run("../data/bcancer.out", "../data/bcancer.label", verbosity="progress,samples", max_num_nodes=1000000)
+
+out_list = pycorels.tolist("../data/bcancer.out")
 ~~~~
