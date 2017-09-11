@@ -9,13 +9,6 @@
 #include "../src/rule.h"
 
 #define BUFSZ  512
-#define RULE_INC  100
-
-// returns 1 if obj is a string object
-int CheckString(PyObject **obj)
-{
-    return PyUnicode_Check(*obj);
-}
 
 PyObject* generate_list(rule_t *rules, int nrules, int nsamples)
 {
@@ -74,6 +67,7 @@ PyObject* generate_list(rule_t *rules, int nrules, int nsamples)
         }
 
         if(PyList_SetItem(obj, i, tuple) != 0) {
+            Py_XDECREF(tuple);
             PyErr_SetString(PyExc_Exception, "Could not insert tuple into list");
             Py_XDECREF(obj);
             return NULL;
@@ -125,7 +119,7 @@ int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, in
         rules[rule_idx].features = malloc(features_len + 1);
         strcpy(rules[rule_idx].features, features);
         //rule[rule_idx].features[features_len] = '\0';
-
+        
         rules[rule_idx].cardinality = 1;
 
         if(!PyArray_Check(vector)) {
@@ -155,6 +149,7 @@ int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, in
 
         if(ascii_to_vector(data, b_len, &samples_cnt, &rules[rule_idx].support, &rules[rule_idx].truthtable) != 0) {
             PyErr_SetString(PyExc_Exception, "Could not load bit vector");
+            Py_DECREF(clean);
             goto error;
         }
 
@@ -201,7 +196,7 @@ static PyObject* pycorels_tolist(PyObject *self, PyObject *args)
 {
     const char *fname;
 
-    if(!PyArg_ParseTuple(args, "si", &fname))
+    if(!PyArg_ParseTuple(args, "s", &fname))
         return NULL;
 
     rule_t *rules;
@@ -246,10 +241,19 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
     char error_txt[BUFSZ];
     PyObject* error_type = PyExc_ValueError;
 
-    if(PyUnicode_Check(out_data)) {
-        out_fname = PyUnicode_AsUTF8(out_data);
-        if(!out_fname)
+    if(PyBytes_Check(out_data)) {
+        if(!(out_fname = PyBytes_AsString(out_data)))
             return NULL;
+    }
+    else if(PyUnicode_Check(out_data)) {
+        PyObject* bytes = PyUnicode_AsUTF8String(out_data);
+        if(!bytes)
+            return NULL;
+
+        else if(!(out_fname = PyBytes_AsString(bytes)))
+            return NULL;
+
+        Py_DECREF(bytes);
     }
     else if(PyList_Check(out_data)) {
         if(!PyList_Size(out_data)) {
@@ -263,10 +267,19 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         goto error;
     }
 
-    if(PyUnicode_Check(label_data)) {
-        label_fname = PyUnicode_AsUTF8(label_data);
-        if(!label_fname)
+    if(PyBytes_Check(label_data)) {
+        if(!(label_fname = PyBytes_AsString(label_data)))
             return NULL;
+    }
+    else if(PyUnicode_Check(label_data)) {
+        PyObject* bytes = PyUnicode_AsUTF8String(label_data);
+        if(!bytes)
+            return NULL;
+
+        else if(!(label_fname = PyBytes_AsString(bytes)))
+            return NULL;
+
+        Py_DECREF(bytes);
     }
     else if(PyList_Check(label_data)) {
         if(!PyList_Size(label_data)) {
@@ -281,10 +294,19 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
     }
 
     if(minor_data) {
-        if(PyUnicode_Check(minor_data)) {
-            minor_fname = PyUnicode_AsUTF8(minor_data);
-            if(!minor_fname)
+        if(PyBytes_Check(minor_data)) {
+            if(!(minor_fname = PyBytes_AsString(minor_data)))
                 return NULL;
+        }
+        else if(PyUnicode_Check(minor_data)) {
+            PyObject* bytes = PyUnicode_AsUTF8String(minor_data);
+            if(!bytes)
+                return NULL;
+
+            else if(!(minor_fname = PyBytes_AsString(bytes)))
+                return NULL;
+
+            Py_DECREF(bytes);
         }
         else if(PyList_Check(minor_data)) {
             if(!PyList_Size(minor_data)) {
@@ -403,6 +425,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
     if(params.meta)
         rules_free(params.meta, nmeta, 0);
 
+    Py_INCREF(Py_None);
     return Py_None;
 
 error:
@@ -418,6 +441,8 @@ static PyMethodDef pycorelsMethods[] = {
     {NULL, NULL, 0, NULL}
 };
 
+#if PY_MAJOR_VERSION > 2
+
 static struct PyModuleDef pycorelsModule = {
     PyModuleDef_HEAD_INIT,
     "pycorels",
@@ -432,3 +457,14 @@ PyMODINIT_FUNC PyInit_pycorels(void)
 
     return PyModule_Create(&pycorelsModule);
 }
+
+#else
+
+PyMODINIT_FUNC initpycorels(void)
+{
+    import_array();
+
+    Py_InitModule("pycorels", pycorelsMethods);
+}
+
+#endif
