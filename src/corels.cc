@@ -38,6 +38,7 @@ void evaluate_children(CacheTree* tree, Node* parent, tracking_vector<unsigned s
     parent_lower_bound = parent->lower_bound();
     parent_equivalent_minority = parent->equivalent_minority();
     double t0 = timestamp();
+    std::set<std::string> verbosity = logger->getVerbosity();
     for (i = 1; i < nrules; i++) {
         double t1 = timestamp();
         // check if this rule is already in the prefix
@@ -46,7 +47,7 @@ void evaluate_children(CacheTree* tree, Node* parent, tracking_vector<unsigned s
         // captured represents data captured by the new rule
         rule_vand(captured, parent_not_captured, tree->rule(i).truthtable, nsamples, &num_captured);
         // lower bound on antecedent support
-        if ((tree->ablation() != 1) && (num_captured < threshold)) 
+        if ((tree->ablation() != 1) && (num_captured < threshold))
             continue;
         rule_vand(captured_zeros, captured, tree->label(0).truthtable, nsamples, &c0);
         c1 = num_captured - c0;
@@ -81,8 +82,10 @@ void evaluate_children(CacheTree* tree, Node* parent, tracking_vector<unsigned s
         logger->addToObjTime(time_diff(t2));
         logger->incObjNum();
         if (objective < tree->min_objective()) {
-            printf("min(objective): %1.5f -> %1.5f, length: %d, cache size: %zu\n",
-                   tree->min_objective(), objective, len_prefix, tree->num_nodes());
+            if (verbosity.count("progress")) {
+                printf("min(objective): %1.5f -> %1.5f, length: %d, cache size: %zu\n",
+                        tree->min_objective(), objective, len_prefix, tree->num_nodes());
+            }
 
             logger->setTreeMinObj(objective);
             tree->update_min_objective(objective);
@@ -150,7 +153,6 @@ void evaluate_children(CacheTree* tree, Node* parent, tracking_vector<unsigned s
  * The queue can be ordered by DFS, BFS, or an alternative priority metric (e.g. lower bound).
  */
 int bbound(CacheTree* tree, size_t max_num_nodes, Queue* q, PermutationMap* p) {
-    bool print_queue = 0;
     size_t num_iter = 0;
     int cnt;
     double min_objective;
@@ -163,9 +165,9 @@ int bbound(CacheTree* tree, size_t max_num_nodes, Queue* q, PermutationMap* p) {
     double start = timestamp();
     logger->setInitialTime(start);
     logger->initializeState(tree->calculate_size());
-    int verbosity = logger->getVerbosity();
+    std::set<std::string> verbosity = logger->getVerbosity();
     // initial log record
-    logger->dumpState();         
+    logger->dumpState();
 
     min_objective = 1.0;
     tree->insert_root();
@@ -192,13 +194,13 @@ int bbound(CacheTree* tree, size_t max_num_nodes, Queue* q, PermutationMap* p) {
 
             if (tree->min_objective() < min_objective) {
                 min_objective = tree->min_objective();
-                if (verbosity >= 10)
-                    printf("before garbage_collect. num_nodes: %zu, log10(remaining): %zu\n", 
+                if (verbosity.count("progress"))
+                    printf("before garbage_collect. num_nodes: %zu, log10(remaining): %zu\n",
                             tree->num_nodes(), logger->getLogRemainingSpaceSize());
                 logger->dumpState();
                 tree->garbage_collect();
                 logger->dumpState();
-                if (verbosity >= 10)
+                if (verbosity.count("progress"))
                     printf("after garbage_collect. num_nodes: %zu, log10(remaining): %zu\n", tree->num_nodes(), logger->getLogRemainingSpaceSize());
             }
         }
@@ -210,7 +212,7 @@ int bbound(CacheTree* tree, size_t max_num_nodes, Queue* q, PermutationMap* p) {
         }
         ++num_iter;
         if ((num_iter % 10000) == 0) {
-            if (verbosity >= 10)
+            if (verbosity.count("progress"))
                 printf("iter: %zu, tree: %zu, queue: %zu, pmap: %zu, log10(remaining): %zu, time elapsed: %f\n",
                        num_iter, tree->num_nodes(), q->size(), p->size(), logger->getLogRemainingSpaceSize(), time_diff(start));
         }
@@ -220,34 +222,40 @@ int bbound(CacheTree* tree, size_t max_num_nodes, Queue* q, PermutationMap* p) {
         }
     }
     logger->dumpState(); // second last log record (before queue elements deleted)
-    if (verbosity >= 1)
+    if (verbosity.count("progress")) {
         printf("iter: %zu, tree: %zu, queue: %zu, pmap: %zu, log10(remaining): %zu, time elapsed: %f\n",
                num_iter, tree->num_nodes(), q->size(), p->size(), logger->getLogRemainingSpaceSize(), time_diff(start));
-    if (q->empty())
-        printf("Exited because queue empty\n");
-    else
-        printf("Exited because max number of nodes in the tree was reached\n");
+        if (q->empty())
+            printf("Exited because queue empty\n");
+        else
+            printf("Exited because max number of nodes in the tree was reached\n");
+    }
 
-    size_t tree_mem = logger->getTreeMemory(); 
-    size_t pmap_mem = logger->getPmapMemory(); 
-    size_t queue_mem = logger->getQueueMemory(); 
-    printf("TREE mem usage: %zu\n", tree_mem);
-    printf("PMAP mem usage: %zu\n", pmap_mem);
-    printf("QUEUE mem usage: %zu\n", queue_mem);
+    size_t tree_mem = logger->getTreeMemory();
+    size_t pmap_mem = logger->getPmapMemory();
+    size_t queue_mem = logger->getQueueMemory();
+    if (verbosity.count("progress")) {
+        printf("TREE mem usage: %zu\n", tree_mem);
+        printf("PMAP mem usage: %zu\n", pmap_mem);
+        printf("QUEUE mem usage: %zu\n", queue_mem);
+    }
 
     // Print out queue
     ofstream f;
-    if (print_queue) {
+    if (verbosity.count("log")) {
         char fname[] = "queue.txt";
-        printf("Writing queue elements to: %s\n", fname);
+        if (verbosity.count("progress"))
+            printf("Writing queue elements to: %s\n", fname);
         f.open(fname, ios::out | ios::trunc);
         f << "lower_bound objective length frac_captured rule_list\n";
     }
 
     // Clean up data structures
-    printf("Deleting queue elements and corresponding nodes in the cache,"
-            "since they may not be reachable by the tree's destructor\n");
-    printf("\nminimum objective: %1.10f\n", tree->min_objective());
+    if (verbosity.count("progress")) {
+        printf("Deleting queue elements and corresponding nodes in the cache,"
+                "since they may not be reachable by the tree's destructor\n");
+        printf("\nminimum objective: %1.10f\n", tree->min_objective());
+    }
     Node* node;
     double min_lower_bound = 1.0;
     double lb;
@@ -263,7 +271,7 @@ int bbound(CacheTree* tree, size_t max_num_nodes, Queue* q, PermutationMap* p) {
             lb = node->lower_bound() + tree->c();
             if (lb < min_lower_bound)
                 min_lower_bound = lb;
-            if (print_queue) {
+            if (verbosity.count("log")) {
                 std::pair<tracking_vector<unsigned short, DataStruct::Tree>, tracking_vector<bool, DataStruct::Tree> > pp_pair = node->get_prefix_and_predictions();
                 tracking_vector<unsigned short, DataStruct::Tree> prefix = std::move(pp_pair.first);
                 tracking_vector<bool, DataStruct::Tree> predictions = std::move(pp_pair.second);
@@ -278,8 +286,9 @@ int bbound(CacheTree* tree, size_t max_num_nodes, Queue* q, PermutationMap* p) {
             }
         }
     }
-    printf("minimum lower bound in queue: %1.10f\n\n", min_lower_bound);
-    if (print_queue)
+    if (verbosity.count("progress"))
+        printf("minimum lower bound in queue: %1.10f\n\n", min_lower_bound);
+    if (verbosity.count("log"))
         f.close();
     // last log record (before cache deleted)
     logger->dumpState();
