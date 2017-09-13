@@ -119,7 +119,7 @@ int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, in
         rules[rule_idx].features = malloc(features_len + 1);
         strcpy(rules[rule_idx].features, features);
         //rule[rule_idx].features[features_len] = '\0';
-        
+
         rules[rule_idx].cardinality = 1;
 
         if(!PyArray_Check(vector)) {
