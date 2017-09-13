@@ -16,6 +16,11 @@ PyObject* generate_list(rule_t *rules, int nrules, int nsamples)
 
     obj = PyList_New(nrules);
 
+    if(!obj) {
+        PyErr_SetString(PyExc_MemoryError, "Could not create list");
+        return NULL;
+    }
+
     for(int i = 0; i < nrules; i++)
     {
 #ifdef GMP
@@ -190,6 +195,78 @@ error:
     *nrules = 0;
     *nsamples = 0;
     return 1;
+}
+
+static PyObject* pycorels_split(PyObject *self, PyObject *args)
+{
+    PyObject *in_list, *in_tuple, *out_list1, *out_list2, *out_tuple1, *out_tuple2,
+             *in_vector, *out_vector1, *out_vector2;
+
+    char *features;
+    double break_point = 0.5;
+
+    if(!PyArg_ParseTuple(arg, "O|d", &in_list, &break_point))
+        return NULL;
+
+    Py_ssize_t list_len = PyList_Size(in_list);
+
+    // Break right after this sample
+    int sample_break = break_point * (double)list_len + 0.5;
+
+    out_list1 = PyList_New(list_len);
+    out_list2 = PyList_New(list_len);
+
+    if(!out_list1 || !out_list2) {
+        PyErr_SetString(PyExc_MemoryError, "Could not create lists");
+        goto error;
+    }
+
+    for(Py_ssize_t i = 0; i < list_len; i++) {
+        if(!(in_tuple = PyList_GetItem(in_list, i)))
+            goto error;
+
+        if(!PyTuple_Check(in_tuple)) {
+            PyErr_SetString(PyExc_TypeError, "Array members must be tuples");
+            goto error;
+        }
+
+        if(!PyArg_ParseTuple(arg, "sO", &features, &in_vector)) {
+            goto error;
+        }
+
+        if(!PyArray_Check(in_vector)) {
+            PyErr_SetString(PyExc_TypeError, "The second element of each tuple must be a numpy array");
+            goto error;
+        }
+
+        out_vector1 =
+
+        if(!(out_tuple1 = Py_BuildValue("sO", features, out_vector1))) {
+            goto error;
+        }
+
+        if(!(out_tuple2 = Py_BuildValue("sO", features, out_vector2))) {
+            Py_DECREF(out_tuple1);
+            goto error;
+        }
+
+        if(PyList_SetItem(out_list1, i, out_tuple1) != 0) {
+            Py_DECREF(out_tuple2);
+            Py_XDECREF(out_tuple1);
+            goto error;
+        }
+
+        if(PyList_SetItem(out_list2, i, out_tuple2) != 0) {
+            Py_DECREF(out_tuple1);
+            Py_XDECREF(out_tuple2);
+            goto error;
+        }
+    }
+
+error:
+    Py_XDECREF(out_list1);
+    Py_XDECREF(out_list2);
+    return NULL;
 }
 
 static PyObject* pycorels_tolist(PyObject *self, PyObject *args)
