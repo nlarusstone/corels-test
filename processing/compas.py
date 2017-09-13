@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import time
 
@@ -7,8 +8,13 @@ import tabular as tb
 import mine
 import utils
 
+def get_age(dob, cd):
+    dob = datetime.strptime(dob, "%Y-%m-%d")
+    cd = datetime.strptime(cd, "%Y-%m-%d")
+    return ((cd - dob) + datetime(1, 1, 1)).year
 
-def age_func(a):
+def age_func(dob, cd):
+    a = get_age(dob, cd)
     if (a <= 20):       # minimum age is 18
         return '18-20'  # support = 220
     elif (a <= 22):
@@ -46,6 +52,7 @@ max_cardinality = 2
 min_support = 0.005
 labels = ['No', 'Yes']
 minor = True
+race = False
 
 np.random.seed(seed)
 
@@ -73,7 +80,7 @@ columns = [(x['sex'] == 'Male'),
            ((x['age'] >= 45) & (x['age'] <= 59))]
 """
 
-age = np.array([age_func(i) for i in x['age']])
+age = np.array([age_func(dob, cd) for dob, cd in zip(x['dob'], x['compas_screening_date'])])
 
 juvenile_felonies = np.array(['>0' if (i > 0) else '=0' for i in x['juv_fel_count']])   # support = 282
 
@@ -90,22 +97,18 @@ c_charge_degree = np.array(['Misdemeanor' if (i == 'M') else 'Felony' for i in x
 # see `c_jail_in` and `c_jail_out` for time in jail?
 
 columns = [x['sex'], age, juvenile_felonies, juvenile_misdemeanors, juvenile_crimes,
-           priors_count, c_charge_degree, x['two_year_recid']]
+           priors_count, c_charge_degree]
 
 cnames = ['sex', 'age', 'juvenile-felonies', 'juvenile-misdemeanors', 'juvenile-crimes',
-          'priors', 'current-charge-degree', 'recidivate-within-two-years']
+          'priors', 'current-charge-degree']
 
-"""
-race_list = list(set(x['race']))
- 
-columns += [(x['race'] == n) for n in race_list]
+if race:
+    race_list = list(set(x['race']))
+    columns += [(x['race'] == n) for n in race_list]
+    cnames += ['Race=%s' % r for r in race_list]
 
-cnames = ['Gender=Male', 'Age=18-20', 'Age=18-22', 'Age=18-25',
-          'Age<30', 'Age>=60', 'Age=30-44', 'Age=45-59']
-
-cnames += ['Race=%s' % r for r in race_list]
-"""
-
+columns.append(x['two_year_recid'])
+cnames.append('recidivate-within-two-years')
 
 print 'write categorical dataset', fout
 y = tb.tabarray(columns=columns, names=cnames)
