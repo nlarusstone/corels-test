@@ -116,10 +116,10 @@ b = utils.to_binary(y)
 b.saveSV(bout)
 
 print 'permute and partition dataset'
-split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_folds)
+split_ind = np.array_split(np.random.permutation(len(y)), num_folds)
 print 'number of folds:', num_folds
-print 'train size:', len(split_ind[0]) * (num_folds - 1)
-print 'test size:', len(split_ind[0])
+print 'train size:', [sum([len(split_ind[i]) for i in range(num_folds) if i != j]) for j in range(num_folds)]
+print 'test size:', [sum([len(split_ind[i]) for i in range(num_folds) if i == j]) for j in range(num_folds)]
 
 num_rules = np.zeros(num_folds, int)
 mine_time = np.zeros(num_folds)
