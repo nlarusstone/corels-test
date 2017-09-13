@@ -2,8 +2,8 @@
 
 #include "rule.h"
 
-#define D_OPT_FNAME          NULL
-#define D_LOG_FNAME          NULL
+#define D_OPT_FNAME          "corels-opt.txt"
+#define D_LOG_FNAME          "corels.txt"
 #define D_MAX_NUM_NODES      10000
 #define D_C                  0.01
 #define D_VSTRING            "progress"

@@ -14,3 +14,5 @@ label_list = pycorels.tolist(label_file)
 
 pycorels.run(out_file, label_file, verbosity=verbosity)
 pycorels.run(out_list, label_list, verbosity=verbosity)
+
+pycorels.eval()
