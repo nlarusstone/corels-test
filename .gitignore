@@ -93,7 +93,7 @@ src/tags
 
 # Specific to bbcache
 *.txt
-corels
+src/corels
 tests
 evaluate-test
 figs/*png
