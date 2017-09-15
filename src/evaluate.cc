@@ -86,7 +86,7 @@ double obj_brute(data_t data, rulelist_t* opt_list, int max_list_len, double c, 
         temp_list.default_prediction = i;
 
         temp_list.nrules = 0;
-        double obj = evaluate_data(data, temp_list, c, v ? 1 : 0);
+        double obj = evaluate_data(data, temp_list, NULL, c, v ? 1 : 0);
 
         if(obj == -1.0)
             continue;
@@ -134,7 +134,7 @@ void _obj_brute_helper(data_t data, double* min_obj, rulelist_t* opt_list, rulel
             prefix.predictions[prefix.nrules] = label;
             prefix.nrules = prefix.nrules + 1;
 
-            double obj = evaluate_data(data, prefix, c, v ? 1 : 0);
+            double obj = evaluate_data(data, prefix, NULL, c, v ? 1 : 0);
 
             if(obj == -1.0) {
                 if(v > 0)
@@ -283,14 +283,14 @@ int data_init(data_t* out, rulelist_t* opt_out, const char* model_file, const ch
         rules_free(out->labels, nlabels, 0);
     }
 
-    if(out->nsamples != nsamples_chk) {
+    /*if(out->nsamples != nsamples_chk) {
         if(v > 0)
             printf("[data_init] Error: Nsamples mismatch between .out and .label files\n");
 
         rules_free(out->rules, out->nrules, 1);
         rules_free(out->labels, 2, 0);
         return 1;
-    }
+    }*/
 
     if(model_file != NULL) {
         return data_init_model(opt_out, *out, model_file, v);
@@ -318,7 +318,7 @@ void rulelist_free(rulelist_t rulelist)
 }
 
 
-double evaluate(const char * model_file, const char *out_file, const char *label_file, double c, int v)
+double evaluate(const char * model_file, const char *out_file, const char *label_file, VECTOR *total_captured_correct, double c, int v)
 {
     data_t data;
     rulelist_t opt_list;
@@ -328,7 +328,7 @@ double evaluate(const char * model_file, const char *out_file, const char *label
         return -1.0;
     }
 
-    double r = evaluate_data(data, opt_list, c, v);
+    double r = evaluate_data(data, opt_list, total_captured_correct, c, v);
 
     data_free(data);
     rulelist_free(opt_list);
@@ -336,7 +336,7 @@ double evaluate(const char * model_file, const char *out_file, const char *label
     return r;
 }
 
-double evaluate_data(data_t data, rulelist_t list, double c, int v)
+double evaluate_data(data_t data, rulelist_t list, VECTOR *total_captured_correct, double c, int v)
 {
     //printf("%d\n", model.nrules);
 
@@ -366,6 +366,11 @@ double evaluate_data(data_t data, rulelist_t list, double c, int v)
         total_ncaptured += ncaptured;
 
         rule_vand(captured_correct, captured, data.labels[pred].truthtable, data.nsamples, &ncorrect);
+
+        if(total_captured_correct) {
+            int temp;
+            rule_vor(*total_captured_correct, *total_captured_correct, captured_correct, data.nsamples, &temp);
+        }
 
         total_nincorrect += (ncaptured - ncorrect);
 
@@ -397,6 +402,12 @@ double evaluate_data(data_t data, rulelist_t list, double c, int v)
 
     rule_vinit(data.nsamples, &default_correct);
     rule_vandnot(default_correct, data.labels[list.default_prediction].truthtable, total_captured, data.nsamples, &ndefault_correct);
+
+    if(total_captured_correct) {
+        int temp;
+        rule_vor(*total_captured_correct, *total_captured_correct, default_correct, data.nsamples, &temp);
+    }
+
     rule_vfree(&default_correct);
 
     total_nincorrect += (data.nsamples - total_ncaptured - ndefault_correct);
@@ -559,7 +570,7 @@ int run_random_tests(size_t num_iters, int num_rules, int num_samples, double c,
         rlist.default_prediction = opt_preds_int[rlist.nrules];
 
         // Check objective outputted by CORELS
-        double e_obj = evaluate_data(data, rlist, c, v);
+        double e_obj = evaluate_data(data, rlist, NULL, c, v);
 
         tracking_vector<unsigned short, DataStruct::Tree> b_opt_list;
         tracking_vector<bool, DataStruct::Tree> b_opt_preds;

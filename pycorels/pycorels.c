@@ -497,7 +497,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         goto error;
     }
 
-    run_corels(params);
+    double accuracy = run_corels(params);
 
     rules_free(params.rules, params.nrules, 1);
     rules_free(params.labels, params.nlabels, 0);
@@ -505,8 +505,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
     if(params.meta)
         rules_free(params.meta, nmeta, 0);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    return Py_BuildValue("d", accuracy);
 
 error:
 

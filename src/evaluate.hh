@@ -250,7 +250,7 @@ _obj_brute_helper(data_t data, double * min_obj, rulelist_t * opt_list, rulelist
             -1.0
 **/
 double
-evaluate(const char * model_file, const char * out_file, const char * label_file, double c, int v);
+evaluate(const char * model_file, const char * out_file, const char * label_file, VECTOR *total_captured_correct, double c, int v);
 
 
 
@@ -260,4 +260,4 @@ evaluate(const char * model_file, const char * out_file, const char * label_file
         and a rulelist_t preloaded with the rulelist being evaluated
 **/
 double
-evaluate_data(data_t data, rulelist_t list, double c, int v);
+evaluate_data(data_t data, rulelist_t list, VECTOR *total_captured_correct, double c, int v);
