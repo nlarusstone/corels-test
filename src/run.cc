@@ -11,7 +11,7 @@ NullLogger* logger;
 
 extern "C" {
 
-int run_corels (run_params_t params) {
+double run_corels (run_params_t params) {
 
     std::set<std::string> verbosity;
 
@@ -22,7 +22,7 @@ int run_corels (run_params_t params) {
     while ((vopt = strsep(&vcopy, ",")) != NULL) {
         if (!strstr(voptions, vopt)) {
             fprintf(stderr, "verbosity options must be one or more of (%s), separated with commas (i.e. -v progress,log)\n", voptions);
-            return 1;
+            return -1.0;
         }
         verbosity.insert(vopt);
     }
@@ -30,11 +30,11 @@ int run_corels (run_params_t params) {
 
     if (verbosity.count("samples") && !(verbosity.count("rule") || verbosity.count("label"))) {
         fprintf(stderr, "verbosity 'samples' option must be combined with at least one of (rule|label)\n");
-        return 1;
+        return -1.0;
     }
     if (verbosity.size() > 2 && verbosity.count("silent")) {
         fprintf(stderr, "verbosity 'silent' option must be passed without any additional verbosity parameters\n");
-        return 1;
+        return -1.0;
     }
 
     if (verbosity.size() == 0) {
@@ -113,12 +113,13 @@ int run_corels (run_params_t params) {
 
     const tracking_vector<unsigned short, DataStruct::Tree>& r_list = tree->opt_rulelist();
 
+    double accuracy = 1.0 - tree->min_objective() + params.c*r_list.size();
+
     if (verbosity.count("progress")) {
         printf("final num_nodes: %zu\n", tree->num_nodes());
         printf("final num_evaluated: %zu\n", tree->num_evaluated());
         printf("final min_objective: %1.5f\n", tree->min_objective());
-        printf("final accuracy: %1.5f\n",
-           1 - tree->min_objective() + params.c*r_list.size());
+        printf("final accuracy: %1.5f\n", accuracy);
    }
 
     print_final_rulelist(r_list, tree->opt_predictions(),
@@ -150,7 +151,7 @@ int run_corels (run_params_t params) {
     }
     delete logger;*/
 
-    return 0;
+    return accuracy;
 }
 
 } // end extern C

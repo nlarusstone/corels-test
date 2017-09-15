@@ -1,4 +1,5 @@
 #include <Python.h>
+#include <string.h>
 
 #define NPY_NO_DEPRECATED_API NPY_API_VERSION
 
@@ -8,106 +9,207 @@
 
 #include "../src/rule.h"
 
-#define BUFSZ  512
+#include "utils.h"
 
-PyObject* generate_list(rule_t *rules, int nrules, int nsamples)
+static PyObject *pycorels_fastmine(PyObject *self, PyObject *args, PyObject *keywds)
 {
-    PyObject *obj, *vector, *tuple;
+    const char *base_out_path;
+    int max_cardinality;
+    double min_support = 0.1;
+    GATE *gates = NULL;
+    int num_gates;
 
-    obj = PyList_New(nrules);
+    int no_repeat = 1;
+    int log_freq = 100000;
 
-    if(!obj) {
-        PyErr_SetString(PyExc_MemoryError, "Could not create list");
+    PyObject *gates_obj;
+
+    static char* kwlist[] = {"out_file", "max_cardinality", "min_support", "gates", "no_repeat", "log_freq"};
+
+    if(!PyArg_ParseTupleAndKeywords(args, keywds, "sidO|ii", kwlist, &base_out_path, &max_cardinality, &min_support, &gates_obj, &no_repeat, &log_freq)) {
         return NULL;
     }
 
-    for(int i = 0; i < nrules; i++)
+    if(!PyLong_Check(gates_obj)) {
+        PyErr_SetString(PyExc_TypeError, "Gates must be a list");
+        return NULL;
+    }
+
+    long gates_code = PyLong_AsLong(gates_obj);
+    switch(gates_code)
     {
-#ifdef GMP
-        int leading_zeros = nsamples - mpz_sizeinbase(rules[i].truthtable, 2);
-        char* bits = malloc(nsamples + 1);
+        case 0:
+            gates = malloc(sizeof(GATE));
+            gates[0] = G_AND;
+            num_gates = 1;
+            break;
+        case 1:
+            gates = malloc(sizeof(GATE));
+            gates[0] = G_OR;
+            num_gates = 1;
+            break;
+        case 2:
+            gates = malloc(2 * sizeof(GATE));
+            gates[0] = G_AND;
+            gates[1] = G_OR;
+            num_gates = 2;
+            break;
+        default:
+            num_gates = 0;
+            break;
+    };
 
-        mpz_get_str(bits + leading_zeros, 2, rules[i].truthtable);
+    int nsamples;
+    rule_t **rules = malloc(sizeof(rule_t*) * max_cardinality);
+    int *nrules = malloc(sizeof(int) * max_cardinality);
 
-        for(int j = 0; j < leading_zeros; j++)
-            bits[j] = 0;
+    contains_t **contains = malloc(sizeof(contains_t*) * max_cardinality);
 
-        for(int j = leading_zeros; j < nsamples; j++)
-            bits[j] = bits[j] - '0';
+    if(rules_init(base_out_path, &nrules[0], &nsamples, &rules[0], 0) != 0) {
+        PyErr_SetString(PyExc_IOError, "Could not load base out file\n");
+        free(rules);
+        free(nrules);
+        return NULL;
+    }
 
-        int num_bits = nsamples;
-#else
-        char* bits = malloc(nsamples + 1);
+    printf("samples: %d\n", nsamples);
 
-        int nentry = (nsamples + BITS_PER_ENTRY - 1) / BITS_PER_ENTRY;
-        v_entry mask;
-        for(int j = 0; j < nentry; j++) {
-            mask = 1;
+    contains[0] = malloc(sizeof(contains_t) * nrules[0]);
 
-            for(int k = 0; k < BITS_PER_ENTRY; k++) {
-                bits[j * BITS_PER_ENTRY + k] = !!(rules[i].truthtable[j] & mask);
-                mask <<= 1;
+    if(no_repeat) {
+        for(int i = 0; i < nrules[0]; i++) {
+            contains[0][i].data = malloc(sizeof(int));
+            *(contains[0][i].data) = i;
+            contains[0][i].len = 1;
+        }
+    }
+
+    int total_rule_idx = 0;
+    // card is actually one less than the cardinality it represents
+    for(int card = 1; card < max_cardinality; card++) {
+        int rule_idx = 0;
+
+        rules[card] = NULL;
+
+        if(no_repeat)
+            contains[card] = NULL;
+
+        for(int rule1_idx = 0; rule1_idx < nrules[card-1]; rule1_idx++) {
+            for(int rule2_idx = (card == 1 ? rule1_idx+1 : 0); rule2_idx < nrules[0]; rule2_idx++) {
+                if(no_repeat) {
+                    int isin = 0;
+                    for(int j = 0; j < contains[card-1][rule1_idx].len; j++) {
+                        if(contains[card-1][rule1_idx].data[j] == rule2_idx) {
+                            isin = 1;
+                            break;
+                        }
+                    }
+
+                    if(isin)
+                        continue;
+                }
+
+                for(int gate = 0; gate < num_gates; gate++) {
+                    rule_t temp;
+                    contains_t tcont;
+                    contains_t *src1_contains = NULL, *src2_contains = NULL;
+
+                    if(no_repeat) {
+                        src1_contains = &contains[card-1][rule1_idx];
+                        src2_contains = &contains[0][rule2_idx];
+                    }
+
+                    if(generate_rule(&temp, rules[card-1][rule1_idx], rules[0][rule2_idx], gates[gate], nsamples, min_support, no_repeat, &tcont, src1_contains, src2_contains) == 0) {
+                        if(rules[card] == NULL)
+                            rules[card] = malloc(sizeof(rule_t) * (rule_idx + 1));
+                        else
+                            rules[card] = realloc(rules[card], sizeof(rule_t) * (rule_idx + 1));
+
+                        if(no_repeat) {
+                            if(contains[card] == NULL)
+                                contains[card] = malloc(sizeof(contains_t) * (rule_idx + 1));
+                            else
+                                contains[card] = realloc(contains[card], sizeof(contains_t) * (rule_idx + 1));
+                        }
+
+                        memcpy(&rules[card][rule_idx], &temp, sizeof(rule_t));
+                        if(no_repeat)
+                            memcpy(&contains[card][rule_idx], &tcont, sizeof(contains_t));
+
+                        total_rule_idx++;
+                        if(total_rule_idx % log_freq == 0)
+                            printf("Generated %d rules\n", total_rule_idx);
+
+                        rule_idx++;
+                    }
+                }
             }
         }
 
-        bits[nsamples] = '\0';
-
-        int num_bits = nsamples;
-#endif
-
-        //rule_print(rules, i, nsamples, 1);
-        //printf("%s\n", bits);
-
-        if(!(vector = PyArray_FromString(bits, num_bits, PyArray_DescrFromType(NPY_BOOL), -1, NULL))) {
-            PyErr_SetString(PyExc_ValueError, "Could not load bitvector");
-            Py_DECREF(obj);
-            return NULL;
-        }
-
-        free(bits);
-
-        if(!(tuple = Py_BuildValue("sO", rules[i].features, vector))) {
-            Py_DECREF(obj);
-            return NULL;
-        }
-
-        if(PyList_SetItem(obj, i, tuple) != 0) {
-            Py_XDECREF(tuple);
-            PyErr_SetString(PyExc_Exception, "Could not insert tuple into list");
-            Py_XDECREF(obj);
-            return NULL;
-        }
+        nrules[card] = rule_idx;
+        //printf("%d\n", rule_idx);
     }
 
-    return obj;
+    total_rule_idx += nrules[0];
+
+    printf("total: %d\n", total_rule_idx);
+
+    PyObject *list = PyList_New(total_rule_idx);
+
+    int start = 0;
+    for(int i = 0; i < max_cardinality; i++) {
+        if(!fill_list(list, rules[i], start, nrules[i], nsamples)) {
+            Py_XDECREF(list);
+            list = NULL;
+            break;
+        }
+        start += nrules[i];
+    }
+
+    for(int i = 0; i < max_cardinality; i++) {
+        for(int j = 0; j < nrules[i]; j++) {
+            mpz_clear(rules[i][j].truthtable);
+            if(no_repeat)
+                free(contains[i][j].data);
+            free(rules[i][j].features);
+        }
+        free(rules[i]);
+        if(no_repeat)
+            free(contains[i]);
+    }
+
+    if(gates)
+        free(gates);
+
+    free(contains);
+    free(rules);
+    free(nrules);
+
+    return list;
 }
 
-int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, int add_default_rule)
+static PyObject *pycorels_tofile(PyObject *self, PyObject *args)
 {
-    rule_t* rules = NULL;
+    PyObject *list;
+    const char *fname;
+
+    if(!PyArg_ParseTuple(args, "Os", &list, &fname))
+        return NULL;
 
     if(!PyList_Check(list)) {
-        PyErr_SetString(PyExc_TypeError, "Data must be a python list");
-        goto error;
+        PyErr_SetString(PyExc_TypeError, "Argument must be a list");
+        return NULL;
     }
 
-    Py_ssize_t list_len = PyList_Size(list);
+    PyObject *tuple, *vector;
+    char *features;
 
-    int ntotal_rules = list_len + (add_default_rule ? 1 : 0);
+    npy_intp list_len = PyList_Size(list);
 
-    rules = malloc(sizeof(rule_t) * ntotal_rules);
-    if(!rules) {
-        PyErr_SetString(PyExc_MemoryError, "Could not allocate rule array");
-        goto error;
-    }
+    FILE *fp;
+    if(!(fp = fopen(fname, "w")))
+        return NULL;
 
-    int samples_cnt = 0;
-
-    PyObject* tuple;
-    PyObject* vector;
-    char* features;
-
-    int rule_idx = ntotal_rules - list_len;
     for(Py_ssize_t i = 0; i < list_len; i++) {
         if(!(tuple = PyList_GetItem(list, i)))
             goto error;
@@ -120,17 +222,7 @@ int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, in
         if(!PyArg_ParseTuple(tuple, "sO", &features, &vector))
             goto error;
 
-        int features_len = strlen(features);
-        rules[rule_idx].features = malloc(features_len + 1);
-        strcpy(rules[rule_idx].features, features);
-        //rule[rule_idx].features[features_len] = '\0';
-
-        rules[rule_idx].cardinality = 1;
-
-        if(!PyArray_Check(vector)) {
-            PyErr_SetString(PyExc_TypeError, "The second element of each tuple must be a numpy array");
-            goto error;
-        }
+        fprintf(fp, "%s ", features);
 
         int type = PyArray_TYPE((PyArrayObject*)vector);
         if(PyArray_NDIM((PyArrayObject*)vector) != 1 && (PyTypeNum_ISINTEGER(type) || PyTypeNum_ISBOOL(type))) {
@@ -138,138 +230,35 @@ int load_list(PyObject *list, int *nrules, int *nsamples, rule_t **rules_ret, in
             goto error;
         }
 
-        PyArrayObject* clean = (PyArrayObject*)PyArray_FromAny(vector, PyArray_DescrFromType(NPY_BYTE), 0, 0, NPY_ARRAY_CARRAY | NPY_ARRAY_ENSURECOPY | NPY_ARRAY_FORCECAST, NULL);
+        PyArrayObject *clean = (PyArrayObject*)PyArray_FromAny(vector, PyArray_DescrFromType(NPY_BYTE), 0, 0, NPY_ARRAY_CARRAY | NPY_ARRAY_ENSURECOPY | NPY_ARRAY_FORCECAST, NULL);
         if(clean == NULL) {
             PyErr_SetString(PyExc_Exception, "Could not cast array to byte carray");
             goto error;
         }
 
-        char* data = PyArray_BYTES(clean);
+        char *data = PyArray_BYTES(clean);
         npy_intp b_len = PyArray_SIZE(clean);
 
-        for(npy_intp j = 0; j < b_len; j++)
-            data[j] = '0' + !!data[j];
-
-        data[b_len] = '\0';
-
-        if(ascii_to_vector(data, b_len, &samples_cnt, &rules[rule_idx].support, &rules[rule_idx].truthtable) != 0) {
-            PyErr_SetString(PyExc_Exception, "Could not load bit vector");
-            Py_DECREF(clean);
-            goto error;
+        for(npy_intp j = 0; j < b_len-1; j++) {
+            fprintf(fp, "%d ", !!data[j]);
         }
+
+        fprintf(fp, "%d\n", !!data[b_len-1]);
 
         Py_DECREF(clean);
-
-        rule_idx++;
     }
 
-    if(add_default_rule) {
-        rules[0].support = samples_cnt;
-		rules[0].features = "default";
-		rules[0].cardinality = 0;
-		if (make_default(&rules[0].truthtable, samples_cnt) != 0) {
-            PyErr_SetString(PyExc_Exception, "Could not make default rule");
-		    goto error;
-        }
-    }
+    fclose(fp);
 
-    *nrules = ntotal_rules;
-    *rules_ret = rules;
-    *nsamples = samples_cnt;
-
-    return 0;
+    Py_INCREF(Py_None);
+    return Py_None;
 
 error:
-    if(rules != NULL) {
-        for (int i = 1; i < rule_idx; i++) {
-            free(rules[i].features);
-#ifdef GMP
-            mpz_clear(rules[i].truthtable);
-#else
-            free(rules[i].truthtable);
-#endif
-        }
-        free(rules);
-    }
-    *rules_ret = NULL;
-    *nrules = 0;
-    *nsamples = 0;
-    return 1;
-}
-
-static PyObject* pycorels_split(PyObject *self, PyObject *args)
-{
-    PyObject *in_list, *in_tuple, *out_list1, *out_list2, *out_tuple1, *out_tuple2,
-             *in_vector, *out_vector1, *out_vector2;
-
-    char *features;
-    double break_point = 0.5;
-
-    if(!PyArg_ParseTuple(arg, "O|d", &in_list, &break_point))
-        return NULL;
-
-    Py_ssize_t list_len = PyList_Size(in_list);
-
-    // Break right after this sample
-    int sample_break = break_point * (double)list_len + 0.5;
-
-    out_list1 = PyList_New(list_len);
-    out_list2 = PyList_New(list_len);
-
-    if(!out_list1 || !out_list2) {
-        PyErr_SetString(PyExc_MemoryError, "Could not create lists");
-        goto error;
-    }
-
-    for(Py_ssize_t i = 0; i < list_len; i++) {
-        if(!(in_tuple = PyList_GetItem(in_list, i)))
-            goto error;
-
-        if(!PyTuple_Check(in_tuple)) {
-            PyErr_SetString(PyExc_TypeError, "Array members must be tuples");
-            goto error;
-        }
-
-        if(!PyArg_ParseTuple(arg, "sO", &features, &in_vector)) {
-            goto error;
-        }
-
-        if(!PyArray_Check(in_vector)) {
-            PyErr_SetString(PyExc_TypeError, "The second element of each tuple must be a numpy array");
-            goto error;
-        }
-
-        out_vector1 =
-
-        if(!(out_tuple1 = Py_BuildValue("sO", features, out_vector1))) {
-            goto error;
-        }
-
-        if(!(out_tuple2 = Py_BuildValue("sO", features, out_vector2))) {
-            Py_DECREF(out_tuple1);
-            goto error;
-        }
-
-        if(PyList_SetItem(out_list1, i, out_tuple1) != 0) {
-            Py_DECREF(out_tuple2);
-            Py_XDECREF(out_tuple1);
-            goto error;
-        }
-
-        if(PyList_SetItem(out_list2, i, out_tuple2) != 0) {
-            Py_DECREF(out_tuple1);
-            Py_XDECREF(out_tuple2);
-            goto error;
-        }
-    }
-
-error:
-    Py_XDECREF(out_list1);
-    Py_XDECREF(out_list2);
+    fclose(fp);
     return NULL;
 }
 
-static PyObject* pycorels_tolist(PyObject *self, PyObject *args)
+static PyObject *pycorels_tolist(PyObject *self, PyObject *args)
 {
     const char *fname;
 
@@ -284,11 +273,17 @@ static PyObject* pycorels_tolist(PyObject *self, PyObject *args)
         return NULL;
     }
 
-    PyObject *res = generate_list(rules, nrules, nsamples);
+    PyObject *list = PyList_New(nrules);
+
+    PyObject *res = fill_list(list, rules, 0, nrules, nsamples);
+    if(!res) {
+        Py_XDECREF(list);
+        list = NULL;
+    }
 
     rules_free(rules, nrules, 0);
 
-    return res;
+    return list;
 }
 
 static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
@@ -319,7 +314,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
     PyObject* error_type = PyExc_ValueError;
 
     if(PyBytes_Check(out_data)) {
-        if(!(out_fname = PyBytes_AsString(out_data)))
+        if(!(out_fname = strdup(PyBytes_AsString(out_data))))
             return NULL;
     }
     else if(PyUnicode_Check(out_data)) {
@@ -327,7 +322,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         if(!bytes)
             return NULL;
 
-        else if(!(out_fname = PyBytes_AsString(bytes)))
+        else if(!(out_fname = strdup(PyBytes_AsString(bytes))))
             return NULL;
 
         Py_DECREF(bytes);
@@ -345,7 +340,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
     }
 
     if(PyBytes_Check(label_data)) {
-        if(!(label_fname = PyBytes_AsString(label_data)))
+        if(!(label_fname = strdup(PyBytes_AsString(label_data))))
             return NULL;
     }
     else if(PyUnicode_Check(label_data)) {
@@ -353,7 +348,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         if(!bytes)
             return NULL;
 
-        else if(!(label_fname = PyBytes_AsString(bytes)))
+        else if(!(label_fname = strdup(PyBytes_AsString(bytes))))
             return NULL;
 
         Py_DECREF(bytes);
@@ -372,7 +367,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
 
     if(minor_data) {
         if(PyBytes_Check(minor_data)) {
-            if(!(minor_fname = PyBytes_AsString(minor_data)))
+            if(!(minor_fname = strdup(PyBytes_AsString(minor_data))))
                 return NULL;
         }
         else if(PyUnicode_Check(minor_data)) {
@@ -380,7 +375,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
             if(!bytes)
                 return NULL;
 
-            else if(!(minor_fname = PyBytes_AsString(bytes)))
+            else if(!(minor_fname = strdup(PyBytes_AsString(bytes))))
                 return NULL;
 
             Py_DECREF(bytes);
@@ -423,11 +418,15 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         goto error;
     }
 
+    //printf("out_fname: %s\n", out_fname);
+
     if(out_fname) {
         if(rules_init(out_fname, &params.nrules, &params.nsamples, &params.rules, 1) != 0) {
             snprintf(error_txt, BUFSZ, "could not load out file at path '%s'", out_fname);
             goto error;
         }
+
+        free(out_fname);
     } else {
         if(load_list(out_data, &params.nrules, &params.nsamples, &params.rules, 1) != 0)
             return NULL;
@@ -440,6 +439,8 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
             snprintf(error_txt, BUFSZ, "could not load label file at path '%s'", label_fname);
             goto error;
         }
+
+        free(label_fname);
     } else {
         if(load_list(label_data, &params.nlabels, &nsamples_chk, &params.labels, 0) != 0) {
             rules_free(params.rules, params.nrules, 1);
@@ -458,6 +459,8 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
                 snprintf(error_txt, BUFSZ, "could not load minority file at path '%s'", minor_fname);
                 goto error;
             }
+
+            free(minor_fname);
         } else {
             if(load_list(minor_data, &nmeta, &nsamples_check, &params.meta, 0) != 0) {
                 rules_free(params.rules, params.nrules, 1);
@@ -467,7 +470,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         }
     }
 
-    if(params.nsamples != nsamples_chk) {
+    /*if(params.nsamples != nsamples_chk) {
         rules_free(params.rules, params.nrules, 1);
         rules_free(params.labels, params.nlabels, 0);
         if(params.meta)
@@ -483,7 +486,7 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
 
         snprintf(error_txt, BUFSZ, "the number of samples in the out file (%d) and minority file (%d) must match", params.nsamples, nsamples_check);
         goto error;
-    }
+    }*/
 
     if(params.nlabels != 2) {
         rules_free(params.rules, params.nrules, 1);
@@ -515,6 +518,8 @@ error:
 static PyMethodDef pycorelsMethods[] = {
     {"run", (PyCFunction)pycorels_run, METH_VARARGS | METH_KEYWORDS },
     {"tolist", (PyCFunction)pycorels_tolist, METH_VARARGS },
+    {"tofile", (PyCFunction)pycorels_tofile, METH_VARARGS },
+    {"fastmine", (PyCFunction)pycorels_fastmine, METH_VARARGS | METH_KEYWORDS },
     {NULL, NULL, 0, NULL}
 };
 
