@@ -7,8 +7,8 @@
 #define D_MAX_NUM_NODES      10000
 #define D_C                  0.01
 #define D_VSTRING            "progress"
-#define D_CURIOSITY_POLICY   0
-#define D_MAP_TYPE           0
+#define D_CURIOSITY_POLICY   2
+#define D_MAP_TYPE           1
 #define D_FREQ               1000
 #define D_ABLATION           0
 #define D_CALCULATE_SIZE     0
