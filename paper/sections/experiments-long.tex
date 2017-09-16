@@ -2,45 +2,54 @@
 \label{sec:experiments}
 
 Our experimental analysis addresses five questions:
-\begin{itemize}
-\item How does CORELS' accuracy compare to that of other algorithms? (\S\ref{sec:sparsity})
-\item How does CORELS' model size compare to that of other algorithms? (\S\ref{sec:sparsity})
-\item How rapidly do the objective value and its lower bound converge,
+%
+How does CORELS' accuracy compare to that of other algorithms,
+including COMPAS scores? (\S\ref{sec:sparsity})
+%
+How does CORELS' model size compare to that of other algorithms? (\S\ref{sec:sparsity})
+%
+How rapidly do the objective value and its lower bound converge,
 for different values of the regularization parameter~$\Reg$? (\S\ref{sec:reg-param})
-\item How much does each of the implementation optimizations contribute to CORELS' performance? (\S\ref{sec:ablation})
-\item How rapidly does CORELS prune the search space? (\S\ref{sec:reg-param} and \S\ref{sec:ablation})
-\end{itemize}
-Below, we first describe our computational environment (\S\ref{sec:environment}),
-datasets we use and prediction problems for each (\S\ref{sec:datasets}),
-and example optimal rule lists found by CORELS (\S\ref{sec:examples}).
+%
+How much does each of the implementation optimizations contribute to CORELS' performance? (\S\ref{sec:ablation})
+%
+How rapidly does CORELS prune the search space? (\S\ref{sec:reg-param} and \S\ref{sec:ablation})
+%
+Before proceeding to the analysis described above,
+we first describe our computational environment, as well as
+datasets we use and prediction problems for each,
+and then show example optimal rule lists found by CORELS (\S\ref{sec:examples}).
 
-\subsection{Computational environment}
-\label{sec:environment}
-
+\textbf{Computational environment.}
+%\label{sec:environment}
 All timed results ran on a server with two Intel Xeon E5-2699~v4
 (55~MB cache, 2.20~GHz) processors and 756~GB RAM.
 %
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16GB~RAM.
 
-\subsection{Datasets and prediction problems}
-\label{sec:datasets}
-
+%\textbf{Datasets and prediction problems.}
+%\label{sec:datasets}
 Our evaluation focuses on two socially-important prediction problems associated
-with recent, publicly-available datasets:
-\begin{itemize}
-\item Predicting which individuals in the ProPublica COMPAS
+with recent, publicly-available datasets.
+
+\textbf{ProPublica recidivism dataset.}
+For our first problem, we predict which individuals in the ProPublica COMPAS
 dataset~\citep{LarsonMaKiAn16} recidivate within two years.
 This dataset contains records for all offenders in Broward County, Florida
 in 2013 and 2014 who were given a COMPAS score pre-trial.
 Recidivism is defined as committing a crime within 2 years of the COMPAS
 assessment.
-This dataset contains records for 7,215 individuals.
+This dataset contains records for 7,214 individuals.
 %
-Our rule mining framework extracts 14 features and combines them into
-${M=156}$ antecedents on average (folds ranged from containing 155 to 157 antecedents).
+For the majority of our analysis, we extract a set of 14 features,
+which our antecedent mining framework combines into ${M=156}$ antecedents,
+on average (folds ranged from containing 155 to 157 antecedents).
 %
-\item Using the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
+We also consider a second, similar antecedent set in~\S\ref{sec:examples} and~\S\ref{sec:sparsity}.
+
+\textbf{NYCLU stop-and-frisk dataset.} For our second problem, we use
+the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
 whether a weapon will be found on a stopped individual who is frisked or searched.
 %
 From the original dataset of 45,787 records, each describing an incident involving
@@ -57,9 +66,8 @@ that we use in our experiments below, through~\S\ref{sec:sparsity}.
 %
 For our experiments in~\S\ref{sec:ablation}, we add negations of 18 of these antecedents,
 which gives a total of ${M=46}$ antecedents.
-\end{itemize}
-%
-For further details about data preprocessing steps and antecedent mining,
+
+For further details about these datasets, preprocessing steps, and antecedent mining,
 see Appendix~\ref{appendix:data}.
 %
 Our choice of, and approach to, the weapon prediction problem is inspired by the work
@@ -74,24 +82,41 @@ interventions are likely to discover criminal possession of a weapon.
 \subsection{Example optimal rule lists}
 \label{sec:examples}
 
-We first ran a 10-fold cross validation experiment using CORELS
-and eight other algorithms:
-logistic regression, support vector machines, AdaBoost, CART, C4.5,
-random forests, RIPPER, and scalable Bayesian rule lists (SBRL).\footnote{For
-SBRL, we use the C implementation at \url{https://github.com/Hongyuy/sbrlmod}.
-By default, SBRL sets ${\eta = 3}$, ${\lambda = 9}$,
-the number of chains to 11 and iterations to 1,000.}
+To motivate the feature set we used in most of our analysis of the ProPublica dataset,
+described in Appendix~\ref{appendix:data}, we first consider a slightly different feature set.
 %
-We use standard R packages, with default parameter settings,
-for the first seven algorithms.\footnote{For CART, C4.5 (J48), and RIPPER,
-\ie the tree and rule list learning algorithms, we use the implementations
-from the R packages rpart, RWeka, and caret, respectively.
+\begin{figure}[t!]
+\begin{algorithmic}
+\State \bif $(priors > 3)$ \bthen $yes$
+\State \belif $(sex = male) \band (age < 25)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(age < 25) \band (priors = 2-3)$ \bthen $yes$
+\State \belif $(age < 25) \band (juvenile~crimes > 0)$ \bthen $yes$
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(juvenile~crimes = 0) \band (priors = 0)$ \bthen $no$
+\State \belif $(sex = male) \band (age < 25)$ \bthen $yes$
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\caption{Three representative optimal rule lists that predict two-year recidivism for the
+ProPublica dataset, found by CORELS (${\Reg = 0.005}$), across 10 cross-validation folds.
 %
-By default, CART uses complexity parameter ${cp = 0.01}$,
-and C4.5 uses complexity parameter ${C = 0.25}$.
+The remaining seven optimal rule lists were the same or similar to the top or
+middle of these, with prefixes containing the same rules, up to a permutation,
+and the same default rules.
 }
-
-\begin{figure}[t]
+\label{fig:propublica}
+\end{figure}
+%
+\begin{figure}[hb!]
+\vspace{1mm}
 \begin{algorithmic}
 \State \bif $(age = 23-25) \band (priors = 2-3)$ \bthen $yes$
 \State \belif $(age = 18-20)$ \bthen $yes$
@@ -133,6 +158,21 @@ though some may be seen as desirable.
 }
 \label{fig:recidivism-all-folds}
 \end{figure}
+%
+Figure~\ref{fig:propublica} shows optimal rule lists learned by CORELS,
+using a feature set that includes age categories ($<$25, 25-45, $>$45) from the ProPublica dataset,
+as well as race categories (African American, Asian, Caucasian, Hispanic,
+Other\footnote{We grouped together the original Native American ($<$0.003) and Other ($>$0.05) categories.}).
+%
+For this feature set, our antecedent mining procedure generated an average
+of~197 antecedents, across folds.
+%
+Notice that none of these rule lists contain antecedents that directly depend on race;
+this motivated our choice to exclude race in our subsequent analysis.
+%
+To explore the effect of a different discretization of the age attribute,
+in our subsequent analysis, we chose a set of age ranges that was fine-grained
+for younger individuals (18-20, 21-22, 23-25, 26-45, $>$45).
 
 \begin{figure}[t!]
 \begin{algorithmic}
@@ -149,6 +189,60 @@ folds; the others contain the same rules, up to a permutation.
 }
 \label{fig:weapon-rule-list}
 \end{figure}
+
+Figures~\ref{fig:recidivism-all-folds} and~\ref{fig:weapon-rule-list}
+show example optimal rule lists that CORELS learns
+for the ProPublica (${\Reg = 0.005}$) and NYCLU (${\Reg = 0.01}$) datasets, respectively,
+using 10-fold cross validation and the antecedent sets described
+at the beginning of~\S\ref{sec:experiments}.
+
+While our goal is to provide illustrative examples, and not to provide a
+detailed analysis nor to advocate for the use of these specific models,
+we note that these rule lists are short and easy to understand.
+%
+Furthermore, as we demonstrate in~\S\ref{sec:sparsity},
+optimal rule lists learned by CORELS achieve accuracies that are competitive
+with a suite of other models, including black box COMPAS scores.
+%
+We also note that the three-rule list for weapon prediction
+in Figure~\ref{fig:weapon-rule-list} has the spirit of the heuristic
+strategy presented by~\citet{Goel16} that combines three stop criteria
+and is based on a reduced version of their full regression model.
+%
+See Appendix~\ref{appendix:examples} for additional listings of optimal rule lists found
+by CORELS, for each of our prediction problems, across cross-validation folds,
+for different values of the regularization parameter~$\Reg$.
+
+\subsection{Comparison of accuracy and model size for CORELS and other algorithms}
+\label{sec:sparsity}
+
+We ran a 10-fold cross validation experiment using CORELS
+and eight other algorithms:
+logistic regression, support vector machines, AdaBoost, CART, C4.5,
+random forests, RIPPER, and scalable Bayesian rule lists (SBRL).\footnote{For
+SBRL, we use the C implementation at \url{https://github.com/Hongyuy/sbrlmod}.
+By default, SBRL sets ${\eta = 3}$, ${\lambda = 9}$,
+the number of chains to 11 and iterations to 1,000.}
+%
+We use standard R packages, with default parameter settings,
+for the first seven algorithms.\footnote{For CART, C4.5 (J48), and RIPPER,
+\ie the tree and rule list learning algorithms, we use the implementations
+from the R packages rpart, RWeka, and caret, respectively.
+%
+By default, CART uses complexity parameter ${cp = 0.01}$,
+and C4.5 uses complexity parameter ${C = 0.25}$.
+}
+%
+We use the same antecedent sets as input to the two rule list learning algorithms, CORELS and SBRL;
+for the other algorithms, the inputs are binary feature sets corresponding to the
+single clause antecedents in the aforementioned antecedent sets (see Appendix~\ref{appendix:data}).
+
+Figure~\ref{fig:comparison} shows that there were no statistically significant
+differences in algorithm accuracies.
+In fact, the difference between folds was far larger than the difference
+between algorithms.
+We conclude that CORELS produces models whose accuracy is comparable
+to those found via other algorithms.
 
 \begin{figure}[t!]
 \begin{center}
@@ -180,33 +274,6 @@ Note that we were unable to execute RIPPER for the NYCLU problem.
 \label{fig:comparison}
 \end{figure}
 
-Figures~\ref{fig:recidivism-all-folds} and~\ref{fig:weapon-rule-list}
-show example optimal rule lists that CORELS learns
-for the ProPublica and NYCLU datasets, respectively.
-%
-While our goal is to provide illustrative examples, and not to provide a
-detailed analysis nor to advocate for the use of these specific models,
-we note that these rule lists are short and easy to understand.
-%
-In particular, the three-rule list for weapon prediction
-in Figure~\ref{fig:weapon-rule-list} has the spirit of the heuristic
-strategy presented by~\citet{Goel16} that combines three stop criteria
-and is based on a reduced version of their full regression model.
-%
-See Appendix~\ref{appendix:examples} for listings of optimal rule lists found
-by CORELS, for each of our prediction problems, across cross-validation folds,
-for different values of the regularization parameter~$\Reg$.
-
-\subsection{Comparison of accuracy and model size for CORELS and other algorithms}
-\label{sec:sparsity}
-
-Figure~\ref{fig:comparison} shows that there were no statistically significant
-differences in algorithm accuracies.
-In fact, the difference between folds was far larger than the difference
-between algorithms.
-We conclude that CORELS produces models whose accuracy is comparable
-to those found via other algorithms.
-
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
@@ -220,9 +287,9 @@ width=0.93\textwidth]{figs/frisk-sparsity-training-c45.pdf}
 \end{center}
 \caption{Training and test accuracy as a function of model size.
 %
-For CORELS, CART, and C4.5, we vary the regularization parameter~$\Reg$,
-and complexity parameters~$cp$ and~$C$, respectively;
-numbers within parentheses in the legend indicate parameter values.
+In the legend, numbers in parentheses are algorithm parameters that we vary
+for CORELS~($\Reg$), CART~($cp$), C4.5~($C$), and SBRL ($\eta$, $\lambda$, $i$),
+where~$i$ is the number of iterations.
 %
 Note that the CART implementation sets ${cp = 0.01}$ by default,
 and C4.5 uses ${C = 0.25}$.
@@ -253,10 +320,34 @@ C4.5 finds large models and dramatically overfits for all tested parameters.
 Figure~\ref{fig:sparsity} summarizes differences in accuracy and model size
 for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
 %
+Here, we vary different algorithm parameters, and increase the number of iterations for SBRL to 10,000.
+%
 For both problems, CORELS can learn short rule lists without sacrificing accuracy.
 %
 For listings of example optimal rule lists that correspond to the results
 for CORELS summarized in Figure~\ref{fig:sparsity}, see Appendix~\ref{appendix:examples}.
+
+\textbf{Comparison to COMPAS.}
+The accuracies of rule lists learned by CORELS are competitive with
+scores generated by the black box COMPAS algorithm
+at predicting two-year recidivism for the ProPublica dataset.
+%
+Across 10 cross-validation folds, optimal rule lists learned by CORELS
+(Figure~\ref{fig:recidivism-all-folds}, ${\Reg = 0.005}$)
+have mean test accuracy~0.676, with standard deviation~0.020.
+%
+For comparison, optimal rule lists learned by CORELS,
+for a slightly different feature set (Figure~\ref{fig:propublica}, ${\Reg = 0.005}$),
+achieve a similar mean test accuracy of~0.659, with standard deviation~0.016, across folds.
+
+The COMPAS algorithm outputs scores between~1 and~10,
+representing low (1-4), medium (5-7), and high (8-10) risk for recidivism.
+%
+As in the analysis by~\citep{LarsonMaKiAn16}, we interpret a medium or high score
+as a positive prediction for two-year recidivism, and a low score as a negative prediction.
+%
+Across the 10 test sets, the COMPAS algorithm scores obtain
+mean accuracy of~0.654, with standard deviation~0.015.
 
 \subsection{CORELS execution traces, for different regularization parameters}
 \label{sec:reg-param}
@@ -287,7 +378,11 @@ when the lower bound matches the objective value.
 %
 The lower panels in Figure~\ref{fig:weapon-reg-execution} plot corresponding traces of
 an upper bound on the size of the remaining search space (Theorem~\ref{thm:remaining-eval-fine}),
-and illustrate that as~$\Reg$ decreases, it becomes more difficult to eliminate regions of the search space.
+and illustrate that as~$\Reg$ decreases, it becomes more difficult to eliminate regions of the search~space.
+%
+For Figure~\ref{fig:weapon-reg-execution}, we dynamically and incrementally
+calculate~$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
+which adds some computational overhead; we do not perform this calculation elsewhere unless noted.
 
 Figure~\ref{fig:queue-weapon-reg} visualizes the elements in CORELS's logical queue,
 for each of the executions in Figure~\ref{fig:weapon-reg-execution}.
@@ -300,28 +395,41 @@ As an execution progresses, longer prefixes are placed in the queue;
 as~$\Reg$ decreases, the algorithm must spend more time evaluating longer and longer prefixes.
 
 \begin{table}[t!]
-\begin{centering}
+\centering
+%\begin{centering}
 CORELS with different regularization parameters (NYCLU stop-and-frisk dataset) \\
-\end{centering}
+%\end{centering}
 \vspace{2mm}
-\begin{tabular}{l | c | c | c | c | c}
-& Total & Time to & Max evaluated & Total queue &  Max queue \\
-$\lambda$ & time (s) & optimum (s) & prefix length & insertions ($\times 10^6$) & size ($\times 10^3$) \\
+\begin{tabular}{l | c | c | c | c}
+& Total & Time to & Max evaluated & Optimal \\
+$\lambda$ & time (s) & optimum (s) & prefix length & prefix length \\
 \hline
-0.04 & 0.33 (0.03) & 0.001 (0.0004) & 6 & 0.033 (0.002) & 1.9 (0.1) \\
-0.01 & 32 (2) & 0.004 (0.001) & 11 & 3.2 (0.2) & 170 (13) \\
-0.0025 & 450 (30) & 21 (25) & 16-17 & 41 (2.7) & 2400 (170) \\
+.04 & .36 (.02) & .002 ($<$.001) & 6 & 2 \\
+.01 & 45 (4) & .006 ($<$.001) & 11 & 3 \\
+.0025 & 760 (50) & 30 (40) & 16-17 & 6-10 \\
+\hline
+\end{tabular}
+\begin{tabular}{l | c | c | c}
+\hline
+& Lower bound & Total queue &  Max queue \\
+$\lambda$ & evaluations ($\times 10^6$) &~ insertions ($\times 10^3$) ~&~ size ($\times 10^3$) \\
+\hline
+.04 & .035 (.002) & 2.2 (.1) & .9 (.1) \\
+.01 & 4.3 (.3) & 230 (20) & 140 (10) \\
+.0025 & 65 (4) & 3700 (200) & 1900 (100) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Summary of CORELS executions, for the NYCLU stop-and-frisk dataset (${M = 28}$),
 for same three regularization parameters as in Figure~\ref{fig:sparsity} (bottom).
 %
 The columns report the total execution time,
-time to optimum, maximum evaluated prefix length,
+time to optimum, maximum evaluated prefix length, optimal prefix length,
 number of times we completely evaluate a prefix~$\Prefix$'s lower bound~$b(\Prefix, \x, \y)$,
-and total number of queue insertions (which is equal to the number of cache insertions).
+total number of queue insertions (which is equal to the number of cache insertions),
+and the maximum queue size.
 %
-We report means (and standard deviations) over 10 cross-validation folds.
+For prefix lengths, we report single values or ranges corresponding to the minimum and maximum observed values;
+in the other columns, we report means (and standard deviations) over 10 cross-validation folds.
 %
 See also Figures~\ref{fig:weapon-reg-execution} and~\ref{fig:queue-weapon-reg}.
 }
@@ -333,7 +441,7 @@ See also Figures~\ref{fig:weapon-reg-execution} and~\ref{fig:queue-weapon-reg}.
 \begin{center}
 % left lower right upper
 \includegraphics[trim={35mm 0mm 35mm 15mm},
-width=\textwidth]{figs/weapon_reg-execution.pdf}
+width=0.97\textwidth]{figs/weapon_reg-execution.pdf}
 \end{center}
 \vspace{-5mm}
 \caption{Example executions of CORELS, for the NYCLU stop-and-frisk dataset (${M = 28}$).
@@ -365,11 +473,12 @@ from the panels to the left, for the three different values of~$\Reg$.
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={30mm 0mm 15mm 5mm},
-width=\textwidth]{figs/weapon_reg-queue.pdf}
+\includegraphics[trim={30mm 0mm 30mm 3mm},
+width=0.9\textwidth]{figs/weapon_reg-queue.pdf}
 \end{center}
 \vspace{-5mm}
 \caption{Summary of CORELS's logical queue,
+%\ie the nodes in the physical queue that have not been marked for deletion,
 for the NYCLU stop-and-frisk dataset (${M = 28}$),
 for same three regularization parameters as in Figure~\ref{fig:sparsity} (bottom)
 and Table~\ref{tab:weapon-reg}.
@@ -394,64 +503,27 @@ This section examines the efficacy of each of our bounds and data structure opti
 We remove a single bound or data structure optimization from our final implementation and measure
 how the performance of our algorithm changes.
 %
-We examine these performance traces on both the NYCLU and the ProPublica datasets and show that
-different bounds are important depending on the structure of the dataset.
-
-Table~\ref{tab:ablation} provides summary statistics for experiments using the full
-CORELS implementation and five variants that each remove a specific optimization.
-%
-Each experiment was run under 10-fold cross validation---each entry in the table is the mean from those 
-runs while the standard deviation is reported in parentheses. 
-%
-Not all components are equally important; as each component is removed the run time of the algorithm increases,
-but it increases by different amounts.
-%
-However, we can see that, similar to Table~\ref{tab:weapon-reg}, we always encounter the optimal rule list in far less
-time than it takes to certify optimality.
-%
-We again note the longest prefix we place on the queue as well as the longest prefix for which we evaluate the bounds.
-%
-Finally, we report the number of prefixes evaluated, the number of times we insert into the queue, and the maximum size
-of the logical queue.
-%
-Since these metrics are all proxies for how much work our algorithm has to do, they all scale with the overall slowdown 
-of our algorithm.
-
-Figure~\ref{fig:queue} records the execution trace of the 10-fold cross validation experiments detailed in Table~\ref{tab:ablation}.
-%
-Panels correspond to different removed optimizations as seen in the table; each color represents a different prefix length,
-so the entire plot shows the number of prefixes of different lengths over the entire execution of the program.
-%
-The gray area in each plot represents the cumulative number of prefixes in our queue at any given time during the mean execution
-of CORELS.
-%
-These plots demonstrate that our optimizations reduce the number of prefixes examined and are especially effective at 
-limiting the number of long prefixes that have to be evaluated.
-%
-For the ProPublica dataset, the most important optimization is the equivalent points bound---without it we place prefixes of 
-length 9 in our queue, while every other optimization prevents looking at prefixes of at worst length 6.
-
-Similarly, Figure~\ref{fig:queue-weapon} provides a trace of the experiments from Table~\ref{tab:ablation-weapon} dealing with the NYCLU dataset.
-%
-Note that while the equivalent points bound proved to be the most important optimization for the ProPublica dataset,
-the symmetry-aware map is the crucial optimization for the NYCLU dataset.
+We examine these performance traces on both the NYCLU and the ProPublica datasets,
+and highlight that on different problems, the relative performance improvements of our optimizations can vary.
 
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
 \begin{table}[t!]
-\begin{centering}
+\centering
+%\begin{centering}
 Per-component performance improvement (ProPublica dataset) \\
-\end{centering}
+%\end{centering}
 \vspace{1mm}
 \begin{tabular}{l | c  r | c | c}
 & Total & Slow- & Time to & Max evaluated~ \\
 Algorithm variant & time (min) & down & optimum (s) & prefix length \\
 \hline
-CORELS & 5.5 (1.6) & --- & 8 (2) & 5-6 \\
-No priority queue (BFS) & 6.8 (2.2) & 1.2$\times$ & 4 (1) & 5-6 \\
-No support bounds & 10 (3.4) & 1.8$\times$ & 13 (4) & 5-6 \\
-No lookahead bound & 72 (23) & 13$\times$ & 9 (2) & 6-7 \\
-No symmetry-aware map & 59 (23) & 10$\times$ & 23 (6) & 5-6 \\
-No equivalent points bound & $>$190 (100) & $>$39$\times$ & $>$7100~* & $\ge$10 \\
+CORELS & 4.9 (1.5) & --- & 7 (2) & 5-6 \\
+No priority queue (BFS) & 5.3 (1.6) & 1.1$\times$ & 29 (13) & 5-6 \\
+No support bounds & 8.8 (3.0) & 1.8$\times$ & 11 (3) & 5-6 \\
+No lookahead bound & 65 (21) & 13$\times$ & 8 (2) & 6-7 \\
+No symmetry-aware map & 59 (23) & 11$\times$ & 22 (6) & 5-6 \\
+%No equivalent points bound & $>$87 & $>$12$\times$ & $>$3400~* & $\ge$10 \\
+No equivalent points bound & $>$93 (9) & $>$22$\times$ & $>$4600~* & $\ge$10 \\
 \hline
 \end{tabular}
 \begin{tabular}{l | c | c | c}
@@ -459,12 +531,12 @@ No equivalent points bound & $>$190 (100) & $>$39$\times$ & $>$7100~* & $\ge$10 
  & Lower bound & Total queue &  Max queue \\
 Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^6$) & size ($\times 10^6$) \\
 \hline
-CORELS & 180 (54) & 1.7 (0.4) & 1.3 (0.4) \\
-No priority queue (BFS) & 230 (75) & 1.9 (0.6) & 1.5 (0.5) \\
-No support bounds & 360 (120) & 2.7 (0.8) & 2.2 (0.7) \\
-No lookahead bound & 2200 (710) & 19 (5.9) & 16 (5.3) \\
-No symmetry-aware map & 2000 (770) & 16 (5.9) & 15 (5.7) \\
-No equivalent points bound & $>$1490 & $>$800 & $>$790 \\
+CORELS & 160 (40) & 1.7 (.4) & 1.2 (.4) \\
+No priority queue (BFS) & 180 (50) & 3.1 (.9) & 2.0 (.7) \\
+No support bounds & 310 (100) & 2.7 (.8) & 1.9 (.6) \\
+No lookahead bound & 2200 (700) & 19 (6) & 16 (5) \\
+No symmetry-aware map & 2000 (800) & 16 (6) & 15 (6) \\
+No equivalent points bound & $>$1800 & $>$1000 & $>$990 \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Per-component performance improvement, for the ProPublica dataset
@@ -483,8 +555,8 @@ that each remove a specific implementation optimization or bound.
 %
 All rows represent complete executions, except for the final row,
 in which each execution was terminated due to memory constraints,
-once the size of the cache reached ${8 \times 10^8}$ elements,
-after consuming 390-410GB RAM.
+once the size of the cache reached ${10^9}$ elements,
+after consuming $\sim$350GB RAM.
 %
 In all but the final row and column, we report means
 (and standard deviations) over 10 cross-validation folds.
@@ -493,32 +565,119 @@ We also report the  mean slowdown in total execution time,
 with respect to CORELS.
 %
 In the final row, we report the mean (and standard deviation) of the
-incomplete execution time and corresponding slowdown;
+incomplete execution time and corresponding slowdown,
+and a lower bound on the mean time to optimum;
 in the remaining fields, we report minimum values across folds.
 %
 See also Figure~\ref{fig:queue}. \\
 %
-*~Only 4 out of 10 folds achieve the optimum before being terminated.
+*~Only 7 out of 10 folds achieve the optimum before being terminated.
 }
 \vspace{4mm}
 \label{tab:ablation}
 \end{table}
 
+\begin{figure}[t!]
+\begin{center}
+% left lower right upper
+\includegraphics[trim={0mm 10mm 0mm 20mm},
+width=0.94\textwidth]{figs/kdd_compas_ablation-queue.pdf}
+\end{center}
+\vspace{-5mm}
+\caption{Summary of the logical queue's contents, for full CORELS (top left)
+%\ie the nodes in the physical queue that have not been marked for deletion,
+and five variants that each remove a specific implementation optimization or bound,
+for the ProPublica dataset (${\Reg = 0.005}$, ${M = 156}$).  See also Table~\ref{tab:ablation}.
+%
+Solid lines plot the numbers of prefixes in the logical queue (log scale), colored by length (legend),
+as a function of wall clock time (log scale).
+%
+All plots are generated using a single, representative cross-validation training set.
+%
+The gray shading fills in the area beneath the total number of
+queue elements for CORELS,
+\ie the sum over all lengths in the top left figure.
+%
+For comparison, we replicate the same gray region
+in the other five subfigures.
+%
+For each execution, we indicate the total time in seconds,
+relative to the full CORELS implementation (T = 304 s),
+and with a dashed vertical line.
+%
+The execution without the equivalent points bound (bottom right) is incomplete.
+}
+\label{fig:queue}
+\end{figure}
+
+
+Table~\ref{tab:ablation} provides summary statistics for experiments using the full
+CORELS implementation and five variants that each remove a specific optimization.
+%
+(1)~Instead of a priority queue (\S\ref{sec:queue}) ordered by the objective lower bound,
+we use a queue that implements breadth-first search (BFS).
+%
+(2)~We remove checks that would trigger pruning via
+our lower bounds on antecedent support (Theorem~\ref{thm:min-capture})
+and accurate antecedent support (Theorem~\ref{thm:min-capture-correct}).
+%
+(3)~We remove the effect of our lookahead bound (Lemma~\ref{lemma:lookahead}),
+which otherwise tightens the objective lower bound by~$\Reg$.
+%
+(4)~We disable the symmetry-aware map (\S\ref{sec:pmap}), our data structure
+that enables pruning triggered by the permutation bound (Corollary~\ref{thm:permutation}).
+%
+(5)~We do not identify sets of equivalent points, which we otherwise use to tighten the
+objective lower bound via the equivalent points bound (Theorem~\ref{thm:identical}).
+
+Removing any single optimization increases total execution time,
+by varying amounts across these optimizations.
+%
+Similar to our experiments in~\S\ref{sec:reg-param}, we always encounter the
+optimal rule list in far less time than it takes to certify optimality.
+%
+As in Table~\ref{tab:weapon-reg}, we report metrics that are all proxies
+for how much work our algorithm has to do, and thus scale with the overall slowdown.
+
+Figure~\ref{fig:queue} visualizes execution traces of the elements in CORELS's logical queue,
+similar to Figure~\ref{fig:queue-weapon-reg},
+for a single, representative cross-validation fold.
+%
+Panels correspond to different removed optimizations, as in Table~\ref{tab:ablation}.
+%
+These plots demonstrate that our optimizations reduce the number of evaluated prefixes
+and are especially effective at limiting the number of longer evaluated prefixes.
+%
+For the ProPublica dataset, the most important optimization is the equivalent points
+bound---without it, we place prefixes of at least length~9 in our queue,
+and must terminate these executions before they are complete.
+%
+In contrast, CORELS, and variants that remove any single one of the other
+optimizations evaluate only prefixes up to at most length~7 (without the lookahead bound)
+or~6 (all other variants).
+
+Table~\ref{tab:ablation-weapon} and Figure~\ref{fig:queue-weapon} summarize an
+analogous set of experiments for the NYCLU dataset.
+%
+Note that while the equivalent points bound proved to be the most important optimization for the ProPublica dataset,
+the symmetry-aware map is the crucial optimization for the NYCLU dataset.
+
 \begin{table}[t!]
-\begin{centering}
+\centering
+%\begin{centering}
 Per-component performance improvement (NYCLU stop-and-frisk dataset) \\
-\end{centering}
+%\end{centering}
 \vspace{1mm}
 \begin{tabular}{l | c  r | c | c}
-& Total & Slow- & Time to & Max evaluated~ \\
+& Total & Slow- & Time to & Max evaluated \\
 Algorithm variant & time (min) & down & optimum ($\mu$s) & prefix length \\
 \hline
-CORELS & 0.8 (0.1) & --- & 6.9 (0.2) & 11 \\
-No priority queue (BFS) & 2.4 (0.2) & 3.0$\times$ & 26 (0.6) & 11 \\
-No support bounds & 1.5 (0.1) & 1.9$\times$ & 11 (0.3) & 11-12 \\
-No lookahead bound & 1.3 (0.1) & 1.6$\times$ & 6.9 (0.3) & 11-12 \\
-No symmetry-aware map & 610 (100) & 770$\times$ & 6.7 (0.1) & 11 \\
-No equivalent points bound & 2.4 (0.5) & 3.0$\times$ & 6.4 (0.4) & 13 \\
+CORELS & .7 (.1) & --- & 6.7 (.1) & 11 \\
+No priority queue (BFS) & 1.5 (.1) & 2.0$\times$ & 60 (20) & 11 \\
+No support bounds & 1.4 (.1) & 1.9$\times$ & 10 (.1) & 11-12 \\
+No lookahead bound & 1.2 (.1) & 1.6$\times$ & 6.9 (.3) & 11-12 \\
+No symmetry-aware map & 620 (100) & 850$\times$ & 6.6 (.1) & 11 \\
+No equivalent points bound & 2.4 (.1) & 3.4$\times$ & 6.0 (.4) & 13 \\
 \hline
 \end{tabular}
 \begin{tabular}{l | c | c | c}
@@ -526,12 +685,12 @@ No equivalent points bound & 2.4 (0.5) & 3.0$\times$ & 6.4 (0.4) & 13 \\
  & Lower bound & Total queue &  Max queue \\
 Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^5$) & size ($\times 10^5$) \\
 \hline
-CORELS & 6.5 (0.5) & 1.7 (0.1) & 1.1 (0.1) \\
-No priority queue (BFS) & 20 (1.7) & 5.4 (0.5) & 2.0 (0.1) \\
-No support bounds & 12 (1.0) & 3.1 (0.3) & 1.9 (0.1) \\
-No lookahead bound & 10 (0.7) & 2.8 (0.2) & 1.8 (0.1) \\
-No symmetry-aware map & 5200 (850) & 1400 (240) & 1100 (180) \\
-No equivalent points bound & 25 (5.4) & 7.5 (0.5) & 4.6 (0.2) \\
+CORELS & 6.0 (.5) & 1.7 (.1) & 1.0 (.1) \\
+No priority queue (BFS) & 12 (1) & 3.6 (.3) & 1.3 (.1) \\
+No support bounds & 11 (1) & 3.1 (.3) & 1.8 (.1) \\
+No lookahead bound & 9.6 (.7) & 2.8 (.2) & 1.7 (.1) \\
+No symmetry-aware map & 5200 (800) & 1400 (200) & 1100 (200) \\
+No equivalent points bound & 26 (1) & 7.5 (.4) & 4.5 (.2) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Per-component performance improvement, as in Table~\ref{tab:ablation},
@@ -549,46 +708,7 @@ and also Figure~\ref{fig:queue-weapon}.
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={15mm 20mm 5mm 25mm},
-width=0.94\textwidth]{figs/kdd_compas_ablation-queue.pdf}
-\end{center}
-\vspace{-5mm}
-\caption{Summary of the logical queue's contents, for full CORELS (top left)
-and five variants that each remove a specific implementation optimization or bound,
-for the ProPublica dataset (${\Reg = 0.005}$, ${M = 156}$).  See also Table~\ref{tab:ablation}.
-%
-%We summarize the composition of the logical queue,
-%\ie the nodes in the physical that have not been marked for deletion.
-%
-Solid lines plot the numbers of prefixes in the logical queue (log scale), colored by length (legend),
-as a function of wall clock time (log scale).
-%
-All plots are generated using a single, representative cross-validation training set.
-%
-%EXPAND HERE
-%the permutation bounds (top right),
-%lookahead bound (bottom left), and equivalent points bound (bottom right).
-%
-The gray shading fills in the area beneath the total number of
-queue elements for CORELS,
-\ie the sum over all lengths in the top left figure.
-%
-For comparison, we replicate the same gray region
-in the other five subfigures.
-%
-For each execution, we indicate the total time in seconds,
-relative to the full CORELS implementation (T = 342 s),
-and with a dashed vertical line.
-%
-The execution without the equivalent points bound (bottom right) is incomplete.
-}
-\label{fig:queue}
-\end{figure}
-
-\begin{figure}[t!]
-\begin{center}
-% left lower right upper
-\includegraphics[trim={15mm 20mm 5mm 25mm},
+\includegraphics[trim={0mm 10mm 0mm 20mm},
 width=0.94\textwidth]{figs/weapon_ablation-queue.pdf}
 \end{center}
 \vspace{-5mm}
@@ -612,12 +732,11 @@ CORELS certifies optimality in less than 6 minutes --
 the objective lower bound steadily converges to the optimal objective (top)
 as the search space shrinks (bottom).
 %
-We dynamically and incrementally
+As in Figure~\ref{fig:weapon-reg-execution}, we dynamically and incrementally
 calculate~$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
 where~$\Remaining(\CurrentObj, \Queue)$
 is the upper bound~\eqref{eq:remaining} on remaining search space size
-(Theorem~\ref{thm:remaining-eval-fine});
-this adds some computational overhead.
+(Theorem~\ref{thm:remaining-eval-fine}); this adds some computational overhead.
 %
 In the same plots (left), we additionally highlight
 a separate execution of CORELS without the equivalent points bound
@@ -639,10 +758,8 @@ requires orders of magnitude more time to complete (thick lines).
 \begin{center}
 %\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
 % left lower right upper
-%\includegraphics[trim={13mm, 20mm, 0mm, 13mm},
-%width=0.495\textwidth]{figs/compas_execution_large-remaining-space.pdf}
-\includegraphics[trim={25mm, 20mm, 30mm, 10mm},
-width=\textwidth]{figs/weapon_execution-remaining-space.pdf}
+\includegraphics[trim={30mm, 20mm, 30mm, 20mm},
+width=\textwidth]{figs/weapon_execution_large-remaining-space.pdf}
 \end{center}
 \caption{Execution progress of CORELS and selected variants,
 for the ProPublica (${\Reg = 0.005}$, ${M = 155}$) (left)
@@ -685,14 +802,21 @@ the remaining search space decays much more slowly without these bounds (thick s
 We calculate the overall speed-up of CORELS compared to a naive implementation and determine the feasibility of running
 our algorithm 30 years ago.
 %
-On the COMPAS dataset, where the number of rules is $M = 156$, naively evaluating all prefixes of up to length 5 would
-require examining $8.7 \times 10^{10}$ different prefixes.
+Consider an execution of CORELS for the ProPublica dataset, with ${M = 156}$ antecedents,
+that evaluates prefixes up to length~5 in order to certify optimality (Table~\ref{tab:ablation}).
 %
-However, while CORELS only examines prefixes up to length 5 in order to certify optimality, a naive implementation 
-would have to look at even longer prefixes. 
+A brute force implementation that naively considers all prefixes of up to length~5
+would evaluate ${8.7 \times 10^{10}}$ prefixes.
 %
-Without our equivalent points bound, but with all of our other optimizations, we evaluate prefixes up to at least length 10 (see 
-Table~\ref{tab:ablation} and Figure~\ref{fig:queue})---thus a naive algorithm would have to evaluate prefixes of length 10 or longer.
+As shown in Figure~\ref{fig:recidivism-all-folds}, the optimal rule list has prefix length~4,
+thus the brute force algorithm would identify the optimal rule list.
+%
+However, for this approach certify optimality, it would have consider far longer prefixes.
+%
+Without our equivalent points bound, but with all of our other optimizations,
+we evaluate prefixes up to at least length 10
+(see Table~\ref{tab:ablation} and Figure~\ref{fig:queue})---thus a brute force algorithm
+would have to evaluate prefixes of length 10 or longer.
 %
 Naively evaluating all prefixes up to length 10 would require looking at $6.4 \times 10^{21}$ different prefixes.
 %

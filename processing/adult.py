@@ -122,7 +122,7 @@ if (max_cardinality == 1):
     min_support = 0.001
     prefix = '1'
 elif (max_cardinality == 2):
-    min_support = 0.04
+    min_support = 0.05
     prefix = ''
 
 labels = ['<=50K', '>50K']

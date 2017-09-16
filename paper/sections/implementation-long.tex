@@ -1,5 +1,6 @@
 \input{sections/incremental}
 
+\clearpage
 \section{Implementation}
 \label{sec:implementation}
 
@@ -26,10 +27,8 @@ We additionally describe how we garbage collect our data structures~(\S\ref{sec:
 %
 Finally, we explore how our queue can be used to support
 custom scheduling policies designed to improve performance~(\S\ref{sec:scheduling}).
-%
-Our implementation of CORELS can be found~at: \\
 
-\centerline{\url{https://github.com/nlarusstone/corels}.}
+Our implementation of CORELS is at: \url{https://github.com/nlarusstone/corels}.
 
 \subsection{Prefix tree}
 \label{sec:trie}
@@ -185,8 +184,8 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
            \State $\delta b \gets n_w / N$ \Comment{Misclassification error of the rule $s \rightarrow 0$}
        \EndIf
        \State $b(\PrefixB, \x, \y) \gets b(\Prefix, \x, \y) + \Reg + \delta b$ \Comment{Incremental lower bound~\eqref{eq:inc-lb}}
-       \If {$b(\PrefixB, \x, \y) + \Reg \ge \CurrentObj$} \Comment{\textbf{Hierarchical objective lower bound (Theorem~\ref{thm:bound})}}
-           \State \Continue \hfill {combined with the \textbf{Lookahead bound (Lemma~\ref{lemma:lookahead})}}
+       \If {$b(\PrefixB, \x, \y) \ge \CurrentObj$} \Comment{\textbf{Hierarchical objective lower bound (Theorem~\ref{thm:bound})}}
+           \State \Continue
        \EndIf
        \State $\mathbf{f} \gets \mathbf{u} \wedge \neg\,\mathbf{v} $ \Comment{Bit vector indicating data not captured by $\PrefixB$}
        \State $n_f = \Count(\mathbf{f})$ \Comment{Number of data not captured by $\PrefixB$}
@@ -206,8 +205,8 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
         \EndIf
         \State $b_0(\PrefixB, \x, \y) \gets \Count(\mathbf{f} \wedge \mathbf{z}) / N$ \Comment{Lower bound on the default rule misclassification}
         \State $b \gets b(\PrefixB, \x, \y) + b_0(\PrefixB, \x, \y)$ \hfill error defined in~\eqref{eq:lb-b0}
-        \If {$b \ge \CurrentObj$}
-            \State \Continue \Comment{\textbf{Equivalent points bound (Theorem~\ref{thm:identical})}}
+        \If {$b + \Reg \ge \CurrentObj$} \Comment{\textbf{Equivalent points bound (Theorem~\ref{thm:identical})}}
+            \State \Continue \hfill {combined with the \textbf{Lookahead bound (Lemma~\ref{lemma:lookahead})}}
         \EndIf
         \State \Call{CheckMapAndInsert}{$\PrefixB, b$} \Comment{Check the \textbf{Permutation bound (Corollary~\ref{thm:permutation})} and}
         %\If {\Call{CheckSymmetryAwareMap}{$\PrefixB, b$}} \Comment{\textbf{Permutation bound (Corollary~\ref{thm:permutation})}}

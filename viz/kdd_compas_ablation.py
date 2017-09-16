@@ -69,21 +69,22 @@ fs = 18 # fontsize
 num_folds = 10
 make_figure = False
 
-num_folds = 1
-make_figure = True
+#num_folds = 1
+#make_figure = True
 
 make_small = False
-make_small = True
+#make_small = True
 
 # log files generated on beepboop
 # no-minor execution using ~350GB RAM when halted
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=2-f=1000.txt',
-'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=2-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000000-c=0.0050000-v=2-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=1000000000-c=0.0050000-v=2-f=1000.txt',
-'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=2-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=2-f=1000.txt']
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
+log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0050000-v=10-f=1000.txt',
+'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0050000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000001-c=0.0050000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=1000000001-c=0.0050000-v=10-f=1000.txt',
+'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000001-c=0.0050000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000001-c=0.0050000-v=10-f=1000.txt']
 labels = ['CORELS', 'No priority queue (BFS)', 'No support bounds', 'No lookahead bound',  'No symmetry-aware map', 'No equivalent points bound']
 ftag = "kdd_compas_ablation"
 
@@ -251,7 +252,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
             pylab.xticks(10.**np.array([-3, -1, 1, 3]), fontsize=fs)
             pylab.yticks(10.**np.array([0, 2, 4, 6, 8]), fontsize=fs)
             #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
-            ax = [10**-4, 5360, ymin, ymax]
+            ax = [10**-4, 6814, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()
             if (ncomp + 1 == ntot):
@@ -295,14 +296,19 @@ slow_m = (t_tot / t_tot[0]).mean(axis=1) # slowdown
 lb_m = lower_bound_num.mean(axis=1) / 10**6
 lb_s = lower_bound_num.std(axis=1) / 10**6
 
+mm = min_obj[-1]
+ivec = (min_obj[-1] - min_obj[0]) > 10**-6
+topt = t_opt[-1]
+topt[ivec] = t_tot[-1][ivec]
+
 print 'for no equiv pts:'
 print 'folds that achieve min objective:', ((min_obj[-1] - min_obj[0]) < 10**-6).sum()
 print 'total time >', t_tot[-1:].min() / 60
-print 'time to optimum >', t_opt[-1][((min_obj[-1] - min_obj[0]) < 10**-6)].min()
+print 'time to optimum (lower bound on mean) >', topt.mean() #t_opt[-1][((min_obj[-1] - min_obj[0]) < 10**-6)].min()
 print 'max prefix length >=', max_prefix_length[-1]
-print 'num lower bound evals >=', lower_bound_num[-1].min()
-print 'total queue insertions >', num_insertions[-1].min() / 10**6
-print 'max queue size >', max_queue[-1].min() / 10**6
+print 'num lower bound evals >=', lower_bound_num[-1].min() / 10.**6
+print 'total queue insertions >', num_insertions[-1].min() / 10.**6
+print 'max queue size >', max_queue[-1].min() / 10.**6
 
 print '& Total time & Slow- & Time to & Max evaluated \\\\'
 print 'Algorithm variant & (min) & down & optimum (s) & prefix length \\\\'

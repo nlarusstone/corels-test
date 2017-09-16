@@ -39,8 +39,11 @@ all: corels
 corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
-libcorels.so: run.o params.o corels.o pmap.o cache.o rulelib.o utils.o           
+libcorels.so: corels.o pmap.o cache.o rulelib.o evaluate.o utils.o
 	$(CXX) -shared  -Wl,-soname,$@ -o $@ $^
+
+evaluate-test: evaluate-test.o evaluate.o corels.o pmap.o cache.o rulelib.o utils.o
+	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 main.o: main.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
@@ -60,6 +63,12 @@ cache.o: cache.cc $(DEPSDIR)/stamp
 rulelib.o: rulelib.c $(DEPSDIR)/stamp
 	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
+evaluate-test.o: evaluate-test.cc $(DEPSDIR)/stamp
+	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+
+evaluate.o: evaluate.cc $(DEPSDIR)/stamp
+	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+
 $(DEPSDIR)/stamp:
 	mkdir -p $(dir $@)
 	touch $@
@@ -75,3 +84,4 @@ endif
 
 .PHONY: all clean
 .SUFFIXES:
+

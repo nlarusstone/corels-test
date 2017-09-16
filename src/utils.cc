@@ -4,7 +4,7 @@
 #include <sys/utsname.h>
 
 
-Logger::Logger(double c, size_t nrules, int verbosity, char* log_fname, int freq) {
+Logger::Logger(double c, size_t nrules, std::set<std::string> verbosity, char* log_fname, int freq) {
       _c = c;
       _nrules = nrules - 1;
       _v = verbosity;
@@ -17,7 +17,7 @@ Logger::Logger(double c, size_t nrules, int verbosity, char* log_fname, int freq
  * Sets the logger file name and writes the header line to the file.
  */
 void Logger::setLogFileName(char *fname) {
-    if (_v < 1) return;
+    if (!_v.count("log")) return;
 
     printf("writing logs to: %s\n\n", fname);
     _f.open(fname, ios::out | ios::trunc);
@@ -38,7 +38,7 @@ void Logger::setLogFileName(char *fname) {
  * Writes current stats about the execution to the log file.
  */
 void Logger::dumpState() {
-    if (_v < 1) return;
+    if (!_v.count("log")) return;
 
     // update timestamp here
     setTotalTime(time_diff(_state.initial_time));

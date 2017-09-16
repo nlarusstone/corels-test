@@ -340,6 +340,7 @@ CacheTree::update_opt_predictions(Node* parent, bool new_pred, bool new_default_
         predictions.push_back(node->prediction());
         node = node->parent();
     }
+    std::reverse(predictions.begin(), predictions.end());
     opt_predictions_.assign(predictions.begin(), predictions.end());
     opt_predictions_.push_back(new_pred);
     opt_predictions_.push_back(new_default_pred);

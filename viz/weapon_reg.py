@@ -17,7 +17,7 @@ data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
 lw = 2  # linewidth
 ms = 9  # markersize
-fs = 16 # fontsize
+fs = 18 # fontsize
 
 num_folds = 10
 make_figure = False
@@ -30,23 +30,24 @@ figure_fold = 0
 
 # log files generated on beepboop
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
+log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
 
 if make_figure:
-    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0400000-v=10-f=10.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=2-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0025000-v=2-f=1000.txt']
+    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0400000-v=10-f=10.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0100000-v=10-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0025000-v=10-f=1000.txt']
 else:
-    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0400000-v=2-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=2-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0025000-v=2-f=1000.txt']
+    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0400000-v=10-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0025000-v=10-f=1000.txt']
 
 labels = ['$\lambda$ = 0.04', '$\lambda$ = 0.01', '$\lambda$ = 0.0025']
 ftag = "weapon_reg"
 
 if (make_figure):
     pylab.ion()
-    pylab.figure(6, figsize=(16, 5.8))
+    pylab.figure(6, figsize=(16, 6.55))
 
 ntot = len(log_root_list)
 
@@ -59,6 +60,7 @@ num_insertions = np.zeros((ntot, num_folds), int)
 max_queue = np.zeros((ntot, num_folds), int)
 min_obj = np.zeros((ntot, num_folds))
 lower_bound_num = np.zeros((ntot, num_folds), int)
+optimal_prefix_length = np.zeros((ntot, num_folds), int)
 ablation_names = ['0.04', '0.01', '0.0025']
 
 for (ncomp, log_root) in enumerate(log_root_list):
@@ -77,6 +79,12 @@ for (ncomp, log_root) in enumerate(log_root_list):
         try:
             print 'reading', log_fname
             x = tb.tabarray(SVfile=log_fname)
+            oname = log_fname.replace('.txt', '-opt.txt').replace('0001', '0002')
+            print oname
+            if not os.path.exists(oname):
+                oname = oname.replace('f=1000', 'f=10')
+            olength = len(open(oname, 'rU').read().strip().split(';')[:-1])
+            optimal_prefix_length[ncomp, fold] = olength
         except:
             print 'skipping', log_fname
             continue
@@ -159,7 +167,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 pylab.xlabel('Time (s)\n', fontsize=fs+2)
             if (ncomp % 3 == 0):
                 pylab.ylabel('Count', fontsize=fs+2)
-            (ymin, ymax) = (10**-0.1, 10**6.8)
+            (ymin, ymax) = (10**-0.01, 10**6.8)
             t_corels = t_comp[-1]
             tmax = np.round(tt[-1])
             pylab.plot([tt[-1], tt[-1]], [ymin, ymax], 'k--', linewidth=lw)
@@ -172,12 +180,14 @@ for (ncomp, log_root) in enumerate(log_root_list):
             pylab.text(10**-3.7, 10**6.1, labels[ncomp], fontsize=fs+2)
             pylab.xticks(fontsize=fs-2)
             pylab.yticks(fontsize=fs-2)
+            pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs)
+            pylab.yticks(10.**np.array([0, 2, 4, 6]), fontsize=fs)
             ax = [10**-4, 10**3, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()
             if (ncomp + 1 == ntot):
                 if not (make_small):
-                    pylab.legend(['%d' % ii for ii in range(1, max_length + 1)], bbox_to_anchor=(1., 1.), loc=2, labelspacing=0.35)
+                    pylab.legend(['%d' % ii for ii in range(1, max_length + 1)], loc=(-1.83, 0.52), handletextpad=0, borderaxespad=0.1, ncol=2, frameon=False, columnspacing=0.5)
                     pylab.suptitle('Execution traces of queue contents (NYCLU stop-and-frisk dataset)', fontsize=fs+4)
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)
 
@@ -200,22 +210,27 @@ km_m = np.cast[int](max_prefix_length.mean(axis=1))
 km_s = max_prefix_length.std(axis=1)
 km_min = max_prefix_length.min(axis=1)
 km_max = max_prefix_length.max(axis=1)
+k_min = optimal_prefix_length.min(axis=1)
+k_max = optimal_prefix_length.max(axis=1)
 it_m = num_insertions.mean(axis=1) / 10**3
 it_s = num_insertions.std(axis=1) / 10**3
 mq_m = max_queue.mean(axis=1) / 10**3
 mq_s = max_queue.std(axis=1) / 10**3
 
-for rec in zip(ablation_names, tt_m, tt_s, to_m, to_s, it_m, it_s, mq_m, mq_s, km_min, km_max):
-    print '%s & %1.1f (%1.1f) & %d (%d) & %1.1f (%1.1f) & %1.1f (%1.1f) & %d-%d \\\\' % rec
-
 slow_m = (t_tot / t_tot[0]).mean(axis=1) # slowdown
 lb_m = lower_bound_num.mean(axis=1) / 10**6
 lb_s = lower_bound_num.std(axis=1) / 10**6
 
-print '& Total time & Time to & Max evaluated & Total queue &  Max queue \\\\'
-print '$\\lambda$ & (s) & optimum (s) & prefix length & insertions ($\\times 10^3$) & size ($\\times 10^3$) \\\\'
-for rec in zip(ablation_names, tt_m, tt_s, to_m, to_s, km_min, km_max, lb_m, lb_s, it_m, it_s):
-    print '%s & %1.2f (%1.2f) & %1.4f (%1.4f) & %d-%d & %1.3f (%1.3f) & %1.2f (%1.2f) \\\\' % rec
+print '& Total time & Time to & Max evaluated & Optimal \\\\'
+print '$\\lambda$ & (s) & optimum (s) & prefix length & prefix length \\\\'
+for rec in zip(ablation_names, tt_m, tt_s, to_m, to_s, km_min, km_max, k_min, k_max):
+    print '%s & %1.2f (%1.2f) & %1.3f (%1.5f) & %d-%d & %d-%d \\\\' % rec
+
+print '& Lower bound & Total queue &  Max queue \\\\'
+print '$\\lambda$ & evaluations ($\\times 10^6$) & insertions ($\\times 10^3$) & size ($\\times 10^3$) \\\\'
+for rec in zip(ablation_names, lb_m, lb_s, it_m, it_s, mq_m, mq_s):
+    print '%s & %1.3f (%1.3f) & %1.1f (%1.1f) & %1.2f (%1.2f) \\\\' % rec
+
 
 #print '& Lower bound & Total queue &  Max queue \\\\'
 #print 'Algorithm variant & computations ($\\times 10^6$) & insertions ($\\times 10^5$) & size #($\\times 10^5$) \\\\'

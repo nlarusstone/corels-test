@@ -25,12 +25,13 @@ fs = 16 # fontsize
 # log files generated on beepboop
 # no-minor execution using ~350GB RAM when halted
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=999999999-c=0.0050000-v=10-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=999999999-c=0.0050000-v=10-f=1000.txt']
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
+log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0050000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000002-c=0.0050000-v=10-f=1000.txt']
 fold = 0
 
-large = False
+large = True
 
 if large:
     ftag = 'compas_execution_large'
@@ -104,7 +105,7 @@ for jj in ip:
 pylab.ylabel('Value', fontsize=fs)
 if large:
     pylab.title('Execution progress (ProPublica dataset)', fontsize=fs)
-    pylab.axis([x['total_time'][2], 1100, 0, 0.52])
+    pylab.axis([x['total_time'][2], 7750, 0, 0.52])
 else:
     pylab.title('Execution progress (ProPublica)', fontsize=fs)
     pylab.axis([x['total_time'][2], 970, 0, 0.52])
@@ -132,7 +133,7 @@ pylab.xlabel('Time (s)', fontsize=fs)
 pylab.ylabel('log10(Size)', fontsize=fs)
 if large:
     pylab.yticks(range(0, 160, 50), fontsize=fs)
-    pylab.axis([x['total_time'][2], 1100, 0, 175])
+    pylab.axis([x['total_time'][2], 7750, 0, 175])
 else:
     pylab.yticks(range(0, 175, 50), fontsize=fs)
     pylab.axis([x['total_time'][2], 970, 0, 175])

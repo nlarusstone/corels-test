@@ -56,7 +56,7 @@ Run the following from the `src/` directory.
 
 ### Usage
 
-    ./corels [-b] [-n max_num_nodes] [-r regularization] [-v verbosity] -c (1|2|3|4) -p (0|1|2)
+    ./corels [-b] [-n max_num_nodes] [-r regularization] [-v (rule|label|samples|progress|log)] -c (1|2|3|4) -p (0|1|2)
              [-f logging_frequency] -a (1|2|3) [-s] [-L latex_out] data.out data.label [data.minor]
 
 ### Data format
@@ -82,10 +82,17 @@ The default value corresponds to `-r 0.01` and can be thought of as adding a
 penalty equivalent to misclassifying 1% of data when increasing a rule list's
 length by one association rule.
 
-**[-v verbosity]** Verbosity.
-Default value corresponds to `-v 0`.
-If verbosity is at least `10`, then print machine info.
-If verbosity is at least `1000`, then also print input antecedents and labels.
+**[-v (rule|label|samples|progress|log|silent)]** Verbosity.
+* Use `rule` to print inputted rules.
+* Use `label` to print inputted labels.
+* Use `samples` to print a truth table of samples captured by each rule (this option produces debugging output that is very long)
+* Use `progress` to continuously print the algorithm's status (default).
+* Use `log` to turn on logging to files.
+* Use `silent` without any other options to only print the optimal rule list at the end.
+
+Options may be combined with each other (except for `silent`), and the `samples` option must be combined with at least one of `rule` and `label`.
+Use commas to separate options, i.e., `-v progress,log`
+Defaults to `-v progress`.
 
 **-c (1|2|3|4)** Best-first search policy.
 You must specify a search policy; use exactly one of `(-b | -c)`.
@@ -144,22 +151,22 @@ There are four training data files:
 
 * `compas_train.csv` : `7` categorical and integer-valued features and binary class labels extracted from `compas-scores-two-years.csv`
 
-    sex (Male, Female), age, juvenile-felonies, juvenile-misdemeanors, juvenile-crimes,
-    priors, current-charge-degree (Misdemeanor, Felony)
+        sex (Male, Female), age, juvenile-felonies, juvenile-misdemeanors, juvenile-crimes,
+        priors, current-charge-degree (Misdemeanor, Felony)
 
 * `compas_train-binary.csv` : `14` equivalent binary features and class labels (included for convenience / use with other algorithms)
 
-    sex:Male, age:18-20, age:21-22, age:23-25, age:26-45, age:>45
-    juvenile-felonies:>0, juvenile-misdemeanors:>0, juvenile-crimes:>0
-    priors:2-3, priors:=0, priors:=1, priors:>3, current-charge-degree:Misdemeanor
+        sex:Male, age:18-20, age:21-22, age:23-25, age:26-45, age:>45
+        juvenile-felonies:>0, juvenile-misdemeanors:>0, juvenile-crimes:>0
+        priors:2-3, priors:=0, priors:=1, priors:>3, current-charge-degree:Misdemeanor
 
 * `compas_train.out` : `155` mined antecedents (binary features and length-2 conjunctions of binary features with support in `[0.005, 0.995]`), e.g.,
 
-    {sex:Female}, {age:18-20}, {sex:Male,current-charge-degree:Misdemeanor}, {age:26-45,juvenile-felonies:>0}
+        {sex:Female}, {age:18-20}, {sex:Male,current-charge-degree:Misdemeanor}, {age:26-45,juvenile-felonies:>0}
 
 * `compas_train.labels` : class labels
 
-    {recidivate-within-two-years:No}, {recidivate-within-two-years:Yes}
+        {recidivate-within-two-years:No}, {recidivate-within-two-years:Yes}
 
 * `compas_train.minor` : bit vector used to support the equivalent points bound
 

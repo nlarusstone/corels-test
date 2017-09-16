@@ -54,11 +54,11 @@ int main(int argc, char* argv[])
     if(verbosity) {
         printf("\n/********** RULE DUMP **********/\n\n");
         printf("Printing rules:\n");
-        rule_print_all(rules, nrules, nsamples);
+        rule_print_all(rules, nrules, nsamples, 1);
         printf("\n\nPrinting labels:\n");
-        rule_print_all(labels, nlabels, nsamples);
+        rule_print_all(labels, nlabels, nsamples, 1);
         printf("\n\nPrinting minority:\n");
-        rule_print_all(minority, nminority, nsamples);
+        rule_print_all(minority, nminority, nsamples, 1);
         printf("\n\n/******** END RULE DUMP ********/\n\n\n");
     }
 

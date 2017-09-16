@@ -21,7 +21,6 @@ data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
 lw = 2  # linewidth
 ms = 9  # markersize
-fs = 16 # fontsize
 
 num_folds = 10
 figure_fold = -1
@@ -32,15 +31,22 @@ figure_fold = 0
 
 # log files generated on beepboop
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
+log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
 
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=99999999-c=0.0400000-v=10-f=10.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=99999999-c=0.0100000-v=10-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=99999999-c=0.0025000-v=10-f=1000.txt']
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0400000-v=10-f=10.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0100000-v=10-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0025000-v=10-f=1000.txt']
 
 labels = ['$\lambda$ = 0.04', '$\lambda$ = 0.01', '$\lambda$ = 0.0025']
 ftag = "weapon_reg"
-fs_legend = fs - 2
+
+if make_small:
+    fs = 16
+    fs_legend = fs - 2
+else:
+    fs = 17
+    fs_legend = fs - 3
 
 pylab.ion()
 if (make_small):
@@ -98,13 +104,13 @@ for (ncomp, log_root) in enumerate(log_root_list):
         pylab.semilogx(tt, oo, 'o', markerfacecolor='white', markeredgewidth=2, markersize=6, markeredgecolor='k')
         pylab.text(tt * 1.1, oo + 0.025, str(pl), fontsize=fs-2)
 
-    pylab.xticks(fontsize=fs-1)
+    pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs-1)
     if (make_small):
         pylab.text(10**-1.2, 0.46, labels[ncomp], fontsize=fs)
     else:
         pylab.title(labels[ncomp], fontsize=fs)
-    pylab.xticks(fontsize=fs-2)
-    pylab.yticks(np.arange(0, 0.59, 0.1), fontsize=fs)
+    pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs-2)
+    pylab.yticks(np.arange(0, 0.59, 0.2), fontsize=fs)
     pylab.axis([x['total_time'][2], 10**3, 0, 0.55])
     if (ncomp % 3 == 0):
         pylab.ylabel('Value', fontsize=fs)
@@ -113,7 +119,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
     if (make_small):
         if (ncomp == 2):
             pylab.ylabel('Value', fontsize=fs)
-            pylab.xticks(fontsize=fs-1)
+            pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs-1)
             pylab.xlabel('Time (s)', fontsize=fs)
         pylab.subplot(2, 2, 4)
     else:
@@ -122,15 +128,15 @@ for (ncomp, log_root) in enumerate(log_root_list):
     pylab.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='b', linewidth=lw)
     pylab.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '--', color='k', linewidth=lw)
     #pylab.semilogx(tmin, opt, 'k*', markersize=18)
-    pylab.xticks(fontsize=fs-1)
-    pylab.yticks(np.arange(0, 0.59, 0.1), fontsize=fs)
+    pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs-1)
+    pylab.yticks(np.arange(0, 0.59, 0.2), fontsize=fs)
     pylab.axis([x['total_time'][2], 10**3, 0, 0.55])
     if (make_small):
         if (ncomp == 0):
             pylab.text(10**-1.5, 0.45, ' Overlay', fontsize=fs)
     else:
         pylab.title('Overlay', fontsize=fs)
-    pylab.xticks(fontsize=fs-1)
+    pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs-1)
 
     if (make_small):
         pylab.xlabel('Time (s)', fontsize=fs)
@@ -145,7 +151,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
             pylab.ylabel('log10(Size)', fontsize=fs)
             pylab.legend(['Upper bound on\nsize of remaining\nsearch space'], fontsize=fs_legend, loc='best', frameon=False)
         pylab.xlabel('Time (s)', fontsize=fs)
-        pylab.xticks(fontsize=fs-1)
+        pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs-1)
         pylab.yticks(range(0, 40, 10), fontsize=fs)
         pylab.axis([x['total_time'][2], 10**3, 0, 32])
         pylab.subplot(2, 4, 8)
@@ -153,7 +159,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
         pylab.yticks(range(0, 40, 10), fontsize=fs)
         pylab.axis([x['total_time'][2], 10**3, 0, 32])
         pylab.xlabel('Time (s)', fontsize=fs)
-        pylab.xticks(fontsize=fs-1)
+        pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs-1)
 
 #pylab.suptitle('Execution progress for different regularization parameters (NYCLU dataset)\n', fontsize=fs+2)
 pylab.savefig('../figs/%s-execution.pdf' % ftag)
