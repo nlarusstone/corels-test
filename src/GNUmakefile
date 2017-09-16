@@ -1,8 +1,5 @@
-CFLAGS := -g -W -fPIC -Wall -Wno-unused-parameter -I. -O$(O)
-
-ifndef disable-gmp
-	CFLAGS += -DGMP
-endif
+CFLAGS := -g -W -Wall -Wno-unused-parameter -I. -DGMP -O2 -fno-omit-frame-pointer
+CXXFLAGS := $(CFLAGS) -std=c++11
 
 ifneq (,$(filter $(shell uname -n),elaines-MacBook-Pro.local Nicholass-Air-5.wireless.yale.internal))
     LIBS := -L/usr/local/lib
