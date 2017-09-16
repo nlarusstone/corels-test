@@ -42,11 +42,16 @@ e.g., [install libmpc](http://brewformulas.org/Libmpc) via [homewbrew](https://b
 
     brew install libmpc
 
+### Compilation
+
+Simply run the following from the `src/` directory:
+
+    make [disable-gmp=1]
+
 ### Sample command
 
 Run the following from the `src/` directory.
 
-    make
     ./corels -r 0.015 -c 2 -p 1 ../data/compas_train.out ../data/compas_train.label ../data/compas_train.minor
 
 ### Usage

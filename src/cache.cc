@@ -48,7 +48,7 @@ CacheTree::~CacheTree() {
 }
 
 Node* CacheTree::construct_node(unsigned short new_rule, size_t nrules, bool prediction,
-                         bool default_prediction, double lower_bound, double objective, 
+                         bool default_prediction, double lower_bound, double objective,
                          Node* parent, int num_not_captured, int nsamples,
                          int len_prefix, double c, double equivalent_minority) {
     size_t num_captured = nsamples - num_not_captured;
@@ -69,11 +69,9 @@ Node* CacheTree::construct_node(unsigned short new_rule, size_t nrules, bool pre
  * Inserts the root of the tree, setting up the default rules.
  */
 void CacheTree::insert_root() {
-    VECTOR tmp_vec;
     size_t d0, d1;
     bool default_prediction;
     double objective;
-    make_default(&tmp_vec, nsamples_);
     d0 = labels_[0].support;
     d1 = nsamples_ - d0;
     if (d0 > d1) {
@@ -134,7 +132,7 @@ void CacheTree::prune_up(Node* node) {
  */
 Node* CacheTree::check_prefix(tracking_vector<unsigned short, DataStruct::Tree>& prefix) {
     Node* node = this->root_;
-    for(tracking_vector<unsigned short, DataStruct::Tree>::iterator it = prefix.begin(); 
+    for(tracking_vector<unsigned short, DataStruct::Tree>::iterator it = prefix.begin();
             it != prefix.end(); ++it) {
         node = node->child(*it);
         if (node == NULL)
@@ -144,7 +142,7 @@ Node* CacheTree::check_prefix(tracking_vector<unsigned short, DataStruct::Tree>&
 }
 
 /*
- * Recursive helper function to traverse down the tree, deleting nodes with a lower bound greater 
+ * Recursive helper function to traverse down the tree, deleting nodes with a lower bound greater
  * than the minimum objective.
  */
 void CacheTree::gc_helper(Node* node) {
@@ -153,7 +151,7 @@ void CacheTree::gc_helper(Node* node) {
     Node* child;
     double lb;
     std::vector<Node*> children;
-    for (typename std::map<unsigned short, Node*>::iterator cit = node->children_.begin(); 
+    for (typename std::map<unsigned short, Node*>::iterator cit = node->children_.begin();
             cit != node->children_.end(); ++cit)
         children.push_back(cit->second);
     for (typename std::vector<Node*>::iterator cit = children.begin(); cit != children.end(); ++cit) {
@@ -186,22 +184,22 @@ void CacheTree::garbage_collect() {
  * update_remaining_state_space -- boolean flag indicating whether to update the size of
  * the remaining search space (optional calculation in logger state)
  */
-void delete_subtree(CacheTree* tree, Node* node, bool destructive, 
+void delete_subtree(CacheTree* tree, Node* node, bool destructive,
         bool update_remaining_state_space) {
     Node* child;
     // Interior (non-leaf) node
     if (node->done()) {
-        for(std::map<unsigned short, Node*>::iterator iter = node->children_begin(); 
+        for(std::map<unsigned short, Node*>::iterator iter = node->children_begin();
                 iter != node->children_end(); ++iter) {
             child = iter->second;
             delete_subtree(tree, child, destructive, update_remaining_state_space);
         }
         // always delete interior nodes
-        tree->decrement_num_nodes(); 
+        tree->decrement_num_nodes();
         delete node;
     } else {
         // only delete leaf nodes in destructive mode
-        if (destructive) {  
+        if (destructive) {
             tree->decrement_num_nodes();
             delete node;
         } else {

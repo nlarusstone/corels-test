@@ -100,6 +100,8 @@ figs/*png
 logs/
 cache/
 bbcache
+corels
+tests/tests
 profiles/
 eval/tdata_R.label
 eval/tdata_R.out
@@ -111,6 +113,7 @@ eval/tdata_R.out
 *.toc
 *.lof
 *.out
+!tests.out
 *.cut
 paper/arxiv.pdf
 paper/kdd17.pdf

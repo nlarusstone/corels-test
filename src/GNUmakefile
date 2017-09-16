@@ -38,6 +38,9 @@ all: corels
 corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
+libcorels.so: corels.o pmap.o cache.o rulelib.o evaluate.o utils.o
+	$(CXX) -shared  -Wl,-soname,$@ -o $@ $^
+
 evaluate-test: evaluate-test.o evaluate.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
