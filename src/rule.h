@@ -150,7 +150,7 @@ int rules_init(const char *, int *, int *, rule_t **, int);
 void rules_free(rule_t *, const int, int);
 
 void rule_print(rule_t *, int, int, int);
-void rule_print_all(rule_t *, int, int);
+void rule_print_all(rule_t *, int, int, int);
 void rule_vector_print(VECTOR, int);
 void rule_copy(VECTOR, VECTOR, int);
 
