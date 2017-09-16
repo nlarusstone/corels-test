@@ -1,7 +1,7 @@
 /** HELPER FILE FOR TESTS.CC ***/
 
-#include "../rule.h"
-#include "../utils.hh"
+#include "../src/rule.h"
+#include "../src/utils.hh"
 
 #define CATCH_CONFIG_RUNNER
 #include "catch.hpp"
@@ -40,9 +40,9 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    int r = rules_init("testing/tests.out", &nrules, &nsamples, &rules, 1);
-    int l = rules_init("testing/tests.label", &nlabels, &nsamples_chk, &labels, 0);
-    int m = rules_init("testing/tests.minor", &nminority, &nsamples_check, &minority, 0);
+    int r = rules_init("tests.out", &nrules, &nsamples, &rules, 1);
+    int l = rules_init("tests.label", &nlabels, &nsamples_chk, &labels, 0);
+    int m = rules_init("tests.minor", &nminority, &nsamples_check, &minority, 0);
 
     if(r != 0 || l != 0 || m != 0 || nsamples != nsamples_chk)
     {

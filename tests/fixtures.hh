@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../queue.hh"
+#include "../src/queue.hh"
 
 #ifdef GMP
     #include <gmp.h>
