@@ -97,6 +97,7 @@ public:
     }
 
     virtual ~PrefixMapFixture() {
+
         if(pmap)
             delete pmap;
 

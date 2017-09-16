@@ -1,4 +1,4 @@
-CFLAGS := -g -W -Wall -Wno-unused-parameter -I. -O$(O)
+CFLAGS := -g -W -fPIC -Wall -Wno-unused-parameter -I. -O$(O)
 
 ifndef disable-gmp
 	CFLAGS += -DGMP
@@ -38,6 +38,9 @@ all: corels
 
 corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+
+libcorels.so: run.o params.o corels.o pmap.o cache.o rulelib.o utils.o           
+	$(CXX) -shared  -Wl,-soname,$@ -o $@ $^
 
 main.o: main.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
