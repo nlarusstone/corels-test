@@ -363,7 +363,7 @@ TEST_CASE_METHOD(TrieFixture, "Trie/Check prefix", "[trie][check_prefix]") {
 /**
                             DELETE subtree
 
-    Creates an artificial tree fand then deletes it, first non-destructively,
+    Creates an artificial tree and then deletes it, first non-destructively,
     so we can check if it labels the correct nodes for destruction, and then
     destructively, to see if it deletes the correct nodes, and then deletes
     everything up to the root node as well.
