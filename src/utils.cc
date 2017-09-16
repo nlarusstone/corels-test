@@ -108,7 +108,8 @@ void print_final_rulelist(const tracking_vector<unsigned short, DataStruct::Tree
                           const bool latex_out,
                           const rule_t rules[],
                           const rule_t labels[],
-                          char fname[]) {
+                          char fname[],
+                          int print_progress) {
     assert(rulelist.size() == preds.size() - 1);
 
     printf("\nOPTIMAL RULE LIST\n");
@@ -147,7 +148,8 @@ void print_final_rulelist(const tracking_vector<unsigned short, DataStruct::Tree
     }
 
     ofstream f;
-    printf("writing optimal rule list to: %s\n\n", fname);
+    if(print_progress)
+        printf("writing optimal rule list to: %s\n\n", fname);
     f.open(fname, ios::out | ios::trunc);
     for(size_t i = 0; i < rulelist.size(); ++i) {
         f << rules[rulelist[i]].features << "~"

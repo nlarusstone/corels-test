@@ -953,13 +953,13 @@ rule_vector_print(VECTOR v, int n)
 }
 
 void
-rule_print_all(rule_t *rules, int nrules, int nsamples)
+rule_print_all(rule_t *rules, int nrules, int nsamples, int print_samples)
 {
 	int i, n;
 
 	n = (nsamples + BITS_PER_ENTRY - 1) / BITS_PER_ENTRY;
 	for (i = 0; i < nrules; i++)
-		rule_print(rules, i, n, 1);
+		rule_print(rules, i, n, print_samples);
 }
 
 /*
