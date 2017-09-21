@@ -91,7 +91,7 @@ def age_func(a):
 
 predict_frisked = False
 predict_weapon = True
-small = True
+small = False
 
 # for the weapon prediction problem, we resample due to class imbalance
 resample_test = False   # if True, will resample the test set, otherwise only resample the train set

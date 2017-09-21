@@ -27,7 +27,7 @@ int main(int argc, char *argv[]) {
     bool latex_out = false;
     bool use_prefix_perm_map = false;
     bool use_captured_sym_map = false;
-    char *vopt;
+    char *vopt, *verb_trim;
     std::set<std::string> verbosity;
     bool verr = false;
     const char *vstr = "rule|label|samples|progress|log|silent";
@@ -40,6 +40,7 @@ int main(int argc, char *argv[]) {
     int freq = 1000;
     int ablation = 0;
     bool calculate_size = false;
+    char verbstr[BUFSZ]; 
     /* only parsing happens here */
     while ((ch = getopt(argc, argv, "bsLc:p:v:n:r:f:a:")) != -1) {
         switch (ch) {
@@ -62,7 +63,9 @@ int main(int argc, char *argv[]) {
             use_captured_sym_map = map_type == 2;
             break;
         case 'v':
-            vopt = strtok(optarg, ",");
+            verb_trim = strtok(optarg, " ");
+            strcpy(verbstr, verb_trim);
+            vopt = strtok(verb_trim, ",");
             while (vopt != NULL) {
                 if (!strstr(vstr, vopt)) {
                     verr = true;
@@ -172,7 +175,7 @@ int main(int argc, char *argv[]) {
     char log_fname[BUFSZ];
     char opt_fname[BUFSZ];
     const char* pch = strrchr(argv[0], '/');
-    snprintf(froot, BUFSZ, "../logs/for-%s-%s%s-%s-%s-removed=%s-max_num_nodes=%d-c=%.7f-f=%d",
+    snprintf(froot, BUFSZ, "../logs/for-%s-%s%s-%s-%s-removed=%s-max_num_nodes=%d-c=%.7f-v=%s-f=%d",
             pch ? pch + 1 : "",
             run_bfs ? "bfs" : "",
             run_curiosity ? curiosity_map[curiosity_policy].c_str() : "",
@@ -180,7 +183,7 @@ int main(int argc, char *argv[]) {
                 (use_captured_sym_map ? "with_captured_symmetry_map" : "no_pmap"),
             meta ? "minor" : "no_minor",
             ablation ? ((ablation == 1) ? "support" : "lookahead") : "none",
-            max_num_nodes, c, freq);
+            max_num_nodes, c, verbstr, freq);
     snprintf(log_fname, BUFSZ, "%s.txt", froot);
     snprintf(opt_fname, BUFSZ, "%s-opt.txt", froot);
 

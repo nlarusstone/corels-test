@@ -59,9 +59,9 @@ import utils
 pylab.rcParams['pdf.fonttype'] = 42
 pylab.rcParams['ps.fonttype'] = 42
 
-froot = 'propublica_ours'
+froot = 'compas'
 data_dir = '../data/CrossValidation/'
-log_dir = '../logs/'
+log_dir = '../jmlr/'
 lw = 2  # linewidth
 ms = 9  # markersize
 fs = 18 # fontsize
@@ -123,7 +123,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
         else:
             make_figure = False
         print "Make fig?: {0}".format(make_figure)
-        tname = 'propublica_ours_%d_train.out' % fold
+        tname = '{0}_{1}_train.out'.format(froot, fold)
         log_fname = log_root % tname
         print log_fname
         fname = os.path.join(data_dir, tname)
@@ -180,11 +180,12 @@ for (ncomp, log_root) in enumerate(log_root_list):
         assert ([int(name) for name in z.dtype.names] == range(max_length + 1))
         #zc = z.extract()[:, ::-1].cumsum(axis=1)[:, ::-1]
         zc = z.extract()
-        if (ncomp == 0):
+        if (ncomp == 0 and fold == 0):
             queue_comp = zc.sum(axis=1)
             ii = queue_comp.nonzero()[0]
             queue_comp = queue_comp[ii]
             t_comp = x['total_time'][ii]
+            print 'HEREHEREHEREHEREHERE ', ncomp
         
         max_q = zc.sum(axis=1).max()
         max_queue[ncomp, fold] = max_q
@@ -234,6 +235,9 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 xloc = tmax / 5000
             else:
                 xloc = tmax / 10000
+            print 'TMAX: ', tmax
+            print 'TCORELS: ', t_corels
+            print 'TMAX/TCORELS', tmax / t_corels
             if (ncomp == 0):
                 pylab.plot([t_corels, t_corels], [ymin, ymax], 'k--', linewidth=lw)
                 xloc = 0.4
@@ -266,6 +270,8 @@ for (ncomp, log_root) in enumerate(log_root_list):
                                  borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
                 else:
                     pylab.suptitle('\nExecution traces of queue contents (ProPublica dataset)', fontsize=fs+2)
+                    pylab.tight_layout()
+                    pylab.subplots_adjust(top=0.85)
                     pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.175, 2.93), handletextpad=0, labelspacing=0.3,  borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
                 print '../figs/%s-queue.pdf' % ftag
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)

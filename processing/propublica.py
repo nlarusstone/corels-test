@@ -38,26 +38,17 @@ def priors_count_func(p):
 
 def age_cat_func(dob, jail_in):
     a = get_age(dob, jail_in)
-    if (a < 25):
-        return '<25'  # support = 1018
+    if (a < 25): return '<25'  # support = 1018
     elif (a <= 45):
         return '25-45'  # support = 3890
     else:
         return '>45'    # support = 1463
 
 def race_func(r):
-    if r == 'White':
-        return r
-    elif r == 'Black':
-        return r
-    elif r == 'Hispanic':
-        return r
-    else:
+    if (r in ['Native American', 'Other', 'Asian']):
         return 'Other'
-    #if (r in ['Native American', 'Other']):
-    #    return 'Other'
-    #else:
-    #    return r.replace(' ', '-')
+    else:
+        return r.replace(' ', '-')
 
 def score_func(s):
     if (s < 5):
@@ -65,6 +56,7 @@ def score_func(s):
     else:
         return 1            # Medium = 5-7, High = 8-10
 
+#ftag = 'compas' #our age categories, no race
 #ftag = 'propublica' # coarse age categories, with race
 ftag = 'propublica_ours' # our age categories, with race
 #ftag = 'score' # learn COMPAS scores
@@ -113,12 +105,13 @@ columns = [(x['sex'] == 'Male'),
            ((x['age'] >= 45) & (x['age'] <= 59))]
 """
 
-if (ftag in ['propublica_ours']):
+if (ftag in ['propublica_ours', 'compas']):
     age = np.array([age_func(dob, jail_in) for dob, jail_in in zip(x['dob'], x['c_jail_in'])])
 else:
     age = np.array([age_cat_func(dob, jail_in) for dob, jail_in in zip(x['dob'], x['c_jail_in'])])
 
-race = np.array([race_func(i) for i in x['race']])
+if (ftag not in ['comaps']):
+    race = np.array([race_func(i) for i in x['race']])
 
 juvenile_felonies = np.array(['>0' if (i > 0) else '=0' for i in x['juv_fel_count']])   # support = 282
 
@@ -136,12 +129,15 @@ assert (set(x['c_charge_degree']) == set(['F', 'M']))
 
 #race_list = list(set(x['race']))
 
-columns = [x['sex'], age, race]
+columns = [x['sex'], age]
+cnames = ['sex', 'age']
+if (ftag not in ['compas']):
+    columns.append(race)
+    cnames.append('race')
 #columns += [(x['race'] == n) for n in race_list]
 columns += [juvenile_felonies, juvenile_misdemeanors, juvenile_crimes,
            priors_count]#, c_charge_degree]
 
-cnames = ['sex', 'age', 'race']
 #cnames += ['Race=%s' % r for r in race_list]
 cnames += ['juvenile-felonies', 'juvenile-misdemeanors', 'juvenile-crimes',
           'priors']#, 'current-charge-degree']
