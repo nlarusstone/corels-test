@@ -33,7 +33,7 @@ of length nsamples, representing the captured bitvector of each rule.
 The optional keywords are:
 
 | Keywords                          | Description 
-| ---                               | -----------
+| ---                               | --------
 | minor_data (string or list)       | minority info, either in a file path or list
 | opt_file (string)                 | the path of the file in which to store the optimal rule list, defaults to "corels-opt.txt"
 | log_file (string)                 | the path of the log file, defaults to "corels.txt"
