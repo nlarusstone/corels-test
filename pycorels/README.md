@@ -61,7 +61,18 @@ the rule file
 
 #### Return value
 
-returns a list of tuples (in the format detailed above) describing the rules
+returns a list of tuples (in the format detailed above) describing the rules, not containing a default rule
+
+### pycorels.tofile
+
+#### Parameters
+
+This function only takes two required arguments: the first is a list of tuples describing a list of rules (as specified above), and the second is a path to a file. The function then outputs the list into the file specified by the second argument, the exact opposite of pycorels.tolist.
+
+#### Return value
+
+none
+
 
 ## Example
 
