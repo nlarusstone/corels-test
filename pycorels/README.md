@@ -32,18 +32,20 @@ of length nsamples, representing the captured bitvector of each rule.
 
 The optional keywords are:
 
-- minor_data (string or list)       minority info, either in a file path or list
-- opt_file (string)                 the path of the file in which to store the optimal rule list, defaults to "corels-opt.txt"
-- log_file (string)                 the path of the log file, defaults to "corels.txt"
-- curiosity_policy (integer)         the method of ordering the queue elements, valid values are between 0 and 4, inclusive, which correspond to ordering by BFS, curiosity, lower bound, objective, and dfs, respecively
-- latex_out (string)                the path of the file in which to store the output in latex format. Defaults to blank (and no file is outputted unless a path is given)
-- map_type (integer)                 the type of symmetry-aware map to use, valid values are between 0 and 2, inclusive, with 0 being no map, 1 being prefix permutation map, and 2 being captured permutation map
-- verbosity (string)                a comma-separated list of verbosity tags, valid tags are 'rule', 'label', 'samples', 'progress', 'log', and 'silent'
-- log_freq (integer)                 every this number of nodes searched in the queue, print an update in the log
-- max_num_nodes (integer)           maximum number of nodes to be searched before exiting
-- c (float)                         regularization constant
-- ablation (integer)                dictates what kind of bounds to use (greater than 1 uses the lower bound on antecedent bound, and greater than 2 uses the lookahead bound)
-- calculate_size (bool)             whether or not the logger should keep track of memory usage
+| Keywords                          | Description 
+| ---                               | -----------
+| minor_data (string or list)       | minority info, either in a file path or list
+| opt_file (string)                 | the path of the file in which to store the optimal rule list, defaults to "corels-opt.txt"
+| log_file (string)                 | the path of the log file, defaults to "corels.txt"
+| curiosity_policy (integer)        | the method of ordering the queue elements, valid values are between 0 and 4, inclusive, which correspond to ordering by BFS, curiosity, lower bound, objective, and dfs, respecively
+| latex_out (string)                | the path of the file in which to store the output in latex format. Defaults to blank (and no file is outputted unless a path is given)
+| map_type (integer)                | the type of symmetry-aware map to use, valid values are between 0 and 2, inclusive, with 0 being no map, 1 being prefix permutation map, and 2 being captured permutation map
+| verbosity (string)                | a comma-separated list of verbosity tags, valid tags are 'rule', 'label', 'samples', 'progress', 'log', and 'silent'
+| log_freq (integer)                |  every this number of nodes searched in the queue, print an update in the log
+| max_num_nodes (integer)           | maximum number of nodes to be searched before exiting
+| c (float)                         | regularization constant
+| ablation (integer)                | dictates what kind of bounds to use (greater than 1 uses the lower bound on antecedent bound, and greater than 2 uses the lookahead bound)
+| calculate_size (bool)             | whether or not the logger should keep track of memory usage
 
 #### Return value
 

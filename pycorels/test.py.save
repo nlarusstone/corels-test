@@ -1,8 +1,0 @@
-import numpy as np
-import pycorels
-
-a = [("{1}", np.array([0, 1, 1])), ("{2}", np.array([1, 0, 0]))]
-PyErr_SetString(PyExc_TypeError, "The second argument of every tuple must be a numpy array");
-            goto error;
-
-pycorels.run(a, a, verbosity="rule")
