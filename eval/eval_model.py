@@ -14,6 +14,7 @@ $ python eval_model.py adult --parallel --minor -n 1000 -r 0.01 -c 1 -p 1
 """
 import argparse
 import subprocess
+import string
 
 import numpy as np
 import pandas as pd
@@ -23,8 +24,8 @@ parser = argparse.ArgumentParser(description='Find rulelist and evaluate on mode
 parser.add_argument('-s', action='store_true')
 parser.add_argument('-b', action='store_true')
 parser.add_argument('-n', type=str, metavar='max_num_nodes', default='100000')
-parser.add_argument('-r', type=str, metavar='regularization', default='0.01')
-parser.add_argument('-v', type=str, metavar='verbosity', default='2')
+parser.add_argument('-r', type=str, metavar='regularization', default='0.005')
+parser.add_argument('-v', type=str, metavar='verbosity', default='progress')
 parser.add_argument('-c', type=str, metavar='(1|2|3|4)')
 parser.add_argument('-a', type=str, metavar='(1|2)')
 parser.add_argument('-p', type=str, metavar='(0|1|2)')
@@ -40,7 +41,6 @@ def run_model(fname, log_fname):
         line = f.readline()
         opt = map(lambda x: x.split('~'), line.split(';'))
         opt = map(lambda x: (x[0], int(x[1])), opt)
-        #print opt
 
     nrules = 0
     try:
@@ -113,7 +113,6 @@ if __name__ == '__main__':
         out = '../data/CrossValidation/' + fname + '.out'
         label = '../data/CrossValidation/' + fname + '.label'
         print fname
-        print out
         log_fname = '../logs/for-{0}.out-'.format(fname)
         if args.s:
             fxn.append('-s')
@@ -149,12 +148,14 @@ if __name__ == '__main__':
             fxn.append('-r ' + args.r)
             log_fname += 'c=%.7f-' % float(args.r)
         if args.v:
-            fxn.append('-v ' + args.v)
-            log_fname += 'v={0}-'.format(args.v)
+            verb = string.lstrip(args.v)
+            fxn.append('-v ' + verb)
+            log_fname += 'v={0}-'.format(verb)
         if args.f:
             fxn.append('-f ' + args.f)
             log_fname += 'f={0}'.format(args.f)
         log_fname += '-opt.txt'
+        print log_fname
         log_list.append(log_fname)
         fxn.append(out)
         fxn.append(label)

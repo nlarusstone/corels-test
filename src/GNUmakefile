@@ -1,4 +1,5 @@
-CFLAGS := -g -W -Wall -Wno-unused-parameter -DGMP -fPIC -I. -O$(O)
+CFLAGS := -g -W -Wall -Wno-unused-parameter -I. -DGMP -O2 -fno-omit-frame-pointer
+CXXFLAGS := $(CFLAGS) -std=c++11
 
 ifneq (,$(filter $(shell uname -n),elaines-MacBook-Pro.local Nicholass-Air-5.wireless.yale.internal))
     LIBS := -L/usr/local/lib
@@ -25,6 +26,8 @@ endif
 
 CC = gcc
 CXX = g++ -std=c++11
+#CC = clang
+#CXX = clang++ -std=c++11
 
 DEPSDIR := .deps
 
@@ -51,16 +54,16 @@ run.o: run.cc $(DEPSDIR)/stamp
 	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 corels.o: corels.cc $(DEPSDIR)/stamp
-	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 pmap.o: pmap.cc $(DEPSDIR)/stamp
-	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 utils.o: utils.cc $(DEPSDIR)/stamp
-	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 cache.o: cache.cc $(DEPSDIR)/stamp
-	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 rulelib.o: rulelib.c $(DEPSDIR)/stamp
 	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@

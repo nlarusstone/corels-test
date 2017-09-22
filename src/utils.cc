@@ -148,7 +148,7 @@ void print_final_rulelist(const tracking_vector<unsigned short, DataStruct::Tree
     }
 
     ofstream f;
-    if (print_progress)
+    if(print_progress)
         printf("writing optimal rule list to: %s\n\n", fname);
     f.open(fname, ios::out | ios::trunc);
     for(size_t i = 0; i < rulelist.size(); ++i) {

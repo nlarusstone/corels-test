@@ -95,6 +95,7 @@ class PermutationMap {
                              double objective, Node* parent, int num_not_captured, int nsamples, int len_prefix,
                              double c, double equivalent_minority, CacheTree* tree, VECTOR not_captured,
                              tracking_vector<unsigned short, DataStruct::Tree> parent_prefix);
+        ~PermutationMap() {}
 };
 
 class PrefixPermutationMap : public PermutationMap {
@@ -103,11 +104,15 @@ class PrefixPermutationMap : public PermutationMap {
         size_t size() override {
             return pmap->size();
         }
-        Node* insert (unsigned short new_rule, size_t nrules, bool prediction, 
-            bool default_prediction, double lower_bound, double objective, Node* parent, 
+        Node* insert (unsigned short new_rule, size_t nrules, bool prediction,
+            bool default_prediction, double lower_bound, double objective, Node* parent,
             int num_not_captured, int nsamples, int len_prefix, double c, double equivalent_minority,
-            CacheTree* tree, VECTOR not_captured, tracking_vector<unsigned short, 
+            CacheTree* tree, VECTOR not_captured, tracking_vector<unsigned short,
             DataStruct::Tree> parent_prefix) override;
+
+        inline PrefixMap* getMap() const {
+            return pmap;
+        }
 	private:
 		PrefixMap* pmap;
 };
@@ -118,11 +123,15 @@ class CapturedPermutationMap : public PermutationMap {
         size_t size() override {
             return pmap->size();
         }
-        Node* insert(unsigned short new_rule, size_t nrules, bool prediction, bool default_prediction, 
-                double lower_bound, double objective, Node* parent, int num_not_captured, int nsamples, 
+        Node* insert(unsigned short new_rule, size_t nrules, bool prediction, bool default_prediction,
+                double lower_bound, double objective, Node* parent, int num_not_captured, int nsamples,
                 int len_prefix, double c, double equivalent_minority, CacheTree* tree, VECTOR not_captured,
                  tracking_vector<unsigned short, DataStruct::Tree> parent_prefix) override;
-	private:
+
+        inline CapturedMap* getMap() const {
+            return pmap;
+        }
+    private:
 		CapturedMap* pmap;
 };
 

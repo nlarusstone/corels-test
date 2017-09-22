@@ -126,7 +126,7 @@ def check_binary(c):
 # for the weapon prediction problem, we resample due to class imbalance
 resample_test = False   # if True, will resample the test set, otherwise only resample the train set
 
-max_cardinality = 1
+max_cardinality = 2
 min_support = 0.001
 exclude_not = True
 froot = 'cpw'

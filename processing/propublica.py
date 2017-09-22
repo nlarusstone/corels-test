@@ -1,3 +1,4 @@
+from datetime import datetime
 import os
 import time
 
@@ -7,8 +8,13 @@ import tabular as tb
 import mine
 import utils
 
+def get_age(dob, jail_in):
+    dob = datetime.strptime(dob, "%Y-%m-%d")
+    cd = datetime.strptime(jail_in, "%Y-%m-%d %I:%M:%S")
+    return ((cd - dob) + datetime(1, 1, 1)).year
 
-def age_func(a):
+def age_func(dob, jail_in):
+    a = get_age(dob, jail_in)
     if (a <= 20):       # minimum age is 18
         return '18-20'  # support = 220
     elif (a <= 22):
@@ -30,17 +36,16 @@ def priors_count_func(p):
     else:
         return '>3'    # support = 2259
 
-def age_cat_func(c):
-    if (c == '25 - 45'):
-        return '25-45'
-    elif (c == 'Greater than 45'):
-        return '>45'
+def age_cat_func(dob, jail_in):
+    a = get_age(dob, jail_in)
+    if (a < 25): return '<25'  # support = 1018
+    elif (a <= 45):
+        return '25-45'  # support = 3890
     else:
-        assert (c == 'Less than 25')
-        return '<25'
+        return '>45'    # support = 1463
 
 def race_func(r):
-    if (r in ['Native American', 'Other']):
+    if (r in ['Native American', 'Other', 'Asian']):
         return 'Other'
     else:
         return r.replace(' ', '-')
@@ -51,9 +56,10 @@ def score_func(s):
     else:
         return 1            # Medium = 5-7, High = 8-10
 
-ftag = 'propublica' # coarse age categories, with race
-#ftag = 'propublica_ours' # our age categories, with race
-ftag = 'score' # learn COMPAS scores
+#ftag = 'compas' #our age categories, no race
+#ftag = 'propublica' # coarse age categories, with race
+ftag = 'propublica_ours' # our age categories, with race
+#ftag = 'score' # learn COMPAS scores
 
 fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
 fout = os.path.join('..', 'data', '%s.csv' % ftag)
@@ -85,6 +91,8 @@ for n in names:
         nlist.append(n)
 
 x = tb.tabarray(SVfile=fin, names=nlist)
+# require record to have c_jail_in field
+x = x[x['c_jail_in'] != '']
 
 assert (x['priors_count'] == x['priors_count_']).all()
 assert (x['decile_score'] == x['decile_score_']).all()
@@ -97,12 +105,13 @@ columns = [(x['sex'] == 'Male'),
            ((x['age'] >= 45) & (x['age'] <= 59))]
 """
 
-if (ftag in ['propublica_ours']):
-    age = np.array([age_func(i) for i in x['age']])
+if (ftag in ['propublica_ours', 'compas']):
+    age = np.array([age_func(dob, jail_in) for dob, jail_in in zip(x['dob'], x['c_jail_in'])])
 else:
-    age = np.array([age_cat_func(i) for i in x['age_cat']])
+    age = np.array([age_cat_func(dob, jail_in) for dob, jail_in in zip(x['dob'], x['c_jail_in'])])
 
-race = np.array([race_func(i) for i in x['race']])
+if (ftag not in ['comaps']):
+    race = np.array([race_func(i) for i in x['race']])
 
 juvenile_felonies = np.array(['>0' if (i > 0) else '=0' for i in x['juv_fel_count']])   # support = 282
 
@@ -114,21 +123,24 @@ priors_count = np.array([priors_count_func(i) for i in x['priors_count']])
 
 assert (set(x['c_charge_degree']) == set(['F', 'M']))
 
-c_charge_degree = np.array(['Misdemeanor' if (i == 'M') else 'Felony' for i in x['c_charge_degree']])
+#c_charge_degree = np.array(['Misdemeanor' if (i == 'M') else 'Felony' for i in x['c_charge_degree']])
 
 # see `c_jail_in` and `c_jail_out` for time in jail?
 
 #race_list = list(set(x['race']))
 
-columns = [x['sex'], age, race]
+columns = [x['sex'], age]
+cnames = ['sex', 'age']
+if (ftag not in ['compas']):
+    columns.append(race)
+    cnames.append('race')
 #columns += [(x['race'] == n) for n in race_list]
 columns += [juvenile_felonies, juvenile_misdemeanors, juvenile_crimes,
-           priors_count, c_charge_degree]
+           priors_count]#, c_charge_degree]
 
-cnames = ['sex', 'age', 'race']
 #cnames += ['Race=%s' % r for r in race_list]
 cnames += ['juvenile-felonies', 'juvenile-misdemeanors', 'juvenile-crimes',
-          'priors', 'current-charge-degree']
+          'priors']#, 'current-charge-degree']
  
 if (ftag == 'score'):
     score = np.array([score_func(i) for i in x['decile_score']])
@@ -153,10 +165,10 @@ b = utils.to_binary(y)
 b.saveSV(bout)
 
 print 'permute and partition dataset'
-split_ind = np.split(np.random.permutation(len(y) / num_folds * num_folds), num_folds)
+split_ind = np.array_split(np.random.permutation(len(y)), num_folds)
 print 'number of folds:', num_folds
-print 'train size:', len(split_ind[0]) * (num_folds - 1)
-print 'test size:', len(split_ind[0])
+print 'train size:', [sum([len(split_ind[i]) for i in range(num_folds) if i != j]) for j in range(num_folds)]
+print 'test size:', [sum([len(split_ind[i]) for i in range(num_folds) if i == j]) for j in range(num_folds)]
 
 score_accuracy = np.zeros(num_folds)
 
