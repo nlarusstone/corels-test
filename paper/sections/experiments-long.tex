@@ -346,14 +346,10 @@ Since the rule lists output by CORELS do not explicitly contain race, the rules 
 Although CORELS is less likely to predict a false positive for black individuals in this case, our primary advantage comes from the fact that our model can be easily inspected to determine why the prediction rates are different across races (or any other category).
 
 \begin{figure}[t!]
-\begin{center}
 % left lower right upper
-\includegraphics[trim={12mm, 0mm, 24mm, 5mm},
-width=0.93\textwidth]{figs/corels-compas_fpr.pdf}
-\vspace{6mm}
-
+\begin{center}
 \includegraphics[trim={12mm, 0mm, 24mm, 0mm},
-width=0.93\textwidth]{figs/corels-compas_tpr.pdf}
+width=0.93\textwidth]{figs/compas-corels-comparison.pdf}
 \end{center}
 \caption{TPR and FPR of CORELS and COMPAS on the different races in our dataset across the 10 folds.
 %
@@ -486,7 +482,6 @@ from the panels to the left, for the three different values of~$\Reg$.
 \label{fig:weapon-reg-execution}
 \end{figure}
 
-%TODO UPDATE FIGURE
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
