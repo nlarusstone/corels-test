@@ -94,7 +94,7 @@ if make_small:
 else:
     if (make_figure):
         pylab.ion()
-        pylab.figure(6, figsize=(11, 13))
+        pylab.figure(6, figsize=(8, 14))
 
 ntot = len(log_root_list)
 
@@ -252,13 +252,13 @@ for (ncomp, log_root) in enumerate(log_root_list):
             #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
             ax = [10**-4, 10**4.9, ymin, ymax]
             pylab.axis(ax)
+            pylab.tight_layout()
+            pylab.subplots_adjust(top=0.85)
             pylab.draw()
             if (ncomp + 1 == ntot):
-                pylab.tight_layout()
-                pylab.subplots_adjust(top=0.85)
                 if not (make_small):
                     pylab.legend(['%d' % ii for ii in range(1, max_length + 1)], loc=(-0.56, 2.6), handletextpad=0, borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
-                    pylab.suptitle('\nExecution traces of queue contents (NYCLU stop-and-frisk dataset)', fontsize=fs+2)
+                    pylab.suptitle('\nExecution traces of queue contents\n(NYCLU stop-and-frisk dataset)', fontsize=fs+2)
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)
 
 max_prefix_length += 1

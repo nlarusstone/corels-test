@@ -99,7 +99,7 @@ if make_small:
 else:
     if (make_figure):
         pylab.ion()
-        pylab.figure(6, figsize=(11, 13))
+        pylab.figure(6, figsize=(8.5, 12))
 
 ntot = len(log_root_list)
 
@@ -185,7 +185,6 @@ for (ncomp, log_root) in enumerate(log_root_list):
             ii = queue_comp.nonzero()[0]
             queue_comp = queue_comp[ii]
             t_comp = x['total_time'][ii]
-            print 'HEREHEREHEREHEREHERE ', ncomp
         
         max_q = zc.sum(axis=1).max()
         max_queue[ncomp, fold] = max_q
@@ -265,7 +264,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
             print ncomp, ntot
             if (ncomp + 1 == ntot):
                 if make_small:
-                    pylab.tight_layout()
+                    #pylab.tight_layout()
                     pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.11, 1.77), handletextpad=0,
                                  borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
                 else:

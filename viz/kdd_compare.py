@@ -25,7 +25,7 @@ for dataset in ['compas', 'weapon']:
     if (dataset == 'compas'):
         names = ['GLM', 'SVM', 'AdaBoost\n\n', 'CART', 'C4.5', 'RF', 'RIPPER\n', 'SBRL', 'CORELS']
         title = 'Recidivism prediction (ProPublica)'
-        yticks = np.arange(0.62, 0.76, 0.03)
+        yticks = np.arange(0.62, 0.74, 0.03)
     elif (dataset == 'weapon'):
         names = ['GLM', 'SVM', 'AdaBoost\n\n', 'CART', 'C4.5', 'RF', 'SBRL', 'CORELS']
         title = 'Weapon prediction (NYCLU)'
@@ -93,7 +93,7 @@ for dataset in ['compas', 'weapon']:
         a[1] += 0.5
         if dataset == 'compas':
             a[2] = 0.625
-            a[3] = 0.755
+            a[3] = 0.725
         else:
             a[2] = 0.755
             a[3] = 0.885

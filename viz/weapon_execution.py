@@ -62,6 +62,7 @@ log_fname_x = os.path.join(log_dir, log_fname_x)
 log_fname_y = os.path.join(log_dir, log_fname_y)
 x = tb.tabarray(SVfile=log_fname_x)
 y = tb.tabarray(SVfile=log_fname_y)
+print log_fname_y
 
 x = x[x['tree_min_objective'] > 0]
 y = y[(y['tree_min_objective'] > 0)]
@@ -111,6 +112,8 @@ if large:
     pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
 else:
     pylab.yticks(np.arange(0, 0.55, 0.1), fontsize=fs)
+print(x['total_time'][2])
+print(y['total_time'][-1])
 pylab.axis([x['total_time'][2], y['total_time'][-1]*1.2, 0, 0.52])
 #pylab.legend(['Objective (CORELS)', 'Lower bound (CORELS)', 'Lower bound (%s map)' % wo], loc=loc, fontsize=fs_legend, frameon=False, borderpad=0.01)
 pylab.legend(['Lower bound (%s map)' % wo], loc=loc, fontsize=fs_legend, frameon=False)
