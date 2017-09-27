@@ -33,11 +33,10 @@ juvenile felonies & 0-20 & 0, $>$0 & 2 \\
 juvenile misdemeanors & 0-13 & 0, $>$0 & 2 \\
 %other juvenile crimes & 0-17 & --- & 2 \\
 juvenile crimes & 0-21 & 0, $>$0 & 2 \\
-priors & 0-38 & 0, 1, 2-3, $>$3 & 4 \\
-current charge & --- & misdemeanor, felony & 2
+priors & 0-38 & 0, 1, 2-3, $>$3 & 4
 \end{tabular}
 %\vspace{4mm}
-\caption{Categorical features (7 attributes, 19 values) from the ProPublica dataset.
+\caption{Categorical features (6 attributes, 17 values) from the ProPublica dataset.
 We construct the feature \emph{juvenile crimes} from the sum of
 \emph{juvenile felonies}, \emph{juvenile misdemeanors}, and
 the number of juvenile crimes that were neither felonies nor misdemeanors (not shown).
@@ -69,11 +68,7 @@ In our 10-fold cross-validation experiments, each training set contains 50,743 o
 Table~\ref{tab:frisk-data} shows the 5 categorical attributes that we use,
 corresponding to a total of 28 values.
 %
-Our results in~\S\ref{sec:examples} through~\S\ref{sec:sparsity}
-are from experiments that use 28 single-clause antecedents corresponding
-these 28 values, \eg (\emph{stop reason = suspicious object}).
-%
-Our experiments in~\S\ref{sec:ablation} use the same antecedents,
+Our experiments use these antecedents,
 as well as negations of the 18 antecedents corresponding to the two features
 \emph{stop reason} and \emph{additional circumstances},
 which gives a total of 46 antecedents.

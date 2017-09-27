@@ -105,6 +105,8 @@ tests/tests
 profiles/
 eval/tdata_R.label
 eval/tdata_R.out
+eval/sbrlmod
+sbrlmod
 
 # Latex
 *.aux

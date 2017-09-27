@@ -24,9 +24,8 @@ where optimality is defined with respect to minimization of a regularized loss f
 \begin{arxiv}
 \begin{figure}[t!]
 \begin{algorithmic}
-\State \bif $(age=23-25) \band (priors=2-3)$ \bthen $yes$
-\State \belif $(age=18-20)$ \bthen $yes$
-\State \belif $(sex=male) \band (age=21-22)$ \bthen $yes$
+\State \bif $(age=18-20) \band (sex=male)$ \bthen $yes$
+\State \belif $(age=21-23)	 \band (priors=2-3)$ \bthen $yes$
 \State \belif $(priors>3)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}

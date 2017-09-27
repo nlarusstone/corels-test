@@ -39,12 +39,12 @@ followed by a default rule~$r_0$.
 %
 \begin{arxiv}
 Figure~\ref{fig:rule-list-symbols} illustrates
-a rule list, ${\RL =}$ ${(r_1, r_2, r_3, r_4, r_0)}$,
+a rule list, ${\RL =}$ ${(r_1, r_2, r_3, r_0)}$,
 which for clarity, we sometimes call a $K$-rule list.
 \end{arxiv}
 \begin{kdd}
-Figure~\ref{fig:rule-list} illustrates a 4-rule list,
-${\RL =}$ ${(r_1, r_2, r_3, r_4, r_0)}$.
+Figure~\ref{fig:rule-list} illustrates a 3-rule list,
+${\RL =}$ ${(r_1, r_2, r_3, r_0)}$.
 \end{kdd}
 %where each rule is of the form ${r_k = p_k \rightarrow q_k}$,
 %for all ${k = 0, \dots, 4}$.
@@ -74,9 +74,8 @@ whose antecedent~$p_0$ simply asserts true.
 \begin{figure}[t!]
 \begin{subfigure}{0.67\textwidth}
 \begin{algorithmic}
-\State \bif $(age=23-25) \,\wedge\, (priors=2-3)$ \bthen $yes$
-\State \belif $(age=18-20)$ \bthen $yes$
-\State \belif $(sex=male) \,\wedge\, (age=21-22)$ \bthen $yes$
+\State \bif $(age=18-20) \band (sex=male)$ \bthen $yes$
+\State \belif $(age=21-23)	 \band (priors=2-3)$ \bthen $yes$
 \State \belif $(priors>3)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
@@ -87,18 +86,17 @@ whose antecedent~$p_0$ simply asserts true.
 \State \bif $p_1$ \bthen $q_1$
 \State \belif $p_2$ \bthen $q_2$
 \State \belif $p_3$ \bthen $q_3$
-\State \belif $p_4$ \bthen $q_4$
 \State \belse $q_0$
 \end{algorithmic}
 \end{subfigure}
-\caption{The same 4-rule list ${\RL = (r_1, r_2, r_3, r_4, r_0)}$,
+\caption{The same 3-rule list ${\RL = (r_1, r_2, r_3, r_0)}$,
 as in Figure~\ref{fig:rule-list},
 that predicts two-year recidivism for the ProPublica dataset.
 Each rule is of the form ${r_k = p_k \rightarrow q_k}$,
-for all ${k = 0, \dots, 4}$.
+for all ${k = 0, \dots, 3}$.
 We also equivalently write ${\RL = (\Prefix, \Labels, \Default, K)}$,
-where ${\Prefix = (p_1, p_2, p_3, p_4)}$, ${\Labels = (1, 1, 1, 1)}$,
-${\Default = 0}$, and ${K=4}$.
+where ${\Prefix = (p_1, p_2, p_3)}$, ${\Labels = (1, 1, 1, 1)}$,
+${\Default = 0}$, and ${K=3}$.
 }
 \label{fig:rule-list-symbols}
 \end{figure}
@@ -126,8 +124,8 @@ example, for
 \end{arxiv}
 the rule list in Figure~\ref{fig:rule-list},
 we would write ${\RL = (\Prefix, \Labels, \Default, K)}$,
-where ${\Prefix = (p_1, p_2, p_3, p_4)}$, ${\Labels = (1, 1, 1, 1)}$,
-${\Default = 0}$, and ${K=4}$.
+where ${\Prefix = (p_1, p_2, p_3)}$, ${\Labels = (1, 1, 1)}$,
+${\Default = 0}$, and ${K=3}$.
 
 Let ${\Prefix = (p_1, \dots, p_k, \dots, p_K)}$ be an antecedent list,
 then for any ${k \le K}$, we define ${\Prefix^k =}$ ${(p_1, \dots, p_k)}$

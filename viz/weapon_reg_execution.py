@@ -114,7 +114,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
         pylab.title(labels[ncomp], fontsize=fs)
     pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs-2)
     pylab.yticks(np.arange(0, 0.59, 0.2), fontsize=fs)
-    pylab.axis([x['total_time'][2], 10**3, 0, 0.55])
+    pylab.axis([x['total_time'][2], 10**3.4, 0, 0.55])
     if (ncomp % 3 == 0):
         pylab.ylabel('Value', fontsize=fs)
         pylab.legend(['Objective', 'Lower bound', 'Optimum'], loc='lower right', fontsize=fs_legend, numpoints=1, frameon=False)
@@ -128,14 +128,12 @@ for (ncomp, log_root) in enumerate(log_root_list):
     else:
         pylab.subplot(2, 4, 4)
 
-    print 'Obj:', x['tree_min_objective'][2:ii]
-    print 'LB:', x['current_lower_bound'][2:ii]
     pylab.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='b', linewidth=lw)
     pylab.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '--', color='k', linewidth=lw)
     #pylab.semilogx(tmin, opt, 'k*', markersize=18)
     pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs-1)
     pylab.yticks(np.arange(0, 0.59, 0.2), fontsize=fs)
-    pylab.axis([x['total_time'][2], 10**3, 0, 0.55])
+    pylab.axis([x['total_time'][2], 10**3.4, 0, 0.55])
     if (make_small):
         if (ncomp == 0):
             pylab.text(10**-1.5, 0.45, ' Overlay', fontsize=fs)
@@ -157,14 +155,15 @@ for (ncomp, log_root) in enumerate(log_root_list):
             pylab.legend(['Upper bound on\nsize of remaining\nsearch space'], fontsize=fs_legend, loc='best', frameon=False)
         pylab.xlabel('Time (s)', fontsize=fs)
         pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs-1)
-        pylab.yticks(range(0, 40, 10), fontsize=fs)
-        pylab.axis([x['total_time'][2], 10**3, 0, 32])
+        pylab.yticks(range(0, 61, 10), fontsize=fs)
+        pylab.axis([x['total_time'][2], 10**3.4, 0, 60])
+
         pylab.subplot(2, 4, 8)
         pylab.semilogx(xtt, xrr, '-', color='c', linewidth=lw*2)
-        pylab.yticks(range(0, 40, 10), fontsize=fs)
-        pylab.axis([x['total_time'][2], 10**3, 0, 32])
         pylab.xlabel('Time (s)', fontsize=fs)
         pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs-1)
+        pylab.yticks(range(0, 61, 10), fontsize=fs)
+        pylab.axis([x['total_time'][2], 10**3.4, 0, 60])
 
 #pylab.suptitle('Execution progress for different regularization parameters (NYCLU dataset)\n', fontsize=fs+2)
 pylab.savefig('../figs/%s-execution.pdf' % ftag)
