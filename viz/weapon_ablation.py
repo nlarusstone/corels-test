@@ -72,14 +72,15 @@ figure_fold = 1
 
 # log files generated on beepboop
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+log_dir = '/Users/nlarusstone/Documents/Research/bbcache/jmlr'
 
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt',
-'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt',
-'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt',
-'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt']
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=10-f=1000.txt',
+'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000000-c=0.0100000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-minor-removed=lookahead-max_num_nodes=100000000-c=0.0100000-v=10-f=1000.txt',
+'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=10-f=1000.txt',
+'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=100000000-c=0.0100000-v=10-f=1000.txt']
 labels = ['CORELS', 'No priority queue (BFS)', 'No support bounds', 'No lookahead bound', 'No symmetry-aware map', 'No equivalent points bound']
 ftag = "weapon_ablation"
 
@@ -253,6 +254,8 @@ for (ncomp, log_root) in enumerate(log_root_list):
             pylab.axis(ax)
             pylab.draw()
             if (ncomp + 1 == ntot):
+                pylab.tight_layout()
+                pylab.subplots_adjust(top=0.85)
                 if not (make_small):
                     pylab.legend(['%d' % ii for ii in range(1, max_length + 1)], loc=(-0.56, 2.6), handletextpad=0, borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
                     pylab.suptitle('\nExecution traces of queue contents (NYCLU stop-and-frisk dataset)', fontsize=fs+2)

@@ -110,6 +110,7 @@ if __name__ == '__main__':
         print args
         fxn = ['../src/corels']
         fname = args.fname + '_' + str(i) + '_train'
+        print fname
         out = '../data/CrossValidation/' + fname + '.out'
         label = '../data/CrossValidation/' + fname + '.label'
         print fname

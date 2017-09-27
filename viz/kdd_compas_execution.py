@@ -26,10 +26,11 @@ fs = 16 # fontsize
 # no-minor execution using ~350GB RAM when halted
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0050000-v=10-f=1000.txt',
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+log_dir = '/Users/nlarusstone/Documents/Research/bbcache/jmlr/'
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000002-c=0.0050000-v=10-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000002-c=0.0050000-v=10-f=1000.txt']
-fold = 0
+fold = 1
 
 large = True
 
@@ -142,4 +143,5 @@ pylab.xticks(fontsize=fs)
 legend_text = '%s equivalent points bound' % wo
 pylab.legend([legend_text, 'CORELS'], loc='center right', fontsize=fs_legend, frameon=False)
 pylab.draw()
+print ftag
 pylab.savefig('../figs/%s-remaining-space.pdf' % ftag)

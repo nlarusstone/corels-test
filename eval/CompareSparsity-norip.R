@@ -56,7 +56,6 @@ testDataWOClass <- subset(testData, select=-c(Class))
 
 ## CART
 ## complexity (cp) parameters -> 0.01 (default), 0.003, 0.001, 0.03, 0.1
-if(FALSE){
 cartAccs <- c()
 cartTrainAccs <- c()
 cartLeaves <- c()
@@ -84,7 +83,6 @@ printf("%s", cat(cps, "\n"))
 printf("%s", cat(cartAccs, "\n"))
 printf("%s", cat(cartLeaves, "\n"))
 printf("%s", cat(cartTrainAccs, "\n"))
-}
 
 ## C4.5
 ## complexity (C) parameters -> 0.05, 0.15, 0.25 (default), 0.35, 0.45

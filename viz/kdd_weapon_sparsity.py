@@ -7,28 +7,30 @@ import matplotlib.pyplot as plt
 import numpy as np
 import tabular as tb
 
+# see:  http://phyletica.org/matplotlib-fonts/
+plt.rcParams['pdf.fonttype'] = 42
+plt.rcParams['ps.fonttype'] = 42
+
 with_training = True
-log2 = False
 
 plt.ion()
-
-z = tb.tabarray(SVfile='../eval/frisk_sparsity.csv')
+       
+z = tb.tabarray(SVfile='../eval/weapon_sparsity.csv')
 z = z[z['Method'] != 'C4.5']
-q = tb.tabarray(SVfile='../eval/frisk_sparsity-c45.csv')
+q = tb.tabarray(SVfile='../eval/weapon_sparsity-c45.csv')
 z = z.rowstack(q)
+b = tb.tabarray(SVfile='../eval/weapon_sparsity-sbrl.csv', names=z.dtype.names, namesinheader=False)
+y = tb.tabarray(SVfile='../eval/weapon_sparsity-CORELS.csv', names=z.dtype.names, namesinheader=False)
+q = tb.tabarray(SVfile='../eval/weapon_sparsity-sbrl-eta=500-lambda=5.csv', names=list(z.dtype.names) + ['eta', 'lambda'], namesinheader=False)
 
-b = tb.tabarray(SVfile='../eval/frisk_sparsity-sbrl.csv', names=z.dtype.names, namesinheader=False)
-y = tb.tabarray(SVfile='../eval/frisk_sparsity-CORELS.csv', names=z.dtype.names, namesinheader=False)
-p = tb.tabarray(SVfile='../eval/frisk_sparsity-sbrl-eta=500-lambda=5.csv', names=list(z.dtype.names) + ['eta', 'lambda'], namesinheader=False)
-
-x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(y).rowstack(p)
+x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(y).rowstack(q)
 x['eta'][(x['Method'] == 'SBRL') & (x['eta'] == 0)] = 3
 x['lambda'][(x['Method'] == 'SBRL') & (x['lambda'] == 0)] = 9
 
 m = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
 s = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
 
-fig = plt.figure(2, figsize=(8, 3.3))
+fig = plt.figure(2, figsize=(9, 4))
 plt.clf()
 
 m.sort(order=['Method', 'C', 'cp', 'R', 'eta', 'lambda'])
@@ -56,14 +58,14 @@ plt.xlabel('Model size', fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
 ax1.set_xlim(0, 56)
 #ax2.set_ylim(0.64, 0.74)
-ax1.set_ylim(0.64, 0.87)
+ax1.set_ylim(0.63, 0.88)
 
 ax2 = plt.subplot2grid((20, 60), (0, 50), colspan=10, rowspan=18)
 plt.xticks([400, 700], fontsize=fs)
 plt.yticks(np.arange(0.65, 0.9, 0.05), ())
 #plt.ylabel('Accuracy', fontsize=fs)
-ax2.set_xlim(320, 780)
-ax2.set_ylim(0.64, 0.87)
+ax2.set_xlim(320, 770)
+ax2.set_ylim(0.63, 0.88)
 
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:
@@ -89,14 +91,15 @@ for r in m[:-3]:
         else:
             descr += ' (%d, %d, 10000)' % (r['eta'], r['lambda'])
     legend += [descr]
-ax1.legend(legend, loc='upper left', fontsize=fs-3.6, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0, columnspacing=0., markerscale=0.8, frameon=False)
+ax1.legend(legend, loc='lower right', fontsize=fs-3.6, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0, columnspacing=0., markerscale=0.8, frameon=False)
 
 legend = []
 for r in m[-3:]:
     descr = r['Method']
     descr += ' (%s)' % ('%1.5f' % r['C']).strip('0')
     legend += [descr]
-ax2.legend(legend, loc=(-1.55, 0.735), fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, markerscale=0.8, frameon=False)
+#ax2.legend(legend, loc=(-1.55, 0.735), fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, markerscale=0.8, frameon=False)
+ax2.legend(legend, loc=(0.23, 0.05), fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, markerscale=0.8, frameon=False)
 
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:
@@ -127,14 +130,14 @@ if (with_training):
                 xx = np.log2(xx)
             if (np.abs(ty - yy) > 0.01):
                 ax.plot([xx, xx], [ty, yy+h], ':', color=cdict[method], linewidth=2)
-            ax.plot(xx, ty, 'o', markersize=6, color='white', markeredgewidth=mew, markeredgecolor='k')
+            ax.plot(xx, ty, 'o', markersize=4, color='white', markeredgewidth=mew, markeredgecolor='k')
         i += 1
 
 plt.suptitle('Weapon prediction (NYCLU stop-and-frisk dataset)', fontsize=fs)
 
 if (with_training):
     plt.show()
-    plt.savefig('../figs/frisk-sparsity-training-c45.pdf')
+    plt.savefig('../figs/weapon-sparsity-training-c45.pdf')
 else:
     plt.show()
-    plt.savefig('../figs/frisk-sparsity-c45.pdf')
+    plt.savefig('../figs/weapon--sparsity-c45.pdf')

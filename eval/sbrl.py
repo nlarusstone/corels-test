@@ -9,14 +9,15 @@ import numpy as np
 
 dataset = 'frisk'
 dataset = 'compas'
-dataset = 'adult'
+#dataset = 'adult'
 #dataset = '1adult'
 descr = 'sparsity-sbrl'
 
-dataset = 'frisk'
+dataset = 'weapon'
 #dataset = 'compas'
-descr = 'sparsity-sbrl-eta=15-lambda=5'
-descr = 'sparsity-sbrl-eta=500-lambda=5'
+descr = 'sparsity-sbrl-eta=3-lambda=9'
+#descr = 'sparsity-sbrl-eta=15-lambda=5'
+#descr = 'sparsity-sbrl-eta=500-lambda=5'
 
 folds = open('%s_%s.txt' % (dataset, descr), 'rU').read().strip().split('Initialize')[1:]
 out = []

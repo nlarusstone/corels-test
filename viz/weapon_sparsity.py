@@ -1,5 +1,4 @@
 """
-For KDD 2017 Figure 3.
 
 """
 import matplotlib.patches as mp
@@ -17,6 +16,22 @@ log2 = False
 plt.ion()
 
 z = tb.tabarray(SVfile='../eval/weapon_sparsity.csv')
+z = z[z['Method'] != 'C4.5']
+q = tb.tabarray(SVfile='../eval/weapon_sparsity-c45.csv')
+z = z.rowstack(q)
+
+b = tb.tabarray(SVfile='../eval/weapon_sparsity-sbrl.csv', names=z.dtype.names, namesinheader=False)
+y = tb.tabarray(SVfile='../eval/weapon_sparsity-CORELS.csv', names=z.dtype.names, namesinheader=False)
+p = tb.tabarray(SVfile='../eval/weapon_sparsity-sbrl-eta=500-lambda=5.csv', names=list(z.dtype.names) + ['eta', 'lambda'], namesinheader=False)
+
+x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(y).rowstack(p)
+x['eta'][(x['Method'] == 'SBRL') & (x['eta'] == 0)] = 3
+x['lambda'][(x['Method'] == 'SBRL') & (x['lambda'] == 0)] = 9
+
+m = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
+s = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
+
+"""z = tb.tabarray(SVfile='../eval/weapon_sparsity.csv')
 b = tb.tabarray(SVfile='../eval/weapon_sparsity-sbrl.csv', names=z.dtype.names, namesinheader=False)
 y = tb.tabarray(SVfile='../eval/weapon_sparsity-CORELS.csv', names=z.dtype.names, namesinheader=False)
 
@@ -24,6 +39,7 @@ x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(
 
 m = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean})
 s = x.aggregate(On=['Method', 'C', 'cp', 'R'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std})
+"""
 
 fig = plt.figure(2, figsize=(8, 3.5))
 plt.clf()
@@ -105,11 +121,11 @@ else:
 
 if (with_training):
     plt.xticks(range(0, 56, 5), fontsize=fs)
-    plt.yticks(np.arange(0.63, 0.76, 0.02), fontsize=fs)
-    ax.set_ylim(0.64, 0.75)
+    plt.yticks(np.arange(0.63, 0.91, 0.04), fontsize=fs)
+    ax.set_ylim(0.64, 0.92)
     plt.show()
-    plt.savefig('../figs/frisk-sparsity-training.pdf')
+    plt.savefig('../figs/weapon-sparsity-training.pdf')
 else:
-    ax.set_ylim(0.64, 0.74)
+    ax.set_ylim(0.64, 0.92)
     plt.show()
-    plt.savefig('../figs/frisk-sparsity.pdf')
+    plt.savefig('../figs/weapon-sparsity.pdf')

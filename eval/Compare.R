@@ -47,11 +47,14 @@ library(ada)
 library(RWeka)
 library(randomForest)
 
-trainData <- read.csv(traincsv, header = TRUE, sep = ",")
+trainData <- read.csv(traincsv, header = TRUE, sep = ",", fileEncoding="UTF-8")
 testData <- read.csv(testcsv, header = TRUE, sep = ",")
+printf("TRAIN")
 colnames(trainData)[ncol(trainData)] <- "Class"
+printf("TEST ncols: %d cols: ", ncol(trainData))
+printf(colnames(testData))
 colnames(testData)[ncol(trainData)] <- "Class"
-
+printf("DONE")
 
 sortednames <- sort(make.names(unique(trainData$Class)))
 trainData$Class <-factor(trainData$Class, labels=sortednames)
@@ -108,10 +111,10 @@ printf("RandomForests result: %.4f\n", rfAcc)
 results <- c(results, rfAcc)
 
 ## RIPPER
-ripModel <- JRip(Class ~ . , data=as.data.frame(trainData))
-pred.ripModel <- predict(ripModel, newdata=as.data.frame(testDataWOClass), type="class")
-ripAcc <- sum(testData$Class == pred.ripModel)/length(testData$Class)
-printf("RIPPER result: %.4f\n", ripAcc)
-results <- c(results, ripAcc)
+#ripModel <- JRip(Class ~ . , data=as.data.frame(trainData))
+##pred.ripModel <- predict(ripModel, newdata=as.data.frame(testDataWOClass), type="class")
+#ripAcc <- sum(testData$Class == pred.ripModel)/length(testData$Class)
+#printf("RIPPER result: %.4f\n", ripAcc)
+#results <- c(results, ripAcc)
 
 printf("%s", cat(results))

@@ -12,7 +12,7 @@ import tabular as tb
 import utils
 
 
-froot = 'frisk'
+froot = 'weapon'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
 lw = 2  # linewidth
@@ -25,22 +25,23 @@ figure_fold = -1
 make_small = False
 
 make_figure = True
-num_folds = 1
+#num_folds = 1
 figure_fold = 0
 
 # log files generated on beepboop
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+log_dir = '/Users/nlarusstone/Documents/Research/bbcache/jmlr/'
 
 if make_figure:
-    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0400000-v=10-f=10.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0100000-v=10-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0025000-v=10-f=1000.txt']
+    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0400000-v=10-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=10-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0025000-v=10-f=1000.txt']
 else:
-    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0400000-v=10-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0100000-v=10-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000001-c=0.0025000-v=10-f=1000.txt']
+    log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0400000-v=10-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=10-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0025000-v=10-f=1000.txt']
 
 labels = ['$\lambda$ = 0.04', '$\lambda$ = 0.01', '$\lambda$ = 0.0025']
 ftag = "weapon_reg"
@@ -176,13 +177,19 @@ for (ncomp, log_root) in enumerate(log_root_list):
             else:
                 descr = '%d s' % tmax
             descr = ' ' * 2 * (5 - len(descr)) + descr
-            pylab.text(tt[-1] / 50, qc.max() * 1.1, descr, fontsize=fs+2)
+            print "TTTT: ", tt[-1]
+            pylab.text(tt[-1] / 170, qc.max() * 1.1, descr, fontsize=fs+2)
             pylab.text(10**-3.7, 10**6.1, labels[ncomp], fontsize=fs+2)
             pylab.xticks(fontsize=fs-2)
             pylab.yticks(fontsize=fs-2)
             pylab.xticks(10.**np.array([-2, 0, 2]), fontsize=fs)
+            xmax = 10**3
+            if ncomp == 2:
+                print "NCOMP 2"
+                xmax = 10**3.5
+                pylab.xlim([10**-2, 10**3.5])
             pylab.yticks(10.**np.array([0, 2, 4, 6]), fontsize=fs)
-            ax = [10**-4, 10**3, ymin, ymax]
+            ax = [10**-4, xmax, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()
             if (ncomp + 1 == ntot):

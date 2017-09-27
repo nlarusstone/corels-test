@@ -22,5 +22,5 @@ do
     cv_fold_path=${cv_dir}/${cv_fold}
     echo "\nCV fold: ${cv_fold}\n"
     echo "RUNNING C4.5"
-    Rscript CompareSparsity.R $cv_fold $outf >> $temp_f 2>&1
+    Rscript CompareSparsityc45.R $cv_fold $outf >> $temp_f 2>&1
 done

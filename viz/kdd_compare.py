@@ -29,19 +29,23 @@ for dataset in ['compas', 'weapon']:
     elif (dataset == 'weapon'):
         names = ['GLM', 'SVM', 'AdaBoost\n\n', 'CART', 'C4.5', 'RF', 'SBRL', 'CORELS']
         title = 'Weapon prediction (NYCLU)'
-        yticks = np.arange(0.62, 0.76, 0.03)
+        #    a[2] = 0.755
+        #    a[3] = 0.885
+        yticks = np.arange(0.75, 0.89, 0.03)
 
     x = open('../compare/%s.txt' % dataset, 'rU').read().strip().split('\n')
 
     sbrl = [line.strip().split()[3] for line in x if line.startswith('test accuracy')]
     sbrl = np.array(sbrl)
 
-    other = [line.strip().split() for line in x if line.startswith('0')]
+    other = [line.strip().split() for line in x if line.startswith('0.')]
     other = np.array(other)
 
     corels = [line for line in x if line.startswith('Test accuracies')][0]
     corels = np.array(corels.strip().split('[')[1].split(']')[0].split(','))
 
+    print other.shape
+    print sbrl.shape
     y = np.cast[float](np.vstack([other.T, sbrl, corels]).T)
 
     print '\n'.join(['%s & %2.1f $\\pm$ %2.1f' % (n.strip(), m, s) for (n, m, s) in zip(names, y.mean(axis=0) * 100, y.std(axis=0) * 100)])
@@ -80,17 +84,22 @@ for dataset in ['compas', 'weapon']:
         if (vertical) or (dataset == 'compas'):
             pylab.yticks(yticks, fontsize=fs)
         else:
-            pylab.yticks(yticks, (), fontsize=fs)
+            pylab.yticks(yticks, fontsize=fs)
         if (vertical) or (dataset == 'compas'):
             pylab.ylabel('Accuracy', fontsize=fs)
 
         a = list(pylab.axis())
         a[0] -= 0.5
         a[1] += 0.5
-        a[2] = 0.625
-        a[3] = 0.755
+        if dataset == 'compas':
+            a[2] = 0.625
+            a[3] = 0.755
+        else:
+            a[2] = 0.755
+            a[3] = 0.885
         print a
         pylab.axis(a)
+        pylab.tight_layout()
         pylab.title(title, fontsize=fs)
 
     if vertical:

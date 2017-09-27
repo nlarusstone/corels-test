@@ -16,7 +16,8 @@ import utils
 pylab.rcParams['pdf.fonttype'] = 42
 pylab.rcParams['ps.fonttype'] = 42
 
-froot = 'frisk'
+#froot = 'frisk'
+froot = 'weapon'
 data_dir = '../data/CrossValidation/'
 log_dir = '../logs/'
 lw = 2  # linewidth
@@ -27,16 +28,17 @@ figure_fold = -1
 make_small = False
 
 num_folds = 1
-figure_fold = 0
+figure_fold = 1
 
 # log files generated on beepboop
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
-log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+#log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+log_dir = '/Users/nlarusstone/Documents/Research/bbcache/jmlr'
 
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0400000-v=10-f=10.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0100000-v=10-f=1000.txt',
-    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000002-c=0.0025000-v=10-f=1000.txt']
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000002-c=0.0400000-v=10-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000002-c=0.0100000-v=10-f=1000.txt',
+    'for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000002-c=0.0025000-v=10-f=1000.txt']
 
 labels = ['$\lambda$ = 0.04', '$\lambda$ = 0.01', '$\lambda$ = 0.0025']
 ftag = "weapon_reg"
@@ -66,7 +68,7 @@ c2 = ['skyblue', 'c', 'blue']
 fold = 0
 
 for (ncomp, log_root) in enumerate(log_root_list):
-    tname = '%s_%d_train.out' % (froot, fold)
+    tname = '%s_%d_train.out' % (froot, figure_fold)
     log_fname = log_root % tname
     print log_fname
     fname = os.path.join(data_dir, tname)
@@ -83,6 +85,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
 
     x['total_time'] = x['total_time'] - x['total_time'][0] + 10**-4
     ii = (x['current_lower_bound'] < x['tree_min_objective'][-1]).nonzero()[0][-1]
+    ii += 1
 
     opt = x['tree_min_objective'][-1]
     imin = np.nonzero(x['tree_min_objective'] == opt)[0][0]
@@ -125,6 +128,8 @@ for (ncomp, log_root) in enumerate(log_root_list):
     else:
         pylab.subplot(2, 4, 4)
 
+    print 'Obj:', x['tree_min_objective'][2:ii]
+    print 'LB:', x['current_lower_bound'][2:ii]
     pylab.semilogx(x['total_time'][2:ii], x['tree_min_objective'][2:ii], '-', color='b', linewidth=lw)
     pylab.semilogx(x['total_time'][2:ii], x['current_lower_bound'][2:ii], '--', color='k', linewidth=lw)
     #pylab.semilogx(tmin, opt, 'k*', markersize=18)

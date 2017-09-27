@@ -15,5 +15,5 @@ do
     # default is eta=3, lambda=9
     #./sbrlmod -t 3 -d 1 -e 3 -l 9 -i 10000 -S 0 $train_out $train_label $test_out $test_label
     #./sbrlmod -t 3 -d 1 -e 15 -l 5 -i 10000 -S 0 $train_out $train_label $test_out $test_label # compas
-    ./sbrlmod -t 3 -d 1 -e 500 -l 5 -i 10000 -S 0 $train_out $train_label $test_out $test_label # frisk
+    ./sbrlmod -t 3 -d 10 -e 500 -l 5 -i 10000 -S 0 $train_out $train_label $test_out $test_label # frisk
 done

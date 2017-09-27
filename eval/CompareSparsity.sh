@@ -26,7 +26,8 @@ do
     #sbrl_run=$(printf '%s -t 3 -d 1 -S 0 %s_train.out %s_train.label %s_test.out %s_test.label' "$sbrl" "$cv_fold_path" "$cv_fold_path" "$cv_fold_path" "$cv_fold_path")
 
     echo "RUNNING CART, C4.5, RIPPER"
-    Rscript CompareSparsity-norip.R $cv_fold $outf >> $temp_f 2>&1
+    #Rscript CompareSparsity-norip.R $cv_fold $outf >> $temp_f 2>&1
+    Rscript CompareSparsity.R $cv_fold $outf >> $temp_f 2>&1
 
     #echo "RUNNING SBRL"
     #eval "$sbrl_run" >> $temp_f 2>&1
@@ -41,6 +42,13 @@ done
 #echo "using regularization = {0.001, 0.003, 0.005, 0.01, 0.02}"
 #for R in 0.001 0.003 0.005 0.01 0.02; do
 #    python eval_model.py $dataset --parallel --minor -c 2 -p 1 -r $R -n 100000 --sparsity $outf >> $temp_f 2>&1
+#done
+#echo "\nRUNNING CORELS for all 10 folds of $dataset"
+#echo "using regularization = {0.005, 0.01, 0.02} for compas"
+#echo "using regularization = {0.0025, 0.01, 0.04} for frisk"
+#for R in 0.005 0.01 0.02; do
+#for R in 0.0025 0.01 0.04; do
+#  python eval_model.py $dataset --minor -c 2 -p 1 -r $R -n 100000000 --sparsity $outf >> $temp_f 2>&1
 #done
 
 rm $temp_f
