@@ -259,7 +259,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
             pylab.xticks(10.**np.array([-3, -1, 1, 3]), fontsize=fs)
             pylab.yticks(10.**np.array([0, 2, 4, 6, 8]), fontsize=fs)
             #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
-            ax = [10**-4, 6814, ymin, ymax]
+            ax = [10**-4, 7878, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()
             print ncomp, ntot
