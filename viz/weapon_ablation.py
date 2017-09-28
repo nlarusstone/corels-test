@@ -74,7 +74,7 @@ figure_fold = 1
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
 log_dir = '/Users/nlarusstone/Documents/Research/bbcache/jmlr'
-log_dir = '/Users/elaine/git/bbcache/jmlr'
+#log_dir = '/Users/elaine/git/bbcache/jmlr'
 
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=10-f=1000.txt',
 'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=10-f=1000.txt',
