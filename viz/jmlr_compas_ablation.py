@@ -272,7 +272,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
                     pylab.suptitle('Execution traces of queue contents (ProPublica dataset)', fontsize=fs+2)
                     pylab.tight_layout()
                     pylab.subplots_adjust(top=0.92)
-                    pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-0.47, 2.59), handletextpad=0, labelspacing=0.25,  borderaxespad=0.1, ncol=1, columnspacing=0.5, frameon=False)
+                    pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-0.47, 2.61), handletextpad=0, labelspacing=0.3,  borderaxespad=0.1, ncol=1, columnspacing=0.5, frameon=False)
                 print '../figs/%s-queue.pdf' % ftag
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)
 
