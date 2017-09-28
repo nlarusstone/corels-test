@@ -584,8 +584,8 @@ that each remove a specific implementation optimization or bound.
 %
 (We are not measuring the cumulative effects of removing a sequence of components.)
 %
-All rows represent complete executions, except for the final row,
-in which each execution was terminated due to memory constraints,
+All rows represent complete executions, except those labeled `No equivalent points bound,'
+for which each execution was terminated due to memory constraints,
 once the size of the cache reached ${5 \times 10^8}$ elements,
 after consuming $\sim$250GB RAM.
 %
@@ -726,7 +726,7 @@ No equivalent points bound & 33.01 (2.3) & 9.39 (0.7) & 5.95 (0.4) \\
 \caption{Per-component performance improvement, as in Table~\ref{tab:ablation},
 for the NYCLU stop-and-frisk dataset (${\Reg = 0.01}$, ${M = 46}$).
 %
-All rows except 'No symmetry-aware map' represent complete executions.
+All rows except those labeled `No symmetry-aware map' represent complete executions.
 %
 A single fold running without a symmetry-aware map took over 2 days to complete, so in order to run all 10 folds above, we terminated execution after the tree reached $10 \time 10^8$ nodes.
 %
