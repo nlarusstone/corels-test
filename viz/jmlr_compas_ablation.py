@@ -1,5 +1,5 @@
 """
-For KDD 2017 Table 1 and Figure 5.  See also `kdd_compas_execution.py`
+For JMLR Table 2 and Figure 11.  See also `kdd_compas_ablation.py`
 
 #!/bin/bash
 
@@ -80,6 +80,7 @@ make_small = False
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
 log_dir = '/Users/nlarusstone/Documents/Research/bbcache/jmlr'
+#log_dir = '/Users/elaine/git/bbcache/jmlr'
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=10-f=1000.txt',
 'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=10-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000000-c=0.0050000-v=10-f=1000.txt',
@@ -87,7 +88,7 @@ log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_
 'for-%s-curious_lb-no_pmap-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=10-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-no_minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=10-f=1000.txt']
 labels = ['CORELS', 'No priority queue (BFS)', 'No support bounds', 'No lookahead bound',  'No symmetry-aware map', 'No equivalent points bound']
-ftag = "kdd_compas_ablation"
+ftag = "jmlr_compas_ablation"
 
 if make_small:
     log_root_list = log_root_list[:1] + log_root_list[-3:]
@@ -233,13 +234,13 @@ for (ncomp, log_root) in enumerate(log_root_list):
             if (make_small):
                 xloc = tmax / 5000
             else:
-                xloc = tmax / 10000
+                xloc = tmax / 30000
             print 'TMAX: ', tmax
             print 'TCORELS: ', t_corels
             print 'TMAX/TCORELS', tmax / t_corels
             if (ncomp == 0):
                 pylab.plot([t_corels, t_corels], [ymin, ymax], 'k--', linewidth=lw)
-                xloc = 0.4
+                xloc = 0.03
                 pylab.text(xloc, 10**8, 'T $\\equiv$ %d s' % t_corels, fontsize=fs)
             else:
                 if (tmax / t_corels) < 10:
@@ -248,17 +249,17 @@ for (ncomp, log_root) in enumerate(log_root_list):
                     descr = '%d s $\\approx$ %d T' % (np.round(tmax), np.round(tmax / t_corels))
                 if (ncomp == (ntot - 1)):
                     descr = '> %s' % descr
-                    xloc = 0.02
+                    xloc = 0.01
                 else:
                     pylab.plot([tmax, tmax], [ymin, ymax], 'k--', linewidth=lw)
                     descr = (14 - (len(descr.split('$')[0] + descr.split('$')[-1]) + 1)) * ' ' + descr
                 pylab.text(xloc, 10**8, descr, fontsize=fs)
             #pylab.suptitle('lengths of prefixes in the logical queue\n', fontsize=fs)
-            pylab.title(labels[ncomp], fontsize=fs+2)
+            pylab.title(labels[ncomp], fontsize=fs)
             pylab.xticks(10.**np.array([-3, -1, 1, 3]), fontsize=fs)
             pylab.yticks(10.**np.array([0, 2, 4, 6, 8]), fontsize=fs)
             #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
-            ax = [10**-4, 6814, ymin, ymax]
+            ax = [10**-4, 7878, ymin, ymax]
             pylab.axis(ax)
             pylab.draw()
             print ncomp, ntot
@@ -268,10 +269,10 @@ for (ncomp, log_root) in enumerate(log_root_list):
                     pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.11, 1.77), handletextpad=0,
                                  borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
                 else:
-                    pylab.suptitle('\nExecution traces of queue contents (ProPublica dataset)', fontsize=fs+2)
+                    pylab.suptitle('Execution traces of queue contents (ProPublica dataset)', fontsize=fs+2)
                     pylab.tight_layout()
-                    pylab.subplots_adjust(top=0.85)
-                    pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.175, 2.93), handletextpad=0, labelspacing=0.3,  borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
+                    pylab.subplots_adjust(top=0.92)
+                    pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-0.47, 2.61), handletextpad=0, labelspacing=0.3,  borderaxespad=0.1, ncol=1, columnspacing=0.5, frameon=False)
                 print '../figs/%s-queue.pdf' % ftag
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)
 

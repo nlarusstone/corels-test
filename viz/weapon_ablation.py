@@ -74,6 +74,7 @@ figure_fold = 1
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
 log_dir = '/Users/nlarusstone/Documents/Research/bbcache/jmlr'
+#log_dir = '/Users/elaine/git/bbcache/jmlr'
 
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=10-f=1000.txt',
 'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0100000-v=10-f=1000.txt',
@@ -135,9 +136,9 @@ for (ncomp, log_root) in enumerate(log_root_list):
             print 'skipping', log_fname
             continue
 
-        #x = x[:-1]  # ignore last log record because it measures the time to delete the queue
+        x = x[:-2]  # ignore last two log record because these measure the time to delete the queue
 
-        x['total_time'] = x['total_time'] - x['total_time'][0] + 10**-4
+        x['total_time'] = x['total_time'] - x['total_time'][0]
 
         if ('no_minor' in log_fname):
             x = x[x['tree_min_objective'] > 0]
@@ -185,7 +186,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
 
         if (make_figure):
             color_vec = ['r', 'r', 'orange', 'y', 'g', 'c', 'b', 'purple', 'm', 'violet', 'pink', 'gray', 'k']#[:(max_length + 1)][::-1]
-            color_vec = ['k', 'violet', 'm', 'purple', 'b', 'c', 'green', 'yellowgreen', 'y', 'orange', 'r', 'brown']
+            color_vec = ['k', 'violet', 'm', 'purple', 'b', 'c', 'green', 'yellowgreen', 'y', 'orange', 'r', 'brown', 'darkgray']
             #color_vec = ['purple', 'b', 'c', 'm', 'gray', 'k'][::-1]
 
             if (ncomp == 0):
@@ -202,7 +203,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 jj = zc[:, length].nonzero()[0]
                 tt = x['total_time'][jj]
                 yy = zc[jj, length]
-                if (ncomp + 1 < ntot):
+                if (ncomp + 1 != 5):
                     yy = np.array([1] + list(yy) + [1])
                     tt = np.array([tt[0]] + list(tt) + [tt[-1]])
                 else:
@@ -226,13 +227,13 @@ for (ncomp, log_root) in enumerate(log_root_list):
             if (make_small):
                 xloc = tmax / 5000
             else:
-                xloc = tmax / 50000
+                xloc = tmax / 20000
             if (ncomp == 0):
                 pylab.plot([t_corels, t_corels], [ymin, ymax], 'k--', linewidth=lw)
                 if (make_small):
                     xloc = 0.4
                 else:
-                    xloc = 0.02
+                    xloc = 0.15
                 pylab.text(xloc, 10**7, 'T $\\equiv$ %d s' % t_corels, fontsize=fs)
             else:
                 if (tmax / t_corels) < 10:
@@ -240,17 +241,17 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 else:
                     descr = '%d s $\\approx$ %d T' % (np.round(tmax), np.round(tmax / t_corels))
                 if (ncomp == 4):
-                    xloc = 0.001
+                    xloc = 0.01
                 else:
                     descr = (14 - (len(descr.split('$')[0] + descr.split('$')[-1]) + 1)) * ' ' + descr
-                pylab.plot([tmax, tmax], [ymin, ymax], 'k--', linewidth=lw)
+                    pylab.plot([tmax, tmax], [ymin, ymax], 'k--', linewidth=lw)
                 pylab.text(xloc, 10**7, descr, fontsize=fs)
             #pylab.suptitle('lengths of prefixes in the logical queue\n', fontsize=fs)
-            pylab.title(labels[ncomp], fontsize=fs+2)
+            pylab.title(labels[ncomp], fontsize=fs)
             pylab.xticks(10.**np.array([-3, -1, 1, 3]), fontsize=fs)
             pylab.yticks(10.**np.array([1, 3, 5, 7]), fontsize=fs)
             #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
-            ax = [10**-4, 10**4.9, ymin, ymax]
+            ax = [10**-4, 3553, ymin, ymax]
             pylab.axis(ax)
             pylab.tight_layout()
             pylab.subplots_adjust(top=0.85)
