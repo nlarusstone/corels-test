@@ -11,18 +11,17 @@ How does CORELS' model size compare to that of other algorithms? (\S\ref{sec:spa
 How rapidly do the objective value and its lower bound converge,
 for different values of the regularization parameter~$\Reg$? (\S\ref{sec:reg-param})
 %
-How much does each of the implementation optimizations contribute to CORELS' performance? (\S\ref{sec:ablation})
+How much does each of the implementation optimizations contribute to CORELS' performance?~(\S\ref{sec:ablation})
 %
 How rapidly does CORELS prune the search space? (\S\ref{sec:reg-param} and \S\ref{sec:ablation})
 %
-Before proceeding to the analysis described above,
-we first describe our computational environment, as well as
-datasets we use and prediction problems for each,
+Before proceeding, we first describe our computational environment,
+as well as the datasets we use and prediction problems for each,
 and then show example optimal rule lists found by CORELS (\S\ref{sec:examples}).
 
 \textbf{Computational environment.}
 %\label{sec:environment}
-All timed results ran on a server with 44 Intel Xeon E5-2699~v4 (56~MB cache, 2.20GHz) and 251~GB RAM.
+All timed results ran on a server with a Intel Xeon E5-2699~v4 (56~MB cache, 2.20GHz) processor and 251~GB RAM.
 %with two Intel Xeon E5-2699~v4 (55~MB cache, 2.20~GHz) processors and 756~GB RAM.
 %
 Except where we mention a memory constraint, all experiments
