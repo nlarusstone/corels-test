@@ -37,15 +37,16 @@ For our first problem, we predict which individuals in the ProPublica COMPAS
 dataset~\citep{LarsonMaKiAn16} recidivate within two years.
 This dataset contains records for all offenders in Broward County, Florida
 in 2013 and 2014 who were given a COMPAS score pre-trial.
-Recidivism is defined as committing a crime within 2 years of the COMPAS
+Recidivism is defined as committing a crime within two years of the COMPAS
 assessment.
-This dataset contains records for 7,214 individuals, of which we had complete data for 6,907 of them.
+This dataset contains records for 7,214 individuals, of which we had complete data for 6,907.
 %
-For the majority of our analysis, we extract a set of 14 features,
+For the majority of our analysis, we extract a set of~13 binary features (Feature set~A),
 which our antecedent mining framework combines into ${M=122}$ antecedents,
 on average (folds ranged from containing 121 to 123 antecedents).
 %
-We also consider a second, similar antecedent set in~\S\ref{sec:examples}.
+We also consider a second, similar antecedent set in~\S\ref{sec:examples},
+derived from a superset of Feature set~A that includes~4 additional binary features (Feature set~B).
 
 \textbf{NYCLU stop-and-frisk dataset.} For our second problem, we use
 the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
