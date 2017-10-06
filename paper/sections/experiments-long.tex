@@ -393,7 +393,7 @@ across 10 cross-validation folds.
 \label{sec:reg-param}
 In this section, we illustrate several views of CORELS execution traces,
 for the NYCLU stop-and-frisk dataset with ${M = 46}$ antecedents,
-for the same three regularization parameters (${\Reg = 0.04, 0.01, 0.025}$)
+for the same three regularization parameters (${\Reg = .04, .01, .025}$)
 as in Figure~\ref{fig:sparsity} (bottom).
 
 Table~\ref{tab:weapon-reg} summarizes execution traces across all 10 cross-validation folds.
@@ -441,30 +441,30 @@ CORELS with different regularization parameters (NYCLU stop-and-frisk dataset) \
 \vspace{2mm}
 \begin{tabular}{l | c | c | c | c}
 & Total & Time to & Max evaluated & Optimal \\
-\hline
 $\lambda$ & time (s) & optimum (s) & prefix length & prefix length \\
-0.04 & 0.61 (0.03) & 0.002 (0.00046) & 6-6 & 2-2 \\
-0.01 & 69.70 (6.09) & 0.008 (0.00162) & 11-11 & 3-3 \\
-0.0025 & 1586.32 (108.04) & 56.321 (73.94361) & 16-17 & 6-10 \\
+\hline
+.04 & .61 (.03) & .002 (.001) & 6 & 2 \\
+.01 & 70 (6) & .008 (.002) & 11 & 3 \\
+.0025 & 1600 (100) & 56 (74) & 16-17 & 6-10 \\
 \hline
 \end{tabular}
 \begin{tabular}{l | c | c | c}
 \hline
 & Lower bound & Total queue &  Max queue \\
-$\lambda$ & evaluations ($\times 10^6$) &~ insertions ($\times 10^3$) ~&~ size ($\times 10^3$) \\
+$\lambda$ &~ evaluations ($\times 10^6$) ~&~ insertions ($\times 10^3$) ~&~ size ($\times 10^3$) \\
 \hline
-0.04 & 0.070 (0.004) & 2.2 (0.1) & 0.94 (0.11) \\
-0.01 & 7.532 (0.645) & 208.9 (18.4) & 134.90 (11.22) \\
-0.0025 & 153.476 (10.416) & 4376.0 (302.7) & 2463.48 (173.11) \\
+.04 & .070 (.004) & 2.2 (.1) & .9 (.1) \\
+.01 & 7.5 (.6) & 210 (20) & 130 (10) \\
+.0025 & 150 (10) & 4400 (300) & 2500 (170) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Summary of CORELS executions, for the NYCLU stop-and-frisk dataset (${M = 46}$),
-for same three regularization parameters as in Figure~\ref{fig:sparsity} (bottom).
+for same three regularization parameter ($\Reg$) values as in Figure~\ref{fig:sparsity} (bottom).
 %
 The columns report the total execution time,
 time to optimum, maximum evaluated prefix length, optimal prefix length,
 number of times we completely evaluate a prefix~$\Prefix$'s lower bound~$b(\Prefix, \x, \y)$,
-total number of queue insertions (which is equal to the number of cache insertions),
+total number of queue insertions (this number is equal to the number of cache insertions),
 and the maximum queue size.
 %
 For prefix lengths, we report single values or ranges corresponding to the minimum and maximum observed values;
@@ -487,7 +487,7 @@ width=0.97\textwidth]{figs/weapon_reg-execution.pdf}
 %
 See also Table~\ref{tab:weapon-reg} and Figure~\ref{fig:queue-weapon-reg}.
 %
-Top: Objective value (thin line) and lower bound (thick line) for CORELS,
+Top: Objective value (solid line) and lower bound (dashed line) for CORELS,
 as a function of wall clock time (log scale).
 %
 Numbered points along the trace of the objective value
