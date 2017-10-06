@@ -210,37 +210,38 @@ for different values of the regularization parameter~$\Reg$.
 
 We ran a 10-fold cross validation experiment using CORELS
 and eight other algorithms:
-logistic regression, support vector machines, AdaBoost, CART, C4.5,
-random forests, RIPPER, and scalable Bayesian rule lists (SBRL).\footnote{For
+logistic regression, support vector machine (SVM), AdaBoost, CART, C4.5,
+random forest (RF), RIPPER, and scalable Bayesian rule lists (SBRL).\footnote{For
 SBRL, we use the C implementation at \url{https://github.com/Hongyuy/sbrlmod}.
 By default, SBRL sets ${\eta = 3}$, ${\lambda = 9}$,
 the number of chains to 11 and iterations to 1,000.}
 %
 We use standard R packages, with default parameter settings,
 for the first seven algorithms.\footnote{For CART, C4.5 (J48), and RIPPER,
-\ie the tree and rule list learning algorithms, we use the implementations
-from the R packages rpart, RWeka, and caret, respectively.
+we use the R packages rpart, RWeka, and caret, respectively.
 %
-By default, CART uses complexity parameter ${cp = 0.01}$,
-and C4.5 uses complexity parameter ${C = 0.25}$.
+By default, CART uses complexity parameter ${cp = 0.01}$ and C4.5 uses complexity parameter ${C = 0.25}$.
 }
 %
 We use the same antecedent sets as input to the two rule list learning algorithms, CORELS and SBRL;
 for the other algorithms, the inputs are binary feature sets corresponding to the
 single clause antecedents in the aforementioned antecedent sets (see Appendix~\ref{appendix:data}).
 
-Figure~\ref{fig:comparison} shows that there were no statistically significant
-differences in algorithm accuracies.
-In fact, the difference between folds was far larger than the difference
-between algorithms.
-We conclude that CORELS produces models whose accuracy is comparable
-to those found via other algorithms.
+Figure~\ref{fig:comparison} shows that for the ProPublica dataset (left),
+there were no statistically significant differences in test accuracies across algorithms;
+the difference between folds was far larger than the difference between algorithms.
+%
+For the NYCLU dataset (right), the differences between algorithms are more significant,
+with CART, random forests, and CORELS performing the best.
+%
+We conclude that CORELS produces models whose accuracy is comparable to or better than
+those found via other algorithms.
 
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
-\includegraphics[trim={10mm, 5mm, 15mm, 5mm},
+\includegraphics[trim={5mm, 10mm, 5mm, 0mm},
 width=\textwidth]{figs/compare-compas-weapon.pdf}
 \end{center}
 \caption{Comparison of CORELS and a panel of eight other algorithms:
@@ -326,8 +327,8 @@ at predicting two-year recidivism for the ProPublica dataset.
 %
 Across 10 cross-validation folds, optimal rule lists learned by CORELS
 (Figure~\ref{fig:recidivism-all-folds}, ${\Reg = 0.005}$)
-have mean test accuracy~0.665, with standard deviation~0.018.
-
+have a mean test accuracy of~0.665, with standard deviation~0.018.
+%
 The COMPAS algorithm outputs scores between~1 and~10,
 representing low (1-4), medium (5-7), and high (8-10) risk for recidivism.
 %
@@ -335,7 +336,7 @@ As in the analysis by~\citep{LarsonMaKiAn16}, we interpret a medium or high scor
 as a positive prediction for two-year recidivism, and a low score as a negative prediction.
 %
 Across the 10 test sets, the COMPAS algorithm scores obtain
-mean accuracy of ~0.660, with standard deviation~0.019.
+a mean accuracy of~0.660, with standard deviation~0.019.
 
 In addition, we observe that CORELS achieves a lower false positive rate (FPR) on black individuals than COMPAS does across all 10 folds.
 %
