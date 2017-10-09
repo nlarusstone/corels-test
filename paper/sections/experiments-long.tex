@@ -844,66 +844,69 @@ the remaining search space decays much more slowly without these bounds (thick s
 
 \subsection{Algorithmic Speedup}
 %
-Table \ref{tab:speedup} shows the overall speed-up of CORELS compared to a naive implementation and demonstrates the infeasibility of running
-our algorithm 30 years ago.
+Table \ref{tab:speedup} shows the overall speedup of CORELS compared to a na\"ive implementation
+and demonstrates the infeasibility of running our algorithm 30 years ago.
 %
 Consider an execution of CORELS for the ProPublica dataset, with ${M = 122}$ antecedents,
 that evaluates prefixes up to length~5 in order to certify optimality (Table~\ref{tab:ablation}).
 %
-A brute force implementation that naively considers all prefixes of up to length~5
+A brute force implementation that na\"ively considers all prefixes of up to length~5
 would evaluate ${2.5 \times 10^{10}}$ prefixes.
 %
-As shown in Figure~\ref{fig:recidivism-all-folds}, the optimal rule list has prefix length~4,
+As shown in Figure~\ref{fig:recidivism-all-folds}, the optimal rule list has prefix length~3,
 thus the brute force algorithm would identify the optimal rule list.
 %
-However, for this approach certify optimality, it would have consider far longer prefixes.
+However, for this approach to certify optimality, it would have consider far longer prefixes.
 %
 Without our equivalent points bound, but with all of our other optimizations,
-we evaluate prefixes up to at least length 10
+we evaluate prefixes up to at least length~10
 (see Table~\ref{tab:ablation} and Figure~\ref{fig:queue})---thus a brute force algorithm
-would have to evaluate prefixes of length 10 or longer.
+would have to evaluate prefixes of length~10 or longer.
 %
-Naively evaluating all prefixes up to length 10 would require looking at $5.0 \times 10^{20}$ different prefixes.
+Na\"ively evaluating all prefixes up to length~10 would require looking at ${5.0 \times 10^{20}}$ different prefixes.
+
+However, CORELS examines only 28 million prefixes in total---a reduction of 893 compared to examining
+all prefixes up to length~5 and a reduction of ${1.8 \times 10^{13}}$ for the case of length~10.
 %
-However, CORELS examines only 28 million prefixes in total---a reduction of 893 compared to examining all prefixes up to length 5 and a reduction of $1.8 \times 10^{13}$ for the case of length 10.
-%
-On a laptop, we require about 1.3μs to evaluate a single prefix (given by dividing the number of lower bound evaluations by the total time
+On a laptop, we require about 1.3~$\mu$s to evaluate a single prefix (given by dividing the number of lower bound evaluations by the total time
 in Table~\ref{tab:ablation}). 
 %
-Our runtime is only about 36 seconds, but the naive solutions of examining all prefixes up to lengths 5 and 10 would take 9 hours and 21 million years, respectively. 
+Our runtime is only about 36 seconds, but the na\"ive solutions of examining all prefixes up to
+lengths~5 and~10 would take 9 hours and 21 million years, respectively.
 %
 It is clear that brute force would not scale to larger problems.
 
 We compare our current computing circumstances to those of 1984, the year when CART was published.
 %
-Moore's law holds that computing power doubled every 18 months from 1984-2006.
+Moore's law holds that computing power doubled every 18 months from 1984--2006.
 %
-This is a period of 264 months, which means computing power has gone up by at least a factor of $32,000$ since 1984.
+This is a period of 264 months, which means computing power has gone up by at least a factor of 32,000 since 1984.
 %
-Thus, even with our algorithmic and data structural improvements, CORELS would have run in over 1,200,000s in 1984---an unreasonable amount of time.
+Thus, even with our algorithmic and data structural improvements,
+CORELS would have required over 1.2 million seconds in 1984---an unreasonable amount of time.
 %
 Our advances are meaningful only because we can run them on a modern system.
 %
-Combining our algorithmic improvements with the increase in modern processor speeds, our algorithm runs more than $10^{13}$ times faster than a naive implementation would have in 1984.
+Combining our algorithmic improvements with the increase in modern processor speeds,
+our algorithm runs more than $10^{13}$ times faster than a na\"ive implementation would have in 1984.
 %
-This helps explain why our algorithm, nor other branch-and-bound variants, had not been developed before now.
+This helps explain why neither our algorithm, nor other branch-and-bound variants, had not been developed before now.
 
 \begin{table}[]
 \centering
-\begin{tabular}{|l|l|l|l|}
-\hline
+\begin{tabular}{l|l|l|l}
 & Maximum & Number of & Predicted runtime \\
 & prefix length & evaluated prefixes & \\ \hline
-Our approach & 5  & $ 2.8 \times 10^7$ & $36.4$ sec             \\ \hline
-Brute Force & 5 & $2.5 \times 10^{10}$ & $3.3 \times 10^4$ sec = $9.0$ hours           \\ \hline
-Brute Force & 10 & $5.0 \times 10^{20}$ & $6.5 \times 10^{14}$ sec = $21$ million years          \\ \hline
-Our approach (1984) & 5 & $2.8 \times 10^7$ & $1.2 \times 10^6$ sec = $13.5$ days          \\ \hline
+Our approach & 5  & $ 2.8 \times 10^7$ & $36.4$ s \\
+Brute Force & 5 & $2.5 \times 10^{10}$ & $3.3 \times 10^4$ s = $9.0$ hours \\
+Brute Force & 10 & $5.0 \times 10^{20}$ & $6.5 \times 10^{14}$ s = $21$ million years \\
+Our approach (1984) & 5 & $2.8 \times 10^7$ & $1.2 \times 10^6$ s = $13.5$ days \\
 \end{tabular}
 \caption{Algorithmic Speedup for ProPublica dataset (${\Reg = 0.005}$, ${M = 122}$).
 %
-Solving this problem using brute force is intractable due to the inability to explore rule lists of any reasonable length.
+Solving this problem using brute force is impractical due to the inability to explore rule lists of reasonable lengths.
 %
-Removing just the equivalent points bound, we explore prefixes of up to length 10 (see Table \ref{tab:ablation}), a clearly intractable problem.
+Removing only the equivalent points bound requires exploring prefixes of up to length 10 (see Table \ref{tab:ablation}), a clearly intractable problem.
 %
 Even with all of our improvements, however, it is only recently that processors have been fast enough in order to allow this type of discrete optimization algorithm to succeed.
 }
