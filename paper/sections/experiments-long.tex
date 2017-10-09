@@ -712,25 +712,25 @@ Per-component performance improvement (NYCLU stop-and-frisk dataset) \\
 & Total & Slow- & Time to & Max evaluated \\
 Algorithm variant & time (min) & down & optimum ($\mu$s) & prefix length \\
 \hline
-CORELS & 1.08 (0.1) & 1.00$\times$ & 8.89 (0.02) & 11-11 \\
-No priority queue (BFS) & 2.21 (0.2) & 2.04$\times$ & 105.12 (6.39) & 11-11 \\
-No support bounds & 1.23 (0.1) & 1.13$\times$ & 8.84 (0.82) & 11-11 \\
-No lookahead bound & 1.70 (0.2) & 1.57$\times$ & 7.32 (1.83) & 11-12 \\
-No symmetry-aware map & $>$ 72.56 (5.4) & $>$ 68.33$\times$ & $>$ 7.59 (0.38) & $>$ 10-10 \\
-No equivalent points bound & 4.11 (0.3) & 3.81$\times$ & 6.35 (0.89) & 14-14 \\
+CORELS & 1.1 (.1) & --- & 8.9 (.1) & 11 \\
+No priority queue (BFS) & 2.2 (.2) & 2.0$\times$ & 110 (10) & 11 \\
+No support bounds & 1.2 (.1) & 1.1$\times$ & 8.8 (.8) & 11 \\
+No lookahead bound & 1.7 (.2) & 1.6$\times$ & 7.3 (1.8) & 11-12 \\
+No symmetry-aware map & $>$ 73 (5.4) & $>$ 68$\times$ & $>$ 7.6 (.4) & $>$ 10 \\
+No equivalent points bound & 4 (.3) & 3.8$\times$ & 6.4 (.9) & 14 \\
 \hline
 \end{tabular}
 \begin{tabular}{l | c | c | c}
 \hline
  & Lower bound & Total queue &  Max queue \\
-Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^5$) & size ($\times 10^5$) \\
+Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^5$) &~ size ($\times 10^5$) \\
 \hline
-CORELS & 7.03 (0.7) & 1.95 (0.2) & 1.27 (0.1) \\
-No priority queue (BFS) & 14.35 (1.2) & 4.08 (0.4) & 1.38 (0.1) \\
-No support bounds & 7.91 (0.8) & 2.14 (0.2) & 1.32 (0.1) \\
-No lookahead bound & 11.42 (1.1) & 3.20 (0.3) & 2.09 (0.2) \\
-No symmetry-aware map & $>$ 388.33 (38.0) & $>$ 1000.00 (0.0) & $>$ 899.44 (10.0) \\
-No equivalent points bound & 33.01 (2.3) & 9.39 (0.7) & 5.95 (0.4) \\
+CORELS & 7.0 (.7) & 2.0 (.2) & 1.3 (.1) \\
+No priority queue (BFS) & 14 (1) & 4.1 (.4) & 1.4 (.1) \\
+No support bounds & 7.9 (.8) & 2.1 (.2) & 1.3 (.1) \\
+No lookahead bound & 11 (1) & 3.2 (.3) & 2.1 (.2) \\
+No symmetry-aware map & $>$ 390 (40) & $>$ 1000 (0) & $>$ 900 (10) \\
+No equivalent points bound & 33 (2) & 9.4 (.7) & 6.0 (.4) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Per-component performance improvement, as in Table~\ref{tab:ablation},
