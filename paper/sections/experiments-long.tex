@@ -543,7 +543,8 @@ We remove a single bound or data structure optimization from our final implement
 how the performance of our algorithm changes.
 %
 We examine these performance traces on both the NYCLU and the ProPublica datasets,
-and highlight that on different problems, the relative performance improvements of our optimizations can vary.
+and highlight the result that on different problems, the relative performance improvements
+of our optimizations can vary.
 
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
 \begin{table}[t!]
@@ -556,25 +557,25 @@ Per-component performance improvement (ProPublica dataset) \\
 & Total time & Slow- & Time to & Max evaluated \\
 Algorithm variant & (min) & down & optimum (s) & prefix length \\
 \hline
-CORELS & 0.98 (0.6) & --- & 1 (1) & 5-5 \\
-No priority queue (BFS) & 1.03 (0.6) & 1.05$\times$ & 2 (4) & 5-5 \\
-No support bounds & 1.49 (0.9) & 1.49$\times$ & 1 (2) & 5-5 \\
-No lookahead bound & 12.28 (6.2) & 13.26$\times$ & 1 (1) & 6-6 \\
-No symmetry-aware map & 9.11 (6.4) & 8.44$\times$ & 2 (3) & 5-5 \\
-No equivalent points bound & $>$128.08 (2.6) & $>$184.89$\times$ & $>$1420 (2030) & $\ge$11 \\
+CORELS & 0.98 (.6) & --- & 1 (1) & 5 \\
+No priority queue (BFS) & 1.03 (.6) & 1.1$\times$ & 2 (4) & 5 \\
+No support bounds & 1.5 (.9) & 1.5$\times$ & 1 (2) & 5 \\
+No lookahead bound & 12.3 (6.2) & 13.3$\times$ & 1 (1) & 6 \\
+No symmetry-aware map & 9.1 (6.4) & 8.4$\times$ & 2 (3) & 5 \\
+No equivalent points bound* & $>$130 (2.6) & $>$180$\times$ & $>$1400 (2000) & $\ge$11 \\
 \hline
 \end{tabular}
 \begin{tabular}{l | c | c | c}
 \hline
  & Lower bound & Total queue &  Max queue \\
-Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^6$) & size ($\times 10^6$) \\
+Algorithm variant & evaluations ($\times 10^6$) & insertions ($\times 10^6$) &~ size ($\times 10^6$) \\
 \hline
-CORELS & 26.04 (14.6) & 0.29 (0.2) & 0.24 (0.1) \\
-No priority queue (BFS) & 27.23 (15.6) & 0.33 (0.2) & 0.20 (0.1) \\
-No support bounds & 41.76 (25.2) & 0.40 (0.2) & 0.33 (0.2) \\
-No lookahead bound & 318.82 (156.9) & 3.56 (1.8) & 3.04 (1.5) \\
-No symmetry-aware map & 250.35 (175.2) & 2.45 (1.7) & 2.36 (1.7) \\
-No equivalent points bound & $>$942.44 (4.7) & $>$508.51 (1.1) & $>$497.86 (1.2) \\
+CORELS & 26 (15) & .29 (.2) & .24 (.1) \\
+No priority queue (BFS) & 27 (16) & .33 (.2) & .20 (.1) \\
+No support bounds & 42 (25) & .40 (.2) & .33 (.2) \\
+No lookahead bound & 320 (160) & 3.6 (1.8) & 3.0 (1.5) \\
+No symmetry-aware map & 250 (180) & 2.5 (1.7) & 2.4 (1.7) \\
+No equivalent points bound* & $>$940 (5) & $>$510 (1.1) & $>$500 (1.2) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Per-component performance improvement, for the ProPublica dataset
