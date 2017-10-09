@@ -2,24 +2,23 @@
 \label{appendix:data}
 
 \textbf{ProPublica recidivism dataset.}
-Table~\ref{tab:recidivism-data} shows the 7 attributes
-and corresponding 19 categorical values
+Table~\ref{tab:recidivism-data} shows the~6 attributes
+and corresponding~17 categorical values
 that we use for the ProPublica dataset.
 %
-From these, we construct 19 single-clause antecedents, \eg ${(age = 23-25)}$.
+From these, we construct~17 single-clause antecedents, \eg ${(age = 23-25)}$.
 %
 We then combine pairs of these antecedents as conjunctions to form
 two-clause antecedents, \eg ${(age = 23-25) \wedge (priors = 2-3)}$.
 %
 By virtue of our lower bound on antecedent support,
 (Theorem~\ref{thm:min-capture},~\S\ref{sec:lb-support}),
-we eliminate antecedents with support less than 0.005 or greater than 0.995,
+we eliminate antecedents with support less than~0.005 or greater than~0.995,
 since ${\Reg = 0.005}$ is the smallest regularization parameter value
 we study for this problem.
 %
-With this filtering step, we generate between 155 and 157 antecedents
-for each fold; without it, we would instead generate 361 antecedents --
-more than twice as many -- as input to our algorithm.
+With this filtering step, we generate between~121 and~123 antecedents for each fold;
+without it, we would instead generate about~130 antecedents as input to our algorithm.
 
 \begin{table}[h!]
 \centering
@@ -127,8 +126,8 @@ For the largest regularization parameter~${\Reg = 0.02}$~(Figure~\ref{fig:recidi
 we observe that all folds identify the same length-1 rule list.
 %
 For the smallest value~${\Reg = 0.005}$~(Figure~\ref{fig:recidivism-all-folds}),
-we observed in~\S\ref{sec:examples} that the folds identify three different
-optimal rule lists that all contain the same prefix rules, up to a permutation.
+we observed in~\S\ref{sec:examples} that the folds identify
+optimal 3-rule lists that all contain the same prefix rules, up to a permutation.
 %
 Across all three regularization parameter values and all folds,
 the prefix rules always predict the positive class label,
@@ -137,7 +136,7 @@ and the default rule always predicts the negative class label.
 We note that our objective is not designed to enforce any of these properties,
 though some may be seen as desirable.
 %
-With the intermediate~${\Reg = 0.01}$ (Figure~\ref{fig:recidivism-all-folds},~\S\ref{sec:examples}),
+With the intermediate~${\Reg = 0.01}$ (Figure~\ref{fig:recidivism-rule-list-02-01}),
 we observe a greater diversity of optimal rule lists, though they share similar structure.
 
 %compas 0.02
