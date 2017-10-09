@@ -579,7 +579,7 @@ No equivalent points bound* & $>$940 (5) & $>$510 (1.1) & $>$500 (1.2) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Per-component performance improvement, for the ProPublica dataset
-(${\Reg = 0.005}$, ${M = 123}$).
+(${\Reg = 0.005}$, ${M = 122}$).
 %
 The columns report the total execution time,
 time to optimum, maximum evaluated prefix length,
@@ -592,7 +592,8 @@ that each remove a specific implementation optimization or bound.
 %
 (We are not measuring the cumulative effects of removing a sequence of components.)
 %
-All rows represent complete executions, except those labeled `No equivalent points bound,'
+All rows represent complete executions that certify optimality,
+except those labeled `No equivalent points bound,'
 for which each execution was terminated due to memory constraints,
 once the size of the cache reached ${5 \times 10^8}$ elements,
 after consuming $\sim$250GB RAM.
@@ -640,7 +641,7 @@ For comparison, we replicate the same gray region
 in the other five subfigures.
 %
 For each execution, we indicate the total time in seconds,
-relative to the full CORELS implementation (T = 304 s),
+relative to the full CORELS implementation (T = 21 s),
 and with a dashed vertical line.
 %
 The execution without the equivalent points bound (bottom right) is incomplete.
@@ -650,7 +651,7 @@ The execution without the equivalent points bound (bottom right) is incomplete.
 
 
 Table~\ref{tab:ablation} provides summary statistics for experiments using the full
-CORELS implementation and five variants that each remove a specific optimization.
+CORELS implementation (first row) and five variants (subsequent rows) that each remove a specific optimization:
 %
 (1)~Instead of a priority queue (\S\ref{sec:queue}) ordered by the objective lower bound,
 we use a queue that implements breadth-first search (BFS).
@@ -660,7 +661,7 @@ our lower bounds on antecedent support (Theorem~\ref{thm:min-capture})
 and accurate antecedent support (Theorem~\ref{thm:min-capture-correct}).
 %
 (3)~We remove the effect of our lookahead bound (Lemma~\ref{lemma:lookahead}),
-which otherwise tightens the objective lower bound by~$\Reg$.
+which otherwise tightens the objective lower bound by an amount equal to the regularization parameter~$\Reg$.
 %
 (4)~We disable the symmetry-aware map (\S\ref{sec:pmap}), our data structure
 that enables pruning triggered by the permutation bound (Corollary~\ref{thm:permutation}).
@@ -675,7 +676,9 @@ Similar to our experiments in~\S\ref{sec:reg-param}, we always encounter the
 optimal rule list in far less time than it takes to certify optimality.
 %
 As in Table~\ref{tab:weapon-reg}, we report metrics that are all proxies
-for how much work our algorithm has to do, and thus scale with the overall slowdown.
+for how much computational work our algorithm must perform;
+these metrics thus scale with the overall slowdown with respect to CORELS execution time
+(Table~\ref{tab:ablation}, first column).
 
 Figure~\ref{fig:queue} visualizes execution traces of the elements in CORELS's logical queue,
 similar to Figure~\ref{fig:queue-weapon-reg},
@@ -687,12 +690,11 @@ These plots demonstrate that our optimizations reduce the number of evaluated pr
 and are especially effective at limiting the number of longer evaluated prefixes.
 %
 For the ProPublica dataset, the most important optimization is the equivalent points
-bound---without it, we place prefixes of at least length~9 in our queue,
+bound---without it, we place prefixes of at least length~10 in our queue,
 and must terminate these executions before they are complete.
 %
-In contrast, CORELS, and variants that remove any single one of the other
-optimizations evaluate only prefixes up to at most length~7 (without the lookahead bound)
-or~6 (all other variants).
+In contrast, CORELS and most other variants evaluate only prefixes up to at most length~5,
+except for the variant without the lookahead bound, which evaluates prefixes up to length~6.
 
 Table~\ref{tab:ablation-weapon} and Figure~\ref{fig:queue-weapon} summarize an
 analogous set of experiments for the NYCLU dataset.
@@ -736,7 +738,9 @@ for the NYCLU stop-and-frisk dataset (${\Reg = 0.01}$, ${M = 46}$).
 %
 All rows except those labeled `No symmetry-aware map' represent complete executions.
 %
-A single fold running without a symmetry-aware map took over 2 days to complete, so in order to run all 10 folds above, we terminated execution after the tree reached $10 \time 10^8$ nodes.
+A single fold running without a symmetry-aware map required over 2 days to complete,
+so in order to run all 10 folds above, we terminated execution after the prefix tree~(\S\ref{sec:trie})
+reached~$10^8$ nodes.
 %
 See Table~\ref{tab:ablation} for a detailed caption,
 and also Figure~\ref{fig:queue-weapon}.
@@ -756,7 +760,7 @@ and also Figure~\ref{fig:queue-weapon}.
 \caption{Summary of the logical queue's contents, for full CORELS (top left)
 and five variants that each remove a specific implementation optimization or bound,
 for the NYCLU stop-and-frisk dataset (${\Reg = 0.01}$, ${M = 46}$), as in Table~\ref{tab:ablation-weapon}.
-The execution of the run without the symmetry-aware map (bottom left) is incomplete.
+The execution without the symmetry-aware map (bottom left) is incomplete.
 %
 See Figure~\ref{fig:queue} for a detailed caption.
 }
