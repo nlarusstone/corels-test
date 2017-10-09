@@ -773,10 +773,9 @@ the equivalent points bound for the ProPublica dataset (left)
 and the symmetry-aware map for the NYCLU dataset (right).
 %
 For CORELS (thin lines) with the ProPublica recidivism dataset (left),
-the objective drops quickly, achieving the optimal value within 10 seconds.
-CORELS certifies optimality in less than 6 minutes --
-the objective lower bound steadily converges to the optimal objective (top)
-as the search space shrinks (bottom).
+the objective drops quickly, achieving the optimal value within a second.
+CORELS certifies optimality in about a minute---the objective lower bound
+steadily converges to the optimal objective (top) as the search space shrinks (bottom).
 %
 As in Figure~\ref{fig:weapon-reg-execution}, we dynamically and incrementally
 calculate~$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
@@ -788,17 +787,17 @@ In the same plots (left), we additionally highlight
 a separate execution of CORELS without the equivalent points bound
 (Theorem~\ref{thm:identical}) (thick lines).
 %
-After nearly 3 hours, the execution is still far from complete;
+After more than 2 hours, the execution is still far from complete;
 in particular, the lower bound is far from the optimum objective value (top)
 and much of the search space remains unexplored (bottom).
 %
 For the NYCLU stop-and-frisk dataset (right),
 CORELS achieves the optimum objective in well under a second,
-and certifies optimality in less than a minute.
+and certifies optimality in a little over a minute.
 %
 CORELS without the permutation bound (Corollary~\ref{thm:permutation}),
 and thus the symmetry-aware map,
-requires orders of magnitude more time to complete (thick lines).
+requires more than an hour, \ie orders of magnitude more time, to complete (thick lines).
 
 \begin{figure}[t!]
 \begin{center}
