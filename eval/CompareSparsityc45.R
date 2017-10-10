@@ -14,17 +14,18 @@ printf <- function(...) cat(sprintf(...))
 
 args = commandArgs(TRUE)
 if (length(args)  <= 1) {
-    stop(sprintf("Usage: CompareSparsity.R [dataset] [outputfile] e.g. CompareSparsity.R compas_0 compas_sparsity.csv\n",
+    stop(sprintf("Usage: CompareSparsity.R [dataset] [outputfile] [predictionsfile] e.g. CompareSparsity.R compas_0 compas_sparsity.csv\n",
                  args[1]))
 }
 
 # 'dataset' used to represent dataset
 fname <- args[1]
 foutput <- args[2]
+fpreds <- args[3]
 
 printf("Assumes data is in data/CrossValidation\n")
 printf("Running %s_{train|test}-binary.csv ", fname)
-printf("against CART, C4.5, and RIPPER\n\n")
+printf("against C4.5\n\n")
 
 datadir <- "../data/CrossValidation"
 traincsv <- paste(datadir, sprintf("%s_train-binary.csv", fname), sep = "/")
@@ -67,6 +68,7 @@ if (startsWith(fname, "adult")) {
     Cs <- c(0.05, 0.15, 0.25, 0.35, 0.45)
 }
 c45Results <- data.frame(stringsAsFactors=F)
+predictions <- data.frame(stringsAsFactors=F)
 
 for (val in Cs) {
     data_train_fac <- as.data.frame(trainData)
@@ -85,6 +87,7 @@ for (val in Cs) {
     leaves <- c45Model$classifier$measureNumLeaves()
     c45Leaves <- c(c45Leaves, leaves)
     c45Results <- rbind(c45Results, list(fname, "C4.5", val, 0.0, 0.0, acc, leaves, tacc))
+    predictions <- rbind(predictions, pred.c45Model)
 }
 printf("C4.5:\n")
 printf("%s", cat(Cs, "\n"))
@@ -95,6 +98,8 @@ printf("%s", cat(c45TrainAccs, "\n"))
 ## Write out results
 colnames(c45Results) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy")
 isNewFile <- is.na(file.info(foutput)$size) || file.info(foutput)$size == 0
-write.table(c45Results, foutput, row.names=F, col.names=F, append=T,
-            quote = F, sep=",")
+write.table(c45Results, foutput, row.names=F, col.names=F, append=T, quote=F, sep=",")
+
+isNewFile <- is.na(file.info(fpreds)$size) || file.info(fpreds)$size == 0
+write.table(predictions, fpreds, row.names=F, col.names=F, append=T, quote=F, sep=" ")
 }
