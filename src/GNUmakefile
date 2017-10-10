@@ -1,7 +1,6 @@
 CFLAGS := -g -W -Wall -Wno-unused-parameter -I. -DGMP -O2 -fno-omit-frame-pointer
-CXXFLAGS := $(CFLAGS) -std=c++11
 
-ifneq (,$(filter $(shell uname -n),elaines-MacBook-Pro.local Nicholass-Air-5.wireless.yale.internal))
+ifneq (,$(filter $(shell uname -n),elaines-MacBook-Pro.local Nicholass-Air-5.wireless.yale.internal elaines-MBP))
     LIBS := -L/usr/local/lib
     CFLAGS += -I/usr/local/include
 else
@@ -19,6 +18,8 @@ ifneq ($(shell uname -n),beepboop)
 else
     LDFLAGS :=
 endif
+
+CXXFLAGS := $(CFLAGS) -std=c++11
 
 ifneq ($(shell uname),Darwin)
     LIBS += -lbsd
