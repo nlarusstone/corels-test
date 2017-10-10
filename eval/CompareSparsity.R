@@ -21,6 +21,7 @@ if (length(args)  <= 1) {
 # 'dataset' used to represent dataset
 fname <- args[1]
 foutput <- args[2]
+fpreds <- args[3]
 
 printf("Assumes data is in data/CrossValidation\n")
 printf("Running %s_{train|test}-binary.csv ", fname)
@@ -54,6 +55,7 @@ testData$Class <-factor(testData$Class, labels=sortednames)
 trainDataWOClass <- subset(trainData, select=-c(Class))
 testDataWOClass <- subset(testData, select=-c(Class))
 
+# predictions <- data.frame(stringsAsFactors=F)
 
 ## CART
 ## complexity (cp) parameters -> 0.01 (default), 0.003, 0.001, 0.03, 0.1
@@ -75,6 +77,15 @@ for (val in cps) {
     pred.cartModel <- round(predict(cartModel, newdata=as.data.frame(testDataWOClass)))
     acc <- sum(testData$Class == factor(pred.cartModel[,"X1"], labels=sortednames))/length(testData$Class)
     cartAccs <- c(cartAccs, acc)
+    nn <- length(testData$Class)
+    tt <- table(testData$Class, factor(pred.cartModel[,"X1"], labels=sortednames))
+    tp <- tt[1, 1]
+    fp <- tt[1, 2]
+    fn <- tt[2, 1]
+    tn <- tt[2, 2]
+    tpr <- tp / (tp + fn)
+    fpr <- fp / (fp + tn)
+    printf("%d %d %d %d %d %1.5f %1.5f %1.5f %1.5f\n", nn, tp, fp, fn, tn, tpr, fpr, acc, (tp + tn) / (tp + tn + fp + fn))
 
     trainPred.cartModel <- round(predict(cartModel, newdata=as.data.frame(trainDataWOClass)))
     tacc <- sum(trainData$Class == factor(trainPred.cartModel[,"X1"], labels=sortednames))/length(trainData$Class)
@@ -82,7 +93,8 @@ for (val in cps) {
 
     leaves <- length(which(cartModel$frame[,"var"]=="<leaf>"))
     cartLeaves <- c(cartLeaves, leaves)
-    cartResults <- rbind(cartResults, list(fname, "CART", 0.0, val, 0.0, acc, leaves, tacc))
+    cartResults <- rbind(cartResults, list(fname, "CART", 0.0, val, 0.0, acc, leaves, tacc, nn, tp, fp, fn, tn, tpr, fpr))
+    # predictions <- rbind(predictions, pred.cartModel[,"X1"])
 }
 printf("CART:\n")
 printf("%s", cat(cps, "\n"))
@@ -99,6 +111,8 @@ if (startsWith(fname, "adult")) {
     Cs <- c(0.00001, 0.0001, 0.001, 0.01, 0.1)
 } else if (startsWith(fname, "frisk")) {
     Cs <- c(0.00001, 0.0001, 0.0005, 0.001)
+} else if (startsWith(fname, "weapon")) {
+    Cs <- c(0.00001, 0.0001, 0.001)
 } else {
     Cs <- c(0.05, 0.15, 0.25, 0.35, 0.45)
 }
@@ -113,6 +127,15 @@ for (val in Cs) {
     pred.c45Model <- predict(c45Model, newdata=as.data.frame(testDataWOClass), type="class")
     acc <- sum(testData$Class == pred.c45Model)/length(testData$Class)
     c45Accs <- c(c45Accs, acc)
+    nn <- length(testData$Class)
+    tt <- table(testData$Class, pred.c45Model)
+    tp <- tt[1, 1]
+    fp <- tt[1, 2]
+    fn <- tt[2, 1]
+    tn <- tt[2, 2]
+    tpr <- tp / (tp + fn)
+    fpr <- fp / (fp + tn)
+    printf("%d %d %d %d %d %1.5f %1.5f %1.5f %1.5f\n", nn, tp, fp, fn, tn, tpr, fpr, acc, (tp + tn) / (tp + tn + fp + fn))
 
     trainPred.c45Model <- predict(c45Model, newdata=as.data.frame(trainDataWOClass), type="class")
     tacc <- sum(trainData$Class == trainPred.c45Model)/length(trainData$Class)
@@ -120,7 +143,8 @@ for (val in Cs) {
 
     leaves <- c45Model$classifier$measureNumLeaves()
     c45Leaves <- c(c45Leaves, leaves)
-    c45Results <- rbind(c45Results, list(fname, "C4.5", val, 0.0, 0.0, acc, leaves, tacc))
+    c45Results <- rbind(c45Results, list(fname, "C4.5", val, 0.0, 0.0, acc, leaves, tacc, nn, tp, fp, fn, tn, tpr, fpr))
+    #predictions <- rbind(predictions, pred.c45Model)
 }
 printf("C4.5:\n")
 printf("%s", cat(Cs, "\n"))
@@ -135,13 +159,22 @@ if (!(startsWith(fname, "weapon"))) {
 
     pred.ripModel <- predict(ripModel, newdata=as.data.frame(testDataWOClass), type="class")
     ripAcc <- sum(testData$Class == pred.ripModel)/length(testData$Class)
+    nn <- length(testData$Class)
+    tt <- table(testData$Class, pred.c45Model)
+    tp <- tt[1, 1]
+    fp <- tt[1, 2]
+    fn <- tt[2, 1]
+    tn <- tt[2, 2]
+    tpr <- tp / (tp + fn)
+    fpr <- fp / (fp + tn)
+    printf("%d %d %d %d %d %1.5f %1.5f %1.5f %1.5f\n", nn, tp, fp, fn, tn, tpr, fpr, acc, (tp + tn) / (tp + tn + fp + fn))
 
     trainPred.ripModel <- predict(ripModel, newdata=as.data.frame(trainDataWOClass), type="class")
     ripTrainAcc <- sum(trainData$Class == trainPred.ripModel)/length(trainData$Class)
 
     ripRuleLen <- length(as.list(ripModel$classifier$getRuleset()))
-    ripResults <- rbind(ripResults, list(fname, "RIPPER", 0.0, 0.0, 0.0, ripAcc, ripRuleLen, ripTrainAcc))
-
+    ripResults <- rbind(ripResults, list(fname, "RIPPER", 0.0, 0.0, 0.0, ripAcc, ripRuleLen, ripTrainAcc, nn, tp, fp, fn, tn, tpr, fpr))
+    predictions <- rbind(predictions, pred.ripModel)
 
     printf("RIPPER:\n")
     printf("%.4f\n", ripAcc)
@@ -150,10 +183,10 @@ if (!(startsWith(fname, "weapon"))) {
 }
 
 ## Write out results
-colnames(cartResults) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy")
-colnames(c45Results) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy")
+colnames(cartResults) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy", "ntest", "TP", "FP", "FN", "TN", "TPR", "FPR")
+colnames(c45Results) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy", "ntest", "TP", "FP", "FN", "TN", "TPR", "FPR")
 if (!(startsWith(fname, "weapon"))) {
-    colnames(ripResults) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy")
+    colnames(ripResults) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy", "ntest", "TP", "FP", "FN", "TN", "TPR", "FPR")
 }
 isNewFile <- is.na(file.info(foutput)$size) || file.info(foutput)$size == 0
 write.table(cartResults, foutput, row.names=F, col.names=isNewFile,
@@ -164,3 +197,5 @@ if (!(startsWith(fname, "weapon"))) {
     write.table(ripResults, foutput, row.names=F, col.names=F, append=T,
                 quote = F, sep=",")
 }
+#isNewFile <- is.na(file.info(fpreds)$size) || file.info(fpreds)$size == 0
+#write.table(predictions, fpreds, row.names=F, col.names=F, append=T, quote=F, sep=" ")
