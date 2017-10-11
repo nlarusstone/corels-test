@@ -56,6 +56,9 @@ trainDataWOClass <- subset(trainData, select=-c(Class))
 testDataWOClass <- subset(testData, select=-c(Class))
 
 # predictions <- data.frame(stringsAsFactors=F)
+nn <- length(testData$Class)
+neg <- as.numeric(testData$Class) == 1
+pos <- as.numeric(testData$Class) == 2
 
 ## CART
 ## complexity (cp) parameters -> 0.01 (default), 0.003, 0.001, 0.03, 0.1
@@ -77,12 +80,12 @@ for (val in cps) {
     pred.cartModel <- round(predict(cartModel, newdata=as.data.frame(testDataWOClass)))
     acc <- sum(testData$Class == factor(pred.cartModel[,"X1"], labels=sortednames))/length(testData$Class)
     cartAccs <- c(cartAccs, acc)
-    nn <- length(testData$Class)
-    tt <- table(testData$Class, factor(pred.cartModel[,"X1"], labels=sortednames))
-    tp <- tt[1, 1]
-    fp <- tt[1, 2]
-    fn <- tt[2, 1]
-    tn <- tt[2, 2]
+    predneg <- as.numeric(factor(pred.cartModel[,"X1"], labels=sortednames)) == 1
+    predpos <- as.numeric(factor(pred.cartModel[,"X1"], labels=sortednames)) == 2
+    tp <- sum(pos & predpos)
+    fp <- sum(neg & predpos)
+    fn <- sum(pos & predneg)
+    tn <- sum(neg & predneg)
     tpr <- tp / (tp + fn)
     fpr <- fp / (fp + tn)
     printf("%d %d %d %d %d %1.5f %1.5f %1.5f %1.5f\n", nn, tp, fp, fn, tn, tpr, fpr, acc, (tp + tn) / (tp + tn + fp + fn))
@@ -127,12 +130,12 @@ for (val in Cs) {
     pred.c45Model <- predict(c45Model, newdata=as.data.frame(testDataWOClass), type="class")
     acc <- sum(testData$Class == pred.c45Model)/length(testData$Class)
     c45Accs <- c(c45Accs, acc)
-    nn <- length(testData$Class)
-    tt <- table(testData$Class, pred.c45Model)
-    tp <- tt[1, 1]
-    fp <- tt[1, 2]
-    fn <- tt[2, 1]
-    tn <- tt[2, 2]
+    predneg <- as.numeric(pred.c45Model) == 1
+    predpos <- as.numeric(pred.c45Model) == 2
+    tp <- sum(pos & predpos)
+    fp <- sum(neg & predpos)
+    fn <- sum(pos & predneg)
+    tn <- sum(neg & predneg)
     tpr <- tp / (tp + fn)
     fpr <- fp / (fp + tn)
     printf("%d %d %d %d %d %1.5f %1.5f %1.5f %1.5f\n", nn, tp, fp, fn, tn, tpr, fpr, acc, (tp + tn) / (tp + tn + fp + fn))
@@ -159,12 +162,12 @@ if (!(startsWith(fname, "weapon"))) {
 
     pred.ripModel <- predict(ripModel, newdata=as.data.frame(testDataWOClass), type="class")
     ripAcc <- sum(testData$Class == pred.ripModel)/length(testData$Class)
-    nn <- length(testData$Class)
-    tt <- table(testData$Class, pred.c45Model)
-    tp <- tt[1, 1]
-    fp <- tt[1, 2]
-    fn <- tt[2, 1]
-    tn <- tt[2, 2]
+    predneg <- as.numeric(pred.ripModel == 1)
+    predpos <- as.numeric(pred.ripModel == 2)
+    tp <- sum(pos & predpos)
+    fp <- sum(neg & predpos)
+    fn <- sum(pos & predneg)
+    tn <- sum(neg & predneg)
     tpr <- tp / (tp + fn)
     fpr <- fp / (fp + tn)
     printf("%d %d %d %d %d %1.5f %1.5f %1.5f %1.5f\n", nn, tp, fp, fn, tn, tpr, fpr, acc, (tp + tn) / (tp + tn + fp + fn))
