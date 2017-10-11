@@ -94,8 +94,10 @@ def run_model(fname, log_fname):
     print 'Accuracy: ', acc
     print 'True Positive  | False Negative || %d | %d' % (true_positive, false_negative)
     print 'False Positive | True Negative  || %d | %d' % (false_positive, true_negative)
+    tpr = float(true_positive) / (true_positive + false_negative)
+    fpr = float(false_positive) / (false_positive + true_negative)
 
-    return (len(opt), acc, [true_positive, false_negative, false_positive, true_negative])
+    return (len(opt), acc, [true_positive, false_negative, false_positive, true_negative], tpr, fpr)
 
 if __name__ == '__main__':
     args = parser.parse_args()
@@ -104,6 +106,8 @@ if __name__ == '__main__':
     test_accuracies = []
     ctables = []
     test_ctables = []
+    test_tpr = []
+    test_fpr = []
     plist = []
     log_list = []
     for i in range(num_folds):
@@ -169,15 +173,17 @@ if __name__ == '__main__':
 	    #proc.wait()
             print
             train_name = args.fname + '_' + str(i) + '_train'
-            (len_opt, train_acc, ct) = run_model(train_name, log_list[i])
+            (len_opt, train_acc, ct, tpr, fpr) = run_model(train_name, log_list[i])
             accuracies.append(train_acc)
             ctables.append(ct)
             print '---- Calculating Validation Accuracy For Fold {0} -----'.format(i)
             print
             test_name = args.fname + '_' + str(i) + '_test'
-            (len_opt, acc, ct) = run_model(test_name, log_list[i])
+            (len_opt, acc, ct, tpr, fpr) = run_model(test_name, log_list[i])
             test_accuracies.append(acc)
             test_ctables.append(ct)
+            test_tpr += [tpr]
+            test_fpr += [fpr]
             if args.sparsity:
                 cv_fold = args.fname + '_' + str(i)
                 with open(args.sparsity, 'a') as f:
@@ -190,9 +196,11 @@ if __name__ == '__main__':
             plist[i].wait()
             train_name = args.fname + '_' + str(i) + '_train'
             test_name = args.fname + '_' + str(i) + '_test'
-            (len_opt, acc, ct) = run_model(test_name, log_list[i])
+            (len_opt, acc, ct, tpr, fpr) = run_model(test_name, log_list[i])
             test_accuracies.append(acc)
             test_ctables.append(ct)
+            test_tpr += [tpr]
+            test_fpr += [fpr]
             if args.sparsity:
                 cv_fold = args.fname + '_' + str(i)
                 with open(args.sparsity, 'a') as f:
@@ -219,3 +227,6 @@ if __name__ == '__main__':
     print
     print 'Test accuracies', test_accuracies
     print 'Test accuracies mean, std', np.mean(test_accuracies), np.std(test_accuracies)
+
+    print 'Test TPRs', test_tpr
+    print 'Test FPRs', test_fpr
