@@ -44,21 +44,21 @@ ms = 5
 cdict = {'CORELS': 'k', 'C4.5': 'k', 'CART': 'k', 'RIPPER': 'k', 'SBRL': 'k'}
 mdict = {'CORELS': 's', 'C4.5': 'o', 'CART': 'd', 'RIPPER': '^', 'SBRL': 'D'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
-mfcdict = {'CORELS': 'm', 'C4.5': 'c', 'CART': 'white', 'RIPPER': 'gray', 'SBRL': 'k'}
+mfcdict = {'CORELS': 'r', 'C4.5': 'c', 'CART': 'b', 'RIPPER': 'k', 'SBRL': 'darkred'}
 #msvec = np.array([11, 9, 8, 10, 10, 10, 9, 8, 7, 7, 8, 7, 6, 5, 4]) * 2
 msvec = np.array([4, 7, 10, 3, 8, 1, 3, 5, 7, 9, 4, 6, 8, 10, 8]) + 6
-mew = 1
+mew = 2
 
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:
     mfc = mfcdict[method]
-    plt.plot(xx, yy, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc)
+    plt.plot(xx, yy, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=mfc, markerfacecolor='white')
     i += 1
 
 i = 0
 for (method, xx, yy, w, h, ty, th) in data:
     mfc = mfcdict[method]
-    plt.errorbar(xx, yy, xerr=w, yerr=h, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=cdict[method], markerfacecolor=mfc, capsize=0, elinewidth=1)
+    plt.errorbar(xx, yy, xerr=w, yerr=h, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=mfc, markerfacecolor='white', capsize=0, elinewidth=1)
     i += 1
 
 if (with_training):
@@ -69,7 +69,7 @@ if (with_training):
         else:
             mfc = mfcdict[method]
         if ty:
-            plt.plot(xx, ty, 'o', markersize=6, color='white', markeredgewidth=mew, markeredgecolor='k')
+            plt.plot(xx, ty, 'o', markersize=6, color='white', markeredgewidth=1, markeredgecolor='k')
         i += 1
 
 legend = []
@@ -93,7 +93,7 @@ plt.xticks(fontsize=fs)
 plt.yticks(np.arange(0.60, 0.71, 0.02), fontsize=fs)
 plt.xlabel('Model size', fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
-plt.legend(legend, loc='lower right', fontsize=fs-3.6, numpoints=1, ncol=3, labelspacing=0.5, borderpad=0, columnspacing=0.1, markerscale=0.8, frameon=False)
+plt.legend(legend, loc='lower right', fontsize=fs-3.6, numpoints=1, ncol=3, labelspacing=0.5, borderpad=0.1, columnspacing=0.1, markerscale=0.8, frameon=False)
 plt.title('Two-year recidivism prediction (ProPublica dataset)', fontsize=fs)
 
 ax.set_xlim(0, 31)
