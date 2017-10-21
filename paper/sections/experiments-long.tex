@@ -351,35 +351,35 @@ as a positive prediction for two-year recidivism, and a low score as a negative 
 Across the 10 test sets, the COMPAS algorithm scores obtain
 a mean accuracy of~0.660, with standard deviation~0.019.
 
-In addition, we observe that CORELS achieves a lower false positive rate (FPR) on black individuals than COMPAS does across all 10 folds.
+%In addition, we observe that CORELS achieves a lower false positive rate (FPR) on black individuals than COMPAS does across all 10 folds.
 %
-While CORELS also has a lower true positive rate (TPR) on black individuals than COMPAS, the two algorithms perform similarly on white individuals.
+%While CORELS also has a lower true positive rate (TPR) on black individuals than COMPAS, the two algorithms perform similarly on white individuals.
 %
-Both algorithms have much higher FPRs and TPRs on black individuals than white individuals.
+%Both algorithms have much higher FPRs and TPRs on black individuals than white individuals.
 %
-Since the rule lists output by CORELS do not explicitly contain race, the rules involving prior criminal convictions must implicitly be racially skewed.
+%Since the rule lists output by CORELS do not explicitly contain race, the rules involving prior criminal convictions must implicitly be racially skewed.
 %
-Although CORELS is less likely to predict a false positive for black individuals in this case, our primary advantage comes from the fact that our model can be easily inspected to determine why the prediction rates are different across races (or any other category).
+%Although CORELS is less likely to predict a false positive for black individuals in this case, our primary advantage comes from the fact that our model can be easily inspected to determine why the prediction rates are different across races (or any other category).
 
 CORELS and COMPAS perform similarly across both black and white individuals.
 %
-Both algorithms have much higher FPRs and TPRs for blacks than whites, and higher true negative rates (TNRs) and false negative rates (FNRs) for whites than blacks. 
+Both algorithms have much higher true positive rates (TPR's) and false positive rates (FPRs) for blacks than whites, and higher true negative rates (TNR's) and false negative rates (FNRs) for whites than blacks.
 %
-The fact that COMPAS has higher FPR's for blacks and higher FNR's for whites was a central observation motivating Propublica's claim that COMPAS is racially biased. 
+The fact that COMPAS has higher FPR's for blacks and higher FNR's for whites was a central observation motivating ProPublica's claim that COMPAS is racially biased~\citep{LarsonMaKiAn16}.
 %
 The fact that CORELS' models are so simple, with almost the same results as COMPAS, and do not contain anything except criminal history features and age, indicates possible explanations for the uneven predictions of both COMPAS and CORELS. 
 %
-In particular, blacks tend to have longer criminal histories (on average 4.4 crimes for blacks vs 2.6 crimes for whites), leading to higher FPR's and lower FNR's for blacks.
+In particular, blacks tend to have longer criminal histories (on average 4.4 crimes for blacks versus 2.6 crimes for whites), leading to higher FPR's and lower FNR's for blacks.
 %
 There are many definitions of fairness, and it is not clear whether these models are fair, but it is much easier to debate about the fairness of a model when it is transparent. 
 %
-Additional fairness constraints or transparency constraints can be placed on CORELS' models if desired, though one would need to edit the bounds and code in order to impose more constraints.
+Additional fairness constraints or transparency constraints can be placed on CORELS' models if desired, though one would need to edit our bounds (\S\ref{sec:framework}) and implementation (\S\ref{sec:implementation}) in order to impose more constraints.
 
 COMPAS is a proprietary model, constructed from a proprietary dataset involving surveys that are not available in any form. 
 %
-The US government pays Northpointe (now called Equivant) to use COMPAS.
+The United States government pays Northpointe (now called Equivant) to use COMPAS.
 %
-In light of the fact that CORELS is as accurate as COMPAS, CORELS' models are completely transparent, and CORELS predicts similarly to COMPAS for both blacks and whites, it is not clear what the value of using COMPAS is. 
+In light of our observations that CORELS is as accurate as COMPAS, CORELS' models are completely transparent, and CORELS predicts similarly to COMPAS for both blacks and whites, it is not clear what the value of using COMPAS is.
 %
 Further, our experiments indicate that the proprietary survey data required to compute COMPAS does not have value, as it does not increase prediction accuracy.
 
