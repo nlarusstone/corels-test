@@ -2,8 +2,8 @@
 
 # ./sbrl.sh compas > compas_sparsity-sbrl-eta=15-lambda=5.txt
 # ./sbrl.sh frisk > frisk_sparsity-sbrl-eta=500-lambda=5.txt
-# ./sbrl.sh weapon > weapon_sparsity-sbrl-eta=3-lambda=9.txt
-# ./sbrl.sh weapon > weapon_sparsity-sbrl-eta=500-lambda=5.txt
+# ./sbrl.sh weapon > weapon_sparsity-sbrl-eta=3_lambda_i=1000.txt
+# ./sbrl.sh weapon > weapon_sparsity-sbrl-eta=500_lambda=5_i=10000.txt
 
 args=("$@")
 dataset=${args[0]}
@@ -17,6 +17,6 @@ do
     # default is eta=3, lambda=9
     #./sbrlmod -t 3 -d 1 -e 3 -l 9 -i 10000 -S 0 $train_out $train_label $test_out $test_label
     #./sbrlmod -t 3 -d 1 -e 15 -l 5 -i 10000 -S 0 $train_out $train_label $test_out $test_label # compas
-    ./sbrlmod -t 3 -d 10 -e 3 -l 9 -i 1000 -S 0 $train_out $train_label $test_out $test_label # weapon
-    #./sbrlmod -t 3 -d 10 -e 500 -l 5 -i 10000 -S 0 $train_out $train_label $test_out $test_label # weapon
+    #./sbrlmod-ela -t 3 -d 10 -e 3 -l 9 -i 1000 -S 0 $train_out $train_label $test_out $test_label # weapon
+    ./sbrlmod-ela -t 3 -d 10 -e 500 -l 5 -i 10000 -S 0 $train_out $train_label $test_out $test_label # weapon
 done
