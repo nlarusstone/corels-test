@@ -3,7 +3,7 @@
 
 Our experimental analysis addresses five questions:
 %
-How does CORELS' accuracy compare to that of other algorithms,
+How does CORELS' predictive performance compare to that of other algorithms,
 including COMPAS scores? (\S\ref{sec:sparsity})
 %
 How does CORELS' model size compare to that of other algorithms? (\S\ref{sec:sparsity})
@@ -206,7 +206,7 @@ See Appendix~\ref{appendix:examples} for additional listings of optimal rule lis
 by CORELS, for each of our prediction problems, across cross-validation folds,
 for different values of the regularization parameter~$\Reg$.
 
-\subsection{Comparison of accuracy and model size for CORELS and other algorithms}
+\subsection{Predictive performance and model size for CORELS and other algorithms}
 \label{sec:sparsity}
 
 We ran a 10-fold cross validation experiment using CORELS
@@ -273,13 +273,15 @@ Note that we were unable to execute RIPPER for the NYCLU problem.
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
 \includegraphics[trim={12mm, 0mm, 24mm, 5mm},
-width=0.93\textwidth]{figs/compas-sparsity-training.pdf}
-\vspace{6mm}
+width=0.9\textwidth]{figs/compas-sparsity-training.pdf}
+\vspace{3mm}
 
-\includegraphics[trim={12mm, 0mm, 24mm, 0mm},
-width=0.93\textwidth]{figs/weapon-sparsity-training-c45.pdf}
+\includegraphics[trim={17mm, 0mm, 27mm, 0mm},
+width=0.9\textwidth]{figs/weapon-sparsity-jmlr.pdf}
+\vspace{-4mm}
+
 \end{center}
-\caption{Training and test accuracy as a function of model size.
+\caption{Predictive performance versus model size across different methods.
 %
 In the legend, numbers in parentheses are algorithm parameters that we vary
 for CORELS~($\Reg$), CART~($cp$), C4.5~($C$), and SBRL ($\eta$, $\lambda$, $i$),
@@ -289,11 +291,12 @@ Note that the CART implementation sets ${cp = 0.01}$ by default,
 and C4.5 uses ${C = 0.25}$.
 %
 Legend markers and error bars indicate means and standard deviations,
-respectively, of test accuracy across cross-validation folds.
+respectively, across cross-validation folds.
 %
 Small circles mark associated training accuracy means.
 %
-Top:  Two-year recidivism prediction for the ProPublica COMPAS dataset.
+Top: Training and test accuracy as a function of model size,
+for two-year recidivism prediction with the ProPublica COMPAS dataset.
 %
 %For CORELS and SBRL, the number of antecedents~$M$ is between 155 and 157.
 %
@@ -301,22 +304,31 @@ None of the models exhibit significant overfitting;
 mean training accuracy never exceeds mean test accuracy
 by more than about 0.01.
 %
-Bottom:  Weapon prediction for the NYCLU stop-and-frisk dataset.
+Bottom: True positive rate (TPR, open markers) and false positive rate (FPR, solid markers)
+for the test set, for weapon prediction with the NYCLU stop-and-frisk dataset.
 %
 %For CORELS and SBRL, we use ${M = 28}$ antecedents.
 %
-CART with ${cp = 0.001}$ significantly overfits;
-C4.5 finds large models and dramatically overfits for all tested parameters.
+%CART with ${cp = 0.001}$ significantly overfits;
+%C4.5 finds large models and dramatically overfits for all tested parameters.
+C4.5 finds large models for all tested parameters.
 }
 \label{fig:sparsity}
 \end{figure}
 
-Figure~\ref{fig:sparsity} summarizes differences in accuracy and model size
+Figure~\ref{fig:sparsity} summarizes differences in predictive performance and model size
 for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
 %
 Here, we vary different algorithm parameters, and increase the number of iterations for SBRL to 10,000.
 %
-For both problems, CORELS can learn short rule lists without sacrificing accuracy.
+For two-year recidivism prediction with the ProPublica dataset, we plot both training and test accuracy,
+as a function of the number of leaves in the learned model.
+%
+Due to class imbalance for the weapon prediction problem with the NYCLU stop-and-frisk dataset,
+we plot both true positive rate (TPR) and false positive rate (FPR),
+again as a function of the number of leaves.
+%
+For both problems, CORELS can learn short rule lists without sacrificing predictive performance.
 %
 For listings of example optimal rule lists that correspond to the results
 for CORELS summarized in Figure~\ref{fig:sparsity}, see Appendix~\ref{appendix:examples}.
