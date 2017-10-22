@@ -71,7 +71,7 @@ This function only takes two required arguments: the first is a list of tuples d
 
 #### Return value
 
-none
+None
 
 
 ## Example
