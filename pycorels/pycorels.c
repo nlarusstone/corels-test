@@ -293,24 +293,6 @@ static PyObject* pycorels_run(PyObject* self, PyObject* args, PyObject* keywds)
         }
     }
 
-    /*if(params.nsamples != nsamples_chk) {
-        rules_free(params.rules, params.nrules, 1);
-        rules_free(params.labels, params.nlabels, 0);
-        if(params.meta)
-            rules_free(params.meta, nmeta, 0);
-
-        snprintf(error_txt, BUFSZ, "the number of samples in the out file (%d) and label file (%d) must match", params.nsamples, nsamples_chk);
-        goto error;
-    }
-    if(params.meta && params.nsamples != nsamples_check) {
-        rules_free(params.rules, params.nrules, 1);
-        rules_free(params.labels, params.nlabels, 0);
-        rules_free(params.meta, nmeta, 0);
-
-        snprintf(error_txt, BUFSZ, "the number of samples in the out file (%d) and minority file (%d) must match", params.nsamples, nsamples_check);
-        goto error;
-    }*/
-
     if(params.nlabels != 2) {
         rules_free(params.rules, params.nrules, 1);
         rules_free(params.labels, params.nlabels, 0);

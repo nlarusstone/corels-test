@@ -15,7 +15,7 @@ Then, run `python setup.py install` or `python3 setup.py install` in this direct
 First, you have to include the module:
 `import pycorels`
 
-There are currently only two functions in the module: `pycorels.run` and `pycorels.tolist`
+There are currently only three functions in the module: `pycorels.run`, `pycorels.tolist`, and `pycorels.tofile`
 
 ### pycorels.run
 
