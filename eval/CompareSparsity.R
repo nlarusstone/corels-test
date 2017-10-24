@@ -177,7 +177,7 @@ if (!(startsWith(fname, "weapon"))) {
 
     ripRuleLen <- length(as.list(ripModel$classifier$getRuleset()))
     ripResults <- rbind(ripResults, list(fname, "RIPPER", 0.0, 0.0, 0.0, ripAcc, ripRuleLen, ripTrainAcc, nn, tp, fp, fn, tn, tpr, fpr))
-    predictions <- rbind(predictions, pred.ripModel)
+    #predictions <- rbind(predictions, pred.ripModel)
 
     printf("RIPPER:\n")
     printf("%.4f\n", ripAcc)

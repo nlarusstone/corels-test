@@ -36,9 +36,9 @@ data = zip(m['Method'], m['leaves'], m['accuracy'], m['TPR'], m['FPR'], s['leave
 
 ms = 5
 cdict = {'CORELS': 'k', 'C4.5': 'k', 'CART': 'k', 'RIPPER': 'k', 'SBRL': 'k'}
-mdict = {'CORELS': 's', 'C4.5': 'o', 'CART': 'd', 'RIPPER': '^', 'SBRL': 'D'}
+mdict = {'CORELS': 'd', 'C4.5': 'o', 'CART': 's', 'RIPPER': '^', 'SBRL': 'D'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
-mfcdict = {'CORELS': 'red', 'C4.5': 'c', 'CART': 'b', 'RIPPER': 'gray', 'SBRL': 'darkred'}
+mfcdict = {'CORELS': 'r', 'C4.5': 'c', 'CART': 'b', 'RIPPER': 'gray', 'SBRL': 'darkred'}
 msvec = np.array([3, 5, 7, 3, 8, 1, 3, 5, 9, 0, 2, 4]) + 6
 mew = 1
 
@@ -100,20 +100,33 @@ for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data:
     ax.errorbar(xx, tpr, xerr=w, yerr=tpre, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew*2, markeredgecolor=mfc, markerfacecolor='white', capsize=0, elinewidth=1)
     i += 1
 
+i = 0
+for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data[:3]:
+    mfc = mfcdict[method]
+    ax1.errorbar(xx, tpr, xerr=w, yerr=tpre, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew*2, markeredgecolor=mfc, markerfacecolor='white', capsize=0, elinewidth=1)
+    i += 1
+
 ####
 
 i = 0
 for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data:
-    print (method, xx, yy, w, h, ty, th)
     mfc = mfcdict[method]
     if (method == 'C4.5'):
         w = 0
         ax = ax2
     else:
         ax = ax1
-    ax.errorbar(xx, fpr, xerr=w, yerr=fpre, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=1,  markerfacecolor=mfc, capsize=0, elinewidth=1)
+    ax.errorbar(xx, fpr, xerr=w, yerr=fpre, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=1,  markerfacecolor=mfc, capsize=0, elinewidth=1, mew=0)
     i += 1
 
+i = 0
+for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data[:3]:
+    mfc = mfcdict[method]
+    ax1.errorbar(xx, fpr, xerr=w, yerr=fpre, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=1,  markerfacecolor=mfc, capsize=0, elinewidth=1)
+    i += 1
+
+ax1.set_ylim(0, 0.67)
+ax2.set_ylim(0, 0.67)
 
 plt.suptitle('Weapon prediction (NYCLU stop-and-frisk dataset)', fontsize=fs)
 plt.show()

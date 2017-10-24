@@ -16,9 +16,11 @@ with_training = True
 plt.ion()
 
 z = tb.tabarray(SVfile='../eval/compas_sparsity-train.csv')
-b = tb.tabarray(SVfile='../eval/compas_sparsity-sbrl.csv', names=z.dtype.names, namesinheader=False)
+b = tb.tabarray(SVfile='../eval/compas_sparsity-sbrl-eta=3-lambda=9.csv', names=list(z.dtype.names), namesinheader=False)
+b = b.colstack(tb.tabarray(columns=[[3] * 10, [9] * 10], names=['eta', 'lambda']))
 y = tb.tabarray(SVfile='../eval/compas_sparsity-CORELS.csv', names=z.dtype.names, namesinheader=False)
-q = tb.tabarray(SVfile='../eval/compas_sparsity-sbrl-eta=15-lambda=5.csv', names=list(z.dtype.names) + ['eta', 'lambda'], namesinheader=False)
+q = tb.tabarray(SVfile='../eval/compas_sparsity-sbrl-eta=15-lambda=5.csv', names=list(z.dtype.names), namesinheader=False)
+q = q.colstack(tb.tabarray(columns=[[15] * 10, [5] * 10], names=['eta', 'lambda']))
 
 x = z[(z['Method'] != 'CORELS') & (z['Method'] != 'SBRL')].rowstack(b).rowstack(y).rowstack(q)
 x['eta'][(x['Method'] == 'SBRL') & (x['eta'] == 0)] = 3
@@ -42,7 +44,7 @@ data = zip(m['Method'], m['leaves'], m['accuracy'],  s['leaves'], s['accuracy'],
 
 ms = 5
 cdict = {'CORELS': 'k', 'C4.5': 'k', 'CART': 'k', 'RIPPER': 'k', 'SBRL': 'k'}
-mdict = {'CORELS': 's', 'C4.5': 'o', 'CART': 'd', 'RIPPER': '^', 'SBRL': 'D'}
+mdict = {'CORELS': 'd', 'C4.5': 'o', 'CART': 's', 'RIPPER': '^', 'SBRL': 'D'}
 msdict = {'CORELS': 10, 'C4.5': ms, 'CART': ms, 'RIPPER': ms*2, 'SBRL': ms*2}
 mfcdict = {'CORELS': 'r', 'C4.5': 'c', 'CART': 'b', 'RIPPER': 'k', 'SBRL': 'darkred'}
 #msvec = np.array([11, 9, 8, 10, 10, 10, 9, 8, 7, 7, 8, 7, 6, 5, 4]) * 2
@@ -61,15 +63,18 @@ for (method, xx, yy, w, h, ty, th) in data:
     plt.errorbar(xx, yy, xerr=w, yerr=h, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=mfc, markerfacecolor='white', capsize=0, elinewidth=1)
     i += 1
 
+i = 0
+for (method, xx, yy, w, h, ty, th) in data[:3]:
+    mfc = mfcdict[method]
+    plt.plot(xx, yy, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew, markeredgecolor=mfc, markerfacecolor='white')
+    i += 1
+
 if (with_training):
     i = 0
     for (method, xx, yy, w, h, ty, th) in data:
-        if (i == 8):
-            mfc = 'None'
-        else:
-            mfc = mfcdict[method]
-        if ty:
-            plt.plot(xx, ty, 'o', markersize=6, color='white', markeredgewidth=1, markeredgecolor='k')
+        print (method, xx, yy, w, h, ty, th)
+        mfc = mfcdict[method]
+        plt.plot(xx, ty, 'o', markersize=6, color='white', markeredgewidth=1, markeredgecolor='k')
         i += 1
 
 legend = []
@@ -90,16 +95,16 @@ for r in m:
 
 fs = 14
 plt.xticks(fontsize=fs)
-plt.yticks(np.arange(0.60, 0.71, 0.02), fontsize=fs)
+plt.yticks(np.arange(0.63, 0.7, 0.02), fontsize=fs)
 plt.xlabel('Model size', fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
-plt.legend(legend, loc='lower right', fontsize=fs-3.6, numpoints=1, ncol=3, labelspacing=0.5, borderpad=0.1, columnspacing=0.1, markerscale=0.8, frameon=False)
+plt.legend(legend, loc='lower right', fontsize=fs-3.6, numpoints=1, ncol=3, labelspacing=0.5, borderpad=0.1, columnspacing=0.2, markerscale=0.8, frameon=False, handletextpad=0.1)
 plt.title('Two-year recidivism prediction (ProPublica dataset)', fontsize=fs)
 
-ax.set_xlim(0, 31)
+ax.set_xlim(0, 23.6)
 
 if (with_training):
-    ax.set_ylim(0.615, 0.7)
+    ax.set_ylim(0.618, 0.692)
     plt.show()
     plt.savefig('../figs/compas-sparsity-training.pdf')
 else:

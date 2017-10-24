@@ -1,4 +1,4 @@
-Initialize time: Elapsed time  0.0153	 0.0001 per rule
+Initialize time: Elapsed time  0.0097	 0.0001 per rule
 124 rules 6216 samples
 
 
@@ -160,7 +160,7 @@ n0=191, n1=193, captured=384, training accuracy = 0.50260417
 theta[5] = 0.50259067
 n0=1357, n1=592, captured=1949, training accuracy = 0.69625449
 theta[6] = 0.30394669
-Time to train: Elapsed time  0.9386	 0.9386 
+Time to train: Elapsed time  1.1782	 1.1782 
 
 The best rulelist for 11 MCMC chains is: 7 rules 6216 samples
 RULE 84: ( {age:26-45,priors:2-3} ), support=583, card=2:583 captured; 
@@ -192,7 +192,7 @@ Rule 119 captures 34 of 691 samples
 Rule 6 captures 46 of 691 samples
 Rule 0 captures 242 of 691 samples
 test accuracy = 0.709117 
-Initialize time: Elapsed time  0.0144	 0.0001 per rule
+Initialize time: Elapsed time  0.0070	 0.0001 per rule
 122 rules 6216 samples
 
 
@@ -355,7 +355,7 @@ n0=27, n1=73, captured=100, training accuracy = 0.73000000
 theta[5] = 0.72549020
 n0=878, n1=597, captured=1475, training accuracy = 0.59525424
 theta[6] = 0.40487475
-Time to train: Elapsed time  0.9572	 0.9572 
+Time to train: Elapsed time  1.2815	 1.2815 
 
 The best rulelist for 11 MCMC chains is: 7 rules 6216 samples
 RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=767, card=2:767 captured; 
@@ -387,7 +387,7 @@ Rule 114 captures 130 of 691 samples
 Rule 79 captures 11 of 691 samples
 Rule 0 captures 170 of 691 samples
 test accuracy = 0.645441 
-Initialize time: Elapsed time  0.0147	 0.0001 per rule
+Initialize time: Elapsed time  0.0065	 0.0001 per rule
 123 rules 6216 samples
 
 
@@ -550,7 +550,7 @@ n0=192, n1=184, captured=376, training accuracy = 0.51063830
 theta[5] = 0.48941799
 n0=1373, n1=602, captured=1975, training accuracy = 0.69518987
 theta[6] = 0.30500759
-Time to train: Elapsed time  0.9408	 0.9408 
+Time to train: Elapsed time  1.0386	 1.0386 
 
 The best rulelist for 11 MCMC chains is: 7 rules 6216 samples
 RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=765, card=2:765 captured; 
@@ -582,7 +582,7 @@ Rule 118 captures 33 of 691 samples
 Rule 70 captures 35 of 691 samples
 Rule 0 captures 235 of 691 samples
 test accuracy = 0.654124 
-Initialize time: Elapsed time  0.0157	 0.0001 per rule
+Initialize time: Elapsed time  0.0083	 0.0001 per rule
 123 rules 6216 samples
 
 
@@ -745,7 +745,7 @@ n0=632, n1=309, captured=941, training accuracy = 0.67162593
 theta[5] = 0.32873807
 n0=673, n1=1126, captured=1799, training accuracy = 0.62590328
 theta[6] = 0.62576346
-Time to train: Elapsed time  0.9962	 0.9962 
+Time to train: Elapsed time  1.0331	 1.0331 
 
 The best rulelist for 11 MCMC chains is: 7 rules 6216 samples
 RULE 70: ( {age:18-20,juvenile-crimes:=0} ), support=423, card=2:423 captured; 
@@ -777,7 +777,7 @@ Rule 83 captures 29 of 691 samples
 Rule 110 captures 103 of 691 samples
 Rule 0 captures 188 of 691 samples
 test accuracy = 0.659913 
-Initialize time: Elapsed time  0.0151	 0.0001 per rule
+Initialize time: Elapsed time  0.0073	 0.0001 per rule
 123 rules 6216 samples
 
 
@@ -939,7 +939,7 @@ n0=136, n1=157, captured=293, training accuracy = 0.53583618
 theta[5] = 0.53559322
 n0=1435, n1=632, captured=2067, training accuracy = 0.69424286
 theta[6] = 0.30594490
-Time to train: Elapsed time  0.9299	 0.9299 
+Time to train: Elapsed time  1.0887	 1.0887 
 
 The best rulelist for 11 MCMC chains is: 7 rules 6216 samples
 RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=760, card=2:760 captured; 
@@ -971,7 +971,7 @@ Rule 118 captures 24 of 691 samples
 Rule 22 captures 33 of 691 samples
 Rule 0 captures 228 of 691 samples
 test accuracy = 0.668596 
-Initialize time: Elapsed time  0.0144	 0.0001 per rule
+Initialize time: Elapsed time  0.0069	 0.0001 per rule
 123 rules 6216 samples
 
 
@@ -1133,7 +1133,7 @@ n0=908, n1=327, captured=1235, training accuracy = 0.73522267
 theta[5] = 0.26515764
 n0=537, n1=498, captured=1035, training accuracy = 0.51884058
 theta[6] = 0.48119576
-Time to train: Elapsed time  0.9912	 0.9912 
+Time to train: Elapsed time  0.9888	 0.9888 
 
 The best rulelist for 11 MCMC chains is: 7 rules 6216 samples
 RULE 74: ( {age:26-45,priors:=1} ), support=484, card=2:484 captured; 
@@ -1165,7 +1165,7 @@ Rule 7 captures 48 of 691 samples
 Rule 115 captures 132 of 691 samples
 Rule 0 captures 140 of 691 samples
 test accuracy = 0.661360 
-Initialize time: Elapsed time  0.0151	 0.0001 per rule
+Initialize time: Elapsed time  0.0069	 0.0001 per rule
 124 rules 6216 samples
 
 
@@ -1325,7 +1325,7 @@ n0=182, n1=178, captured=360, training accuracy = 0.50555556
 theta[5] = 0.49447514
 n0=1399, n1=602, captured=2001, training accuracy = 0.69915042
 theta[6] = 0.30104843
-Time to train: Elapsed time  0.9321	 0.9321 
+Time to train: Elapsed time  1.0456	 1.0456 
 
 The best rulelist for 11 MCMC chains is: 7 rules 6216 samples
 RULE 76: ( {age:26-45,priors:2-3} ), support=569, card=2:569 captured; 
@@ -1357,7 +1357,7 @@ Rule 112 captures 36 of 691 samples
 Rule 71 captures 51 of 691 samples
 Rule 0 captures 206 of 691 samples
 test accuracy = 0.646889 
-Initialize time: Elapsed time  0.0141	 0.0001 per rule
+Initialize time: Elapsed time  0.0071	 0.0001 per rule
 123 rules 6217 samples
 
 
@@ -1523,7 +1523,7 @@ n0=490, n1=269, captured=759, training accuracy = 0.64558630
 theta[6] = 0.35479632
 n0=504, n1=927, captured=1431, training accuracy = 0.64779874
 theta[7] = 0.64759246
-Time to train: Elapsed time  1.5949	 1.5949 
+Time to train: Elapsed time  1.0952	 1.0952 
 
 The best rulelist for 11 MCMC chains is: 8 rules 6217 samples
 RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=748, card=2:748 captured; 
@@ -1558,7 +1558,7 @@ Rule 115 captures 126 of 690 samples
 Rule 100 captures 74 of 690 samples
 Rule 0 captures 174 of 690 samples
 test accuracy = 0.686957 
-Initialize time: Elapsed time  0.0155	 0.0001 per rule
+Initialize time: Elapsed time  0.0075	 0.0001 per rule
 123 rules 6217 samples
 
 
@@ -1719,7 +1719,7 @@ n0=190, n1=193, captured=383, training accuracy = 0.50391645
 theta[5] = 0.50389610
 n0=1387, n1=577, captured=1964, training accuracy = 0.70621181
 theta[6] = 0.29399797
-Time to train: Elapsed time  1.6554	 1.6554 
+Time to train: Elapsed time  0.9636	 0.9636 
 
 The best rulelist for 11 MCMC chains is: 7 rules 6217 samples
 RULE 75: ( {age:26-45,priors:2-3} ), support=592, card=2:592 captured; 
@@ -1751,7 +1751,7 @@ Rule 118 captures 24 of 690 samples
 Rule 7 captures 47 of 690 samples
 Rule 0 captures 233 of 690 samples
 test accuracy = 0.671014 
-Initialize time: Elapsed time  0.0125	 0.0001 per rule
+Initialize time: Elapsed time  0.0069	 0.0001 per rule
 123 rules 6217 samples
 
 
@@ -1914,7 +1914,7 @@ n0=144, n1=157, captured=301, training accuracy = 0.52159468
 theta[5] = 0.52145215
 n0=1434, n1=614, captured=2048, training accuracy = 0.70019531
 theta[6] = 0.30000000
-Time to train: Elapsed time  0.9340	 0.9340 
+Time to train: Elapsed time  1.0129	 1.0129 
 
 The best rulelist for 11 MCMC chains is: 7 rules 6217 samples
 RULE 75: ( {age:26-45,priors:2-3} ), support=580, card=2:580 captured; 

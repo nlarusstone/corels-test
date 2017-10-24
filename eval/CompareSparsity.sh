@@ -27,7 +27,7 @@ do
 
     echo "RUNNING CART, C4.5, RIPPER"
     #Rscript CompareSparsity-norip.R $cv_fold $outf >> $temp_f 2>&1
-    Rscript CompareSparsity.R $cv_fold $outf >> $temp_f 2>&1
+    Rscript CompareSparsity.R $cv_fold $outf #>> $temp_f 2>&1
 
     #echo "RUNNING SBRL"
     #eval "$sbrl_run" >> $temp_f 2>&1
