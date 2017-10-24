@@ -56,9 +56,9 @@ def score_func(s):
     else:
         return 1            # Medium = 5-7, High = 8-10
 
-#ftag = 'compas' #our age categories, no race
+ftag = 'compas' #our age categories, no race
 #ftag = 'propublica' # coarse age categories, with race
-ftag = 'propublica_ours' # our age categories, with race
+#ftag = 'propublica_ours' # our age categories, with race
 #ftag = 'score' # learn COMPAS scores
 
 fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
