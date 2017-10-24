@@ -20,7 +20,11 @@ we study for this problem.
 With this filtering step, we generate between~121 and~123 antecedents for each fold;
 without it, we would instead generate about~130 antecedents as input to our algorithm.
 
-\begin{table}[h!]
+Note that we exclude the `current charge' attribute (which has two categorical values,
+`misdemeanor' and `felony'); for individuals in the dataset booked on multiple charges,
+this attribute does not appear to consistently reflect the most serious charge.
+
+\begin{table}[b!]
 \centering
 %$Q_\text{max}$ $K_\text{max}$
 \begin{tabular}{l  | c  c  c}
