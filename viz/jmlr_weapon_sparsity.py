@@ -19,8 +19,8 @@ q = tb.tabarray(SVfile='../eval/weapon_sparsity_jmlr-sbrl.csv')
 
 x = z.rowstack(y).rowstack(q)
 
-m = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean, 'TPR': np.mean, 'FPR': np.mean})
-s = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std, 'TPR': np.std, 'FPR': np.std})
+m = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda', 'i'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean, 'TPR': np.mean, 'FPR': np.mean})
+s = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda', 'i'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std, 'TPR': np.std, 'FPR': np.std})
 
 fig = plt.figure(2, figsize=(9, 4))
 plt.clf()
