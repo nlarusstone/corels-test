@@ -122,8 +122,10 @@ Recall that as~$\Reg$ decreases, optimal rule lists tend to grow in length. \\
 We show example optimal rule lists that predict two-year recidivism.
 %
 Figure~\ref{fig:recidivism-rule-list-02-01} shows examples for
-regularization parameters~${\Reg = 0.02}$ and~0.01;
-we showed examples for~${\Reg = 0.005}$ in
+regularization parameters~${\Reg = 0.02}$ and~0.01.
+%
+Figure~\ref{fig:recidivism-rule-list-005} shows examples for~${\Reg = 0.005}$;
+we gave two representative samples in
 Figure~\ref{fig:recidivism-all-folds}~(\S\ref{sec:examples}).
 
 For the largest regularization parameter~${\Reg = 0.02}$~(Figure~\ref{fig:recidivism-rule-list-02-01}),
@@ -146,17 +148,12 @@ we observe a greater diversity of optimal rule lists, though they share similar 
 %compas 0.02
 %{priors:>3}~1;default~0
 %
-%compas 0.01
-%{sex:Male,juvenile-crimes:>0}~1;{priors:>3}~1;default~0
-%{age:23-25,priors:2-3}~1;{age:18-20}~1;{sex:Male,age:21-22}~1;{priors:>3}~1;default~0
-%{sex:Male,juvenile-crimes:>0}~1;{juvenile-felonies:=0,priors:>3}~1;default~0
-%{age:23-25,priors:2-3}~1;{age:18-20}~1;{sex:Male,age:21-22}~1;{priors:>3}~1;default~0
-%{sex:Male,juvenile-crimes:>0}~1;{priors:>3}~1;default~0
-%{age:23-25,priors:2-3}~1;{age:18-20}~1;{sex:Male,age:21-22}~1;{priors:>3}~1;default~0
-%{age:18-20}~1;{sex:Male,age:21-22}~1;{priors:>3}~1;default~0
-%{age:23-25,priors:2-3}~1;{age:18-20}~1;{priors:>3}~1;{sex:Male,age:21-22}~1;default~0
-%{age:18-20}~1;{priors:>3}~1;default~0
-%{age:18-20}~1;{sex:Male,age:21-22}~1;{priors:>3}~1;default~0
+%$ tail -n 1 ../logs/for-compas_*_train.out-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=10000000-c=0.0100000-v=progress-f=1000-opt.txt
+%{priors:>3}~1;{sex:Male,juvenile-crimes:>0}~1;default~0 x 3
+%{sex:Male,juvenile-crimes:>0}~1;{priors:>3}~1;default~0 x 2
+%{sex:Male,age:18-20}~1;{priors:>3}~1;default~0 x 2
+%{age:21-22,priors:2-3}~1;{priors:>3}~1;{sex:Male,age:18-20}~1;default~0 x 2
+%{priors:>3}~1;{sex:Male,age:18-20}~1;default~0
 \begin{figure}[h!]
 \textbf{Two-year recidivism prediction $(\Reg = 0.02)$}
 \vspace{1mm}
@@ -168,31 +165,8 @@ we observe a greater diversity of optimal rule lists, though they share similar 
 \textbf{Two-year recidivism prediction $(\Reg = 0.01)$}
 \vspace{1mm}
 \begin{algorithmic}
-\State \bif $(age = 23-25) \band (priors = 2-3)$ \bthen $yes$ \Comment{Found by 3 folds}
-\State \belif $(age = 18-20)$ \bthen $yes$
-\State \belif $(sex = male) \band (age = 21-22)$ \bthen $yes$
-\State \belif $(priors > 3)$ \bthen $yes$
-\State \belse $no$
-\end{algorithmic}
-\vspace{1mm}
-\begin{algorithmic}
-\State \bif $(age = 23-25) \band (priors = 2-3)$ \bthen $yes$ \Comment{Found by 1 fold}
-\State \belif $(age = 18-20)$ \bthen $yes$
-\State \belif $(priors > 3)$ \bthen $yes$
-\State \belif $(sex = male) \band (age = 21-22)$ \bthen $yes$
-\State \belse $no$
-\end{algorithmic}
-\vspace{1mm}
-\begin{algorithmic}
-\State \bif $(age = 18-20)$ \bthen $yes$ \Comment{Found by 2 folds}
-\State \belif $(sex = male) \band (age = 21-22)$ \bthen $yes$
-\State \belif $(priors > 3)$ \bthen $yes$
-\State \belse $no$
-\end{algorithmic}
-\vspace{1mm}
-\begin{algorithmic}
-\State \bif $(age = 18-20)$ \bthen $yes$ \Comment{Found by 1 fold}
-\State \belif $(priors > 3)$ \bthen $yes$
+\State \bif $(priors > 3)$ \bthen $yes$ \Comment{Found by 3 folds}
+\State \belif $(sex = male) \band (juvenile~crimes > 0)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
 \vspace{1mm}
@@ -203,8 +177,21 @@ we observe a greater diversity of optimal rule lists, though they share similar 
 \end{algorithmic}
 \vspace{1mm}
 \begin{algorithmic}
-\State \bif $(sex = male) \band (juvenile~crimes > 0)$ \bthen $yes$ \Comment{Found by 1 fold}
-\State \belif $(juvenile~felonies = 0) \band (priors > 3)$ \bthen $yes$
+\State \bif $(age = 21-22) \band (priors = 2-3)$ \bthen $yes$ \Comment{Found by 2 folds}
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belif $(age = 18-20) \band (sex = male)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(age = 18-20) \band (sex = male)$ \bthen $yes$ \Comment{Found by 2 folds}
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(priors > 3)$ \bthen $yes$ \Comment{Found by 1 fold}
+\State \belif $(age = 18-20) \band (sex = male)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
 \caption{Example optimal rule lists for the ProPublica dataset,
@@ -212,6 +199,68 @@ found by CORELS with regularization parameters~${\Reg = 0.02}$~(top),
 and~0.01~(bottom) across 10 cross-validation folds.
 }
 \label{fig:recidivism-rule-list-02-01}
+\end{figure}
+
+%logs in jmlr/ from Nicholas 9/27
+%$ tail -n 1 *compas*curious*with*-minor*none-m*1000000000*0.005*opt.txt
+%{sex:Male,age:18-20}~1;{age:21-22,priors:2-3}~1;{priors:>3}~1;default~0 x 4
+%{age:21-22,priors:2-3}~1;{priors:>3}~1;{sex:Male,age:18-20}~1;default~0 x 2
+%{sex:Male,age:18-20}~1;{priors:>3}~1;{age:21-22,priors:2-3}~1;default~0
+%{sex:Male,age:18-20}~1;{age:21-22,priors:2-3}~1;{age:23-25,priors:2-3}~1;{priors:>3}~1;default~0
+%{sex:Male,age:18-20}~1;{age:21-22,priors:2-3}~1;{priors:>3}~1;{age:23-25,priors:2-3}~1;default~0
+%{age:21-22,priors:2-3}~1;{age:23-25,priors:2-3}~1;{priors:>3}~1;{sex:Male,age:18-20}~1;default~0
+\begin{figure}[h!]
+\textbf{Two-year recidivism prediction $(\Reg = 0.005)$}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(age = 18-20) \band (sex = male)$ \bthen $yes$ \Comment{Found by 4 folds}
+\State \belif $(age = 21-22) \band (priors = 2-3)$ \bthen $yes$
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(age = 21-22) \band (priors = 2-3)$ \bthen $yes$  \Comment{Found by 2 folds}
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belif $(age = 18-20) \band (sex = male)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(age = 18-20) \band (sex = male)$ \bthen $yes$ \Comment{Found by 1 fold}
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belif $(age = 21-22) \band (priors = 2-3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(age = 18-20) \band (sex = male)$ \bthen $yes$ \Comment{Found by 1 fold}
+\State \belif $(age = 21-22) \band (priors = 2-3)$ \bthen $yes$
+\State \belif $(age = 23-25) \band (priors = 2-3)$ \bthen $yes$
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(age = 18-20) \band (sex = male)$ \bthen $yes$ \Comment{Found by 1 fold}
+\State \belif $(age = 21-22) \band (priors = 2-3)$ \bthen $yes$
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belif $(age = 23-25) \band (priors = 2-3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(age = 21-22) \band (priors = 2-3)$ \bthen $yes$ \Comment{Found by 1 fold}
+\State \belif $(age = 23-25) \band (priors = 2-3)$ \bthen $yes$
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \bif $(age = 18-20) \band (sex = male)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\caption{Example optimal rule lists for the ProPublica dataset,
+found by CORELS with regularization parameters~${\Reg = 0.005}$,
+across 10 cross-validation folds.
+}
+\label{fig:recidivism-rule-list-005}
 \end{figure}
 
 \textbf{NYCLU stop-and-frisk dataset.}
