@@ -67,7 +67,7 @@ smaller class with replacement.
 We generate cross-validation folds first, and then resample within each fold.
 %
 In our 10-fold cross-validation experiments, each training set contains 50,743 observations.
-
+%
 Table~\ref{tab:frisk-data} shows the 5 categorical attributes that we use,
 corresponding to a total of 28 values.
 %
@@ -125,15 +125,18 @@ Figure~\ref{fig:recidivism-rule-list-02-01} shows examples for
 regularization parameters~${\Reg = 0.02}$ and~0.01.
 %
 Figure~\ref{fig:recidivism-rule-list-005} shows examples for~${\Reg = 0.005}$;
-we gave two representative samples in
-Figure~\ref{fig:recidivism-all-folds}~(\S\ref{sec:examples}).
+Figure~\ref{fig:recidivism-all-folds}~(\S\ref{sec:examples}) showed two representative examples.
 
 For the largest regularization parameter~${\Reg = 0.02}$~(Figure~\ref{fig:recidivism-rule-list-02-01}),
 we observe that all folds identify the same length-1 rule list.
 %
-For the smallest value~${\Reg = 0.005}$~(Figure~\ref{fig:recidivism-all-folds}),
-we observed in~\S\ref{sec:examples} that the folds identify
-optimal 3-rule lists that all contain the same prefix rules, up to a permutation.
+For the intermediate value~${\Reg = 0.01}$ (Figure~\ref{fig:recidivism-rule-list-02-01}),
+the folds identify optimal 2-rule or 3-rule lists that contain the nearly same prefix rules,
+up to permutations.
+%
+For the smallest value~${\Reg = 0.005}$~(Figure~\ref{fig:recidivism-rule-list-005}),
+the folds identify optimal 3-rule or 4-rule lists that contain the nearly same prefix rules,
+up to permutations.
 %
 Across all three regularization parameter values and all folds,
 the prefix rules always predict the positive class label,
@@ -141,11 +144,8 @@ and the default rule always predicts the negative class label.
 %
 We note that our objective is not designed to enforce any of these properties,
 though some may be seen as desirable.
-%
-With the intermediate~${\Reg = 0.01}$ (Figure~\ref{fig:recidivism-rule-list-02-01}),
-we observe a greater diversity of optimal rule lists, though they share similar structure.
 
-%compas 0.02
+% tail -n 1 ../logs/for-compas_*_train.out-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=10000000-c=0.0200000-v=progress-f=1000-opt.txt
 %{priors:>3}~1;default~0
 %
 %$ tail -n 1 ../logs/for-compas_*_train.out-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=10000000-c=0.0100000-v=progress-f=1000-opt.txt
@@ -253,7 +253,7 @@ and~0.01~(bottom) across 10 cross-validation folds.
 \State \bif $(age = 21-22) \band (priors = 2-3)$ \bthen $yes$ \Comment{Found by 1 fold}
 \State \belif $(age = 23-25) \band (priors = 2-3)$ \bthen $yes$
 \State \belif $(priors > 3)$ \bthen $yes$
-\State \bif $(age = 18-20) \band (sex = male)$ \bthen $yes$
+\State \belif $(age = 18-20) \band (sex = male)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
 \caption{Example optimal rule lists for the ProPublica dataset,
@@ -270,93 +270,70 @@ will be found on a stopped individual who is frisked or searched.
 Figure~\ref{fig:weapon-rule-list-04-01} shows
 regularization parameters~${\Reg = 0.04}$ and~0.01,
 and Figure~\ref{fig:weapon-rule-list-0025} shows~${\Reg = 0.0025}$.
+%
+We showed a representative solution for~${\Reg = 0.01}$ in
+Figure~\ref{fig:weapon-rule-list}~(\S\ref{sec:examples}).
 
 For each of the two larger regularization parameters in Figure~\ref{fig:weapon-rule-list-04-01},
 ${\Reg = 0.04}$~(top) and 0.01~(bottom), we observe that across the folds,
-all the optimal rule lists contain the same prefix rules, up to a permutation.
+all the optimal rule lists contain the same or equivalent rules, up to a permutation.
 %
-Furthermore, the prefix rules always predict the positive class label,
-and the default rule always predicts the negative class label.
-%
-We note that our objective is not designed to enforce any of these properties,
-though some may be seen as desirable.
-%
-With the smaller regularization parameter~${\Reg = 0.0025}$ (Figure~\ref{fig:weapon-rule-list-0025}), we observe a greater diversity
-of optimal rule lists, though they share similar structure.
+With the smaller regularization parameter~${\Reg = 0.0025}$ (Figure~\ref{fig:weapon-rule-list-0025}),
+we observe a greater diversity of longer optimal rule lists, though they share similar structure.
 
-%frisk 0.04
-%{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_objcs:stop-reason=suspicious-object}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
-%{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_objcs:stop-reason=suspicious-object}~1;default~0
-%{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_objcs:stop-reason=suspicious-object}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
+%logs in jmlr/ from Nicholas 9/27
+%tail -n 1 tail -n 1 *weapon*0.04*opt.txt
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=not-suspicious-bulge}~0;default~1 x 7
+%{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_objcs:stop-reason=not-suspicious-object}~0;default~1 x 3
 %
-%frisk 0.01
-%{cs_bulge:stop-reason=suspicious-bulge}~1;{location:transit-authority}~1;{cs_objcs:stop-reason=suspicious-object}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{location:transit-authority}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
-%{location:transit-authority}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_objcs:stop-reason=suspicious-object}~1;default~0
-%{cs_bulge:stop-reason=suspicious-bulge}~1;{location:transit-authority}~1;{cs_objcs:stop-reason=suspicious-object}~1;default~0
-%{location:transit-authority}~1;{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
-%{location:transit-authority}~1;{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{location:transit-authority}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{location:transit-authority}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;{location:transit-authority}~1;default~0
-%{location:transit-authority}~1;{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0
+%$ tail -n 1 *weapon*curious*with*-minor-*none*1000000000*0.01*opt.txt
+%{cs_objcs:stop-reason=suspicious-object}~1;{location:transit-authority}~1;{cs_bulge:stop-reason=not-suspicious-bulge}~0;default~1 x 4
+%{location:transit-authority}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_objcs:stop-reason=suspicious-object}~1;default~0 x 3
+%{location:transit-authority}~1;{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;default~0 x 2
+%{location:transit-authority}~1;{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=not-suspicious-bulge}~0;default~1
 \begin{figure}[b!]
 \textbf{Weapon prediction $(\Reg = 0.04)$}
 \vspace{1mm}
 \begin{algorithmic}
 \State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 7 folds}
-\State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
-\State \belse $no$
+\State \belif $(stop~reason \neq suspicious~bulge)$ \bthen $no$
+\State \belse $yes$
 \end{algorithmic}
 \vspace{1mm}
 \begin{algorithmic}
 \State \bif $(stop~reason = suspicious~bulge)$ \bthen $yes$ \Comment{Found by 3 folds}
-\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
-\State \belse $no$
+\State \belif $(stop~reason \neq suspicious~object)$ \bthen $no$
+\State \belse $yes$
 \end{algorithmic}
 \vspace{5mm}
 \textbf{Weapon prediction $(\Reg = 0.01)$}
 \vspace{1mm}
 \begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 4 folds}
+\State \belif $(location = transit~authority)$ \bthen $yes$
+\State \belif $(stop~reason \neq suspicious~bulge)$ \bthen $no$
+\State \belse $yes$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
 \State \bif $(location = transit~authority)$ \bthen $yes$ \Comment{Found by 3 folds}
-\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
 \State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
+\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
 \vspace{1mm}
 \begin{algorithmic}
-\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 3 folds}
-\State \belif $(location = transit~authority)$ \bthen $yes$
-\State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
-\State \belse $no$
-\end{algorithmic}
-\vspace{1mm}
-\begin{algorithmic}
-\State \bif $(stop~reason = suspicious~bulge)$ \bthen $yes$ \Comment{Found by 2 folds}
-\State \belif $(location = transit~authority)$ \bthen $yes$
+\State \bif $(location = transit~authority)$ \bthen $yes$ \Comment{Found by 2 folds}
 \State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
+\State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
 \vspace{1mm}
 \begin{algorithmic}
 \State \bif $(location = transit~authority)$ \bthen $yes$ \Comment{Found by 1 fold}
-\State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
 \State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
-\State \belse $no$
-\end{algorithmic}
-\vspace{1mm}
-\begin{algorithmic}
-\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 1 fold}
-\State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
-\State \belif $(location = transit~authority)$ \bthen $yes$
-\State \belse $no$
+\State \belif $(stop~reason \neq suspicious~bulge)$ \bthen $no$
+\State \belse $yes$
 \end{algorithmic}
 \caption{Example optimal rule lists for the NYCLU stop-and-frisk dataset,
 found by CORELS with regularization parameters~${\Reg = 0.04}$~(top) and~0.01~(bottom),
@@ -365,17 +342,15 @@ across 10 cross-validation folds.
 \label{fig:weapon-rule-list-04-01}
 \end{figure}
 
-%frisk 0.025
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_descr:stop-reason=fits-description}~0;{location:transit-authority}~1;{inout:inside}~0;{city:Manhattan}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;{location:housing-authority}~0;{cs_descr:stop-reason=fits-description}~0;{cs_casng:stop-reason=casing}~0;{city:Manhattan}~1;default~0
-%{cs_drgtr:stop-reason=drug-transaction}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_objcs:stop-reason=suspicious-object}~1;{location:housing-authority}~0;{cs_descr:stop-reason=fits-description}~0;{cs_casng:stop-reason=casing}~0;{city:Manhattan}~1;{city:Bronx}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_descr:stop-reason=fits-description}~0;{location:transit-authority}~1;{inout:inside}~0;{city:Manhattan}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_descr:stop-reason=fits-description}~0;{location:transit-authority}~1;{inout:inside}~0;{city:Manhattan}~1;default~0
+%logs in jmlr/ from Nicholas 9/27
+%$ tail -n 1 *weapon*curious*with*-minor-*none*1000000000*0.0025*opt.txt
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_descr:stop-reason=fits-description}~0;{location:transit-authority}~1;{inout:inside}~0;{city:Manhattan}~1;default~0 x 4
 %{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_descr:stop-reason=fits-description}~0;{location:housing-authority}~0;{city:Manhattan}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_descr:stop-reason=fits-description}~0;{location:transit-authority}~1;{inout:inside}~0;{city:Manhattan}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_descr:stop-reason=fits-description}~0;{location:transit-authority}~1;{inout:inside}~0;{city:Manhattan}~1;{ac_cgdir:circumstances=changed-direction}~0;{city:Bronx}~1;default~0
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;{location:housing-authority}~0;{cs_casng:stop-reason=casing}~0;{cs_descr:stop-reason=fits-description}~0;{city:Manhattan}~1;default~0
 %{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{location:housing-authority}~0;{cs_descr:stop-reason=fits-description}~0;{city:Manhattan}~1;default~0
-%{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_descr:stop-reason=fits-description}~0;{cs_vcrim:stop-reason=actions-of-violent-crime}~0;{location:transit-authority}~1;{inout:inside}~0;{city:Manhattan}~1;{ac_evasv:circumstances=evasive-response}~0;{city:Bronx}~1;default~0
+%{cs_drgtr:stop-reason=drug-transaction}~0;{cs_objcs:stop-reason=suspicious-object}~1;{cs_bulge:stop-reason=suspicious-bulge}~1;{location:housing-authority}~0;{cs_descr:stop-reason=fits-description}~0;{cs_casng:stop-reason=casing}~0;{city:Manhattan}~1;{city:Bronx}~1;default~0
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_descr:stop-reason=fits-description}~0;{location:transit-authority}~1;{inout:inside}~0;{city:Manhattan}~1;{ac_cgdir:circumstances=changed-direction}~0;{city:Bronx}~1;default~0
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_vcrim:stop-reason=actions-of-violent-crime}~0;{cs_descr:stop-reason=fits-description}~0;{location:transit-authority}~1;{inout:inside}~0;{city:Manhattan}~1;{ac_evasv:circumstances=evasive-response}~0;{city:Bronx}~1;default~0
 \begin{figure}[h!]
 \textbf{Weapon prediction $(\Reg = 0.0025)$}
 \vspace{0.5mm}
@@ -395,8 +370,8 @@ across 10 cross-validation folds.
 \State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 1 fold $(K=6)$}
 \State \belif $(stop~reason = casing)$ \bthen $no$
 \State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
-\State \belif $(location = housing~authority)$ \bthen $no$
 \State \belif $(stop~reason = fits~description)$ \bthen $no$
+\State \belif $(location = housing~authority)$ \bthen $no$
 \State \belif $(city = Manhattan)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
@@ -405,8 +380,8 @@ across 10 cross-validation folds.
 \State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 1 fold $(K=6)$}
 \State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
 \State \belif $(location = housing~authority)$ \bthen $no$
-\State \belif $(stop~reason = fits~description)$ \bthen $no$
 \State \belif $(stop~reason = casing)$ \bthen $no$
+\State \belif $(stop~reason = fits~description)$ \bthen $no$
 \State \belif $(city = Manhattan)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
@@ -418,6 +393,18 @@ across 10 cross-validation folds.
 \State \belif $(stop~reason = fits~description)$ \bthen $no$
 \State \belif $(location = housing~authority)$ \bthen $no$
 \State \belif $(city = Manhattan)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{0.5mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = drug~transaction)$ \bthen $no$ \Comment{Found by 1 fold $(K=8)$}
+\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
+\State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
+\State \belif $(location = housing~authority)$ \bthen $no$
+\State \belif $(stop~reason = fits~description)$ \bthen $no$
+\State \belif $(stop~reason = casing)$ \bthen $no$
+\State \belif $(city = Manhattan)$ \bthen $yes$
+\State \belif $(city = Bronx)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
 \vspace{0.5mm}
@@ -434,28 +421,17 @@ across 10 cross-validation folds.
 \State \belse $no$
 \end{algorithmic}
 \vspace{0.5mm}
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_bulge:stop-reason=suspicious-bulge}~1;{cs_vcrim:stop-reason=actions-of-violent-crime}~0;{cs_descr:stop-reason=fits-description}~0;{location:transit-authority}~1;{inout:inside}~0;{city:Manhattan}~1;{ac_evasv:circumstances=evasive-response}~0;{city:Bronx}~1;default~0
 \begin{algorithmic}
 \State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 1 fold $(K=10)$}
 \State \belif $(stop~reason = casing)$ \bthen $no$
 \State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
-\State \belif $(stop~reason = fits~description)$ \bthen $no$
 \State \belif $(stop~reason = actions~of~violent~crime)$ \bthen $no$
+\State \belif $(stop~reason = fits~description)$ \bthen $no$
 \State \belif $(location = transit~authority)$ \bthen $yes$
 \State \belif $(inside~or~outside = inside)$ \bthen $no$
 \State \belif $(city = Manhattan)$ \bthen $yes$
 \State \belif $(additional~circumstances = evasive~response)$ \bthen $no$
-\State \belif $(city = Bronx)$ \bthen $yes$
-\State \belse $no$
-\end{algorithmic}
-\vspace{0.5mm}
-\begin{algorithmic}
-\State \bif $(stop~reason = drug~transaction)$ \bthen $no$ \Comment{Found by 1 fold $(K=8)$}
-\State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
-\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
-\State \belif $(location = housing~authority)$ \bthen $no$
-\State \belif $(stop~reason = fits~description)$ \bthen $no$
-\State \belif $(stop~reason = casing)$ \bthen $no$
-\State \belif $(city = Manhattan)$ \bthen $yes$
 \State \belif $(city = Bronx)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}

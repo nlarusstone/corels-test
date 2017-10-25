@@ -136,12 +136,14 @@ ProPublica dataset (Feature Set~A, ${M=122}$), found by CORELS (${\Reg = 0.005}$
 %
 Feature Set~A is a subset of Feature Set~B (Figure~\ref{fig:propublica}) that excludes race features.
 %
-The optimal rule lists found using Feature Sets~A and~B are very similar.
+Optimal rule lists found using the two feature sets are very similar.
 %
-The upper and lower rule lists are representative of seven and three of the folds, respectively.
+The upper and lower rule lists are representative of~7 and~3 folds, respectively.
 %
-Each of the remaining eight optimal rule lists is the same or similar to one these examples,
+Each of the remaining~8 solutions is the same or similar to one these,
 with prefixes containing the same rules, up to a permutation, and the same default rule.
+%
+See Figure~\ref{fig:recidivism-rule-list-005} in Appendix~\ref{appendix:examples} for a complete listing.
 }
 \label{fig:recidivism-all-folds}
 \end{figure}
@@ -150,15 +152,17 @@ with prefixes containing the same rules, up to a permutation, and the same defau
 \vspace{2mm}
 \begin{algorithmic}
 \State \bif $(location = transit~authority)$ \bthen $yes$
-\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
 \State \belif $(stop~reason = suspicious~bulge)$ \bthen $yes$
+\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
 \caption{An example rule list that predicts whether a weapon will be found on a
 stopped individual who is frisked or searched, for the NYCLU stop-and-frisk dataset.
 %
-This is the most common optimal rule list found by CORELS across 10 cross-validation
-folds; the others contain the same rules, up to a permutation.
+Across 10 cross-validation folds, the other optimal rule lists found by CORELS
+contain the same or equivalent rules, up to a permutation.
+%
+See Figure~\ref{fig:weapon-rule-list-04-01} in Appendix~\ref{appendix:examples} for a complete listing.
 }
 \label{fig:weapon-rule-list}
 \end{figure}
@@ -189,12 +193,14 @@ For the examples and regularization parameter choices in this section,
 the optimal rule lists are relatively robust across cross-validation folds:
 the rules are nearly the same, up to permutations of the prefix rules.
 %
-For smaller values of the regularization parameter, we observe less of this robustness,
+For smaller values of the regularization parameter, we observe less robustness,
 as rule lists are allowed to grow in length.
 %
-We note that the prefix rules always predict the positive class label
-and the default rule always predicts the negative class label;
-thus, each of these rule lists could be equivalently expressed as a DNF rule.
+For the sets of optimal rule lists represented in Figures~\ref{fig:propublica},
+\ref{fig:recidivism-all-folds}, and~\ref{fig:weapon-rule-list},
+each set could be equivalently expressed as a DNF rule;
+\eg this is easy to see when the prefix rules all predict the positive class label
+and the default rule predicts the negative class label.
 %
 Our objective is not designed to enforce any of these properties,
 though some may be seen as desirable.
