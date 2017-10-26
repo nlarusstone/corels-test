@@ -9,11 +9,11 @@ fs = 12
 pylab.subplot(1, 2, 1)
 pylab.plot(-1, -1, 'D', markerfacecolor='w', markeredgecolor='k', markersize=6, markeredgewidth=2)
 pylab.plot(-1, -1, 'D', markerfacecolor='k', markersize=8, markeredgewidth=1, markeredgecolor='gray')
-pylab.legend(('TPR (open)', 'FPR (solid)'), fontsize=fs, numpoints=1, loc='upper left')
+pylab.legend(('TPR (open)', 'FPR (solid)'), fontsize=fs, numpoints=1, loc='lower left', frameon=False)
 pylab.subplot(1, 2, 2)
 pylab.plot(-1, -1, 'D', markerfacecolor='w', markeredgecolor='k', markersize=6, markeredgewidth=2)
 pylab.plot(-1, -1, 'D', markerfacecolor='k', markersize=8, markeredgewidth=1, markeredgecolor='gray')
-pylab.legend(('TNR (open)', 'FNR (solid)'), fontsize=fs, numpoints=1, loc='upper left')
+pylab.legend(('TNR (open)', 'FNR (solid)'), fontsize=fs, numpoints=1, loc='lower left', frameon=False)
 
 for fold in range(10):
 
@@ -93,9 +93,9 @@ for fold in range(10):
     pylab.plot(3 + offset, white_fpr, 's', markerfacecolor='darkred', markersize=7, markeredgewidth=1, markeredgecolor='gray')
     pylab.plot(4 + offset, white_tpr, 's', markerfacecolor='w', markeredgecolor='c', markersize=6, markeredgewidth=2)
     pylab.plot(4 + offset, white_fpr, 's', markerfacecolor='c', markersize=7, markeredgewidth=1, markeredgecolor='gray')
-    pylab.axis([0.5, 4.5, 0, 1])
+    pylab.axis([0.5, 4.5, 0, 0.87])
     pylab.xticks(np.array([1, 2, 3, 4]) + 0.1, ['Black\n(CORELS)', 'Black\n(COMPAS)', 'White\n(CORELS)', 'White\n(COMPAS)'], fontsize=fs)
-    pylab.yticks(fontsize=fs)
+    pylab.yticks(np.arange(0, 0.9, 0.25), fontsize=fs)
     pylab.ylabel('True or false positive rate')
     pylab.subplot(1, 2, 2)
     pylab.plot(1 + offset, black_tnr, 'd', markerfacecolor='w', markeredgecolor='r', markersize=6, markeredgewidth=2)
@@ -106,9 +106,9 @@ for fold in range(10):
     pylab.plot(3 + offset, white_fnr, 's', markerfacecolor='darkred', markersize=7, markeredgewidth=1, markeredgecolor='gray')
     pylab.plot(4 + offset, white_tnr, 's', markerfacecolor='w', markeredgecolor='c', markersize=6, markeredgewidth=2)
     pylab.plot(4 + offset, white_fnr, 's', markerfacecolor='c', markersize=7, markeredgewidth=1, markeredgecolor='gray')
-    pylab.axis([0.5, 4.5, 0, 1])
+    pylab.axis([0.5, 4.5, 0, 0.87])
     pylab.xticks(np.array([1, 2, 3, 4]) + 0.1,  ['Black\n(CORELS)', 'Black\n(COMPAS)', 'White\n(CORELS)', 'White\n(COMPAS)'], fontsize=fs)
-    pylab.yticks(fontsize=fs)
+    pylab.yticks(np.arange(0, 0.9, 0.25), fontsize=fs)
     pylab.ylabel('True or false negative rate')
 
 pylab.savefig('../figs/compare_corels_compas.pdf')
