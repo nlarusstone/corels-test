@@ -92,7 +92,7 @@ for dataset in ['compas', 'weapon']:
         a[0] -= 0.5
         a[1] += 0.5
         if dataset == 'compas':
-            a[2] = 0.625
+            a[2] = 0.615
             a[3] = 0.725
         else:
             a[2] = 0.755
