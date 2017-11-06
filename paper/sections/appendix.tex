@@ -1,3 +1,4 @@
+\newpage
 \section{Data processing details and antecedent mining}
 \label{appendix:data}
 
@@ -24,7 +25,7 @@ Note that we exclude the `current charge' attribute (which has two categorical v
 `misdemeanor' and `felony'); for individuals in the dataset booked on multiple charges,
 this attribute does not appear to consistently reflect the most serious charge.
 
-\begin{table}[b!]
+\begin{table}[h!]
 \centering
 %$Q_\text{max}$ $K_\text{max}$
 \begin{tabular}{l  | c  c  c}
@@ -142,8 +143,8 @@ Across all three regularization parameter values and all folds,
 the prefix rules always predict the positive class label,
 and the default rule always predicts the negative class label.
 %
-We note that our objective is not designed to enforce any of these properties,
-though some may be seen as desirable.
+We note that our objective is not designed to enforce any of these properties.
+%though some may be seen as desirable.
 
 % tail -n 1 ../logs/for-compas_*_train.out-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=10000000-c=0.0200000-v=progress-f=1000-opt.txt
 %{priors:>3}~1;default~0
