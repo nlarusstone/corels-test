@@ -45,17 +45,17 @@ mew = 1
 fs = 14
 ax1 = plt.subplot2grid((20, 60), (0, 1), colspan=44, rowspan=18)
 plt.xticks(fontsize=fs)
-plt.yticks(np.arange(0.77, 0.92, 0.03), fontsize=fs)
+plt.yticks(np.arange(0.78, 0.87, 0.04), fontsize=fs)
 plt.ylabel('Accuracy', fontsize=fs)
 plt.xlabel('                          Model size', fontsize=fs)
 ax1.set_xlim(0, 56)
-ax1.set_ylim(0.77, 0.92)
+ax1.set_ylim(0.77, 0.87)
 
 ax2 = plt.subplot2grid((20, 60), (0, 46), colspan=14, rowspan=18)
 plt.xticks([400, 550, 700], fontsize=fs)
-plt.yticks(np.arange(0.77, 0.92, 0.03), ())
+plt.yticks(np.arange(0.78, 0.87, 0.04), ())
 ax2.set_xlim(320, 770)
-ax2.set_ylim(0.77, 0.92)
+ax2.set_ylim(0.77, 0.87)
 
 i = 0
 for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data:
@@ -79,7 +79,7 @@ for r in m[:-3]:
     elif r['eta']:
         descr += ' (%d, %d, %d)' % (r['eta'], r['lambda'], r['i'])
     legend += [descr]
-ax1.legend(legend, loc='upper right', fontsize=fs-3.6, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0.5, columnspacing=0., markerscale=0.8, frameon=False, borderaxespad=0.1)
+ax1.legend(legend, loc='upper right', fontsize=fs-5.5, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0.5, columnspacing=0., markerscale=0.8, frameon=False, borderaxespad=0.1)
 
 legend = []
 for r in m[-3:]:
@@ -87,7 +87,7 @@ for r in m[-3:]:
     descr += ' (%s)' % ('%1.5f' % r['C']).strip('0')
     legend += [descr]
 #ax2.legend(legend, loc=(-1.55, 0.735), fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, markerscale=0.8, frameon=False)
-ax2.legend(legend, loc='upper center', fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0.5, markerscale=0.8, frameon=False, borderaxespad=0.1)
+ax2.legend(legend, loc='upper center', fontsize=fs-5.5, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0.5, markerscale=0.8, frameon=False, borderaxespad=0.1)
 
 i = 0
 for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data:
@@ -102,7 +102,7 @@ for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data:
 i = 0
 for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data[:3]:
     mfc = mfcdict[method]
-    ax1.errorbar(xx, yy, xerr=w, yerr=tpre, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew*2, markeredgecolor=mfc, markerfacecolor='white', capsize=0, elinewidth=1)
+    ax1.errorbar(xx, yy, xerr=w, yerr=h, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew*2, markeredgecolor=mfc, markerfacecolor='white', capsize=0, elinewidth=1)
     i += 1
 
 #ax1.set_ylim(0, 0.67)
