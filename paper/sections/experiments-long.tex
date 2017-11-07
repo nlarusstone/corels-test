@@ -371,12 +371,12 @@ by more than about 0.01.
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
-\includegraphics[trim={17mm, 10mm, 27mm, 0mm},
-width=0.82\textwidth]{figs/weapon-sparsity-jmlr.pdf}
-%\vspace{-4mm}
-
+\includegraphics[trim={17mm, 0mm, 27mm, 0mm},
+width=0.8\textwidth]{figs/weapon-sparsity-tpr.pdf}
+\includegraphics[trim={17mm, 10mm, 27mm, 4mm},
+width=0.8\textwidth]{figs/weapon-sparsity-fpr.pdf}
 \end{center}
-\caption{True positive rate (TPR, open markers) and false positive rate (FPR, solid markers)
+\caption{True positive rate (TPR, top) and false positive rate (FPR, bottom)
 for the test set, as a function of model size, across different methods,
 for weapon prediction with the NYCLU stop-and-frisk dataset.
 %
@@ -473,12 +473,24 @@ See also Figures~\ref{fig:weapon-reg-execution} and~\ref{fig:queue-weapon-reg}.
 \vspace{4mm}
 \label{tab:weapon-reg}
 \end{table}
+
+Table~\ref{tab:weapon-reg} summarizes execution traces across all 10 cross-validation folds.
 %
+For each value of~$\Reg$, CORELS achieves the optimum in a small fraction of the total execution time.
+%
+As~$\Reg$ decreases, these times increase because the search problems become more difficult,
+as is summarized by the observation that CORELS must evaluate longer prefixes;
+as a consequence, our data structures grow in size.
+%
+We report the total number of elements inserted into the queue and the maximum queue size;
+recall from~\S\ref{sec:implementation} that the queue elements correspond to the trie's leaves,
+and that the symmetry-aware map elements correspond to the trie's nodes.
+
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
 \includegraphics[trim={35mm 0mm 35mm 15mm},
-width=0.97\textwidth]{figs/weapon_reg-execution.pdf}
+width=0.92\textwidth]{figs/weapon_reg-execution.pdf}
 \end{center}
 \vspace{-5mm}
 \caption{Example executions of CORELS, for the NYCLU stop-and-frisk dataset (${M = 46}$).
@@ -506,39 +518,12 @@ from the panels to the left, for the three different values of~$\Reg$.
 }
 \label{fig:weapon-reg-execution}
 \end{figure}
-
-Table~\ref{tab:weapon-reg} summarizes execution traces across all 10 cross-validation folds.
 %
-For each value of~$\Reg$, CORELS achieves the optimum in a small fraction of the total execution time.
-%
-As~$\Reg$ decreases, these times increase because the search problems become more difficult,
-as is summarized by the observation that CORELS must evaluate longer prefixes;
-as a consequence, our data structures grow in size.
-%
-We report the total number of elements inserted into the queue and the maximum queue size;
-recall from~\S\ref{sec:implementation} that the queue elements correspond to the trie's leaves,
-and that the symmetry-aware map elements correspond to the trie's nodes.
-
-The upper panels in Figure~\ref{fig:weapon-reg-execution} plot example execution traces,
-from a single cross-validation fold, of both the current best objective value~$\CurrentObj$
-and the lower bound~$b(\Prefix, \x, \y)$ of the prefix~$\Prefix$ being evaluated.
-%
-These plots illustrate that CORELS certifies optimality
-when the lower bound matches the objective value.
-%
-The lower panels in Figure~\ref{fig:weapon-reg-execution} plot corresponding traces of
-an upper bound on the size of the remaining search space (Theorem~\ref{thm:remaining-eval-fine}),
-and illustrate that as~$\Reg$ decreases, it becomes more difficult to eliminate regions of the search~space.
-%
-For Figure~\ref{fig:weapon-reg-execution}, we dynamically and incrementally
-calculate~$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
-which adds some computational overhead; we do not perform this calculation elsewhere unless noted.
-
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
 \includegraphics[trim={30mm 0mm 30mm 3mm},
-width=0.87\textwidth]{figs/weapon_reg-queue.pdf}
+width=0.92\textwidth]{figs/weapon_reg-queue.pdf}
 \end{center}
 \vspace{-5mm}
 \caption{Summary of CORELS's logical queue,
@@ -558,6 +543,21 @@ we also annotate the total time in seconds, marked with a dashed vertical line.
 }
 \label{fig:queue-weapon-reg}
 \end{figure}
+
+The upper panels in Figure~\ref{fig:weapon-reg-execution} plot example execution traces,
+from a single cross-validation fold, of both the current best objective value~$\CurrentObj$
+and the lower bound~$b(\Prefix, \x, \y)$ of the prefix~$\Prefix$ being evaluated.
+%
+These plots illustrate that CORELS certifies optimality
+when the lower bound matches the objective value.
+%
+The lower panels in Figure~\ref{fig:weapon-reg-execution} plot corresponding traces of
+an upper bound on the size of the remaining search space (Theorem~\ref{thm:remaining-eval-fine}),
+and illustrate that as~$\Reg$ decreases, it becomes more difficult to eliminate regions of the search~space.
+%
+For Figure~\ref{fig:weapon-reg-execution}, we dynamically and incrementally
+calculate~$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
+which adds some computational overhead; we do not perform this calculation elsewhere unless noted.
 
 Figure~\ref{fig:queue-weapon-reg} visualizes the elements in CORELS's logical queue,
 for each of the executions in Figure~\ref{fig:weapon-reg-execution}.
@@ -582,7 +582,7 @@ and highlight the result that on different problems, the relative performance im
 of our optimizations can vary.
 
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
-\begin{table}[b!]
+\begin{table}[t!]
 \centering
 %\begin{centering}
 Per-component performance improvement (ProPublica dataset) \\

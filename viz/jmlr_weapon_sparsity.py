@@ -22,7 +22,9 @@ x = z.rowstack(y).rowstack(q)
 m = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda', 'i'], AggFuncDict={'accuracy': np.mean, 'leaves': np.mean, 'train_accuracy': np.mean, 'TPR': np.mean, 'FPR': np.mean})
 s = x.aggregate(On=['Method', 'C', 'cp', 'R', 'eta', 'lambda', 'i'], AggFuncDict={'accuracy': np.std, 'leaves': np.std, 'train_accuracy': np.std, 'TPR': np.std, 'FPR': np.std})
 
-fig = plt.figure(2, figsize=(9, 4))
+fig2 = plt.figure(2, figsize=(9, 3.5))
+plt.clf()
+fig3 = plt.figure(3, figsize=(9, 3.5))
 plt.clf()
 
 m.sort(order=['Method', 'C', 'cp', 'R', 'eta', 'lambda'])
@@ -43,20 +45,23 @@ msvec = np.array([3, 5, 7, 3, 8, 1, 3, 5, 9, 0, 2, 4]) + 6
 mew = 1
 
 fs = 14
+
+plt.figure(2)
+plt.suptitle('Weapon prediction (NYCLU stop-and-frisk dataset)', fontsize=fs)
 ax1 = plt.subplot2grid((20, 60), (0, 1), colspan=44, rowspan=18)
 plt.xticks(fontsize=fs)
-plt.yticks(np.arange(0, 0.71, 0.1), fontsize=fs)
-plt.xlabel('                          Model size', fontsize=fs)
-plt.ylabel('FPR (solid)       TPR (open)', fontsize=fs)
+plt.yticks(np.arange(0.43, 0.71, 0.1), fontsize=fs)
+plt.xlabel('Model size', fontsize=fs)
+plt.ylabel('True positive rate (TPR)', fontsize=fs)
 ax1.set_xlim(0, 56)
-ax1.set_ylim(0, 0.7)
+ax1.set_ylim(0.4, 0.66)
 
 ax2 = plt.subplot2grid((20, 60), (0, 46), colspan=14, rowspan=18)
 plt.xticks([400, 550, 700], fontsize=fs)
-plt.yticks(np.arange(0, 0.71, 0.1), ())
+plt.yticks(np.arange(0.43, 0.71, 0.1), ())
 #plt.ylabel('Accuracy', fontsize=fs)
 ax2.set_xlim(320, 770)
-ax2.set_ylim(0, 0.7)
+ax2.set_ylim(0.4, 0.66)
 
 i = 0
 for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data:
@@ -80,7 +85,7 @@ for r in m[:-3]:
     elif r['eta']:
         descr += ' (%d, %d, %d)' % (r['eta'], r['lambda'], r['i'])
     legend += [descr]
-ax1.legend(legend, loc=(0.43, 0.1), fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0.5, columnspacing=0., markerscale=0.8, frameon=False)
+ax1.legend(legend, loc='lower right', fontsize=fs-3.6, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0.5, columnspacing=0., markerscale=0.8, frameon=False, borderaxespad=0.1)
 
 legend = []
 for r in m[-3:]:
@@ -88,7 +93,7 @@ for r in m[-3:]:
     descr += ' (%s)' % ('%1.5f' % r['C']).strip('0')
     legend += [descr]
 #ax2.legend(legend, loc=(-1.55, 0.735), fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, markerscale=0.8, frameon=False)
-ax2.legend(legend, loc='center', fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0.5, markerscale=0.8, frameon=False)
+ax2.legend(legend, loc='lower center', fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0.5, markerscale=0.8, frameon=False)
 
 i = 0
 for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data:
@@ -106,7 +111,24 @@ for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data[:3]:
     ax1.errorbar(xx, tpr, xerr=w, yerr=tpre, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=mew*2, markeredgecolor=mfc, markerfacecolor='white', capsize=0, elinewidth=1)
     i += 1
 
+plt.savefig('../figs/weapon-sparsity-tpr.pdf')
+
 ####
+plt.figure(3)
+ax1 = plt.subplot2grid((20, 60), (0, 1), colspan=44, rowspan=18)
+plt.xticks(fontsize=fs)
+plt.yticks(np.arange(0.12, 0.22, 0.04), fontsize=fs)
+plt.xlabel('Model size', fontsize=fs)
+plt.ylabel('False positive rate (FPR)', fontsize=fs)
+ax1.set_xlim(0, 56)
+ax1.set_ylim(0.11, 0.22)
+
+ax2 = plt.subplot2grid((20, 60), (0, 46), colspan=14, rowspan=18)
+plt.xticks([400, 550, 700], fontsize=fs)
+plt.yticks(np.arange(0.12, 0.22, 0.04), ())
+#plt.ylabel('Accuracy', fontsize=fs)
+ax2.set_xlim(320, 770)
+ax2.set_ylim(0.11, 0.22)
 
 i = 0
 for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data:
@@ -124,10 +146,26 @@ for (method, xx, yy, tpr, fpr, w, h, ty, th, tpre, fpre) in data[:3]:
     mfc = mfcdict[method]
     ax1.errorbar(xx, fpr, xerr=w, yerr=fpre, color=cdict[method], linewidth=0, marker=mdict[method], markersize=msvec[i], markeredgewidth=1,  markerfacecolor=mfc, capsize=0, elinewidth=1)
     i += 1
+legend = []
+for r in m[:-3]:
+    descr = r['Method']
+    if r['cp']:
+        descr += ' (%s)' % ('%1.3f' % r['cp']).strip('0').replace('.01', '.01, .03')
+    elif r['R']:
+        descr += ' (%s)' % ('%1.4f' % r['R']).strip('0')
+    elif r['eta']:
+        descr += ' (%d, %d, %d)' % (r['eta'], r['lambda'], r['i'])
+    legend += [descr]
+ax1.legend(legend, loc='lower right', fontsize=fs-3.6, numpoints=1, ncol=2, labelspacing=0.5, borderpad=0.5, columnspacing=0., markerscale=0.8, frameon=False, borderaxespad=0.1)
 
-ax1.set_ylim(0, 0.67)
-ax2.set_ylim(0, 0.67)
+legend = []
+for r in m[-3:]:
+    descr = r['Method']
+    descr += ' (%s)' % ('%1.5f' % r['C']).strip('0')
+    legend += [descr]
+#ax2.legend(legend, loc=(-1.55, 0.735), fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0, markerscale=0.8, frameon=False)
+ax2.legend(legend, loc='lower center', fontsize=fs-3.6, numpoints=1, ncol=1, labelspacing=0.5, borderpad=0.5, markerscale=0.8, frameon=False)
 
-plt.suptitle('Weapon prediction (NYCLU stop-and-frisk dataset)', fontsize=fs)
+#plt.suptitle('Weapon prediction (NYCLU stop-and-frisk dataset)', fontsize=fs)
 plt.show()
-plt.savefig('../figs/weapon-sparsity-jmlr.pdf')
+plt.savefig('../figs/weapon-sparsity-fpr.pdf')
