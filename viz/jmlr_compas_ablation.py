@@ -80,7 +80,7 @@ make_small = False
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
 log_dir = '/Users/nlarusstone/Documents/Research/bbcache/jmlr'
-#log_dir = '/Users/elaine/git/bbcache/jmlr'
+log_dir = '/Users/elaine/git/bbcache/jmlr'
 log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=10-f=1000.txt',
 'for-%s-bfs-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=10-f=1000.txt',
 'for-%s-curious_lb-with_prefix_perm_map-minor-removed=support-max_num_nodes=1000000000-c=0.0050000-v=10-f=1000.txt',
@@ -100,7 +100,7 @@ if make_small:
 else:
     if (make_figure):
         pylab.ion()
-        pylab.figure(6, figsize=(8.5, 12))
+        pylab.figure(6, figsize=(12, 9))
 
 ntot = len(log_root_list)
 
@@ -200,7 +200,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 pylab.clf()
 
             if (len(log_root_list) == 6):
-                pylab.subplot(3, 2, ncomp+1)
+                pylab.subplot(2, 3, ncomp+1)
             else:
                 pylab.subplot(2, 2, ncomp+1)
 
@@ -224,9 +224,9 @@ for (ncomp, log_root) in enumerate(log_root_list):
                 #        txt = pylab.text(tt[0] * 0.47, 1.5, '%d ' % length, fontsize=fs+4)
                 #    else:
                 #        txt = pylab.text(tt[0] * 0.4, 1.5, '%d ' % length, fontsize=fs+4)
-            if (ncomp > ntot - 3):
+            if (ncomp > ntot - 4):
                 pylab.xlabel('Time (s)', fontsize=fs+2)
-            if (ncomp % 2 == 0):
+            if (ncomp % 3 == 0):
                 pylab.ylabel('Count', fontsize=fs+2)
             (ymin, ymax) = (10**-0.1, 10**9)
             t_corels = int(np.round(t_comp[-1]))
@@ -234,13 +234,13 @@ for (ncomp, log_root) in enumerate(log_root_list):
             if (make_small):
                 xloc = tmax / 5000
             else:
-                xloc = tmax / 30000
+                xloc = tmax / 10.**5
             print 'TMAX: ', tmax
             print 'TCORELS: ', t_corels
             print 'TMAX/TCORELS', tmax / t_corels
             if (ncomp == 0):
                 pylab.plot([t_corels, t_corels], [ymin, ymax], 'k--', linewidth=lw)
-                xloc = 0.03
+                xloc = 0.01
                 pylab.text(xloc, 10**8, 'T $\\equiv$ %d s' % t_corels, fontsize=fs)
             else:
                 if (tmax / t_corels) < 10:
@@ -249,7 +249,7 @@ for (ncomp, log_root) in enumerate(log_root_list):
                     descr = '%d s $\\approx$ %d T' % (np.round(tmax), np.round(tmax / t_corels))
                 if (ncomp == (ntot - 1)):
                     descr = '> %s' % descr
-                    xloc = 0.01
+                    xloc = 0.001
                 else:
                     pylab.plot([tmax, tmax], [ymin, ymax], 'k--', linewidth=lw)
                     descr = (14 - (len(descr.split('$')[0] + descr.split('$')[-1]) + 1)) * ' ' + descr
@@ -261,6 +261,8 @@ for (ncomp, log_root) in enumerate(log_root_list):
             #pylab.loglog([1, 1], [10**-0.1, 10**8.3], 'k--')
             ax = [10**-4, 7878, ymin, ymax]
             pylab.axis(ax)
+            pylab.tight_layout()
+            pylab.subplots_adjust(top=0.85)
             pylab.draw()
             print ncomp, ntot
             if (ncomp + 1 == ntot):
@@ -269,10 +271,8 @@ for (ncomp, log_root) in enumerate(log_root_list):
                     pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-1.11, 1.77), handletextpad=0,
                                  borderaxespad=0.1, ncol=2, columnspacing=0.5, frameon=False)
                 else:
-                    pylab.suptitle('Execution traces of queue contents (ProPublica dataset)', fontsize=fs+2)
-                    pylab.tight_layout()
-                    pylab.subplots_adjust(top=0.92)
-                    pylab.legend(['%d' % ii for ii in range(1, 11)], loc=(-0.47, 2.61), handletextpad=0, labelspacing=0.3,  borderaxespad=0.1, ncol=1, columnspacing=0.5, frameon=False)
+                    pylab.suptitle('\nExecution traces of queue contents (ProPublica dataset)', fontsize=fs+2)
+                    pylab.legend(['%d' % ii for ii in range(1, 11)], borderaxespad=0.1, ncol=1, frameon=False, loc=(-1.73, 1.35))
                 print '../figs/%s-queue.pdf' % ftag
                 pylab.savefig('../figs/%s-queue.pdf' % ftag)
 

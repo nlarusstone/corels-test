@@ -274,7 +274,7 @@ Further, our experiments indicate that the proprietary survey data required to c
 % left lower right upper
 \begin{center}
 \includegraphics[trim={35mm, 0mm, 40mm, 0mm},
-width=0.93\textwidth]{figs/compare_corels_compas.pdf}
+width=0.9\textwidth]{figs/compare_corels_compas.pdf}
 \end{center}
 \caption{Comparison of TPR and FPR (left), as well as TNR and FNR (right),
 for different races in the ProPublica dataset, for CORELS and COMPAS,
@@ -376,11 +376,11 @@ width=0.8\textwidth]{figs/weapon-sparsity-tpr.pdf}
 \includegraphics[trim={17mm, 10mm, 27mm, 4mm},
 width=0.8\textwidth]{figs/weapon-sparsity-fpr.pdf}
 \end{center}
-\caption{True positive rate (TPR, top) and false positive rate (FPR, bottom)
+\caption{True positive rate (top) and false positive rate (bottom)
 for the test set, as a function of model size, across different methods,
 for weapon prediction with the NYCLU stop-and-frisk dataset.
 %
-In the legend, numbers in parentheses are algorithm parameters that we vary,
+In the legend, numbers in parentheses are algorithm parameters,
 as in Figure~\ref{fig:sparsity-compas}.
 %
 Legend markers and error bars indicate means and standard deviations,
@@ -422,7 +422,7 @@ again as a function of the number of leaves.
 For both problems, CORELS can learn short rule lists without sacrificing predictive performance.
 %
 For listings of example optimal rule lists that correspond to the results
-for CORELS summarized in these two figures, see Appendix~\ref{appendix:examples}.
+for CORELS summarized here, see Appendix~\ref{appendix:examples}.
 
 \subsection{CORELS execution traces, for different regularization parameters}
 \label{sec:reg-param}
@@ -480,7 +480,7 @@ For each value of~$\Reg$, CORELS achieves the optimum in a small fraction of the
 %
 As~$\Reg$ decreases, these times increase because the search problems become more difficult,
 as is summarized by the observation that CORELS must evaluate longer prefixes;
-as a consequence, our data structures grow in size.
+consequently, our data structures grow in size.
 %
 We report the total number of elements inserted into the queue and the maximum queue size;
 recall from~\S\ref{sec:implementation} that the queue elements correspond to the trie's leaves,
@@ -557,7 +557,7 @@ and illustrate that as~$\Reg$ decreases, it becomes more difficult to eliminate 
 %
 For Figure~\ref{fig:weapon-reg-execution}, we dynamically and incrementally
 calculate~$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
-which adds some computational overhead; we do not perform this calculation elsewhere unless noted.
+which adds some computational overhead; we do not calculate this elsewhere unless noted.
 
 Figure~\ref{fig:queue-weapon-reg} visualizes the elements in CORELS's logical queue,
 for each of the executions in Figure~\ref{fig:weapon-reg-execution}.
@@ -572,17 +572,8 @@ as~$\Reg$ decreases, the algorithm must spend more time evaluating longer and lo
 \subsection{Efficacy of CORELS algorithm optimizations}
 \label{sec:ablation}
 
-This section examines the efficacy of each of our bounds and data structure optimizations.
-%
-We remove a single bound or data structure optimization from our final implementation and measure
-how the performance of our algorithm changes.
-%
-We examine these performance traces on both the NYCLU and the ProPublica datasets,
-and highlight the result that on different problems, the relative performance improvements
-of our optimizations can vary.
-
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
-\begin{table}[t!]
+\begin{table}[b!]
 \centering
 %\begin{centering}
 Per-component performance improvement (ProPublica dataset) \\
@@ -652,10 +643,19 @@ See also Figure~\ref{fig:queue}. \\
 \label{tab:ablation}
 \end{table}
 
+This section examines the efficacy of each of our bounds and data structure optimizations.
+%
+We remove a single bound or data structure optimization from our final implementation and measure
+how the performance of our algorithm changes.
+%
+We examine these performance traces on both the NYCLU and the ProPublica datasets,
+and highlight the result that on different problems, the relative performance improvements
+of our optimizations can vary.
+
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-\includegraphics[trim={0mm 0mm 0mm 5mm}, width=0.74\textwidth]{figs/jmlr_compas_ablation-queue.pdf}
+\includegraphics[trim={0mm 0mm 0mm 5mm}, width=\textwidth]{figs/jmlr_compas_ablation-queue.pdf}
 \end{center}
 \vspace{-5mm}
 \caption{Summary of the logical queue's contents, for full CORELS (top left)
@@ -750,13 +750,13 @@ and also Figure~\ref{fig:queue-weapon}.
 \vspace{4mm}
 \label{tab:ablation-weapon}
 \end{table}
-
+%
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
 %trim={0mm 10mm 0mm 20mm},
 %\includegraphics[width=0.94\textwidth]{figs/weapon_ablation-queue.pdf}
-\includegraphics[trim={0mm 0mm 0mm 5mm}, width=0.74\textwidth]{figs/weapon_ablation-queue.pdf}
+\includegraphics[trim={0mm 0mm 0mm 5mm}, width=\textwidth]{figs/weapon_ablation-queue.pdf}
 \end{center}
 \vspace{-5mm}
 \caption{Summary of the logical queue's contents, for full CORELS (top left)
@@ -807,7 +807,7 @@ the symmetry-aware map is the crucial optimization for the NYCLU dataset.
 %\includegraphics[width=0.65\textwidth]{figs/sketch-objective.png}
 % left lower right upper
 \includegraphics[trim={30mm, 20mm, 30mm, 20mm},
-width=\textwidth]{figs/weapon_execution_large-remaining-space.pdf}
+width=0.95\textwidth]{figs/weapon_execution_large-remaining-space.pdf}
 \end{center}
 \caption{Execution progress of CORELS and selected variants,
 for the ProPublica (${\Reg = 0.005}$, ${M = 122}$) (left)
@@ -880,7 +880,7 @@ requires more than an hour, \ie orders of magnitude more time, to complete (thic
 \subsection{Algorithmic Speedup}
 \label{sec:speedup}
 
-\begin{table}[b!]
+\begin{table}[t!]
 \centering
 \begin{tabular}{l|c|c|r l}
 Algorithmic & Max evaluated & Lower bound & Predicted&runtime \\
