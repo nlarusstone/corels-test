@@ -270,6 +270,26 @@ In light of our observations that CORELS is as accurate as COMPAS, CORELS' model
 %
 Further, our experiments indicate that the proprietary survey data required to compute COMPAS does not have value, as it does not increase prediction accuracy.
 
+Regardless of whether COMPAS is racially biased (which our analysis does not indicate is true),
+COMPAS may have many other fairness defects that might be considered to be serious.
+%
+Many of COMPAS's survey questions are direct inquiries about socioeconomic status
+(``Is it easy to get drugs in your neighborhood?,''
+``How often do you have barely enough money to get by?,''
+``Do you frequently get jobs that don't pay more than minimum wage?,''
+``How often have you moved in the last 12 months?'')
+or events that were not caused by the person who is being evaluated
+(``If you lived with both parents and they later separated, how old were you at the time?'',
+``Was one of you parents ever sent to jail or prison?'',
+``Was your mother ever arrested, that you know of?'').
+%
+It is not clear that such questions should be asked when evaluating recidivism risk,
+particularly if they are unnecessary (and as our analysis indicates, they are unnecessary).
+%
+Further, the fact that COMPAS requires over 130 questions answered,
+many of whose answers may not be able to be verified,
+means that the computation of the COMPAS score is prone to errors.
+
 \begin{figure}[t!]
 % left lower right upper
 \begin{center}
@@ -309,6 +329,35 @@ By default, CART uses complexity parameter ${cp = 0.01}$ and C4.5 uses complexit
 We use the same antecedent sets as input to the two rule list learning algorithms, CORELS and SBRL;
 for the other algorithms, the inputs are binary feature sets corresponding to the
 single clause antecedents in the aforementioned antecedent sets (see Appendix~\ref{appendix:data}).
+
+Figure~\ref{fig:comparison} shows that for the ProPublica dataset (left),
+there were no statistically significant differences in test accuracies across algorithms;
+the difference between folds was far larger than the difference between algorithms.
+%
+For the NYCLU dataset (right), the differences between algorithms are more significant,
+with CART, random forests, and CORELS performing the best.
+%
+We conclude that CORELS produces models whose accuracy is comparable to or better than
+those found via other algorithms.
+
+Figures~\ref{fig:sparsity-compas} and~\ref{fig:sparsity-weapon} summarize differences
+in predictive performance and model size
+for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
+%
+Here, we vary different algorithm parameters, and increase the number of iterations for SBRL to 10,000.
+%
+For two-year recidivism prediction with the ProPublica dataset (Figure~\ref{fig:sparsity-compas}),
+we plot both training and test accuracy,
+as a function of the number of leaves in the learned model.
+%
+Due to class imbalance for the weapon prediction problem with the NYCLU stop-and-frisk dataset
+(Figure~\ref{fig:sparsity-weapon}), we plot both true positive rate (TPR) and false positive rate (FPR),
+again as a function of the number of leaves.
+%
+For both problems, CORELS can learn short rule lists without sacrificing predictive performance.
+%
+For listings of example optimal rule lists that correspond to the results
+for CORELS summarized here, see Appendix~\ref{appendix:examples}.
 
 \begin{figure}[t!]
 \begin{center}
@@ -394,35 +443,6 @@ C4.5 finds large models for all tested parameters.
 }
 \label{fig:sparsity-weapon}
 \end{figure}
-
-Figure~\ref{fig:comparison} shows that for the ProPublica dataset (left),
-there were no statistically significant differences in test accuracies across algorithms;
-the difference between folds was far larger than the difference between algorithms.
-%
-For the NYCLU dataset (right), the differences between algorithms are more significant,
-with CART, random forests, and CORELS performing the best.
-%
-We conclude that CORELS produces models whose accuracy is comparable to or better than
-those found via other algorithms.
-
-Figures~\ref{fig:sparsity-compas} and~\ref{fig:sparsity-weapon} summarize differences
-in predictive performance and model size
-for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
-%
-Here, we vary different algorithm parameters, and increase the number of iterations for SBRL to 10,000.
-%
-For two-year recidivism prediction with the ProPublica dataset (Figure~\ref{fig:sparsity-compas}),
-we plot both training and test accuracy,
-as a function of the number of leaves in the learned model.
-%
-Due to class imbalance for the weapon prediction problem with the NYCLU stop-and-frisk dataset
-(Figure~\ref{fig:sparsity-weapon}), we plot both true positive rate (TPR) and false positive rate (FPR),
-again as a function of the number of leaves.
-%
-For both problems, CORELS can learn short rule lists without sacrificing predictive performance.
-%
-For listings of example optimal rule lists that correspond to the results
-for CORELS summarized here, see Appendix~\ref{appendix:examples}.
 
 \subsection{CORELS execution traces, for different regularization parameters}
 \label{sec:reg-param}
@@ -569,11 +589,12 @@ CORELS has already evaluated and whose children the algorithm plans to evaluate 
 As an execution progresses, longer prefixes are placed in the queue;
 as~$\Reg$ decreases, the algorithm must spend more time evaluating longer and longer prefixes.
 
+%\newpage
 \subsection{Efficacy of CORELS algorithm optimizations}
 \label{sec:ablation}
 
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}
-\begin{table}[b!]
+\begin{table}[t!]
 \centering
 %\begin{centering}
 Per-component performance improvement (ProPublica dataset) \\
@@ -684,7 +705,6 @@ The execution without the equivalent points bound (bottom right) is incomplete.
 \label{fig:queue}
 \end{figure}
 
-
 Table~\ref{tab:ablation} provides summary statistics for experiments using the full
 CORELS implementation (first row) and five variants (subsequent rows) that each remove a specific optimization:
 %
@@ -754,8 +774,6 @@ and also Figure~\ref{fig:queue-weapon}.
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
-%trim={0mm 10mm 0mm 20mm},
-%\includegraphics[width=0.94\textwidth]{figs/weapon_ablation-queue.pdf}
 \includegraphics[trim={0mm 0mm 0mm 15mm}, width=\textwidth]{figs/weapon_ablation-queue.pdf}
 \end{center}
 \vspace{-5mm}
@@ -880,7 +898,8 @@ requires more than an hour, \ie orders of magnitude more time, to complete (thic
 \subsection{Algorithmic Speedup}
 \label{sec:speedup}
 
-\begin{table}[t!]
+\begin{table}[b!]
+\vspace{5mm}
 \centering
 \begin{tabular}{l|c|c|r l}
 Algorithmic & Max evaluated & Lower bound & Predicted&runtime \\
