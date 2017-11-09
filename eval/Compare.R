@@ -13,16 +13,38 @@
 ## 6) RF (Random Forests)
 ## 7) RIPPER (Repeated Incremental Pruning to Produce Error Reduction)
 
+# increase Java Heap size, e.g., see
+# https://stackoverflow.com/questions/21937640/handling-java-lang-outofmemoryerror-when-writing-to-excel-from-r
+library(rJava)
+options(java.parameters = "-Xmx12000m")
+
+# garbage collection, also from above link
+jgc <- function()
+{
+  .jcall("java/lang/System", method = "gc")
+}
+
+confusionMatrix <- function(pos, neg, predpos, predneg) {
+    tp <- sum(pos & predpos)
+    fp <- sum(neg & predpos)
+    fn <- sum(pos & predneg)
+    tn <- sum(neg & predneg)
+    tpr <- tp / (tp + fn)
+    fpr <- fp / (fp + tn)
+    printf("%d %d %d %d %d %1.5f %1.5f %1.5f\n", nn, tp, fp, fn, tn, tpr, fpr, (tp + tn) / (tp + tn + fp + fn))
+    c(tp, fp, fn, tn, tpr, fpr)
+}
 
 printf <- function(...) cat(sprintf(...))
 
 args = commandArgs(TRUE)
 if (length(args)  == 0) {
-    stop(sprintf("Usage: Compare.R [dataset] e.g. Compare.R compas_0\n"))
+    stop(sprintf("Usage: Compare.R [dataset] [outfile] e.g. Compare.R compas_0 compas_compare.csv\n"))
 }
 
 # 'dataset' used to represent dataset
 fname <- args[1]
+foutput <- args[2]
 
 printf("Assumes data is in data/CrossValidation\n")
 printf("Running %s_{train|test}-binary.csv ", fname)
@@ -33,7 +55,7 @@ traincsv <- paste(datadir, sprintf("%s_train-binary.csv", fname), sep = "/")
 testcsv <- paste(datadir, sprintf("%s_test-binary.csv", fname), sep = "/")
 
 list.of.packages <- c("RWeka", "ggplot2", "gbm", "kernlab", "ada",
-                      "svmRadial", "rpart", "randomForest")
+                      "rpart", "randomForest")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if (length(new.packages) > 0)
     install.packages(new.packages,
@@ -63,7 +85,12 @@ testData$Class <-factor(testData$Class, labels=sortednames)
 trainDataWOClass <- subset(trainData, select=-c(Class))
 testDataWOClass <- subset(testData, select=-c(Class))
 
+nn <- length(testData$Class)
+neg <- as.numeric(testData$Class) == 1
+pos <- as.numeric(testData$Class) == 2
+
 results <- c()
+resultsTable <- data.frame(stringsAsFactors=F)
 
 ## Logistic Regression
 glmModel <- glm(Class ~ . , family=binomial(link="logit"), data=as.data.frame(trainData))
@@ -72,6 +99,10 @@ pred.glmModel <- factor(round(predict(glmModel, newdata=as.data.frame(testDataWO
 glmAcc <- sum(testData$Class == pred.glmModel)/length(testData$Class)
 printf("GLM accuracy: %.4f\n", glmAcc)
 results <- c(results, glmAcc)
+predneg <- as.numeric(pred.glmModel) == 1
+predpos <- as.numeric(pred.glmModel) == 2
+cm <- confusionMatrix(pos, neg, predpos, predneg)
+resultsTable <- rbind(resultsTable, list(fname, "GLM", 0., 0., 0., glmAcc, 0, 0., nn), cm)
 
 ## Support Vector Machines:
 svmModel <- ksvm(x=as.matrix(trainDataWOClass), y=as.factor(trainData$Class), kernel="rbfdot")
@@ -79,6 +110,10 @@ pred.svmModel <- predict(svmModel, newdata=testDataWOClass, type="response")
 svmAcc <- sum(testData$Class == pred.svmModel)/length(testData$Class)
 printf("SVM (with RBF kernel) result: %.4f\n", svmAcc)
 results <- c(results, svmAcc)
+predneg <- as.numeric(pred.svmModel) == 1
+predpos <- as.numeric(pred.svmModel) == 2
+cm <- confusionMatrix(pos, neg, predpos, predneg)
+resultsTable <- rbind(resultsTable, list(fname, "SVM", 0., 0., 0., svmAcc, 0, 0., nn), cm)
 
 ## Adaboost
 boostModel <- ada(x = trainDataWOClass, y=trainData$Class)
@@ -86,6 +121,10 @@ pred.boostModel <- predict(boostModel, newdata=testDataWOClass)
 boostAcc <- sum(testData$Class == pred.boostModel)/length(testData$Class)
 printf("Adaboost result: %.4f\n", boostAcc)
 results <- c(results, boostAcc)
+predneg <- as.numeric(pred.boostModel) == 1
+predpos <- as.numeric(pred.boostModel) == 2
+cm <- confusionMatrix(pos, neg, predpos, predneg)
+resultsTable <- rbind(resultsTable, list(fname, "AdaBoost", 0., 0., 0., boostAcc, 0, 0., nn), cm)
 
 ## CART
 cartModel <- rpart(Class ~ . , data=as.data.frame(trainData))
@@ -93,6 +132,10 @@ pred.cartModel <- round(predict(cartModel, newdata=as.data.frame(testDataWOClass
 cartAcc <- sum(testData$Class == factor(pred.cartModel[,"X1"], labels=sortednames))/length(testData$Class)
 printf("CART result: %.4f\n", cartAcc)
 results <- c(results, cartAcc)
+predneg <- as.numeric(factor(pred.cartModel[,"X1"], labels=sortednames)) == 1
+predpos <- as.numeric(factor(pred.cartModel[,"X1"], labels=sortednames)) == 2
+cm <- confusionMatrix(pos, neg, predpos, predneg)
+resultsTable <- rbind(resultsTable, list(fname, "CART", 0., 0.01, 0., cartAcc, 0, 0., nn), cm)
 
 ## C4.5
 data_train_fac <- as.data.frame(trainData)
@@ -102,6 +145,11 @@ pred.c45Model <- predict(c45_model, newdata=as.data.frame(testDataWOClass), type
 c45Acc <- sum(testData$Class == pred.c45Model)/length(testData$Class)
 printf("C4.5 result: %.4f\n", c45Acc)
 results <- c(results, c45Acc)
+predneg <- as.numeric(pred.c45Model) == 1
+predpos <- as.numeric(pred.c45Model) == 2
+cm <- confusionMatrix(pos, neg, predpos, predneg)
+resultsTable <- rbind(resultsTable, list(fname, "C4.5", 0.25, 0., 0., c45Acc, 0, 0., nn), cm)
+
 
 # RandomForests
 rfModel <- randomForest(x=trainDataWOClass, y=as.factor(trainData$Class))
@@ -109,6 +157,10 @@ pred.rfModel <- predict(rfModel, newdata=as.data.frame(testDataWOClass), type="c
 rfAcc <- sum(testData$Class == pred.rfModel)/length(testData$Class)
 printf("RandomForests result: %.4f\n", rfAcc)
 results <- c(results, rfAcc)
+predneg <- as.numeric(pred.rfModel) == 1
+predpos <- as.numeric(pred.rfModel) == 2
+cm <- confusionMatrix(pos, neg, predpos, predneg)
+resultsTable <- rbind(resultsTable, list(fname, "RF", 0., 0., 0., rfAcc, 0, 0., nn), cm)
 
 ## RIPPER
 #ripModel <- JRip(Class ~ . , data=as.data.frame(trainData))
@@ -118,3 +170,10 @@ results <- c(results, rfAcc)
 #results <- c(results, ripAcc)
 
 printf("%s", cat(results))
+
+## Write out results
+colnames(resultsTable) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy", "ntest", "TP", "FP", "FN", "TN", "TPR", "FPR")
+
+isNewFile <- is.na(file.info(foutput)$size) || file.info(foutput)$size == 0
+write.table(resultsTable, foutput, row.names=F, col.names=isNewFile,
+            append=!isNewFile, quote = F, sep=",")
