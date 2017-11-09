@@ -33,7 +33,7 @@ can run comfortably on smaller machines, \eg a laptop with 16~GB~RAM.
 Our evaluation focuses on two socially-important prediction problems associated
 with recent, publicly-available datasets.
 
-\textbf{ProPublica recidivism dataset.}
+\textbf{Recicidivism prediction.}
 For our first problem, we predict which individuals in the ProPublica COMPAS
 dataset~\citep{LarsonMaKiAn16} recidivate within two years.
 This dataset contains records for all offenders in Broward County, Florida
@@ -51,9 +51,34 @@ on average (folds ranged from containing 121 to 123 antecedents).
 We also consider a second, similar antecedent set in~\S\ref{sec:examples},
 derived from a superset of Feature set~A that includes~4 additional binary features (Feature Set~B).
 
-\textbf{NYCLU stop-and-frisk dataset.} For our second problem, we use
-the NYCLU 2014 stop-and-frisk dataset~\citep{nyclu:2014} to predict
-whether a weapon will be found on a stopped individual who is frisked or searched.
+\textbf{Weapon prediction.} For our second problem, we use New York City
+stop-and-frisk data to predict whether a weapon will be found on a stopped
+individual who is frisked or searched.
+%
+For experiments in[??FIXME??],
+we compile data from a database maintained by the New York Police Department (NYPD)~\citep{nypd},
+from years 2008-2012, following~\citet{Goel16}.
+%
+Starting from 2,941,390 records, each describing an incident involving
+a stopped person, we first extract 376,488 records where the suspected
+crime mentioned criminal possession of a weapon (CPW).
+%('cpw' in c) or ('c.p.w.' in c)
+%
+From these, we next we identify a subset of 325,800 records for which the
+individual was frisked and/or searched; of these, criminal possession of a weapon
+was identified in only 10,885 instances (about 3.3\%).
+%
+Resampling due to class imbalance, for 10-fold cross-validation, yields training sets
+that each contain 566,839 datapoints.
+%
+From a set of 5 categorical features, we form a set of ${M=28}$ single-clause antecedents
+that we use as input to CORELS.
+
+For further details about these datasets, preprocessing steps, and antecedent mining,
+see Appendix~\ref{appendix:data}.
+
+For experiments in the remaining sections, we use a smaller stop-and-frisk dataset,
+derived by the NYCLU from the NYPD's 2014 data~\citep{nyclu:2014}.
 %
 From the original dataset of 45,787 records, each describing an incident involving
 a stopped person, we identify a subset of 29,595 records for which the individual
@@ -70,7 +95,7 @@ that we use in our experiments below.
 For further details about these datasets, preprocessing steps, and antecedent mining,
 see Appendix~\ref{appendix:data}.
 %
-Our choice of, and approach to, the weapon prediction problem is inspired by the work
+Our choice of, and approach to, the weapon prediction problem is influenced by the work
 of~\citet{Goel16}, who develop regression models to analyze racial disparities
 in New York City's stop-and-frisk policy for a related, larger dataset.
 %
@@ -307,6 +332,38 @@ across 10 cross-validation folds.
 %
 }
 \label{fig:tpr-fpr}
+\end{figure}
+
+\subsection{Comparison of CORELS a heuristic model for weapon prediction}
+\label{sec:frisk}
+
+\begin{figure}[t!]
+\begin{center}
+% left lower right upper
+\includegraphics[trim={12mm, 0mm, 24mm, 5mm},
+width=0.9\textwidth]{figs/cpw_folds.pdf}
+\vspace{6mm}
+\includegraphics[trim={12mm, 0mm, 24mm, 0mm},
+width=0.9\textwidth]{figs/cpw_tpr_fpr.pdf}
+\end{center}
+\caption{NYPD stop-and-frisk dataset.
+(Top)  Fraction of weapons recovered as a function of the fraction of stops
+where the individual was frisked and/or searched,
+for various models learned by CORELS (red markers) and the heuristic model by~\citet{Goel16}.
+%
+Interestingly, the models learned by CORELS span a region that is not accessed
+by the heuristic model; the heuristic model would require \dots
+%
+The region is notable, and possibly desirable, since it includes models that
+recover (${\Reg = 0.005}$ bright red) \dots
+%
+The results we report for the heuristic model (blue markers)
+are our reproduction of the results reported in Figure 9 by~\citet{Goel16}
+(first four open circles, from left to right; we exclude the trivial open circle
+showing 100\% of weapons recovered at 100\% of stops, obtained by setting the threshold at 0).
+(Bottom)
+}
+\label{fig:frisk}
 \end{figure}
 
 \subsection{Predictive performance and model size for CORELS and other algorithms}
