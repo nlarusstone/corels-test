@@ -17,7 +17,7 @@ printf 'Running Cross Validation folds for %s\n' "$dataset"
 
 rm $outf
 
-temp_f="random_file.txt"
+#temp_f="random_file.txt"
 for i in `seq 0 9`;
 do
     cv_fold=${dataset}_${i}
@@ -51,5 +51,5 @@ done
 #  python eval_model.py $dataset --minor -c 2 -p 1 -r $R -n 100000000 --sparsity $outf >> $temp_f 2>&1
 #done
 
-rm $temp_f
+#rm $temp_f
 

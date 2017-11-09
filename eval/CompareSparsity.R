@@ -9,6 +9,16 @@
 ## 2) C4.5
 ## 3) RIPPER
 
+# increase Java Heap size, e.g., see
+# https://stackoverflow.com/questions/21937640/handling-java-lang-outofmemoryerror-when-writing-to-excel-from-r
+library(rJava)
+options(java.parameters = "-Xmx12000m")
+
+# garbage collection, also from above link
+jgc <- function()
+{
+  .jcall("java/lang/System", method = "gc")
+}
 
 printf <- function(...) cat(sprintf(...))
 
@@ -114,7 +124,7 @@ if (startsWith(fname, "adult")) {
     Cs <- c(0.00001, 0.0001, 0.001, 0.01, 0.1)
 } else if (startsWith(fname, "frisk")) {
     Cs <- c(0.00001, 0.0001, 0.0005, 0.001)
-} else if (startsWith(fname, "weapon")) {
+} else if (startsWith(fname, "weapon") || startsWith(fname, "cpw")) {
     Cs <- c(0.00001, 0.0001, 0.001)
 } else {
     Cs <- c(0.05, 0.15, 0.25, 0.35, 0.45)
@@ -155,8 +165,12 @@ printf("%s", cat(c45Accs, "\n"))
 printf("%s", cat(c45Leaves, "\n"))
 printf("%s", cat(c45TrainAccs, "\n"))
 
+# garbage collection
+gc()
+jgc()
+
 ## RIPPER
-if (!(startsWith(fname, "weapon"))) {
+if (!(startsWith(fname, "weapon")) && !(startsWith(fname, "cpw"))) {
     ripResults <- data.frame(stringsAsFactors=F)
     ripModel <- JRip(Class ~ . , data=as.data.frame(trainData))
 
@@ -196,7 +210,7 @@ write.table(cartResults, foutput, row.names=F, col.names=isNewFile,
             append=!isNewFile, quote = F, sep=",")
 write.table(c45Results, foutput, row.names=F, col.names=F, append=T,
             quote = F, sep=",")
-if (!(startsWith(fname, "weapon"))) {
+if (!(startsWith(fname, "weapon")) && !(startsWith(fname, "cpw"))) {
     write.table(ripResults, foutput, row.names=F, col.names=F, append=T,
                 quote = F, sep=",")
 }
