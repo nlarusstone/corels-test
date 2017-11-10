@@ -81,8 +81,8 @@ for fold in range(nfolds):
         pylab.plot(imap[i] + 0.5, fpr[i], markersize=7, marker=marker[i], color=cvec[i], markeredgewidth=0, linestyle="None")
 
 pylab.figure(2)
-pylab.axis([0, 0.4, 0, 0.65])
-pylab.plot([0, 0.4], [0.5, 0.5], 'k:')
+pylab.axis([0, 0.35, 0, 0.65])
+pylab.plot([0, 0.35], [0.5, 0.5], 'k:')
 pylab.xlabel('Fraction of stops', fontsize=fs)
 pylab.ylabel('Fraction recovered', fontsize=fs)
 pylab.title('Fraction of weapons recovered', fontsize=fs)
