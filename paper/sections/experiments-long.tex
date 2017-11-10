@@ -55,7 +55,7 @@ derived from a superset of Feature set~A that includes~4 additional binary featu
 stop-and-frisk data to predict whether a weapon will be found on a stopped
 individual who is frisked or searched.
 %
-For experiments in[??FIXME??],
+For experiments in [??FIXME??],
 we compile data from a database maintained by the New York Police Department (NYPD)~\citep{nypd},
 from years 2008-2012, following~\citet{Goel16}.
 %
@@ -71,13 +71,10 @@ was identified in only 10,885 instances (about 3.3\%).
 Resampling due to class imbalance, for 10-fold cross-validation, yields training sets
 that each contain 566,839 datapoints.
 %
-From a set of 5 categorical features, we form a set of ${M=28}$ single-clause antecedents
-that we use as input to CORELS.
+From a set of 5 categorical features, we form a set of [??FIXME??] single-clause antecedents
+that we use as input to CORELS. [??FIXME?? actually we have 2 feature sets]
 
-For further details about these datasets, preprocessing steps, and antecedent mining,
-see Appendix~\ref{appendix:data}.
-
-For experiments in the remaining sections, we use a smaller stop-and-frisk dataset,
+For experiments in [??FIXME??], we use a smaller stop-and-frisk dataset,
 derived by the NYCLU from the NYPD's 2014 data~\citep{nyclu:2014}.
 %
 From the original dataset of 45,787 records, each describing an incident involving
@@ -273,6 +270,24 @@ a mean accuracy of~0.660, with standard deviation~0.019.
 %
 %Although CORELS is less likely to predict a false positive for black individuals in this case, our primary advantage comes from the fact that our model can be easily inspected to determine why the prediction rates are different across races (or any other category).
 
+\begin{figure}[t!]
+% left lower right upper
+\begin{center}
+\includegraphics[trim={35mm, 0mm, 40mm, 0mm},
+width=0.9\textwidth]{figs/compare_corels_compas.pdf}
+\end{center}
+\caption{Comparison of TPR and FPR (left), as well as TNR and FNR (right),
+for different races in the ProPublica dataset, for CORELS and COMPAS,
+across 10 cross-validation folds.
+%
+%CORELS has a lower FPR for black individuals in the dataset than COMPAS, as well as a lower TPR.
+%
+%Both CORELS and COMPAS have a significantly higher FPR rate for black indviduals than white individuals--despite CORELS producing optimal rule lists without explicit race features.
+%
+}
+\label{fig:tpr-fpr}
+\end{figure}
+
 Figure~\ref{fig:tpr-fpr} shows that CORELS and COMPAS perform similarly across both black and white individuals.
 %
 Both algorithms have much higher true positive rates (TPR's) and false positive rates (FPRs) for blacks than whites (left), and higher true negative rates (TNR's) and false negative rates (FNRs) for whites than blacks (right).
@@ -316,35 +331,19 @@ Further, the fact that COMPAS requires over~130 questions answered,
 many of whose answers may not be able to be verified,
 means that the computation of the COMPAS score is prone to errors.
 
-\begin{figure}[t!]
-% left lower right upper
-\begin{center}
-\includegraphics[trim={35mm, 0mm, 40mm, 0mm},
-width=0.9\textwidth]{figs/compare_corels_compas.pdf}
-\end{center}
-\caption{Comparison of TPR and FPR (left), as well as TNR and FNR (right),
-for different races in the ProPublica dataset, for CORELS and COMPAS,
-across 10 cross-validation folds.
-%
-%CORELS has a lower FPR for black individuals in the dataset than COMPAS, as well as a lower TPR.
-%
-%Both CORELS and COMPAS have a significantly higher FPR rate for black indviduals than white individuals--despite CORELS producing optimal rule lists without explicit race features.
-%
-}
-\label{fig:tpr-fpr}
-\end{figure}
-
 \subsection{Comparison of CORELS a heuristic model for weapon prediction}
 \label{sec:frisk}
+
+[??FIXME??]
 
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
 \includegraphics[trim={12mm, 0mm, 24mm, 5mm},
-width=0.9\textwidth]{figs/cpw_folds.pdf}
+width=0.8\textwidth]{figs/cpw_folds.pdf}
 \vspace{6mm}
 \includegraphics[trim={12mm, 0mm, 24mm, 0mm},
-width=0.9\textwidth]{figs/cpw_tpr_fpr.pdf}
+width=0.8\textwidth]{figs/cpw_tpr_fpr.pdf}
 \end{center}
 \caption{NYPD stop-and-frisk dataset.
 Top: Fraction of weapons recovered as a function of the fraction of stops
