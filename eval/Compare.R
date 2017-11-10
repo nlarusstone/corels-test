@@ -32,7 +32,7 @@ confusionMatrix <- function(pos, neg, predpos, predneg) {
     tpr <- tp / (tp + fn)
     fpr <- fp / (fp + tn)
     printf("%d %d %d %d %d %1.5f %1.5f %1.5f\n", nn, tp, fp, fn, tn, tpr, fpr, (tp + tn) / (tp + tn + fp + fn))
-    c(tp, fp, fn, tn, tpr, fpr)
+    list(tp, fp, fn, tn, tpr, fpr)
 }
 
 printf <- function(...) cat(sprintf(...))
@@ -90,7 +90,7 @@ neg <- as.numeric(testData$Class) == 1
 pos <- as.numeric(testData$Class) == 2
 
 results <- c()
-resultsTable <- data.frame(stringsAsFactors=F)
+resultsTable <- data.frame(Fold=character(), Method=character(), C=double(), cp=double(), R=double(), accuracy=double(), leaves=integer(), train_accuracy=double(), ntest=integer(), TP=integer(), FP=integer(), FN=integer(), TN=integer(), TPR=double(), FPR=double(), stringsAsFactors=F)
 
 ## Logistic Regression
 glmModel <- glm(Class ~ . , family=binomial(link="logit"), data=as.data.frame(trainData))
@@ -102,7 +102,7 @@ results <- c(results, glmAcc)
 predneg <- as.numeric(pred.glmModel) == 1
 predpos <- as.numeric(pred.glmModel) == 2
 cm <- confusionMatrix(pos, neg, predpos, predneg)
-resultsTable <- rbind(resultsTable, list(fname, "GLM", 0., 0., 0., glmAcc, 0, 0., nn), cm)
+resultsTable[1,] <- c(list(fname, "GLM", 0., 0., 0., glmAcc, 0, 0., nn), cm)
 
 ## Support Vector Machines:
 svmModel <- ksvm(x=as.matrix(trainDataWOClass), y=as.factor(trainData$Class), kernel="rbfdot")
@@ -113,7 +113,7 @@ results <- c(results, svmAcc)
 predneg <- as.numeric(pred.svmModel) == 1
 predpos <- as.numeric(pred.svmModel) == 2
 cm <- confusionMatrix(pos, neg, predpos, predneg)
-resultsTable <- rbind(resultsTable, list(fname, "SVM", 0., 0., 0., svmAcc, 0, 0., nn), cm)
+resultsTable[2,] <- c(list(fname, "SVM", 0., 0., 0., svmAcc, 0, 0., nn), cm)
 
 ## Adaboost
 boostModel <- ada(x = trainDataWOClass, y=trainData$Class)
@@ -124,7 +124,7 @@ results <- c(results, boostAcc)
 predneg <- as.numeric(pred.boostModel) == 1
 predpos <- as.numeric(pred.boostModel) == 2
 cm <- confusionMatrix(pos, neg, predpos, predneg)
-resultsTable <- rbind(resultsTable, list(fname, "AdaBoost", 0., 0., 0., boostAcc, 0, 0., nn), cm)
+resultsTable[3,] <- c(c(fname, "AdaBoost", 0., 0., 0., boostAcc, 0, 0., nn), cm)
 
 ## CART
 cartModel <- rpart(Class ~ . , data=as.data.frame(trainData))
@@ -135,7 +135,7 @@ results <- c(results, cartAcc)
 predneg <- as.numeric(factor(pred.cartModel[,"X1"], labels=sortednames)) == 1
 predpos <- as.numeric(factor(pred.cartModel[,"X1"], labels=sortednames)) == 2
 cm <- confusionMatrix(pos, neg, predpos, predneg)
-resultsTable <- rbind(resultsTable, list(fname, "CART", 0., 0.01, 0., cartAcc, 0, 0., nn), cm)
+resultsTable[4,] <- c(list(fname, "CART", 0., 0.01, 0., cartAcc, 0, 0., nn), cm)
 
 ## C4.5
 data_train_fac <- as.data.frame(trainData)
@@ -148,7 +148,7 @@ results <- c(results, c45Acc)
 predneg <- as.numeric(pred.c45Model) == 1
 predpos <- as.numeric(pred.c45Model) == 2
 cm <- confusionMatrix(pos, neg, predpos, predneg)
-resultsTable <- rbind(resultsTable, list(fname, "C4.5", 0.25, 0., 0., c45Acc, 0, 0., nn), cm)
+resultsTable[5,] <- c(list(fname, "C4.5", 0.25, 0., 0., c45Acc, 0, 0., nn), cm)
 
 
 # RandomForests
@@ -160,7 +160,7 @@ results <- c(results, rfAcc)
 predneg <- as.numeric(pred.rfModel) == 1
 predpos <- as.numeric(pred.rfModel) == 2
 cm <- confusionMatrix(pos, neg, predpos, predneg)
-resultsTable <- rbind(resultsTable, list(fname, "RF", 0., 0., 0., rfAcc, 0, 0., nn), cm)
+resultsTable[6,] <- c(list(fname, "RF", 0., 0., 0., rfAcc, 0, 0., nn), cm)
 
 ## RIPPER
 #ripModel <- JRip(Class ~ . , data=as.data.frame(trainData))
@@ -172,7 +172,6 @@ resultsTable <- rbind(resultsTable, list(fname, "RF", 0., 0., 0., rfAcc, 0, 0., 
 printf("%s", cat(results))
 
 ## Write out results
-colnames(resultsTable) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy", "ntest", "TP", "FP", "FN", "TN", "TPR", "FPR")
 
 isNewFile <- is.na(file.info(foutput)$size) || file.info(foutput)$size == 0
 write.table(resultsTable, foutput, row.names=F, col.names=isNewFile,

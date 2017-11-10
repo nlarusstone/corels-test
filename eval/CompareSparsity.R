@@ -202,7 +202,7 @@ if (!(startsWith(fname, "weapon")) && !(startsWith(fname, "cpw"))) {
 ## Write out results
 colnames(cartResults) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy", "ntest", "TP", "FP", "FN", "TN", "TPR", "FPR")
 colnames(c45Results) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy", "ntest", "TP", "FP", "FN", "TN", "TPR", "FPR")
-if (!(startsWith(fname, "weapon"))) {
+if (!(startsWith(fname, "weapon")) && !(startsWith(fname, "cpw"))) {
     colnames(ripResults) <- c("Fold", "Method", "C", "cp", "R", "accuracy", "leaves", "train_accuracy", "ntest", "TP", "FP", "FN", "TN", "TPR", "FPR")
 }
 isNewFile <- is.na(file.info(foutput)$size) || file.info(foutput)$size == 0
