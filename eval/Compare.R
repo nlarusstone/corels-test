@@ -56,7 +56,7 @@ datadir <- "../data/CrossValidation"
 traincsv <- paste(datadir, sprintf("%s_train-binary.csv", fname), sep = "/")
 testcsv <- paste(datadir, sprintf("%s_test-binary.csv", fname), sep = "/")
 
-list.of.packages <- c("RWeka", "ggplot2", "gbm", "kernlab", "ada",
+list.of.packages <- c("RWeka", "ggplot2", "gbm", "kernlab", "ada", "adabag",
                       "rpart", "randomForest")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if (length(new.packages) > 0)
@@ -129,6 +129,9 @@ if (!(startsWith(fname, "cpw"))) {
 boostModel <- ada(x = trainDataWOClass, y=trainData$Class)
 pred.boostModel <- predict(boostModel, newdata=testDataWOClass)
 boostAcc <- sum(testData$Class == pred.boostModel)/length(testData$Class)
+#boostModel <- boosting(Class ~ ., data=as.data.frame(trainData))
+#pred.boostModel <- round(predict(boostModel, newdata=as.data.frame(testDataWOClass)))
+#boostAcc <- sum(testData$Class == factor(pred.boostModel[,"X1"], labels=sortednames))/length(testData$Class)
 printf("AdaBoost result: %.4f\n", boostAcc)
 results <- c(results, boostAcc)
 predneg <- as.numeric(pred.boostModel) == 1
@@ -136,7 +139,6 @@ predpos <- as.numeric(pred.boostModel) == 2
 cm <- confusionMatrix(pos, neg, predpos, predneg)
 nrows <- nrows + 1
 resultsTable[nrows,] <- c(c(fname, "AdaBoost", 0., 0., 0., boostAcc, 0, 0., nn), cm)
-warnings()
 
 ## CART
 cartModel <- rpart(Class ~ . , data=as.data.frame(trainData))
