@@ -24,7 +24,7 @@ do
     sbrl_run=$(printf '%s -t 3 -d 1 -S 0 %s_train.out %s_train.label %s_test.out %s_test.label' "$sbrl" "$cv_fold_path" "$cv_fold_path" "$cv_fold_path" "$cv_fold_path")
     #echo "RUNNING SBRL"
     #eval "$sbrl_run" >> $temp_f 2>&1
-    echo $(tail -n 1 $temp_f)
+    #echo $(tail -n 1 $temp_f)
     echo "RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER"
     Rscript Compare.R $cv_fold $outf #>> $temp_f 2>&1
     #echo $(tail -n 1 $temp_f)
