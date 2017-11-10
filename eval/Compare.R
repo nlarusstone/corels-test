@@ -13,6 +13,8 @@
 ## 6) RF (Random Forests)
 ## 7) RIPPER (Repeated Incremental Pruning to Produce Error Reduction)
 
+options(warn=1)
+
 # increase Java Heap size, e.g., see
 # https://stackoverflow.com/questions/21937640/handling-java-lang-outofmemoryerror-when-writing-to-excel-from-r
 library(rJava)
@@ -71,12 +73,12 @@ library(randomForest)
 
 trainData <- read.csv(traincsv, header = TRUE, sep = ",", fileEncoding="UTF-8")
 testData <- read.csv(testcsv, header = TRUE, sep = ",")
-printf("TRAIN")
+printf("TRAIN\n")
 colnames(trainData)[ncol(trainData)] <- "Class"
-printf("TEST ncols: %d cols: ", ncol(trainData))
+printf("TEST ncols: %d cols: \n", ncol(trainData))
 printf(colnames(testData))
 colnames(testData)[ncol(trainData)] <- "Class"
-printf("DONE")
+printf("\nDONE\n")
 
 sortednames <- sort(make.names(unique(trainData$Class)))
 trainData$Class <-factor(trainData$Class, labels=sortednames)
@@ -92,6 +94,8 @@ pos <- as.numeric(testData$Class) == 2
 results <- c()
 resultsTable <- data.frame(Fold=character(), Method=character(), C=double(), cp=double(), R=double(), accuracy=double(), leaves=integer(), train_accuracy=double(), ntest=integer(), TP=integer(), FP=integer(), FN=integer(), TN=integer(), TPR=double(), FPR=double(), stringsAsFactors=F)
 
+nrows <- 0
+
 ## Logistic Regression
 glmModel <- glm(Class ~ . , family=binomial(link="logit"), data=as.data.frame(trainData))
 pred.glmModel <- factor(round(predict(glmModel, newdata=as.data.frame(testDataWOClass), type="response")),
@@ -102,29 +106,37 @@ results <- c(results, glmAcc)
 predneg <- as.numeric(pred.glmModel) == 1
 predpos <- as.numeric(pred.glmModel) == 2
 cm <- confusionMatrix(pos, neg, predpos, predneg)
-resultsTable[1,] <- c(list(fname, "GLM", 0., 0., 0., glmAcc, 0, 0., nn), cm)
+nrows <- nrows + 1
+resultsTable[nrows,] <- c(list(fname, "GLM", 0., 0., 0., glmAcc, 0, 0., nn), cm)
 
-## Support Vector Machines:
-svmModel <- ksvm(x=as.matrix(trainDataWOClass), y=as.factor(trainData$Class), kernel="rbfdot")
-pred.svmModel <- predict(svmModel, newdata=testDataWOClass, type="response")
-svmAcc <- sum(testData$Class == pred.svmModel)/length(testData$Class)
-printf("SVM (with RBF kernel) result: %.4f\n", svmAcc)
-results <- c(results, svmAcc)
-predneg <- as.numeric(pred.svmModel) == 1
-predpos <- as.numeric(pred.svmModel) == 2
-cm <- confusionMatrix(pos, neg, predpos, predneg)
-resultsTable[2,] <- c(list(fname, "SVM", 0., 0., 0., svmAcc, 0, 0., nn), cm)
+## Support Vector Machines
+if (!(startsWith(fname, "cpw"))) {
+    svmModel <- ksvm(x=as.matrix(trainDataWOClass), y=as.factor(trainData$Class), kernel="rbfdot")
+    pred.svmModel <- predict(svmModel, newdata=testDataWOClass, type="response")
+    print("%s", cat(testData$Class))
+    print("%s", cat(pred.svmModel))
+    svmAcc <- sum(testData$Class == pred.svmModel)/length(testData$Class)
+    printf("SVM (with RBF kernel) result: %.4f\n", svmAcc)
+    results <- c(results, svmAcc)
+    predneg <- as.numeric(pred.svmModel) == 1
+    predpos <- as.numeric(pred.svmModel) == 2
+    cm <- confusionMatrix(pos, neg, predpos, predneg)
+    nrows <- nrows + 1
+    resultsTable[nrows,] <- c(list(fname, "SVM", 0., 0., 0., svmAcc, 0, 0., nn), cm)
+}
 
-## Adaboost
+## AdaBoost
 boostModel <- ada(x = trainDataWOClass, y=trainData$Class)
 pred.boostModel <- predict(boostModel, newdata=testDataWOClass)
 boostAcc <- sum(testData$Class == pred.boostModel)/length(testData$Class)
-printf("Adaboost result: %.4f\n", boostAcc)
+printf("AdaBoost result: %.4f\n", boostAcc)
 results <- c(results, boostAcc)
 predneg <- as.numeric(pred.boostModel) == 1
 predpos <- as.numeric(pred.boostModel) == 2
 cm <- confusionMatrix(pos, neg, predpos, predneg)
-resultsTable[3,] <- c(c(fname, "AdaBoost", 0., 0., 0., boostAcc, 0, 0., nn), cm)
+nrows <- nrows + 1
+resultsTable[nrows,] <- c(c(fname, "AdaBoost", 0., 0., 0., boostAcc, 0, 0., nn), cm)
+warnings()
 
 ## CART
 cartModel <- rpart(Class ~ . , data=as.data.frame(trainData))
@@ -135,7 +147,8 @@ results <- c(results, cartAcc)
 predneg <- as.numeric(factor(pred.cartModel[,"X1"], labels=sortednames)) == 1
 predpos <- as.numeric(factor(pred.cartModel[,"X1"], labels=sortednames)) == 2
 cm <- confusionMatrix(pos, neg, predpos, predneg)
-resultsTable[4,] <- c(list(fname, "CART", 0., 0.01, 0., cartAcc, 0, 0., nn), cm)
+nrows <- nrows + 1
+resultsTable[nrows,] <- c(list(fname, "CART", 0., 0.01, 0., cartAcc, 0, 0., nn), cm)
 
 ## C4.5
 data_train_fac <- as.data.frame(trainData)
@@ -148,26 +161,35 @@ results <- c(results, c45Acc)
 predneg <- as.numeric(pred.c45Model) == 1
 predpos <- as.numeric(pred.c45Model) == 2
 cm <- confusionMatrix(pos, neg, predpos, predneg)
-resultsTable[5,] <- c(list(fname, "C4.5", 0.25, 0., 0., c45Acc, 0, 0., nn), cm)
+nrows <- nrows + 1
+resultsTable[nrows,] <- c(list(fname, "C4.5", 0.25, 0., 0., c45Acc, 0, 0., nn), cm)
 
 
 # RandomForests
 rfModel <- randomForest(x=trainDataWOClass, y=as.factor(trainData$Class))
 pred.rfModel <- predict(rfModel, newdata=as.data.frame(testDataWOClass), type="class")
 rfAcc <- sum(testData$Class == pred.rfModel)/length(testData$Class)
-printf("RandomForests result: %.4f\n", rfAcc)
+printf("Random Forests result: %.4f\n", rfAcc)
 results <- c(results, rfAcc)
 predneg <- as.numeric(pred.rfModel) == 1
 predpos <- as.numeric(pred.rfModel) == 2
 cm <- confusionMatrix(pos, neg, predpos, predneg)
-resultsTable[6,] <- c(list(fname, "RF", 0., 0., 0., rfAcc, 0, 0., nn), cm)
+nrows <- nrows + 1
+resultsTable[nrows,] <- c(list(fname, "RF", 0., 0., 0., rfAcc, 0, 0., nn), cm)
 
 ## RIPPER
-#ripModel <- JRip(Class ~ . , data=as.data.frame(trainData))
-##pred.ripModel <- predict(ripModel, newdata=as.data.frame(testDataWOClass), type="class")
-#ripAcc <- sum(testData$Class == pred.ripModel)/length(testData$Class)
-#printf("RIPPER result: %.4f\n", ripAcc)
-#results <- c(results, ripAcc)
+if (!(startsWith(fname, "weapon")) && !(startsWith(fname, "cpw"))) {
+    ripModel <- JRip(Class ~ . , data=as.data.frame(trainData))
+    pred.ripModel <- predict(ripModel, newdata=as.data.frame(testDataWOClass), type="class")
+    ripAcc <- sum(testData$Class == pred.ripModel)/length(testData$Class)
+    printf("RIPPER result: %.4f\n", ripAcc)
+    results <- c(results, ripAcc)
+    predneg <- as.numeric(pred.ripModel) == 1
+    predpos <- as.numeric(pred.ripModel) == 2
+    cm <- confusionMatrix(pos, neg, predpos, predneg)
+    nrows <- nrows + 1
+    resultsTable[nrows,] <- c(list(fname, "RF", 0., 0., 0., ripAcc, 0, 0., nn), cm)
+}
 
 printf("%s", cat(results))
 
