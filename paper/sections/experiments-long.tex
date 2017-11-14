@@ -288,35 +288,60 @@ across 10 cross-validation folds.
 \label{fig:tpr-fpr}
 \end{figure}
 
-Figure~\ref{fig:tpr-fpr} shows that CORELS and COMPAS perform similarly across both black and white individuals. Both algorithms have much higher true positive rates (TPR's) and false positive rates (FPRs) for blacks than whites (left), and higher true negative rates (TNR's) and false negative rates (FNRs) for whites than blacks (right). The fact that COMPAS has higher FPR's for blacks and higher FNR's for whites was a central observation motivating
-ProPublica's claim that COMPAS is racially biased~\citep{LarsonMaKiAn16}.
+Figure~\ref{fig:tpr-fpr} shows that CORELS and COMPAS perform similarly across both black and white individuals.
+%
+Both algorithms have much higher true positive rates (TPR's) and false positive rates (FPRs) for blacks than whites (left), and higher true negative rates (TNR's) and false negative rates (FNRs) for whites than blacks (right).
+%
+The fact that COMPAS has higher FPR's for blacks and higher FNR's for whites was a central observation motivating ProPublica's claim that COMPAS is racially biased~\citep{LarsonMaKiAn16}.
 %
 The fact that CORELS' models are so simple, with almost the same results as COMPAS, and do not contain anything except criminal history features and age, indicates possible explanations for the uneven predictions of both COMPAS and CORELS.
 %
-In particular, blacks tend to have longer criminal histories (on average 4.4 crimes for blacks versus 2.6 crimes for whites) within the dataset, leading to higher FPR's for blacks and lower FNR's for whites. This aspect of the data could entirely explain why Propublica concluded that COMPAS was racially biased. There are many definitions of fairness, and it is not clear whether CORELS's models are fair either, but it is much easier to debate about the fairness of a model when it is transparent. Additional fairness constraints or transparency constraints can be placed on CORELS' models if desired, though one would need to edit our bounds (\S\ref{sec:framework}) and implementation (\S\ref{sec:implementation}) in order to impose more constraints.
-
+In particular, blacks tend to have longer criminal histories within the dataset,
+(on average, 4.4 crimes for blacks versus~2.6 crimes for whites)
+leading to higher FPR's for blacks and higher FNR's for whites.
 %
+This aspect of the data could entirely explain why ProPublica concluded that COMPAS was racially biased.
+%
+There are many definitions of fairness, and it is not clear whether CORELS's models are fair either, but it is much easier to debate about the fairness of a model when it is transparent.
+%
+Additional fairness constraints or transparency constraints can be placed on CORELS' models if desired, though one would need to edit our bounds~(\S\ref{sec:framework}) and implementation~(\S\ref{sec:implementation}) in order to impose more constraints.
+
 Regardless of whether COMPAS is racially biased (which our analysis does not indicate is true as long as criminal history and age are allowed to be considered as features),
-COMPAS may have many other fairness defects that might be considered to be serious.
+COMPAS may have many other fairness defects that might be considered serious.
 %
 Many of COMPAS's survey questions are direct inquiries about socioeconomic status. For instance, COMPAS asks:
 ``Is it easy to get drugs in your neighborhood?,''
 ``How often do you have barely enough money to get by?,''
 ``Do you frequently get jobs that don't pay more than minimum wage?,''
 ``How often have you moved in the last~12 months?''
+%
 COMPAS's survey questions also ask about events that were not caused by the person who is being evaluated, such as:
-``If you lived with both parents and they later separated, how old were you at the time?”,
-``Was one of you parents ever sent to jail or prison?,
+``If you lived with both parents and they later separated, how old were you at the time?,''
+``Was one of you parents ever sent to jail or prison?,''
 ``Was your mother ever arrested, that you know of?"
 \citep{compas-survey:2016,AngwinLaMaKi16}.
 
+The fact that COMPAS requires over~130 questions to be answered, many of whose answers may not be verifiable, means that the computation of the COMPAS score is prone to errors.
+%
+Even the Arnold Foundation's ``public-safety assessment'' (PSA) score -- which is completely transparent, and has only~9 factors -- has been miscalculated in serious criminal trials, leading to a recent lawsuit~\citep{npr-bail:2017}.
+%
+It is substantially more difficult to obtain the information required to calculate COMPAS scores than PSA scores (with over~14 times the number of survey questions).
+%
+This significant discrepancy suggests that COMPAS scores are more fallible than PSA scores, as well as even simpler models, like those produced by CORELS.
+%
+Some of these problems could be alleviated by using only data within electronic records that can be automatically calculated, instead of using information entered by hand and/or collected via subjective surveys.
 
-The fact that COMPAS requires over 130 questions to be answered, many of whose answers may not be able to be verified, means that the computation of the COMPAS score is prone to errors. Even the Arnold Foundation's PSA score -- which is completely transparent, having only 9 factors -- has been miscalculated in serious criminal trials, leading to a recent lawsuit (https://www.npr.org/2017/08/18/543976003/did-a-bail-reform-algorithm-contribute-to-this-san-francisco-man-s-murder ). It is substantially more difficult to calculate COMPAS than the PSA (with over 14 times the number of survey questions), so one could imagine how many more errors could be made calculating COMPAS as opposed to the PSA (or even simpler models like those produced by CORELS). Some of these problems could be alleviated by using only data within electronic records that can be automatically calculated, instead of having clerks type the information by hand, or using subjective survey questions.
+The United States government pays Northpointe (now called equivant) to use COMPAS.
+%
+In light of our observations that CORELS is as accurate as COMPAS on a real-world dataset where COMPAS is used in practice, CORELS predicts similarly to COMPAS for both blacks and whites, and CORELS' models are completely transparent, it is not clear what value COMPAS scores possess.
+%
+Our experiments also indicate that the proprietary survey data required to compute COMPAS scores has not boosted its prediction accuracy above that of transparent models in practice.
 
-
-The United States government pays Northpointe (now called Equivant) to use COMPAS. In light of our observations that CORELS is as accurate as COMPAS on a real-world dataset where COMPAS is used in practice,  CORELS predicts similarly to COMPAS for both blacks and whites, and CORELS' models are completely transparent, it is not clear what the value of using COMPAS is. Our experiments also indicate that the proprietary survey data required to compute COMPAS has not boosted its prediction accuracy above that of transparent models in practice.
-
-Risk predictions are important for the integrity of the judicial system; judges cannot be expected to keep entire databases in their heads to calculate risks, whereas models (when used correctly) can help to ensure equity. Risk prediction models also have the potential to heavily impact how efficient the judicial system is, in terms of bail and parole decisions; efficiency in this case means that dangerous individuals are not released, whereas non-dangerous individuals are granted bail or parole. High stakes decisions, such as these, are ideal applications for machine learning algorithms that produce transparent models from high dimensional data.
+Risk predictions are important for the integrity of the judicial system; judges cannot be expected to keep entire databases in their heads to calculate risks, whereas models (when used correctly) can help to ensure equity.
+%
+Risk prediction models also have the potential to heavily impact how efficient the judicial system is, in terms of bail and parole decisions; efficiency in this case means that dangerous individuals are not released, whereas non-dangerous individuals are granted bail or parole.
+%
+High stakes decisions, such as these, are ideal applications for machine learning algorithms that produce transparent models from high dimensional data.
 
 Currently, justice system data does not support highly accurate risk predictions, but current risk models are useful in practice, and these risk predictions will become more accurate as more data and higher quality data are made available.
 
