@@ -22,6 +22,11 @@ nfolds = 10
 imap = [6, 5, 4, 3, 7, 2, 1, 0]
 names = 'Fold,Method,C,cp,R,accuracy,leaves,train_accuracy,ntest,TP,FP,FN,TN,TPR,FPR'.split(',')
 
+pylab.figure(3)
+pylab.plot(-1, -1, 'D', markerfacecolor='w', markeredgecolor='k', markersize=6, markeredgewidth=2)
+pylab.plot(-1, -1, 'D', markerfacecolor='k', markersize=8, markeredgewidth=1, markeredgecolor='gray')
+pylab.legend(('TPR (open)', 'FPR (solid)'), fontsize=fs, numpoints=1, loc='upper left', frameon=False, borderpad=0)
+
 for fold in range(nfolds):
     ct = []
     ll = []
@@ -111,7 +116,7 @@ pylab.axis([0, 0.35, 0, 0.65])
 pylab.plot([0, 0.35], [0.5, 0.5], 'k:')
 pylab.xlabel('Fraction of stops', fontsize=fs)
 pylab.ylabel('Fraction recovered', fontsize=fs)
-pylab.title('Fraction of weapons recovered', fontsize=fs)
+pylab.title('Fraction of weapons recovered (NYPD dataset)', fontsize=fs)
 pylab.xticks(fontsize=fs)
 pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 pylab.legend(legend, loc='lower right', fontsize=fs-2, frameon=False, numpoints=1, ncol=2)
@@ -119,7 +124,7 @@ pylab.savefig('../figs/cpw_folds.pdf')
 
 pylab.figure(3)
 #pylab.subplot(1, 2, 1)
-pylab.axis([0, 8, 0, 0.7])
+pylab.axis([0, 8, 0, 0.65])
 pylab.plot([0, 8], [0.5, 0.5], 'k:')
 #pylab.xticks(np.arange(0.5, 8, 1), ())
 pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
@@ -129,6 +134,6 @@ pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 #pylab.xticks(np.arange(0.5, 8, 1), [u'\u22654', u'\u22653', u'\u22652', '.01*', '.01', '.005*', '.005', u'\u22651'], rotation=25)
 pylab.xticks(np.arange(0.5, 8, 1), [u'Heuristic\n(T \u2265 4)', u'Heuristic\n(T \u2265 3)', u'Heuristic\n(T \u2265 2)', 'CORELS\n(.01, loc)', 'CORELS\n(.01)', 'CORELS\n(.005, loc)', 'CORELS\n(.005)', u'Heuristic\n(T \u2265 1)'])
 pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
-pylab.ylabel('Rate', fontsize=fs)
-pylab.title('TPR (open) and FPR (solid) for weapon prediction', fontsize=fs)
+pylab.ylabel('True or false positive rate', fontsize=fs)
+pylab.title('Comparison of CORELS and heuristic models (NYPD dataset)', fontsize=fs)
 pylab.savefig('../figs/cpw_tpr_fpr.pdf')
