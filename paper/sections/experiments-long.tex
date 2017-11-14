@@ -4,7 +4,7 @@
 Our experimental analysis addresses five questions:
 %
 How does CORELS' predictive performance compare to that of COMPAS scores
-and other algorithms? (\S\ref{sec:compas}, \S\ref{sec:sparsity})
+and other algorithms? (\S\ref{sec:compas}, \S\ref{sec:frisk}, and~\S\ref{sec:sparsity})
 %
 How does CORELS' model size compare to that of other algorithms? (\S\ref{sec:sparsity})
 %
@@ -17,7 +17,7 @@ How rapidly does CORELS prune the search space? (\S\ref{sec:reg-param} and \S\re
 %
 Before proceeding, we first describe our computational environment,
 as well as the datasets we use and prediction problems for each,
-and then show example optimal rule lists found by CORELS (\S\ref{sec:examples}).
+and then in Section~\ref{sec:examples} show example optimal rule lists found by CORELS.
 
 \textbf{Computational environment.}
 %\label{sec:environment}
@@ -73,6 +73,12 @@ that each contain 566,839 datapoints.
 %
 From a set of 5 categorical features, we form a set of [??FIXME??] single-clause antecedents
 that we use as input to CORELS. [??FIXME?? actually we have 2 feature sets]
+%
+Our choice of, and approach to, the weapon prediction problem is influenced by the work
+of~\citet{Goel16}, who develop regression models to analyze racial disparities
+in New York City's stop-and-frisk policy.
+%
+We compare directly to their heuristic models in Section~\ref{sec:frisk}.
 
 For experiments in [??FIXME??], we use a smaller stop-and-frisk dataset,
 derived by the NYCLU from the NYPD's 2014 data~\citep{nyclu:2014}.
@@ -91,15 +97,6 @@ that we use in our experiments below.
 
 For further details about these datasets, preprocessing steps, and antecedent mining,
 see Appendix~\ref{appendix:data}.
-%
-Our choice of, and approach to, the weapon prediction problem is influenced by the work
-of~\citet{Goel16}, who develop regression models to analyze racial disparities
-in New York City's stop-and-frisk policy for a related, larger dataset.
-%
-In particular, the authors arrive at a simple and interpretable heuristic that
-could potentially help police officers more effectively decide when to
-frisk and/or search stopped individuals, \ie when such
-interventions are likely to discover criminal possession of a weapon.
 
 \subsection{Example optimal rule lists}
 \label{sec:examples}
@@ -348,6 +345,61 @@ Currently, justice system data does not support highly accurate risk predictions
 \subsection{Comparison of CORELS a heuristic model for weapon prediction}
 \label{sec:frisk}
 
+CORELS generates simple, accurate models for the task of weapon prediction,
+using the NYPD stop-and-frisk dataset.
+%
+Our approach offers a principled alternative to heuristic models proposed by~\citet{Goel16},
+who develop a series of regression models to analyze racial disparities
+in New York City's stop-and-frisk policy for a related, larger dataset.
+%
+In particular, the authors arrive at a heuristic that they suggest
+could potentially help police officers more effectively decide when to
+frisk and/or search stopped individuals, \ie when such
+interventions are likely to discover criminal possession of a weapon (CPW).
+%
+Starting from a full regression model with~7,705 variables, the authors reduce this to a
+smaller model with 98 variables; from this, they keep three variables with the largest coefficients.
+%
+This gives a heuristic model of the form ${ax + by + cz \ge T}$,
+where
+\begin{align}
+x &= \one[stop~reason = suspicious~object] \nn \\
+y &= \one[stop~reason = suspicious~bulge] \nn \\
+z &= \one[additional~circumstances = sights~and~sounds~of~criminal~activity], \nn
+\end{align}
+and~$T$ is a threshold, such that the model predicts CPW when the threshold is met or exceeded.
+%
+We focus on their approach that uses a single threshold, rather than precinct-specific thresholds.
+%
+To increase ease-of-use, the authors round the coefficients
+to the nearest integers, which gives ${(a, b, c) = (3, 1, 1)}$;
+this constrains the threshold to take one of six values, ${T \in \{0, 1, 2, 3, 4, 5\}}$.
+%
+To employ this heuristic model in the field,
+``\dots officers simply need to add at most three small, positive integers \dots
+and check whether the sum exceeds a fixed threshold\dots'' \citep{Goel16}.
+
+We showed examples of CORELS's models in Figures~\ref{fig} describe similarities and differences between models [??FIXME??]
+
+Figure~\ref{fig:frisk} directly compares various models learned by CORELS to the heuristic models,
+using the same dataset as~\citet{Goel16}.
+%
+The top subfigure plots the fraction of weapons recovered as a function of the fraction of
+stops where the individual was frisked and/or searched.
+%
+\citep{Goel16} target models that efficiently recover a majority of weapons
+(while also minimizing racial disparities, which we do not address here).
+%
+
+%
+Interestingly, the models learned by CORELS span a region that is not accessed
+by the heuristic model; the heuristic model would require \dots
+%
+The region is notable, and possibly desirable, since it includes models that
+recover (${\Reg = 0.005}$ bright red) \dots
+%
+
+The bottom subfigure plots both TPR and FPR for each of the models in the top subfigure.
 [??FIXME??]
 
 \begin{figure}[t!]
@@ -360,21 +412,22 @@ width=0.8\textwidth]{figs/cpw_folds.pdf}
 width=0.8\textwidth]{figs/cpw_tpr_fpr.pdf}
 \end{center}
 \caption{NYPD stop-and-frisk dataset.
+%
 Top: Fraction of weapons recovered as a function of the fraction of stops
 where the individual was frisked and/or searched,
-for various models learned by CORELS (red markers) and the heuristic model by~\citet{Goel16}.
+for various models learned by CORELS and the heuristic model by~\citet{Goel16}.
 %
-Interestingly, the models learned by CORELS span a region that is not accessed
-by the heuristic model; the heuristic model would require \dots
-%
-The region is notable, and possibly desirable, since it includes models that
-recover (${\Reg = 0.005}$ bright red) \dots
+In the legend, entries for CORELS (red markers) indicate the regularization parameter~$(\Reg)$
+and whether or not extra location features were used (``location'');
+entries for the heuristic model (blue markers) indicate the threshold value~$(T)$.
 %
 The results we report for the heuristic model (blue markers)
 are our reproduction of the results reported in Figure 9 by~\citet{Goel16}
-(first four open circles, from left to right; we exclude the trivial open circle
+(first four open circles in that figure, from left to right; we exclude the trivial open circle
 showing 100\% of weapons recovered at 100\% of stops, obtained by setting the threshold at 0).
-Bottom: [??FIXME??]
+Bottom:
+%
+Abbreviated horizontal tick labels correspond to the legend in the top figure.
 }
 \label{fig:frisk}
 \end{figure}
