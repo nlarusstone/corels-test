@@ -390,14 +390,17 @@ stops where the individual was frisked and/or searched.
 \citep{Goel16} target models that efficiently recover a majority of weapons
 (while also minimizing racial disparities, which we do not address here).
 %
-
+Interestingly, the models learned by CORELS span a significant region that is not available
+to the heuristic model, which would require larger or non-integer parameters to access the region.
 %
-Interestingly, the models learned by CORELS span a region that is not accessed
-by the heuristic model; the heuristic model would require \dots
+The region is notable, and possibly desirable, since it includes models (${\Reg = 0.005}$, bright red)
+that recover a majority (${\ge 50\%}$) of weapons (that are known in the dataset).
 %
-The region is notable, and possibly desirable, since it includes models that
-recover (${\Reg = 0.005}$ bright red) \dots
+More generally, CORELS's all recover at least ${\ge 40\%}$ of weapons
+on average, \ie more weapons than any of the heuristic models with~${T \ge 2}$,
+which recover less than 25\% of weapons on average.
 %
+At the same time, CORELS's models all require fewer than
 
 The bottom subfigure plots both TPR and FPR for each of the models in the top subfigure.
 [??FIXME??]
@@ -406,28 +409,36 @@ The bottom subfigure plots both TPR and FPR for each of the models in the top su
 \begin{center}
 % left lower right upper
 \includegraphics[trim={12mm, 0mm, 24mm, 5mm},
-width=0.8\textwidth]{figs/cpw_folds.pdf}
+width=0.78\textwidth]{figs/cpw_folds.pdf}
 \vspace{6mm}
 \includegraphics[trim={12mm, 0mm, 24mm, 0mm},
-width=0.8\textwidth]{figs/cpw_tpr_fpr.pdf}
+width=0.78\textwidth]{figs/cpw_tpr_fpr.pdf}
 \end{center}
-\caption{NYPD stop-and-frisk dataset.
+\caption{Weapon prediction with the NYPD stop-and-frisk dataset,
+for various models learned by CORELS and the heuristic model by~\citet{Goel16},
+across~10 cross-validation folds.
+%
+Note that the fraction of weapons recovered (top) is equal to the TPR (bottom).
+%
+Markers above the dotted horizontal lines at the value~0.5 correspond to models that
+recover a majority of weapons (that are known in the dataset).
 %
 Top: Fraction of weapons recovered as a function of the fraction of stops
-where the individual was frisked and/or searched,
-for various models learned by CORELS and the heuristic model by~\citet{Goel16}.
+where the individual was frisked and/or searched.
 %
 In the legend, entries for CORELS (red markers) indicate the regularization parameter~$(\Reg)$
 and whether or not extra location features were used (``location'');
 entries for the heuristic model (blue markers) indicate the threshold value~$(T)$.
 %
-The results we report for the heuristic model (blue markers)
+The results we report for the heuristic model
 are our reproduction of the results reported in Figure 9 by~\citet{Goel16}
 (first four open circles in that figure, from left to right; we exclude the trivial open circle
 showing 100\% of weapons recovered at 100\% of stops, obtained by setting the threshold at 0).
-Bottom:
 %
-Abbreviated horizontal tick labels correspond to the legend in the top figure.
+Bottom: Comparison of TPR (open markers) and FPR (solid markers) for various
+CORELS and heuristic models.
+%
+Horizontal tick labels correspond to the legend in the top~figure.
 }
 \label{fig:frisk}
 \end{figure}
@@ -534,7 +545,7 @@ Note that we were unable to execute RIPPER for the NYCLU problem.
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
-\includegraphics[trim={12mm, 0mm, 24mm, 5mm},
+\includegraphics[trim={12mm, 5mm, 24mm, 5mm},
 width=0.82\textwidth]{figs/compas-sparsity-training.pdf}
 
 \end{center}
@@ -548,7 +559,7 @@ where~$i$ is the number of iterations.
 Legend markers and error bars indicate means and standard deviations,
 respectively, across cross-validation folds.
 %
-Small circles mark associated training accuracy means.
+Small circles mark training accuracy means.
 %
 None of the models exhibit significant overfitting;
 mean training accuracy never exceeds mean test accuracy
@@ -585,7 +596,6 @@ C4.5 finds large models for all tested parameters.
 \label{fig:sparsity-weapon}
 \end{figure}
 
-\newpage
 \subsection{CORELS execution traces, for different regularization parameters}
 \label{sec:reg-param}
 In this section, we illustrate several views of CORELS execution traces,
