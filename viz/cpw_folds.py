@@ -85,8 +85,8 @@ for fold in range(nfolds):
     zz = np.zeros(8)
     rr = [0.005] * 2 + [0.01] * 2 + [0.] * 4
     ll += [4] * 4
-    cols = [fold_name, method, zz, zz, zz, rr, zz, ll, acc, n,
-            np.cast[int](tp), np.cast[int](fp), np.cast[int](fn), tpr, fpr]
+    cols = [fold_name, method, zz, zz, rr, zz, ll, acc, n,
+            np.cast[int](tp), np.cast[int](fp), np.cast[int](fn), np.cast[int](tn), tpr, fpr]
     if (fold == 0):
         x = tb.tabarray(columns=cols, names=names)
     else:
