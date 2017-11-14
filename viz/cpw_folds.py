@@ -15,7 +15,7 @@ ct = []
 #thresh = np.array([0, 0, 0, 0, 1, 2, 3, 4])
 cvec = ['r'] * 2 + ['darkred'] * 2 + ['c', 'blue'] * 2
 marker = ['^', 's', '^', 's'] + ['d', 'd', 'o', 'o']
-legend = [u'Heuristic (\u2265%d)' % i for i in [4, 3, 2, 1]] + ['CORELS (.01, location)', 'CORELS (.01)',  'CORELS (.005, location)', 'CORELS (.005)']
+legend = [u'Heuristic (T \u2265 %d)' % i for i in [4, 3, 2, 1]] + ['CORELS ($\lambda =$.01, location)', 'CORELS ($\lambda =$.01)',  'CORELS ($\lambda =$.005, location)', 'CORELS ($\lambda =$.005)']
 legend = legend[::-1]
 fs = 14
 nfolds = 10
@@ -127,7 +127,7 @@ pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 #pylab.subplot(1, 2, 2)
 #pylab.axis([0, 8.5, 0, 0.7])
 #pylab.xticks(np.arange(0.5, 8, 1), [u'\u22654', u'\u22653', u'\u22652', '.01*', '.01', '.005*', '.005', u'\u22651'], rotation=25)
-pylab.xticks(np.arange(0.5, 8, 1), [u'Heuristic\n(\u22654)', u'Heuristic\n(\u22653)', u'Heuristic\n(\u22652)', 'CORELS\n(.01, loc)', 'CORELS\n(.01)', 'CORELS\n(.005, loc)', 'CORELS\n(.005)', u'Heuristic\n(\u22651)'])
+pylab.xticks(np.arange(0.5, 8, 1), [u'Heuristic\n(T \u2265 4)', u'Heuristic\n(T \u2265 3)', u'Heuristic\n(T \u2265 2)', 'CORELS\n(.01, loc)', 'CORELS\n(.01)', 'CORELS\n(.005, loc)', 'CORELS\n(.005)', u'Heuristic\n(T \u2265 1)'])
 pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 pylab.ylabel('Rate', fontsize=fs)
 pylab.title('TPR (open) and FPR (solid) for weapon prediction', fontsize=fs)
