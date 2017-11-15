@@ -130,7 +130,7 @@ max_cardinality = 2
 min_support = 0.001
 exclude_not = True
 froot = 'cpw'
-use_cpw_func = True
+use_cpw_func = False
 include_loc = False
 filter_frisk = True
 

@@ -22,13 +22,19 @@ legend = legend[::-1]
 fs = 14
 nfolds = 10
 imap = [6, 5, 4, 3, 7, 2, 1, 0]
+#imap2 = [4, 5, 6, 7, 3, 2, 1, 0]
+imap2 = [7, 6, 1, 0, 5, 4, 3, 2]
 names = 'Fold,Method,C,cp,R,T,accuracy,leaves,train_accuracy,ntest,TP,FP,FN,TN,TPR,FPR'.split(',')
 
 for nfig in [3, 4]:
     pylab.figure(nfig)
     pylab.plot(-1, -1, 'D', markerfacecolor='w', markeredgecolor='k', markersize=6, markeredgewidth=2)
-    pylab.plot(-1, -1, 'D', markerfacecolor='k', markersize=8, markeredgewidth=1, markeredgecolor='gray')
-    pylab.legend(('TPR (open)', 'FPR (solid)'), fontsize=fs, numpoints=1, loc='upper left', frameon=False, borderpad=0)
+    pylab.plot(-1, -1, 'D', markerfacecolor='k', markersize=8, markeredgewidth=1, markeredgecolor='k')
+    if (nfig == 3):
+        loc = 'upper left'
+    else:
+        loc = 'upper left'
+    pylab.legend(('TPR (open)', 'FPR (solid)'), fontsize=fs, numpoints=1, loc=loc, frameon=False, borderpad=0)
 
 for fold in range(nfolds):
     ct = []
@@ -112,10 +118,16 @@ for fold in range(nfolds):
         pylab.plot(imap[i] + 0.5, tpr[i], markersize=7, marker=marker[i], markerfacecolor='white', markeredgecolor=cvec[i], markeredgewidth=1, linestyle="None")
         #pylab.subplot(1, 2, 2)
         pylab.plot(imap[i] + 0.5, fpr[i], markersize=7, marker=marker[i], color=cvec[i], markeredgewidth=0, linestyle="None")
+        if (fold == 0):
+            pylab.text(imap[i] + 0.7, tpr[i], str(ll[i]), fontsize=fs)
+        #    pylab.text(imap[i] + 0.42, 0.37 + (0.1 * ll[i] - 0.4) / 2, str(ll[i]), fontsize=fs)
 
     pylab.figure(4)
-        pylab.plot(ll, tpr[i], markersize=7, marker=marker[i], markerfacecolor='white', markeredgecolor=cvec[i], markeredgewidth=1, linestyle="None")
-        pylab.plot(ll, fpr[i], markersize=7, marker=marker[i], color=cvec[i], markeredgewidth=0, linestyle="None")
+    for i in range(len(tp)):
+        pylab.plot(imap2[i] + 0.5, tpr[i], markersize=7, marker=marker[i], markerfacecolor='white', markeredgecolor=cvec[i], markeredgewidth=1, linestyle="None")
+        pylab.plot(imap2[i] + 0.5, fpr[i], markersize=7, marker=marker[i], color=cvec[i], markeredgewidth=0, linestyle="None")
+        if (fold == 0):
+            pylab.text(imap2[i] + 0.7, tpr[i], str(ll[i]), fontsize=fs)
 
 x.saveSV('../eval/cpw-noloc_sparsity_jmlr-CORELS.csv')
 
@@ -132,7 +144,7 @@ pylab.savefig('../figs/cpw_folds.pdf')
 
 pylab.figure(3)
 #pylab.subplot(1, 2, 1)
-pylab.axis([0, 8, 0, 0.65])
+pylab.axis([0, 8, 0, 0.7])
 pylab.plot([0, 8], [0.5, 0.5], 'k:')
 #pylab.xticks(np.arange(0.5, 8, 1), ())
 pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
@@ -147,10 +159,16 @@ pylab.title('Comparison of CORELS and heuristic models (NYPD dataset)', fontsize
 pylab.savefig('../figs/cpw_tpr_fpr.pdf')
 
 pylab.figure(4)
-pylab.axis([0, 7, 0, 0.65])
-pylab.plot([0, 7], [0.5, 0.5], 'k:')
+pylab.axis([0, 8, 0, 0.65])
+pylab.plot([0, 8], [0.5, 0.5], 'k:')
+#pylab.xticks(np.arange(0.5, 8, 1), ())
 pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
-pylab.xticks(np.arange(0, 8, 2), fontsize=fs)
+#pylab.title('True positive rate', fontsize=fs)
+#pylab.subplot(1, 2, 2)
+#pylab.axis([0, 8.5, 0, 0.7])
+#pylab.xticks(np.arange(0.5, 8, 1), [u'\u22654', u'\u22653', u'\u22652', '.01*', '.01', '.005*', '.005', u'\u22651'], rotation=25)
+pylab.xticks(np.arange(0.5, 8, 1), [u'Heuristic\n(T \u2265 4)', u'Heuristic\n(T \u2265 3)', u'Heuristic\n(T \u2265 2)', 'CORELS\n(.01, loc)', 'CORELS\n(.01)', 'CORELS\n(.005, loc)', 'CORELS\n(.005)', u'Heuristic\n(T \u2265 1)'])
+pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 pylab.ylabel('True or false positive rate', fontsize=fs)
 pylab.title('Comparison of CORELS and heuristic models (NYPD dataset)', fontsize=fs)
 pylab.savefig('../figs/cpw_tpr_fpr_sparsity.pdf')
