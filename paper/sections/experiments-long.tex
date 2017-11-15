@@ -396,14 +396,27 @@ to the heuristic model, which would require larger or non-integer parameters to 
 The region is notable, and possibly desirable, since it includes models (${\Reg = 0.005}$, bright red)
 that recover a majority (${\ge 50\%}$) of weapons (that are known in the dataset).
 %
-More generally, CORELS's all recover at least ${\ge 40\%}$ of weapons
+More generally, CORELS's all recover at least ${40\%}$ of weapons
 on average, \ie more weapons than any of the heuristic models with~${T \ge 2}$,
 which recover less than 25\% of weapons on average.
 %
-At the same time, CORELS's models all require fewer than
+At the same time, CORELS's models all require well under 25\% of stops---significantly
+less than the heuristic model with~${T = 1}$, which requires over 30\% of stops
+to recover a fraction of weapons comparable to the CORELS model that recovers the most weapons.
 
-The bottom subfigure plots both TPR and FPR for each of the models in the top subfigure.
-[??FIXME??]
+The bottom subfigure plots both TPR and FPR as a function of model size,
+for each of the models in the top subfigure.
+%
+For the heuristic, we define the model size as the number of model parameters;
+for CORELS, we use the number of rules in the rule list,
+which is equal to the number of leaves when we view a rule list as a decision tree.
+%
+The heuristic models all have~4 parameters, while the different CORELS models have
+between~3 and approximately~5 rules, on average.
+%
+CORELS's models are thus approximately as small, interpretable, and transparent
+as the heuristic models; furthermore, their predictions are straightforward
+to compute, and do not even require arithmetic.
 
 \begin{figure}[t!]
 \begin{center}
