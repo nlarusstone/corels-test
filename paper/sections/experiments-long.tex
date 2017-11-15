@@ -32,6 +32,53 @@ can run comfortably on smaller machines, \eg a laptop with 16~GB~RAM.
 %\label{sec:datasets}
 Our evaluation focuses on two socially-important prediction problems associated
 with recent, publicly-available datasets.
+%
+Table~1 summarizes the datasets and prediction problems,
+and Table~2 summarizes feature sets extract from each dataset,
+as well as antecedent sets we mine from these feature sets.
+%
+We provide further details next.
+
+\begin{table}[t!]
+\centering
+\begin{tabular}{l|c|c|c|c|c}
+Dataset & Prediction problem & N & Positive fraction & Resample & Train size \\
+\hline
+ProPublica & Two-year recidivism & 6,907 & 0.46 & No & 6,217 \\
+NYPD & Weapon possession & 325,800 & 0.033 & Yes & 566,839 \\
+NYCLU & Weapon possession & 29,595 & 0.047 & Yes & 50,743 \\
+\end{tabular}
+\caption{Summary of datasets and prediction problems.
+%
+The last four columns report the total number of observations,
+the fraction of observations with the positive class label,
+whether we resampled due to class imbalance,
+and the size of each training set in our 10-fold cross-validation studies.
+}
+\label{tab:datasets}
+\end{table}
+
+\begin{table}[t!]
+\centering
+\begin{tabular}{l|c|c|c|c|c|c}
+Dataset & Feature & Categorical & Binary & Mined & Max number & Negations \\
+& set & attributes & features & antecedents & of clauses & \\
+\hline
+ProPublica & A & 6 & 13 & 122 & 2 & No \\
+ProPublica & B & 7 & 17 & 189 & 2 & No \\
+NYPD & C & 5 & 28 & 28 & 1 & No \\
+NYPD & D & 3 & 20 & 20 & 1 & No \\
+NYCLU & --- & 5 & 28 & 46 & 1 & Yes
+\end{tabular}
+\caption{Summary of feature sets and mined antecedents.
+%
+The last five columns report the number of categorical attributes,
+the number of binary features, the average number of mined antecedents,
+the maximum number of clauses in each antecedent,
+and whether antecedents include negated clauses.
+}
+\label{tab:features}
+\end{table}
 
 \textbf{Recicidivism prediction.}
 For our first problem, we predict which individuals in the ProPublica COMPAS
@@ -49,7 +96,7 @@ which our antecedent mining framework combines into ${M=122}$ antecedents,
 on average (folds ranged from containing 121 to 123 antecedents).
 %
 We also consider a second, similar antecedent set in~\S\ref{sec:examples},
-derived from a superset of Feature set~A that includes~4 additional binary features (Feature Set~B).
+derived from a superset of Feature Set~A that includes~4 additional binary features (Feature Set~B).
 
 \textbf{Weapon prediction.} For our second problem, we use New York City
 stop-and-frisk data to predict whether a weapon will be found on a stopped
@@ -61,8 +108,9 @@ from years 2008-2012, following~\citet{Goel16}.
 %
 Starting from 2,941,390 records, each describing an incident involving
 a stopped person, we first extract 376,488 records where the suspected
-crime mentioned criminal possession of a weapon (CPW).
-%('cpw' in c) or ('c.p.w.' in c)
+crime was criminal possession of a weapon (CPW).\footnote{We filter for records that
+explicitly match the string `CPW'; we note that additional records, after converting to
+lowercase, contain strings such as `cpw' or `c.p.w.'}
 %
 From these, we next we identify a subset of 325,800 records for which the
 individual was frisked and/or searched; of these, criminal possession of a weapon
@@ -71,14 +119,11 @@ was identified in only 10,885 instances (about 3.3\%).
 Resampling due to class imbalance, for 10-fold cross-validation, yields training sets
 that each contain 566,839 datapoints.
 %
-From a set of 5 categorical features, we form a set of [??FIXME??] single-clause antecedents
-that we use as input to CORELS. [??FIXME?? actually we have 2 feature sets]
+From a set of 5 categorical features, we form a set of~28 single-clause antecedents
+corresponding to~28 binary features (Feature Set~C).
 %
-Our choice of, and approach to, the weapon prediction problem is influenced by the work
-of~\citet{Goel16}, who develop regression models to analyze racial disparities
-in New York City's stop-and-frisk policy.
-%
-We compare directly to their heuristic models in Section~\ref{sec:frisk}.
+We also consider a second, similar antecedent set in Sections~\ref{sec:examples} and~\ref{sec:frisk},
+derived from a subset of Feature Set~C that excludes~8 location-specific binary features (Feature Set~D).
 
 For experiments in [??FIXME??], we use a smaller stop-and-frisk dataset,
 derived by the NYCLU from the NYPD's 2014 data~\citep{nyclu:2014}.
@@ -92,8 +137,8 @@ Of these, criminal possession of a weapon was identified in only about 5\% of in
 Resampling due to class imbalance, for 10-fold cross-validation, yields training sets
 that each contain 50,743 datapoints.
 %
-From a set of 5 categorical features, we form a set of ${M=46}$ single-clause antecedents (including negations)
-that we use in our experiments below.
+From the same set of 5 categorical features as in Feature Set~C, we form a set of ${M=46}$
+single-clause antecedents (including negations).
 
 For further details about these datasets, preprocessing steps, and antecedent mining,
 see Appendix~\ref{appendix:data}.
@@ -384,7 +429,7 @@ We showed examples of CORELS's models in Figures~\ref{fig} describe similarities
 Figure~\ref{fig:frisk} directly compares various models learned by CORELS to the heuristic models,
 using the same dataset as~\citet{Goel16}.
 %
-The top subfigure plots the fraction of weapons recovered as a function of the fraction of
+The top panel plots the fraction of weapons recovered as a function of the fraction of
 stops where the individual was frisked and/or searched.
 %
 \citep{Goel16} target models that efficiently recover a majority of weapons
@@ -404,27 +449,26 @@ At the same time, CORELS's models all require well under 25\% of stops---signifi
 less than the heuristic model with~${T = 1}$, which requires over 30\% of stops
 to recover a fraction of weapons comparable to the CORELS model that recovers the most weapons.
 
-The bottom subfigure plots both TPR and FPR as a function of model size,
-for each of the models in the top subfigure.
+The bottom panel in Figure~\ref{fig:frisk} plots both TPR and FPR and labels model size,
+for each of the models in the top panel.
 %
-For the heuristic, we define the model size as the number of model parameters;
+For the heuristic, we define model size as the number of model parameters;
 for CORELS, we use the number of rules in the rule list,
 which is equal to the number of leaves when we view a rule list as a decision tree.
 %
 The heuristic models all have~4 parameters, while the different CORELS models have
-between~3 and approximately~5 rules, on average.
+either~3 or approximately~5 rules.
 %
 CORELS's models are thus approximately as small, interpretable, and transparent
 as the heuristic models; furthermore, their predictions are straightforward
-to compute, and do not even require arithmetic.
+to compute, without even requiring arithmetic.
 
 \begin{figure}[t!]
 \begin{center}
 % left lower right upper
 \includegraphics[trim={12mm, 0mm, 24mm, 5mm},
 width=0.78\textwidth]{figs/cpw_folds.pdf}
-\vspace{6mm}
-\includegraphics[trim={12mm, 0mm, 24mm, 0mm},
+\includegraphics[trim={12mm, 5mm, 24mm, 0mm},
 width=0.78\textwidth]{figs/cpw_tpr_fpr.pdf}
 \end{center}
 \caption{Weapon prediction with the NYPD stop-and-frisk dataset,
@@ -451,7 +495,12 @@ showing 100\% of weapons recovered at 100\% of stops, obtained by setting the th
 Bottom: Comparison of TPR (open markers) and FPR (solid markers) for various
 CORELS and heuristic models.
 %
+Models are sorted left-to-right by TPR.
+%
 Markers and abbreviated horizontal tick labels correspond to the legend in the top~figure.
+%
+Numbers in the plot label model size; there was no variation in model size across folds,
+except for a single fold for CORELS (${\Reg = 0.005}$, location), which found a model of size~6.
 }
 \label{fig:frisk}
 \end{figure}
@@ -1064,7 +1113,7 @@ requires more than an hour, \ie orders of magnitude more time, to complete (thic
 \label{sec:speedup}
 
 \begin{table}[t!]
-\vspace{5mm}
+%\vspace{5mm}
 \centering
 \begin{tabular}{l|c|c|r l}
 Algorithmic & Max evaluated & Lower bound & Predicted&runtime \\
@@ -1083,7 +1132,7 @@ Removing only the equivalent points bound requires exploring prefixes of up to l
 %
 Even with all of our improvements, however, it is only recently that processors have been fast enough in order to allow this type of discrete optimization algorithm to succeed.
 }
-\vspace{4mm}
+%\vspace{4mm}
 \label{tab:speedup}
 \end{table}
 
