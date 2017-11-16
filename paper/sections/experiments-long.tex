@@ -71,7 +71,7 @@ ProPublica & A & 6 & 13 & 122 & 2 & No \\
 ProPublica & B & 7 & 17 & 189 & 2 & No \\
 NYPD & C & 5 & 28 & 28 & 1 & No \\
 NYPD & D & 3 & 20 & 20 & 1 & No \\
-NYCLU & --- & 5 & 28 & 46 & 1 & Yes
+NYCLU & E & 5 & 28 & 46 & 1 & Yes
 \end{tabular}
 \caption{Summary of feature sets and mined antecedents.
 %
@@ -132,7 +132,8 @@ corresponding to~28 binary features (Feature Set~C).
 We also consider another, similar antecedent set, derived from a subset of Feature Set~C
 that excludes~8 location-specific binary features (Feature Set~D).
 
-Throughout our experiments, we also use a smaller stop-and-frisk dataset,
+In Sections~\ref{sec:examples}, \ref{sec:sparsity}, \ref{sec:reg-param}, and~\ref{sec:ablation},
+we also use a smaller stop-and-frisk dataset,
 derived by the NYCLU from the NYPD's 2014 data~\citep{nyclu:2014}.
 %
 From the original dataset of 45,787 records, each describing an incident involving
@@ -145,7 +146,7 @@ Resampling due to class imbalance, for 10-fold cross-validation, yields training
 that each contain 50,743 datapoints.
 %
 From the same set of 5 categorical features as in Feature Set~C, we form a set of ${M=46}$
-single-clause antecedents (including negations).
+single-clause antecedents, including negations (Feature Set~E).
 
 \subsection{Example optimal rule lists}
 \label{sec:examples}
