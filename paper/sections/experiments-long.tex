@@ -223,10 +223,10 @@ See Figure~\ref{fig:recidivism-rule-list-005} in Appendix~\ref{appendix:examples
 \caption{An example rule list that predicts whether a weapon will be found on a
 stopped individual who is frisked or searched, for the NYCLU stop-and-frisk dataset.
 %
-Across 10 cross-validation folds, the other optimal rule lists found by CORELS
+Across 10 cross-validation folds, the other optimal rule lists found by CORELS~(${\Reg = 0.01}$)
 contain the same or equivalent rules, up to a permutation.
 %
-See Figure~\ref{fig:weapon-rule-list-04-01} in Appendix~\ref{appendix:examples} for a complete listing.
+See also Figure~\ref{fig:weapon-rule-list-04-01} in Appendix~\ref{appendix:examples}.
 }
 \label{fig:weapon-rule-list}
 \end{figure}
@@ -244,10 +244,66 @@ this motivated our choice to exclude race, by using Feature Set~A, in our subseq
 For both feature sets, we replaced the original ProPublica age categories ($<$25, 25-45, $>$45)
 with a set that is more fine-grained for younger individuals (18-20, 21-22, 23-25, 26-45, $>$45).
 %
-Figures~\ref{fig:recidivism-all-folds} and~\ref{fig:weapon-rule-list}
-show example optimal rule lists that CORELS learns
-for the ProPublica (Feature Set~A, ${\Reg = 0.005}$) and NYCLU (${\Reg = 0.01}$) datasets, respectively,
-using 10-fold cross validation.
+Figure~\ref{fig:recidivism-all-folds} shows example optimal rule lists that CORELS learns
+for the ProPublica dataset (Feature Set~A, ${\Reg = 0.005}$), using 10-fold cross validation.
+
+\begin{figure}[t!]
+%$ head *cpw_*0.01*opt* K = 2
+%{cs_objcs:stop-reason=suspicious-object}~1;{location:transit-authority}~1;default~0 x 8
+%{location:transit-authority}~1;{cs_objcs:stop-reason=suspicious-object}~1;default~0 x 2
+\textbf{Weapon prediction $(\Reg = 0.01, \text{Feature Set~C})$}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ %\Comment{Found by 8 folds}
+\State \belif $(location = transit~authority)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\textbf{Weapon prediction $(\Reg = 0.01, \text{Feature Set~D})$}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ %\Comment{Found by 7 folds}
+\State \belif $(inside~or~outside = outside)$ \bthen $no$
+\State \belse $yes$
+\end{algorithmic}
+\vspace{1mm}
+\textbf{Weapon prediction $(\Reg = 0.005, \text{Feature Set~C})$}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ %\Comment{Found by 7 folds}
+\State \belif $(location = transit~authority)$ \bthen $yes$
+\State \belif $(location = housing~authority)$ \bthen $no$
+\State \belif $(city = Manhattan)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\textbf{Weapon prediction $(\Reg = 0.005, \text{Feature Set~D})$}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ %\Comment{Found by 2 folds}
+\State \belif $(stop~reason = acting~as~lookout)$ \bthen $no$
+\State \belif $(stop~reason = fits~description)$ \bthen $no$
+\State \belif $(stop~reason = furtive~movements)$ \bthen $no$
+\State \belse $yes$
+\end{algorithmic}
+\caption{Example optimal rule lists for the NYPD stop-and-frisk dataset, found by CORELS.
+%
+Feature Set~C contains attributes for `location' and `city', while Feature Set~D does not.
+%
+For each choice of regularization parameter and feature set, the rule lists learned by CORELS,
+across all 10~cross-validation folds, contain the same or equivalent rules, up to a permutation,
+with the exception of a single fold (Feature Set~C, ${\Reg = 0.005}$).
+%
+For a complete listing, see Figures~\ref{fig:cpw-rule-list} and~\ref{fig:cpw-noloc-rule-list}
+in Appendix~\ref{appendix:examples}.
+}
+\label{fig:nypd}
+\end{figure}
+
+Figures~\ref{fig:weapon-rule-list} and~\ref{fig:nypd} show example optimal rule lists that
+CORELS learns for the NYCLU (${\Reg = 0.01}$) and NYPD datasets.
+%
+Figure~\ref{fig:nypd} shows optimal rule lists that CORELS learns for the larger NYPD dataset.
+%
 
 While our goal is to provide illustrative examples, and not to provide a
 detailed analysis nor to advocate for the use of these specific models,
@@ -269,10 +325,10 @@ and the default rule predicts the negative class label.
 Our objective is not designed to enforce any of these properties,
 though some may be seen as desirable.
 %
-Finally, we note that the three-rule list for weapon prediction
-in Figure~\ref{fig:weapon-rule-list} has the spirit of the heuristic
-strategy presented by~\citet{Goel16} that combines three stop criteria
-and is based on a reduced version of their full regression~model.
+%Finally, we note that the three-rule list for weapon prediction
+%in Figure~\ref{fig:weapon-rule-list} has the spirit of the heuristic
+%strategy presented by~\citet{Goel16} that combines three stop criteria
+%and is based on a reduced version of their full regression~model.
 
 As we demonstrate in~\S\ref{sec:sparsity},
 optimal rule lists learned by CORELS achieve accuracies that are competitive
@@ -424,10 +480,13 @@ To employ this heuristic model in the field,
 ``\dots officers simply need to add at most three small, positive integers \dots
 and check whether the sum exceeds a fixed threshold\dots'' \citep{Goel16}.
 
-We showed examples of CORELS's models in Figures~\ref{fig} describe similarities and differences between models [??FIXME??]
-
 Figure~\ref{fig:frisk} directly compares various models learned by CORELS to the heuristic models,
 using the same dataset as~\citet{Goel16}.
+%
+For CORELS, the models correspond to the rule lists illustrated in Figure~\ref{fig:nypd}
+from Section~\ref{sec:examples}, and Figures~\ref{fig:cpw-rule-list} and~\ref{fig:cpw-noloc-rule-list}
+in Appendix~\ref{appendix:examples}, we consider both Feature Sets~C and~D
+and both regularization parameters ${\Reg = 0.005}$ and~0.01.
 %
 The top panel plots the fraction of weapons recovered as a function of the fraction of
 stops where the individual was frisked and/or searched.
