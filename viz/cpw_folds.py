@@ -16,14 +16,13 @@ ct = []
 #reg = np.array([0.005, 0.005, 0.01, 0.01, 0, 0, 0, 0])
 #thresh = np.array([0, 0, 0, 0, 1, 2, 3, 4])
 cvec = ['r'] * 2 + ['darkred'] * 2 + ['c', 'blue'] * 2
-marker = ['^', 's', '^', 's'] + ['d', 'd', 'o', 'o']
-legend = [u'Heuristic (T \u2265 %d)' % i for i in [4, 3, 2, 1]] + ['CORELS ($\lambda =$.01, location)', 'CORELS ($\lambda =$.01)',  'CORELS ($\lambda =$.005, location)', 'CORELS ($\lambda =$.005)']
-legend = legend[::-1]
+marker = ['s', '^', 's', '^'] + ['d', 'd', 'o', 'o']
+legend = ['CORELS ($\lambda =$.005, Feature Set C)', 'CORELS ($\lambda =$.005, Feature Set D)', 'CORELS ($\lambda =$.01, Feature Set C)', 'CORELS ($\lambda =$.01, Feature Set D)'] + [u'Heuristic (T \u2265 %d)' % i for i in [1, 2, 3, 4]]
 fs = 14
 nfolds = 10
-imap = [6, 5, 4, 3, 7, 2, 1, 0]
+imap = [5, 6, 3, 4, 7, 2, 1, 0]
 #imap2 = [4, 5, 6, 7, 3, 2, 1, 0]
-imap2 = [7, 6, 1, 0, 5, 4, 3, 2]
+imap2 = [6, 7, 0, 1, 5, 4, 3, 2]
 names = 'Fold,Method,C,cp,R,T,accuracy,leaves,train_accuracy,ntest,TP,FP,FN,TN,TPR,FPR'.split(',')
 
 for nfig in [3, 4]:
@@ -40,26 +39,26 @@ for fold in range(nfolds):
     ct = []
     ll = []
 
-    # python2 eval_model.py cpw-noloc -n 10000 -r 0.005 -c 2 -p 1 -v 10 --minor --parallel
-    ctables = np.array([[625, 463, 6468, 25023], [602, 486, 6377, 25114], [624, 464, 6538, 24953], [646, 442, 6495, 24996], [629, 459, 6462, 25029], [630, 458, 6555, 24936], [589, 499, 6263, 25228], [620, 468, 6225, 25266], [638, 450, 6559, 24932], [655, 433, 6389, 25102]])
-    leaves = [5] * 10
-    ct += [ctables[fold]]
-    ll += [leaves[fold]]
-
     # python2 eval_model.py cpw -n 10000 -r 0.005 -c 2 -p 1 -v 10 --minor --parallel
     ctables = np.array([[565, 523, 3724, 27767], [541, 547, 3734, 27757], [555, 533, 3753, 27738], [575, 513, 3604, 27887], [549, 539, 3663, 27828], [559, 529, 3669, 27822], [569, 519, 3757, 27734], [545, 543, 3641, 27850], [550, 538, 3706, 27785], [648, 440, 5567, 25924]])
     leaves = [5] * 9 + [6]
     ct += [ctables[fold]]
     ll += [leaves[fold]]
 
-    # python2 eval_model.py cpw-noloc -n 10000 -r 0.01 -c 2 -p 1 -v 10 --minor --parallel
-    ctables = np.array([[490, 598, 3870, 27621], [508, 580, 3871, 27620], [508, 580, 3828, 27663], [534, 554, 3775, 27716], [505, 583, 3910, 27581], [508, 580, 3850, 27641], [503, 585, 3761, 27730], [503, 585, 3932, 27559], [493, 595, 3885, 27606], [522, 566, 3806, 27685]])
-    leaves = [3] * 10
+    # python2 eval_model.py cpw-noloc -n 10000 -r 0.005 -c 2 -p 1 -v 10 --minor --parallel
+    ctables = np.array([[625, 463, 6468, 25023], [602, 486, 6377, 25114], [624, 464, 6538, 24953], [646, 442, 6495, 24996], [629, 459, 6462, 25029], [630, 458, 6555, 24936], [589, 499, 6263, 25228], [620, 468, 6225, 25266], [638, 450, 6559, 24932], [655, 433, 6389, 25102]])
+    leaves = [5] * 10
     ct += [ctables[fold]]
     ll += [leaves[fold]]
 
     # python2 eval_model.py cpw -n 10000 -r 0.01 -c 2 -p 1 -v 10 --minor --parallel
     ctables = np.array([[435, 653, 1001, 30490], [439, 649, 990, 30501], [437, 651, 970, 30521], [471, 617, 949, 30542], [438, 650, 1031, 30460], [454, 634, 1026, 30465], [435, 653, 988, 30503], [438, 650, 1014, 30477], [423, 665, 1002, 30489], [457, 631, 946, 30545]])
+    leaves = [3] * 10
+    ct += [ctables[fold]]
+    ll += [leaves[fold]]
+
+    # python2 eval_model.py cpw-noloc -n 10000 -r 0.01 -c 2 -p 1 -v 10 --minor --parallel
+    ctables = np.array([[490, 598, 3870, 27621], [508, 580, 3871, 27620], [508, 580, 3828, 27663], [534, 554, 3775, 27716], [505, 583, 3910, 27581], [508, 580, 3850, 27641], [503, 585, 3761, 27730], [503, 585, 3932, 27559], [493, 595, 3885, 27606], [522, 566, 3806, 27685]])
     leaves = [3] * 10
     ct += [ctables[fold]]
     ll += [leaves[fold]]
@@ -152,7 +151,7 @@ pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 #pylab.subplot(1, 2, 2)
 #pylab.axis([0, 8.5, 0, 0.7])
 #pylab.xticks(np.arange(0.5, 8, 1), [u'\u22654', u'\u22653', u'\u22652', '.01*', '.01', '.005*', '.005', u'\u22651'], rotation=25)
-pylab.xticks(np.arange(0.5, 8, 1), [u'Heuristic\n(T \u2265 4)', u'Heuristic\n(T \u2265 3)', u'Heuristic\n(T \u2265 2)', 'CORELS\n(.01, loc)', 'CORELS\n(.01)', 'CORELS\n(.005, loc)', 'CORELS\n(.005)', u'Heuristic\n(T \u2265 1)'])
+pylab.xticks(np.arange(0.5, 8, 1), [u'Heuristic\n(T \u2265 4)', u'Heuristic\n(T \u2265 3)', u'Heuristic\n(T \u2265 2)', 'CORELS\n(.01, C)', 'CORELS\n(.01, D)', 'CORELS\n(.005, C)', 'CORELS\n(.005, D)', u'Heuristic\n(T \u2265 1)'])
 pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 pylab.ylabel('True or false positive rate', fontsize=fs)
 pylab.title('Comparison of CORELS and heuristic models (NYPD dataset)', fontsize=fs)
@@ -167,7 +166,7 @@ pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 #pylab.subplot(1, 2, 2)
 #pylab.axis([0, 8.5, 0, 0.7])
 #pylab.xticks(np.arange(0.5, 8, 1), [u'\u22654', u'\u22653', u'\u22652', '.01*', '.01', '.005*', '.005', u'\u22651'], rotation=25)
-pylab.xticks(np.arange(0.5, 8, 1), ['CORELS\n(.01, loc)', 'CORELS\n(.01)', u'Heuristic\n(T \u2265 4)', u'Heuristic\n(T \u2265 3)', u'Heuristic\n(T \u2265 2)', u'Heuristic\n(T \u2265 1)', 'CORELS\n(.005, loc)', 'CORELS\n(.005)'])
+pylab.xticks(np.arange(0.5, 8, 1), ['CORELS\n(.01, C)', 'CORELS\n(.01, D)', u'Heuristic\n(T \u2265 4)', u'Heuristic\n(T \u2265 3)', u'Heuristic\n(T \u2265 2)', u'Heuristic\n(T \u2265 1)', 'CORELS\n(.005, C)', 'CORELS\n(.005, D)'])
 pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 pylab.ylabel('True or false positive rate', fontsize=fs)
 pylab.title('Comparison of CORELS and heuristic models (NYPD dataset)', fontsize=fs)
