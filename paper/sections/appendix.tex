@@ -1,4 +1,4 @@
-\clearpage
+%\clearpage
 \section{Data processing details and antecedent mining}
 \label{appendix:data}
 
@@ -52,7 +52,7 @@ the number of juvenile crimes that were neither felonies nor misdemeanors (not s
 \textbf{NYPD stop-and-frisk dataset.} This dataset is larger than, but similar to the
 NYCLU stop-and-frisk dataset, described next.
 
-%\clearpage
+\newpage
 \textbf{NYCLU stop-and-frisk dataset.} The original dataset contains 45,787 records,
 each describing an incident involving a stopped person; the individual
 was frisked in 30,345 (66.3\%) of records and and searched in 7,283 (15.9\%).
@@ -270,9 +270,156 @@ across 10 cross-validation folds.
 \end{figure}
 
 \clearpage
+\textbf{NYPD stop-and-frisk dataset.}
+We show example optimal rule lists that predict whether a weapon
+will be found on a stopped individual who is frisked or searched, learned from the NYPD dataset.
+
+\begin{figure}[b!]
+%$ head *cpw_*0.01*opt* K = 2
+%{cs_objcs:stop-reason=suspicious-object}~1;{location:transit-authority}~1;default~0 x 8
+%{location:transit-authority}~1;{cs_objcs:stop-reason=suspicious-object}~1;default~0 x 2
+\textbf{Weapon prediction $(\Reg = 0.01, \text{Feature Set~C})$}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 8 folds}
+\State \belif $(location = transit~authority)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(location = transit~authority)$ \bthen $yes$ \Comment{Found by 2 folds}
+\State \belif $(stop~reason = suspicious~object)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{5mm}
+%$ head *cpw_*0.005*opt* K = 4 or 5
+%{cs_objcs:stop-reason=suspicious-object}~1;{location:transit-authority}~1;{location:housing-authority}~0;{city:MANHATTAN}~1;default~0 x 7
+%{cs_objcs:stop-reason=suspicious-object}~1;{location:housing-authority}~0;{location:transit-authority}~1;{city:MANHATTAN}~1;default~0
+%{cs_objcs:stop-reason=suspicious-object}~1;{location:housing-authority}~0;{city:MANHATTAN}~1;{location:transit-authority}~1;default~0
+%{cs_objcs:stop-reason=suspicious-object}~1;{location:transit-authority}~1;{city:BRONX}~0;{location:housing-authority}~0;{cs_furtv:stop-reason=furtive-movements}~0;default~1
+\textbf{Weapon prediction $(\Reg = 0.005, \text{Feature Set~C})$}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 7 folds}
+\State \belif $(location = transit~authority)$ \bthen $yes$
+\State \belif $(location = housing~authority)$ \bthen $no$
+\State \belif $(city = Manhattan)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 1 fold}
+\State \belif $(location = housing~authority)$ \bthen $no$
+\State \belif $(location = transit~authority)$ \bthen $yes$
+\State \belif $(city = Manhattan)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 1 fold}
+\State \belif $(location = housing~authority)$ \bthen $no$
+\State \belif $(city = Manhattan)$ \bthen $yes$
+\State \belif $(location = transit~authority)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 1 fold}
+\State \belif $(location = transit~authority)$ \bthen $yes$
+\State \belif $(city = Bronx)$ \bthen $no$
+\State \belif $(location = housing~authority)$ \bthen $no$
+\State \belif $(stop~reason = furtive~movements)$ \bthen $no$
+\State \belse $yes$
+\end{algorithmic}
+\caption{Example optimal rule lists for the NYPD stop-and-frisk dataset,
+found by CORELS with regularization parameters~${\Reg = 0.01}$~(top) and~0.005~(bottom),
+across 10 cross-validation folds.
+}
+\label{fig:cpw-rule-list}
+\end{figure}
+
+\begin{figure}[b!]
+%$ head *cpw-noloc_*0.01*opt* K = 2
+%{cs_objcs:stop-reason=suspicious-object}~1;{inout:outside}~0;default~1 x 7
+%{cs_objcs:stop-reason=suspicious-object}~1;{inout:inside}~1;default~0 x 3
+\textbf{Weapon prediction $(\Reg = 0.01, \text{Feature Set~D})$}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 7 folds}
+\State \belif $(inside~or~outside = outside)$ \bthen $no$
+\State \belse $yes$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 3 folds}
+\State \belif $(inside~or~outside = inside)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\vspace{5mm}
+%$ head *cpw-noloc_*0.005*opt* K = 4
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_lkout:stop-reason=acting-as-lookout}~0;{cs_descr:stop-reason=fits-description}~0;{cs_furtv:stop-reason=furtive-movements}~0;default~1 x 2
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_furtv:stop-reason=furtive-movements}~0;{cs_lkout:stop-reason=acting-as-lookout}~0;{cs_descr:stop-reason=fits-description}~0;default~1 x 2
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_lkout:stop-reason=acting-as-lookout}~0;{cs_furtv:stop-reason=furtive-movements}~0;{cs_descr:stop-reason=fits-description}~0;default~1
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_descr:stop-reason=fits-description}~0;{cs_lkout:stop-reason=acting-as-lookout}~0;{cs_furtv:stop-reason=furtive-movements}~0;default~1
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_furtv:stop-reason=furtive-movements}~0;{cs_descr:stop-reason=fits-description}~0;{cs_lkout:stop-reason=acting-as-lookout}~0;default~1
+%
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_descr:stop-reason=fits-description}~0;{cs_casng:stop-reason=casing}~0;{cs_furtv:stop-reason=furtive-movements}~0;default~1
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_descr:stop-reason=fits-description}~0;{cs_furtv:stop-reason=furtive-movements}~0;default~1
+%{cs_objcs:stop-reason=suspicious-object}~1;{cs_casng:stop-reason=casing}~0;{cs_furtv:stop-reason=furtive-movements}~0;{cs_descr:stop-reason=fits-description}~0;default~1
+\textbf{Weapon prediction $(\Reg = 0.005, \text{Feature Set~D})$}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 2 folds}
+\State \belif $(stop~reason = acting~as~lookout)$ \bthen $no$
+\State \belif $(stop~reason = fits~description)$ \bthen $no$
+\State \belif $(stop~reason = furtive~movements)$ \bthen $no$
+\State \belse $yes$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 2 folds}
+\State \belif $(stop~reason = furtive~movements)$ \bthen $no$
+\State \belif $(stop~reason = acting~as~lookout)$ \bthen $no$
+\State \belif $(stop~reason = fits~description)$ \bthen $no$
+\State \belse $yes$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 1 fold}
+\State \belif $(stop~reason = acting~as~lookout)$ \bthen $no$
+\State \belif $(stop~reason = furtive~movements)$ \bthen $no$
+\State \belif $(stop~reason = fits~description)$ \bthen $no$
+\State \belse $yes$
+\end{algorithmic}
+\begin{algorithmic}
+\vspace{1mm}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 1 fold}
+\State \belif $(stop~reason = fits~description)$ \bthen $no$
+\State \belif $(stop~reason = acting~as~lookout)$ \bthen $no$
+\State \belif $(stop~reason = furtive~movements)$ \bthen $no$
+\State \belse $yes$
+\end{algorithmic}
+\vspace{1mm}
+\begin{algorithmic}
+\State \bif $(stop~reason = suspicious~object)$ \bthen $yes$ \Comment{Found by 1 fold}
+\State \belif $(stop~reason = furtive~movements)$ \bthen $no$
+\State \belif $(stop~reason = fits~description)$ \bthen $no$
+\State \belif $(stop~reason = acting~as~lookout)$ \bthen $no$
+\State \belse $yes$
+\end{algorithmic}
+\caption{Example optimal rule lists for the NYPD stop-and-frisk dataset (Feature Set~D)
+found by CORELS with regularization parameters~${\Reg = 0.01}$~(top) and~0.005~(bottom),
+across 10 cross-validation folds.
+%
+For~${\Reg = 0.005}$, we show results from~7 folds; the remaining~3 folds were equivalent,
+up to a permutation of the prefix rules, and started with the same first prefix rule.
+}
+\label{fig:cpw-noloc-rule-list}
+\end{figure}
+
+\clearpage
 \textbf{NYCLU stop-and-frisk dataset.}
 We show example optimal rule lists that predict whether a weapon
-will be found on a stopped individual who is frisked or searched.
+will be found on a stopped individual who is frisked or searched, learned from the NYCLU dataset.
 %
 Figure~\ref{fig:weapon-rule-list-04-01} shows
 regularization parameters~${\Reg = 0.04}$ and~0.01,
