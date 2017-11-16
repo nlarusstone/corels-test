@@ -594,3 +594,34 @@ across 10 cross-validation folds.
 }
 \label{fig:weapon-rule-list-0025}
 \end{figure}
+
+\clearpage
+\section{TPR, FPR, and model size for CORELS and other algorithms (NYPD, Feature Set~D)}
+\label{ref:nypd}
+\begin{figure}[b!]
+\begin{center}
+%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
+% left lower right upper
+\includegraphics[trim={17mm, 0mm, 27mm, 0mm},
+width=0.8\textwidth]{figs/cpw-noloc-sparsity-tpr.pdf}
+\includegraphics[trim={17mm, 10mm, 27mm, 4mm},
+width=0.8\textwidth]{figs/cpw-noloc-sparsity-fpr.pdf}
+\end{center}
+\caption{TPR (top) and FPR (bottom)
+for the test set, as a function of model size, across different methods,
+for weapon prediction with the NYPD stop-and-frisk dataset (Feature Set~D).
+%
+In the legend, numbers in parentheses are algorithm parameters,
+as in Figure~\ref{fig:sparsity-weapon}.
+%
+Legend markers and error bars indicate means and standard deviations,
+respectively, across cross-validation folds.
+%
+%For CORELS and SBRL, we use ${M = 28}$ antecedents.
+%
+%CART with ${cp = 0.001}$ significantly overfits;
+%C4.5 finds large models and dramatically overfits for all tested parameters.
+C4.5 finds large models for all tested parameters.
+}
+\label{fig:sparsity-cpw}
+\end{figure}

@@ -105,7 +105,7 @@ derived from a superset of Feature Set~A that includes~4 additional binary featu
 stop-and-frisk data to predict whether a weapon will be found on a stopped
 individual who is frisked or searched.
 %
-For experiments in [??FIXME??],
+For experiments in Sections~\ref{sec:examples} and~\ref{sec:frisk}, and Appendix~\ref{appendix:nypd},
 we compile data from a database maintained by the New York Police Department (NYPD)~\citep{nypd},
 from years 2008-2012, following~\citet{Goel16}.
 %
@@ -128,7 +128,7 @@ corresponding to~28 binary features (Feature Set~C).
 We also consider a second, similar antecedent set in Sections~\ref{sec:examples} and~\ref{sec:frisk},
 derived from a subset of Feature Set~C that excludes~8 location-specific binary features (Feature Set~D).
 
-For experiments in [??FIXME??], we use a smaller stop-and-frisk dataset,
+Throughout our experiments, we also use a smaller stop-and-frisk dataset,
 derived by the NYCLU from the NYPD's 2014 data~\citep{nyclu:2014}.
 %
 From the original dataset of 45,787 records, each describing an incident involving
@@ -618,6 +618,9 @@ For both problems, CORELS can learn short rule lists without sacrificing predict
 %
 For listings of example optimal rule lists that correspond to the results
 for CORELS summarized here, see Appendix~\ref{appendix:examples}.
+%
+In Appendix~\ref{appendix:cpw}, we show Figure~\ref{fig:sparsity-cpw}, which is similar to
+Figure~\ref{fig:sparsity-weapon} but uses the larger NYPD dataset.
 
 \begin{figure}[t!]
 \begin{center}
@@ -694,9 +697,9 @@ by more than about 0.01.
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
 \includegraphics[trim={17mm, 0mm, 27mm, 0mm},
-width=0.8\textwidth]{figs/weapon-sparsity-tpr.pdf}
+width=0.8\textwidth]{figs/cpw-noloc-sparsity-tpr.pdf}
 \includegraphics[trim={17mm, 10mm, 27mm, 4mm},
-width=0.8\textwidth]{figs/weapon-sparsity-fpr.pdf}
+width=0.8\textwidth]{figs/cpw-noloc-sparsity-fpr.pdf}
 \end{center}
 \caption{TPR (top) and FPR (bottom)
 for the test set, as a function of model size, across different methods,
