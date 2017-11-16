@@ -105,7 +105,7 @@ derived from a superset of Feature Set~A that includes~4 additional binary featu
 stop-and-frisk data to predict whether a weapon will be found on a stopped
 individual who is frisked or searched.
 %
-For experiments in Sections~\ref{sec:examples} and~\ref{sec:frisk}, and Appendix~\ref{appendix:nypd},
+For experiments in Sections~\ref{sec:examples} and~\ref{sec:frisk}, and Appendix~\ref{appendix:cpw},
 we compile data from a database maintained by the New York Police Department (NYPD)~\citep{nypd},
 from years 2008-2012, following~\citet{Goel16}.
 %
@@ -125,8 +125,8 @@ that each contain 566,839 datapoints.
 From a set of 5 categorical features, we form a set of~28 single-clause antecedents
 corresponding to~28 binary features (Feature Set~C).
 %
-We also consider a second, similar antecedent set in Sections~\ref{sec:examples} and~\ref{sec:frisk},
-derived from a subset of Feature Set~C that excludes~8 location-specific binary features (Feature Set~D).
+We also consider another, similar antecedent set, derived from a subset of Feature Set~C
+that excludes~8 location-specific binary features (Feature Set~D).
 
 Throughout our experiments, we also use a smaller stop-and-frisk dataset,
 derived by the NYCLU from the NYPD's 2014 data~\citep{nyclu:2014}.
@@ -567,6 +567,26 @@ except for a single fold for CORELS (${\Reg = 0.005}$, location), which found a 
 \subsection{Predictive performance and model size for CORELS and other algorithms}
 \label{sec:sparsity}
 
+\begin{figure}[t!]
+\begin{center}
+%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
+% left lower right upper
+%\includegraphics[trim={2mm, 10mm, 2mm, 0mm}, width=\textwidth]{figs/compare-compas-weapon.pdf}
+\includegraphics[trim={2mm, 5mm, 102mm, 0mm}, clip,
+width=0.6\textwidth]{figs/compare-compas-weapon.pdf}
+\end{center}
+\caption{Two-year recidivism prediction for the ProPublica COMPAS dataset.
+%
+Comparison of CORELS and a panel of eight other algorithms:
+logistic regression~(GLM), support vector machines~(SVM),
+AdaBoost, CART, C4.5, random forests~(RF), RIPPER,
+scalable Bayesian rule lists~(SBRL).
+%
+For CORELS, we use regularization parameter~${\Reg=0.005}$.
+}
+\label{fig:compas-comparison}
+\end{figure}
+
 We ran a 10-fold cross validation experiment using CORELS
 and eight other algorithms:
 logistic regression, support vector machines (SVM), AdaBoost, CART, C4.5,
@@ -600,48 +620,6 @@ while achieving a significantly lower FPR.
 We conclude that CORELS produces models whose predictive performance is comparable to or better than
 those found via other algorithms.
 
-Figures~\ref{fig:sparsity-compas} and~\ref{fig:sparsity-weapon} summarize differences
-in predictive performance and model size
-for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
-%
-Here, we vary different algorithm parameters, and increase the number of iterations for SBRL to 10,000.
-%
-For two-year recidivism prediction with the ProPublica dataset (Figure~\ref{fig:sparsity-compas}),
-we plot both training and test accuracy,
-as a function of the number of leaves in the learned model.
-%
-Due to class imbalance for the weapon prediction problem with the NYCLU stop-and-frisk dataset
-(Figure~\ref{fig:sparsity-weapon}), we plot both true positive rate (TPR) and false positive rate (FPR),
-again as a function of the number of leaves.
-%
-For both problems, CORELS can learn short rule lists without sacrificing predictive performance.
-%
-For listings of example optimal rule lists that correspond to the results
-for CORELS summarized here, see Appendix~\ref{appendix:examples}.
-%
-In Appendix~\ref{appendix:cpw}, we show Figure~\ref{fig:sparsity-cpw}, which is similar to
-Figure~\ref{fig:sparsity-weapon} but uses the larger NYPD dataset.
-
-\begin{figure}[t!]
-\begin{center}
-%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
-% left lower right upper
-%\includegraphics[trim={2mm, 10mm, 2mm, 0mm}, width=\textwidth]{figs/compare-compas-weapon.pdf}
-\includegraphics[trim={2mm, 5mm, 102mm, 0mm}, clip,
-width=0.6\textwidth]{figs/compare-compas-weapon.pdf}
-\end{center}
-\caption{Two-year recidivism prediction for the ProPublica COMPAS dataset.
-%
-Comparison of CORELS and a panel of eight other algorithms:
-logistic regression~(GLM), support vector machines~(SVM),
-AdaBoost, CART, C4.5, random forests~(RF), RIPPER,
-scalable Bayesian rule lists~(SBRL).
-%
-For CORELS, we use regularization parameter~${\Reg=0.005}$.
-}
-\label{fig:compas-comparison}
-\end{figure}
-%
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
@@ -664,7 +642,7 @@ Note that we were unable to execute RIPPER for the NYCLU problem.
 }
 \label{fig:weapon-comparison}
 \end{figure}
-
+%
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
@@ -691,6 +669,28 @@ by more than about 0.01.
 }
 \label{fig:sparsity-compas}
 \end{figure}
+
+Figures~\ref{fig:sparsity-compas} and~\ref{fig:sparsity-weapon} summarize differences
+in predictive performance and model size
+for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning algorithms.
+%
+Here, we vary different algorithm parameters, and increase the number of iterations for SBRL to 10,000.
+%
+For two-year recidivism prediction with the ProPublica dataset (Figure~\ref{fig:sparsity-compas}),
+we plot both training and test accuracy,
+as a function of the number of leaves in the learned model.
+%
+Due to class imbalance for the weapon prediction problem with the NYCLU stop-and-frisk dataset
+(Figure~\ref{fig:sparsity-weapon}), we plot both true positive rate (TPR) and false positive rate (FPR),
+again as a function of the number of leaves.
+%
+For both problems, CORELS can learn short rule lists without sacrificing predictive performance.
+%
+For listings of example optimal rule lists that correspond to the results
+for CORELS summarized here, see Appendix~\ref{appendix:examples}.
+%
+Also see Figure~\ref{fig:sparsity-cpw} in Appendix~\ref{appendix:cpw}; it uses the larger
+NYPD dataset and is similar to Figure~\ref{fig:sparsity-weapon}.
 
 \begin{figure}[t!]
 \begin{center}
