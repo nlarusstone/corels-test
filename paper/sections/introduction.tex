@@ -43,7 +43,10 @@ Consider the recent ProPublica article on the Correctional Offender Management P
 %
 It highlights a case where a black-box, proprietary predictive model is being used for recidivism prediction.
 %
-The authors show that the COMPAS scores are racially biased, but since the model is not transparent, no one (outside of the creators of COMPAS) can determine the reason or extent of the bias~\citep{LarsonMaKiAn16}, nor can anyone determine the reason for any particular prediction.
+The authors hypothesize that the COMPAS scores are racially biased,
+but since the model is not transparent, no one (outside of the creators of COMPAS)
+can determine the reason or extent of the bias~\citep{LarsonMaKiAn16},
+nor can anyone determine the reason for any particular prediction.
 %
 By using COMPAS, users implicitly assumed that a transparent model
 would not be sufficiently accurate for recidivism prediction,
@@ -107,10 +110,6 @@ such solution and the optimal one.
 %
 The certificate of optimality means that we can investigate how close other models
 (\eg models provided by greedy algorithms) are to optimal.
-%
-In particular, we can investigate if the rule lists from probabilistic approaches
-are nearly optimal or whether those approaches sacrifice too much accuracy
-in the interest of speed.
 
 \begin{arxiv}
 Within its branch-and-bound procedure, CORELS maintains a lower bound on the
@@ -122,7 +121,7 @@ if the bound is larger than the error of the best rule list that it has already 
 The use of careful bounding techniques leads to massive pruning of
 the search space of potential rule lists.
 %
-It continues to consider incomplete and complete rule lists until it has either
+The algorithm continues to consider incomplete and complete rule lists until it has either
 examined or eliminated every rule list from consideration.
 %
 Thus, CORELS terminates with the optimal rule list %, the close-to-optimal rule lists,
@@ -169,10 +168,10 @@ best-first, and stochastic search.
 In particular, we can design different best-first strategies
 by customizing how we order elements in a priority queue.
 %
-In addition, we are able to limit the number of nodes in the tree
+In addition, we are able to limit the number of nodes in the trie
 and thereby enable tuning of space-time tradeoffs in a robust manner.
 %
-This tree structure is a useful way of organizing the generation
+This trie structure is a useful way of organizing the generation
 and evaluation of rule lists.
 
 \begin{arxiv}
@@ -204,7 +203,7 @@ NYCLU
 2014 stop-and-frisk dataset~\citep{nyclu:2014}, to predict whether a weapon will be found
 on a stopped individual who is frisked or searched.
 %
-We produce certifiably optimal, interpretable rule lists that achieve
+On these data, we produce certifiably optimal, interpretable rule lists that achieve
 the same accuracy as approaches such as random forests.
 %
 This calls into question the need for use of a proprietary,
