@@ -86,10 +86,14 @@ and whether antecedents include negated clauses.
 \textbf{Recicidivism prediction.}
 For our first problem, we predict which individuals in the ProPublica COMPAS
 dataset~\citep{LarsonMaKiAn16} recidivate within two years.
+%
 This dataset contains records for all offenders in Broward County, Florida
 in 2013 and 2014 who were given a COMPAS score pre-trial.
-Recidivism is defined as committing a crime within two years of the COMPAS
-assessment.
+%
+Recidivism is defined as being charged with a new crime within two years
+after receiving a COMPAS assessment; the article by \citet{LarsonMaKiAn16},
+and their code,\footnote{\url{https://github.com/propublica/compas-analysis}}
+provide more details about this definition.
 %
 From the original dataset of records for 7,214 individuals,
 we identify a subset of 6,907 records without missing data.
