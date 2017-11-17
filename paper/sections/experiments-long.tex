@@ -405,7 +405,7 @@ leading to higher FPR's for blacks and higher FNR's for whites.
 %
 This aspect of the data could entirely explain why ProPublica concluded that COMPAS was racially biased.
 %
-There are many definitions of fairness, and it is not clear whether CORELS's models are fair either, but it is much easier to debate about the fairness of a model when it is transparent.
+There are many definitions of fairness, and it is not clear whether CORELS' models are fair either, but it is much easier to debate about the fairness of a model when it is transparent.
 %
 Additional fairness constraints or transparency constraints can be placed on CORELS' models if desired, though one would need to edit our bounds~(\S\ref{sec:framework}) and implementation~(\S\ref{sec:implementation}) in order to impose more constraints.
 
@@ -508,11 +508,11 @@ to the heuristic model, which would require larger or non-integer parameters to 
 The region is notable, and possibly desirable, since it includes models (${\Reg = 0.005}$, bright red)
 that recover a majority (${\ge 50\%}$) of weapons (that are known in the dataset).
 %
-More generally, CORELS's all recover at least ${40\%}$ of weapons
+More generally, CORELS' all recover at least ${40\%}$ of weapons
 on average, \ie more weapons than any of the heuristic models with~${T \ge 2}$,
 which recover less than 25\% of weapons on average.
 %
-At the same time, CORELS's models all require well under 25\% of stops---significantly
+At the same time, CORELS' models all require well under 25\% of stops---significantly
 less than the heuristic model with~${T = 1}$, which requires over 30\% of stops
 to recover a fraction of weapons comparable to the CORELS model that recovers the most weapons.
 
@@ -526,7 +526,7 @@ which is equal to the number of leaves when we view a rule list as a decision tr
 The heuristic models all have~4 parameters, while the different CORELS models have
 either~3 or approximately~5 rules.
 %
-CORELS's models are thus approximately as small, interpretable, and transparent
+CORELS' models are thus approximately as small, interpretable, and transparent
 as the heuristic models; furthermore, their predictions are straightforward
 to compute, without even requiring arithmetic.
 
@@ -830,7 +830,7 @@ from the panels to the left, for the three different values of~$\Reg$.
 width=0.92\textwidth]{figs/weapon_reg-queue.pdf}
 \end{center}
 \vspace{-5mm}
-\caption{Summary of CORELS's logical queue,
+\caption{Summary of CORELS' logical queue,
 %\ie the nodes in the physical queue that have not been marked for deletion,
 for the NYCLU stop-and-frisk dataset (${M = 46}$),
 for same three regularization parameters as in Figure~\ref{fig:sparsity-weapon}
@@ -863,7 +863,7 @@ For Figure~\ref{fig:weapon-reg-execution}, we dynamically and incrementally
 calculate~$\lfloor \log_{10} \Remaining(\CurrentObj, \Queue) \rfloor$,
 which adds some computational overhead; we do not calculate this elsewhere unless noted.
 
-Figure~\ref{fig:queue-weapon-reg} visualizes the elements in CORELS's logical queue,
+Figure~\ref{fig:queue-weapon-reg} visualizes the elements in CORELS' logical queue,
 for each of the executions in Figure~\ref{fig:weapon-reg-execution}.
 %
 Recall from~\S\ref{sec:gc} that the logical queue corresponds to elements in the
@@ -1082,7 +1082,7 @@ for how much computational work our algorithm must perform;
 these metrics thus scale with the overall slowdown with respect to CORELS execution time
 (Table~\ref{tab:ablation}, first column).
 
-Figure~\ref{fig:queue} visualizes execution traces of the elements in CORELS's logical queue,
+Figure~\ref{fig:queue} visualizes execution traces of the elements in CORELS' logical queue,
 similar to Figure~\ref{fig:queue-weapon-reg},
 for a single, representative cross-validation fold.
 %
