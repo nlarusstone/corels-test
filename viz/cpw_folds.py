@@ -17,7 +17,7 @@ ct = []
 #thresh = np.array([0, 0, 0, 0, 1, 2, 3, 4])
 cvec = ['r'] * 2 + ['darkred'] * 2 + ['c', 'blue'] * 2
 marker = ['s', '^', 's', '^'] + ['d', 'd', 'o', 'o']
-legend = ['CORELS ($\lambda =$.005, Feature Set C)', 'CORELS ($\lambda =$.005, Feature Set D)', 'CORELS ($\lambda =$.01, Feature Set C)', 'CORELS ($\lambda =$.01, Feature Set D)'] + [u'Heuristic (T \u2265 %d)' % i for i in [1, 2, 3, 4]]
+legend = ['CORELS ($\lambda =$.005, Feature Set C)', 'CORELS ($\lambda =$.005, Feature Set D)', 'CORELS ($\lambda =$.01, Feature Set C)', 'CORELS ($\lambda =$.01, Feature Set D)'] + [u'Heuristic (T = %d)' % i for i in [1, 2, 3, 4]]
 fs = 14
 nfolds = 10
 imap = [5, 6, 3, 4, 7, 2, 1, 0]
@@ -150,8 +150,8 @@ pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 #pylab.title('True positive rate', fontsize=fs)
 #pylab.subplot(1, 2, 2)
 #pylab.axis([0, 8.5, 0, 0.7])
-#pylab.xticks(np.arange(0.5, 8, 1), [u'\u22654', u'\u22653', u'\u22652', '.01*', '.01', '.005*', '.005', u'\u22651'], rotation=25)
-pylab.xticks(np.arange(0.5, 8, 1), [u'Heuristic\n(T \u2265 4)', u'Heuristic\n(T \u2265 3)', u'Heuristic\n(T \u2265 2)', 'CORELS\n(.01, C)', 'CORELS\n(.01, D)', 'CORELS\n(.005, C)', 'CORELS\n(.005, D)', u'Heuristic\n(T \u2265 1)'])
+#pylab.xticks(np.arange(0.5, 8, 1), [u'=4', u'=3', u'=2', '.01*', '.01', '.005*', '.005', u'=1'], rotation=25)
+pylab.xticks(np.arange(0.5, 8, 1), [u'Heuristic\n(T = 4)', u'Heuristic\n(T = 3)', u'Heuristic\n(T = 2)', 'CORELS\n(.01, C)', 'CORELS\n(.01, D)', 'CORELS\n(.005, C)', 'CORELS\n(.005, D)', u'Heuristic\n(T = 1)'])
 pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 pylab.ylabel('True or false positive rate', fontsize=fs)
 pylab.title('Comparison of CORELS and heuristic models (NYPD dataset)', fontsize=fs)
@@ -165,8 +165,8 @@ pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 #pylab.title('True positive rate', fontsize=fs)
 #pylab.subplot(1, 2, 2)
 #pylab.axis([0, 8.5, 0, 0.7])
-#pylab.xticks(np.arange(0.5, 8, 1), [u'\u22654', u'\u22653', u'\u22652', '.01*', '.01', '.005*', '.005', u'\u22651'], rotation=25)
-pylab.xticks(np.arange(0.5, 8, 1), ['CORELS\n(.01, C)', 'CORELS\n(.01, D)', u'Heuristic\n(T \u2265 4)', u'Heuristic\n(T \u2265 3)', u'Heuristic\n(T \u2265 2)', u'Heuristic\n(T \u2265 1)', 'CORELS\n(.005, C)', 'CORELS\n(.005, D)'])
+#pylab.xticks(np.arange(0.5, 8, 1), [u'=4', u'=3', u'=2', '.01*', '.01', '.005*', '.005', u'=1'], rotation=25)
+pylab.xticks(np.arange(0.5, 8, 1), ['CORELS\n(.01, C)', 'CORELS\n(.01, D)', u'Heuristic\n(T = 4)', u'Heuristic\n(T = 3)', u'Heuristic\n(T = 2)', u'Heuristic\n(T = 1)', 'CORELS\n(.005, C)', 'CORELS\n(.005, D)'])
 pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
 pylab.ylabel('True or false positive rate', fontsize=fs)
 pylab.title('Comparison of CORELS and heuristic models (NYPD dataset)', fontsize=fs)
