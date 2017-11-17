@@ -44,19 +44,20 @@ see Appendix~\ref{appendix:data}.
 
 \begin{table}[t!]
 \centering
-\begin{tabular}{l|c|c|c|c|c}
-Dataset & Prediction problem & N & Positive fraction & Resample & Train size \\
+\begin{tabular}{l|c|c|c|c|c|c}
+Dataset & Prediction problem & N & Positive & Resample & Training & Test \\
+& & & fraction & training set & set size & set size \\
 \hline
-ProPublica & Two-year recidivism & 6,907 & 0.46 & No & 6,217 \\
-NYPD & Weapon possession & 325,800 & 0.033 & Yes & 566,839 \\
-NYCLU & Weapon possession & 29,595 & 0.047 & Yes & 50,743 \\
+ProPublica & Two-year recidivism & 6,907 & 0.46 & No & 6,217 & 692 \\
+NYPD & Weapon possession & 325,800 & 0.033 & Yes & 566,839 & 32,580 \\
+NYCLU & Weapon possession & 29,595 & 0.047 & Yes & 50,743 & 2,959 \\
 \end{tabular}
 \caption{Summary of datasets and prediction problems.
 %
 The last four columns report the total number of observations,
 the fraction of observations with the positive class label,
-whether we resampled due to class imbalance,
-and the size of each training set in our 10-fold cross-validation studies.
+whether we resampled the training set due to class imbalance,
+and the sizes of each training and test set in our 10-fold cross-validation studies.
 }
 \label{tab:datasets}
 \end{table}
@@ -124,7 +125,7 @@ individual was frisked and/or searched; of these, criminal possession of a weapo
 was identified in only 10,885 instances (about 3.3\%).
 %
 Resampling due to class imbalance, for 10-fold cross-validation, yields training sets
-that each contain 566,839 datapoints.
+that each contain 566,839 datapoints. (We form corresponding test sets without resampling.)
 %
 From a set of 5 categorical features, we form a set of~28 single-clause antecedents
 corresponding to~28 binary features (Feature Set~C).
@@ -142,8 +143,8 @@ was frisked and/or searched.
 %
 Of these, criminal possession of a weapon was identified in about 5\% of instances.
 %
-Resampling due to class imbalance, for 10-fold cross-validation, yields training sets
-that each contain 50,743 datapoints.
+As with the larger NYPD dataset, we resample the data to form training sets
+(but not to form test sets).
 %
 From the same set of 5 categorical features as in Feature Set~C, we form a set of ${M=46}$
 single-clause antecedents, including negations (Feature Set~E).
@@ -489,7 +490,10 @@ To employ this heuristic model in the field,
 and check whether the sum exceeds a fixed threshold\dots'' \citep{Goel16}.
 
 Figure~\ref{fig:frisk} directly compares various models learned by CORELS to the heuristic models,
-using the same dataset as~\citet{Goel16}.
+using the same dataset as~\citet{Goel16} and 10-fold cross-validation.
+%
+Recall that we train on resampled data to correct for class imbalance;
+we evaluate with respect to test sets that have been formed without resampling.
 %
 For CORELS, the models correspond to the rule lists illustrated in Figure~\ref{fig:nypd}
 from Section~\ref{sec:examples}, and Figures~\ref{fig:cpw-rule-list} and~\ref{fig:cpw-noloc-rule-list}
@@ -499,7 +503,7 @@ and both regularization parameters ${\Reg = 0.005}$ and~0.01.
 The top panel plots the fraction of weapons recovered as a function of the fraction of
 stops where the individual was frisked and/or searched.
 %
-\citep{Goel16} target models that efficiently recover a majority of weapons
+\citet{Goel16} target models that efficiently recover a majority of weapons
 (while also minimizing racial disparities, which we do not address here).
 %
 Interestingly, the models learned by CORELS span a significant region that is not available
