@@ -489,6 +489,48 @@ To employ this heuristic model in the field,
 ``\dots officers simply need to add at most three small, positive integers \dots
 and check whether the sum exceeds a fixed threshold\dots'' \citep{Goel16}.
 
+\begin{figure}[t!]
+\begin{center}
+% left lower right upper
+\includegraphics[trim={12mm, 0mm, 24mm, 5mm},
+width=0.78\textwidth]{figs/cpw_folds.pdf}
+\includegraphics[trim={12mm, 5mm, 24mm, 0mm},
+width=0.78\textwidth]{figs/cpw_tpr_fpr.pdf}
+\end{center}
+\caption{Weapon prediction with the NYPD stop-and-frisk dataset,
+for various models learned by CORELS and the heuristic model by~\citet{Goel16},
+across~10 cross-validation folds.
+%
+Note that the fraction of weapons recovered (top) is equal to the TPR (bottom, open markers).
+%
+Markers above the dotted horizontal lines at the value~0.5 correspond to models that
+recover a majority of weapons (that are known in the dataset).
+%
+Top: Fraction of weapons recovered as a function of the fraction of stops
+where the individual was frisked and/or searched.
+%
+In the legend, entries for CORELS (red markers) indicate the regularization parameter~$(\Reg)$
+and whether or not extra location features were used (``location'');
+entries for the heuristic model (blue markers) indicate the threshold value~$(T)$.
+%
+The results we report for the heuristic model
+are our reproduction of the results reported in Figure 9 by~\citet{Goel16}
+(first four open circles in that figure, from left to right; we exclude the trivial open circle
+showing 100\% of weapons recovered at 100\% of stops, obtained by setting the threshold at 0).
+%
+Bottom: Comparison of TPR (open markers) and FPR (solid markers) for various
+CORELS and heuristic models.
+%
+Models are sorted left-to-right by TPR.
+%
+Markers and abbreviated horizontal tick labels correspond to the legend in the top~figure.
+%
+Numbers in the plot label model size; there was no variation in model size across folds,
+except for a single fold for CORELS (${\Reg = 0.005}$, location), which found a model of size~6.
+}
+\label{fig:frisk}
+\end{figure}
+
 Figure~\ref{fig:frisk} directly compares various models learned by CORELS to the heuristic models,
 using the same dataset as~\citet{Goel16} and 10-fold cross-validation.
 %
@@ -534,48 +576,6 @@ CORELS' models are thus approximately as small, interpretable, and transparent
 as the heuristic models; furthermore, their predictions are straightforward
 to compute, without even requiring arithmetic.
 
-\begin{figure}[t!]
-\begin{center}
-% left lower right upper
-\includegraphics[trim={12mm, 0mm, 24mm, 5mm},
-width=0.78\textwidth]{figs/cpw_folds.pdf}
-\includegraphics[trim={12mm, 5mm, 24mm, 0mm},
-width=0.78\textwidth]{figs/cpw_tpr_fpr.pdf}
-\end{center}
-\caption{Weapon prediction with the NYPD stop-and-frisk dataset,
-for various models learned by CORELS and the heuristic model by~\citet{Goel16},
-across~10 cross-validation folds.
-%
-Note that the fraction of weapons recovered (top) is equal to the TPR (bottom, open markers).
-%
-Markers above the dotted horizontal lines at the value~0.5 correspond to models that
-recover a majority of weapons (that are known in the dataset).
-%
-Top: Fraction of weapons recovered as a function of the fraction of stops
-where the individual was frisked and/or searched.
-%
-In the legend, entries for CORELS (red markers) indicate the regularization parameter~$(\Reg)$
-and whether or not extra location features were used (``location'');
-entries for the heuristic model (blue markers) indicate the threshold value~$(T)$.
-%
-The results we report for the heuristic model
-are our reproduction of the results reported in Figure 9 by~\citet{Goel16}
-(first four open circles in that figure, from left to right; we exclude the trivial open circle
-showing 100\% of weapons recovered at 100\% of stops, obtained by setting the threshold at 0).
-%
-Bottom: Comparison of TPR (open markers) and FPR (solid markers) for various
-CORELS and heuristic models.
-%
-Models are sorted left-to-right by TPR.
-%
-Markers and abbreviated horizontal tick labels correspond to the legend in the top~figure.
-%
-Numbers in the plot label model size; there was no variation in model size across folds,
-except for a single fold for CORELS (${\Reg = 0.005}$, location), which found a model of size~6.
-}
-\label{fig:frisk}
-\end{figure}
-
 \subsection{Predictive performance and model size for CORELS and other algorithms}
 \label{sec:sparsity}
 
@@ -585,7 +585,7 @@ except for a single fold for CORELS (${\Reg = 0.005}$, location), which found a 
 % left lower right upper
 %\includegraphics[trim={2mm, 10mm, 2mm, 0mm}, width=\textwidth]{figs/compare-compas-weapon.pdf}
 \includegraphics[trim={2mm, 5mm, 102mm, 0mm}, clip,
-width=0.6\textwidth]{figs/compare-compas-weapon.pdf}
+width=0.5\textwidth]{figs/compare-compas-weapon.pdf}
 \end{center}
 \caption{Two-year recidivism prediction for the ProPublica COMPAS dataset.
 %
@@ -660,8 +660,8 @@ Note that we were unable to execute RIPPER for the NYCLU problem.
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
 \includegraphics[trim={12mm, 5mm, 24mm, 5mm},
-width=0.82\textwidth]{figs/compas-sparsity-training.pdf}
-
+width=0.78\textwidth]{figs/compas-sparsity-training.pdf}
+%
 \end{center}
 \caption{Training and test accuracy as a function of model size, across different methods,
 for two-year recidivism prediction with the ProPublica COMPAS dataset.
@@ -709,9 +709,9 @@ NYPD dataset and is similar to Figure~\ref{fig:sparsity-weapon}.
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
 \includegraphics[trim={17mm, 0mm, 27mm, 0mm},
-width=0.8\textwidth]{figs/cpw-noloc-sparsity-tpr.pdf}
+width=0.78\textwidth]{figs/cpw-noloc-sparsity-tpr.pdf}
 \includegraphics[trim={17mm, 10mm, 27mm, 4mm},
-width=0.8\textwidth]{figs/cpw-noloc-sparsity-fpr.pdf}
+width=0.78\textwidth]{figs/cpw-noloc-sparsity-fpr.pdf}
 \end{center}
 \caption{TPR (top) and FPR (bottom)
 for the test set, as a function of model size, across different methods,
