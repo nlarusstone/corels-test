@@ -526,7 +526,7 @@ Models are sorted left-to-right by TPR.
 Markers and abbreviated horizontal tick labels correspond to the legend in the top~figure.
 %
 Numbers in the plot label model size; there was no variation in model size across folds,
-except for a single fold for CORELS (${\Reg = 0.005}$, location), which found a model of size~6.
+except for a single fold for CORELS (${\Reg = 0.005}$, Feature Set~C), which found a model of size~6.
 }
 \label{fig:frisk}
 \end{figure}
@@ -551,10 +551,10 @@ stops where the individual was frisked and/or searched.
 Interestingly, the models learned by CORELS span a significant region that is not available
 to the heuristic model, which would require larger or non-integer parameters to access the region.
 %
-The region is notable, and possibly desirable, since it includes models (${\Reg = 0.005}$, bright red)
+The region is possibly desirable, since it includes models (${\Reg = 0.005}$, bright red)
 that recover a majority (${\ge 50\%}$) of weapons (that are known in the dataset).
 %
-More generally, CORELS' all recover at least ${40\%}$ of weapons
+More generally, CORELS' models all recover at least ${40\%}$ of weapons
 on average, \ie more weapons than any of the heuristic models with~${T \ge 2}$,
 which recover less than 25\% of weapons on average.
 %
