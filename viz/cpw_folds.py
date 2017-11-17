@@ -138,7 +138,7 @@ pylab.ylabel('Fraction recovered', fontsize=fs)
 pylab.title('Fraction of weapons recovered (NYPD dataset)', fontsize=fs)
 pylab.xticks(fontsize=fs)
 pylab.yticks(np.arange(0, 0.8, 0.2), fontsize=fs)
-pylab.legend(legend, loc='lower right', fontsize=fs-2, frameon=False, numpoints=1, ncol=2)
+pylab.legend(legend, loc='lower right', fontsize=fs-2, frameon=False, numpoints=1, ncol=2, columnspacing=0., handletextpad=0.1)
 pylab.savefig('../figs/cpw_folds.pdf')
 
 pylab.figure(3)
