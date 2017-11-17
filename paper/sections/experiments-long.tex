@@ -393,7 +393,7 @@ across 10 cross-validation folds.
 
 Figure~\ref{fig:tpr-fpr} shows that CORELS and COMPAS perform similarly across both black and white individuals.
 %
-Both algorithms have much higher true positive rates (TPR's) and false positive rates (FPRs) for blacks than whites (left), and higher true negative rates (TNR's) and false negative rates (FNRs) for whites than blacks (right).
+Both algorithms have much higher true positive rates (TPR's) and false positive rates (FPR's) for blacks than whites (left), and higher true negative rates (TNR's) and false negative rates (FNR's) for whites than blacks (right).
 %
 The fact that COMPAS has higher FPR's for blacks and higher FNR's for whites was a central observation motivating ProPublica's claim that COMPAS is racially biased~\citep{LarsonMaKiAn16}.
 %
@@ -412,7 +412,11 @@ Additional fairness constraints or transparency constraints can be placed on COR
 Regardless of whether COMPAS is racially biased (which our analysis does not indicate is true as long as criminal history and age are allowed to be considered as features),
 COMPAS may have many other fairness defects that might be considered serious.
 %
-Many of COMPAS's survey questions are direct inquiries about socioeconomic status. For instance, COMPAS asks:
+Many of COMPAS's survey questions are direct inquiries about socioeconomic status.
+%
+For instance, a sample COMPAS survey\footnote{
+\url{https://www.documentcloud.org/documents/2702103-Sample-Risk-Assessment-COMPAS-CORE.html}.
+Contributed by Julia Angwin, ProPublica.} asks:
 ``Is it easy to get drugs in your neighborhood?,''
 ``How often do you have barely enough money to get by?,''
 ``Do you frequently get jobs that don't pay more than minimum wage?,''
@@ -420,9 +424,8 @@ Many of COMPAS's survey questions are direct inquiries about socioeconomic statu
 %
 COMPAS's survey questions also ask about events that were not caused by the person who is being evaluated, such as:
 ``If you lived with both parents and they later separated, how old were you at the time?,''
-``Was one of you parents ever sent to jail or prison?,''
+``Was one of your parents ever sent to jail or prison?,''
 ``Was your mother ever arrested, that you know of?"
-\citep{compas-survey:2016,AngwinLaMaKi16}.
 
 The fact that COMPAS requires over~130 questions to be answered, many of whose answers may not be verifiable, means that the computation of the COMPAS score is prone to errors.
 %
@@ -434,7 +437,7 @@ This significant discrepancy suggests that COMPAS scores are more fallible than 
 %
 Some of these problems could be alleviated by using only data within electronic records that can be automatically calculated, instead of using information entered by hand and/or collected via subjective surveys.
 
-The United States government pays Northpointe (now called equivant) to use COMPAS.
+The United States government pays Northpointe (now called Equivant) to use COMPAS.
 %
 In light of our observations that CORELS is as accurate as COMPAS on a real-world dataset where COMPAS is used in practice, CORELS predicts similarly to COMPAS for both blacks and whites, and CORELS' models are completely transparent, it is not clear what value COMPAS scores possess.
 %
