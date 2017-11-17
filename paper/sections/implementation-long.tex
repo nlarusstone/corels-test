@@ -20,7 +20,7 @@ Next, we summarize how these data structures interact throughout
 our model of incremental execution~(\S\ref{sec:execution}).
 %
 In particular, Algorithms~\ref{alg:bounds} and~\ref{alg:pmap} illustrate many
-of the computational details from CORELS's inner loop, and highlight each of
+of the computational details from CORELS' inner loop, and highlight each of
 the bounds from~\S\ref{sec:framework} that we use to prune the search space.
 %
 We additionally describe how we garbage collect our data structures~(\S\ref{sec:gc}).
@@ -220,7 +220,7 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
 
 
 \begin{algorithm}[t!]
-  \caption{Possibly insert a prefix into CORELS's data structures, after first
+  \caption{Possibly insert a prefix into CORELS' data structures, after first
   checking the symmetry-aware map, which supports search space pruning
   triggered by the permutation bound (Corollary~\ref{thm:permutation}).
   For further context, see Algorithm~\ref{alg:bounds}.}
@@ -282,7 +282,7 @@ better than~$\CurrentObj$, thus we do not insert~$\PrefixB$ into the tree or que
 We also leverage our other bounds from~\S\ref{sec:framework}
 to aggressively prune the search space; we highlight each of these bounds
 in Algorithms~\ref{alg:bounds} and~\ref{alg:pmap},
-which summarize the computations and data structure operations performed in CORELS's inner loop.
+which summarize the computations and data structure operations performed in CORELS' inner loop.
 %
 When there are no more leaves to explore, \ie the queue is empty, we output the optimal rule list.
 %
