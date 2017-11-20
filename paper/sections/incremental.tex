@@ -105,7 +105,7 @@ with respect to its objective lower bound:
 \begin{align}
 \Obj(\RL', \x, \y) &=  \Loss_p(\Prefix', \Labels', \x, \y) +
   \Loss_0(\Prefix', \Default', \x, \y) + \Reg (K + 1) \nn \\
-&= b(\Prefix', \x, \y) + \Loss_0(\Prefix', \Default', \x, y) \nn \\
+&= b(\Prefix', \x, \y) + \Loss_0(\Prefix', \Default', \x, \y) \nn \\
 &= b(\Prefix', \x, \y) + \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix') \wedge
   \one [q'_0 \neq y_n] \nn \\
 &= b(\Prefix', \x, \y) + \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge
