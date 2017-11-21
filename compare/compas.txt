@@ -1,54 +1,2569 @@
-Running Cross Validation folds for compas
-\nCV fold: compas_0\n
-RUNNING SBRL
-test accuracy = 0.686546
-RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
-0.7059639 0.70319 0.6893204 0.7073509 0.7018031 0.6990291 0.70319
-\nCV fold: compas_1\n
-RUNNING SBRL
-test accuracy = 0.682386
-RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
-0.6851595 0.6920943 0.6934813 0.6740638 0.6823856 0.6823856 0.6823856
-\nCV fold: compas_2\n
-RUNNING SBRL
-test accuracy = 0.687933
-RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
-0.6893204 0.6768377 0.6837725 0.668516 0.6837725 0.6823856 0.6865465
-\nCV fold: compas_3\n
-RUNNING SBRL
-test accuracy = 0.679612
-RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
-0.6768377 0.6768377 0.6712899 0.6809986 0.6768377 0.6796117 0.6809986
-\nCV fold: compas_4\n
-RUNNING SBRL
-test accuracy = 0.644938
-RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
-0.6518724 0.6463245 0.6560333 0.6435506 0.6532594 0.6504854 0.6435506
-\nCV fold: compas_5\n
-RUNNING SBRL
-test accuracy = 0.660194
-RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
-0.6643551 0.6588072 0.668516 0.6490985 0.6601942 0.6546463 0.6699029
-\nCV fold: compas_6\n
-RUNNING SBRL
-test accuracy = 0.643551
-RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
-0.6463245 0.6407767 0.6463245 0.6435506 0.6421637 0.6490985 0.6407767
-\nCV fold: compas_7\n
-RUNNING SBRL
-test accuracy = 0.680999
-RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
-0.6837725 0.6768377 0.6851595 0.6740638 0.6782247 0.6837725 0.6712899
-\nCV fold: compas_8\n
-RUNNING SBRL
-test accuracy = 0.657420
-RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
-0.6601942 0.6546463 0.6463245 0.6393897 0.6601942 0.6560333 0.6588072
-\nCV fold: compas_9\n
-RUNNING SBRL
-test accuracy = 0.689320
-RUNNING GLM, SVM, Adaboost, CART, C4.5, RF, RIPPER
-0.6907074 0.6879334 0.6865465 0.6851595 0.6920943 0.6920943 0.6948682
-\nRUNNING BBRL for all 10 folds of compas
-Test accuracies [0.7073509015256588, 0.6823855755894591, 0.6893203883495146, 0.680998613037448, 0.6490984743411928, 0.6601941747572816, 0.6435506241331485, 0.6893203883495146, 0.6588072122052705, 0.694868238557559]
-Test accuracies mean, std 0.675589459085 0.0201987656911
+Initialize time: Elapsed time  0.0107	 0.0001 per rule
+124 rules 6216 samples
+
+
+The best rule list is (#reject=9 #add=345 #delete=349 #swap=306):
+max_log_posterior = -3959.281113
+max_log_posterior = -3959.281113
+10 rules 6216 samples
+RULE 74: ( {age:>45,priors:>3} ), support=369, card=2:369 captured; 
+RULE 30: ( {sex:Male,juvenile-felonies:>0} ), support=238, card=2:227 captured; 
+RULE 73: ( {age:>45,priors:=0} ), support=337, card=2:337 captured; 
+RULE 41: ( {sex:Female,priors:=1} ), support=237, card=2:237 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:>3} ), support=1804, card=2:1447 captured; 
+RULE 6: ( {age:18-20} ), support=618, card=1:523 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:=0} ), support=1882, card=2:1243 captured; 
+RULE 58: ( {age:26-45,juvenile-misdemeanors:=0} ), support=2931, card=2:931 captured; 
+RULE 55: ( {age:>45,juvenile-misdemeanors:=0} ), support=1095, card=2:346 captured; 
+RULE 0: ( default ), support=6216, card=0:556 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=14 #add=346 #delete=314 #swap=340):
+max_log_posterior = -3957.330942
+max_log_posterior = -3957.330942
+11 rules 6216 samples
+RULE 84: ( {age:26-45,priors:2-3} ), support=583, card=2:583 captured; 
+RULE 83: ( {age:26-45,priors:=1} ), support=477, card=2:477 captured; 
+RULE 117: ( {juvenile-crimes:=0,priors:>3} ), support=1489, card=2:1489 captured; 
+RULE 15: ( {priors:>3} ), support=1983, card=1:494 captured; 
+RULE 70: ( {age:18-20,juvenile-crimes:>0} ), support=199, card=2:181 captured; 
+RULE 3: ( {age:>45} ), support=1096, card=1:727 captured; 
+RULE 6: ( {age:18-20} ), support=618, card=1:407 captured; 
+RULE 16: ( {priors:=1} ), support=1150, card=1:282 captured; 
+RULE 72: ( {age:21-22,juvenile-crimes:>0} ), support=138, card=2:54 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:=0} ), support=1882, card=2:1234 captured; 
+RULE 0: ( default ), support=6216, card=0:288 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=12 #add=345 #delete=323 #swap=332):
+max_log_posterior = -3966.257089
+max_log_posterior = -3966.257089
+12 rules 6216 samples
+RULE 30: ( {sex:Male,juvenile-felonies:>0} ), support=238, card=2:238 captured; 
+RULE 110: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1731, card=2:1613 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:>3} ), support=1804, card=2:198 captured; 
+RULE 91: ( {age:21-22,priors:2-3} ), support=144, card=2:137 captured; 
+RULE 27: ( {sex:Male,age:21-22} ), support=474, card=2:269 captured; 
+RULE 26: ( {sex:Male,age:18-20} ), support=514, card=2:446 captured; 
+RULE 6: ( {age:18-20} ), support=618, card=1:100 captured; 
+RULE 3: ( {age:>45} ), support=1096, card=1:727 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:=0} ), support=1882, card=2:1081 captured; 
+RULE 41: ( {sex:Female,priors:=1} ), support=237, card=2:170 captured; 
+RULE 4: ( {age:23-25} ), support=816, card=1:297 captured; 
+RULE 0: ( default ), support=6216, card=0:940 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=12 #add=313 #delete=359 #swap=328):
+max_log_posterior = -3952.343369
+max_log_posterior = -3952.343369
+10 rules 6216 samples
+RULE 87: ( {age:18-20,priors:2-3} ), support=101, card=2:101 captured; 
+RULE 121: ( {juvenile-crimes:>0,priors:>3} ), support=494, card=2:494 captured; 
+RULE 74: ( {age:>45,priors:>3} ), support=369, card=2:353 captured; 
+RULE 91: ( {age:21-22,priors:2-3} ), support=144, card=2:144 captured; 
+RULE 15: ( {priors:>3} ), support=1983, card=1:1136 captured; 
+RULE 27: ( {sex:Male,age:21-22} ), support=474, card=2:271 captured; 
+RULE 64: ( {age:>45,juvenile-crimes:=0} ), support=1080, card=2:727 captured; 
+RULE 17: ( {priors:2-3} ), support=1201, card=1:772 captured; 
+RULE 6: ( {age:18-20} ), support=618, card=1:487 captured; 
+RULE 0: ( default ), support=6216, card=0:1731 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=35 #add=323 #delete=316 #swap=361):
+max_log_posterior = -3953.479039
+max_log_posterior = -3953.479039
+11 rules 6216 samples
+RULE 117: ( {juvenile-crimes:=0,priors:>3} ), support=1489, card=2:1489 captured; 
+RULE 91: ( {age:21-22,priors:2-3} ), support=144, card=2:144 captured; 
+RULE 9: ( {juvenile-felonies:>0} ), support=251, card=1:243 captured; 
+RULE 87: ( {age:18-20,priors:2-3} ), support=101, card=2:84 captured; 
+RULE 64: ( {age:>45,juvenile-crimes:=0} ), support=1080, card=2:727 captured; 
+RULE 17: ( {priors:2-3} ), support=1201, card=1:760 captured; 
+RULE 15: ( {priors:>3} ), support=1983, card=1:315 captured; 
+RULE 77: ( {age:23-25,priors:=0} ), support=209, card=2:209 captured; 
+RULE 25: ( {sex:Male,age:26-45} ), support=2484, card=2:964 captured; 
+RULE 2: ( {sex:Male} ), support=5026, card=1:759 captured; 
+RULE 0: ( default ), support=6216, card=0:522 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=15 #add=306 #delete=335 #swap=359):
+max_log_posterior = -3951.956282
+max_log_posterior = -3951.956282
+9 rules 6216 samples
+RULE 38: ( {sex:Male,juvenile-crimes:>0} ), support=775, card=2:775 captured; 
+RULE 74: ( {age:>45,priors:>3} ), support=369, card=2:356 captured; 
+RULE 55: ( {age:>45,juvenile-misdemeanors:=0} ), support=1095, card=2:727 captured; 
+RULE 15: ( {priors:>3} ), support=1983, card=1:1176 captured; 
+RULE 91: ( {age:21-22,priors:2-3} ), support=144, card=2:102 captured; 
+RULE 6: ( {age:18-20} ), support=618, card=1:422 captured; 
+RULE 102: ( {juvenile-felonies:=0,priors:2-3} ), support=1164, card=2:714 captured; 
+RULE 28: ( {sex:Female,juvenile-felonies:=0} ), support=1177, card=2:495 captured; 
+RULE 0: ( default ), support=6216, card=0:1449 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=17 #add=354 #delete=326 #swap=320):
+max_log_posterior = -3948.715124
+max_log_posterior = -3948.715124
+10 rules 6216 samples
+RULE 121: ( {juvenile-crimes:>0,priors:>3} ), support=494, card=2:494 captured; 
+RULE 74: ( {age:>45,priors:>3} ), support=369, card=2:353 captured; 
+RULE 73: ( {age:>45,priors:=0} ), support=337, card=2:337 captured; 
+RULE 55: ( {age:>45,juvenile-misdemeanors:=0} ), support=1095, card=2:390 captured; 
+RULE 15: ( {priors:>3} ), support=1983, card=1:1136 captured; 
+RULE 41: ( {sex:Female,priors:=1} ), support=237, card=2:193 captured; 
+RULE 26: ( {sex:Male,age:18-20} ), support=514, card=2:488 captured; 
+RULE 14: ( {priors:=0} ), support=1882, card=1:1305 captured; 
+RULE 5: ( {age:26-45} ), support=3099, card=1:949 captured; 
+RULE 0: ( default ), support=6216, card=0:571 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=15 #add=340 #delete=314 #swap=346):
+max_log_posterior = -3958.618570
+max_log_posterior = -3958.618570
+10 rules 6216 samples
+RULE 41: ( {sex:Female,priors:=1} ), support=237, card=2:237 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:=0} ), support=66, card=2:66 captured; 
+RULE 117: ( {juvenile-crimes:=0,priors:>3} ), support=1489, card=2:1489 captured; 
+RULE 83: ( {age:26-45,priors:=1} ), support=477, card=2:366 captured; 
+RULE 91: ( {age:21-22,priors:2-3} ), support=144, card=2:144 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=857, card=1:724 captured; 
+RULE 64: ( {age:>45,juvenile-crimes:=0} ), support=1080, card=2:683 captured; 
+RULE 69: ( {age:18-20,juvenile-crimes:=0} ), support=419, card=2:389 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:=0} ), support=1882, card=2:1223 captured; 
+RULE 0: ( default ), support=6216, card=0:895 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=16 #add=296 #delete=354 #swap=350):
+max_log_posterior = -3961.610910
+max_log_posterior = -3961.610910
+12 rules 6216 samples
+RULE 117: ( {juvenile-crimes:=0,priors:>3} ), support=1489, card=2:1489 captured; 
+RULE 64: ( {age:>45,juvenile-crimes:=0} ), support=1080, card=2:727 captured; 
+RULE 9: ( {juvenile-felonies:>0} ), support=251, card=1:251 captured; 
+RULE 84: ( {age:26-45,priors:2-3} ), support=583, card=2:576 captured; 
+RULE 46: ( {sex:Male,priors:2-3} ), support=978, card=2:328 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:>3} ), support=1804, card=2:315 captured; 
+RULE 52: ( {age:18-20,juvenile-felonies:=0} ), support=563, card=2:474 captured; 
+RULE 112: ( {juvenile-misdemeanors:=0,priors:2-3} ), support=1117, card=2:59 captured; 
+RULE 35: ( {sex:Female,juvenile-crimes:=0} ), support=1108, card=2:484 captured; 
+RULE 5: ( {age:26-45} ), support=3099, card=1:966 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:=0} ), support=1882, card=2:320 captured; 
+RULE 0: ( default ), support=6216, card=0:227 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=34 #add=351 #delete=276 #swap=373):
+max_log_posterior = -3955.302953
+max_log_posterior = -3955.302953
+13 rules 6216 samples
+RULE 121: ( {juvenile-crimes:>0,priors:>3} ), support=494, card=2:494 captured; 
+RULE 74: ( {age:>45,priors:>3} ), support=369, card=2:353 captured; 
+RULE 3: ( {age:>45} ), support=1096, card=1:727 captured; 
+RULE 85: ( {age:18-20,priors:=0} ), support=302, card=2:302 captured; 
+RULE 41: ( {sex:Female,priors:=1} ), support=237, card=2:193 captured; 
+RULE 84: ( {age:26-45,priors:2-3} ), support=583, card=2:583 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:=0} ), support=1816, card=2:1223 captured; 
+RULE 77: ( {age:23-25,priors:=0} ), support=209, card=2:8 captured; 
+RULE 15: ( {priors:>3} ), support=1983, card=1:1136 captured; 
+RULE 25: ( {sex:Male,age:26-45} ), support=2484, card=2:368 captured; 
+RULE 12: ( {juvenile-crimes:=0} ), support=5359, card=1:581 captured; 
+RULE 2: ( {sex:Male} ), support=5026, card=1:233 captured; 
+RULE 0: ( default ), support=6216, card=0:15 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=16 #add=323 #delete=354 #swap=323):
+max_log_posterior = -3954.920668
+max_log_posterior = -3954.920668
+12 rules 6216 samples
+RULE 9: ( {juvenile-felonies:>0} ), support=251, card=1:251 captured; 
+RULE 74: ( {age:>45,priors:>3} ), support=369, card=2:357 captured; 
+RULE 79: ( {age:23-25,priors:=1} ), support=148, card=2:146 captured; 
+RULE 82: ( {age:26-45,priors:>3} ), support=1222, card=2:1106 captured; 
+RULE 84: ( {age:26-45,priors:2-3} ), support=583, card=2:576 captured; 
+RULE 64: ( {age:>45,juvenile-crimes:=0} ), support=1080, card=2:727 captured; 
+RULE 17: ( {priors:2-3} ), support=1201, card=1:404 captured; 
+RULE 110: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1731, card=2:265 captured; 
+RULE 44: ( {sex:Male,priors:>3} ), support=1727, card=2:71 captured; 
+RULE 27: ( {sex:Male,age:21-22} ), support=474, card=2:269 captured; 
+RULE 52: ( {age:18-20,juvenile-felonies:=0} ), support=563, card=2:460 captured; 
+RULE 0: ( default ), support=6216, card=0:1584 captured; 
+Total Captured: 6216
+n0=116, n1=378, captured=494, training accuracy = 0.76518219
+theta[0] = 0.76411290
+n0=169, n1=184, captured=353, training accuracy = 0.52124646
+theta[1] = 0.52112676
+n0=283, n1=54, captured=337, training accuracy = 0.83976261
+theta[2] = 0.16224189
+n0=287, n1=103, captured=390, training accuracy = 0.73589744
+theta[3] = 0.26530612
+n0=394, n1=742, captured=1136, training accuracy = 0.65316901
+theta[4] = 0.65289982
+n0=139, n1=54, captured=193, training accuracy = 0.72020725
+theta[5] = 0.28205128
+n0=196, n1=292, captured=488, training accuracy = 0.59836066
+theta[6] = 0.59795918
+n0=936, n1=369, captured=1305, training accuracy = 0.71724138
+theta[7] = 0.28309105
+n0=576, n1=373, captured=949, training accuracy = 0.60695469
+theta[8] = 0.39327024
+n0=244, n1=327, captured=571, training accuracy = 0.57267951
+theta[9] = 0.57242583
+Time to train: Elapsed time  0.0840	 0.0840 
+
+The best rulelist for 11 MCMC chains is: 10 rules 6216 samples
+RULE 121: ( {juvenile-crimes:>0,priors:>3} ), support=494, card=2:494 captured; 
+RULE 74: ( {age:>45,priors:>3} ), support=369, card=2:353 captured; 
+RULE 73: ( {age:>45,priors:=0} ), support=337, card=2:337 captured; 
+RULE 55: ( {age:>45,juvenile-misdemeanors:=0} ), support=1095, card=2:390 captured; 
+RULE 15: ( {priors:>3} ), support=1983, card=1:1136 captured; 
+RULE 41: ( {sex:Female,priors:=1} ), support=237, card=2:193 captured; 
+RULE 26: ( {sex:Male,age:18-20} ), support=514, card=2:488 captured; 
+RULE 14: ( {priors:=0} ), support=1882, card=1:1305 captured; 
+RULE 5: ( {age:26-45} ), support=3099, card=1:949 captured; 
+RULE 0: ( default ), support=6216, card=0:571 captured; 
+Total Captured: 6216
+121, 0.76411290
+74, 0.52112676
+73, 0.16224189
+55, 0.26530612
+15, 0.65289982
+41, 0.28205128
+26, 0.59795918
+14, 0.28309105
+5, 0.39327024
+0, 0.57242583
+Lambda = 9.000000
+Eta = 3.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 1000
+Rule 121 captures 35 of 691 samples
+Rule 74 captures 40 of 691 samples
+Rule 73 captures 33 of 691 samples
+Rule 55 captures 50 of 691 samples
+Rule 15 captures 116 of 691 samples
+Rule 41 captures 27 of 691 samples
+Rule 26 captures 66 of 691 samples
+Rule 14 captures 157 of 691 samples
+Rule 5 captures 100 of 691 samples
+Rule 0 captures 67 of 691 samples
+test accuracy = 0.696093 
+Assumes data is in data/CrossValidation
+Running compas_0_{train|test}-binary.csv against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER
+
+Installing package into ‘/Users/margo/Library/R/3.4/library’
+(as ‘lib’ is unspecified)
+Warning message:
+package ‘svmRadial’ is not available (for R version 3.4.1) 
+randomForest 4.6-12
+Type rfNews() to see new features/changes/bug fixes.
+Error in read.table(file = file, header = header, sep = sep, quote = quote,  : 
+  more columns than column names
+Calls: read.csv -> read.table
+In addition: Warning message:
+In read.table(file = file, header = header, sep = sep, quote = quote,  :
+  line 1 appears to contain embedded nulls
+Execution halted
+Initialize time: Elapsed time  0.0109	 0.0001 per rule
+122 rules 6216 samples
+0.7163531 0.7105644 0.7134588 0.6960926 0.7062229 0.7105644 0.7047757
+
+
+The best rule list is (#reject=19 #add=353 #delete=347 #swap=300):
+max_log_posterior = -3922.005725
+max_log_posterior = -3922.005725
+10 rules 6216 samples
+RULE 119: ( {juvenile-crimes:>0,priors:>3} ), support=476, card=2:476 captured; 
+RULE 15: ( {priors:>3} ), support=1938, card=1:1462 captured; 
+RULE 72: ( {age:26-45,priors:=0} ), support=822, card=2:822 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1081, card=2:739 captured; 
+RULE 3: ( {age:26-45} ), support=3085, card=1:1066 captured; 
+RULE 111: ( {juvenile-misdemeanors:=0,priors:2-3} ), support=1114, card=2:360 captured; 
+RULE 84: ( {age:23-25,priors:=0} ), support=221, card=2:221 captured; 
+RULE 30: ( {sex:Female,juvenile-felonies:=0} ), support=1187, card=2:201 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=848, card=1:229 captured; 
+RULE 0: ( default ), support=6216, card=0:640 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=23 #add=335 #delete=319 #swap=346):
+max_log_posterior = -3920.628184
+max_log_posterior = -3920.628184
+9 rules 6216 samples
+RULE 72: ( {age:26-45,priors:=0} ), support=822, card=2:822 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=767, card=2:765 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=138, card=2:100 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:>3} ), support=1773, card=2:1497 captured; 
+RULE 61: ( {age:18-20,juvenile-misdemeanors:=0} ), support=556, card=2:424 captured; 
+RULE 5: ( {age:>45} ), support=1095, card=1:740 captured; 
+RULE 17: ( {priors:2-3} ), support=1196, card=1:702 captured; 
+RULE 1: ( {sex:Male} ), support=5016, card=1:879 captured; 
+RULE 0: ( default ), support=6216, card=0:287 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=18 #add=343 #delete=326 #swap=331):
+max_log_posterior = -3928.828673
+max_log_posterior = -3928.828673
+9 rules 6216 samples
+RULE 119: ( {juvenile-crimes:>0,priors:>3} ), support=476, card=2:476 captured; 
+RULE 9: ( {juvenile-felonies:>0} ), support=240, card=1:75 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=523, card=2:459 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=235, card=2:229 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:>3} ), support=1773, card=2:1455 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1086, card=2:695 captured; 
+RULE 98: ( {juvenile-felonies:=0,priors:=0} ), support=1913, card=2:1330 captured; 
+RULE 47: ( {age:26-45,juvenile-felonies:=0} ), support=2969, card=2:943 captured; 
+RULE 0: ( default ), support=6216, card=0:554 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=12 #add=317 #delete=362 #swap=321):
+max_log_posterior = -3919.915102
+max_log_posterior = -3919.915102
+10 rules 6216 samples
+RULE 45: ( {sex:Female,priors:=1} ), support=235, card=2:235 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=848, card=1:835 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=356, card=2:342 captured; 
+RULE 5: ( {age:>45} ), support=1095, card=1:695 captured; 
+RULE 15: ( {priors:>3} ), support=1938, card=1:1120 captured; 
+RULE 7: ( {age:18-20} ), support=630, card=1:399 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=138, card=2:97 captured; 
+RULE 114: ( {juvenile-crimes:=0,priors:=0} ), support=1842, card=2:1239 captured; 
+RULE 63: ( {age:26-45,juvenile-crimes:=0} ), support=2743, card=2:907 captured; 
+RULE 0: ( default ), support=6216, card=0:347 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=26 #add=317 #delete=316 #swap=367):
+max_log_posterior = -3922.806751
+max_log_posterior = -3922.806751
+9 rules 6216 samples
+RULE 115: ( {juvenile-crimes:=0,priors:>3} ), support=1462, card=2:1462 captured; 
+RULE 119: ( {juvenile-crimes:>0,priors:>3} ), support=476, card=2:476 captured; 
+RULE 106: ( {juvenile-misdemeanors:=0,juvenile-crimes:>0} ), support=485, card=2:258 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=569, card=2:544 captured; 
+RULE 5: ( {age:>45} ), support=1095, card=1:739 captured; 
+RULE 17: ( {priors:2-3} ), support=1196, card=1:367 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=523, card=2:312 captured; 
+RULE 110: ( {juvenile-misdemeanors:=0,priors:=1} ), support=1138, card=2:744 captured; 
+RULE 0: ( default ), support=6216, card=0:1314 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=16 #add=307 #delete=331 #swap=362):
+max_log_posterior = -3933.730693
+max_log_posterior = -3933.730693
+9 rules 6216 samples
+RULE 119: ( {juvenile-crimes:>0,priors:>3} ), support=476, card=2:476 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:>3} ), support=1462, card=2:1462 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1086, card=2:739 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=767, card=2:332 captured; 
+RULE 9: ( {juvenile-felonies:>0} ), support=240, card=1:7 captured; 
+RULE 7: ( {age:18-20} ), support=630, card=1:429 captured; 
+RULE 17: ( {priors:2-3} ), support=1196, card=1:794 captured; 
+RULE 2: ( {sex:Female} ), support=1200, card=1:502 captured; 
+RULE 0: ( default ), support=6216, card=0:1475 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=13 #add=349 #delete=327 #swap=324):
+max_log_posterior = -3924.835756
+max_log_posterior = -3924.835756
+8 rules 6216 samples
+RULE 13: ( {juvenile-crimes:>0} ), support=848, card=1:848 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=523, card=2:337 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=569, card=2:534 captured; 
+RULE 14: ( {priors:=0} ), support=1913, card=1:1639 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=195, card=2:195 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1131, card=2:951 captured; 
+RULE 5: ( {age:>45} ), support=1095, card=1:342 captured; 
+RULE 0: ( default ), support=6216, card=0:1370 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=12 #add=351 #delete=313 #swap=336):
+max_log_posterior = -3916.798771
+max_log_posterior = -3916.798771
+9 rules 6216 samples
+RULE 81: ( {age:>45,priors:>3} ), support=356, card=2:356 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1081, card=2:739 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=767, card=2:756 captured; 
+RULE 15: ( {priors:>3} ), support=1938, card=1:1158 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=523, card=2:330 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=569, card=2:540 captured; 
+RULE 17: ( {priors:2-3} ), support=1196, card=1:269 captured; 
+RULE 41: ( {sex:Male,priors:=1} ), support=934, card=2:566 captured; 
+RULE 0: ( default ), support=6216, card=0:1502 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=22 #add=301 #delete=347 #swap=352):
+max_log_posterior = -3914.310137
+max_log_posterior = -3914.310137
+8 rules 6216 samples
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=767, card=2:767 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=523, card=2:337 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=356, card=2:345 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=569, card=2:540 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1086, card=2:739 captured; 
+RULE 110: ( {juvenile-misdemeanors:=0,priors:=1} ), support=1138, card=2:755 captured; 
+RULE 98: ( {juvenile-felonies:=0,priors:=0} ), support=1913, card=2:1311 captured; 
+RULE 0: ( default ), support=6216, card=0:1422 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=34 #add=347 #delete=286 #swap=367):
+max_log_posterior = -3928.700820
+max_log_posterior = -3928.700820
+12 rules 6216 samples
+RULE 119: ( {juvenile-crimes:>0,priors:>3} ), support=476, card=2:476 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=138, card=2:138 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=235, card=2:235 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=356, card=2:342 captured; 
+RULE 15: ( {priors:>3} ), support=1938, card=1:1120 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1094, card=2:695 captured; 
+RULE 65: ( {age:21-22,juvenile-crimes:=0} ), support=452, card=2:298 captured; 
+RULE 72: ( {age:26-45,priors:=0} ), support=822, card=2:822 captured; 
+RULE 63: ( {age:26-45,juvenile-crimes:=0} ), support=2743, card=2:907 captured; 
+RULE 84: ( {age:23-25,priors:=0} ), support=221, card=2:221 captured; 
+RULE 95: ( {juvenile-felonies:=0,juvenile-crimes:=0} ), support=5368, card=2:657 captured; 
+RULE 0: ( default ), support=6216, card=0:305 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=24 #add=339 #delete=349 #swap=312):
+max_log_posterior = -3925.031129
+max_log_posterior = -3925.031129
+9 rules 6216 samples
+RULE 13: ( {juvenile-crimes:>0} ), support=848, card=1:848 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=356, card=2:342 captured; 
+RULE 15: ( {priors:>3} ), support=1938, card=1:1120 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=138, card=2:97 captured; 
+RULE 61: ( {age:18-20,juvenile-misdemeanors:=0} ), support=556, card=2:417 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=497, card=2:486 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1081, card=2:739 captured; 
+RULE 114: ( {juvenile-crimes:=0,priors:=0} ), support=1842, card=2:1239 captured; 
+RULE 0: ( default ), support=6216, card=0:928 captured; 
+Total Captured: 6216
+n0=204, n1=563, captured=767, training accuracy = 0.73402868
+theta[0] = 0.73342003
+n0=151, n1=186, captured=337, training accuracy = 0.55192878
+theta[1] = 0.55162242
+n0=163, n1=182, captured=345, training accuracy = 0.52753623
+theta[2] = 0.52737752
+n0=312, n1=228, captured=540, training accuracy = 0.57777778
+theta[3] = 0.42250923
+n0=580, n1=159, captured=739, training accuracy = 0.78484438
+theta[4] = 0.21592443
+n0=486, n1=269, captured=755, training accuracy = 0.64370861
+theta[5] = 0.35667107
+n0=959, n1=352, captured=1311, training accuracy = 0.73150267
+theta[6] = 0.26884996
+n0=502, n1=920, captured=1422, training accuracy = 0.64697609
+theta[7] = 0.64676966
+Time to train: Elapsed time  0.0729	 0.0729 
+
+The best rulelist for 11 MCMC chains is: 8 rules 6216 samples
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=767, card=2:767 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=523, card=2:337 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=356, card=2:345 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=569, card=2:540 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1086, card=2:739 captured; 
+RULE 110: ( {juvenile-misdemeanors:=0,priors:=1} ), support=1138, card=2:755 captured; 
+RULE 98: ( {juvenile-felonies:=0,priors:=0} ), support=1913, card=2:1311 captured; 
+RULE 0: ( default ), support=6216, card=0:1422 captured; 
+Total Captured: 6216
+36, 0.73342003
+22, 0.55162242
+81, 0.52737752
+75, 0.42250923
+50, 0.21592443
+110, 0.35667107
+98, 0.26884996
+0, 0.64676966
+Lambda = 9.000000
+Eta = 3.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 1000
+Rule 36 captures 85 of 691 samples
+Rule 22 captures 39 of 691 samples
+Rule 81 captures 51 of 691 samples
+Rule 75 captures 63 of 691 samples
+Rule 50 captures 71 of 691 samples
+Rule 110 captures 80 of 691 samples
+Rule 98 captures 131 of 691 samples
+Rule 0 captures 171 of 691 samples
+test accuracy = 0.654124 
+Assumes data is in data/CrossValidation
+Running compas_1_{train|test}-binary.csv against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER
+
+Installing package into ‘/Users/margo/Library/R/3.4/library’
+(as ‘lib’ is unspecified)
+Warning message:
+package ‘svmRadial’ is not available (for R version 3.4.1) 
+randomForest 4.6-12
+Type rfNews() to see new features/changes/bug fixes.
+Warning message:
+In predict.lm(object, newdata, se.fit, scale = 1, type = ifelse(type ==  :
+  prediction from a rank-deficient fit may be misleading
+GLM accuracy: 0.6657
+SVM (with RBF kernel) result: 0.6599
+Adaboost result: 0.6585
+CART result: 0.6339
+C4.5 result: 0.6556
+RandomForests result: 0.6671
+RIPPER result: 0.6671
+0.6657019 0.6599132 0.658466 0.633864 0.6555716 0.6671491 0.6671491
+Initialize time: Elapsed time  0.0097	 0.0001 per rule
+123 rules 6216 samples
+
+
+The best rule list is (#reject=30 #add=343 #delete=348 #swap=309):
+max_log_posterior = -3929.848534
+max_log_posterior = -3929.848534
+11 rules 6216 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=472, card=2:472 captured; 
+RULE 71: ( {age:18-20,juvenile-crimes:>0} ), support=201, card=2:184 captured; 
+RULE 84: ( {age:23-25,priors:=0} ), support=220, card=2:220 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:357 captured; 
+RULE 15: ( {priors:>3} ), support=1980, card=1:1151 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:565 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1082, card=2:720 captured; 
+RULE 3: ( {age:26-45} ), support=3064, card=1:1289 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1156, card=2:410 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1786, card=2:461 captured; 
+RULE 0: ( default ), support=6216, card=0:387 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=18 #add=339 #delete=315 #swap=346):
+max_log_posterior = -3935.329789
+max_log_posterior = -3935.329789
+11 rules 6216 samples
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:565 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=195, card=2:195 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=496, card=2:496 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=845, card=1:794 captured; 
+RULE 80: ( {age:>45,priors:=0} ), support=322, card=2:322 captured; 
+RULE 70: ( {age:18-20,juvenile-crimes:=0} ), support=434, card=2:434 captured; 
+RULE 108: ( {juvenile-misdemeanors:=0,priors:=0} ), support=1848, card=2:1202 captured; 
+RULE 82: ( {age:>45,priors:=1} ), support=203, card=2:203 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1156, card=2:257 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1082, card=2:357 captured; 
+RULE 0: ( default ), support=6216, card=0:1391 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=18 #add=346 #delete=326 #swap=328):
+max_log_posterior = -3930.473375
+max_log_posterior = -3930.473375
+12 rules 6216 samples
+RULE 72: ( {age:26-45,priors:=0} ), support=793, card=2:793 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=765, card=2:764 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:360 captured; 
+RULE 15: ( {priors:>3} ), support=1980, card=1:1189 captured; 
+RULE 3: ( {age:26-45} ), support=3064, card=1:1019 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1093, card=2:720 captured; 
+RULE 118: ( {juvenile-crimes:=0,priors:2-3} ), support=1021, card=2:298 captured; 
+RULE 19: ( {sex:Male,age:21-22} ), support=473, card=2:236 captured; 
+RULE 7: ( {age:18-20} ), support=635, card=1:394 captured; 
+RULE 14: ( {priors:=0} ), support=1849, card=1:265 captured; 
+RULE 78: ( {age:21-22,priors:=1} ), support=135, card=2:24 captured; 
+RULE 0: ( default ), support=6216, card=0:154 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=19 #add=308 #delete=372 #swap=320):
+max_log_posterior = -3927.462379
+max_log_posterior = -3927.462379
+10 rules 6216 samples
+RULE 74: ( {age:26-45,priors:=1} ), support=496, card=2:496 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=845, card=1:831 captured; 
+RULE 80: ( {age:>45,priors:=0} ), support=322, card=2:322 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:357 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=140, card=2:93 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1745, card=2:1151 captured; 
+RULE 52: ( {age:18-20,juvenile-felonies:=0} ), support=577, card=2:423 captured; 
+RULE 14: ( {priors:=0} ), support=1849, card=1:1202 captured; 
+RULE 5: ( {age:>45} ), support=1094, card=1:398 captured; 
+RULE 0: ( default ), support=6216, card=0:943 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=13 #add=323 #delete=321 #swap=356):
+max_log_posterior = -3927.360192
+max_log_posterior = -3927.360192
+12 rules 6216 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=472, card=2:472 captured; 
+RULE 15: ( {priors:>3} ), support=1980, card=1:1508 captured; 
+RULE 9: ( {juvenile-felonies:>0} ), support=246, card=1:76 captured; 
+RULE 80: ( {age:>45,priors:=0} ), support=322, card=2:322 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:558 captured; 
+RULE 5: ( {age:>45} ), support=1094, card=1:398 captured; 
+RULE 3: ( {age:26-45} ), support=3064, card=1:1286 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:2-3} ), support=1155, card=2:402 captured; 
+RULE 41: ( {sex:Male,priors:=1} ), support=947, card=2:378 captured; 
+RULE 19: ( {sex:Male,age:21-22} ), support=473, card=2:157 captured; 
+RULE 7: ( {age:18-20} ), support=635, card=1:328 captured; 
+RULE 0: ( default ), support=6216, card=0:331 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=25 #add=316 #delete=330 #swap=354):
+max_log_posterior = -3939.116204
+max_log_posterior = -3939.116204
+12 rules 6216 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=472, card=2:472 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:357 captured; 
+RULE 80: ( {age:>45,priors:=0} ), support=322, card=2:322 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=845, card=1:373 captured; 
+RULE 32: ( {sex:Male,juvenile-misdemeanors:>0} ), support=317, card=2:0 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1508, card=2:1151 captured; 
+RULE 61: ( {age:18-20,juvenile-misdemeanors:=0} ), support=561, card=2:423 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=140, card=2:93 captured; 
+RULE 14: ( {priors:=0} ), support=1849, card=1:1202 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:528 captured; 
+RULE 6: ( {age:23-25} ), support=842, card=1:307 captured; 
+RULE 0: ( default ), support=6216, card=0:988 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=18 #add=362 #delete=321 #swap=317):
+max_log_posterior = -3936.174097
+max_log_posterior = -3936.174097
+13 rules 6216 samples
+RULE 88: ( {age:18-20,priors:=0} ), support=306, card=2:306 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:565 captured; 
+RULE 80: ( {age:>45,priors:=0} ), support=322, card=2:322 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=245, card=2:245 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=195, card=2:195 captured; 
+RULE 82: ( {age:>45,priors:=1} ), support=203, card=2:164 captured; 
+RULE 17: ( {priors:2-3} ), support=1195, card=1:435 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=496, card=2:378 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=845, card=1:602 captured; 
+RULE 14: ( {priors:=0} ), support=1849, card=1:1202 captured; 
+RULE 5: ( {age:>45} ), support=1094, card=1:357 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1745, card=2:1151 captured; 
+RULE 0: ( default ), support=6216, card=0:294 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=8 #add=344 #delete=309 #swap=347):
+max_log_posterior = -3925.031167
+max_log_posterior = -3925.031167
+11 rules 6216 samples
+RULE 9: ( {juvenile-felonies:>0} ), support=246, card=1:246 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:362 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=472, card=2:297 captured; 
+RULE 84: ( {age:23-25,priors:=0} ), support=220, card=2:220 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:558 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1093, card=2:720 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:2-3} ), support=1155, card=2:402 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1745, card=2:1151 captured; 
+RULE 47: ( {age:26-45,juvenile-felonies:=0} ), support=2945, card=2:1286 captured; 
+RULE 2: ( {sex:Female} ), support=1189, card=1:197 captured; 
+RULE 0: ( default ), support=6216, card=0:777 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=25 #add=306 #delete=342 #swap=352):
+max_log_posterior = -3925.457658
+max_log_posterior = -3925.457658
+9 rules 6216 samples
+RULE 45: ( {sex:Female,priors:=1} ), support=245, card=2:245 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=845, card=1:830 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:357 captured; 
+RULE 15: ( {priors:>3} ), support=1980, card=1:1151 captured; 
+RULE 5: ( {age:>45} ), support=1094, card=1:681 captured; 
+RULE 7: ( {age:18-20} ), support=635, card=1:403 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1786, card=2:1202 captured; 
+RULE 3: ( {age:26-45} ), support=3064, card=1:896 captured; 
+RULE 0: ( default ), support=6216, card=0:451 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=23 #add=356 #delete=283 #swap=361):
+max_log_posterior = -3928.199460
+max_log_posterior = -3928.199460
+13 rules 6216 samples
+RULE 79: ( {age:21-22,priors:2-3} ), support=140, card=2:140 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=472, card=2:472 captured; 
+RULE 80: ( {age:>45,priors:=0} ), support=322, card=2:322 captured; 
+RULE 86: ( {age:23-25,priors:=1} ), support=165, card=2:165 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:357 captured; 
+RULE 87: ( {age:23-25,priors:2-3} ), support=187, card=2:187 captured; 
+RULE 5: ( {age:>45} ), support=1094, card=1:398 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1745, card=2:1151 captured; 
+RULE 9: ( {juvenile-felonies:>0} ), support=246, card=1:60 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=525, card=2:457 captured; 
+RULE 19: ( {sex:Male,age:21-22} ), support=473, card=2:266 captured; 
+RULE 17: ( {priors:2-3} ), support=1195, card=1:574 captured; 
+RULE 0: ( default ), support=6216, card=0:1667 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=8 #add=319 #delete=360 #swap=321):
+max_log_posterior = -3930.794806
+max_log_posterior = -3930.794806
+10 rules 6216 samples
+RULE 87: ( {age:23-25,priors:2-3} ), support=187, card=2:187 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=472, card=2:472 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1745, card=2:1508 captured; 
+RULE 71: ( {age:18-20,juvenile-crimes:>0} ), support=201, card=2:184 captured; 
+RULE 7: ( {age:18-20} ), support=635, card=1:423 captured; 
+RULE 5: ( {age:>45} ), support=1094, card=1:720 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=496, card=2:496 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=140, card=2:140 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1786, card=2:1202 captured; 
+RULE 0: ( default ), support=6216, card=0:884 captured; 
+Total Captured: 6216
+n0=57, n1=189, captured=246, training accuracy = 0.76829268
+theta[0] = 0.76612903
+n0=171, n1=191, captured=362, training accuracy = 0.52762431
+theta[1] = 0.52747253
+n0=65, n1=232, captured=297, training accuracy = 0.78114478
+theta[2] = 0.77926421
+n0=168, n1=52, captured=220, training accuracy = 0.76363636
+theta[3] = 0.23873874
+n0=323, n1=235, captured=558, training accuracy = 0.57885305
+theta[4] = 0.42142857
+n0=564, n1=156, captured=720, training accuracy = 0.78333333
+theta[5] = 0.21745152
+n0=132, n1=270, captured=402, training accuracy = 0.67164179
+theta[6] = 0.67079208
+n0=392, n1=759, captured=1151, training accuracy = 0.65942659
+theta[7] = 0.65915004
+n0=924, n1=362, captured=1286, training accuracy = 0.71850700
+theta[8] = 0.28183230
+n0=137, n1=60, captured=197, training accuracy = 0.69543147
+theta[9] = 0.30653266
+n0=385, n1=392, captured=777, training accuracy = 0.50450450
+theta[10] = 0.50449294
+Time to train: Elapsed time  0.0797	 0.0797 
+
+The best rulelist for 11 MCMC chains is: 11 rules 6216 samples
+RULE 9: ( {juvenile-felonies:>0} ), support=246, card=1:246 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:362 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=472, card=2:297 captured; 
+RULE 84: ( {age:23-25,priors:=0} ), support=220, card=2:220 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:558 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1093, card=2:720 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:2-3} ), support=1155, card=2:402 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1745, card=2:1151 captured; 
+RULE 47: ( {age:26-45,juvenile-felonies:=0} ), support=2945, card=2:1286 captured; 
+RULE 2: ( {sex:Female} ), support=1189, card=1:197 captured; 
+RULE 0: ( default ), support=6216, card=0:777 captured; 
+Total Captured: 6216
+9, 0.76612903
+81, 0.52747253
+120, 0.77926421
+84, 0.23873874
+75, 0.42142857
+58, 0.21745152
+101, 0.67079208
+109, 0.65915004
+47, 0.28183230
+2, 0.30653266
+0, 0.50449294
+Lambda = 9.000000
+Eta = 3.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 1000
+Rule 9 captures 29 of 691 samples
+Rule 81 captures 36 of 691 samples
+Rule 120 captures 36 of 691 samples
+Rule 84 captures 22 of 691 samples
+Rule 75 captures 71 of 691 samples
+Rule 58 captures 90 of 691 samples
+Rule 101 captures 46 of 691 samples
+Rule 109 captures 101 of 691 samples
+Rule 47 captures 163 of 691 samples
+Rule 2 captures 16 of 691 samples
+Rule 0 captures 81 of 691 samples
+test accuracy = 0.648336 
+Assumes data is in data/CrossValidation
+Running compas_2_{train|test}-binary.csv against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER
+
+Installing package into ‘/Users/margo/Library/R/3.4/library’
+(as ‘lib’ is unspecified)
+Warning message:
+package ‘svmRadial’ is not available (for R version 3.4.1) 
+randomForest 4.6-12
+Type rfNews() to see new features/changes/bug fixes.
+Warning message:
+In predict.lm(object, newdata, se.fit, scale = 1, type = ifelse(type ==  :
+  prediction from a rank-deficient fit may be misleading
+GLM accuracy: 0.6585
+SVM (with RBF kernel) result: 0.6671
+Adaboost result: 0.6585
+CART result: 0.6512
+C4.5 result: 0.6643
+RandomForests result: 0.6614
+RIPPER result: 0.6657
+0.658466 0.6671491 0.658466 0.6512301 0.6642547 0.6613603 0.6657019
+Initialize time: Elapsed time  0.0104	 0.0001 per rule
+123 rules 6216 samples
+
+
+The best rule list is (#reject=10 #add=351 #delete=353 #swap=296):
+max_log_posterior = -3917.143902
+max_log_posterior = -3917.143902
+8 rules 6216 samples
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:565 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=775, card=2:745 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=521, card=2:333 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=372, card=2:361 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1070, card=2:712 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1131, card=2:757 captured; 
+RULE 14: ( {priors:=0} ), support=1884, card=1:1299 captured; 
+RULE 0: ( default ), support=6216, card=0:1444 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=8 #add=338 #delete=327 #swap=335):
+max_log_posterior = -3931.387303
+max_log_posterior = -3931.387303
+9 rules 6216 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=478, card=2:478 captured; 
+RULE 70: ( {age:18-20,juvenile-crimes:=0} ), support=423, card=2:423 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1817, card=2:1561 captured; 
+RULE 52: ( {age:18-20,juvenile-felonies:=0} ), support=568, card=2:136 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=182, card=2:182 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1131, card=2:975 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:565 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1070, card=2:358 captured; 
+RULE 0: ( default ), support=6216, card=0:1538 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=22 #add=343 #delete=317 #swap=340):
+max_log_posterior = -3927.512910
+max_log_posterior = -3927.512910
+9 rules 6216 samples
+RULE 81: ( {age:>45,priors:>3} ), support=372, card=2:372 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=775, card=2:764 captured; 
+RULE 15: ( {priors:>3} ), support=1968, card=1:1171 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1083, card=2:712 captured; 
+RULE 7: ( {age:18-20} ), support=629, card=1:430 captured; 
+RULE 16: ( {priors:=1} ), support=1170, card=1:738 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:535 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1817, card=2:1232 captured; 
+RULE 0: ( default ), support=6216, card=0:262 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=19 #add=311 #delete=367 #swap=322):
+max_log_posterior = -3929.291047
+max_log_posterior = -3929.291047
+9 rules 6216 samples
+RULE 81: ( {age:>45,priors:>3} ), support=372, card=2:372 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:565 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=250, card=2:250 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1070, card=2:670 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=858, card=1:793 captured; 
+RULE 7: ( {age:18-20} ), support=629, card=1:404 captured; 
+RULE 108: ( {juvenile-misdemeanors:=0,priors:=0} ), support=1883, card=2:1232 captured; 
+RULE 110: ( {juvenile-misdemeanors:=0,priors:=1} ), support=1133, card=2:556 captured; 
+RULE 0: ( default ), support=6216, card=0:1374 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=14 #add=321 #delete=314 #swap=365):
+max_log_posterior = -3927.515382
+max_log_posterior = -3927.515382
+9 rules 6216 samples
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1490, card=2:1490 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=494, card=2:494 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:565 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=775, card=2:735 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1083, card=2:714 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=521, card=2:326 captured; 
+RULE 110: ( {juvenile-misdemeanors:=0,priors:=1} ), support=1133, card=2:276 captured; 
+RULE 98: ( {juvenile-felonies:=0,priors:=0} ), support=1884, card=2:1299 captured; 
+RULE 0: ( default ), support=6216, card=0:317 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=16 #add=320 #delete=329 #swap=351):
+max_log_posterior = -3921.122640
+max_log_posterior = -3921.122640
+9 rules 6216 samples
+RULE 74: ( {age:26-45,priors:=1} ), support=494, card=2:494 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=148, card=2:148 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=775, card=2:720 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=372, card=2:361 captured; 
+RULE 5: ( {age:>45} ), support=1084, card=1:712 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:>3} ), support=1792, card=2:1165 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=521, card=2:326 captured; 
+RULE 14: ( {priors:=0} ), support=1884, card=1:1299 captured; 
+RULE 0: ( default ), support=6216, card=0:991 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=17 #add=346 #delete=320 #swap=334):
+max_log_posterior = -3943.342002
+max_log_posterior = -3943.342002
+10 rules 6216 samples
+RULE 13: ( {juvenile-crimes:>0} ), support=858, card=1:858 captured; 
+RULE 52: ( {age:18-20,juvenile-felonies:=0} ), support=568, card=2:423 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=182, card=2:182 captured; 
+RULE 14: ( {priors:=0} ), support=1884, card=1:1561 captured; 
+RULE 16: ( {priors:=1} ), support=1170, card=1:930 captured; 
+RULE 6: ( {age:23-25} ), support=819, card=1:323 captured; 
+RULE 5: ( {age:>45} ), support=1084, card=1:358 captured; 
+RULE 73: ( {age:26-45,priors:>3} ), support=1205, card=2:912 captured; 
+RULE 65: ( {age:21-22,juvenile-crimes:=0} ), support=458, card=2:139 captured; 
+RULE 0: ( default ), support=6216, card=0:530 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=8 #add=344 #delete=319 #swap=337):
+max_log_posterior = -3939.802685
+max_log_posterior = -3939.802685
+12 rules 6216 samples
+RULE 82: ( {age:>45,priors:=1} ), support=201, card=2:201 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=478, card=2:478 captured; 
+RULE 88: ( {age:18-20,priors:=0} ), support=300, card=2:300 captured; 
+RULE 71: ( {age:18-20,juvenile-crimes:>0} ), support=206, card=2:144 captured; 
+RULE 73: ( {age:26-45,priors:>3} ), support=1205, card=2:912 captured; 
+RULE 80: ( {age:>45,priors:=0} ), support=329, card=2:329 captured; 
+RULE 98: ( {juvenile-felonies:=0,priors:=0} ), support=1884, card=2:1255 captured; 
+RULE 47: ( {age:26-45,juvenile-felonies:=0} ), support=2958, card=2:1050 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=182, card=2:182 captured; 
+RULE 5: ( {age:>45} ), support=1084, card=1:358 captured; 
+RULE 16: ( {priors:=1} ), support=1170, card=1:400 captured; 
+RULE 0: ( default ), support=6216, card=0:607 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=50 #add=301 #delete=340 #swap=359):
+max_log_posterior = -3929.954636
+max_log_posterior = -3929.954636
+9 rules 6216 samples
+RULE 84: ( {age:23-25,priors:=0} ), support=212, card=2:212 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=858, card=1:849 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:530 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1725, card=2:1490 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1074, card=2:712 captured; 
+RULE 3: ( {age:26-45} ), support=3085, card=1:1298 captured; 
+RULE 111: ( {juvenile-misdemeanors:=0,priors:2-3} ), support=1112, card=2:299 captured; 
+RULE 1: ( {sex:Male} ), support=5016, card=1:644 captured; 
+RULE 0: ( default ), support=6216, card=0:182 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=15 #add=350 #delete=296 #swap=354):
+max_log_posterior = -3928.588794
+max_log_posterior = -3928.588794
+10 rules 6216 samples
+RULE 87: ( {age:23-25,priors:2-3} ), support=186, card=2:186 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=148, card=2:148 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=494, card=2:494 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=775, card=2:688 captured; 
+RULE 15: ( {priors:>3} ), support=1968, card=1:1532 captured; 
+RULE 20: ( {sex:Male,age:>45} ), support=880, card=2:553 captured; 
+RULE 19: ( {sex:Male,age:21-22} ), support=488, card=2:249 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=521, card=2:326 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1817, card=2:1218 captured; 
+RULE 0: ( default ), support=6216, card=0:822 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=21 #add=337 #delete=344 #swap=319):
+max_log_posterior = -3922.934719
+max_log_posterior = -3922.934719
+10 rules 6216 samples
+RULE 84: ( {age:23-25,priors:=0} ), support=212, card=2:212 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:565 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=775, card=2:738 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=372, card=2:361 captured; 
+RULE 15: ( {priors:>3} ), support=1968, card=1:1171 captured; 
+RULE 5: ( {age:>45} ), support=1084, card=1:712 captured; 
+RULE 47: ( {age:26-45,juvenile-felonies:=0} ), support=2958, card=2:1303 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:2-3} ), support=1154, card=2:310 captured; 
+RULE 33: ( {sex:Female,juvenile-misdemeanors:=0} ), support=1163, card=2:194 captured; 
+RULE 0: ( default ), support=6216, card=0:650 captured; 
+Total Captured: 6216
+n0=317, n1=248, captured=565, training accuracy = 0.56106195
+theta[0] = 0.43915344
+n0=196, n1=549, captured=745, training accuracy = 0.73691275
+theta[1] = 0.73627845
+n0=145, n1=188, captured=333, training accuracy = 0.56456456
+theta[2] = 0.56417910
+n0=169, n1=192, captured=361, training accuracy = 0.53185596
+theta[3] = 0.53168044
+n0=555, n1=157, captured=712, training accuracy = 0.77949438
+theta[4] = 0.22128852
+n0=492, n1=265, captured=757, training accuracy = 0.64993395
+theta[5] = 0.35046113
+n0=951, n1=348, captured=1299, training accuracy = 0.73210162
+theta[6] = 0.26825519
+n0=504, n1=940, captured=1444, training accuracy = 0.65096953
+theta[7] = 0.65076072
+Time to train: Elapsed time  0.0718	 0.0718 
+
+The best rulelist for 11 MCMC chains is: 8 rules 6216 samples
+RULE 75: ( {age:26-45,priors:2-3} ), support=565, card=2:565 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=775, card=2:745 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=521, card=2:333 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=372, card=2:361 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1070, card=2:712 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1131, card=2:757 captured; 
+RULE 14: ( {priors:=0} ), support=1884, card=1:1299 captured; 
+RULE 0: ( default ), support=6216, card=0:1444 captured; 
+Total Captured: 6216
+75, 0.43915344
+36, 0.73627845
+22, 0.56417910
+81, 0.53168044
+67, 0.22128852
+100, 0.35046113
+14, 0.26825519
+0, 0.65076072
+Lambda = 9.000000
+Eta = 3.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 1000
+Rule 75 captures 71 of 691 samples
+Rule 36 captures 74 of 691 samples
+Rule 22 captures 43 of 691 samples
+Rule 81 captures 35 of 691 samples
+Rule 67 captures 98 of 691 samples
+Rule 100 captures 76 of 691 samples
+Rule 14 captures 143 of 691 samples
+Rule 0 captures 151 of 691 samples
+test accuracy = 0.655572 
+Assumes data is in data/CrossValidation
+Running compas_3_{train|test}-binary.csv against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER
+
+Installing package into ‘/Users/margo/Library/R/3.4/library’
+(as ‘lib’ is unspecified)
+Warning message:
+package ‘svmRadial’ is not available (for R version 3.4.1) 
+randomForest 4.6-12
+Type rfNews() to see new features/changes/bug fixes.
+Warning message:
+In predict.lm(object, newdata, se.fit, scale = 1, type = ifelse(type ==  :
+  prediction from a rank-deficient fit may be misleading
+GLM accuracy: 0.6657
+SVM (with RBF kernel) result: 0.6541
+Adaboost result: 0.6628
+CART result: 0.6556
+C4.5 result: 0.6556
+RandomForests result: 0.6585
+RIPPER result: 0.6483
+0.6657019 0.6541245 0.6628075 0.6555716 0.6555716 0.658466 0.6483357
+Initialize time: Elapsed time  0.0090	 0.0001 per rule
+123 rules 6216 samples
+
+
+The best rule list is (#reject=29 #add=346 #delete=343 #swap=311):
+max_log_posterior = -3934.017174
+max_log_posterior = -3934.017174
+11 rules 6216 samples
+RULE 79: ( {age:21-22,priors:2-3} ), support=141, card=2:141 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=243, card=2:243 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=492, card=2:373 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=472, card=2:472 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=842, card=1:304 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:>3} ), support=1779, card=2:1475 captured; 
+RULE 70: ( {age:18-20,juvenile-crimes:=0} ), support=423, card=2:396 captured; 
+RULE 19: ( {sex:Male,age:21-22} ), support=476, card=2:240 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1084, card=2:691 captured; 
+RULE 14: ( {priors:=0} ), support=1883, card=1:1075 captured; 
+RULE 0: ( default ), support=6216, card=0:806 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=17 #add=321 #delete=327 #swap=352):
+max_log_posterior = -3938.123323
+max_log_posterior = -3938.123323
+12 rules 6216 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=472, card=2:472 captured; 
+RULE 80: ( {age:>45,priors:=0} ), support=330, card=2:330 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=243, card=2:243 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=492, card=2:373 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=842, card=1:345 captured; 
+RULE 7: ( {age:18-20} ), support=620, card=1:405 captured; 
+RULE 108: ( {juvenile-misdemeanors:=0,priors:=0} ), support=1882, card=2:1228 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=366, card=2:350 captured; 
+RULE 15: ( {priors:>3} ), support=1947, card=1:1116 captured; 
+RULE 5: ( {age:>45} ), support=1100, card=1:361 captured; 
+RULE 63: ( {age:26-45,juvenile-crimes:=0} ), support=2730, card=2:536 captured; 
+RULE 0: ( default ), support=6216, card=0:457 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=15 #add=350 #delete=324 #swap=326):
+max_log_posterior = -3926.809308
+max_log_posterior = -3926.809308
+8 rules 6216 samples
+RULE 72: ( {age:26-45,priors:=0} ), support=816, card=2:816 captured; 
+RULE 84: ( {age:23-25,priors:=0} ), support=222, card=2:222 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=492, card=2:492 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=760, card=2:740 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=366, card=2:353 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1088, card=2:734 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:>3} ), support=1779, card=2:1157 captured; 
+RULE 0: ( default ), support=6216, card=0:1702 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=10 #add=314 #delete=369 #swap=317):
+max_log_posterior = -3935.600823
+max_log_posterior = -3935.600823
+10 rules 6216 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=472, card=2:472 captured; 
+RULE 71: ( {age:18-20,juvenile-crimes:>0} ), support=197, card=2:180 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=243, card=2:237 captured; 
+RULE 88: ( {age:18-20,priors:=0} ), support=299, card=2:258 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1707, card=2:1475 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1099, card=2:691 captured; 
+RULE 14: ( {priors:=0} ), support=1883, card=1:1254 captured; 
+RULE 47: ( {age:26-45,juvenile-felonies:=0} ), support=2954, card=2:936 captured; 
+RULE 41: ( {sex:Male,priors:=1} ), support=939, card=2:327 captured; 
+RULE 0: ( default ), support=6216, card=0:386 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=8 #add=337 #delete=317 #swap=346):
+max_log_posterior = -3928.871564
+max_log_posterior = -3928.871564
+8 rules 6216 samples
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=760, card=2:760 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1475, card=2:1475 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1084, card=2:734 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=517, card=2:331 captured; 
+RULE 14: ( {priors:=0} ), support=1883, card=1:1294 captured; 
+RULE 16: ( {priors:=1} ), support=1182, card=1:760 captured; 
+RULE 4: ( {age:21-22} ), support=587, card=1:106 captured; 
+RULE 0: ( default ), support=6216, card=0:756 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=13 #add=319 #delete=324 #swap=357):
+max_log_posterior = -3926.158411
+max_log_posterior = -3926.158411
+8 rules 6216 samples
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=760, card=2:760 captured; 
+RULE 61: ( {age:18-20,juvenile-misdemeanors:=0} ), support=544, card=2:431 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=366, card=2:353 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=572, card=2:541 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1084, card=2:734 captured; 
+RULE 16: ( {priors:=1} ), support=1182, card=1:738 captured; 
+RULE 108: ( {juvenile-misdemeanors:=0,priors:=0} ), support=1882, card=2:1234 captured; 
+RULE 0: ( default ), support=6216, card=0:1425 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=13 #add=359 #delete=322 #swap=319):
+max_log_posterior = -3923.189498
+max_log_posterior = -3923.189498
+9 rules 6216 samples
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=760, card=2:760 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=366, card=2:353 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=572, card=2:541 captured; 
+RULE 15: ( {priors:>3} ), support=1947, card=1:1161 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1084, card=2:734 captured; 
+RULE 7: ( {age:18-20} ), support=620, card=1:432 captured; 
+RULE 41: ( {sex:Male,priors:=1} ), support=939, card=2:560 captured; 
+RULE 17: ( {priors:2-3} ), support=1204, card=1:265 captured; 
+RULE 0: ( default ), support=6216, card=0:1410 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=5 #add=336 #delete=323 #swap=341):
+max_log_posterior = -3936.852715
+max_log_posterior = -3936.852715
+9 rules 6216 samples
+RULE 22: ( {sex:Male,age:18-20} ), support=517, card=2:517 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=366, card=2:366 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1099, card=2:734 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1475, card=2:1117 captured; 
+RULE 40: ( {sex:Male,priors:>3} ), support=1701, card=2:404 captured; 
+RULE 16: ( {priors:=1} ), support=1182, card=1:807 captured; 
+RULE 108: ( {juvenile-misdemeanors:=0,priors:=0} ), support=1882, card=2:1313 captured; 
+RULE 4: ( {age:21-22} ), support=587, card=1:144 captured; 
+RULE 0: ( default ), support=6216, card=0:814 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=15 #add=298 #delete=336 #swap=366):
+max_log_posterior = -3926.292473
+max_log_posterior = -3926.292473
+9 rules 6216 samples
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=760, card=2:760 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=366, card=2:353 captured; 
+RULE 15: ( {priors:>3} ), support=1947, card=1:1161 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=572, card=2:541 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1088, card=2:734 captured; 
+RULE 118: ( {juvenile-crimes:=0,priors:2-3} ), support=1035, card=2:307 captured; 
+RULE 52: ( {age:18-20,juvenile-felonies:=0} ), support=565, card=2:381 captured; 
+RULE 14: ( {priors:=0} ), support=1883, card=1:1234 captured; 
+RULE 0: ( default ), support=6216, card=0:745 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=7 #add=355 #delete=284 #swap=361):
+max_log_posterior = -3924.327336
+max_log_posterior = -3924.327336
+10 rules 6216 samples
+RULE 72: ( {age:26-45,priors:=0} ), support=816, card=2:816 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=492, card=2:492 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=472, card=2:472 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=141, card=2:141 captured; 
+RULE 84: ( {age:23-25,priors:=0} ), support=222, card=2:222 captured; 
+RULE 15: ( {priors:>3} ), support=1947, card=1:1475 captured; 
+RULE 24: ( {sex:Female,age:21-22} ), support=111, card=2:77 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=760, card=2:269 captured; 
+RULE 5: ( {age:>45} ), support=1100, card=1:734 captured; 
+RULE 0: ( default ), support=6216, card=0:1518 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=14 #add=327 #delete=353 #swap=320):
+max_log_posterior = -3923.551922
+max_log_posterior = -3923.551922
+9 rules 6216 samples
+RULE 74: ( {age:26-45,priors:=1} ), support=492, card=2:492 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=760, card=2:750 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=141, card=2:103 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=366, card=2:353 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1084, card=2:734 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1707, card=2:1142 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=517, card=2:331 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1816, card=2:1284 captured; 
+RULE 0: ( default ), support=6216, card=0:1027 captured; 
+Total Captured: 6216
+n0=203, n1=557, captured=760, training accuracy = 0.73289474
+theta[0] = 0.73228346
+n0=164, n1=189, captured=353, training accuracy = 0.53541076
+theta[1] = 0.53521127
+n0=304, n1=237, captured=541, training accuracy = 0.56192237
+theta[2] = 0.43830571
+n0=390, n1=771, captured=1161, training accuracy = 0.66408269
+theta[3] = 0.66380052
+n0=574, n1=160, captured=734, training accuracy = 0.78201635
+theta[4] = 0.21875000
+n0=208, n1=224, captured=432, training accuracy = 0.51851852
+theta[5] = 0.51843318
+n0=345, n1=215, captured=560, training accuracy = 0.61607143
+theta[6] = 0.38434164
+n0=99, n1=166, captured=265, training accuracy = 0.62641509
+theta[7] = 0.62546816
+n0=1031, n1=379, captured=1410, training accuracy = 0.73120567
+theta[8] = 0.26912181
+Time to train: Elapsed time  0.0723	 0.0723 
+
+The best rulelist for 11 MCMC chains is: 9 rules 6216 samples
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=760, card=2:760 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=366, card=2:353 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=572, card=2:541 captured; 
+RULE 15: ( {priors:>3} ), support=1947, card=1:1161 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1084, card=2:734 captured; 
+RULE 7: ( {age:18-20} ), support=620, card=1:432 captured; 
+RULE 41: ( {sex:Male,priors:=1} ), support=939, card=2:560 captured; 
+RULE 17: ( {priors:2-3} ), support=1204, card=1:265 captured; 
+RULE 0: ( default ), support=6216, card=0:1410 captured; 
+Total Captured: 6216
+36, 0.73228346
+81, 0.53521127
+75, 0.43830571
+15, 0.66380052
+67, 0.21875000
+7, 0.51843318
+41, 0.38434164
+17, 0.62546816
+0, 0.26912181
+Lambda = 9.000000
+Eta = 3.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 1000
+Rule 36 captures 92 of 691 samples
+Rule 81 captures 43 of 691 samples
+Rule 75 captures 62 of 691 samples
+Rule 15 captures 133 of 691 samples
+Rule 67 captures 76 of 691 samples
+Rule 7 captures 48 of 691 samples
+Rule 41 captures 60 of 691 samples
+Rule 17 captures 21 of 691 samples
+Rule 0 captures 156 of 691 samples
+test accuracy = 0.668596 
+Assumes data is in data/CrossValidation
+Running compas_4_{train|test}-binary.csv against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER
+
+Installing package into ‘/Users/margo/Library/R/3.4/library’
+(as ‘lib’ is unspecified)
+Warning message:
+package ‘svmRadial’ is not available (for R version 3.4.1) 
+randomForest 4.6-12
+Type rfNews() to see new features/changes/bug fixes.
+Warning message:
+In predict.lm(object, newdata, se.fit, scale = 1, type = ifelse(type ==  :
+  prediction from a rank-deficient fit may be misleading
+GLM accuracy: 0.6715
+SVM (with RBF kernel) result: 0.6657
+Adaboost result: 0.6657
+CART result: 0.6628
+C4.5 result: 0.6671
+RandomForests result: 0.6671
+RIPPER result: 0.6773
+0.6714906 0.6657019 0.6657019 0.6628075 0.6671491 0.6671491 0.6772793
+Initialize time: Elapsed time  0.0087	 0.0001 per rule
+123 rules 6216 samples
+
+
+The best rule list is (#reject=17 #add=348 #delete=345 #swap=307):
+max_log_posterior = -3928.396294
+max_log_posterior = -3928.396294
+10 rules 6216 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=487, card=2:487 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=569, card=2:569 captured; 
+RULE 15: ( {priors:>3} ), support=1972, card=1:1485 captured; 
+RULE 88: ( {age:18-20,priors:=0} ), support=305, card=2:305 captured; 
+RULE 43: ( {sex:Female,priors:=0} ), support=486, card=2:421 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1088, card=2:644 captured; 
+RULE 71: ( {age:18-20,juvenile-crimes:>0} ), support=207, card=2:143 captured; 
+RULE 3: ( {age:26-45} ), support=3085, card=1:1088 captured; 
+RULE 14: ( {priors:=0} ), support=1903, card=1:321 captured; 
+RULE 0: ( default ), support=6216, card=0:753 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=14 #add=338 #delete=322 #swap=340):
+max_log_posterior = -3926.285849
+max_log_posterior = -3926.285849
+10 rules 6216 samples
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1485, card=2:1485 captured; 
+RULE 9: ( {juvenile-felonies:>0} ), support=255, card=1:255 captured; 
+RULE 61: ( {age:18-20,juvenile-misdemeanors:=0} ), support=554, card=2:494 captured; 
+RULE 15: ( {priors:>3} ), support=1972, card=1:307 captured; 
+RULE 5: ( {age:>45} ), support=1103, card=1:729 captured; 
+RULE 7: ( {age:18-20} ), support=632, card=1:60 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1831, card=2:1235 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=484, card=2:482 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=133, card=2:126 captured; 
+RULE 0: ( default ), support=6216, card=0:1043 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=11 #add=335 #delete=319 #swap=346):
+max_log_posterior = -3954.195465
+max_log_posterior = -3954.195465
+12 rules 6216 samples
+RULE 53: ( {age:18-20,juvenile-felonies:>0} ), support=61, card=2:61 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=187, card=2:187 captured; 
+RULE 86: ( {age:23-25,priors:=1} ), support=156, card=2:156 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=487, card=2:477 captured; 
+RULE 76: ( {age:21-22,priors:=0} ), support=219, card=2:219 captured; 
+RULE 7: ( {age:18-20} ), support=632, card=1:563 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1125, card=2:811 captured; 
+RULE 14: ( {priors:=0} ), support=1903, card=1:1379 captured; 
+RULE 65: ( {age:21-22,juvenile-crimes:=0} ), support=435, card=2:130 captured; 
+RULE 111: ( {juvenile-misdemeanors:=0,priors:2-3} ), support=1102, card=2:753 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1088, card=2:359 captured; 
+RULE 0: ( default ), support=6216, card=0:1121 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=6 #add=318 #delete=367 #swap=315):
+max_log_posterior = -3926.984775
+max_log_posterior = -3926.984775
+9 rules 6216 samples
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1485, card=2:1485 captured; 
+RULE 15: ( {priors:>3} ), support=1972, card=1:487 captured; 
+RULE 9: ( {juvenile-felonies:>0} ), support=255, card=1:76 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=239, card=2:233 captured; 
+RULE 5: ( {age:>45} ), support=1103, card=1:682 captured; 
+RULE 70: ( {age:18-20,juvenile-crimes:=0} ), support=425, card=2:398 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1831, card=2:1235 captured; 
+RULE 63: ( {age:26-45,juvenile-crimes:=0} ), support=2736, card=2:891 captured; 
+RULE 0: ( default ), support=6216, card=0:729 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=8 #add=316 #delete=323 #swap=361):
+max_log_posterior = -3919.672663
+max_log_posterior = -3919.672663
+8 rules 6216 samples
+RULE 74: ( {age:26-45,priors:=1} ), support=484, card=2:484 captured; 
+RULE 88: ( {age:18-20,priors:=0} ), support=305, card=2:305 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=133, card=2:133 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=781, card=2:692 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:>3} ), support=1793, card=2:1520 captured; 
+RULE 5: ( {age:>45} ), support=1103, card=1:730 captured; 
+RULE 108: ( {juvenile-misdemeanors:=0,priors:=0} ), support=1902, card=2:1241 captured; 
+RULE 0: ( default ), support=6216, card=0:1111 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=23 #add=327 #delete=324 #swap=349):
+max_log_posterior = -3920.040819
+max_log_posterior = -3920.040819
+10 rules 6216 samples
+RULE 119: ( {juvenile-crimes:>0,priors:=0} ), support=72, card=2:72 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:374 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=569, card=2:569 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=484, card=2:484 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=781, card=2:668 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1103, card=2:729 captured; 
+RULE 7: ( {age:18-20} ), support=632, card=1:439 captured; 
+RULE 14: ( {priors:=0} ), support=1903, card=1:1235 captured; 
+RULE 16: ( {priors:=1} ), support=1161, card=1:246 captured; 
+RULE 0: ( default ), support=6216, card=0:1400 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=9 #add=354 #delete=322 #swap=324):
+max_log_posterior = -3930.722571
+max_log_posterior = -3930.722571
+10 rules 6216 samples
+RULE 119: ( {juvenile-crimes:>0,priors:=0} ), support=72, card=2:72 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=781, card=2:719 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:>3} ), support=1793, card=2:1520 captured; 
+RULE 61: ( {age:18-20,juvenile-misdemeanors:=0} ), support=554, card=2:421 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=133, card=2:93 captured; 
+RULE 86: ( {age:23-25,priors:=1} ), support=156, card=2:143 captured; 
+RULE 19: ( {sex:Male,age:21-22} ), support=467, card=2:236 captured; 
+RULE 5: ( {age:>45} ), support=1103, card=1:730 captured; 
+RULE 17: ( {priors:2-3} ), support=1180, card=1:695 captured; 
+RULE 0: ( default ), support=6216, card=0:1587 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=30 #add=350 #delete=308 #swap=342):
+max_log_posterior = -3923.606933
+max_log_posterior = -3923.606933
+10 rules 6216 samples
+RULE 72: ( {age:26-45,priors:=0} ), support=827, card=2:827 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=781, card=2:779 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:361 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=569, card=2:538 captured; 
+RULE 15: ( {priors:>3} ), support=1972, card=1:1166 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1088, card=2:729 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:2-3} ), support=1140, card=2:296 captured; 
+RULE 7: ( {age:18-20} ), support=632, card=1:380 captured; 
+RULE 31: ( {sex:Male,juvenile-misdemeanors:=0} ), support=4696, card=2:858 captured; 
+RULE 0: ( default ), support=6216, card=0:282 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=15 #add=301 #delete=347 #swap=352):
+max_log_posterior = -3926.749727
+max_log_posterior = -3926.749727
+11 rules 6216 samples
+RULE 9: ( {juvenile-felonies:>0} ), support=255, card=1:255 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=569, card=2:562 captured; 
+RULE 86: ( {age:23-25,priors:=1} ), support=156, card=2:155 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:363 captured; 
+RULE 15: ( {priors:>3} ), support=1972, card=1:1430 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1088, card=2:729 captured; 
+RULE 17: ( {priors:2-3} ), support=1180, card=1:391 captured; 
+RULE 33: ( {sex:Female,juvenile-misdemeanors:=0} ), support=1156, card=2:553 captured; 
+RULE 7: ( {age:18-20} ), support=632, card=1:382 captured; 
+RULE 4: ( {age:21-22} ), support=576, card=1:269 captured; 
+RULE 0: ( default ), support=6216, card=0:1127 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=21 #add=367 #delete=286 #swap=347):
+max_log_posterior = -3939.574492
+max_log_posterior = -3939.574492
+10 rules 6216 samples
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=781, card=2:781 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=187, card=2:187 captured; 
+RULE 7: ( {age:18-20} ), support=632, card=1:443 captured; 
+RULE 80: ( {age:>45,priors:=0} ), support=337, card=2:337 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1125, card=2:927 captured; 
+RULE 108: ( {juvenile-misdemeanors:=0,priors:=0} ), support=1902, card=2:1241 captured; 
+RULE 65: ( {age:21-22,juvenile-crimes:=0} ), support=435, card=2:130 captured; 
+RULE 17: ( {priors:2-3} ), support=1180, card=1:692 captured; 
+RULE 5: ( {age:>45} ), support=1103, card=1:361 captured; 
+RULE 0: ( default ), support=6216, card=0:1117 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=12 #add=336 #delete=349 #swap=315):
+max_log_posterior = -3919.657231
+max_log_posterior = -3919.657231
+9 rules 6216 samples
+RULE 74: ( {age:26-45,priors:=1} ), support=484, card=2:484 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=781, card=2:774 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:361 captured; 
+RULE 15: ( {priors:>3} ), support=1972, card=1:1166 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1092, card=2:729 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=525, card=2:328 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1831, card=2:1296 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=133, card=2:93 captured; 
+RULE 0: ( default ), support=6216, card=0:985 captured; 
+Total Captured: 6216
+n0=331, n1=153, captured=484, training accuracy = 0.68388430
+theta[0] = 0.31687243
+n0=202, n1=572, captured=774, training accuracy = 0.73901809
+theta[1] = 0.73840206
+n0=172, n1=189, captured=361, training accuracy = 0.52354571
+theta[2] = 0.52341598
+n0=402, n1=764, captured=1166, training accuracy = 0.65523156
+theta[3] = 0.65496575
+n0=575, n1=154, captured=729, training accuracy = 0.78875171
+theta[4] = 0.21203830
+n0=153, n1=175, captured=328, training accuracy = 0.53353659
+theta[5] = 0.53333333
+n0=946, n1=350, captured=1296, training accuracy = 0.72993827
+theta[6] = 0.27041602
+n0=29, n1=64, captured=93, training accuracy = 0.68817204
+theta[7] = 0.68421053
+n0=529, n1=456, captured=985, training accuracy = 0.53705584
+theta[8] = 0.46301925
+Time to train: Elapsed time  0.0708	 0.0708 
+
+The best rulelist for 11 MCMC chains is: 9 rules 6216 samples
+RULE 74: ( {age:26-45,priors:=1} ), support=484, card=2:484 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=781, card=2:774 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=374, card=2:361 captured; 
+RULE 15: ( {priors:>3} ), support=1972, card=1:1166 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1092, card=2:729 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=525, card=2:328 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1831, card=2:1296 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=133, card=2:93 captured; 
+RULE 0: ( default ), support=6216, card=0:985 captured; 
+Total Captured: 6216
+74, 0.31687243
+36, 0.73840206
+81, 0.52341598
+15, 0.65496575
+50, 0.21203830
+22, 0.53333333
+115, 0.27041602
+79, 0.68421053
+0, 0.46301925
+Lambda = 9.000000
+Eta = 3.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 1000
+Rule 74 captures 59 of 691 samples
+Rule 36 captures 68 of 691 samples
+Rule 81 captures 35 of 691 samples
+Rule 15 captures 128 of 691 samples
+Rule 50 captures 81 of 691 samples
+Rule 22 captures 39 of 691 samples
+Rule 115 captures 136 of 691 samples
+Rule 79 captures 18 of 691 samples
+Rule 0 captures 127 of 691 samples
+test accuracy = 0.685962 
+Assumes data is in data/CrossValidation
+Running compas_5_{train|test}-binary.csv against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER
+
+Installing package into ‘/Users/margo/Library/R/3.4/library’
+(as ‘lib’ is unspecified)
+Warning message:
+package ‘svmRadial’ is not available (for R version 3.4.1) 
+randomForest 4.6-12
+Type rfNews() to see new features/changes/bug fixes.
+Warning message:
+In predict.lm(object, newdata, se.fit, scale = 1, type = ifelse(type ==  :
+  prediction from a rank-deficient fit may be misleading
+GLM accuracy: 0.6758
+SVM (with RBF kernel) result: 0.6903
+Adaboost result: 0.6758
+CART result: 0.6483
+C4.5 result: 0.6874
+RandomForests result: 0.6744
+RIPPER result: 0.6787
+0.6758321 0.6903039 0.6758321 0.6483357 0.6874096 0.6743849 0.6787265
+Initialize time: Elapsed time  0.0102	 0.0001 per rule
+124 rules 6216 samples
+
+
+The best rule list is (#reject=17 #add=349 #delete=342 #swap=309):
+max_log_posterior = -3930.347674
+max_log_posterior = -3930.347674
+11 rules 6216 samples
+RULE 88: ( {age:23-25,priors:2-3} ), support=190, card=2:190 captured; 
+RULE 121: ( {juvenile-crimes:>0,priors:>3} ), support=474, card=2:474 captured; 
+RULE 87: ( {age:23-25,priors:=1} ), support=162, card=2:162 captured; 
+RULE 110: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1708, card=2:1475 captured; 
+RULE 80: ( {age:21-22,priors:2-3} ), support=136, card=2:136 captured; 
+RULE 68: ( {age:>45,juvenile-crimes:=0} ), support=1082, card=2:733 captured; 
+RULE 19: ( {sex:Male,age:21-22} ), support=472, card=2:275 captured; 
+RULE 71: ( {age:18-20,juvenile-crimes:=0} ), support=416, card=2:404 captured; 
+RULE 72: ( {age:18-20,juvenile-crimes:>0} ), support=207, card=2:189 captured; 
+RULE 17: ( {priors:2-3} ), support=1195, card=1:569 captured; 
+RULE 0: ( default ), support=6216, card=0:1609 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=19 #add=343 #delete=322 #swap=335):
+max_log_posterior = -3930.737152
+max_log_posterior = -3930.737152
+9 rules 6216 samples
+RULE 75: ( {age:26-45,priors:=1} ), support=492, card=2:492 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=850, card=1:837 captured; 
+RULE 82: ( {age:>45,priors:>3} ), support=365, card=2:349 captured; 
+RULE 80: ( {age:21-22,priors:2-3} ), support=136, card=2:95 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1087, card=2:733 captured; 
+RULE 62: ( {age:18-20,juvenile-misdemeanors:=0} ), support=545, card=2:416 captured; 
+RULE 117: ( {juvenile-crimes:=0,priors:>3} ), support=1475, card=2:1114 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:=0} ), support=1892, card=2:1239 captured; 
+RULE 0: ( default ), support=6216, card=0:941 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=22 #add=343 #delete=329 #swap=328):
+max_log_posterior = -3920.496683
+max_log_posterior = -3920.496683
+10 rules 6216 samples
+RULE 121: ( {juvenile-crimes:>0,priors:>3} ), support=474, card=2:474 captured; 
+RULE 15: ( {priors:>3} ), support=1949, card=1:1475 captured; 
+RULE 5: ( {age:>45} ), support=1098, card=1:733 captured; 
+RULE 76: ( {age:26-45,priors:2-3} ), support=569, card=2:569 captured; 
+RULE 119: ( {juvenile-crimes:=0,priors:2-3} ), support=1022, card=2:296 captured; 
+RULE 85: ( {age:23-25,priors:=0} ), support=217, card=2:217 captured; 
+RULE 2: ( {sex:Female} ), support=1202, card=1:546 captured; 
+RULE 3: ( {age:26-45} ), support=3079, card=1:974 captured; 
+RULE 106: ( {juvenile-misdemeanors:=0,juvenile-crimes:=0} ), support=5366, card=2:645 captured; 
+RULE 0: ( default ), support=6216, card=0:287 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=15 #add=296 #delete=371 #swap=333):
+max_log_posterior = -3927.564719
+max_log_posterior = -3927.564719
+11 rules 6216 samples
+RULE 94: ( {juvenile-felonies:>0,juvenile-misdemeanors:=0} ), support=189, card=2:189 captured; 
+RULE 76: ( {age:26-45,priors:2-3} ), support=569, card=2:563 captured; 
+RULE 121: ( {juvenile-crimes:>0,priors:>3} ), support=474, card=2:355 captured; 
+RULE 63: ( {age:18-20,juvenile-misdemeanors:>0} ), support=78, card=2:66 captured; 
+RULE 15: ( {priors:>3} ), support=1949, card=1:1475 captured; 
+RULE 68: ( {age:>45,juvenile-crimes:=0} ), support=1082, card=2:733 captured; 
+RULE 87: ( {age:23-25,priors:=1} ), support=162, card=2:160 captured; 
+RULE 17: ( {priors:2-3} ), support=1195, card=1:371 captured; 
+RULE 19: ( {sex:Male,age:21-22} ), support=472, card=2:272 captured; 
+RULE 62: ( {age:18-20,juvenile-misdemeanors:=0} ), support=545, card=2:426 captured; 
+RULE 0: ( default ), support=6216, card=0:1606 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=35 #add=343 #delete=313 #swap=344):
+max_log_posterior = -3922.414951
+max_log_posterior = -3922.414951
+9 rules 6216 samples
+RULE 76: ( {age:26-45,priors:2-3} ), support=569, card=2:569 captured; 
+RULE 117: ( {juvenile-crimes:=0,priors:>3} ), support=1475, card=2:1475 captured; 
+RULE 15: ( {priors:>3} ), support=1949, card=1:474 captured; 
+RULE 85: ( {age:23-25,priors:=0} ), support=217, card=2:217 captured; 
+RULE 47: ( {age:26-45,juvenile-felonies:=0} ), support=2957, card=2:1314 captured; 
+RULE 68: ( {age:>45,juvenile-crimes:=0} ), support=1082, card=2:733 captured; 
+RULE 17: ( {priors:2-3} ), support=1195, card=1:435 captured; 
+RULE 96: ( {juvenile-felonies:=0,juvenile-crimes:=0} ), support=5366, card=2:819 captured; 
+RULE 0: ( default ), support=6216, card=0:180 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=15 #add=314 #delete=335 #swap=351):
+max_log_posterior = -3930.672544
+max_log_posterior = -3930.672544
+9 rules 6216 samples
+RULE 75: ( {age:26-45,priors:=1} ), support=492, card=2:492 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:=0} ), support=68, card=2:68 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=770, card=2:702 captured; 
+RULE 15: ( {priors:>3} ), support=1949, card=1:1513 captured; 
+RULE 62: ( {age:18-20,juvenile-misdemeanors:=0} ), support=545, card=2:408 captured; 
+RULE 59: ( {age:>45,juvenile-misdemeanors:=0} ), support=1097, card=2:733 captured; 
+RULE 41: ( {sex:Male,priors:=1} ), support=938, card=2:199 captured; 
+RULE 102: ( {juvenile-felonies:=0,priors:2-3} ), support=1156, card=2:804 captured; 
+RULE 0: ( default ), support=6216, card=0:1297 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=13 #add=354 #delete=327 #swap=319):
+max_log_posterior = -3938.691092
+max_log_posterior = -3938.691092
+12 rules 6216 samples
+RULE 9: ( {juvenile-felonies:>0} ), support=255, card=1:255 captured; 
+RULE 121: ( {juvenile-crimes:>0,priors:>3} ), support=474, card=2:299 captured; 
+RULE 40: ( {sex:Male,priors:>3} ), support=1694, card=2:1258 captured; 
+RULE 74: ( {age:26-45,priors:>3} ), support=1193, card=2:144 captured; 
+RULE 53: ( {age:18-20,juvenile-felonies:=0} ), support=560, card=2:543 captured; 
+RULE 80: ( {age:21-22,priors:2-3} ), support=136, card=2:129 captured; 
+RULE 76: ( {age:26-45,priors:2-3} ), support=569, card=2:563 captured; 
+RULE 19: ( {sex:Male,age:21-22} ), support=472, card=2:272 captured; 
+RULE 14: ( {priors:=0} ), support=1892, card=1:1425 captured; 
+RULE 51: ( {age:23-25,juvenile-felonies:=0} ), support=803, card=2:365 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=850, card=1:14 captured; 
+RULE 0: ( default ), support=6216, card=0:949 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=27 #add=334 #delete=319 #swap=347):
+max_log_posterior = -3925.473449
+max_log_posterior = -3925.473449
+11 rules 6216 samples
+RULE 121: ( {juvenile-crimes:>0,priors:>3} ), support=474, card=2:474 captured; 
+RULE 72: ( {age:18-20,juvenile-crimes:>0} ), support=207, card=2:189 captured; 
+RULE 82: ( {age:>45,priors:>3} ), support=365, card=2:349 captured; 
+RULE 15: ( {priors:>3} ), support=1949, card=1:1126 captured; 
+RULE 76: ( {age:26-45,priors:2-3} ), support=569, card=2:569 captured; 
+RULE 89: ( {age:18-20,priors:=0} ), support=299, card=2:256 captured; 
+RULE 68: ( {age:>45,juvenile-crimes:=0} ), support=1082, card=2:733 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:=0} ), support=1824, card=2:1239 captured; 
+RULE 47: ( {age:26-45,juvenile-felonies:=0} ), support=2957, card=2:493 captured; 
+RULE 16: ( {priors:=1} ), support=1180, card=1:397 captured; 
+RULE 0: ( default ), support=6216, card=0:391 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=19 #add=305 #delete=341 #swap=354):
+max_log_posterior = -3924.793319
+max_log_posterior = -3924.793319
+9 rules 6216 samples
+RULE 72: ( {age:18-20,juvenile-crimes:>0} ), support=207, card=2:207 captured; 
+RULE 82: ( {age:>45,priors:>3} ), support=365, card=2:365 captured; 
+RULE 15: ( {priors:>3} ), support=1949, card=1:1566 captured; 
+RULE 62: ( {age:18-20,juvenile-misdemeanors:=0} ), support=545, card=2:404 captured; 
+RULE 5: ( {age:>45} ), support=1098, card=1:733 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:=0} ), support=1824, card=2:1239 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:=1} ), support=1139, card=2:774 captured; 
+RULE 4: ( {age:21-22} ), support=579, card=1:151 captured; 
+RULE 0: ( default ), support=6216, card=0:777 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=21 #add=353 #delete=283 #swap=364):
+max_log_posterior = -3931.909172
+max_log_posterior = -3931.909172
+10 rules 6216 samples
+RULE 121: ( {juvenile-crimes:>0,priors:>3} ), support=474, card=2:474 captured; 
+RULE 91: ( {age:18-20,priors:2-3} ), support=109, card=2:109 captured; 
+RULE 67: ( {age:21-22,juvenile-crimes:>0} ), support=133, card=2:79 captured; 
+RULE 110: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1708, card=2:1475 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1087, card=2:733 captured; 
+RULE 7: ( {age:18-20} ), support=623, card=1:484 captured; 
+RULE 14: ( {priors:=0} ), support=1892, card=1:1252 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:=1} ), support=1139, card=2:751 captured; 
+RULE 47: ( {age:26-45,juvenile-felonies:=0} ), support=2957, card=2:563 captured; 
+RULE 0: ( default ), support=6216, card=0:296 captured; 
+Total Captured: 6216
+
+The best rule list is (#reject=11 #add=322 #delete=360 #swap=318):
+max_log_posterior = -3924.517778
+max_log_posterior = -3924.517778
+8 rules 6216 samples
+RULE 71: ( {age:18-20,juvenile-crimes:=0} ), support=416, card=2:416 captured; 
+RULE 84: ( {age:>45,priors:2-3} ), support=191, card=2:191 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:=0} ), support=1824, card=2:1568 captured; 
+RULE 76: ( {age:26-45,priors:2-3} ), support=569, card=2:569 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=770, card=2:742 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:=1} ), support=1139, card=2:949 captured; 
+RULE 5: ( {age:>45} ), support=1098, card=1:352 captured; 
+RULE 0: ( default ), support=6216, card=0:1429 captured; 
+Total Captured: 6216
+n0=110, n1=364, captured=474, training accuracy = 0.76793249
+theta[0] = 0.76680672
+n0=536, n1=939, captured=1475, training accuracy = 0.63661017
+theta[1] = 0.63642519
+n0=571, n1=162, captured=733, training accuracy = 0.77899045
+theta[2] = 0.22176871
+n0=321, n1=248, captured=569, training accuracy = 0.56414763
+theta[3] = 0.43607706
+n0=105, n1=191, captured=296, training accuracy = 0.64527027
+theta[4] = 0.64429530
+n0=164, n1=53, captured=217, training accuracy = 0.75576037
+theta[5] = 0.24657534
+n0=393, n1=153, captured=546, training accuracy = 0.71978022
+theta[6] = 0.28102190
+n0=696, n1=278, captured=974, training accuracy = 0.71457906
+theta[7] = 0.28586066
+n0=345, n1=300, captured=645, training accuracy = 0.53488372
+theta[8] = 0.46522411
+n0=85, n1=202, captured=287, training accuracy = 0.70383275
+theta[9] = 0.70242215
+Time to train: Elapsed time  0.0814	 0.0814 
+
+The best rulelist for 11 MCMC chains is: 10 rules 6216 samples
+RULE 121: ( {juvenile-crimes:>0,priors:>3} ), support=474, card=2:474 captured; 
+RULE 15: ( {priors:>3} ), support=1949, card=1:1475 captured; 
+RULE 5: ( {age:>45} ), support=1098, card=1:733 captured; 
+RULE 76: ( {age:26-45,priors:2-3} ), support=569, card=2:569 captured; 
+RULE 119: ( {juvenile-crimes:=0,priors:2-3} ), support=1022, card=2:296 captured; 
+RULE 85: ( {age:23-25,priors:=0} ), support=217, card=2:217 captured; 
+RULE 2: ( {sex:Female} ), support=1202, card=1:546 captured; 
+RULE 3: ( {age:26-45} ), support=3079, card=1:974 captured; 
+RULE 106: ( {juvenile-misdemeanors:=0,juvenile-crimes:=0} ), support=5366, card=2:645 captured; 
+RULE 0: ( default ), support=6216, card=0:287 captured; 
+Total Captured: 6216
+121, 0.76680672
+15, 0.63642519
+5, 0.22176871
+76, 0.43607706
+119, 0.64429530
+85, 0.24657534
+2, 0.28102190
+3, 0.28586066
+106, 0.46522411
+0, 0.70242215
+Lambda = 9.000000
+Eta = 3.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 1000
+Rule 121 captures 55 of 691 samples
+Rule 15 captures 170 of 691 samples
+Rule 5 captures 77 of 691 samples
+Rule 76 captures 67 of 691 samples
+Rule 119 captures 35 of 691 samples
+Rule 85 captures 25 of 691 samples
+Rule 2 captures 60 of 691 samples
+Rule 3 captures 104 of 691 samples
+Rule 106 captures 70 of 691 samples
+Rule 0 captures 28 of 691 samples
+test accuracy = 0.643994 
+Assumes data is in data/CrossValidation
+Running compas_6_{train|test}-binary.csv against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER
+
+Installing package into ‘/Users/margo/Library/R/3.4/library’
+(as ‘lib’ is unspecified)
+Warning message:
+package ‘svmRadial’ is not available (for R version 3.4.1) 
+randomForest 4.6-12
+Type rfNews() to see new features/changes/bug fixes.
+Warning message:
+In predict.lm(object, newdata, se.fit, scale = 1, type = ifelse(type ==  :
+  prediction from a rank-deficient fit may be misleading
+GLM accuracy: 0.6440
+SVM (with RBF kernel) result: 0.6498
+Adaboost result: 0.6498
+CART result: 0.6440
+C4.5 result: 0.6599
+RandomForests result: 0.6469
+RIPPER result: 0.6585
+0.6439942 0.6497829 0.6497829 0.6439942 0.6599132 0.6468886 0.658466
+Initialize time: Elapsed time  0.0099	 0.0001 per rule
+123 rules 6217 samples
+
+
+The best rule list is (#reject=13 #add=360 #delete=347 #swap=293):
+max_log_posterior = -3937.779127
+max_log_posterior = -3937.779127
+8 rules 6217 samples
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=748, card=2:748 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=363, card=2:352 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=560, card=2:532 captured; 
+RULE 61: ( {age:18-20,juvenile-misdemeanors:=0} ), support=561, card=2:440 captured; 
+RULE 5: ( {age:>45} ), support=1106, card=1:743 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1145, card=2:743 captured; 
+RULE 14: ( {priors:=0} ), support=1922, card=1:1252 captured; 
+RULE 0: ( default ), support=6217, card=0:1407 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=12 #add=339 #delete=317 #swap=344):
+max_log_posterior = -3968.143718
+max_log_posterior = -3968.143718
+12 rules 6217 samples
+RULE 87: ( {age:23-25,priors:2-3} ), support=188, card=2:188 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=244, card=2:244 captured; 
+RULE 119: ( {juvenile-crimes:>0,priors:=0} ), support=68, card=2:68 captured; 
+RULE 70: ( {age:18-20,juvenile-crimes:=0} ), support=431, card=2:416 captured; 
+RULE 96: ( {juvenile-felonies:=0,juvenile-crimes:>0} ), support=595, card=2:493 captured; 
+RULE 98: ( {juvenile-felonies:=0,priors:=0} ), support=1922, card=2:1587 captured; 
+RULE 117: ( {juvenile-crimes:=0,priors:=1} ), support=1046, card=2:726 captured; 
+RULE 49: ( {age:21-22,juvenile-felonies:=0} ), support=554, card=2:132 captured; 
+RULE 9: ( {juvenile-felonies:>0} ), support=234, card=1:221 captured; 
+RULE 17: ( {priors:2-3} ), support=1187, card=1:726 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1093, card=2:350 captured; 
+RULE 0: ( default ), support=6217, card=0:1066 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=48 #add=348 #delete=322 #swap=330):
+max_log_posterior = -3941.013012
+max_log_posterior = -3941.013012
+11 rules 6217 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=461, card=2:461 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=497, card=2:497 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:>3} ), support=1766, card=2:1462 captured; 
+RULE 72: ( {age:26-45,priors:=0} ), support=833, card=2:833 captured; 
+RULE 5: ( {age:>45} ), support=1106, card=1:743 captured; 
+RULE 84: ( {age:23-25,priors:=0} ), support=214, card=2:214 captured; 
+RULE 47: ( {age:26-45,juvenile-felonies:=0} ), support=2957, card=2:553 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=748, card=2:286 captured; 
+RULE 17: ( {priors:2-3} ), support=1187, card=1:312 captured; 
+RULE 24: ( {sex:Female,age:21-22} ), support=112, card=2:78 captured; 
+RULE 0: ( default ), support=6217, card=0:778 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=19 #add=312 #delete=363 #swap=325):
+max_log_posterior = -3942.668729
+max_log_posterior = -3942.668729
+10 rules 6217 samples
+RULE 74: ( {age:26-45,priors:=1} ), support=497, card=2:497 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=461, card=2:461 captured; 
+RULE 71: ( {age:18-20,juvenile-crimes:>0} ), support=205, card=2:187 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=363, card=2:350 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1462, card=2:1112 captured; 
+RULE 61: ( {age:18-20,juvenile-misdemeanors:=0} ), support=561, card=2:420 captured; 
+RULE 5: ( {age:>45} ), support=1106, card=1:743 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1854, card=2:1246 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=134, card=2:134 captured; 
+RULE 0: ( default ), support=6217, card=0:1067 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=17 #add=324 #delete=319 #swap=357):
+max_log_posterior = -3940.145265
+max_log_posterior = -3940.145265
+9 rules 6217 samples
+RULE 74: ( {age:26-45,priors:=1} ), support=497, card=2:497 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=134, card=2:134 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=363, card=2:363 captured; 
+RULE 88: ( {age:18-20,priors:=0} ), support=312, card=2:312 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=748, card=2:652 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1093, card=2:743 captured; 
+RULE 15: ( {priors:>3} ), support=1923, card=1:1149 captured; 
+RULE 98: ( {juvenile-felonies:=0,priors:=0} ), support=1922, card=2:1251 captured; 
+RULE 0: ( default ), support=6217, card=0:1116 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=19 #add=306 #delete=329 #swap=365):
+max_log_posterior = -3950.890002
+max_log_posterior = -3950.890002
+11 rules 6217 samples
+RULE 81: ( {age:>45,priors:>3} ), support=363, card=2:363 captured; 
+RULE 97: ( {juvenile-felonies:>0,juvenile-crimes:>0} ), support=234, card=2:226 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=560, card=2:553 captured; 
+RULE 86: ( {age:23-25,priors:=1} ), support=164, card=2:162 captured; 
+RULE 5: ( {age:>45} ), support=1106, card=1:743 captured; 
+RULE 11: ( {juvenile-misdemeanors:>0} ), support=357, card=1:284 captured; 
+RULE 118: ( {juvenile-crimes:=0,priors:2-3} ), support=1026, card=2:300 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=531, card=2:383 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:>3} ), support=1766, card=2:1213 captured; 
+RULE 19: ( {sex:Male,age:21-22} ), support=466, card=2:281 captured; 
+RULE 0: ( default ), support=6217, card=0:1709 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=17 #add=353 #delete=326 #swap=321):
+max_log_posterior = -3941.903586
+max_log_posterior = -3941.903586
+9 rules 6217 samples
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1462, card=2:1462 captured; 
+RULE 15: ( {priors:>3} ), support=1923, card=1:461 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=134, card=2:134 captured; 
+RULE 9: ( {juvenile-felonies:>0} ), support=234, card=1:71 captured; 
+RULE 7: ( {age:18-20} ), support=636, card=1:557 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=497, card=2:494 captured; 
+RULE 5: ( {age:>45} ), support=1106, card=1:743 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1854, card=2:1246 captured; 
+RULE 0: ( default ), support=6217, card=0:1049 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=54 #add=339 #delete=314 #swap=347):
+max_log_posterior = -3950.504969
+max_log_posterior = -3950.504969
+10 rules 6217 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=461, card=2:461 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=531, card=2:514 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=363, card=2:350 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=244, card=2:244 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1105, card=2:696 captured; 
+RULE 14: ( {priors:=0} ), support=1922, card=1:1333 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:>3} ), support=1766, card=2:1104 captured; 
+RULE 54: ( {age:26-45,juvenile-misdemeanors:=0} ), support=2910, card=2:928 captured; 
+RULE 117: ( {juvenile-crimes:=0,priors:=1} ), support=1046, card=2:199 captured; 
+RULE 0: ( default ), support=6217, card=0:388 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=6 #add=290 #delete=351 #swap=359):
+max_log_posterior = -3945.539892
+max_log_posterior = -3945.539892
+11 rules 6217 samples
+RULE 75: ( {age:26-45,priors:2-3} ), support=560, card=2:560 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1462, card=2:1462 captured; 
+RULE 15: ( {priors:>3} ), support=1923, card=1:461 captured; 
+RULE 88: ( {age:18-20,priors:=0} ), support=312, card=2:312 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1105, card=2:743 captured; 
+RULE 71: ( {age:18-20,juvenile-crimes:>0} ), support=205, card=2:142 captured; 
+RULE 118: ( {juvenile-crimes:=0,priors:2-3} ), support=1026, card=2:300 captured; 
+RULE 18: ( {sex:Male,age:26-45} ), support=2444, card=2:989 captured; 
+RULE 2: ( {sex:Female} ), support=1206, card=1:523 captured; 
+RULE 14: ( {priors:=0} ), support=1922, card=1:330 captured; 
+RULE 0: ( default ), support=6217, card=0:395 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=11 #add=360 #delete=276 #swap=364):
+max_log_posterior = -3948.419833
+max_log_posterior = -3948.419833
+11 rules 6217 samples
+RULE 9: ( {juvenile-felonies:>0} ), support=234, card=1:234 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1462, card=2:1462 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=531, card=2:468 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=244, card=2:237 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:>3} ), support=1766, card=2:297 captured; 
+RULE 5: ( {age:>45} ), support=1106, card=1:696 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1854, card=2:1306 captured; 
+RULE 117: ( {juvenile-crimes:=0,priors:=1} ), support=1046, card=2:569 captured; 
+RULE 3: ( {age:26-45} ), support=3070, card=1:563 captured; 
+RULE 4: ( {age:21-22} ), support=578, card=1:159 captured; 
+RULE 0: ( default ), support=6217, card=0:226 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=13 #add=332 #delete=354 #swap=314):
+max_log_posterior = -3936.562811
+max_log_posterior = -3936.562811
+8 rules 6217 samples
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=748, card=2:748 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=363, card=2:352 captured; 
+RULE 7: ( {age:18-20} ), support=636, card=1:451 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1093, card=2:743 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=560, card=2:532 captured; 
+RULE 16: ( {priors:=1} ), support=1185, card=1:744 captured; 
+RULE 108: ( {juvenile-misdemeanors:=0,priors:=0} ), support=1921, card=2:1251 captured; 
+RULE 0: ( default ), support=6217, card=0:1396 captured; 
+Total Captured: 6217
+n0=204, n1=544, captured=748, training accuracy = 0.72727273
+theta[0] = 0.72666667
+n0=167, n1=185, captured=352, training accuracy = 0.52556818
+theta[1] = 0.52542373
+n0=210, n1=241, captured=451, training accuracy = 0.53436807
+theta[2] = 0.53421634
+n0=580, n1=163, captured=743, training accuracy = 0.78061911
+theta[3] = 0.22013423
+n0=311, n1=221, captured=532, training accuracy = 0.58458647
+theta[4] = 0.41573034
+n0=481, n1=263, captured=744, training accuracy = 0.64650538
+theta[5] = 0.35388740
+n0=907, n1=344, captured=1251, training accuracy = 0.72501998
+theta[6] = 0.27533919
+n0=491, n1=905, captured=1396, training accuracy = 0.64828080
+theta[7] = 0.64806867
+Time to train: Elapsed time  0.0687	 0.0687 
+
+The best rulelist for 11 MCMC chains is: 8 rules 6217 samples
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=748, card=2:748 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=363, card=2:352 captured; 
+RULE 7: ( {age:18-20} ), support=636, card=1:451 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1093, card=2:743 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=560, card=2:532 captured; 
+RULE 16: ( {priors:=1} ), support=1185, card=1:744 captured; 
+RULE 108: ( {juvenile-misdemeanors:=0,priors:=0} ), support=1921, card=2:1251 captured; 
+RULE 0: ( default ), support=6217, card=0:1396 captured; 
+Total Captured: 6217
+36, 0.72666667
+81, 0.52542373
+7, 0.53421634
+67, 0.22013423
+75, 0.41573034
+16, 0.35388740
+108, 0.27533919
+0, 0.64806867
+Lambda = 9.000000
+Eta = 3.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 1000
+Rule 36 captures 104 of 690 samples
+Rule 81 captures 44 of 690 samples
+Rule 7 captures 42 of 690 samples
+Rule 67 captures 67 of 690 samples
+Rule 75 captures 71 of 690 samples
+Rule 16 captures 69 of 690 samples
+Rule 108 captures 122 of 690 samples
+Rule 0 captures 171 of 690 samples
+test accuracy = 0.679710 
+Assumes data is in data/CrossValidation
+Running compas_7_{train|test}-binary.csv against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER
+
+Installing package into ‘/Users/margo/Library/R/3.4/library’
+(as ‘lib’ is unspecified)
+Warning message:
+package ‘svmRadial’ is not available (for R version 3.4.1) 
+randomForest 4.6-12
+Type rfNews() to see new features/changes/bug fixes.
+Warning message:
+In predict.lm(object, newdata, se.fit, scale = 1, type = ifelse(type ==  :
+  prediction from a rank-deficient fit may be misleading
+GLM accuracy: 0.6826
+SVM (with RBF kernel) result: 0.6899
+Adaboost result: 0.6826
+CART result: 0.6710
+C4.5 result: 0.6870
+RandomForests result: 0.6884
+RIPPER result: 0.6899
+0.6826087 0.6898551 0.6826087 0.6710145 0.6869565 0.6884058 0.6898551
+Initialize time: Elapsed time  0.0077	 0.0001 per rule
+123 rules 6217 samples
+
+
+The best rule list is (#reject=27 #add=351 #delete=344 #swap=305):
+max_log_posterior = -3937.218241
+max_log_posterior = -3937.218241
+10 rules 6217 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=474, card=2:474 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=376, card=2:360 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=250, card=2:250 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=855, card=1:364 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1102, card=2:680 captured; 
+RULE 7: ( {age:18-20} ), support=636, card=1:408 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1125, card=2:538 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=592, card=2:558 captured; 
+RULE 14: ( {priors:=0} ), support=1885, card=1:1231 captured; 
+RULE 0: ( default ), support=6217, card=0:1354 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=8 #add=338 #delete=314 #swap=348):
+max_log_posterior = -3949.397421
+max_log_posterior = -3949.397421
+11 rules 6217 samples
+RULE 83: ( {age:>45,priors:2-3} ), support=187, card=2:187 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=250, card=2:250 captured; 
+RULE 88: ( {age:18-20,priors:=0} ), support=299, card=2:299 captured; 
+RULE 106: ( {juvenile-misdemeanors:=0,juvenile-crimes:>0} ), support=496, card=2:438 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=592, card=2:568 captured; 
+RULE 7: ( {age:18-20} ), support=636, card=1:231 captured; 
+RULE 80: ( {age:>45,priors:=0} ), support=330, card=2:330 captured; 
+RULE 16: ( {priors:=1} ), support=1166, card=1:711 captured; 
+RULE 98: ( {juvenile-felonies:=0,priors:=0} ), support=1885, card=2:1231 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=376, card=2:361 captured; 
+RULE 0: ( default ), support=6217, card=0:1611 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=28 #add=355 #delete=312 #swap=333):
+max_log_posterior = -3937.259460
+max_log_posterior = -3937.259460
+9 rules 6217 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=474, card=2:474 captured; 
+RULE 15: ( {priors:>3} ), support=1942, card=1:1468 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=592, card=2:592 captured; 
+RULE 3: ( {age:26-45} ), support=3054, card=1:1288 captured; 
+RULE 5: ( {age:>45} ), support=1103, card=1:727 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:2-3} ), support=1190, card=2:416 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=770, card=2:199 captured; 
+RULE 7: ( {age:18-20} ), support=636, card=1:376 captured; 
+RULE 0: ( default ), support=6217, card=0:677 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=11 #add=301 #delete=375 #swap=324):
+max_log_posterior = -3947.402525
+max_log_posterior = -3947.402525
+12 rules 6217 samples
+RULE 81: ( {age:>45,priors:>3} ), support=376, card=2:376 captured; 
+RULE 93: ( {juvenile-felonies:>0,juvenile-misdemeanors:=0} ), support=194, card=2:182 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1468, card=2:1108 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=474, card=2:344 captured; 
+RULE 62: ( {age:18-20,juvenile-misdemeanors:>0} ), support=78, card=2:65 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=592, card=2:587 captured; 
+RULE 5: ( {age:>45} ), support=1103, card=1:727 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:2-3} ), support=1190, card=2:381 captured; 
+RULE 2: ( {sex:Female} ), support=1200, card=1:588 captured; 
+RULE 61: ( {age:18-20,juvenile-misdemeanors:=0} ), support=558, card=2:358 captured; 
+RULE 4: ( {age:21-22} ), support=588, card=1:264 captured; 
+RULE 0: ( default ), support=6217, card=0:1237 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=13 #add=329 #delete=302 #swap=369):
+max_log_posterior = -3943.396424
+max_log_posterior = -3943.396424
+10 rules 6217 samples
+RULE 75: ( {age:26-45,priors:2-3} ), support=592, card=2:592 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=478, card=2:478 captured; 
+RULE 88: ( {age:18-20,priors:=0} ), support=299, card=2:299 captured; 
+RULE 45: ( {sex:Female,priors:=1} ), support=250, card=2:132 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=770, card=2:690 captured; 
+RULE 15: ( {priors:>3} ), support=1942, card=1:1508 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1087, card=2:680 captured; 
+RULE 14: ( {priors:=0} ), support=1885, card=1:1237 captured; 
+RULE 110: ( {juvenile-misdemeanors:=0,priors:=1} ), support=1127, card=2:282 captured; 
+RULE 0: ( default ), support=6217, card=0:319 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=15 #add=308 #delete=339 #swap=353):
+max_log_posterior = -3954.249750
+max_log_posterior = -3954.249750
+12 rules 6217 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=474, card=2:474 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=376, card=2:360 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=855, card=1:381 captured; 
+RULE 44: ( {sex:Female,priors:>3} ), support=252, card=2:164 captured; 
+RULE 40: ( {sex:Male,priors:>3} ), support=1690, card=2:944 captured; 
+RULE 86: ( {age:23-25,priors:=1} ), support=156, card=2:139 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=592, card=2:558 captured; 
+RULE 52: ( {age:18-20,juvenile-felonies:=0} ), support=575, card=2:414 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1091, card=2:727 captured; 
+RULE 17: ( {priors:2-3} ), support=1224, card=1:258 captured; 
+RULE 2: ( {sex:Female} ), support=1200, card=1:463 captured; 
+RULE 0: ( default ), support=6217, card=0:1335 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=11 #add=361 #delete=321 #swap=318):
+max_log_posterior = -3947.075083
+max_log_posterior = -3947.075083
+12 rules 6217 samples
+RULE 71: ( {age:18-20,juvenile-crimes:>0} ), support=210, card=2:210 captured; 
+RULE 80: ( {age:>45,priors:=0} ), support=330, card=2:330 captured; 
+RULE 87: ( {age:23-25,priors:2-3} ), support=185, card=2:185 captured; 
+RULE 7: ( {age:18-20} ), support=636, card=1:426 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1125, card=2:964 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1813, card=2:1231 captured; 
+RULE 4: ( {age:21-22} ), support=588, card=1:254 captured; 
+RULE 17: ( {priors:2-3} ), support=1224, card=1:779 captured; 
+RULE 119: ( {juvenile-crimes:>0,priors:=0} ), support=72, card=2:14 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=855, card=1:407 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1102, card=2:360 captured; 
+RULE 0: ( default ), support=6217, card=0:1057 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=16 #add=337 #delete=314 #swap=349):
+max_log_posterior = -3943.503033
+max_log_posterior = -3943.503033
+10 rules 6217 samples
+RULE 87: ( {age:23-25,priors:2-3} ), support=185, card=2:185 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=770, card=2:744 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=148, card=2:104 captured; 
+RULE 52: ( {age:18-20,juvenile-felonies:=0} ), support=575, card=2:440 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=376, card=2:362 captured; 
+RULE 5: ( {age:>45} ), support=1103, card=1:727 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:2-3} ), support=1190, card=2:564 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1125, card=2:714 captured; 
+RULE 14: ( {priors:=0} ), support=1885, card=1:1237 captured; 
+RULE 0: ( default ), support=6217, card=0:1140 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=26 #add=303 #delete=334 #swap=363):
+max_log_posterior = -3944.168129
+max_log_posterior = -3944.168129
+10 rules 6217 samples
+RULE 81: ( {age:>45,priors:>3} ), support=376, card=2:376 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=592, card=2:592 captured; 
+RULE 84: ( {age:23-25,priors:=0} ), support=226, card=2:226 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=855, card=1:795 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1702, card=2:1108 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1091, card=2:727 captured; 
+RULE 3: ( {age:26-45} ), support=3054, card=1:1271 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:2-3} ), support=1190, card=2:307 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=534, card=2:293 captured; 
+RULE 0: ( default ), support=6217, card=0:522 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=12 #add=363 #delete=279 #swap=358):
+max_log_posterior = -3942.339699
+max_log_posterior = -3942.339699
+9 rules 6217 samples
+RULE 87: ( {age:23-25,priors:2-3} ), support=185, card=2:185 captured; 
+RULE 80: ( {age:>45,priors:=0} ), support=330, card=2:330 captured; 
+RULE 13: ( {juvenile-crimes:>0} ), support=855, card=1:827 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=376, card=2:360 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=534, card=2:343 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=148, card=2:101 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:2-3} ), support=1190, card=2:753 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1702, card=2:1099 captured; 
+RULE 0: ( default ), support=6217, card=0:2219 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=33 #add=322 #delete=358 #swap=320):
+max_log_posterior = -3930.984993
+max_log_posterior = -3930.984993
+8 rules 6217 samples
+RULE 75: ( {age:26-45,priors:2-3} ), support=592, card=2:592 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=770, card=2:742 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=376, card=2:362 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1087, card=2:727 captured; 
+RULE 15: ( {priors:>3} ), support=1942, card=1:1146 captured; 
+RULE 17: ( {priors:2-3} ), support=1224, card=1:319 captured; 
+RULE 7: ( {age:18-20} ), support=636, card=1:376 captured; 
+RULE 0: ( default ), support=6217, card=0:1953 captured; 
+Total Captured: 6217
+n0=346, n1=246, captured=592, training accuracy = 0.58445946
+theta[0] = 0.41582492
+n0=204, n1=538, captured=742, training accuracy = 0.72506739
+theta[1] = 0.72446237
+n0=176, n1=186, captured=362, training accuracy = 0.51381215
+theta[2] = 0.51373626
+n0=565, n1=162, captured=727, training accuracy = 0.77716644
+theta[3] = 0.22359396
+n0=399, n1=747, captured=1146, training accuracy = 0.65183246
+theta[4] = 0.65156794
+n0=116, n1=203, captured=319, training accuracy = 0.63636364
+theta[5] = 0.63551402
+n0=187, n1=189, captured=376, training accuracy = 0.50265957
+theta[6] = 0.50264550
+n0=1381, n1=572, captured=1953, training accuracy = 0.70711726
+theta[7] = 0.29309463
+Time to train: Elapsed time  0.0766	 0.0766 
+
+The best rulelist for 11 MCMC chains is: 8 rules 6217 samples
+RULE 75: ( {age:26-45,priors:2-3} ), support=592, card=2:592 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=770, card=2:742 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=376, card=2:362 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1087, card=2:727 captured; 
+RULE 15: ( {priors:>3} ), support=1942, card=1:1146 captured; 
+RULE 17: ( {priors:2-3} ), support=1224, card=1:319 captured; 
+RULE 7: ( {age:18-20} ), support=636, card=1:376 captured; 
+RULE 0: ( default ), support=6217, card=0:1953 captured; 
+Total Captured: 6217
+75, 0.41582492
+36, 0.72446237
+81, 0.51373626
+67, 0.22359396
+15, 0.65156794
+17, 0.63551402
+7, 0.50264550
+0, 0.29309463
+Lambda = 9.000000
+Eta = 3.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 1000
+Rule 75 captures 44 of 690 samples
+Rule 36 captures 77 of 690 samples
+Rule 81 captures 34 of 690 samples
+Rule 67 captures 83 of 690 samples
+Rule 15 captures 148 of 690 samples
+Rule 17 captures 25 of 690 samples
+Rule 7 captures 46 of 690 samples
+Rule 0 captures 233 of 690 samples
+test accuracy = 0.671014 
+Assumes data is in data/CrossValidation
+Running compas_8_{train|test}-binary.csv against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER
+
+Installing package into ‘/Users/margo/Library/R/3.4/library’
+(as ‘lib’ is unspecified)
+Warning message:
+package ‘svmRadial’ is not available (for R version 3.4.1) 
+randomForest 4.6-12
+Type rfNews() to see new features/changes/bug fixes.
+Warning message:
+In predict.lm(object, newdata, se.fit, scale = 1, type = ifelse(type ==  :
+  prediction from a rank-deficient fit may be misleading
+GLM accuracy: 0.6812
+SVM (with RBF kernel) result: 0.6739
+Adaboost result: 0.6652
+CART result: 0.6594
+C4.5 result: 0.6768
+RandomForests result: 0.6783
+RIPPER result: 0.6739
+0.6811594 0.673913 0.6652174 0.6594203 0.6768116 0.6782609 0.673913
+Initialize time: Elapsed time  0.0086	 0.0001 per rule
+123 rules 6217 samples
+
+
+The best rule list is (#reject=11 #add=355 #delete=341 #swap=304):
+max_log_posterior = -3915.937134
+max_log_posterior = -3915.937134
+10 rules 6217 samples
+RULE 70: ( {age:18-20,juvenile-crimes:=0} ), support=433, card=2:433 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=526, card=2:182 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=188, card=2:188 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=375, card=2:375 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1085, card=2:538 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1126, card=2:768 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=473, card=2:440 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1835, card=2:1228 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=580, card=2:580 captured; 
+RULE 0: ( default ), support=6217, card=0:1485 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=12 #add=336 #delete=318 #swap=346):
+max_log_posterior = -3932.844540
+max_log_posterior = -3932.844540
+11 rules 6217 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=473, card=2:473 captured; 
+RULE 62: ( {age:18-20,juvenile-misdemeanors:>0} ), support=74, card=2:63 captured; 
+RULE 106: ( {juvenile-misdemeanors:=0,juvenile-crimes:>0} ), support=480, card=2:250 captured; 
+RULE 70: ( {age:18-20,juvenile-crimes:=0} ), support=433, card=2:433 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1126, card=2:929 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=375, card=2:359 captured; 
+RULE 98: ( {juvenile-felonies:=0,priors:=0} ), support=1896, card=2:1566 captured; 
+RULE 15: ( {priors:>3} ), support=1964, card=1:1121 captured; 
+RULE 6: ( {age:23-25} ), support=827, card=1:161 captured; 
+RULE 4: ( {age:21-22} ), support=579, card=1:118 captured; 
+RULE 0: ( default ), support=6217, card=0:744 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=13 #add=352 #delete=320 #swap=328):
+max_log_posterior = -3916.411291
+max_log_posterior = -3916.411291
+10 rules 6217 samples
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=473, card=2:473 captured; 
+RULE 71: ( {age:18-20,juvenile-crimes:>0} ), support=199, card=2:181 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1721, card=2:1491 captured; 
+RULE 5: ( {age:>45} ), support=1101, card=1:726 captured; 
+RULE 22: ( {sex:Male,age:18-20} ), support=526, card=2:336 captured; 
+RULE 115: ( {juvenile-crimes:=0,priors:=0} ), support=1835, card=2:1288 captured; 
+RULE 100: ( {juvenile-felonies:=0,priors:=1} ), support=1126, card=2:784 captured; 
+RULE 49: ( {age:21-22,juvenile-felonies:=0} ), support=555, card=2:145 captured; 
+RULE 3: ( {age:26-45} ), support=3078, card=1:586 captured; 
+RULE 0: ( default ), support=6217, card=0:207 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=7 #add=310 #delete=376 #swap=314):
+max_log_posterior = -3921.988269
+max_log_posterior = -3921.988269
+10 rules 6217 samples
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1491, card=2:1491 captured; 
+RULE 84: ( {age:23-25,priors:=0} ), support=222, card=2:222 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=473, card=2:473 captured; 
+RULE 70: ( {age:18-20,juvenile-crimes:=0} ), support=433, card=2:422 captured; 
+RULE 87: ( {age:23-25,priors:2-3} ), support=180, card=2:180 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=142, card=2:142 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1090, card=2:726 captured; 
+RULE 71: ( {age:18-20,juvenile-crimes:>0} ), support=199, card=2:181 captured; 
+RULE 72: ( {age:26-45,priors:=0} ), support=817, card=2:817 captured; 
+RULE 0: ( default ), support=6217, card=0:1563 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=12 #add=328 #delete=313 #swap=359):
+max_log_posterior = -3904.950053
+max_log_posterior = -3904.950053
+11 rules 6217 samples
+RULE 84: ( {age:23-25,priors:=0} ), support=222, card=2:222 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=188, card=2:188 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=580, card=2:580 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1491, card=2:1491 captured; 
+RULE 15: ( {priors:>3} ), support=1964, card=1:473 captured; 
+RULE 118: ( {juvenile-crimes:=0,priors:2-3} ), support=1027, card=2:293 captured; 
+RULE 24: ( {sex:Female,age:21-22} ), support=112, card=2:81 captured; 
+RULE 5: ( {age:>45} ), support=1101, card=1:538 captured; 
+RULE 3: ( {age:26-45} ), support=3078, card=1:1297 captured; 
+RULE 12: ( {juvenile-crimes:=0} ), support=5379, card=1:757 captured; 
+RULE 0: ( default ), support=6217, card=0:297 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=16 #add=316 #delete=338 #swap=346):
+max_log_posterior = -3923.856347
+max_log_posterior = -3923.856347
+11 rules 6217 samples
+RULE 74: ( {age:26-45,priors:=1} ), support=480, card=2:480 captured; 
+RULE 96: ( {juvenile-felonies:=0,juvenile-crimes:>0} ), support=593, card=2:582 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=375, card=2:370 captured; 
+RULE 58: ( {age:>45,juvenile-misdemeanors:=0} ), support=1100, card=2:726 captured; 
+RULE 87: ( {age:23-25,priors:2-3} ), support=180, card=2:156 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1491, card=2:1132 captured; 
+RULE 29: ( {sex:Male,juvenile-felonies:>0} ), support=231, card=2:215 captured; 
+RULE 61: ( {age:18-20,juvenile-misdemeanors:=0} ), support=558, card=2:426 captured; 
+RULE 14: ( {priors:=0} ), support=1896, card=1:1228 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=142, card=2:100 captured; 
+RULE 0: ( default ), support=6217, card=0:802 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=24 #add=339 #delete=337 #swap=324):
+max_log_posterior = -3917.750070
+max_log_posterior = -3917.750070
+8 rules 6217 samples
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=757, card=2:757 captured; 
+RULE 99: ( {juvenile-felonies:=0,priors:>3} ), support=1793, card=2:1524 captured; 
+RULE 79: ( {age:21-22,priors:2-3} ), support=142, card=2:101 captured; 
+RULE 7: ( {age:18-20} ), support=632, card=1:438 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1085, card=2:726 captured; 
+RULE 16: ( {priors:=1} ), support=1163, card=1:726 captured; 
+RULE 108: ( {juvenile-misdemeanors:=0,priors:=0} ), support=1895, card=2:1234 captured; 
+RULE 0: ( default ), support=6217, card=0:711 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=6 #add=341 #delete=327 #swap=332):
+max_log_posterior = -3925.918400
+max_log_posterior = -3925.918400
+12 rules 6217 samples
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1491, card=2:1491 captured; 
+RULE 15: ( {priors:>3} ), support=1964, card=1:473 captured; 
+RULE 24: ( {sex:Female,age:21-22} ), support=112, card=2:103 captured; 
+RULE 87: ( {age:23-25,priors:2-3} ), support=180, card=2:180 captured; 
+RULE 9: ( {juvenile-felonies:>0} ), support=245, card=1:68 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=580, card=2:574 captured; 
+RULE 67: ( {age:>45,juvenile-crimes:=0} ), support=1085, card=2:726 captured; 
+RULE 47: ( {age:26-45,juvenile-felonies:=0} ), support=2957, card=2:1295 captured; 
+RULE 110: ( {juvenile-misdemeanors:=0,priors:=1} ), support=1126, card=2:393 captured; 
+RULE 51: ( {age:23-25,juvenile-felonies:=0} ), support=798, card=2:225 captured; 
+RULE 108: ( {juvenile-misdemeanors:=0,priors:=0} ), support=1895, card=2:463 captured; 
+RULE 0: ( default ), support=6217, card=0:226 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=8 #add=303 #delete=336 #swap=361):
+max_log_posterior = -3916.073907
+max_log_posterior = -3916.073907
+10 rules 6217 samples
+RULE 72: ( {age:26-45,priors:=0} ), support=817, card=2:817 captured; 
+RULE 84: ( {age:23-25,priors:=0} ), support=222, card=2:222 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=375, card=2:375 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=580, card=2:580 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=757, card=2:707 captured; 
+RULE 109: ( {juvenile-misdemeanors:=0,priors:>3} ), support=1721, card=2:1150 captured; 
+RULE 50: ( {age:>45,juvenile-felonies:=0} ), support=1090, card=2:726 captured; 
+RULE 101: ( {juvenile-felonies:=0,priors:2-3} ), support=1157, card=2:303 captured; 
+RULE 7: ( {age:18-20} ), support=632, card=1:389 captured; 
+RULE 0: ( default ), support=6217, card=0:948 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=13 #add=350 #delete=289 #swap=361):
+max_log_posterior = -3906.492535
+max_log_posterior = -3906.492535
+11 rules 6217 samples
+RULE 86: ( {age:23-25,priors:=1} ), support=162, card=2:162 captured; 
+RULE 120: ( {juvenile-crimes:>0,priors:>3} ), support=473, card=2:473 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=188, card=2:188 captured; 
+RULE 15: ( {priors:>3} ), support=1964, card=1:1491 captured; 
+RULE 71: ( {age:18-20,juvenile-crimes:>0} ), support=199, card=2:181 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=580, card=2:580 captured; 
+RULE 63: ( {age:26-45,juvenile-crimes:=0} ), support=2739, card=2:1280 captured; 
+RULE 17: ( {priors:2-3} ), support=1194, card=1:365 captured; 
+RULE 7: ( {age:18-20} ), support=632, card=1:379 captured; 
+RULE 19: ( {sex:Male,age:21-22} ), support=467, card=2:262 captured; 
+RULE 0: ( default ), support=6217, card=0:856 captured; 
+Total Captured: 6217
+
+The best rule list is (#reject=13 #add=323 #delete=353 #swap=324):
+max_log_posterior = -3909.334934
+max_log_posterior = -3909.334934
+11 rules 6217 samples
+RULE 75: ( {age:26-45,priors:2-3} ), support=580, card=2:580 captured; 
+RULE 74: ( {age:26-45,priors:=1} ), support=480, card=2:480 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=188, card=2:188 captured; 
+RULE 36: ( {sex:Male,juvenile-crimes:>0} ), support=757, card=2:719 captured; 
+RULE 81: ( {age:>45,priors:>3} ), support=375, card=2:362 captured; 
+RULE 17: ( {priors:2-3} ), support=1194, card=1:304 captured; 
+RULE 15: ( {priors:>3} ), support=1964, card=1:1169 captured; 
+RULE 20: ( {sex:Male,age:>45} ), support=893, card=2:407 captured; 
+RULE 41: ( {sex:Male,priors:=1} ), support=927, card=2:290 captured; 
+RULE 7: ( {age:18-20} ), support=632, card=1:296 captured; 
+RULE 0: ( default ), support=6217, card=0:1422 captured; 
+Total Captured: 6217
+n0=171, n1=51, captured=222, training accuracy = 0.77027027
+theta[0] = 0.23214286
+n0=131, n1=57, captured=188, training accuracy = 0.69680851
+theta[1] = 0.30526316
+n0=334, n1=246, captured=580, training accuracy = 0.57586207
+theta[2] = 0.42439863
+n0=554, n1=937, captured=1491, training accuracy = 0.62843729
+theta[3] = 0.62826524
+n0=108, n1=365, captured=473, training accuracy = 0.77167019
+theta[4] = 0.77052632
+n0=105, n1=188, captured=293, training accuracy = 0.64163823
+theta[5] = 0.64067797
+n0=66, n1=15, captured=81, training accuracy = 0.81481481
+theta[6] = 0.19277108
+n0=441, n1=97, captured=538, training accuracy = 0.81970260
+theta[7] = 0.18148148
+n0=941, n1=356, captured=1297, training accuracy = 0.72552043
+theta[8] = 0.27482679
+n0=409, n1=348, captured=757, training accuracy = 0.54029062
+theta[9] = 0.45981555
+n0=87, n1=210, captured=297, training accuracy = 0.70707071
+theta[10] = 0.70568562
+Time to train: Elapsed time  0.0849	 0.0849 
+
+The best rulelist for 11 MCMC chains is: 11 rules 6217 samples
+RULE 84: ( {age:23-25,priors:=0} ), support=222, card=2:222 captured; 
+RULE 83: ( {age:>45,priors:2-3} ), support=188, card=2:188 captured; 
+RULE 75: ( {age:26-45,priors:2-3} ), support=580, card=2:580 captured; 
+RULE 116: ( {juvenile-crimes:=0,priors:>3} ), support=1491, card=2:1491 captured; 
+RULE 15: ( {priors:>3} ), support=1964, card=1:473 captured; 
+RULE 118: ( {juvenile-crimes:=0,priors:2-3} ), support=1027, card=2:293 captured; 
+RULE 24: ( {sex:Female,age:21-22} ), support=112, card=2:81 captured; 
+RULE 5: ( {age:>45} ), support=1101, card=1:538 captured; 
+RULE 3: ( {age:26-45} ), support=3078, card=1:1297 captured; 
+RULE 12: ( {juvenile-crimes:=0} ), support=5379, card=1:757 captured; 
+RULE 0: ( default ), support=6217, card=0:297 captured; 
+Total Captured: 6217
+84, 0.23214286
+83, 0.30526316
+75, 0.42439863
+116, 0.62826524
+15, 0.77052632
+118, 0.64067797
+24, 0.19277108
+5, 0.18148148
+3, 0.27482679
+12, 0.45981555
+0, 0.70568562
+Lambda = 9.000000
+Eta = 3.000000
+Alpha[0] = 1
+Alpha[1] = 1
+Number of chains = 11
+Iterations = 1000
+Rule 84 captures 20 of 690 samples
+Rule 83 captures 23 of 690 samples
+Rule 75 captures 56 of 690 samples
+Rule 116 captures 154 of 690 samples
+Rule 15 captures 56 of 690 samples
+Rule 118 captures 38 of 690 samples
+Rule 24 captures 8 of 690 samples
+Rule 5 captures 61 of 690 samples
+Rule 3 captures 155 of 690 samples
+Rule 12 captures 79 of 690 samples
+Rule 0 captures 40 of 690 samples
+test accuracy = 0.634783 
+Assumes data is in data/CrossValidation
+Running compas_9_{train|test}-binary.csv against GLM, SVM, GBM, CART, C5.0, RF, and RIPPER
+
+Installing package into ‘/Users/margo/Library/R/3.4/library’
+(as ‘lib’ is unspecified)
+Warning message:
+package ‘svmRadial’ is not available (for R version 3.4.1) 
+randomForest 4.6-12
+Type rfNews() to see new features/changes/bug fixes.
+Warning message:
+In predict.lm(object, newdata, se.fit, scale = 1, type = ifelse(type ==  :
+  prediction from a rank-deficient fit may be misleading
+GLM accuracy: 0.6449
+SVM (with RBF kernel) result: 0.6478
+Adaboost result: 0.6449
+CART result: 0.6188
+C4.5 result: 0.6391
+RandomForests result: 0.6406
+RIPPER result: 0.6348
+0.6449275 0.6478261 0.6449275 0.6188406 0.6391304 0.6405797 0.6347826
+
+CORELS:
+Test accuracies: [0.6946454413892909, 0.6541244573082489, 0.6642547033285094, 0.6541244573082489, 0.662807525325615, 0.6874095513748191, 0.658465991316932, 0.6797101449275362, 0.6608695652173913, 0.6304347826086957]
