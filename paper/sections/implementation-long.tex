@@ -163,9 +163,8 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
 \State Define $\mathbf{z} \in \{0, 1\}^N$, s.t. ${z_n = \sum_{u=1}^U \one [x_n \in e_u] [y_n = q_u]}$ \\
 \Comment{$e_u$
 is the equivalent points set containing~$x_n$ and $q_u$ is the minority class label of~$e_u$ (\S\ref{sec:identical})}
-\vspace{2.5mm}
 \State Define $b(\Prefix, \x, \y)$ and $\mathbf{u} = \neg\,\Cap(\x, \Prefix)$ \Comment{$\mathbf{u}$ is a bit vector indicating data not captured by $\Prefix$}
-\vspace{2.5mm}
+\vspace{1.5mm}
 \For {$s$ in $\RuleSet$ \textbf{if} $s$ not in $\Prefix$ \textbf{then}} \Comment{Evaluate all of $\Prefix$'s children}
 %    \If {$s$ not in $\Prefix$}
         \State $\PrefixB \gets (\Prefix, s)$ \Comment{\textbf{Branch}: Generate child $\PrefixB$}
@@ -176,14 +175,15 @@ is the equivalent points set containing~$x_n$ and $q_u$ is the minority class la
         \EndIf
         \State $\mathbf{w} \gets \mathbf{v} \wedge \y$ \Comment{Bit vector indicating data captured by $s$ with label $1$}
         \State $n_w = \Count(\mathbf{w})$ \Comment{Number of data captured by $s$ with label $1$}
-       \If {$n_w < \Reg$}
-           \State \Continue \Comment{\textbf{Lower bound on accurate antecedent support (Theorem~\ref{thm:min-capture-correct})}}
-       \EndIf
-       \If {$n_w / n_v > 0.5$}
-           \State $\delta_b \gets (n_v - n_w) / N$ \Comment{Misclassification error of the rule $s \rightarrow 1$}
-       \Else
-           \State $\delta_b \gets n_w / N$ \Comment{Misclassification error of the rule $s \rightarrow 0$}
-       \EndIf
+        \If {$n_w / n_v \ge 0.5$}
+            \State $n_c \gets n_w$ \Comment{Number of correct predictions by the new rule $s \rightarrow 1$}
+        \Else
+            \State $n_c \gets n_v - n_w$ \Comment{Number of correct predictions by the new rule $s \rightarrow 0$}
+        \EndIf
+        \If {$n_c / N < \Reg$}
+            \State \Continue \Comment{\textbf{Lower bound on accurate antecedent support (Theorem~\ref{thm:min-capture-correct})}}
+        \EndIf
+        \State $\delta_b \gets (n_v - n_c) / N$ \Comment{Misclassification error of the new rule}
        \State $b(\PrefixB, \x, \y) \gets b(\Prefix, \x, \y) + \Reg + \delta_b$ \Comment{Incremental lower bound~\eqref{eq:inc-lb}}
        \If {$b(\PrefixB, \x, \y) \ge \CurrentObj$} \Comment{\textbf{Hierarchical objective lower bound (Theorem~\ref{thm:bound})}}
            \State \Continue
