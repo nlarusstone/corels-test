@@ -17,13 +17,16 @@ if figure:
     if vertical:
         pylab.figure(1, figsize=(5, 6))
     else:
-        pylab.figure(1, figsize=(8.5, 3))
+        pylab.figure(1, figsize=(9, 3))
     pylab.clf()
+
+# see ../eval/eval_bias_ela.py
+compas = np.array([0.68451519536903038, 0.65557163531114326, 0.65412445730824886, 0.66570188133140373, 0.64833574529667148, 0.678726483357453, 0.64544138929088279, 0.66956521739130437, 0.6768115942028986, 0.61884057971014494])
 
 for dataset in ['compas', 'weapon']:
 
     if (dataset == 'compas'):
-        names = ['GLM', 'SVM', 'AdaBoost\n\n', 'CART', 'C4.5', 'RF', 'RIPPER\n', 'SBRL', 'CORELS']
+        names = ['GLM', 'SVM', 'AdaBoost\n\n', 'CART', 'C4.5', 'RF', 'RIPPER\n', 'SBRL', 'COMPAS', 'CORELS']
         title = 'Recidivism prediction (ProPublica)'
         yticks = np.arange(0.62, 0.74, 0.03)
     elif (dataset == 'weapon'):
@@ -46,16 +49,19 @@ for dataset in ['compas', 'weapon']:
 
     print other.shape
     print sbrl.shape
-    y = np.cast[float](np.vstack([other.T, sbrl, corels]).T)
+    if (dataset == 'compas'):
+        y = np.cast[float](np.vstack([other.T, sbrl, compas, corels]).T)
+    elif (dataset == 'weapon'):
+        y = np.cast[float](np.vstack([other.T, sbrl, corels]).T)
 
     print '\n'.join(['%s & %2.1f $\\pm$ %2.1f' % (n.strip(), m, s) for (n, m, s) in zip(names, y.mean(axis=0) * 100, y.std(axis=0) * 100)])
 
     if figure:
         if not vertical:
             if dataset == 'compas':
-                pylab.subplot2grid((10, 77), (0, 0), colspan=40, rowspan=8)
+                pylab.subplot2grid((10, 81), (0, 6), colspan=42, rowspan=8)
             elif dataset == 'weapon':
-                pylab.subplot2grid((10, 77), (0, 41), colspan=36, rowspan=8)
+                pylab.subplot2grid((10, 81), (0, 48), colspan=36, rowspan=8)
         else:
             if dataset == 'compas':
                 pylab.subplot2grid((40, 10), (0, 1), colspan=10, rowspan=15)
@@ -74,7 +80,7 @@ for dataset in ['compas', 'weapon']:
         for (i, color) in zip(ii, color_vec):
             pylab.plot(range(nmethods), y[i, :], 'D', color=color, markeredgewidth=0, markersize=4.5)
 
-        pylab.plot(range(nmethods), y.mean(axis=0), 's', color='white', markeredgewidth=2, markersize=7)
+        pylab.plot(range(nmethods), y.mean(axis=0), 's', color='white', markeredgecolor='k', markeredgewidth=2, markersize=7)
 
         if not vertical:
             pylab.xticks(range(nmethods), names, fontsize=fs, rotation=40)

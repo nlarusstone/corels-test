@@ -22,7 +22,9 @@ pylab.subplot(1, 2, 2)
 #pylab.plot(-1, -1, 'D', markerfacecolor='w', markeredgecolor='k', markersize=6, markeredgewidth=2)
 #pylab.legend(('TNR  = 1 - FPR (open)', 'FNR  = 1 - TPR (solid)'), fontsize=fs, numpoints=1, loc='lower left', frameon=False, borderpad=0)
 
+compas_accuracy = []
 fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
+#fout = os.path.join('..', 'viz', 'compas-accuracy.csv')
 seed = sum([3, 15, 13, 16, 1, 19]) # c:3, o:15, m:13, p:16, a:1, s:19
 np.random.seed(seed)
 # duplicate names in header:  decile_score, priors_count
@@ -159,6 +161,8 @@ for fold in range(num_folds):
     white_fnr = float(white_fn) / (white_tp + white_fn)
     white_tnr = float(white_tn) / (white_fp + white_tn)
 
+    compas_accuracy += [(compas == true_arr).sum() / float(len(true_arr))]
+
     pylab.subplot(1, 2, 1)
     pylab.plot(2 + offset, black_tpr, 'd', markerfacecolor='w', markeredgecolor='r', markersize=6, markeredgewidth=2)
     pylab.plot(2 + offset, black_fpr, 'd', markerfacecolor='r', markersize=8, markeredgewidth=1, markeredgecolor='gray')
@@ -175,6 +179,8 @@ pylab.legend(('Black TPR', 'Black FPR', 'White TPR', 'White FPR'), fontsize=fs-1
 
 pylab.subplot(1,2,2)
 pylab.legend(('Black TNR', 'Black FNR', 'White TNR (= 1 $-$ FPR)', 'White FNR (= 1 $-$ TPR)'), fontsize=fs-1, numpoints=1, loc='lower left', frameon=False, borderpad=0, ncol=2, columnspacing=0.1, handletextpad=0.1, borderaxespad=0.3, handlelength=1.6)
+
+print 'COMPAS accuracy:', compas_accuracy
 
 if train:
     pylab.savefig('../figs/compare_corels_compas-train.pdf')

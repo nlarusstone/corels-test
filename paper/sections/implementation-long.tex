@@ -20,15 +20,13 @@ Next, we summarize how these data structures interact throughout
 our model of incremental execution~(\S\ref{sec:execution}).
 %
 In particular, Algorithms~\ref{alg:bounds} and~\ref{alg:pmap} illustrate many
-of the computational details from CORELS' inner loop, and highlight each of
+of the computational details from CORELS' inner loop, highlighting each of
 the bounds from~\S\ref{sec:framework} that we use to prune the search space.
 %
 We additionally describe how we garbage collect our data structures~(\S\ref{sec:gc}).
 %
 Finally, we explore how our queue can be used to support
 custom scheduling policies designed to improve performance~(\S\ref{sec:scheduling}).
-
-Our implementation of CORELS is at: \url{https://github.com/nlarusstone/corels}.
 
 \subsection{Prefix tree}
 \label{sec:trie}
@@ -86,7 +84,7 @@ Finally, we note that we implement the prefix tree as a custom C++ class. % deco
 \label{sec:queue}
 
 The queue is a worklist that orders exploration over the search space of possible
-rule lists; every queue element corresponds to leaf in the prefix tree, and vice versa.
+rule lists; every queue element corresponds to a leaf in the prefix tree, and vice versa.
 %
 In our implementation, each queue element points to a leaf;
 when we pop an element off the queue, we use the leaf's metadata to
@@ -162,7 +160,9 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
 \label{alg:bounds}
 \begin{algorithmic}
 \small
-\State Define $\mathbf{z} \in \{0, 1\}^N$, s.t. ${z_n = \sum_{u=1}^U \one [x_n \in e_u] [y_n = q_u]}$ \Comment{$e_u$ and~$q_u$ are defined as in~\S\ref{sec:identical}}
+\State Define $\mathbf{z} \in \{0, 1\}^N$, s.t. ${z_n = \sum_{u=1}^U \one [x_n \in e_u] [y_n = q_u]}$ \\
+\Comment{$e_u$
+is the equivalent points set containing~$x_n$ and $q_u$ is the minority class label of~$e_u$ (\S\ref{sec:identical})}
 \State Define $b(\Prefix, \x, \y)$ and $\mathbf{u} = \neg\,\Cap(\x, \Prefix)$ \Comment{$\mathbf{u}$ is a bit vector indicating data not captured by $\Prefix$} \\
 
 \For {$s$ in $\RuleSet$ \textbf{if} $s$ not in $\Prefix$ \textbf{then}} \Comment{Evaluate all of $\Prefix$'s children}
