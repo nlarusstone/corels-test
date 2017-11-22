@@ -163,8 +163,9 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
 \State Define $\mathbf{z} \in \{0, 1\}^N$, s.t. ${z_n = \sum_{u=1}^U \one [x_n \in e_u] [y_n = q_u]}$ \\
 \Comment{$e_u$
 is the equivalent points set containing~$x_n$ and $q_u$ is the minority class label of~$e_u$ (\S\ref{sec:identical})}
-\State Define $b(\Prefix, \x, \y)$ and $\mathbf{u} = \neg\,\Cap(\x, \Prefix)$ \Comment{$\mathbf{u}$ is a bit vector indicating data not captured by $\Prefix$} \\
-
+\vspace{2.5mm}
+\State Define $b(\Prefix, \x, \y)$ and $\mathbf{u} = \neg\,\Cap(\x, \Prefix)$ \Comment{$\mathbf{u}$ is a bit vector indicating data not captured by $\Prefix$}
+\vspace{2.5mm}
 \For {$s$ in $\RuleSet$ \textbf{if} $s$ not in $\Prefix$ \textbf{then}} \Comment{Evaluate all of $\Prefix$'s children}
 %    \If {$s$ not in $\Prefix$}
         \State $\PrefixB \gets (\Prefix, s)$ \Comment{\textbf{Branch}: Generate child $\PrefixB$}
