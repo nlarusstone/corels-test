@@ -316,7 +316,7 @@ even if we know the relevant identifying information.
 We therefore have no way to update the queue without iterating over every element.
 %
 We address this by marking prefix tree leaves that we wish to delete (see~\S\ref{sec:trie}),
-and delete the physical nodes lazily, after they are popped from the queue.
+deleting the physical nodes lazily, after they are popped from the queue.
 %
 Later, in our section on experiments~(\S\ref{sec:experiments}),
 we refer to two different queues that we define here: the physical queue
@@ -349,7 +349,7 @@ as the expected objective value of another rule list~$\RL'$ that is related to~$
 different models of the relationship between~$\RL$ and~$\RL'$ lead to different
 curiosity functions.
 %
-In general, the curiosity of~$\RL$ is by definition equal to the sum of the expected
+In general, the curiosity of~$\RL$ is, by definition, equal to the sum of the expected
 misclassification error and the expected regularization penalty of~$\RL'$:
 \begin{align}
 \Curiosity(\Prefix, \x, \y) \equiv \E[ \Obj(\RL', \x, \y) ]
