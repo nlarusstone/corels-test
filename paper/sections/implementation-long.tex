@@ -171,7 +171,7 @@ is the equivalent points set containing~$x_n$ and $q_u$ is the minority class la
         \State $\PrefixB \gets (\Prefix, s)$ \Comment{\textbf{Branch}: Generate child $\PrefixB$}
         \State $\mathbf{v} \gets \mathbf{u} \wedge \Cap(\x, s)$ \Comment{Bit vector indicating data captured by $s$ in $\PrefixB$}
         \State $n_v = \Count(\mathbf{v})$ \Comment{Number of data captured by $s$, the last antecedent in $\PrefixB$}
-        \If {$n_v < \Reg$}
+        \If {$n_v / N < \Reg$}
             \State \Continue \Comment{\textbf{Lower bound on antecedent support (Theorem\ref{thm:min-capture})}}
         \EndIf
         \State $\mathbf{w} \gets \mathbf{v} \wedge \y$ \Comment{Bit vector indicating data captured by $s$ with label $1$}
