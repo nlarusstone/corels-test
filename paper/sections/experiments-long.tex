@@ -16,7 +16,7 @@ How much does each of the implementation optimizations contribute to CORELS' per
 How rapidly does CORELS prune the search space? (\S\ref{sec:reg-param} and \S\ref{sec:ablation})
 %
 Before proceeding, we first describe our computational environment,
-as well as the datasets we use and prediction problems for each,
+as well as the datasets and prediction problems we use,
 and then in Section~\ref{sec:examples} show example optimal rule lists found by CORELS.
 
 \textbf{Computational environment.}
@@ -34,7 +34,7 @@ Our evaluation focuses on two socially-important prediction problems associated
 with recent, publicly-available datasets.
 %
 Table~1 summarizes the datasets and prediction problems,
-and Table~2 summarizes feature sets extract from each dataset,
+and Table~2 summarizes feature sets extracted from each dataset,
 as well as antecedent sets we mine from these feature sets.
 %
 We provide some details next.
@@ -54,7 +54,7 @@ NYCLU & Weapon possession & 29,595 & 0.047 & Yes & 50,743 & 2,959 \\
 \end{tabular}
 \caption{Summary of datasets and prediction problems.
 %
-The last four columns report the total number of observations,
+The last five columns report the total number of observations,
 the fraction of observations with the positive class label,
 whether we resampled the training set due to class imbalance,
 and the sizes of each training and test set in our 10-fold cross-validation studies.
@@ -110,7 +110,7 @@ derived from a superset of Feature Set~A that includes~4 additional binary featu
 stop-and-frisk data to predict whether a weapon will be found on a stopped
 individual who is frisked or searched.
 %
-For experiments in Sections~\ref{sec:examples} and~\ref{sec:frisk}, and Appendix~\ref{appendix:cpw},
+For experiments in Sections~\ref{sec:examples} and~\ref{sec:frisk} and Appendix~\ref{appendix:cpw},
 we compile data from a database maintained by the New York Police Department (NYPD)~\citep{nypd},
 from years 2008-2012, following~\citet{Goel16}.
 %
@@ -120,7 +120,7 @@ crime was criminal possession of a weapon (CPW).\footnote{We filter for records 
 explicitly match the string `CPW'; we note that additional records, after converting to
 lowercase, contain strings such as `cpw' or `c.p.w.'}
 %
-From these, we next we identify a subset of 325,800 records for which the
+From these, we next identify a subset of 325,800 records for which the
 individual was frisked and/or searched; of these, criminal possession of a weapon
 was identified in only 10,885 instances (about 3.3\%).
 %
@@ -179,7 +179,7 @@ While some input antecedents contain features for race, no optimal rule list inc
 %
 %Since race did not appear in any optimal rule list, we omit race features from all subsequent analysis of this dataset.
 %
-Every optimal rule lists is the same or similar to one these examples,
+Every optimal rule list is the same or similar to one of these examples,
 with prefixes containing the same rules, up to a permutation, and same default rule.
 }
 \label{fig:propublica}
@@ -210,7 +210,7 @@ Optimal rule lists found using the two feature sets are very similar.
 %
 The upper and lower rule lists are representative of~7 and~3 folds, respectively.
 %
-Each of the remaining~8 solutions is the same or similar to one these,
+Each of the remaining~8 solutions is the same or similar to one of these,
 with prefixes containing the same rules, up to a permutation, and the same default rule.
 %
 See Figure~\ref{fig:recidivism-rule-list-005} in Appendix~\ref{appendix:examples} for a complete listing.
