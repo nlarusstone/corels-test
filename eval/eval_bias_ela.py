@@ -38,6 +38,13 @@ for n in names:
         nlist.append(n)
 
 num_folds = 10
+corels_black_accuracy = np.zeros(num_folds)
+corels_white_accuracy = np.zeros(num_folds)
+compas_black_accuracy = np.zeros(num_folds)
+compas_white_accuracy = np.zeros(num_folds)
+fraction_black = np.zeros(num_folds)
+fraction_white = np.zeros(num_folds)
+
 y = tb.tabarray(SVfile=fin, names=nlist)
 # require record to have c_jail_in field
 keep = y['c_jail_in'] != ''
@@ -86,9 +93,17 @@ for fold in range(num_folds):
     black = y[split_ind[fold]]['race'] == 'African-American'
     white = y[split_ind[fold]]['race'] == 'Caucasian'
 
+    black_true = true_arr[black]
+    n_black = len(black_true)
+    print '# Black:', n_black
+    white_true = true_arr[white]
+    n_white = len(white_true)
+    print '# white:', n_white
+    fraction_black[fold] = n_black / float(len(pred_arr))
+    fraction_white[fold] = n_white / float(len(pred_arr))
+
     print 'CORELS'
     black_preds = pred_arr[black]
-    black_true = true_arr[black]
     black_tp = ((black_preds == 1) & (black_true == 1)).sum()
     black_fp = ((black_preds == 1) & (black_true == 0)).sum()
     black_fn = ((black_preds == 0) & (black_true == 1)).sum()
@@ -100,6 +115,7 @@ for fold in range(num_folds):
     print 'Black TP: {0} FN: {1}, FP: {2}, TN: {3}'.format(black_tp, black_fn, black_fp, black_tn)
     print 'Black TPR: {0}'.format(black_tpr)
     print 'Black FPR: {0}'.format(black_fpr)
+    corels_black_accuracy[fold] = (black_preds == black_true).sum() / float(n_black)
 
     white_preds = pred_arr[white]
     white_true = true_arr[white]
@@ -114,6 +130,7 @@ for fold in range(num_folds):
     print 'white TP: {0} FN: {1}, FP: {2}, TN: {3}'.format(white_tp, white_fn, white_fp, white_tn)
     print 'white TPR: {0}'.format(white_tpr)
     print 'white FPR: {0}'.format(white_fpr)
+    corels_white_accuracy[fold] = (white_preds == white_true).sum() / float(n_white)
 
     offset = fold * 0.02
     pylab.suptitle('Comparison of CORELS and COMPAS by race (ProPublica dataset)\n', fontsize=fs)
@@ -123,7 +140,7 @@ for fold in range(num_folds):
     p3 = pylab.plot(3 + offset, white_tpr, 's', markerfacecolor='w', markeredgecolor='b', markersize=6, markeredgewidth=2)
     p4 = pylab.plot(3 + offset, white_fpr, 's', markerfacecolor='b', markersize=7, markeredgewidth=1, markeredgecolor='gray')
     pylab.axis([0.5, 4.5, 0, 0.89])
-    pylab.xticks(np.array([1, 2, 3, 4]) + 0.1, ['Black\n(CORELS)', 'Black\n(COMPAS)', 'White\n(CORELS)', 'White\n(COMPAS)'], fontsize=fs-2)
+    pylab.xticks(np.array([1, 2, 3, 4]) + 0.1, ['CORELS', 'COMPAS', 'CORELS', 'COMPAS'], fontsize=fs-2)
     pylab.yticks(np.arange(0, 0.9, 0.2), fontsize=fs)
     pylab.ylabel('True or false positive rate', fontsize=fs)
     pylab.subplot(1, 2, 2)
@@ -132,7 +149,7 @@ for fold in range(num_folds):
     pylab.plot(3 + offset, white_tnr, 's', markerfacecolor='c', markersize=7, markeredgewidth=1, markeredgecolor='gray')
     pylab.plot(3 + offset, white_fnr, 's', markerfacecolor='w', markeredgecolor='c', markersize=6, markeredgewidth=2)
     pylab.axis([0.5, 4.5, 0, 0.89])
-    pylab.xticks(np.array([1, 2, 3, 4]) + 0.1,  ['Black\n(CORELS)', 'Black\n(COMPAS)', 'White\n(CORELS)', 'White\n(COMPAS)'], fontsize=fs-2)
+    pylab.xticks(np.array([1, 2, 3, 4]) + 0.1, ['CORELS', 'COMPAS', 'CORELS', 'COMPAS'], fontsize=fs-2)
     pylab.yticks(np.arange(0, 0.9, 0.2), fontsize=fs)
     pylab.ylabel('True or false negative rate', fontsize=fs)
 
@@ -150,6 +167,7 @@ for fold in range(num_folds):
     print 'Black TP: {0} FN: {1}, FP: {2}, TN: {3}'.format(black_tp, black_fn, black_fp, black_tn)
     print 'Black TPR: {0}'.format(black_tpr)
     print 'Black FPR: {0}'.format(black_fpr)
+    compas_black_accuracy[fold] = (black_preds == black_true).sum() / float(n_black)
 
     white_preds = compas[white]
     white_tp = ((white_preds == 1) & (white_true == 1)).sum()
@@ -160,6 +178,7 @@ for fold in range(num_folds):
     white_fpr = float(white_fp) / (white_fp + white_tn)
     white_fnr = float(white_fn) / (white_tp + white_fn)
     white_tnr = float(white_tn) / (white_fp + white_tn)
+    compas_white_accuracy[fold] = (white_preds == white_true).sum() / float(n_white)
 
     compas_accuracy += [(compas == true_arr).sum() / float(len(true_arr))]
 
@@ -181,6 +200,19 @@ pylab.subplot(1,2,2)
 pylab.legend(('Black TNR', 'Black FNR', 'White TNR (= 1 $-$ FPR)', 'White FNR (= 1 $-$ TPR)'), fontsize=fs-1, numpoints=1, loc='lower left', frameon=False, borderpad=0, ncol=2, columnspacing=0.1, handletextpad=0.1, borderaxespad=0.3, handlelength=1.6)
 
 print 'COMPAS accuracy:', compas_accuracy
+
+print 'fraction black: (%1.3f, %1.3f)' % (fraction_black.mean(), fraction_black.std())
+print 'fraction white: (%1.3f, %1.3f)' % (fraction_white.mean(), fraction_white.std())
+
+print 'CORELS accuracy (black): (%1.3f, %1.3f)' % (corels_black_accuracy.mean(), corels_black_accuracy.std())
+print 'COMPAS accuracy (black): (%1.3f, %1.3f)' % (compas_black_accuracy.mean(), compas_black_accuracy.std())
+print 'CORELS accuracy (white): (%1.3f, %1.3f)' % (corels_white_accuracy.mean(), corels_white_accuracy.std())
+print 'COMPAS accuracy (white): (%1.3f, %1.3f)' % (compas_white_accuracy.mean(), compas_white_accuracy.std())
+
+corels_difference = corels_white_accuracy - corels_black_accuracy
+compas_difference = compas_white_accuracy - compas_black_accuracy
+print 'CORELS difference: (%1.3f, %1.3f)' % (corels_difference.mean(), corels_difference.std())
+print 'COMPAS difference: (%1.3f, %1.3f)' % (compas_difference.mean(), compas_difference.std())
 
 if train:
     pylab.savefig('../figs/compare_corels_compas-train.pdf')
