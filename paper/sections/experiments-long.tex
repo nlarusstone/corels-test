@@ -408,7 +408,7 @@ This aspect of the data could entirely explain why ProPublica concluded that COM
 %
 There are many definitions of fairness, and it is not clear whether CORELS' models are fair either, but it is much easier to debate about the fairness of a model when it is transparent.
 %
-Additional fairness constraints or transparency constraints can be placed on CORELS' models if desired, though one would need to edit our bounds~(\S\ref{sec:framework}) and implementation~(\S\ref{sec:implementation}) in order to impose more constraints.
+Additional fairness constraints or transparency constraints can be placed on CORELS' models if desired, though one would need to edit our bounds~(\S\ref{sec:framework}) and implementation~(\S\ref{sec:implementation}) to impose more constraints.
 
 Regardless of whether COMPAS is racially biased (which our analysis does not indicate is true as long as criminal history and age are allowed to be considered as features),
 COMPAS may have many other fairness defects that might be considered serious.
@@ -450,9 +450,9 @@ Risk prediction models also have the potential to heavily impact how efficient t
 %
 High stakes decisions, such as these, are ideal applications for machine learning algorithms that produce transparent models from high dimensional data.
 
-Currently, justice system data does not support highly accurate risk predictions, but current risk models are useful in practice, and these risk predictions will become more accurate as more data and higher quality data are made available.
+Currently, justice system data does not support highly accurate risk predictions, but current risk models are useful in practice, and these risk predictions will become more accurate as more and higher quality data are made available.
 
-\subsection{Comparison of CORELS a heuristic model for weapon prediction}
+\subsection{Comparison of CORELS to a heuristic model for weapon prediction}
 \label{sec:frisk}
 
 CORELS generates simple, accurate models for the task of weapon prediction,
@@ -1234,7 +1234,7 @@ would have to evaluate prefixes of length~10 or longer.
 %
 Na\"ively evaluating all prefixes up to length~10 would require looking at ${5.0 \times 10^{20}}$ different prefixes.
 
-However, CORELS examines only 28 million prefixes in total---a reduction factor of~893 compared to examining
+However, CORELS examines only 28 million prefixes in total---a reduction of~893$\times$ compared to examining
 all prefixes up to length~5 and a reduction of ${1.8 \times 10^{13}}$ for the case of length~10.
 %
 On a laptop, we require about 1.3~$\mu$s to evaluate a single prefix (given by dividing the number of lower bound evaluations by the total time
