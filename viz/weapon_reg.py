@@ -32,6 +32,7 @@ figure_fold = 0
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/keep/'
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/corels/'
 #log_dir = '/Users/elaine/Dropbox/bbcache/logs/arxiv/'
+#log_dir = '/Users/elaine/Downloads/jmlr/'
 log_dir = '/Users/nlarusstone/Documents/Research/bbcache/jmlr/'
 
 if make_figure:
