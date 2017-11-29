@@ -102,14 +102,9 @@ for the ProPublica dataset, found by CORELS.
 
 We develop specialized tools from the fields of discrete optimization and artificial intelligence.
 %
-Specifically, we introduce a special branch-and-bound algorithm,
-called Certifiably Optimal RulE ListS (CORELS), that provides
-(1) the optimal solution, (2) a certificate of optimality, and (3) optionally,
-a collection of near-optimal solutions and the distance between each
-such solution and the optimal one.
-%
-The certificate of optimality means that we can investigate how close other models
-(\eg models provided by greedy algorithms) are to optimal.
+Specifically, we introduce a specialized branch-and bound algorithm, called
+Certifiably Optimal RulE ListS (CORELS), that provides the optimal solution
+according to the training objective, along with a certificate of optimality.
 
 \begin{arxiv}
 Within its branch-and-bound procedure, CORELS maintains a lower bound on the
