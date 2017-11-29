@@ -44,13 +44,13 @@ see Appendix~\ref{appendix:data}.
 
 \begin{table}[t!]
 \centering
-\begin{tabular}{l|c|c|c|c|c|c}
-Dataset & Prediction problem & N & Positive & Resample & Training & Test \\
-& & & fraction & training set & set size & set size \\
+\begin{tabular}{l|c|r|c|c|r|r}
+Dataset & Prediction problem & N~~~~ & Positive & Resample & Training & Test~~ \\
+& & & fraction & training set & set size~ & set size \\
 \hline
 ProPublica & Two-year recidivism & 6,907 & 0.46 & No & 6,217 & 692 \\
-NYPD & Weapon possession & 325,800 & 0.033 & Yes & 566,839 & 32,580 \\
-NYCLU & Weapon possession & 29,595 & 0.047 & Yes & 50,743 & 2,959 \\
+NYPD & Weapon possession & 325,800 & 0.03 & Yes & 566,839 & 32,580 \\
+NYCLU & Weapon possession & 29,595 & 0.05 & Yes & 50,743 & 2,959 \\
 \end{tabular}
 \caption{Summary of datasets and prediction problems.
 %
@@ -70,9 +70,9 @@ Dataset & Feature & Categorical & Binary & Mined & Max number & Negations \\
 \hline
 ProPublica & A & 6 & 13 & 122 & 2 & No \\
 ProPublica & B & 7 & 17 & 189 & 2 & No \\
-NYPD & C & 5 & 28 & 28 & 1 & No \\
-NYPD & D & 3 & 20 & 20 & 1 & No \\
-NYCLU & E & 5 & 28 & 46 & 1 & Yes
+NYPD & C & 5 & 28 & ~28 & 1 & No \\
+NYPD & D & 3 & 20 & ~20 & 1 & No \\
+NYCLU & E & 5 & 28 & ~46 & 1 & Yes
 \end{tabular}
 \caption{Summary of feature sets and mined antecedents.
 %
