@@ -6,27 +6,18 @@
 Here, we highlight our most significant bounds, as well as directions for future work
 based on bounds that we have yet to leverage in practice.
 
-% Something about symmetries.  Permutations, counting, and speedup calculation
-% Proof of permutation vs. equivalent support
-% It can make sense to use both looser and tighter bounds
-%
 In empirical studies, we found our equivalent support (\S\ref{sec:equivalent}, Theorem~\ref{thm:equivalent})
 and equivalent points (\S\ref{sec:identical}, Theorem~\ref{thm:identical}) bounds
 to yield the most significant improvements in algorithm performance.
 %
 In fact, they sometimes proved critical for finding solutions and proving optimality,
 even on small problems.
-%~\citep{AngelinoLaAlSeRu17,AngelinoLaAlSeRu17-kdd}.
-%
-%In this work, we presented a relaxation of the former: our similar support bound
 
 Accordingly, we would hope that our similar support bound (\S\ref{sec:similar}, Theorem~\ref{thm:similar}) could be useful;
 %
 understanding how to efficiently exploit this result in practice
 represents an important direction for future work. In particular, this type of bound may lead to
 principled approximate variants of our~approach.
-%
-% It is not obvious how to efficiently identify when prefixes have similar support, ideas like LSH may help
 
 We presented several sets of bounds in which at least one bound was strictly tighter than the other(s).
 %

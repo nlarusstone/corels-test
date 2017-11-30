@@ -55,13 +55,7 @@ the set of data not captured by~$\Prefix$ and the support of~$p_{K+1}$:
 1 - \Supp(\Prefix, \x) - \Supp(p_{K+1}, \x \given \Prefix') = \epsilon.
 \end{align*}
 The best outcome for~$\RL'$ would occur if its misclassification
-error were smaller than that of~$\RL$ by~$\epsilon$,
-%\eg this could happen if all data not captured by~$\Prefix'$
-%had the same class label, in which case the default rule of~$\RL'$
-%would incur zero misclassification error.
-% --> it's more complicated, would need to discuss minority class label, etc.
-%
-therefore
+error were smaller than that of~$\RL$ by~$\epsilon$, therefore
 \begin{align*}
 \Obj(\RL', \x, \y) &= \Loss(\RL', \x, \y) + \Reg (K+1) \\
 &\ge \Loss(\RL, \x, \y) - \epsilon + \Reg(K+1)
