@@ -1,0 +1,163 @@
+\documentclass[format=sigconf]{acmart}
+\usepackage{enumitem}
+\usepackage{graphicx}
+
+\setcopyright{acmlicensed}
+
+% DOI
+%\acmDOI{10.1145/3097983.3098047}
+
+% ISBN
+%acmISBN{978-1-4503-4887-4/17/08}
+
+%Conference
+\acmConference{SysML '18}{February 15-16, 2018}{Stanford, CA}
+\acmYear{2018}
+\copyrightyear{2018}
+
+\fancyhead{}
+\settopmatter{printacmref=false} % Removes citation information below abstract
+%\renewcommand\footnotetextcopyrightpermission[1]{} % removes footnote with conference information in first column
+%\pagestyle{plain} % removes running headers
+
+\begin{document}
+
+\title{Systems Optimizations for Learning Certifiably Optimal Rule Lists}
+\author{Nicholas Larus-Stone}
+\affiliation{%
+ \institution{Computer Lab, University of Cambridge}
+% \city{Cambridge}
+% \state{UK}
+}
+\email{nl363@cl.cam.ac.uk}
+
+\author{Elaine Angelino}
+\affiliation{%
+  \institution{EECS, UC Berkeley}
+%  \city{Berkeley} 
+%  \state{CA} 
+%  \postcode{94720}
+}
+\email{elaine@eecs.berkeley.edu}
+
+\author{Daniel Alabi, Margo Seltzer}
+\affiliation{%
+ \institution{SEAS, Harvard University}
+% \city{Cambridge}
+% \state{MA}
+% \postcode{02138}
+\streetaddress{\{alabid@g, margo@eecs\}.harvard.edu}
+}
+
+\author{Cynthia Rudin}
+\affiliation{%
+  \institution{Duke University}
+%  \city{Durham}
+%  \state{NC} 
+%  \postcode{27708}
+}
+\email{cynthia@cs.duke.edu}
+
+\maketitle
+
+\section{Introduction}
+Decision trees are an extremely influential prediction technique in AI.
+They are interpretable, simple to store, and easy to use \cite{BreimanFrOlSt84}.
+However, there has been very little work done to speed up the creation of decision trees for large datasets.
+As big data becomes even more common in machine learning applications, decision trees risk falling in disuse due to computationally construction costs.
+This work focuses on a set of optimizations that aids with the construction of a specific subset of decision trees: 1-sided decision trees, also known as decision lists or rule lists \cite{Rivest87}.
+Our goal is to find the rule list which is provably optimal with respect to our objective function for a given set of pre-mined rules.
+Our algorithm, Certifiably Optimal RulE ListS (CORELS\footnote{Implementation at \textbf{\url{https://github.com/nlarusstone/corels}}}), uses a combination of tight bounds and systems optimizations to achieve reasonable runtimes for moderately sized real datasets.
+
+Finding the optimal rule list from a set of rules is an NP-hard combinatorial problem with no polytime approximation, which is why most decision tree construction strategies are greedy \citep{BreimanFrOlSt84, Quinlan93}.
+A common solution to these types of NP-hard combinatorial problem is to use the branch-and-bound technique \citep{Clausen99}
+Traditionally, branch-and-bound has only been applied to small problems because--even with good bounds--the search space is usually quite large.
+Our use of a branch-and-bound search strategy and the full description of CORELS, including proofs of our bounds, can be found in our previous work \cite{AngelinoLaAlSeRu17}.
+We briefly describe our algorithm's execution below.
+
+A rule list is comprised of an ordered list of rules.
+Rules are features or conjunctions of features that uniformly classify a subset of the data points. 
+For a given rule list, we calculate both how many data points the list correctly classifies as well as how many data points it could ever correctly classify.
+We use the first metric to create an objective function which represents the performance of the rule list as it currently is.
+The second piece of information is used to provide a bound for how well the rule list could ever perform.
+Using those two metrics, we are able to compare the future performance of a rule list to the current best rule list we have seen so far.
+If the best future performance is worse than the performance of a rule list we have already seen, then we know it can not be the optimal rule list so we can prune it.
+We have a number of other bounds that we also apply to allow us to prune rule lists.
+We incrementally compute each of these bounds; for every rule list we examine, we calculate the bounds of its children based on the metrics we have already calculated.
+
+Even with our bounds, though, we would be unable to complete a full execution of our algorithm if we had not optimized the execution of our algorithm.
+In our earlier work, we performed a number of experiments on the COMPAS dataset \cite{LarsonMaKiAn16}, attempting to predict whether or not an individual would recidivate within 2 years.
+This dataset contains 122 rules and 7214 data points; therefore, a brute force search of all possible rule lists would require evaluating ${5.0 \times 10^{20}}$ rule lists.
+Due to our algorithmic bounds, CORELS only examines 28 million rule lists, a reduction of ${1.8 \times 10^{13}}$.
+Between the numerous bit vector operations and the pruning required, a naive implementation of our algorithm would not complete.
+However, in our final implementation, each evaluation takes only 1.3~$\mu$s, allowing us to complete that moderately sized problem in 36s.
+Systems optimizations, even on just a single processor, allow us to solve an NP-hard problem of reasonable size in under a minute.
+
+\section{Implementation}
+Our algorithm is feasible only through the use of three core data structures.
+Firstly, we use a prefix tree to organize and cache our exploration through the search space.
+The incremental nature of our algorithm requires that we store rule lists that we examined and did not discard.
+The prefix tree structure allows us to easily access values in a parent rule list to calculate bounds for a new rule list.
+Next, we organize our search strategy through the use of a priority queue.
+Finally, in order to implement one of our critical bounds, we designed a novel data structure that we term a symmtery-aware map.
+It allows us to easily compare and prune rule lists that are created from the same set of rules (i.e. permutations of each other).
+
+\begin{itemize}[leftmargin=*, itemsep=0.8\baselineskip]
+\item To aid with our incremental execution, we use a prefix tree to cache rule lists we have already looked at and have not pruned.
+Each node in the tree represents a rule, so any rule list can be reconstructed by following a path from the root to a leaf in the tree.
+The node stores metadata to aid in the computation of our bounds including: the lower bound, objective value, and a list of unpruned children.
+Nodes also have parent pointers, so each node is created incrementally by using the parent's bounds to calculate the new bounds.
+This structure also means that a rule list can be represented and passed around as a pointer to a single node in the tree or as an ordered list of rules.
+In most cases the pointer is more efficient, though the list representation is useful as a hashable index.
+
+\item We represent our worklist with a priority queue.
+This allows us to easily try different exploration orders simply by changing the priority metric.
+We implement breadth-first search (BFS), depth-first search (DFS), and a priority search that can take a custom metric.
+Our implementation supports ordering by the lower bound and the objective, though any function that maps a prefix to a real value in a stable manner would work.
+In general, we find that ordering by lower bound (best-first search) yields the best results on most datasets.
+
+\item In order to take advantage of the symmetry inherent to our problem, we had to design a novel structure called a symmetry-aware map.
+We use this map to keep track of the best possible permutation of a given set of rules.
+When a new permutation of that set of rules is encountered, we only add the new permutation to our prefix tree if it is strictly better than the permutation we already have stored.
+We experimented with multiple key types that could represent permutations of rule lists and found that a simple optimization of the key type led to a 3x reduction in memory usage for the map \cite{Larus-Stone17}.
+
+\item An important part of our implementation is that we calculate accuracy and other metrics by using bit vector operations.
+Each rule is represented as a bit vector where each individual is 1 if the rule applies to that individual and 0 otherwise.
+We use the high performance bit vector rule library from an earlier work \cite{YangRuSe16}.
+The implementation uses the GMP multiple-precision library to hold the bit vectors and perform operations on them.
+This is more efficient than built-in C++ constructs such as a vector of bools or a bitset.
+Profiling of CORELS has shown that the majority of algorithm's execution time is spent performing the bit vector operations necessary to calculate our bounds.
+Thus, speeding up these computations would accelerate the execution of our algorithm and is a promising direction for future work.
+\end{itemize}
+\vspace{0.5\baselineskip}
+
+Each one of these structures and optimizations is critical for the success of our algorithm.
+For example, we briefly experimented with a stochastic search policy that didn't use a queue at all but instead followed random paths from the queue to a leaf.
+However, this search strategy performed worse than any strategy involving our queue, so we proceeded only by using the queue.
+Fig \ref{fig:ablation} shows another example of how important data structure design is for solving hard problems such as ours.
+It demonstrates how simply removing the symmetry-aware map can turn a less than 60s execution on a dataset to something that is computationally intractable.
+
+\begin{figure}[t!]
+\begin{center}
+% left lower right upper
+\includegraphics[trim={0mm 0mm 0mm 1mm}, width=0.5\textwidth]{figs/sysml_ablation-queue.pdf}
+\end{center}
+\vspace{-5mm}
+\caption{Summary of the queue's contents, for full CORELS and CORELS without the symmetry-aware map on the NYCLU dataset (N=29,595, M=46)  \citep{nyclu:2014}.
+Each color line represents a different length of rule list, while the gray area is the shape of our baseline execution.
+The execution without the symmetry-aware map was terminated due to memory consumption without certifying the optimality of the best rule list it found.
+}
+\label{fig:ablation}
+\end{figure}
+
+\section{Conclusion}
+Neither the algorithmic bounds nor the systems optimizations alone are enough to allow the algorithm to complete in a reasonable amount of time.
+While much of the theory in this area was developed in the 80s and 90s, there have not been dedicated systems approaches that take advantage of modern hardware to work on real problems.
+Future work on CORELS involves parallelizing the algorithm both for a single machine as well as for a distributed system.
+Additionally, further scaling could be gained by taking advantage porting the algorithm to an FPGA.
+Further investigations of systems level optimizations of classical AI algorithms such as decision trees are a promising rejuvenation of an old field.
+
+\bibliographystyle{ACM-Reference-Format}
+\bibliography{sys_refs}
+
+\end{document}
