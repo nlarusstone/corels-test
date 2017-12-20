@@ -41,7 +41,7 @@ Optimality is important, because there are societal implications for a lack of o
 Consider the ProPublica article on the Correctional Offender Management Profiling for Alternative Sanctions
 (COMPAS) recidivism prediction tool~\citep{LarsonMaKiAn16}.
 %
-It highlights a case where a black-box, proprietary predictive model is being used for recidivism prediction.
+It highlights a case where a black box, proprietary predictive model is being used for recidivism prediction.
 %
 The authors hypothesize that the COMPAS scores are racially biased,
 but since the model is not transparent, no one (outside of the creators of COMPAS)
@@ -102,11 +102,9 @@ for the ProPublica dataset, found by CORELS.
 
 We develop specialized tools from the fields of discrete optimization and artificial intelligence.
 %
-Specifically, we introduce a special branch-and-bound algorithm,
-called Certifiably Optimal RulE ListS (CORELS), that provides
-(1) the optimal solution, (2) a certificate of optimality, and (3) optionally,
-a collection of near-optimal solutions and the distance between each
-such solution and the optimal one.
+Specifically, we introduce a special branch-and bound algorithm, called
+Certifiably Optimal RulE ListS (CORELS), that provides the optimal solution
+according to the training objective, along with a certificate of optimality.
 %
 The certificate of optimality means that we can investigate how close other models
 (\eg models provided by greedy algorithms) are to optimal.
@@ -124,8 +122,7 @@ the search space of potential rule lists.
 The algorithm continues to consider incomplete and complete rule lists until it has either
 examined or eliminated every rule list from consideration.
 %
-Thus, CORELS terminates with the optimal rule list %, the close-to-optimal rule lists,
-and a certificate of optimality.
+Thus, CORELS terminates with the optimal rule list and a certificate of optimality.
 \end{arxiv}
 
 The efficiency of CORELS depends on how much of the search space our bounds
@@ -176,7 +173,6 @@ and evaluation of rule lists.
 
 \begin{arxiv}
 We evaluated CORELS on a number of publicly available datasets.
-%and have made code for our algorithm and experiments publicly available.
 %
 Our metric of success was 10-fold cross-validated prediction accuracy on a subset of the data.
 %

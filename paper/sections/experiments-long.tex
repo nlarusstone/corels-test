@@ -23,7 +23,6 @@ and then in Section~\ref{sec:examples} show example optimal rule lists found by 
 %\label{sec:environment}
 All timed results ran on a server with an Intel Xeon E5-2699~v4 (55~MB cache, 2.20~GHz) processor and 264~GB RAM,
 and we ran each timing measurement separately, on a single hardware thread, with nothing else running on the server.
-%with two Intel Xeon E5-2699~v4 (55~MB cache, 2.20~GHz) processors and 756~GB RAM.
 %
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16~GB~RAM.
@@ -177,8 +176,6 @@ ProPublica dataset (Feature Set~B, ${M=189}$), found by CORELS (${\Reg = 0.005}$
 %
 While some input antecedents contain features for race, no optimal rule list includes such an antecedent.
 %
-%Since race did not appear in any optimal rule list, we omit race features from all subsequent analysis of this dataset.
-%
 Every optimal rule list is the same or similar to one of these examples,
 with prefixes containing the same rules, up to a permutation, and same default rule.
 }
@@ -330,11 +327,6 @@ and the default rule predicts the negative class label.
 %
 Our objective is not designed to enforce any of these properties,
 though some may be seen as desirable.
-%
-%Finally, we note that the three-rule list for weapon prediction
-%in Figure~\ref{fig:weapon-rule-list} has the spirit of the heuristic
-%strategy presented by~\citet{Goel16} that combines three stop criteria
-%and is based on a reduced version of their full regression~model.
 
 As we demonstrate in~\S\ref{sec:sparsity},
 optimal rule lists learned by CORELS achieve accuracies that are competitive
@@ -363,16 +355,6 @@ as a positive prediction for two-year recidivism, and a low score as a negative 
 %
 Across the 10 test sets, the COMPAS algorithm scores obtain
 a mean accuracy of~0.660, with standard deviation~0.019.
-
-%In addition, we observe that CORELS achieves a lower false positive rate (FPR) on black individuals than COMPAS does across all 10 folds.
-%
-%While CORELS also has a lower true positive rate (TPR) on black individuals than COMPAS, the two algorithms perform similarly on white individuals.
-%
-%Both algorithms have much higher FPRs and TPRs on black individuals than white individuals.
-%
-%Since the rule lists output by CORELS do not explicitly contain race, the rules involving prior criminal convictions must implicitly be racially skewed.
-%
-%Although CORELS is less likely to predict a false positive for black individuals in this case, our primary advantage comes from the fact that our model can be easily inspected to determine why the prediction rates are different across races (or any other category).
 
 \begin{figure}[t!]
 % left lower right upper
@@ -728,8 +710,6 @@ respectively, across cross-validation folds.
 %
 %For CORELS and SBRL, we use ${M = 28}$ antecedents.
 %
-%CART with ${cp = 0.001}$ significantly overfits;
-%C4.5 finds large models and dramatically overfits for all tested parameters.
 C4.5 finds large models for all tested parameters.
 }
 \label{fig:sparsity-weapon}

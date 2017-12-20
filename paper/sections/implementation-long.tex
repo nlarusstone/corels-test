@@ -71,14 +71,7 @@ ${\RL = (\Prefix, \Labels, \Default, K)}$, the node~$\varphi(\Prefix)$ also stor
 \item The objective value $\Obj(\RL, \x, \y)$, defined in~\eqref{eq:objective}.
 \end{itemize}
 %
-Finally, we note that we implement the prefix tree as a custom C++ class. % decouple artifact from design
-%
-% This might be a bit much detail for here
-%In addition to our base trie class, we also implemented a different node type that we use in our algorithm.
-%This sub-class has an additional field that can hold custom metrics that we use to order the search space.
-%Since this additional field is just a double, the memory overhead is minimal.
-%
-% Interesting trie-related subroutines besides garbage collection?
+Finally, we note that we implement the prefix tree as a custom C++ class.
 
 \subsection{Queue}
 \label{sec:queue}
@@ -210,11 +203,6 @@ is the equivalent points set containing~$x_n$ and $q_u$ is the minority class la
             \State \Continue \hfill {combined with the \textbf{Lookahead bound (Lemma~\ref{lemma:lookahead})}}
         \EndIf
         \State \Call{CheckMapAndInsert}{$\PrefixB, b$} \Comment{Check the \textbf{Permutation bound (Corollary~\ref{thm:permutation})} and}
-        %\If {\Call{CheckSymmetryAwareMap}{$\PrefixB, b$}} \Comment{\textbf{Permutation bound (Corollary~\ref{thm:permutation})}}
-        %    \State $Q$.push$(\PrefixB)$ \Comment{Add $\PrefixB$ to the queue}
-        %    \State $C$.insert$(\PrefixB, b(\PrefixB, \x, \y))$ \Comment{Add $\PrefixB$ and its lower bound to the cache}
-        %\EndIf
-%    \EndIf
 \EndFor \hfill {possibly insert $\PrefixB$ into data structures (Algorithm~\ref{alg:pmap})}
 \end{algorithmic}
 \end{algorithm}

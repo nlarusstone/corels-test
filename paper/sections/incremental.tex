@@ -78,19 +78,12 @@ b(\Prefix', \x, \y)
   \Cap(x_n, p_{K+1}) \wedge \one [q_{K+1} \neq y_n].
 \label{eq:inc-lb}
 \end{align}
-%Notice that the term~${\neg\, \Cap(x_n, \Prefix)}$ in~\eqref{eq:inc-lb}
-%depends only on~$\Prefix$, \ie it does not depend on~$\Prefix'$; furthermore,
-%it is computed in the evaluation of~$\RL$'s default rule misclassification error,
-%\begin{align}
-%\Loss_0(\Prefix, \Default, \x, \y) = \frac{1}{N}\sum_{n=1}^N \neg\, \Cap(x_n, \Prefix) \wedge \one [q_0 \neq y_n].
-%\end{align}
 Thus, if we store $b(\Prefix, \x, \y)$, % and ${\neg\, \Cap(\x, \Prefix)}$,
 then we can reuse this quantity when computing $b(\Prefix', \x, \y)$.
 %
 Transforming~\eqref{eq:non-inc-lb} into~\eqref{eq:inc-lb} yields a
 significantly simpler expression that is a function of the stored
-quantity~$b(\Prefix, \x, \y)$. %, as well as ${\neg\, \Cap(\x, \Prefix)}$
-%and the last rule of~$\RL'$, ${p_{K+1} \rightarrow q_{K+1}}$.
+quantity~$b(\Prefix, \x, \y)$.
 %
 For the objective of~$\RL'$, first let us write a na\"ive expression:
 \begin{align}
@@ -115,8 +108,7 @@ with respect to its objective lower bound:
 The expression in~\eqref{eq:inc-obj} is simpler to compute than that
 in~\eqref{eq:non-inc-obj}, because the former reuses $b(\Prefix', \x, \y)$,
 which we already computed in~\eqref{eq:inc-lb}.
-%as well as ${\neg\, \Cap(\x, \Prefix)}$,
-%and the last antecedent~$p_{K+1}$ and default rule~$\Default'$ of~$\RL'$.
+%
 Note that instead of computing~$\Obj(\RL', \x, \y)$ incrementally from $b(\Prefix', \x, \y)$
 as in~\eqref{eq:inc-obj}, we could have computed it incrementally from $\Obj(\RL, \x, \y)$.
 However, doing so would in practice require that we store~$\Obj(\RL, \x, \y)$
