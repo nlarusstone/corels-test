@@ -1,4 +1,4 @@
-TARGETS = arxiv #kdd17 #nips_2017
+TARGETS = sysml #arxiv #kdd17 #nips_2017
 
 TEXFILES = $(wildcard *.tex sections/*.tex)
 BIBFILES = $(wildcard *.bib)
@@ -13,11 +13,13 @@ PDFS = $(addsuffix .pdf,$(TARGETS))
 
 all: $(PDFS)
 
-a: arxiv.pdf
+#a: arxiv.pdf
 
 #k: kdd17.pdf
 
 #n: nips_2017.pdf
+
+s: sysml.pdf
 
 spell:
 	$(shell for i in $(TEXFILES); do ispell $(i); done)
