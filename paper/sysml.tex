@@ -1,6 +1,15 @@
 \documentclass[format=sigconf]{acmart}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{caption}
 \usepackage{enumitem}
 \usepackage{graphicx}
+
+\def\bif{\bf if~}
+\def\belif{{\bf else if~}}
+\def\bthen{{\bf then predict~}}
+\def\belse{{\bf else predict~}}
+\def \band{{\bf ~and~}}
 
 \setcopyright{acmlicensed}
 
@@ -60,25 +69,46 @@
 
 \maketitle
 
+\setlength{\abovedisplayskip}{3pt}
+\setlength{\belowdisplayskip}{3pt}
+\setlength{\belowcaptionskip}{-10pt}
+
 \section{Introduction}
 Decision trees are an extremely influential prediction technique in AI.
 They are interpretable, simple to store, and easy to use \cite{BreimanFrOlSt84}.
-However, there has been very little work done to speed up the creation of decision trees for large datasets.
-As big data becomes even more common in machine learning applications, decision trees risk falling in disuse due to computationally construction costs.
-This work focuses on a set of optimizations that aids with the construction of a specific subset of decision trees: 1-sided decision trees, also known as decision lists or rule lists \cite{Rivest87}.
-Our goal is to find the rule list which is provably optimal with respect to our objective function for a given set of pre-mined rules.
-Our algorithm, Certifiably Optimal RulE ListS (CORELS\footnote{Implementation at \textbf{\url{https://github.com/nlarusstone/corels}}}), uses a combination of tight bounds and systems optimizations to achieve reasonable runtimes for moderately sized real datasets.
+However, not enough work has been done on speeding up the creation of decision trees for large datasets.
+As big data becomes even more common in machine learning applications, decision trees risk falling in disuse due to computationally prohibitive construction costs.
+This work focuses on a set of optimizations that aids with the construction of a specific subset of decision trees: one-sided decision trees, also known as decision lists or rule lists \cite{Rivest87}.
+Our goal is to find the rule list that is provably optimal with respect to our objective function, the regularized empirical risk, for a given set of pre-mined rules.
+Our algorithm, Certifiably Optimal RulE ListS (CORELS), uses a combination of tight bounds and systems optimizations to achieve reasonable runtimes for moderately sized real datasets\footnote{Implementation at \textbf{\url{https://github.com/nlarusstone/corels}}} \citep{AngelinoLaAlSeRu17-kdd, AngelinoLaAlSeRu17}.
 
-Finding the optimal rule list from a set of rules is an NP-hard combinatorial problem with no polytime approximation, which is why most decision tree construction strategies are greedy \citep{BreimanFrOlSt84, Quinlan93}.
-A common solution to these types of NP-hard combinatorial problem is to use the branch-and-bound technique \citep{Clausen99}
-Traditionally, branch-and-bound has only been applied to small problems because--even with good bounds--the search space is usually quite large.
+Finding the optimal rule list from a set of rules is an NP-hard combinatorial problem with no polynomial-time approximation.
+Most decision tree construction strategies solve this by quickly finding an approximate through greedy  methods \citep{BreimanFrOlSt84, Quinlan93}.
+Other fields solve similar NP-hard combinatorial problems through the use of branch-and-bound \citep{Clausen99}.
+Traditionally, branch-and-bound has only been applied to small problems because the search space is otherwise enormous, even when tight bounds allow for the pruning of the space.
 Our use of a branch-and-bound search strategy and the full description of CORELS, including proofs of our bounds, can be found in our previous work \cite{AngelinoLaAlSeRu17}.
-We briefly describe our algorithm's execution below.
+Unlike prior greedy approaches, branch-and-bound allows us to find the optimal rule list and certify its optimality.
 
-A rule list is comprised of an ordered list of rules.
-Rules are features or conjunctions of features that uniformly classify a subset of the data points. 
-For a given rule list, we calculate both how many data points the list correctly classifies as well as how many data points it could ever correctly classify.
-We use the first metric to create an objective function which represents the performance of the rule list as it currently is.
+\begin{figure}[ht!]
+\vspace{2mm}
+\begin{algorithmic}
+\State \bif $(age = 18-20) \band (sex = male)$ \bthen $yes$
+\State \belif $(age = 21-22) \band (priors = 2-3)$ \bthen $yes$
+\State \belif $(priors > 3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+\caption{Example optimal rule list that predicts two-year recidivism for the ProPublica COMPAS dataset (${M=122}$), found by CORELS, across 10 cross-validation folds.
+%
+The rule list shown is representative of~7 folds.
+Each of the remaining solutions is the same or similar to one of these, with prefixes containing the same rules, up to a permutation, and the same default rule.
+}
+\label{fig:recidivism}
+\end{figure}
+
+A rule list is comprised of an ordered list of rules, an example of which can be seen in Fig \ref{fig:recidivism}.
+Rules are features or conjunctions of features that uniformly classify a subset of the observations.
+For a given rule list, we calculate both how many observations the list incorrectly classifies as well as a lower bound on how many observations it could ever incorrectly classify.
+Our objective function combines the first metric, normalized to measure misclassification error, with a regularization term that penalizes longer rule lists.
 The second piece of information is used to provide a bound for how well the rule list could ever perform.
 Using those two metrics, we are able to compare the future performance of a rule list to the current best rule list we have seen so far.
 If the best future performance is worse than the performance of a rule list we have already seen, then we know it can not be the optimal rule list so we can prune it.
@@ -87,7 +117,7 @@ We incrementally compute each of these bounds; for every rule list we examine, w
 
 Even with our bounds, though, we would be unable to complete a full execution of our algorithm if we had not optimized the execution of our algorithm.
 In our earlier work, we performed a number of experiments on the COMPAS dataset \cite{LarsonMaKiAn16}, attempting to predict whether or not an individual would recidivate within 2 years.
-This dataset contains 122 rules and 7214 data points; therefore, a brute force search of all possible rule lists would require evaluating ${5.0 \times 10^{20}}$ rule lists.
+This dataset contains 122 rules and 7214 observations; therefore, a brute force search of all possible rule lists would require evaluating ${5.0 \times 10^{20}}$ rule lists.
 Due to our algorithmic bounds, CORELS only examines 28 million rule lists, a reduction of ${1.8 \times 10^{13}}$.
 Between the numerous bit vector operations and the pruning required, a naive implementation of our algorithm would not complete.
 However, in our final implementation, each evaluation takes only 1.3~$\mu$s, allowing us to complete that moderately sized problem in 36s.
