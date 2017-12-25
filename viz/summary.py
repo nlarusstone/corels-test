@@ -22,7 +22,7 @@ fs = 16 # fontsize
 # log files generated on beepboop for KDD ablation experiments
 #log_dir = '../logs/keep/'
 log_dir = '../logs/'
-log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=1000000000-c=0.0050000-v=1-f=1000.txt']
+log_root_list = ['for-%s-curious_lb-with_prefix_perm_map-minor-removed=none-max_num_nodes=100000000-c=0.0050000-v=1-f=1000.txt']
 fold = 1
 ftag = 'compas_logs'
 
