@@ -5,6 +5,10 @@
 \usepackage{enumitem}
 \usepackage{graphicx}
 
+\hyphenation{speed-up}
+\hyphenation{ProPublica}
+\hyphenation{NYCLU}
+
 \def\bif{\bf if~}
 \def\belif{{\bf else if~}}
 \def\bthen{{\bf then predict~}}
@@ -82,7 +86,7 @@ However, not enough work has been done on speeding up the creation of decision t
 As big data becomes even more common in machine learning applications, decision trees risk falling in disuse due to computationally prohibitive construction costs.
 This work focuses on a set of optimizations that aids with the construction of a specific subset of decision trees: one-sided decision trees, also known as decision lists or rule lists \cite{Rivest87}.
 Our goal is to find the rule list that is provably optimal with respect to our objective function, the regularized empirical risk, for a given set of pre-mined rules.
-Our algorithm, Certifiably Optimal RulE ListS (CORELS), uses a combination of tight bounds and systems optimizations to achieve reasonable runtimes for moderately sized real datasets (Implementation at \textbf{\url{https://github.com/nlarusstone/corels}}) \citep{AngelinoLaAlSeRu17-kdd, AngelinoLaAlSeRu17}.
+Our algorithm, Certifiably Optimal RulE ListS (CORELS), uses a combination of tight bounds and systems optimizations to achieve reasonable runtimes for moderately sized real datasets \citep{AngelinoLaAlSeRu17-kdd, AngelinoLaAlSeRu17}. Our implementation is at \textbf{\url{https://github.com/nlarusstone/corels}}.
 
 Finding the optimal rule list from a set of rules is an computationally hard combinatorial problem with no polynomial-time approximation.
 Most decision tree construction strategies solve this by quickly finding an approximate through greedy  methods \citep{BreimanFrOlSt84, Quinlan93}.
@@ -91,18 +95,19 @@ Traditionally, branch-and-bound has only been applied to small problems because 
 Our use of a branch-and-bound search strategy and the full description of CORELS, including proofs of our bounds, can be found in our previous work \cite{AngelinoLaAlSeRu17, ErtekinRu17}.
 Unlike prior greedy approaches, branch-and-bound allows us to find the optimal rule list and certify its optimality.
 
-\begin{figure}[ht!]
-\vspace{-2mm}
+\begin{figure}[b!]
+\vspace{-1mm}
 \begin{algorithmic}
 \State \bif $(age = 18-20) \band (sex = male)$ \bthen $yes$
 \State \belif $(age = 21-22) \band (priors = 2-3)$ \bthen $yes$
 \State \belif $(priors > 3)$ \bthen $yes$
 \State \belse $no$
 \end{algorithmic}
+\vspace{-2mm}
 \caption{Example optimal rule list that predicts two-year recidivism for the ProPublica COMPAS dataset (122 rules), found by CORELS, across 10 cross-validation folds.
 %
-The rule list shown is representative of~7 folds.
-Each of the remaining solutions is the same or similar to one of these, with prefixes containing the same rules, up to a permutation, and the same default rule.
+%The rule list shown is representative of~7 folds.
+%Each of the remaining solutions is the same or similar to one of these, with prefixes containing the same rules, up to a permutation, and the same default rule.
 }
 \label{fig:recidivism}
 \end{figure}
@@ -153,12 +158,12 @@ In most cases the pointer is more efficient, though the list representation is u
 %\item 
 We represent our worklist with a priority queue.
 This allows us to easily try different exploration orders simply by changing the priority metric.
-We implement breadth-first search (BFS), depth-first search (DFS), and a priority search that can take a custom metric.
+We implement breadth-first search (BFS), depth-first search (DFS), and a best-first search that can take a custom metric.
 Our implementation supports ordering by the lower bound and the objective, though any function that maps a prefix to a real value in a stable manner would work.
-In general, we find that ordering by lower bound (best-first search) yields the best results on most datasets.
+In general, we find that ordering by lower bound (best-first) yields the best results on most datasets.
 
 %\item 
-In order to take advantage of the symmetry inherent to our problem, we had to design a novel structure called a symmetry-aware map.
+To take advantage of the symmetry inherent to our problem, we designed a data structure we call a symmetry-aware map.
 We use this map to keep track of the best possible permutation of a given set of rules.
 When a new permutation of that set of rules is encountered, we only add the new permutation to our prefix tree if it is strictly better than the permutation we already have stored.
 We experimented with multiple key types that could represent permutations of rule lists and found that a simple optimization of the key type led to a 3x reduction in memory usage for the map \cite{Larus-Stone17}.
@@ -186,9 +191,9 @@ It demonstrates how simply adding the symmetry-aware map can turn a computationa
 \includegraphics[trim={4mm 0mm 0mm 0mm}, width=0.48\textwidth]{figs/sysml_ablation-queue.pdf}
 \end{center}
 \vspace{-5mm}
-\caption{Summary of the queue's contents, for full CORELS and CORELS without the symmetry-aware map on the NYCLU dataset (29,595 samples, 46 rules)  \citep{nyclu:2014}.
-Each color line represents a different length of rule list, while the gray area is the shape of our baseline execution.
-The execution without the symmetry-aware map was terminated due to memory consumption without certifying the optimality of the best rule list it found.
+\caption{Summary of the queue's contents, for full CORELS and CORELS without the symmetry-aware map (NYCLU dataset, 29,595 samples, 46 rules)  \citep{nyclu:2014}.
+Each colored line represents a different rule list length; the gray area is the shape of the full CORELS execution.
+The execution without the map was terminated early due to memory consumption, without certifying whether best rule list found is optimal.
 }
 \label{fig:ablation}
 \end{figure}
