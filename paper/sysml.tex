@@ -94,12 +94,12 @@ This work focuses on a set of optimizations that aids with the construction of a
 Our goal is to find the rule list that is provably optimal with respect to our objective function, the regularized empirical risk, for a given set of pre-mined rules.
 Our algorithm, Certifiably Optimal RulE ListS (CORELS), uses a combination of tight bounds and systems optimizations to achieve reasonable runtimes for moderately sized real datasets \citep{AngelinoLaAlSeRu17-kdd, AngelinoLaAlSeRu17}. Our implementation is at \textbf{\url{https://github.com/nlarusstone/corels}}.
 
-Finding the optimal rule list from a set of rules is an computationally hard combinatorial problem with no polynomial-time approximation.
-Most decision tree construction strategies solve this by quickly finding an approximate through greedy  methods \citep{BreimanFrOlSt84, Quinlan93}.
-Other fields solve similar computationally hard combinatorial problems through the use of branch-and-bound \citep{Clausen99}.
-Traditionally, branch-and-bound has only been applied to small problems because the search space is otherwise enormous, even when tight bounds allow for the pruning of the space.
-Our use of a branch-and-bound search strategy and the full description of CORELS, including proofs of our bounds, can be found in our previous work \cite{AngelinoLaAlSeRu17, ErtekinRu17}.
-Unlike prior greedy approaches, branch-and-bound allows us to find the optimal rule list and certify its optimality.
+Finding the optimal rule list from a set of rules is a computationally hard combinatorial problem with no polynomial-time approximation.
+Most decision tree construction strategies solve this by quickly finding an approximate solution through greedy  methods \citep{BreimanFrOlSt84, Quinlan93}.
+Other fields solve similar computationally hard combinatorial problems through the use of branch-and-bound algorithms\citep{Clausen99}.
+Traditionally, branch-and-bound has only been applied to small problems, because the search space is otherwise enormous, even when tight bounds allow for the pruning of the space.
+Our previous work presents a branch-and-bound search strategy, full description of CORELS, and proofs of the bounds we use~\cite{AngelinoLaAlSeRu17, ErtekinRu17}.
+Unlike prior greedy approaches, branch-and-bound allows us to both find and certify the optimal rule list.
 
 \begin{figure}[b!]
 \vspace{-1mm}
@@ -138,19 +138,19 @@ Together with additional systems optimizations, our approach efficiently searche
 
 In previous work, we performed experiments using the ProPublica COMPAS dataset \cite{LarsonMaKiAn16}, focusing on the prediction problem of whether or not an individual would recidivate within two years.
 This dataset contains 122 rules; therefore, a brute force search of all possible rule lists up to length 10 would require evaluating ${5.0 \times 10^{20}}$ rule lists.
-Due to our algorithmic bounds, CORELS only examines 28 million rule lists, a reduction of ${1.8 \times 10^{13}}$.
-Between the bookkeeping required to search and prune the state space, and the numerous bit vector operations required to evaluate each rule list, a non-optimized implementation of our algorithm would not complete.
+Due to our algorithmic bounds, CORELS examines only 28 million rule lists, a reduction of ${1.8 \times 10^{13}}$.
+Between the bookkeeping required to search and prune the state space and the numerous bit vector operations required to evaluate each rule list, a non-optimized implementation of our algorithm would not complete.
 However, with CORELS, each evaluation takes only 1.3~$\mu$s, allowing us to complete that moderately sized problem in 36s.
 Systems optimizations, even on just a single processor, allow us to solve a computationally hard problem of reasonable size in under a minute.
 
 \section{Implementation}
 Our algorithm is feasible due to the use of three core data structures.
-Firstly, we use a prefix tree to represent the search space.
+First, we use a prefix tree to represent the search space.
 The incremental nature of our algorithm requires that we store rule lists that we examined but did not discard.
-The prefix tree structure allows us to easily access values in a parent rule list to calculate bounds for a new rule list.
-Next, we implement our scheduling policy with a priority queue.
-Finally, in order to implement one of our critical bounds, we use a symmetry-aware map.
-It allows us to easily compare and prune rule lists that are created from the same set of rules (\ie permutations of each other).
+The prefix tree structure allows us to efficiently access values in a parent rule list to calculate bounds for a new rule list.
+Second, we implement our scheduling policy with a priority queue.
+Third, we use a symmetry-aware map to implement one of our critical bounds.
+It allows us to compare and prune permutations of rule lists.
 
 %\begin{itemize}[leftmargin=*, itemsep=0.8\baselineskip]
 %\item 
@@ -163,7 +163,7 @@ In most cases the pointer is more efficient, though the list representation is u
 
 %\item 
 We represent our worklist with a priority queue.
-This allows us to easily try different exploration orders simply by changing the priority metric.
+This allows us to try different exploration orders simply by changing the priority metric.
 We implement breadth-first search (BFS), depth-first search (DFS), and a best-first search that can take a custom metric.
 Our implementation supports ordering by the lower bound and the objective, though any function that maps a prefix to a real value in a stable manner would work.
 In general, we find that ordering by lower bound (best-first) yields the best results on most datasets.
@@ -171,23 +171,25 @@ In general, we find that ordering by lower bound (best-first) yields the best re
 %\item 
 To take advantage of the symmetry inherent to our problem, we designed a data structure we call a symmetry-aware map.
 We use this map to keep track of the best possible permutation of a given set of rules.
-When a new permutation of that set of rules is encountered, we only add the new permutation to our prefix tree if it is strictly better than the permutation we already have stored.
+When a new permutation of that set of rules is encountered, we add the new permutation to our prefix tree only if it is strictly better than the permutation we already have stored.
 We experimented with multiple key types that could represent permutations of rule lists and found that a simple optimization of the key type led to a 3x reduction in memory usage for the map \cite{Larus-Stone17}.
 
 %\item 
-An important part of our implementation is that we calculate accuracy and other metrics by using bit vector operations.
-Each rule is represented as a bit vector where each individual is 1 if the rule applies to that individual and 0 otherwise.
-We use the high performance bit vector rule library from an earlier work \cite{YangRuSe16}.
-The implementation uses the GMP multiple-precision library to hold the bit vectors and perform operations on them.
+An important part of our implementation is that we calculate accuracy and other metrics using bit vector operations.
+Each rule is represented as a bit vector, whose length is equal to the number of items in the training set. 
+Bit $i$ is set to 1 if the rule evaluates true for data item $i$ and 0 otherwise.
+We use the high performance bit vector rule library~\cite{YangRuSe16}
+that uses the GMP multiple-precision library to represent and manipulate the vectors.
 This is more efficient than built-in C++ constructs such as a vector of bools or a bitset.
-Profiling of CORELS has shown that the majority of algorithm's execution time is spent performing the bit vector operations necessary to calculate our bounds.
-Thus, speeding up these computations would accelerate the execution of our algorithm and is a promising direction for future work.
+CORELS profiling shows that these bit vector operations account for
+the majority of algorithm's execution time.
+Thus, improving the performance of these computations will improve algorithm performance and is a promising direction for future work.
 %\end{itemize}
 %\vspace{0.5\baselineskip}
 
 %Each one of these structures and optimizations is critical for the success of our algorithm.
 %For example, we briefly experimented with a stochastic search policy that did not use a queue at all but instead followed random paths from the queue to a leaf.
-%However, this search strategy performed worse than any strategy involving our queue, so we proceeded only by using the queue.
+%However, this search strategy performed worse than any strategy involving our queue, so we subsequently used only the queue.
 %Fig \ref{fig:ablation} shows another example of how important data structure design is for solving hard problems such as ours.
 %It demonstrates how simply adding the symmetry-aware map can turn a computationally intractable problem into an execution that completes in under 60s.
 
@@ -198,12 +200,12 @@ However, this search strategy performed worse than any strategy involving our qu
 Table \ref{ScalabilityResults} empirically validates the importance of data structure design (symmetry-aware map) on several datasets.
 We conducted trials on small personal laptops\footnote{2.6 GHz i7-6700HQ and 16 GB of RAM, and 2.6 GHz i5-2540M and 8GB of RAM}.
 The method for both symmetry-aware and non-symmetry aware tests used lower-bound ordering (best-first search) in the queue as described above.
-The symmetry-aware map lead to an average reduction of over 81\% in runtime and memory usage. 
-On more computationally complex datasets, such as the NYPD stop-and-frisk dataset, the symmetry-aware map allows an otherwise unsolvable problem to be solved to optimality on a machine with 8GB of memory.
+The symmetry-aware map led to an average reduction of over 81\% in runtime and memory usage. 
+On more computationally complex datasets, such as the NYPD stop-and-frisk dataset, the symmetry-aware map allows an otherwise unsolvable problem to be solved to optimality on a machine with only 8GB of memory.
 
 \begin{table}[h]
 \centering
-\caption{\small Tabulation of average runtime and memory usage (in blue) over 3 runs on different datasets with and without symmetry-aware map, tested on a 2.6 GHz i7-6700HQ and 16 GB RAM, capped at 12 GB. Standard deviations are within 1\% of reported values in all cases.}
+\caption{\small Tabulation of average runtime and memory usage (in square brackets) over 3 runs on different datasets with and without symmetry-aware map, tested on a 2.6 GHz i7-6700HQ and 16 GB RAM, capped at 12 GB. Standard deviations are within 1\% of reported values in all cases.}
 \label{ScalabilityResults}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{|c|c|c|c|c|c|c|c|}
