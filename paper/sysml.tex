@@ -198,26 +198,26 @@ For example, we briefly experimented with a stochastic search policy that did no
 However, this search strategy performed worse than any strategy involving our queue, so we proceeded only by using the queue.
 
 Table \ref{ScalabilityResults} empirically validates the importance of data structure design (symmetry-aware map) on several datasets.
-We conducted trials on small personal laptops\footnote{2.6 GHz i7-6700HQ and 16 GB of RAM, and 2.6 GHz i5-2540M and 8GB of RAM}.
+We conducted trials on small personal laptops\footnote{2.6 GHz i7-6700HQ and 16GB of RAM, and 2.6 GHz i5-2540M and 8GB of RAM}.
 The method for both symmetry-aware and non-symmetry aware tests used lower-bound ordering (best-first search) in the queue as described above.
 The symmetry-aware map led to an average reduction of over 81\% in runtime and memory usage. 
 On more computationally complex datasets, such as the NYPD stop-and-frisk dataset, the symmetry-aware map allows an otherwise unsolvable problem to be solved to optimality on a machine with only 8GB of memory.
 
 \begin{table}[h]
 \centering
-\caption{\small Tabulation of average runtime and memory usage (in square brackets) over 3 runs on different datasets with and without symmetry-aware map, tested on a 2.6 GHz i7-6700HQ and 16 GB RAM, capped at 12 GB. Standard deviations are within 1\% of reported values in all cases.}
+\caption{\small Tabulation of average runtime (s) and memory usage (MB) over 3 runs on different datasets with and without symmetry-aware map, tested on a 2.6 GHz i7-6700HQ and 16GB RAM, capped at 12GB. Standard deviations are within 1\% of reported values in all cases.}
 \label{ScalabilityResults}
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|l|c c|c c|c c|c|}
 \hline
-\shortstack{Dataset} & \shortstack{Avg runtime (s) \\ symmetry-aware} & \shortstack{Avg runtime  (s) \\ not symmetry-aware} & \shortstack{Speedup \\ gain (\%)} & \shortstack{Memory \\ savings (\%)} & \#Samples \\ \hline
-Breast Cancer       & 3206.03 \color{blue}{[3078 MB]}                                                      & 14038.50 \color{blue}{[8598 MB]}                                                                                                                  & 77.16                                                     & 64.20      & 684                                                           \\
-Haberman           & 8.45 \color{blue}{[60.68 MB]}                                                            & 33.37 \color{blue}{[104.00 MB]}                                                                                                                      & 74.67                                                     & 41.65                     & 307                                            \\
-MONKS-1           & 0.29 \color{blue}{[\textless0.1 MB]}                                                            & 0.36 \color{blue}{[\textless0.1 MB]}                                                               & 19.4                                                                                                                   & \textless1                                                                  & 432 \\
-MONKS-3             & 0.10   \color{blue}{[\textless0.1 MB]}                                                           & 0.14  \color{blue}{[\textless0.1 MB]}                                                               & 28.6                                                                                                                        & \textless1                                                             & 432      \\
-Votes  & 8.26 \color{blue}{[43.73 MB]}                                                          & 24.06 \color{blue}{[78.56 MB]}                                                                                                            & 65.65                                                     & 44.34 & 436 \\
-NYPD Stop-and-frisk & 1,728.27 \color{blue}{[641 MB]} & - \color{blue}{[\textgreater12288 MB]} & \textgreater72.0 & \textgreater95.0 & 566,839 \\ \hline
-Average & 644.63 \color{blue}{[955.85 MB]} & 3373.91 \color{blue}{[\textgreater 5267 MB]} & \textgreater81.0 & \textgreater81.0 & \\ \hline
+\shortstack{Dataset} & \shortstack{Time (s) \\ w/map} & \shortstack{Mem (MB) \\ w/map} & \shortstack{Time (s) \\ no map} & \shortstack{Mem (MB) \\ no map} & \shortstack{Speedup \\ gain (\%)} & \shortstack{Memory \\ savings (\%)} & \shortstack{\# \\ samples} \\ \hline
+B. cancer & 3,206 & {3,078} & 14,039 & {8,598} & 77 & 64 & 684 \\
+Haberman  & 8.5 & {61} & 33 & {104} & 75 & 42 & 307 \\
+MONKS-1 & 0.29 & {\textless0.1} & 0.36 & {\textless0.1} & 19 & \textless1 & 432 \\
+MONKS-3 & 0.10 & {\textless0.1} & 0.14 & {\textless.1} & 29 & \textless1 & 432 \\
+Votes  & 8.3 & {44} & 24 & {79} & 66 & 44 & 436 \\
+NYPD & 1,728 & {641} & ??? & {\textgreater12,288} & \textgreater72 & \textgreater95 & 566,839 \\ \hline
+Average & 645 & {956} & 3,374 & {\textgreater 5,267} & \textgreater81 & \textgreater81 & --- \\ \hline
 \end{tabular}%
 }
 \end{table}
