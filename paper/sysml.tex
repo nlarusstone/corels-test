@@ -64,6 +64,12 @@
 \streetaddress{\{alabid@g, margo@eecs\}.harvard.edu}
 }
 
+\author{Aditya Saligrama}
+\affiliation{%
+	\institution{Weston High School}
+}
+\email{20saligramaa@my.weston.org}
+
 \author{Cynthia Rudin}
 \affiliation{%
   \institution{Duke University}
@@ -179,24 +185,53 @@ Thus, speeding up these computations would accelerate the execution of our algor
 %\end{itemize}
 %\vspace{0.5\baselineskip}
 
+%Each one of these structures and optimizations is critical for the success of our algorithm.
+%For example, we briefly experimented with a stochastic search policy that did not use a queue at all but instead followed random paths from the queue to a leaf.
+%However, this search strategy performed worse than any strategy involving our queue, so we proceeded only by using the queue.
+%Fig \ref{fig:ablation} shows another example of how important data structure design is for solving hard problems such as ours.
+%It demonstrates how simply adding the symmetry-aware map can turn a computationally intractable problem into an execution that completes in under 60s.
+
 Each one of these structures and optimizations is critical for the success of our algorithm.
 For example, we briefly experimented with a stochastic search policy that did not use a queue at all but instead followed random paths from the queue to a leaf.
 However, this search strategy performed worse than any strategy involving our queue, so we proceeded only by using the queue.
-Fig \ref{fig:ablation} shows another example of how important data structure design is for solving hard problems such as ours.
-It demonstrates how simply adding the symmetry-aware map can turn a computationally intractable problem into an execution that completes in under 60s.
 
-\begin{figure}[t!]
-\begin{center}
-% left lower right upper
-\includegraphics[trim={4mm 0mm 0mm 0mm}, width=0.48\textwidth]{figs/sysml_ablation-queue.pdf}
-\end{center}
-\vspace{-5mm}
-\caption{Summary of the queue's contents, for full CORELS and CORELS without the symmetry-aware map (NYCLU dataset, 29,595 samples, 46 rules)  \citep{nyclu:2014}.
-Each colored line represents a different rule list length; the gray area is the shape of the full CORELS execution.
-The execution without the map was terminated early due to memory consumption, without certifying whether best rule list found is optimal.
+Table \ref{ScalabilityResults} empirically validates the importance of data structure design (symmetry-aware map) on several datasets.
+We conducted trials on small personal laptops\footnote{2.6 GHz i7-6700HQ and 16 GB of RAM, and 2.6 GHz i5-2540M and 8GB of RAM}.
+The method for both symmetry-aware and non-symmetry aware tests used lower-bound ordering (best-first search) in the queue as described above.
+The symmetry-aware map lead to an average reduction of over 81\% in runtime and memory usage. 
+On more computationally complex datasets, such as the NYPD stop-and-frisk dataset, the symmetry-aware map allows an otherwise unsolvable problem to be solved to optimality on a machine with 8GB of memory.
+
+\begin{table}[h]
+\centering
+\caption{\small Tabulation of average runtime and memory usage (in blue) over 3 runs on different datasets with and without symmetry-aware map, tested on a 2.6 GHz i7-6700HQ and 16 GB RAM, capped at 12 GB. Standard deviations are within 1\% of reported values in all cases.}
+\label{ScalabilityResults}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\shortstack{Dataset} & \shortstack{Avg runtime (s) \\ symmetry-aware} & \shortstack{Avg runtime  (s) \\ not symmetry-aware} & \shortstack{Speedup \\ gain (\%)} & \shortstack{Memory \\ savings (\%)} & \#Samples \\ \hline
+Breast Cancer       & 3206.03 \color{blue}{[3078 MB]}                                                      & 14038.50 \color{blue}{[8598 MB]}                                                                                                                  & 77.16                                                     & 64.20      & 684                                                           \\
+Haberman           & 8.45 \color{blue}{[60.68 MB]}                                                            & 33.37 \color{blue}{[104.00 MB]}                                                                                                                      & 74.67                                                     & 41.65                     & 307                                            \\
+MONKS-1           & 0.29 \color{blue}{[\textless0.1 MB]}                                                            & 0.36 \color{blue}{[\textless0.1 MB]}                                                               & 19.4                                                                                                                   & \textless1                                                                  & 432 \\
+MONKS-3             & 0.10   \color{blue}{[\textless0.1 MB]}                                                           & 0.14  \color{blue}{[\textless0.1 MB]}                                                               & 28.6                                                                                                                        & \textless1                                                             & 432      \\
+Votes  & 8.26 \color{blue}{[43.73 MB]}                                                          & 24.06 \color{blue}{[78.56 MB]}                                                                                                            & 65.65                                                     & 44.34 & 436 \\
+NYPD Stop-and-frisk & 1,728.27 \color{blue}{[641 MB]} & - \color{blue}{[\textgreater12288 MB]} & \textgreater72.0 & \textgreater95.0 & 566,839 \\ \hline
+Average & 644.63 \color{blue}{[955.85 MB]} & 3373.91 \color{blue}{[\textgreater 5267 MB]} & \textgreater81.0 & \textgreater81.0 & \\ \hline
+\end{tabular}%
 }
-\label{fig:ablation}
-\end{figure}
+\end{table}
+
+%\begin{figure}[t!]
+%\begin{center}
+% left lower right upper
+%\includegraphics[trim={4mm 0mm 0mm 0mm}, width=0.48\textwidth]{figs/sysml_ablation-queue.pdf}
+%\end{center}
+%\vspace{-5mm}
+%\caption{Summary of the queue's contents, for full CORELS and CORELS without the symmetry-aware map (NYCLU dataset, 29,595 samples, 46 rules)  \citep{nyclu:2014}.
+%Each colored line represents a different rule list length; the gray area is the shape of the full CORELS execution.
+%The execution without the map was terminated early due to memory consumption, without certifying whether best rule list found is optimal.
+%}
+%\label{fig:ablation}
+%\end{figure}
 
 \section{Conclusion}
 We demonstrated that it is possible to learn certifiably optimal rule lists, but only through a combination of algorithmic bounds, systems optimizations, and efficient data structures.
