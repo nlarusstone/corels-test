@@ -92,7 +92,7 @@ However, not enough work has been done on speeding up the creation of decision t
 As big data becomes even more common in machine learning applications, decision trees risk falling in disuse due to computationally prohibitive construction costs.
 This work focuses on a set of optimizations that aids with the construction of a specific subset of decision trees: one-sided decision trees, also known as decision lists or rule lists \cite{Rivest87}.
 Our goal is to find the rule list that is provably optimal with respect to our objective function, the regularized empirical risk, for a given set of pre-mined rules.
-Our algorithm, Certifiably Optimal RulE ListS (CORELS), uses a combination of tight bounds and systems optimizations to achieve reasonable runtimes for moderately sized real datasets \citep{AngelinoLaAlSeRu17-kdd, AngelinoLaAlSeRu17}. Our implementation is at \textbf{\url{https://github.com/nlarusstone/corels}}.
+Our algorithm, Certifiably Optimal RulE ListS (CORELS), uses a combination of tight bounds and systems optimizations to achieve reasonable runtimes for moderately sized real datasets \citep{AngelinoLaAlSeRu17-kdd, AngelinoLaAlSeRu17}. Our implementation can be found at \textbf{\url{https://github.com/nlarusstone/corels}}.
 
 Finding the optimal rule list from a set of rules is a computationally hard combinatorial problem with no polynomial-time approximation.
 Most decision tree construction strategies solve this by quickly finding an approximate solution through greedy  methods \citep{BreimanFrOlSt84, Quinlan93}.
@@ -123,13 +123,13 @@ Rules are features or conjunctions of features that uniformly classify a subset 
 We generate rule lists by adding a rule to the end of a pre-existing rule list.
 For a given rule list, any longer rule list that starts with the same rules will make the same mistakes as the shorter one.
 To encapsulate this relationship, we call the original rule list a parent and the longer rule list a child.
-We calculate both how many observations the list incorrectly classifies as well as a lower bound on the number of mistakes made by any child rule lists.
+We calculate both how many observations the list incorrectly classifies as well as a lower bound on the number of mistakes that can be made by any child rule lists.
 Calculating each of these metrics from scratch each time would be inefficient; instead, metrics are calculated incrementally using metadata recorded for the parent rule list.
 The incremental computation takes advantage of a specialized, space-efficient prefix tree by reusing previous computation from parent rule lists.
 We systematically search the entire space of rule lists, evaluating them in an order specified by our search policy; for example, a breadth-first search policy examines shorter rule lists before longer ones.
 
 Our objective function combines the number of incorrectly classified observations, normalized to measure misclassification error, with a regularization term that penalizes longer rule lists.
-The maximum number of mistakes provides a bound for how well the children of a rule list could ever perform.
+The maximum number of mistakes that a rule list makes provides a bound for how well the children of that rule list could ever perform.
 Using those two metrics, we are able to compare the potential performance of all of a rule list's children to the current best rule list we have seen so far.
 If the best potential performance is worse than the performance of a rule list we have already seen, then we know it cannot be the optimal rule list, and thus we can prune it.
 We also proved a suite of additional algorithmic bounds that interact to aggressively prune the search space.
@@ -150,7 +150,7 @@ The incremental nature of our algorithm requires that we store rule lists that w
 The prefix tree structure allows us to efficiently access values in a parent rule list to calculate bounds for a new rule list.
 Second, we implement our scheduling policy with a priority queue.
 Third, we use a symmetry-aware map to implement one of our critical bounds.
-It allows us to compare and prune permutations of rule lists.
+The map allows us to compare and prune permutations of rule lists.
 
 %\begin{itemize}[leftmargin=*, itemsep=0.8\baselineskip]
 %\item 
@@ -175,7 +175,7 @@ When a new permutation of that set of rules is encountered, we add the new permu
 We experimented with multiple key types that could represent permutations of rule lists and found that a series of simple optimizations of the key and value types led to a 3x reduction in memory usage for the map \cite{Larus-Stone17}.
 First, we decided that it was unrealistic for our algorithm to operate on datasets with more than $2^{16}$ rules, so we changed the type that represented rules from a size\_t to a short.
 Next, instead of incurring overhead by using a STL set to represent keys, we created a custom key type that was a chunk of memory just large enough to hold all of the rules and the length of the rule list.
-Finally, the value type has to record the actual order of the rules in the rule list, but we were able to take advantage of the fact that the key type already recorded the ids of the rules.
+Finally, the value type has to record the actual order of the rules in the rule list, but we were able to take advantage of the fact that the key type already contained the ids of the rules.
 We took advantage of this by using a byte array to remember the ordering of the rules without storing the actual rule ids again.
 
 %\item 
@@ -201,11 +201,12 @@ Each one of these structures and optimizations is critical for the success of ou
 For example, we briefly experimented with a stochastic search policy that did not use a queue at all but instead followed random paths from the queue to a leaf.
 However, this search strategy performed worse than any strategy involving our queue, so we proceeded only by using the queue.
 
-Table \ref{ScalabilityResults} empirically validates the importance of data structure design (symmetry-aware map) on several datasets.
-We conducted trials on small personal laptops\footnote{2.6 GHz i7-6700HQ and 16GB of RAM, and 2.6 GHz i5-2540M and 8GB of RAM}.
-The method for both symmetry-aware and non-symmetry aware tests used lower-bound ordering (best-first search) in the queue as described above.
-The symmetry-aware map led to an average reduction of over 81\% in runtime and memory usage. 
-On more computationally complex datasets, such as the NYPD stop-and-frisk dataset, the symmetry-aware map allows an otherwise unsolvable problem to be solved to optimality on a machine with only 8GB of memory.
+Table \ref{ScalabilityResults} empirically validates the importance of data structure design (specifically the symmetry-aware map) on several datasets \cite{UCI, Bcancer, nyclu:2014}.
+We conducted trials on a small personal laptop\footnote{2.6 GHz i7-6700HQ and 16GB of RAM}.
+The method for both the tests using the map and the tests without the map used lower-bound ordering (best-first search) in the queue as described above \footnote{We also used a regularization parameter of 0.01}.
+The symmetry-aware map led to an average speedup of 8.83x in runtime and a reduction in memory usage of 3.15x.
+On more computationally complex datasets, such as the breast cancer dataset, the symmetry-aware map allows the problem to be solved to optimality using less than 4GB of RAM, versus about 8.6GB without this optimization.
+This enables such problems to be solved on almost all recent laptops.
 
 \begin{table}[h]
 \centering
@@ -214,14 +215,15 @@ On more computationally complex datasets, such as the NYPD stop-and-frisk datase
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{|l|c c|c c|c c|c|}
 \hline
-\shortstack{Dataset} & \shortstack{Time \\ w/map \\ (s)} & \shortstack{Memory \\ w/map \\ (MB)} & \shortstack{Time \\ no map \\ (s)} & \shortstack{Memory \\ no map \\ (MB)} & \shortstack{Speedup \\ gain \\ (\%)} & \shortstack{Memory \\ savings \\ (\%)} & \shortstack{Number \\ of \\ samples} \\ \hline
-B. cancer & 3,206 & {3,078} & 14,039 & {8,598} & 77 & 64 & 684 \\
-Haberman  & 8.5 & {61} & 33 & {104} & 75 & 42 & 307 \\
-MONKS-1 & 0.29 & {\textless0.1} & 0.36 & {\textless0.1} & 19 & \textless1 & 432 \\
-MONKS-3 & 0.10 & {\textless0.1} & 0.14 & {\textless0.1} & 29 & \textless1 & 432 \\
-Votes  & 8.3 & {44} & 24 & {79} & 66 & 44 & 436 \\
-NYPD & 1,728 & {641} & ??? & {\textgreater12,288} & \textgreater72 & \textgreater95 & 566,839 \\ \hline
-Average & 645 & {956} & 3,374 & {\textgreater 5,267} & \textgreater81 & \textgreater81 & --- \\ \hline
+\shortstack{Dataset} & \shortstack{Time \\ w/map \\ (s)} & \shortstack{Memory \\ w/map \\ (MB)} & \shortstack{Time \\ no map \\ (s)} & \shortstack{Memory \\ no map \\ (MB)} & \shortstack{Speedup} & \shortstack{Memory \\ savings} & \shortstack{Number \\ of \\ samples} \\ \hline
+B. cancer & 3,206 & {3,078} & 14,039 & {8,598} & 4.38 & 2.79 & 684 \\
+Haberman  & 8.5 & {61} & 33 & {104} & 3.88 & 1.70 & 307 \\
+MONKS-1 & 0.29 & {\textless0.1} & 0.36 & {\textless0.1} & 1.24 & \textless1 & 432 \\
+MONKS-3 & 0.10 & {\textless0.1} & 0.14 & {\textless0.1} & 1.40 & \textless1 & 432 \\
+Votes  & 8.3 & {44} & 24 & {79} & 2.89 & 1.80 & 436 \\
+NYPD & 80 & {26} & 15,073 & {1,343} & 188 & 51.7 & 566,839 \\
+COMPAS & 0.86 & {2.7} & 1.45 & {3.0} & 1.69 & 1.11 & 6,217 \\ \hline
+Average & 472 & {459} & 4,167 & {1,447} & 8.83 & 3.15 & --- \\ \hline
 \end{tabular}%
 }
 \end{table}
