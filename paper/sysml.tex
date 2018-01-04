@@ -37,7 +37,7 @@
 
 \begin{document}
 
-\title{Systems Optimizations for Learning Certifiably Optimal Rule Lists}
+\title{Systems Optimizations for \\ Learning Certifiably Optimal Rule Lists}
 \author{Nicholas Larus-Stone}
 \affiliation{%
  \institution{Computer Lab, University of Cambridge}
@@ -202,28 +202,28 @@ For example, we briefly experimented with a stochastic search policy that did no
 However, this search strategy performed worse than any strategy involving our queue, so we proceeded only by using the queue.
 
 Table \ref{ScalabilityResults} empirically validates the importance of data structure design (specifically the symmetry-aware map) on several datasets \cite{UCI, Bcancer, nyclu:2014}.
-We conducted trials on a small personal laptop\footnote{2.6 GHz i7-6700HQ and 16GB of RAM}.
-The method for both the tests using the map and the tests without the map used lower-bound ordering (best-first search) in the queue as described above \footnote{We also used a regularization parameter of 0.01}.
+We conducted trials on a small personal laptop.\footnote{2.6 GHz i7-6700HQ and 16GB of RAM.}
+The method for both the tests using the map and the tests without the map used lower-bound ordering (best-first search) in the queue as described above.\footnote{We set the regularization parameter $\lambda$ to 0.01.}
 The symmetry-aware map led to an average speedup of 8.83x in runtime and a reduction in memory usage of 3.15x.
 On more computationally complex datasets, such as the breast cancer dataset, the symmetry-aware map allows the problem to be solved to optimality using less than 4GB of RAM, versus about 8.6GB without this optimization.
 This enables such problems to be solved on almost all recent laptops.
 
 \begin{table}[h]
 \centering
-\caption{\small Tabulation of average runtime (s) and memory usage (MB) over 3 runs on different datasets with and without symmetry-aware map, tested on a 2.6 GHz i7-6700HQ and 16GB RAM, capped at 12GB. Standard deviations are within 1\% of reported values in all cases.}
+\caption{\small Average runtime (s) and memory usage (MB) for three executions, on different datasets, with and without the symmetry-aware map, tested on a laptop with 2.6 GHz i7-6700HQ and 16GB RAM, capped at 12GB. Standard deviations are within 1\% of reported values in all cases.}
 \label{ScalabilityResults}
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{|l|c c|c c|c c|c|}
+\begin{tabular}{|l|c c|c c|r r|r|}
 \hline
 \shortstack{Dataset} & \shortstack{Time \\ w/map \\ (s)} & \shortstack{Memory \\ w/map \\ (MB)} & \shortstack{Time \\ no map \\ (s)} & \shortstack{Memory \\ no map \\ (MB)} & \shortstack{Speedup} & \shortstack{Memory \\ savings} & \shortstack{Number \\ of \\ samples} \\ \hline
-B. cancer & 3,206 & {3,078} & 14,039 & {8,598} & 4.38 & 2.79 & 684 \\
-Haberman  & 8.5 & {61} & 33 & {104} & 3.88 & 1.70 & 307 \\
-MONKS-1 & 0.29 & {\textless0.1} & 0.36 & {\textless0.1} & 1.24 & \textless1 & 432 \\
-MONKS-3 & 0.10 & {\textless0.1} & 0.14 & {\textless0.1} & 1.40 & \textless1 & 432 \\
-Votes  & 8.3 & {44} & 24 & {79} & 2.89 & 1.80 & 436 \\
-NYPD & 80 & {26} & 15,073 & {1,343} & 188 & 51.7 & 566,839 \\
-COMPAS & 0.86 & {2.7} & 1.45 & {3.0} & 1.69 & 1.11 & 6,217 \\ \hline
-Average & 472 & {459} & 4,167 & {1,447} & 8.83 & 3.15 & --- \\ \hline
+B. cancer & 3,206 & {3,078} & 14,039 & {8,598} & 4.4 & 2.8 & 684 \\
+Haberman  & 8.5 & {61} & 33 & {104} & 3.9 & 1.7 & 307 \\
+MONKS-1 & 0.29 & {\textless0.1} & 0.4 & {\textless0.1} & 1.2 & $\sim1.0$ & 432 \\
+MONKS-3 & 0.10 & {\textless0.1} & 0.1 & {\textless0.1} & 1.4 & $\sim1.0$ & 432 \\
+Votes  & 8.3 & {44} & 24 & {79} & 2.9 & 1.8 & 436 \\
+NYPD & 80 & {26} & 15,073 & {1,343} & 188.4 & 51.6 & 566,839 \\
+COMPAS & 0.86 & {2.7} & 1.45 & {3.0} & 1.7 & 1.1 & 6,217 \\ \hline
+Average & 472 & {459} & 4,167 & {1,447} & 8.8 & 3.2 & --- \\ \hline
 \end{tabular}%
 }
 \end{table}
