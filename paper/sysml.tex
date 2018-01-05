@@ -64,6 +64,12 @@
 \streetaddress{\{alabid@g, margo@eecs\}.harvard.edu}
 }
 
+\author{Vassilios Kaxiras}
+\affiliation{%
+	\institution{Belmont High School}
+}
+\email{vassilioskaxiras@gmail.com}
+
 \author{Aditya Saligrama}
 \affiliation{%
 	\institution{Weston High School}
@@ -215,15 +221,15 @@ This enables such problems to be solved on almost all recent laptops.
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{|l|c c|c c|r r|r|}
 \hline
-\shortstack{Dataset} & \shortstack{Time \\ w/map \\ (s)} & \shortstack{Memory \\ w/map \\ (MB)} & \shortstack{Time \\ no map \\ (s)} & \shortstack{Memory \\ no map \\ (MB)} & \shortstack{Speedup} & \shortstack{Memory \\ savings} & \shortstack{Number \\ of \\ samples} \\ \hline
+\shortstack{Dataset} & \shortstack{Time \\ w/map \\ (s)} & \shortstack{Memory \\ w/map \\ (MB)} & \shortstack{Time \\ no map \\ (s)} & \shortstack{Memory \\ no map \\ (MB)} & \shortstack{Speedup} & \shortstack{Memory \\ savings} & \shortstack{Number \\ of \\ examples} \\ \hline
 B. cancer & 3,206 & {3,078} & 14,039 & {8,598} & 4.4 & 2.8 & 684 \\
 Haberman  & 8.5 & {61} & 33 & {104} & 3.9 & 1.7 & 307 \\
 MONKS-1 & 0.29 & {\textless0.1} & 0.4 & {\textless0.1} & 1.2 & $\sim1.0$ & 432 \\
 MONKS-3 & 0.10 & {\textless0.1} & 0.1 & {\textless0.1} & 1.4 & $\sim1.0$ & 432 \\
 Votes  & 8.3 & {44} & 24 & {79} & 2.9 & 1.8 & 436 \\
-NYPD & 80 & {26} & 15,073 & {1,343} & 188.4 & 51.6 & 566,839 \\
+NYPD & 80 & {26} & 15,073 & {1,343} & \textbf{188.4} & \textbf{51.6} & 566,839 \\
 COMPAS & 0.86 & {2.7} & 1.45 & {3.0} & 1.7 & 1.1 & 6,217 \\ \hline
-Average & 472 & {459} & 4,167 & {1,447} & 8.8 & 3.2 & --- \\ \hline
+%Average & 472 & {459} & 4,167 & {1,447} & 8.8 & 3.2 & --- \\ \hline
 \end{tabular}%
 }
 \end{table}
