@@ -1220,7 +1220,6 @@ the size of an interpretable rule list,
 and ${M=1000}$ represents the approximate number of rules
 with sufficiently high support (Theorem~\ref{thm:min-capture})
 we expect to obtain via rule mining~(\S\ref{sec:setup}).
-%for many datasets that might be used for constructing interpretable models.
 
 \begin{arxiv}
 \subsection{Similar support bound}
@@ -1420,7 +1419,7 @@ starts with~$\Prefix$ can correctly classify all these observations.
 For each set of such observations, the number of mistakes is at least
 the number of observations with the minority label within the set.
 
-Consider a dataset~${\{(x_n, y_n)\}_{n=1}^N}$ and also a set of antecedents
+Consider a data set~${\{(x_n, y_n)\}_{n=1}^N}$ and also a set of antecedents
 ${\{s_m\}_{m=1}^M}$.
 %
 Define distinct observations to be equivalent if they are captured by
@@ -1428,7 +1427,7 @@ exactly the same antecedents, \ie ${x_i \neq x_j}$ are equivalent~if
 \begin{align}
 \frac{1}{M} \sum_{m=1}^M \one [ \Cap(x_i, s_m) = \Cap(x_j, s_m) ] = 1. \nn
 \end{align}
-Notice that we can partition a dataset into sets of equivalent points;
+Notice that we can partition a data set into sets of equivalent points;
 let~${\{e_u\}_{u=1}^U}$ enumerate these sets.
 %
 Let~$e_u$ be the equivalent points set that contains observation~$x_i$.

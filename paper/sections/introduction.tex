@@ -30,7 +30,7 @@ where optimality is defined with respect to minimization of a regularized loss f
 \State \belse $no$
 \end{algorithmic}
 \caption{An example rule list that predicts two-year recidivism
-for the ProPublica dataset, found by CORELS.
+for the ProPublica data set, found by CORELS.
 }
 \label{fig:rule-list}
 \end{figure}
@@ -94,7 +94,7 @@ with the careful use of algorithms, data structures, and implementation techniqu
 \end{algorithmic}
 \vspace{-3mm}
 \caption{An example rule list that predicts two-year recidivism
-for the ProPublica dataset, found by CORELS.
+for the ProPublica data set, found by CORELS.
 }
 \label{fig:rule-list}
 \end{figure}
@@ -172,24 +172,24 @@ This trie structure is a useful way of organizing the generation
 and evaluation of rule lists.
 
 \begin{arxiv}
-We evaluated CORELS on a number of publicly available datasets.
+We evaluated CORELS on a number of publicly available data sets.
 %
 Our metric of success was 10-fold cross-validated prediction accuracy on a subset of the data.
 %
-These datasets involve hundreds of rules and thousands of observations.
+These data sets involve hundreds of rules and thousands of observations.
 %
 CORELS is generally able to find an optimal rule list in a matter of seconds
 and certify its optimality within about 10 minutes.
 %
 We show that we are able to achieve better or similar out-of-sample accuracy on these
-datasets compared to the popular greedy algorithms, CART and C4.5.
+data sets compared to the popular greedy algorithms, CART and C4.5.
 \end{arxiv}
 
 CORELS targets large (not massive) problems,
 where interpretability and certifiable optimality are important.
 %
-We illustrate the efficacy of our approach using (1)~the ProPublica COMPAS dataset~\citep{LarsonMaKiAn16}, for the problem of two-year recidivism prediction,
-and (2)~stop-and-frisk datasets from the
+We illustrate the efficacy of our approach using (1)~the ProPublica COMPAS data set~\citep{LarsonMaKiAn16}, for the problem of two-year recidivism prediction,
+and (2)~stop-and-frisk data sets from the
 \begin{kdd}
 New York Civil Liberties Union (NYCLU)~\citep{nyclu:2014},
 \end{kdd}

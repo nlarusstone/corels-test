@@ -16,7 +16,7 @@ How much does each of the implementation optimizations contribute to CORELS' per
 How rapidly does CORELS prune the search space? (\S\ref{sec:reg-param} and \S\ref{sec:ablation})
 %
 Before proceeding, we first describe our computational environment (\S\ref{sec:environment}),
-as well as the datasets and prediction problems we use (\S\ref{sec:datasets}),
+as well as the data sets and prediction problems we use (\S\ref{sec:datasets}),
 and then in Section~\ref{sec:examples} show example optimal rule lists found by CORELS.
 
 \subsection{Computational environment}
@@ -27,31 +27,31 @@ and we ran each timing measurement separately, on a single hardware thread, with
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16~GB~RAM.
 
-\subsection{Datasets and prediction problems}
+\subsection{Data sets and prediction problems}
 \label{sec:datasets}
 Our evaluation focuses on two socially-important prediction problems associated
-with recent, publicly-available datasets.
+with recent, publicly-available data sets.
 %
-Table~1 summarizes the datasets and prediction problems,
-and Table~2 summarizes feature sets extracted from each dataset,
+Table~1 summarizes the data sets and prediction problems,
+and Table~2 summarizes feature sets extracted from each data set,
 as well as antecedent sets we mine from these feature sets.
 %
 We provide some details next.
 %
-For further details about datasets, preprocessing steps, and antecedent mining,
+For further details about data sets, preprocessing steps, and antecedent mining,
 see Appendix~\ref{appendix:data}.
 
 \begin{table}[t!]
 \centering
 \begin{tabular}{l|c|r|c|c|r|r}
-Dataset & Prediction problem & N~~~~ & Positive & Resample & Training & Test~~ \\
+Data set & Prediction problem & N~~~~ & Positive & Resample & Training & Test~~ \\
 & & & fraction & training set & set size~ & set size \\
 \hline
 ProPublica & Two-year recidivism & 6,907 & 0.46 & No & 6,217 & 692 \\
 NYPD & Weapon possession & 325,800 & 0.03 & Yes & 566,839 & 32,580 \\
 NYCLU & Weapon possession & 29,595 & 0.05 & Yes & 50,743 & 2,959 \\
 \end{tabular}
-\caption{Summary of datasets and prediction problems.
+\caption{Summary of data sets and prediction problems.
 %
 The last five columns report the total number of observations,
 the fraction of observations with the positive class label,
@@ -64,7 +64,7 @@ and the sizes of each training and test set in our 10-fold cross-validation stud
 \begin{table}[t!]
 \centering
 \begin{tabular}{l|c|c|c|c|c|c}
-Dataset & Feature & Categorical & Binary & Mined & Max number & Negations \\
+Data set & Feature & Categorical & Binary & Mined & Max number & Negations \\
 & set & attributes & features & antecedents & of clauses & \\
 \hline
 ProPublica & A & 6 & 13 & 122 & 2 & No \\
@@ -85,9 +85,9 @@ and whether antecedents include negated clauses.
 
 \subsubsection{Recicidivism prediction}
 For our first problem, we predict which individuals in the ProPublica COMPAS
-dataset~\citep{LarsonMaKiAn16} recidivate within two years.
+data set~\citep{LarsonMaKiAn16} recidivate within two years.
 %
-This dataset contains records for all offenders in Broward County, Florida
+This data set contains records for all offenders in Broward County, Florida
 in 2013 and 2014 who were given a COMPAS score pre-trial.
 %
 Recidivism is defined as being charged with a new crime within two years
@@ -95,7 +95,7 @@ after receiving a COMPAS assessment; the article by \citet{LarsonMaKiAn16},
 and their code,\footnote{Data and code used in the analysis by \citet{LarsonMaKiAn16} can be found at \url{https://github.com/propublica/compas-analysis}.}
 provide more details about this definition.
 %
-From the original dataset of records for 7,214 individuals,
+From the original data set of records for 7,214 individuals,
 we identify a subset of 6,907 records without missing data.
 %
 For the majority of our analysis, we extract a set of~13 binary features (Feature Set~A),
@@ -133,16 +133,16 @@ We also consider another, similar antecedent set, derived from a subset of Featu
 that excludes~8 location-specific binary features (Feature Set~D).
 
 In Sections~\ref{sec:examples}, \ref{sec:sparsity}, \ref{sec:reg-param}, and~\ref{sec:ablation},
-we also use a smaller stop-and-frisk dataset,
+we also use a smaller stop-and-frisk data set,
 derived by the NYCLU from the NYPD's 2014 data~\citep{nyclu:2014}.
 %
-From the original dataset of 45,787 records, each describing an incident involving
+From the original data set of 45,787 records, each describing an incident involving
 a stopped person, we identify a subset of 29,595 records for which the individual
 was frisked and/or searched.
 %
 Of these, criminal possession of a weapon was identified in about 5\% of instances.
 %
-As with the larger NYPD dataset, we resample the data to form training sets
+As with the larger NYPD data set, we resample the data to form training sets
 (but not to form test sets).
 %
 From the same set of 5 categorical features as in Feature Set~C, we form a set of ${M=46}$
@@ -152,7 +152,7 @@ single-clause antecedents, including negations (Feature Set~E).
 \label{sec:examples}
 
 To motivate Feature Set~A, described in Appendix~\ref{appendix:data},
-which we used in most of our analysis of the ProPublica dataset,
+which we used in most of our analysis of the ProPublica data set,
 we first consider Feature Set~B, a larger superset of features.
 
 %
@@ -172,7 +172,7 @@ we first consider Feature Set~B, a larger superset of features.
 \State \belse $no$
 \end{algorithmic}
 \caption{Example optimal rule lists that predict two-year recidivism for the
-ProPublica dataset (Feature Set~B, ${M=189}$), found by CORELS (${\Reg = 0.005}$), across 10 cross-validation folds.
+ProPublica data set (Feature Set~B, ${M=189}$), found by CORELS (${\Reg = 0.005}$), across 10 cross-validation folds.
 %
 While some input antecedents contain features for race, no optimal rule list includes such an antecedent.
 %
@@ -183,7 +183,7 @@ with prefixes containing the same rules, up to a permutation, and same default r
 \end{figure}
 
 Figure~\ref{fig:propublica} shows optimal rule lists learned by CORELS,
-using Feature Set~B, which additionally includes race categories from the ProPublica dataset (African American, Caucasian, Hispanic,
+using Feature Set~B, which additionally includes race categories from the ProPublica data set (African American, Caucasian, Hispanic,
 Other\footnote{We grouped the original Native American ($<$0.003), Asian ($<$0.005), and Other ($<$0.06) categories.}).
 %
 For Feature Set~B, our antecedent mining procedure generated an average
@@ -196,7 +196,7 @@ For both feature sets, we replaced the original ProPublica age categories ($<$25
 with a set that is more fine-grained for younger individuals (18-20, 21-22, 23-25, 26-45, $>$45).
 %
 Figure~\ref{fig:recidivism-all-folds} shows example optimal rule lists that CORELS learns
-for the ProPublica dataset (Feature Set~A, ${\Reg = 0.005}$), using 10-fold cross validation.
+for the ProPublica data set (Feature Set~A, ${\Reg = 0.005}$), using 10-fold cross validation.
 
 %
 \begin{figure}[t!]
@@ -216,7 +216,7 @@ for the ProPublica dataset (Feature Set~A, ${\Reg = 0.005}$), using 10-fold cros
 \State \belse $no$
 \end{algorithmic}
 \caption{Example optimal rule lists that predict two-year recidivism for the
-ProPublica dataset (Feature Set~A, ${M=122}$), found by CORELS (${\Reg = 0.005}$), across 10 cross-validation folds.
+ProPublica data set (Feature Set~A, ${M=122}$), found by CORELS (${\Reg = 0.005}$), across 10 cross-validation folds.
 %
 Feature Set~A is a subset of Feature Set~B (Figure~\ref{fig:propublica}) that excludes race features.
 %
@@ -241,7 +241,7 @@ See Figure~\ref{fig:recidivism-rule-list-005} in Appendix~\ref{appendix:examples
 \State \belse $no$
 \end{algorithmic}
 \caption{An example rule list that predicts whether a weapon will be found on a
-stopped individual who is frisked or searched, for the NYCLU stop-and-frisk dataset.
+stopped individual who is frisked or searched, for the NYCLU stop-and-frisk data set.
 %
 Across 10 cross-validation folds, the other optimal rule lists found by CORELS~(${\Reg = 0.01}$)
 contain the same or equivalent rules, up to a permutation.
@@ -290,7 +290,7 @@ See also Figure~\ref{fig:weapon-rule-list-04-01} in Appendix~\ref{appendix:examp
 \State \belif $(stop~reason = furtive~movements)$ \bthen $no$
 \State \belse $yes$
 \end{algorithmic}
-\caption{Example optimal rule lists for the NYPD stop-and-frisk dataset, found by CORELS.
+\caption{Example optimal rule lists for the NYPD stop-and-frisk data set, found by CORELS.
 %
 Feature Set~C contains attributes for `location' and `city', while Feature Set~D does not.
 %
@@ -305,9 +305,9 @@ in Appendix~\ref{appendix:examples}.
 \end{figure}
 
 Figures~\ref{fig:weapon-rule-list} and~\ref{fig:nypd} show example optimal rule lists that
-CORELS learns for the NYCLU (${\Reg = 0.01}$) and NYPD datasets.
+CORELS learns for the NYCLU (${\Reg = 0.01}$) and NYPD data sets.
 %
-Figure~\ref{fig:nypd} shows optimal rule lists that CORELS learns for the larger NYPD dataset.
+Figure~\ref{fig:nypd} shows optimal rule lists that CORELS learns for the larger NYPD data set.
 %
 
 While our goal is to provide illustrative examples, and not to provide a
@@ -343,7 +343,7 @@ for different regularization parameters~$\Reg$.
 
 The accuracies of rule lists learned by CORELS are competitive with
 scores generated by the black box COMPAS algorithm
-at predicting two-year recidivism for the ProPublica dataset (Figure~\ref{fig:compas-comparison}).
+at predicting two-year recidivism for the ProPublica data set (Figure~\ref{fig:compas-comparison}).
 %
 Across 10 cross-validation folds, optimal rule lists learned by CORELS
 (Figure~\ref{fig:recidivism-all-folds}, ${\Reg = 0.005}$)
@@ -365,10 +365,10 @@ a mean accuracy of~0.660, with standard deviation~0.019.
 width=0.9\textwidth]{figs/compare_corels_compas.pdf}
 \end{center}
 \caption{Comparison of TPR and FPR (left), as well as TNR and FNR (right),
-for different races in the ProPublica dataset, for CORELS and COMPAS,
+for different races in the ProPublica data set, for CORELS and COMPAS,
 across 10 cross-validation folds.
 %
-%CORELS has a lower FPR for black individuals in the dataset than COMPAS, as well as a lower TPR.
+%CORELS has a lower FPR for black individuals in the data set than COMPAS, as well as a lower TPR.
 %
 %Both CORELS and COMPAS have a significantly higher FPR rate for black indviduals than white individuals--despite CORELS producing optimal rule lists without explicit race features.
 %
@@ -384,7 +384,7 @@ The fact that COMPAS has higher FPR's for blacks and higher FNR's for whites was
 %
 The fact that CORELS' models are so simple, with almost the same results as COMPAS, and do not contain anything except criminal history features and age, indicates possible explanations for the uneven predictions of both COMPAS and CORELS.
 %
-In particular, blacks tend to have longer criminal histories within the dataset,
+In particular, blacks tend to have longer criminal histories within the data set,
 (on average, 4.4 crimes for blacks versus~2.6 crimes for whites)
 leading to higher FPR's for blacks and higher FNR's for whites.
 %
@@ -424,7 +424,7 @@ Some of these problems could be alleviated by using only data within electronic 
 
 The United States government pays Northpointe (now called Equivant) to use COMPAS.
 %
-In light of our observations that CORELS is as accurate as COMPAS on a real-world dataset where COMPAS is used in practice, CORELS predicts similarly to COMPAS for both blacks and whites, and CORELS' models are completely transparent, it is not clear what value COMPAS scores possess.
+In light of our observations that CORELS is as accurate as COMPAS on a real-world data set where COMPAS is used in practice, CORELS predicts similarly to COMPAS for both blacks and whites, and CORELS' models are completely transparent, it is not clear what value COMPAS scores possess.
 %
 Our experiments also indicate that the proprietary survey data required to compute COMPAS scores has not boosted its prediction accuracy above that of transparent models in practice.
 
@@ -440,11 +440,11 @@ Currently, justice system data does not support highly accurate risk predictions
 \label{sec:frisk}
 
 CORELS generates simple, accurate models for the task of weapon prediction,
-using the NYPD stop-and-frisk dataset.
+using the NYPD stop-and-frisk data set.
 %
 Our approach offers a principled alternative to heuristic models proposed by~\citet{Goel16},
 who develop a series of regression models to analyze racial disparities
-in New York City's stop-and-frisk policy for a related, larger dataset.
+in New York City's stop-and-frisk policy for a related, larger data set.
 %
 In particular, the authors arrive at a heuristic that they suggest
 could potentially help police officers more effectively decide when to
@@ -481,14 +481,14 @@ width=0.71\textwidth]{figs/cpw_folds.pdf}
 \includegraphics[trim={12mm, 5mm, 24mm, 0mm},
 width=0.71\textwidth]{figs/cpw_tpr_fpr.pdf}
 \end{center}
-\caption{Weapon prediction with the NYPD stop-and-frisk dataset,
+\caption{Weapon prediction with the NYPD stop-and-frisk data set,
 for various models learned by CORELS and the heuristic model by~\citet{Goel16},
 across~10 cross-validation folds.
 %
 Note that the fraction of weapons recovered (top) is equal to the TPR (bottom, open markers).
 %
 Markers above the dotted horizontal lines at the value~0.5 correspond to models that
-recover a majority of weapons (that are known in the dataset).
+recover a majority of weapons (that are known in the data set).
 %
 Top: Fraction of weapons recovered as a function of the fraction of stops
 where the individual was frisked and/or searched.
@@ -516,7 +516,7 @@ except for a single fold for CORELS (${\Reg = 0.005}$, Feature Set~C), which fou
 \end{figure}
 
 Figure~\ref{fig:frisk} directly compares various models learned by CORELS to the heuristic models,
-using the same dataset as~\citet{Goel16} and 10-fold cross-validation.
+using the same data set as~\citet{Goel16} and 10-fold cross-validation.
 %
 Recall that we train on resampled data to correct for class imbalance;
 we evaluate with respect to test sets that have been formed without resampling.
@@ -536,7 +536,7 @@ Interestingly, the models learned by CORELS span a significant region that is no
 to the heuristic model, which would require larger or non-integer parameters to access the region.
 %
 The region is possibly desirable, since it includes models (${\Reg = 0.005}$, bright red)
-that recover a majority (${\ge 50\%}$) of weapons (that are known in the dataset).
+that recover a majority (${\ge 50\%}$) of weapons (that are known in the data set).
 %
 More generally, CORELS' models all recover at least ${40\%}$ of weapons
 on average, \ie more weapons than any of the heuristic models with~${T \ge 2}$,
@@ -572,7 +572,7 @@ to compute, without even requiring arithmetic.
 width=0.59\textwidth]{figs/compare-compas-weapon.pdf}
 \vspace{-7mm}
 \end{center}
-\caption{Two-year recidivism prediction for the ProPublica COMPAS dataset.
+\caption{Two-year recidivism prediction for the ProPublica COMPAS data set.
 %
 Comparison of CORELS and a panel of eight other algorithms:
 logistic regression~(GLM), support vector machines~(SVM),
@@ -603,13 +603,13 @@ We use the same antecedent sets as input to the two rule list learning algorithm
 for the other algorithms, the inputs are binary feature sets corresponding to the
 single clause antecedents in the aforementioned antecedent sets (see Appendix~\ref{appendix:data}).
 
-Figure~\ref{fig:compas-comparison} shows that for the ProPublica dataset,
+Figure~\ref{fig:compas-comparison} shows that for the ProPublica data set,
 there were no statistically significant differences in test accuracies across algorithms,
 the difference between folds was far larger than the difference between algorithms.
 %
 These algorithms also all perform similarly to the black box COMPAS algorithm.
 %
-Figure~\ref{fig:weapon-comparison} shows that for the NYCLU dataset,
+Figure~\ref{fig:weapon-comparison} shows that for the NYCLU data set,
 logistic regression, SVM, and AdaBoost have the highest TPR's and also the highest FPR's;
 we show TPR and FPR due to class imbalance.
 %
@@ -628,7 +628,7 @@ width=\textwidth]{figs/compare-weapon.pdf}
 \end{center}
 \caption{TPR (left) and FPR (right) for the test set,
 for CORELS and a panel of seven other algorithms,
-for the weapon prediction problem with the NYCLU stop-and-frisk dataset.
+for the weapon prediction problem with the NYCLU stop-and-frisk data set.
 %
 Means (white squares),
 standard deviations (error bars),
@@ -651,7 +651,7 @@ width=0.78\textwidth]{figs/compas-sparsity-training.pdf}
 %
 \end{center}
 \caption{Training and test accuracy as a function of model size, across different methods,
-for two-year recidivism prediction with the ProPublica COMPAS dataset.
+for two-year recidivism prediction with the ProPublica COMPAS data set.
 %
 In the legend, numbers in parentheses are algorithm parameters that we vary
 for CORELS~($\Reg$), CART~($cp$), C4.5~($C$), and SBRL ($\eta$, $\lambda$, $i$),
@@ -675,11 +675,11 @@ for CORELS and other tree (CART, C4.5) and rule list (RIPPER, SBRL) learning alg
 %
 Here, we vary different algorithm parameters, and increase the number of iterations for SBRL to 10,000.
 %
-For two-year recidivism prediction with the ProPublica dataset (Figure~\ref{fig:sparsity-compas}),
+For two-year recidivism prediction with the ProPublica data set (Figure~\ref{fig:sparsity-compas}),
 we plot both training and test accuracy,
 as a function of the number of leaves in the learned model.
 %
-Due to class imbalance for the weapon prediction problem with the NYCLU stop-and-frisk dataset
+Due to class imbalance for the weapon prediction problem with the NYCLU stop-and-frisk data set
 (Figure~\ref{fig:sparsity-weapon}), we plot both true positive rate (TPR) and false positive rate (FPR),
 again as a function of the number of leaves.
 %
@@ -689,7 +689,7 @@ For listings of example optimal rule lists that correspond to the results
 for CORELS summarized here, see Appendix~\ref{appendix:examples}.
 %
 Also see Figure~\ref{fig:sparsity-cpw} in Appendix~\ref{appendix:cpw}; it uses the larger
-NYPD dataset and is similar to Figure~\ref{fig:sparsity-weapon}.
+NYPD data set and is similar to Figure~\ref{fig:sparsity-weapon}.
 
 \begin{figure}[t!]
 \begin{center}
@@ -702,7 +702,7 @@ width=0.78\textwidth]{figs/weapon-sparsity-fpr.pdf}
 \end{center}
 \caption{TPR (top) and FPR (bottom)
 for the test set, as a function of model size, across different methods,
-for weapon prediction with the NYCLU stop-and-frisk dataset.
+for weapon prediction with the NYCLU stop-and-frisk data set.
 %
 In the legend, numbers in parentheses are algorithm parameters,
 as in Figure~\ref{fig:sparsity-compas}.
@@ -720,14 +720,14 @@ C4.5 finds large models for all tested parameters.
 \subsection{CORELS execution traces, for different regularization parameters}
 \label{sec:reg-param}
 In this section, we illustrate several views of CORELS execution traces,
-for the NYCLU stop-and-frisk dataset with ${M = 46}$ antecedents,
+for the NYCLU stop-and-frisk data set with ${M = 46}$ antecedents,
 for the same three regularization parameters (${\Reg = .04, .01, .025}$)
 as in Figure~\ref{fig:sparsity-weapon}.
 
 \begin{table}[t!]
 \centering
 %\begin{centering}
-CORELS with different regularization parameters (NYCLU stop-and-frisk dataset) \\
+CORELS with different regularization parameters (NYCLU stop-and-frisk data set) \\
 %\end{centering}
 \vspace{2mm}
 \begin{tabular}{l | c | c | c | c}
@@ -749,7 +749,7 @@ $\lambda$ &~ evaluations ($\times 10^6$) ~&~ insertions ($\times 10^3$) ~&~ size
 .0025 & 150 (10) & 4400 (300) & 2500 (170) \\
 \end{tabular}
 %\vspace{4mm}
-\caption{Summary of CORELS executions, for the NYCLU stop-and-frisk dataset (${M = 46}$),
+\caption{Summary of CORELS executions, for the NYCLU stop-and-frisk data set (${M = 46}$),
 for same three regularization parameter ($\Reg$) values as in Figure~\ref{fig:sparsity-weapon}.
 %
 The columns report the total execution time,
@@ -786,7 +786,7 @@ and that the symmetry-aware map elements correspond to the trie's nodes.
 width=0.81\textwidth]{figs/weapon_reg-execution.pdf}
 \end{center}
 \vspace{-5mm}
-\caption{Example executions of CORELS, for the NYCLU stop-and-frisk dataset (${M = 46}$).
+\caption{Example executions of CORELS, for the NYCLU stop-and-frisk data set (${M = 46}$).
 %
 See also Table~\ref{tab:weapon-reg} and Figure~\ref{fig:queue-weapon-reg}.
 %
@@ -821,7 +821,7 @@ width=0.92\textwidth]{figs/weapon_reg-queue.pdf}
 \vspace{-5mm}
 \caption{Summary of CORELS' logical queue,
 %\ie the nodes in the physical queue that have not been marked for deletion,
-for the NYCLU stop-and-frisk dataset (${M = 46}$),
+for the NYCLU stop-and-frisk data set (${M = 46}$),
 for same three regularization parameters as in Figure~\ref{fig:sparsity-weapon}
 and Table~\ref{tab:weapon-reg}.
 %
@@ -870,7 +870,7 @@ as~$\Reg$ decreases, the algorithm must spend more time evaluating longer and lo
 \begin{table}[t!]
 \centering
 %\begin{centering}
-Per-component performance improvement (ProPublica dataset) \\
+Per-component performance improvement (ProPublica data set) \\
 %\end{centering}
 \vspace{1mm}
 \begin{tabular}{l | c  r | c | c}
@@ -898,7 +898,7 @@ No symmetry-aware map & 250 (180) & 2.5 (1.7) & 2.4 (1.7) \\
 No equivalent points bound* & $>$940 (5)~~~~~ & $>$510 (1.1)~~~ & $>$500 (1.2)~~~ \\
 \end{tabular}
 %\vspace{4mm}
-\caption{Per-component performance improvement, for the ProPublica dataset
+\caption{Per-component performance improvement, for the ProPublica data set
 (${\Reg = 0.005}$, ${M = 122}$).
 %
 The columns report the total execution time,
@@ -942,7 +942,7 @@ This section examines the efficacy of each of our bounds and data structure opti
 We remove a single bound or data structure optimization from our final implementation and measure
 how the performance of our algorithm changes.
 %
-We examine these performance traces on both the NYCLU and the ProPublica datasets,
+We examine these performance traces on both the NYCLU and the ProPublica data sets,
 and highlight the result that on different problems, the relative performance improvements
 of our optimizations can vary.
 
@@ -955,7 +955,7 @@ of our optimizations can vary.
 \caption{Summary of the logical queue's contents, for full CORELS (top left)
 %\ie the nodes in the physical queue that have not been marked for deletion,
 and five variants that each remove a specific implementation optimization or bound,
-for the ProPublica dataset (${\Reg = 0.005}$, ${M = 122}$).  See also Table~\ref{tab:ablation}.
+for the ProPublica data set (${\Reg = 0.005}$, ${M = 122}$).  See also Table~\ref{tab:ablation}.
 %
 Solid lines plot the numbers of prefixes in the logical queue (log scale), colored by length (legend),
 as a function of wall clock time (log scale).
@@ -1000,7 +1000,7 @@ objective lower bound via the equivalent points bound (Theorem~\ref{thm:identica
 \begin{table}[t!]
 \centering
 %\begin{centering}
-Per-component performance improvement (NYCLU stop-and-frisk dataset) \\
+Per-component performance improvement (NYCLU stop-and-frisk data set) \\
 %\end{centering}
 \vspace{1mm}
 \begin{tabular}{l | c  r | c | c}
@@ -1029,7 +1029,7 @@ No equivalent points bound & 33 (2) & 9.4 (.7) & 6.0 (.4) \\
 \end{tabular}
 %\vspace{4mm}
 \caption{Per-component performance improvement, as in Table~\ref{tab:ablation},
-for the NYCLU stop-and-frisk dataset (${\Reg = 0.01}$, ${M = 46}$).
+for the NYCLU stop-and-frisk data set (${\Reg = 0.01}$, ${M = 46}$).
 %
 All rows except those labeled `No symmetry-aware map' represent complete executions.
 %
@@ -1052,7 +1052,7 @@ and also Figure~\ref{fig:queue-weapon}.
 \vspace{-5mm}
 \caption{Summary of the logical queue's contents, for full CORELS (top left)
 and five variants that each remove a specific implementation optimization or bound,
-for the NYCLU stop-and-frisk dataset (${\Reg = 0.01}$, ${M = 46}$), as in Table~\ref{tab:ablation-weapon}.
+for the NYCLU stop-and-frisk data set (${\Reg = 0.01}$, ${M = 46}$), as in Table~\ref{tab:ablation-weapon}.
 The execution without the symmetry-aware map (bottom center) is incomplete.
 %
 See Figure~\ref{fig:queue} for a detailed caption.
@@ -1080,7 +1080,7 @@ Panels correspond to different removed optimizations, as in Table~\ref{tab:ablat
 These plots demonstrate that our optimizations reduce the number of evaluated prefixes
 and are especially effective at limiting the number of longer evaluated prefixes.
 %
-For the ProPublica dataset, the most important optimization is the equivalent points
+For the ProPublica data set, the most important optimization is the equivalent points
 bound---without it, we place prefixes of at least length~10 in our queue,
 and must terminate these executions before they are complete.
 %
@@ -1088,10 +1088,10 @@ In contrast, CORELS and most other variants evaluate only prefixes up to at most
 except for the variant without the lookahead bound, which evaluates prefixes up to length~6.
 
 Table~\ref{tab:ablation-weapon} and Figure~\ref{fig:queue-weapon} summarize an
-analogous set of experiments for the NYCLU dataset.
+analogous set of experiments for the NYCLU data set.
 %
-Note that while the equivalent points bound proved to be the most important optimization for the ProPublica dataset,
-the symmetry-aware map is the crucial optimization for the NYCLU dataset.
+Note that while the equivalent points bound proved to be the most important optimization for the ProPublica data set,
+the symmetry-aware map is the crucial optimization for the NYCLU data set.
 
 \begin{figure}[t!]
 \begin{center}
@@ -1102,7 +1102,7 @@ width=0.95\textwidth]{figs/weapon_execution_large-remaining-space.pdf}
 \end{center}
 \caption{Execution progress of CORELS and selected variants,
 for the ProPublica (${\Reg = 0.005}$, ${M = 122}$) (left)
-and NYCLU (${\Reg = 0.01}$, ${M = 46}$) (right) datasets.
+and NYCLU (${\Reg = 0.01}$, ${M = 46}$) (right) data sets.
 %
 Top: Objective value (thin solid lines) and lower bound (dashed lines) for CORELS,
 as a function of wall clock time (log scale).
@@ -1138,10 +1138,10 @@ the remaining search space decays much more slowly without these bounds (thick s
 
 Finally, Figure~\ref{fig:objective} highlights the most significant
 algorithm optimizations for our prediction problems:
-the equivalent points bound for the ProPublica dataset (left)
-and the symmetry-aware map for the NYCLU dataset (right).
+the equivalent points bound for the ProPublica data set (left)
+and the symmetry-aware map for the NYCLU data set (right).
 %
-For CORELS (thin lines) with the ProPublica recidivism dataset (left),
+For CORELS (thin lines) with the ProPublica recidivism data set (left),
 the objective drops quickly, achieving the optimal value within a second.
 CORELS certifies optimality in about a minute---the objective lower bound
 steadily converges to the optimal objective (top) as the search space shrinks (bottom).
@@ -1160,7 +1160,7 @@ After more than 2 hours, the execution is still far from complete;
 in particular, the lower bound is far from the optimum objective value (top)
 and much of the search space remains unexplored~(bottom).
 %
-For the NYCLU stop-and-frisk dataset (right),
+For the NYCLU stop-and-frisk data set (right),
 CORELS achieves the optimum objective in well under a second,
 and certifies optimality in a little over a minute.
 %
@@ -1183,7 +1183,7 @@ Brute force & 5 & ~$2.5 \times 10^{10}$ & $9.0$ hours&$\approx 3.3 \times 10^4$ 
 Brute force & 10 & ~$5.0 \times 10^{20}$ & $21 \times 10^6$ years&$\approx 6.5 \times 10^{14}$ s \\
 CORELS (1984) & 5 & $2.8 \times 10^7$ & $13.5$ days&$\approx 1.2 \times 10^6$ s \\
 \end{tabular}
-\caption{Algorithmic speedup for the ProPublica dataset (${\Reg = 0.005}$, ${M = 122}$).
+\caption{Algorithmic speedup for the ProPublica data set (${\Reg = 0.005}$, ${M = 122}$).
 %
 Solving this problem using brute force is impractical due to the inability to explore rule lists of reasonable lengths.
 %
@@ -1198,7 +1198,7 @@ Even with all of our improvements, however, it is only recently that processors 
 Table \ref{tab:speedup} shows the overall speedup of CORELS compared to a na\"ive implementation
 and demonstrates the infeasibility of running our algorithm 30 years ago.
 %
-Consider an execution of CORELS for the ProPublica dataset, with ${M = 122}$ antecedents,
+Consider an execution of CORELS for the ProPublica data set, with ${M = 122}$ antecedents,
 that evaluates prefixes up to length~5 in order to certify optimality (Table~\ref{tab:ablation}).
 %
 A brute force implementation that na\"ively considers all prefixes of up to length~5
