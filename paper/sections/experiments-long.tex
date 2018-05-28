@@ -15,20 +15,20 @@ How much does each of the implementation optimizations contribute to CORELS' per
 %
 How rapidly does CORELS prune the search space? (\S\ref{sec:reg-param} and \S\ref{sec:ablation})
 %
-Before proceeding, we first describe our computational environment,
-as well as the datasets and prediction problems we use,
+Before proceeding, we first describe our computational environment (\S\ref{sec:environment}),
+as well as the datasets and prediction problems we use (\S\ref{sec:datasets}),
 and then in Section~\ref{sec:examples} show example optimal rule lists found by CORELS.
 
-\textbf{Computational environment.}
-%\label{sec:environment}
+\subsection{Computational environment}
+\label{sec:environment}
 All timed results ran on a server with an Intel Xeon E5-2699~v4 (55~MB cache, 2.20~GHz) processor and 264~GB RAM,
 and we ran each timing measurement separately, on a single hardware thread, with nothing else running on the server.
 %
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16~GB~RAM.
 
-%\textbf{Datasets and prediction problems.}
-%\label{sec:datasets}
+\subsection{Datasets and prediction problems}
+\label{sec:datasets}
 Our evaluation focuses on two socially-important prediction problems associated
 with recent, publicly-available datasets.
 %
@@ -83,7 +83,7 @@ and whether antecedents include negated clauses.
 \label{tab:features}
 \end{table}
 
-\textbf{Recicidivism prediction.}
+\subsubsection{Recicidivism prediction}
 For our first problem, we predict which individuals in the ProPublica COMPAS
 dataset~\citep{LarsonMaKiAn16} recidivate within two years.
 %
@@ -105,7 +105,7 @@ on average (folds ranged from containing 121 to 123 antecedents).
 We also consider a second, similar antecedent set in~\S\ref{sec:examples},
 derived from a superset of Feature Set~A that includes~4 additional binary features (Feature Set~B).
 
-\textbf{Weapon prediction.} For our second problem, we use New York City
+\subsubsection{Weapon prediction} For our second problem, we use New York City
 stop-and-frisk data to predict whether a weapon will be found on a stopped
 individual who is frisked or searched.
 %

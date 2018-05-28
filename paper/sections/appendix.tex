@@ -2,7 +2,7 @@
 \section{Data processing details and antecedent mining}
 \label{appendix:data}
 
-\textbf{ProPublica recidivism dataset.}
+\subsection{ProPublica recidivism dataset}
 Table~\ref{tab:recidivism-data} shows the~6 attributes
 and corresponding~17 categorical values
 that we use for the ProPublica dataset.
@@ -49,11 +49,13 @@ the number of juvenile crimes that were neither felonies nor misdemeanors (not s
 \label{tab:recidivism-data}
 \end{table}
 
-\textbf{NYPD stop-and-frisk dataset.} This dataset is larger than, but similar to the
-NYCLU stop-and-frisk dataset, described next.
+\subsection{NYPD stop-and-frisk dataset}
+This dataset is larger than, but similar to the NYCLU stop-and-frisk dataset, 
+described next.
 
-\newpage
-\textbf{NYCLU stop-and-frisk dataset.} The original dataset contains 45,787 records,
+%\newpage
+\subsection{NYCLU stop-and-frisk dataset}
+The original dataset contains 45,787 records,
 each describing an incident involving a stopped person; the individual
 was frisked in 30,345 (66.3\%) of records and and searched in 7,283 (15.9\%).
 %
@@ -124,7 +126,7 @@ in Figures~\ref{fig:sparsity-compas} and~\ref{fig:sparsity-weapon}~(\S\ref{sec:s
 %
 Recall that as~$\Reg$ decreases, optimal rule lists tend to grow in length. \\
 
-\textbf{ProPublica recidivism dataset.}
+\subsection{ProPublica recidivism dataset}
 We show example optimal rule lists that predict two-year recidivism.
 %
 Figure~\ref{fig:recidivism-rule-list-02-01} shows examples for
@@ -270,7 +272,7 @@ across 10 cross-validation folds.
 \end{figure}
 
 \clearpage
-\textbf{NYPD stop-and-frisk dataset.}
+\subsection{NYPD stop-and-frisk dataset}
 We show example optimal rule lists that predict whether a weapon
 will be found on a stopped individual who is frisked or searched, learned from the NYPD dataset.
 
@@ -417,7 +419,7 @@ up to a permutation of the prefix rules, and started with the same first prefix 
 \end{figure}
 
 \clearpage
-\textbf{NYCLU stop-and-frisk dataset.}
+\subsection{NYCLU stop-and-frisk dataset}
 We show example optimal rule lists that predict whether a weapon
 will be found on a stopped individual who is frisked or searched, learned from the NYCLU dataset.
 %
