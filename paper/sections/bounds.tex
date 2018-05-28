@@ -867,7 +867,7 @@ and the support of~$P_{K'}$ in~$\PrefixB$ depends only on
 the set of antecedents in ${\PrefixB^{K'} =}$ ${(P_1, \dots, P_{K'})}$:
 \begin{align}
 \Supp(P_{K'}, \x \given \PrefixB)
-&= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, P_{K'} \given \PrefixB) \nn \\
+= \frac{1}{N} \sum_{n=1}^N \Cap(x_n, P_{K'} \given \PrefixB) %\nn \\
 %&= \frac{1}{N} \sum_{n=1}^N \left( \neg\, \Cap(x_n, \PrefixB^{K'-1}) \right)
 %  \wedge \Cap(x_n, P_{K'}) \nn \\
 &= \frac{1}{N} \sum_{n=1}^N \left( \bigwedge_{k=1}^{K'-1} \neg\, \Cap(x_n, P_k) \right)
@@ -1165,16 +1165,13 @@ number of $k$-combinations of~$M$.
 %
 Now, the number of length~${k=3}$ prefixes we evaluate is~${C(M, 2) (M - 2)}$.
 %
-Propagating this forward gives
+Propagating this forward~gives
 \begin{arxiv}
 \begin{align}
 \TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K C(M, k-1) (M - k + 1)
 %= 1 + \sum_{k=1}^K {M \choose k-1}(M - k + 1)
 %= 1 + \sum_{k=1}^K \frac{M! (M - k + 1)}{(k - 1)! (M - k + 1)!}
 = 1 + \sum_{k=1}^K \frac{1}{(k - 1)!} \cdot \frac{M!}{(M - k)!}. \nn
-\end{align}
-\begin{align}
-\TotalRemaining(\RuleSet) \le 1 + \sum_{k=1}^K C(M, k-1) (M - k + 1). \nn
 \end{align}
 \end{arxiv}
 \begin{kdd}
