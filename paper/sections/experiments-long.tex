@@ -19,7 +19,7 @@ Before proceeding, we first describe our computational environment (\S\ref{sec:e
 as well as the data sets and prediction problems we use (\S\ref{sec:datasets}),
 and then in Section~\ref{sec:examples} show example optimal rule lists found by CORELS.
 
-\subsection{Computational environment}
+\subsection{Computational Environment}
 \label{sec:environment}
 All timed results ran on a server with an Intel Xeon E5-2699~v4 (55~MB cache, 2.20~GHz) processor and 264~GB RAM,
 and we ran each timing measurement separately, on a single hardware thread, with nothing else running on the server.
@@ -27,7 +27,7 @@ and we ran each timing measurement separately, on a single hardware thread, with
 Except where we mention a memory constraint, all experiments
 can run comfortably on smaller machines, \eg a laptop with 16~GB~RAM.
 
-\subsection{Data sets and prediction problems}
+\subsection{Data Sets and Prediction Problems}
 \label{sec:datasets}
 Our evaluation focuses on two socially-important prediction problems associated
 with recent, publicly-available data sets.
@@ -83,7 +83,7 @@ and whether antecedents include negated clauses.
 \label{tab:features}
 \end{table}
 
-\subsubsection{Recicidivism prediction}
+\subsubsection{Recicidivism Prediction}
 For our first problem, we predict which individuals in the ProPublica COMPAS
 data set~\citep{LarsonMaKiAn16} recidivate within two years.
 %
@@ -105,7 +105,8 @@ on average (folds ranged from containing 121 to 123 antecedents).
 We also consider a second, similar antecedent set in~\S\ref{sec:examples},
 derived from a superset of Feature Set~A that includes~4 additional binary features (Feature Set~B).
 
-\subsubsection{Weapon prediction} For our second problem, we use New York City
+\subsubsection{Weapon Prediction}
+For our second problem, we use New York City
 stop-and-frisk data to predict whether a weapon will be found on a stopped
 individual who is frisked or searched.
 %
@@ -148,7 +149,7 @@ As with the larger NYPD data set, we resample the data to form training sets
 From the same set of 5 categorical features as in Feature Set~C, we form a set of ${M=46}$
 single-clause antecedents, including negations (Feature Set~E).
 
-\subsection{Example optimal rule lists}
+\subsection{Example Optimal Rule Lists}
 \label{sec:examples}
 
 To motivate Feature Set~A, described in Appendix~\ref{appendix:data},
@@ -338,7 +339,7 @@ See Appendix~\ref{appendix:examples} for additional listings of optimal rule lis
 by CORELS, for each of our prediction problems, across cross-validation folds,
 for different regularization parameters~$\Reg$.
 
-\subsection{Comparison of CORELS to the black box COMPAS algorithm}
+\subsection{Comparison of CORELS to the Black Box COMPAS Algorithm}
 \label{sec:compas}
 
 The accuracies of rule lists learned by CORELS are competitive with
@@ -436,7 +437,7 @@ High stakes decisions, such as these, are ideal applications for machine learnin
 
 Currently, justice system data does not support highly accurate risk predictions, but current risk models are useful in practice, and these risk predictions will become more accurate as more and higher quality data are made available.
 
-\subsection{Comparison of CORELS to a heuristic model for weapon prediction}
+\subsection{Comparison of CORELS to a Heuristic Model for Weapon Prediction}
 \label{sec:frisk}
 
 CORELS generates simple, accurate models for the task of weapon prediction,
@@ -560,7 +561,7 @@ CORELS' models are thus approximately as small, interpretable, and transparent
 as the heuristic models; furthermore, their predictions are straightforward
 to compute, without even requiring arithmetic.
 
-\subsection{Predictive performance and model size for CORELS and other algorithms}
+\subsection{Predictive Performance and Model Size for CORELS and Other Algorithms}
 \label{sec:sparsity}
 
 \begin{figure}[t!]
@@ -717,7 +718,7 @@ C4.5 finds large models for all tested parameters.
 \label{fig:sparsity-weapon}
 \end{figure}
 
-\subsection{CORELS execution traces, for different regularization parameters}
+\subsection{CORELS Execution Traces, for Different Regularization Parameters}
 \label{sec:reg-param}
 In this section, we illustrate several views of CORELS execution traces,
 for the NYCLU stop-and-frisk data set with ${M = 46}$ antecedents,
@@ -863,7 +864,7 @@ As an execution progresses, longer prefixes are placed in the queue;
 as~$\Reg$ decreases, the algorithm must spend more time evaluating longer and longer prefixes.
 
 %\newpage
-\subsection{Efficacy of CORELS algorithm optimizations}
+\subsection{Efficacy of CORELS Algorithm Optimizations}
 \label{sec:ablation}
 
 %\includegraphics[width=0.75\textwidth]{figs/sketch-ablation.png}

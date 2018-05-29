@@ -28,7 +28,7 @@ We additionally describe how we garbage collect our data structures~(\S\ref{sec:
 Finally, we explore how our queue can be used to support
 custom scheduling policies designed to improve performance~(\S\ref{sec:scheduling}).
 
-\subsection{Prefix tree}
+\subsection{Prefix Tree}
 \label{sec:trie}
 
 Our incremental computations (\S\ref{sec:incremental}) require a
@@ -111,7 +111,7 @@ stochastic exploration processes that bypass the need for a queue
 by instead following random paths from the root to leaves;
 developing such methods could be an interesting direction for future work.
 
-\subsection{Symmetry-aware map}
+\subsection{Symmetry-aware Map}
 \label{sec:pmap}
 
 The symmetry-aware map supports the symmetry-aware pruning justified in~\S\ref{sec:equivalent}.
@@ -144,7 +144,7 @@ Otherwise, if there exists a permutation~$\pi(\Prefix)$ such that
 ${b(\pi(\Prefix), \x, \y) \le}$ ${b(\Prefix, \x, \y)}$,
 then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
 
-\subsection{Incremental execution}
+\subsection{Incremental Execution}
 \label{sec:execution}
 
 \begin{algorithm}[t!]
@@ -278,7 +278,7 @@ When there are no more leaves to explore, \ie the queue is empty, we output the 
 We can optionally terminate early according to some alternate condition,
 \eg when the size of the prefix tree exceeds some threshold.
 
-\subsection{Garbage collection}
+\subsection{Garbage Collection}
 \label{sec:gc}
 
 During execution, we garbage collect the trie.
@@ -311,7 +311,7 @@ we refer to two different queues that we define here: the physical queue
 corresponds to the C++ queue, and thus all prefix tree leaves, and the logical queue
 corresponds only to those prefix tree leaves that have not been marked for deletion.
 
-\subsection{Custom scheduling policies}
+\subsection{Custom Scheduling Policies}
 \label{sec:scheduling}
 
 In our setting, an ideal scheduling policy would immediately identify an optimal

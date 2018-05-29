@@ -36,7 +36,7 @@ as long as
 ${b(\Prefix, \x, \y) + \Reg \ge \CurrentObj}$, then we can prune
 all prefixes~$\Prefix'$ that start with and are longer than~$\Prefix$.
 
-\subsection{Upper bounds on prefix length}
+\subsection{Upper Bounds on Prefix Length}
 \label{sec:ub-prefix-length}
 
 \begin{arxiv}
@@ -247,7 +247,7 @@ this bound replicates~\eqref{eq:max-length}, since ${b(\Prefix, \x, \y) = 0}$.
 \end{arxiv}
 
 \begin{arxiv}
-\subsection{Upper bounds on the number of prefix evaluations}
+\subsection{Upper Bounds on the Number of Prefix Evaluations}
 \end{arxiv}
 \begin{kdd}
 \subsection{Upper bounds on prefix evaluations}
@@ -506,7 +506,7 @@ This gives an upper bound on the number of remaining prefix evaluations:
 \end{proof}
 \end{arxiv}
 
-\subsection{Lower bounds on antecedent support}
+\subsection{Lower Bounds on Antecedent Support}
 \label{sec:lb-support}
 
 In this section, we give two lower bounds on the normalized support
@@ -709,7 +709,7 @@ rule in a rule list, thus it provides a lower bound on the number of
 observations that each such rule must correctly classify.
 
 \begin{arxiv}
-\subsection{Upper bound on antecedent support}
+\subsection{Upper Bound on Antecedent Support}
 \label{sec:ub-support}
 
 In the previous section~(\S\ref{sec:lb-support}), we proved lower bounds on
@@ -729,7 +729,7 @@ because we did not observe a meaningful benefit in preliminary experiments.
 \end{arxiv}
 
 \begin{arxiv}
-\subsection{Antecedent rejection and its propagation}
+\subsection{Antecedent Rejection and its Propagation}
 \label{sec:reject}
 
 In this section, we demonstrate further consequences of
@@ -954,7 +954,7 @@ combined with Proposition~\ref{prop:ub-support} (Appendix~\ref{appendix:ub-supp}
 constitute the proof of Theorem~\ref{thm:reject}.
 \end{arxiv}
 
-\subsection{Equivalent support bound}
+\subsection{Equivalent Support Bound}
 \label{sec:equivalent}
 
 If two prefixes capture the same data, and one is more accurate than the other,
@@ -1024,7 +1024,7 @@ Next, in Sections~\ref{sec:permutation} and~\ref{sec:permutation-counting},
 we highlight and analyze the special case of prefixes that capture
 the same data because they contain the same antecedents.
 
-\subsection{Permutation bound}% for permutation-aware garbage collection}
+\subsection{Permutation Bound}% for permutation-aware garbage collection}
 \label{sec:permutation}
 
 If two prefixes are composed of the same antecedents,
@@ -1107,7 +1107,7 @@ and we illustrate the subsequent
 computational savings next in~\S\ref{sec:permutation-counting}.
 
 \begin{arxiv}
-\subsection{Upper bound on prefix evaluations with symmetry-aware pruning}
+\subsection{Upper Bound on Prefix Evaluations with Symmetry-aware Pruning}
 \end{arxiv}
 \begin{kdd}
 \subsubsection{Upper bound on prefix evaluations with symmetry-aware pruning}
@@ -1133,7 +1133,7 @@ our execution of branch-and-bound, so that after evaluating
 prefixes of length~$K$, we only keep a single best prefix
 from each set of prefixes equivalent up to a permutation.
 
-\begin{theorem}[Upper bound on prefix evaluations with symmetry-aware pruning]
+\begin{theorem}[\fontdimen2\font=0.6ex Upper bound on prefix evaluations with symmetry-aware pruning]
 %
 Consider a state space of all rule lists formed from a set~$\RuleSet$
 of~$M$ antecedents, and consider the branch-and-bound algorithm with
@@ -1222,7 +1222,7 @@ with sufficiently high support (Theorem~\ref{thm:min-capture})
 we expect to obtain via rule mining~(\S\ref{sec:setup}).
 
 \begin{arxiv}
-\subsection{Similar support bound}
+\subsection{Similar Support Bound}
 \label{sec:similar}
 
 We now present a relaxation of Theorem~\ref{thm:equivalent},
@@ -1407,7 +1407,7 @@ provides a lower bound on~$\Obj(\cal{Q}^*)$.
 
 \end{arxiv}
 
-\subsection{Equivalent points bound}
+\subsection{Equivalent Points Bound}
 \label{sec:identical}
 
 The bounds in this section quantify the following:
