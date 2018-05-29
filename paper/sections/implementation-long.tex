@@ -358,14 +358,14 @@ rule list~${\RL' = (\Prefix', \Labels', \Default', K')}$ from~$\Prefix$.
 Assume that prefix~$\Prefix'$ starts with~$\Prefix$ and captures all the data,
 such that each additional antecedent in~$\Prefix'$
 captures as many `new' observations as each antecedent in~$\Prefix$, on average;
-then, the expected length of~$\Prefix'$ is:
+then, the expected length of~$\Prefix'$ is
 \begin{align}
 \E[ K' ] = \frac{N}{\NCap / K}.
 \label{eq:curiosity-length}
 \end{align}
 Furthermore, assume that each additional antecedent in~$\Prefix'$
 makes as many mistakes as each antecedent in~$\Prefix$, on average,
-thus the expected misclassification error of~$\Prefix'$ is:
+thus the expected misclassification error of~$\Prefix'$ is
 \begin{align}
 \E[\Loss(\Prefix', \Labels', \x, \y)]
 &= \E[\Loss_p(\Prefix', \Labels', \x, \y)] + \E[\Loss_0(\Prefix', \Default', \x, \y)] \nn \\
