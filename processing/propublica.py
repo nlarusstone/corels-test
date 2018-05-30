@@ -60,6 +60,7 @@ ftag = 'compas' #our age categories, no race
 #ftag = 'propublica' # coarse age categories, with race
 #ftag = 'propublica_ours' # our age categories, with race
 #ftag = 'score' # learn COMPAS scores
+ftag = 'compas2' # age and priors only
 
 fin = os.path.join('..', 'compas', 'compas-scores-two-years.csv')
 fout = os.path.join('..', 'data', '%s.csv' % ftag)
@@ -142,6 +143,10 @@ columns += [juvenile_felonies, juvenile_misdemeanors, juvenile_crimes,
 cnames += ['juvenile-felonies', 'juvenile-misdemeanors', 'juvenile-crimes',
           'priors']#, 'current-charge-degree']
  
+if (ftag == 'compas2'):
+    columns = [age, priors_count]
+    cnames = ['age', 'priors']
+
 if (ftag == 'score'):
     score = np.array([score_func(i) for i in x['decile_score']])
     columns += [score]
