@@ -604,40 +604,12 @@ We use the same antecedent sets as input to the two rule list learning algorithm
 for the other algorithms, the inputs are binary feature sets corresponding to the
 single clause antecedents in the aforementioned antecedent sets (see Appendix~\ref{appendix:data}).
 
-\begin{figure}[t!]
-%\vspace{2mm}
-\begin{algorithmic}
-\State \bif $(priors > 3)$ \bthen $yes$
-\State \belif $(age < 25) \band (priors = 2-3)$ \bthen $yes$
-\State \belse $no$
-\end{algorithmic}
-%\vspace{1mm}
-\caption{When restricted to two features (age, priors), CORELS (${\Reg=0.005}$)
-finds the same rule list across 10 cross-validation folds.}
-\label{fig:compas-two-features}
-\end{figure}
-
 Figure~\ref{fig:compas-comparison} shows that for the ProPublica data set,
 there were no statistically significant differences in test accuracies across algorithms,
 the difference between folds was far larger than the difference between algorithms.
 %
 These algorithms also all perform similarly to the black box COMPAS algorithm.
 %
-In prior work, we used CORELS to identify a short rule list depending on only
-three features, age, prior convictions, and sex \citep{AngelinoLaAlSeRu17-kdd},
-that achieves test accuracy comparable to COMPAS.
-%
-\citet{Dressel2018} reported a similar result for another simple classifier,
-a logistic regression model with two features (age and prior convictions).
-%
-If we restrict CORELS to search the space of rule lists formed from these same
-two features (${\Reg=0.005}$), it identifies the same rule list across 10-fold
-cross-validation experiments (Figure~\ref{fig:compas-two-features}).
-%
-This optimal rule list achieves test accuracy that is again comparable to COMPAS.
-%
-Such a rule list is simpler to use than a linear model, which requires multiplication and addition operations to evaluate.
-
 Figure~\ref{fig:weapon-comparison} shows that for the NYCLU data set,
 logistic regression, SVM, and AdaBoost have the highest TPR's and also the highest FPR's;
 we show TPR and FPR due to class imbalance.
@@ -653,7 +625,7 @@ those found via other algorithms.
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
 \includegraphics[trim={2mm, 10mm, 2mm, 0mm},
-width=\textwidth]{figs/compare-weapon.pdf}
+width=0.95\textwidth]{figs/compare-weapon.pdf}
 \end{center}
 \caption{TPR (left) and FPR (right) for the test set,
 for CORELS and a panel of seven other algorithms,
@@ -670,13 +642,13 @@ Note that we were unable to execute RIPPER for the NYCLU problem.
 }
 \label{fig:weapon-comparison}
 \end{figure}
-
+%
 \begin{figure}[t!]
 \begin{center}
 %\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
 \includegraphics[trim={12mm, 5mm, 24mm, 5mm},
-width=0.78\textwidth]{figs/compas-sparsity-training.pdf}
+width=0.75\textwidth]{figs/compas-sparsity-training.pdf}
 %
 \end{center}
 \caption{Training and test accuracy as a function of model size, across different methods,
@@ -722,12 +694,12 @@ NYPD data set and is similar to Figure~\ref{fig:sparsity-weapon}.
 
 \begin{figure}[t!]
 \begin{center}
-%\includegraphics[width=0.75\textwidth]{figs/sketch-comparison.png}
+%\includegraphics[width=0.7\textwidth]{figs/sketch-comparison.png}
 % left lower right upper
 \includegraphics[trim={17mm, 0mm, 27mm, 0mm},
-width=0.78\textwidth]{figs/weapon-sparsity-tpr.pdf}
+width=0.75\textwidth]{figs/weapon-sparsity-tpr.pdf}
 \includegraphics[trim={17mm, 10mm, 27mm, 4mm},
-width=0.78\textwidth]{figs/weapon-sparsity-fpr.pdf}
+width=0.75\textwidth]{figs/weapon-sparsity-fpr.pdf}
 \end{center}
 \caption{TPR (top) and FPR (bottom)
 for the test set, as a function of model size, across different methods,
@@ -744,6 +716,34 @@ respectively, across cross-validation folds.
 C4.5 finds large models for all tested parameters.
 }
 \label{fig:sparsity-weapon}
+\end{figure}
+
+In prior work, we used CORELS to identify a short rule list depending on only
+three features, age, prior convictions, and sex \citep{AngelinoLaAlSeRu17-kdd},
+that achieves test accuracy comparable to COMPAS.
+%
+\citet{Dressel2018} reported a similar result for another simple classifier,
+a logistic regression model with two features (age and prior convictions).
+%
+If we restrict CORELS to search the space of rule lists formed from these same
+two features (${\Reg=0.005}$), it identifies the same rule list across 10-fold
+cross-validation experiments (Figure~\ref{fig:compas-two-features}).
+%
+This optimal rule list achieves test accuracy that is again comparable to COMPAS.
+%
+Such a rule list is simpler to use than a linear model, which requires multiplication and addition operations to evaluate.
+
+\begin{figure}[t!]
+%\vspace{2mm}
+\begin{algorithmic}
+\State \bif $(priors > 3)$ \bthen $yes$
+\State \belif $(age < 25) \band (priors = 2-3)$ \bthen $yes$
+\State \belse $no$
+\end{algorithmic}
+%\vspace{1mm}
+\caption{When restricted to two features (age, priors), CORELS (${\Reg=0.005}$)
+finds the same rule list across 10 cross-validation folds.}
+\label{fig:compas-two-features}
 \end{figure}
 
 \subsection{CORELS Execution Traces, for Different Regularization Parameters}
