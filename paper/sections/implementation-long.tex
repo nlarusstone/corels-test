@@ -153,6 +153,44 @@ then we do nothing, \ie we do not insert~$\Prefix$ into any data structures.
 \subsection{Incremental Execution}
 \label{sec:execution}
 
+Mapping our algorithm to our data structures produces the following execution strategy,
+which we also illustrate in Algorithms~\ref{alg:bounds} and~\ref{alg:pmap}.
+%
+We initialize the current best objective~$\CurrentObj$ and rule list~$\CurrentRL$.
+%
+While the trie contains unexplored leaves, a scheduling policy selects the next prefix~$\Prefix$
+to extend; in our implementation, we pop elements from a (priority) queue, until the queue is empty.
+%
+Then, for every antecedent~$s$ that is not in~$\Prefix$,
+we construct a new prefix~$\PrefixB$ by appending~$s$ to~$\Prefix$;
+we incrementally calculate the lower bound~$b(\PrefixB, \x, \y)$,
+the objective~$\Obj(\RLB, \x, \y)$, of the associated rule list~$\RLB$,
+and other quantities used by our algorithm, summarized by the metadata fields of
+the (potential) prefix tree node~$\varphi(\PrefixB)$.
+
+If the objective~$\Obj(\RLB, \x, \y)$ is less than the current best objective~$\CurrentObj$,
+then we update~$\CurrentObj$ and~$\CurrentRL$.
+%
+If the lower bound of the new prefix~$\PrefixB$ is less than the current best objective,
+%\ie ${b(\Prefix', \x, \y) < \CurrentObj}$,
+then as described in~\S\ref{sec:pmap}, we query the symmetry-aware map for~$\PrefixB$;
+if we insert~$\Prefix'$ into the symmetry-aware map, then we also insert it into the trie and queue.
+%
+Otherwise, %\ie ${b(\Prefix', \x, \y) \ge \CurrentObj}$
+then by our hierarchical lower bound (Theorem~\ref{thm:bound}),
+no extension of~$\PrefixB$ could possibly lead to a rule list with objective
+better than~$\CurrentObj$, thus we do not insert~$\PrefixB$ into the tree or queue.
+%
+We also leverage our other bounds from~\S\ref{sec:framework}
+to aggressively prune the search space; we highlight each of these bounds
+in Algorithms~\ref{alg:bounds} and~\ref{alg:pmap},
+which summarize the computations and data structure operations performed in CORELS' inner loop.
+%
+When there are no more leaves to explore, \ie the queue is empty, we output the optimal rule list.
+%
+We can optionally terminate early according to some alternate condition,
+\eg when the size of the prefix tree exceeds some threshold.
+
 \begin{algorithm}[t!]
   \caption{The inner loop of CORELS, which evaluates all children of a prefix~$\Prefix$.}
 %  For details about symmetry-aware map queries, see Algorithm~\ref{alg:pmap}.}
@@ -245,44 +283,6 @@ is the equivalent points set containing~$x_n$ and $q_u$ is the minority class la
 \EndFunction
 \end{algorithmic}
 \end{algorithm}
-
-Mapping our algorithm to our data structures produces the following execution strategy,
-which we also illustrate in Algorithms~\ref{alg:bounds} and~\ref{alg:pmap}.
-%
-We initialize the current best objective~$\CurrentObj$ and rule list~$\CurrentRL$.
-%
-While the trie contains unexplored leaves, a scheduling policy selects the next prefix~$\Prefix$
-to extend; in our implementation, we pop elements from a (priority) queue, until the queue is empty.
-%
-Then, for every antecedent~$s$ that is not in~$\Prefix$,
-we construct a new prefix~$\PrefixB$ by appending~$s$ to~$\Prefix$;
-we incrementally calculate the lower bound~$b(\PrefixB, \x, \y)$,
-the objective~$\Obj(\RLB, \x, \y)$, of the associated rule list~$\RLB$,
-and other quantities used by our algorithm, summarized by the metadata fields of
-the (potential) prefix tree node~$\varphi(\PrefixB)$.
-
-If the objective~$\Obj(\RLB, \x, \y)$ is less than the current best objective~$\CurrentObj$,
-then we update~$\CurrentObj$ and~$\CurrentRL$.
-%
-If the lower bound of the new prefix~$\PrefixB$ is less than the current best objective,
-%\ie ${b(\Prefix', \x, \y) < \CurrentObj}$,
-then as described in~\S\ref{sec:pmap}, we query the symmetry-aware map for~$\PrefixB$;
-if we insert~$\Prefix'$ into the symmetry-aware map, then we also insert it into the trie and queue.
-%
-Otherwise, %\ie ${b(\Prefix', \x, \y) \ge \CurrentObj}$
-then by our hierarchical lower bound (Theorem~\ref{thm:bound}),
-no extension of~$\PrefixB$ could possibly lead to a rule list with objective
-better than~$\CurrentObj$, thus we do not insert~$\PrefixB$ into the tree or queue.
-%
-We also leverage our other bounds from~\S\ref{sec:framework}
-to aggressively prune the search space; we highlight each of these bounds
-in Algorithms~\ref{alg:bounds} and~\ref{alg:pmap},
-which summarize the computations and data structure operations performed in CORELS' inner loop.
-%
-When there are no more leaves to explore, \ie the queue is empty, we output the optimal rule list.
-%
-We can optionally terminate early according to some alternate condition,
-\eg when the size of the prefix tree exceeds some threshold.
 
 \subsection{Garbage Collection}
 \label{sec:gc}
