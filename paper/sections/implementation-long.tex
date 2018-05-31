@@ -110,6 +110,12 @@ In preliminary work (not shown), we also experimented with
 stochastic exploration processes that bypass the need for a queue
 by instead following random paths from the root to leaves;
 developing such methods could be an interesting direction for future work.
+%
+We note that these search policies are referred to as node selection strategies
+in the MIP literature.
+%
+Strategies such as best-first (best-bound) search and DFS are known as static methods, and the framework we present in~\S\ref{sec:scheduling}
+has the spirit of estimate-based methods~\citet{Linderoth1999}.
 
 \subsection{Symmetry-aware Map}
 \label{sec:pmap}
