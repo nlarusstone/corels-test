@@ -718,15 +718,26 @@ C4.5 finds large models for all tested parameters.
 \label{fig:sparsity-weapon}
 \end{figure}
 
-In Figure~\ref{fig:propublica}, we used CORELS to identify short rule lists, depending on only three features, age, prior convictions, and sex \citep[also see][]{AngelinoLaAlSeRu17-kdd}, that achieve test accuracy comparable to COMPAS.
+In Figure~\ref{fig:recidivism-all-folds}, we used CORELS to identify short
+rule lists, depending on only three features, age, prior convictions, and sex,
+that achieve test accuracy comparable to COMPAS
+\citep[Figure~\ref{fig:compas-comparison}, also see][]{AngelinoLaAlSeRu17-kdd}.
 %
-If we restrict CORELS to search the space of rule lists formed from only age and prior convictions (${\Reg=0.005}$), the optimal rule lists it finds achieves test accuracy that is again comparable to COMPAS.
+If we restrict CORELS to search the space of rule lists formed from only age
+and prior convictions (${\Reg=0.005}$), the optimal rule lists it finds achieve
+test accuracy that is again comparable to COMPAS.
 %
-CORELS identifies the same rule list across 10-fold cross-validation experiments (Figure~\ref{fig:compas-two-features}).
+CORELS identifies the same rule list across 10-fold cross-validation experiments
+(Figure~\ref{fig:compas-two-features}).
 %
-In work subsequent to ours~\citep{AngelinoLaAlSeRu17-kdd}, \citet{Dressel2018} confirmed this result, in the sense that they used logistic regression to construct a linear classifier with age and prior convictions, and also achieved similar accuracy to COMPAS.
+In work subsequent to ours~\citep{AngelinoLaAlSeRu17-kdd}, \citet{Dressel2018}
+confirmed this result, in the sense that they used logistic regression to
+construct a linear classifier with age and prior convictions,
+and also achieved similar accuracy to COMPAS.
 %
-However, computing a logistic regression model requires multiplication and addition, and their model cannot easily be computed, in the sense that it requires a calculator (and thus is potentially error-prone).
+However, computing a logistic regression model requires multiplication and
+addition, and their model cannot easily be computed, in the sense that it
+requires a calculator (and thus is potentially error-prone).
 %
 Our rule lists require no such computation.
 
