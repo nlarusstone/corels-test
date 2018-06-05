@@ -1,4 +1,4 @@
-CFLAGS := -g -W -Wall -Wno-unused-parameter -I. -DGMP -O2 -fno-omit-frame-pointer
+CFLAGS := -g -W -Wall -Wno-unused-parameter -fPIC -I. -DGMP -O2 -fno-omit-frame-pointer
 
 ifneq (,$(filter $(shell uname -n),elaines-MacBook-Pro.local Nicholass-Air-5.wireless.yale.internal elaines-MBP))
     LIBS := -L/usr/local/lib
@@ -36,8 +36,11 @@ CLEAN = corels evaluate-test *~ *.o *.so *.a
 
 all: corels libcorels.so evaluate-test
 
-corels: cli.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
-	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+
+corels-cli: cli.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 libcorels.so: run.o params.o corels.o pmap.o cache.o rulelib.o utils.o evaluate.o
 	$(CXX) -shared  -Wl,-soname,$@ -o $@ $^
@@ -46,13 +49,16 @@ libcorels.a: run.o params.o corels.o pmap.o cache.o rulelib.o utils.o
 	ar rcs $@ $^
 
 evaluate-test: evaluate-test.o evaluate.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
-	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+
+main.o: main.cc $(DEPSDIR)/stamp
+	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 cli.o: cli.cc $(DEPSDIR)/stamp
-	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 run.o: run.cc $(DEPSDIR)/stamp
-	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 corels.o: corels.cc $(DEPSDIR)/stamp
 	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
@@ -73,10 +79,10 @@ params.o: params.c $(DEPSDIR)/stamp
 	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 evaluate-test.o: evaluate-test.cc $(DEPSDIR)/stamp
-	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 evaluate.o: evaluate.cc $(DEPSDIR)/stamp
-	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 $(DEPSDIR)/stamp:
 	mkdir -p $(dir $@)
