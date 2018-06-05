@@ -30,9 +30,6 @@
 #include "rule.h"
 
 
-/* Function declarations. */
-int ascii_to_vector(char *, size_t, int *, int *, VECTOR *);
-int make_default(VECTOR *, int);
 #define RULE_INC 100
 
 /* One-counting tools */
@@ -936,6 +933,8 @@ rule_print(rule_t *rules, int ndx, int n, int detail)
 	    ndx, r->features, r->support, r->cardinality);
 	if (detail)
 		rule_vector_print(r->truthtable, n);
+    else
+        printf("\n");
 }
 
 void

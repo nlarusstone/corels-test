@@ -43,6 +43,7 @@ CacheTree::CacheTree(size_t nsamples, size_t nrules, double c, rule_t *rules,
 }
 
 CacheTree::~CacheTree() {
+    insert_root();
     if (root_)
         delete_subtree(this, root_, true, false);
 }

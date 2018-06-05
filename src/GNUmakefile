@@ -32,21 +32,27 @@ CXX = g++ -std=c++11
 
 DEPSDIR := .deps
 
-CLEAN = corels *~ *.o *.so
+CLEAN = corels evaluate-test *~ *.o *.so *.a
 
-all: corels
+all: corels libcorels.so evaluate-test
 
-corels: main.o corels.o pmap.o cache.o rulelib.o utils.o
-	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+corels: cli.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
+	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
-libcorels.so: corels.o pmap.o cache.o rulelib.o evaluate.o utils.o
+libcorels.so: run.o params.o corels.o pmap.o cache.o rulelib.o utils.o evaluate.o
 	$(CXX) -shared  -Wl,-soname,$@ -o $@ $^
 
-evaluate-test: evaluate-test.o evaluate.o corels.o pmap.o cache.o rulelib.o utils.o
-	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+libcorels.a: run.o params.o corels.o pmap.o cache.o rulelib.o utils.o
+	ar rcs $@ $^
 
-main.o: main.cc $(DEPSDIR)/stamp
-	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
+evaluate-test: evaluate-test.o evaluate.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
+	$(CXX) $(CFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
+
+cli.o: cli.cc $(DEPSDIR)/stamp
+	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+
+run.o: run.cc $(DEPSDIR)/stamp
+	$(CXX) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 corels.o: corels.cc $(DEPSDIR)/stamp
 	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
@@ -61,6 +67,9 @@ cache.o: cache.cc $(DEPSDIR)/stamp
 	$(CXX) $(CXXFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 rulelib.o: rulelib.c $(DEPSDIR)/stamp
+	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
+
+params.o: params.c $(DEPSDIR)/stamp
 	$(CC) $(CFLAGS) $(DEPCFLAGS) -c $< -o $@
 
 evaluate-test.o: evaluate-test.cc $(DEPSDIR)/stamp
@@ -84,4 +93,3 @@ endif
 
 .PHONY: all clean
 .SUFFIXES:
-
