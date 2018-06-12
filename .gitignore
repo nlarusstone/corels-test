@@ -94,6 +94,7 @@ src/tags
 # Specific to bbcache
 *.txt
 src/corels
+src/corels-cli
 tests
 evaluate-test
 figs/*png
