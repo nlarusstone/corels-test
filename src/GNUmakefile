@@ -32,7 +32,7 @@ CXX = g++ -std=c++11
 
 DEPSDIR := .deps
 
-CLEAN = corels evaluate-test *~ *.o *.so *.a
+CLEAN = corels corels-cli evaluate-test *~ *.o *.so *.a
 
 all: corels libcorels.so evaluate-test
 
@@ -43,7 +43,7 @@ corels-cli: cli.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 libcorels.so: run.o params.o corels.o pmap.o cache.o rulelib.o utils.o evaluate.o
-	$(CXX) -shared  -Wl,-soname,$@ -o $@ $^
+	$(CXX) -shared -o $@ $^
 
 libcorels.a: run.o params.o corels.o pmap.o cache.o rulelib.o utils.o
 	ar rcs $@ $^
