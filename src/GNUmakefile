@@ -43,7 +43,7 @@ corels-cli: cli.o params.o run.o corels.o pmap.o cache.o rulelib.o utils.o
 	$(CXX) $(CXXFLAGS) $^ -o $@ $(LDFLAGS) $(LIBS)
 
 libcorels.so: run.o params.o corels.o pmap.o cache.o rulelib.o utils.o evaluate.o
-	$(CXX) -shared -o $@ $^
+	$(CXX) -shared -o $@ $^ $(LDFLAGS) $(LIBS)
 
 libcorels.a: run.o params.o corels.o pmap.o cache.o rulelib.o utils.o
 	ar rcs $@ $^
