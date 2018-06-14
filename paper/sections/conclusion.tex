@@ -75,7 +75,7 @@ prune the search space, and thus the total runtime. We think that it is possible
 
 \end{arxiv}
 
-\section{Conclusion}
+\section{Conclusion and More Possible Directions for Future Work}
 
 \begin{kdd}
 CORELS is an efficient and accurate algorithm for constructing provably optimal rule lists.
@@ -110,11 +110,12 @@ features themselves are not interpretable.
 %
 It could instead be used as a final classifier for image processing problems
 where the features were created beforehand; for instance, one could create classifiers
-for each part of an image, and use CORELS to create a final combined classifier.
+for each part of an image, and use CORELS to create a final combined classifier. The notions of interpretability used in image classification tend to be completely different than that for structured data where each feature is separately meaningful \citep[e.g., see][]{LiEtAl18}. For structured data, decision trees, along with scoring systems, tend to be popular forms of transparent models. Scoring systems are sparse linear models with integer coefficients, and they can also be created from data \citep{UstunRu2017KDD,UstunRu2016SLIM}. 
+
+In some of our experiments, CORELS produces a DNF formula by coincidence, but it might be possible to create a much simpler version of CORELS that only produces DNF. This could build off previous algorithms for creating an optimal DNF formula \citep{Rijnbeek10,WangEtAl16,WangEtAl2017}.
 
 CORELS does not automatically rank the subgroups in order of the likelihood of a
-positive outcome; doing so would require an algorithm such as Falling Rule Lists \citep{WangRu15,ChenRu18},
-which forces the estimated probabilities to decrease along the list.
+positive outcome; doing so would require an algorithm such as Falling Rule Lists \citep{WangRu15,ChenRu18}, which forces the estimated probabilities to decrease along the list.
 %
 Furthermore, while CORELS does not technically produce estimates of ${\P(Y=1 \given x)}$,
 one could form such an estimate by computing the empirical
@@ -129,15 +130,20 @@ Alternative algorithms that estimate conditional differences with interpretable
 rule lists include Causal Falling Rule Lists \citep{WangRu15CFRL},
 Cost-Effective Interpretable Treatment Regimes (CITR) \citep{LakkarajuRu17},
 and an approach by \citet{ZhangEtAl15} for constructing
-interpretable and parsimonious treatment regimes. Alternatively, one could use a complex machine learning model to predict outcomes for the treatment group and a separate complex model for the control group that would allow counterfactuals to be estimated for each observation; from there, CORELS could be applied to produce a transparent model for personalized treatment effects.
+interpretable and parsimonious treatment regimes. Alternatively, one could use a complex machine learning model to predict outcomes for the treatment group and a separate complex model for the control group that would allow counterfactuals to be estimated for each observation; from there, CORELS could be applied to produce a transparent model for personalized treatment effects. A similar approach to this was taken by \citet{GohRu18causal}, who use CORELS to understand a black box causal model.
 %
 
-In its current form, CORELS is not easy to adapt to similar problems,
-such as cost-sensitive learning or weighted regularization.
+CORELS could be adapted to handle cost-sensitive learning or weighted regularization.
 %
-This could be remedied by creating more general versions of our theorems,
-which would be an extension of this work. \citep[Or, one could use the more general but computationally heavy mixed-integer programming algorithm of][which allows easy customization.]{ErtekinRu17}
+This would require creating more general versions of our theorems,
+which would be an extension of this work. 
+%\citep[Or, one could use the more general but computationally heavy mixed-integer programming algorithm of][which allows easy customization.]{ErtekinRu17}
 %
+
+While CORELS does not directly handle continuous variables, we have found that it is not difficult in practice to construct a rule set that is sufficient for creating a useful model. It may be possible to use techniques such as Fast Boxes \citep{GohRu14} to discover useful and interpretable rules for continuous data that can be used within CORELS.
+
+An interesting direction for future research would be to create a hybrid interpretable/black-box model in the style of \citet{Wang2018}, where the rule list would eliminate large parts of the space away from the decision boundary, and the observations that are remain are evaluated by a black box model rather than a default rule.
+
 
 Lastly, CORELS does not create generic single-variable-split decision trees.
 %
