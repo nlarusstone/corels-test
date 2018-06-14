@@ -83,7 +83,7 @@ and whether antecedents include negated clauses.
 \label{tab:features}
 \end{table}
 
-\subsubsection{Recicidivism Prediction}
+\subsubsection{Recidivism Prediction}
 For our first problem, we predict which individuals in the ProPublica COMPAS
 data set~\citep{LarsonMaKiAn16} recidivate within two years.
 %
@@ -353,7 +353,7 @@ have a mean test accuracy of~0.665, with standard deviation~0.018.
 The COMPAS algorithm outputs scores between~1 and~10,
 representing low~(1-4), medium~(5-7), and high~(8-10) risk for recidivism.
 %
-As in the analysis by~\citep{LarsonMaKiAn16}, we interpret a medium or high score
+As in the analysis by~\citet{LarsonMaKiAn16}, we interpret a medium or high score
 as a positive prediction for two-year recidivism, and a low score as a negative prediction.
 %
 Across the 10 test sets, the COMPAS algorithm scores obtain
@@ -383,19 +383,21 @@ Both algorithms have much higher true positive rates (TPR's) and false positive 
 %
 The fact that COMPAS has higher FPR's for blacks and higher FNR's for whites was a central observation motivating ProPublica's claim that COMPAS is racially biased~\citep{LarsonMaKiAn16}.
 %
-The fact that CORELS' models are so simple, with almost the same results as COMPAS, and do not contain anything except criminal history features and age, indicates possible explanations for the uneven predictions of both COMPAS and CORELS.
+The fact that CORELS' models are so simple, with almost the same results as COMPAS, and contain only counts of past crimes, age, and gender, indicates possible explanations for the uneven predictions of both COMPAS and CORELS among blacks and whites.
 %
-In particular, blacks tend to have longer criminal histories within the data set,
+In particular, blacks evaluated within Broward County tend to be younger and have longer criminal histories within the data set,
 (on average, 4.4 crimes for blacks versus~2.6 crimes for whites)
 leading to higher FPR's for blacks and higher FNR's for whites.
 %
-This aspect of the data could entirely explain why ProPublica concluded that COMPAS was racially biased.
+This aspect of the data could help to explain why ProPublica concluded that COMPAS was racially biased. 
+
+Similar observations have been reported for other datasets, namely that complex machine learning models do not have an advantage over simpler transparent models \citep{tollenaar2013method,bushway2013there,ZengUsRu2017}.
 %
 There are many definitions of fairness, and it is not clear whether CORELS' models are fair either, but it is much easier to debate about the fairness of a model when it is transparent.
 %
 Additional fairness constraints or transparency constraints can be placed on CORELS' models if desired, though one would need to edit our bounds~(\S\ref{sec:framework}) and implementation~(\S\ref{sec:implementation}) to impose more constraints.
 
-Regardless of whether COMPAS is racially biased (which our analysis does not indicate is true as long as criminal history and age are allowed to be considered as features),
+Regardless of whether COMPAS is racially biased (which our analysis does not indicate is necessarily true as long as criminal history and age are allowed to be considered as features),
 COMPAS may have many other fairness defects that might be considered serious.
 %
 Many of COMPAS's survey questions are direct inquiries about socioeconomic status.
