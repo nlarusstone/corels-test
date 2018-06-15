@@ -1,0 +1,394 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BITS_PER_ENTRY	rule.h	/^#define BITS_PER_ENTRY /;"	d
+BYTE_MASK	rulelib.c	/^#define BYTE_MASK	/;"	d	file:
+BaseQueue	queue.cc	/^BaseQueue::BaseQueue(std::function<bool(Node*, Node*)> cmp)$/;"	f	class:BaseQueue
+BaseQueue	queue.hh	/^        BaseQueue() : BaseQueue(base_cmp) {};$/;"	f	class:BaseQueue
+BaseQueue	queue.hh	/^class BaseQueue {$/;"	c
+CC	GNUmakefile	/^CC = gcc$/;"	m
+CFLAGS	GNUmakefile	/^CFLAGS := -g -W -Wall -I. -DGMP #-O$(O)$/;"	m
+CLEAN	GNUmakefile	/^CLEAN = bbcache *~ *.o *.so$/;"	m
+CXX	GNUmakefile	/^CXX = g++ -std=c++11$/;"	m
+CacheTree	cache.cc	/^CacheTree::CacheTree(size_t nsamples, size_t nrules, double c, rule_t *rules,$/;"	f	class:CacheTree
+CacheTree	cache.hh	/^    CacheTree() {};$/;"	f	class:CacheTree
+CacheTree	cache.hh	/^class CacheTree {$/;"	c
+CapturedPermutationMap	pmap.cc	/^CapturedPermutationMap::CapturedPermutationMap()$/;"	f	class:CapturedPermutationMap
+CapturedPermutationMap	pmap.hh	/^class CapturedPermutationMap : public PermutationMap {$/;"	c
+CuriousNode	cache.hh	/^        CuriousNode(unsigned short id, size_t nrules, bool prediction, bool default_prediction,$/;"	f	class:CuriousNode
+CuriousNode	cache.hh	/^class CuriousNode: public Node {$/;"	c
+CuriousQueue	queue.cc	/^CuriousQueue::CuriousQueue()$/;"	f	class:CuriousQueue
+CuriousQueue	queue.hh	/^class CuriousQueue : public BaseQueue {$/;"	c
+DEPFILES	GNUmakefile	/^DEPFILES := $(wildcard $(DEPSDIR)\/*.d)$/;"	m
+DEPSDIR	GNUmakefile	/^DEPSDIR := .deps$/;"	m
+DFSQueue	queue.cc	/^DFSQueue::DFSQueue()$/;"	f	class:DFSQueue
+DFSQueue	queue.hh	/^class DFSQueue : public BaseQueue {$/;"	c
+LDFLAGS	GNUmakefile	/^    LDFLAGS := -Wl,-no_pie$/;"	m
+LDFLAGS	GNUmakefile	/^    LDFLAGS :=$/;"	m
+LIBS	GNUmakefile	/^    LIBS := -L\/usr\/local\/lib$/;"	m
+LIBS	GNUmakefile	/^    LIBS :=$/;"	m
+Logger	utils.hh	/^class Logger : public NullLogger {$/;"	c
+LowerBoundQueue	queue.cc	/^LowerBoundQueue::LowerBoundQueue()$/;"	f	class:LowerBoundQueue
+LowerBoundQueue	queue.hh	/^class LowerBoundQueue : public BaseQueue {$/;"	c
+MAX_TRIES	rulelib.c	/^#define MAX_TRIES /;"	d	file:
+Node	cache.cc	/^Node::Node(size_t nrules, bool default_prediction, double objective, double minority)$/;"	f	class:Node
+Node	cache.cc	/^Node::Node(unsigned short id, size_t nrules, bool prediction,$/;"	f	class:Node
+Node	cache.hh	/^class Node {$/;"	c
+NullLogger	utils.hh	/^class NullLogger {$/;"	c
+NullPermutationMap	pmap.hh	/^class NullPermutationMap : public PermutationMap  {$/;"	c
+NullQueue	queue.hh	/^class NullQueue : public BaseQueue {$/;"	c
+ObjectiveQueue	queue.cc	/^ObjectiveQueue::ObjectiveQueue()$/;"	f	class:ObjectiveQueue
+ObjectiveQueue	queue.hh	/^class ObjectiveQueue : public BaseQueue {$/;"	c
+PermutationMap	pmap.hh	/^class PermutationMap {$/;"	c
+PrefixPermutationMap	pmap.cc	/^PrefixPermutationMap::PrefixPermutationMap()$/;"	f	class:PrefixPermutationMap
+PrefixPermutationMap	pmap.hh	/^class PrefixPermutationMap : public PermutationMap {$/;"	c
+RANDOM_RANGE	rule.h	/^#define RANDOM_RANGE(/;"	d
+RULE_INC	rulelib.c	/^#define RULE_INC /;"	d	file:
+State	utils.hh	/^    struct State {$/;"	s	class:NullLogger
+VECTOR	rule.h	/^typedef mpz_t VECTOR;$/;"	t
+VECTOR	rule.h	/^typedef v_entry *VECTOR;$/;"	t
+VECTOR_ASSIGN	rule.h	/^#define VECTOR_ASSIGN(/;"	d
+_f	utils.hh	/^    ofstream _f;                                \/\/ output file$/;"	m	class:NullLogger
+_freq	utils.hh	/^    int _freq;                                  \/\/ frequency of logging$/;"	m	class:NullLogger
+_state	utils.hh	/^    State _state;$/;"	m	class:NullLogger
+_v	utils.hh	/^    int _v;                                     \/\/ verbosity$/;"	m	class:NullLogger
+a	rule.h	/^	double a, b;$/;"	m	struct:interval
+ablation	main.cc	/^int ablation = 0;$/;"	v
+addQueueElement	utils.hh	/^    virtual inline void addQueueElement(unsigned int len_prefix, double lower_bound, bool approx) {}$/;"	f	class:NullLogger
+addToEvalChildrenTime	utils.hh	/^    virtual inline void addToEvalChildrenTime(double t) {}$/;"	f	class:NullLogger
+addToLowerBoundTime	utils.hh	/^    virtual inline void addToLowerBoundTime(double t) {}$/;"	f	class:NullLogger
+addToNodeSelectTime	utils.hh	/^    virtual inline void addToNodeSelectTime(double t) {}$/;"	f	class:NullLogger
+addToObjTime	utils.hh	/^    virtual inline void addToObjTime(double t) {}$/;"	f	class:NullLogger
+addToPermMapInsertionTime	utils.hh	/^    virtual inline void addToPermMapInsertionTime(double t) {}$/;"	f	class:NullLogger
+addToPmapMemory	utils.hh	/^    virtual inline void addToPmapMemory(size_t n) {}$/;"	f	class:NullLogger
+addToQueueInsertionTime	utils.hh	/^    virtual inline void addToQueueInsertionTime(double t) {}$/;"	f	class:NullLogger
+addToQueueMemory	utils.hh	/^    virtual inline void addToQueueMemory(size_t n) {}$/;"	f	class:NullLogger
+addToRuleEvalTime	utils.hh	/^    virtual inline void addToRuleEvalTime(double t) {}$/;"	f	class:NullLogger
+addToTreeInsertionTime	utils.hh	/^    virtual inline void addToTreeInsertionTime(double t) {}$/;"	f	class:NullLogger
+addToTreeMemory	utils.hh	/^    virtual inline void addToTreeMemory(size_t n) {}$/;"	f	class:NullLogger
+allocate	alloc.hh	/^    T* allocate (size_t n) {$/;"	f	struct:cache_alloc
+allocate	alloc.hh	/^    T* allocate (size_t n) {$/;"	f	struct:pmap_alloc
+allocate	alloc.hh	/^    T* allocate (size_t n) {$/;"	f	struct:queue_alloc
+allocate	alloc.hh	/^    T* allocate (size_t n) {$/;"	f	struct:track_alloc
+alpha	rule.h	/^	double alpha[2];$/;"	m	struct:params
+approxRemainingSize	utils.hh	/^    virtual inline void approxRemainingSize(mpz_t tot, unsigned int len_prefix) {}$/;"	f	class:NullLogger
+ascii_to_vector	rulelib.c	/^ascii_to_vector(char *line, size_t len, int *nsamples, int *nones, VECTOR *ret)$/;"	f
+b	rule.h	/^	double a, b;$/;"	m	struct:interval
+base_cmp	queue.hh	/^static std::function<bool(Node*, Node*)> base_cmp = [](Node* left, Node* right) {$/;"	v
+bbound_queue	queue.cc	/^int bbound_queue(CacheTree* tree, size_t max_num_nodes, BaseQueue* q,$/;"	f
+bbound_queue_init	queue.cc	/^void bbound_queue_init(CacheTree* tree, BaseQueue* q, PermutationMap* p, std::vector<unsigned short> rules, double* min_objective) {$/;"	f
+bbound_stochastic	queue.cc	/^void bbound_stochastic(CacheTree* tree, size_t max_num_nodes,$/;"	f
+bit_ones	rulelib.c	/^int bit_ones[] = {0, 1, 3, 7, 15, 31, 63, 127};$/;"	v
+bucket_count	pmap.hh	/^        virtual size_t bucket_count() { return 0; }$/;"	f	class:PermutationMap
+bucket_count	pmap.hh	/^    size_t bucket_count() {$/;"	f	class:PrefixPermutationMap
+byte_ones	rulelib.c	/^int byte_ones[] = {$/;"	v
+c	cache.hh	/^inline double CacheTree::c() const {$/;"	f	class:CacheTree
+c	utils.hh	/^        double c;$/;"	m	struct:NullLogger::State
+c_	cache.hh	/^    double c_;$/;"	m	class:CacheTree
+cache_alloc	alloc.hh	/^struct cache_alloc : track_alloc<T> {$/;"	s
+cap_eq	pmap.hh	/^struct cap_eq {$/;"	s
+cap_val	pmap.hh	/^typedef std::pair<std::vector<unsigned short, cache_alloc<unsigned short> >, double> cap_val;$/;"	t
+captured_hash	pmap.hh	/^struct captured_hash {$/;"	s
+captured_key	pmap.hh	/^struct captured_key {$/;"	s
+captures	rule.h	/^	VECTOR captures;		\/* Bit vector. *\/$/;"	m	struct:ruleset_entry
+cardinality	rule.h	/^	int cardinality;$/;"	m	struct:rule
+check_prefix	cache.cc	/^Node* CacheTree::check_prefix(std::vector<unsigned short, cache_alloc<unsigned short> >& prefix) {$/;"	f	class:CacheTree
+child	cache.hh	/^inline Node* Node::child(unsigned short idx) {$/;"	f	class:Node
+children_	cache.hh	/^    std::map<unsigned short, Node*, std::less<unsigned short>, cache_alloc<std::pair<unsigned short, Node*> > > children_;$/;"	m	class:Node
+children_begin	cache.hh	/^inline typename std::map<unsigned short, Node*>::iterator Node::children_begin() {$/;"	f	class:Node
+children_end	cache.hh	/^inline typename std::map<unsigned short, Node*>::iterator Node::children_end() {$/;"	f	class:Node
+clearRemainingSpaceSize	utils.hh	/^    virtual inline void clearRemainingSpaceSize() {}$/;"	f	class:NullLogger
+closeFile	utils.hh	/^    virtual void closeFile() {}$/;"	f	class:NullLogger
+close_print_file	cache.cc	/^void CacheTree::close_print_file() {$/;"	f	class:CacheTree
+cmap	pmap.hh	/^		std::unordered_map<captured_key, cap_val, captured_hash, cap_eq, pmap_alloc<std::pair<const captured_key, cap_val> > >* cmap;$/;"	m	class:CapturedPermutationMap
+confIntervals	rule.h	/^	interval_t *confIntervals;$/;"	m	struct:pred_model
+construct_node	cache.cc	/^CuriousNode* CacheTree::construct_node(unsigned short new_rule, size_t nrules, bool prediction,$/;"	f	class:CacheTree
+count_ones	rulelib.c	/^count_ones(v_entry val)$/;"	f
+count_ones_vector	rulelib.c	/^count_ones_vector(VECTOR v, int len) {$/;"	f
+create_random_ruleset	rulelib.c	/^create_random_ruleset(int size,$/;"	f
+curious	queue.hh	/^static std::function<bool(Node*, Node*)> curious = [](Node* left, Node* right) {$/;"	v
+current_lower_bound	utils.hh	/^        double current_lower_bound;             \/\/ monotonically decreases for curious lower bound$/;"	m	struct:NullLogger::State
+data	rule.h	/^typedef struct data {$/;"	s
+data_t	rule.h	/^} data_t;$/;"	t	typeref:struct:data
+deallocate	alloc.hh	/^    void deallocate (T* p, size_t n) {$/;"	f	struct:cache_alloc
+deallocate	alloc.hh	/^    void deallocate (T* p, size_t n) {$/;"	f	struct:pmap_alloc
+deallocate	alloc.hh	/^    void deallocate (T* p, size_t n) {$/;"	f	struct:queue_alloc
+deallocate	alloc.hh	/^    void deallocate (T* p, size_t n) {$/;"	f	struct:track_alloc
+decPrefixLen	utils.hh	/^    virtual inline void decPrefixLen(size_t n) {}$/;"	f	class:NullLogger
+decreasePmapSize	utils.hh	/^    virtual inline void decreasePmapSize(size_t n) {}$/;"	f	class:NullLogger
+decrement_num_nodes	cache.hh	/^inline void CacheTree::decrement_num_nodes() {$/;"	f	class:CacheTree
+default_prediction	cache.hh	/^inline bool Node::default_prediction() const {$/;"	f	class:Node
+default_prediction_	cache.hh	/^    bool default_prediction_;$/;"	m	class:Node
+delete_child	cache.hh	/^inline void Node::delete_child(unsigned short idx) {$/;"	f	class:Node
+delete_subtree	cache.cc	/^void delete_subtree(CacheTree* tree, Node* node, bool destructive, $/;"	f
+deleted	cache.hh	/^inline bool Node::deleted() const{$/;"	f	class:Node
+deleted_	cache.hh	/^    bool deleted_;$/;"	m	class:Node
+depth	cache.hh	/^inline size_t Node::depth() const {$/;"	f	class:Node
+depth_	cache.hh	/^    size_t depth_;$/;"	m	class:Node
+dfs	queue.hh	/^static std::function<bool(Node*, Node*)> dfs = [](Node* left, Node* right) {$/;"	v
+done	cache.hh	/^inline bool Node::done() const{$/;"	f	class:Node
+done_	cache.hh	/^    bool done_;$/;"	m	class:Node
+dumpPrefixLens	utils.cc	/^std::string Logger::dumpPrefixLens() {$/;"	f	class:Logger
+dumpPrefixLens	utils.hh	/^    virtual std::string dumpPrefixLens() {}$/;"	f	class:NullLogger
+dumpRemainingSpaceSize	utils.cc	/^std::string Logger::dumpRemainingSpaceSize() {$/;"	f	class:Logger
+dumpRemainingSpaceSize	utils.hh	/^    virtual std::string dumpRemainingSpaceSize() {}$/;"	f	class:NullLogger
+dumpState	utils.cc	/^void Logger::dumpState() {$/;"	f	class:Logger
+dumpState	utils.hh	/^    virtual void dumpState() {}$/;"	f	class:NullLogger
+empty	queue.hh	/^        inline bool empty() {$/;"	f	class:BaseQueue
+eta	rule.h	/^	double eta;$/;"	m	struct:params
+evaluate_children	queue.cc	/^void evaluate_children(CacheTree* tree, Node* parent, VECTOR parent_not_captured,$/;"	f
+evaluate_children_num	utils.hh	/^        size_t evaluate_children_num;$/;"	m	struct:NullLogger::State
+evaluate_children_time	utils.hh	/^        double evaluate_children_time;$/;"	m	struct:NullLogger::State
+features	rule.h	/^	char *features;			\/* Representation of the rule. *\/$/;"	m	struct:rule
+front	queue.hh	/^        Node* front() {$/;"	f	class:BaseQueue
+garbage_collect	cache.cc	/^void CacheTree::garbage_collect() {$/;"	f	class:CacheTree
+gc_helper	cache.cc	/^void CacheTree::gc_helper(Node* node) {$/;"	f	class:CacheTree
+getFrequency	utils.hh	/^    virtual inline int getFrequency() {}$/;"	f	class:NullLogger
+getInitialTime	utils.hh	/^    virtual inline double getInitialTime() {}$/;"	f	class:NullLogger
+getLogRemainingSpaceSize	utils.hh	/^    virtual inline size_t getLogRemainingSpaceSize() {}$/;"	f	class:NullLogger
+getPmapMemory	utils.hh	/^    virtual inline std::pair<size_t, size_t> getPmapMemory() {}$/;"	f	class:NullLogger
+getQueueMemory	utils.hh	/^    virtual inline std::pair<size_t, size_t> getQueueMemory() {}$/;"	f	class:NullLogger
+getQueueMinLen	utils.hh	/^    virtual inline size_t getQueueMinLen() {}$/;"	f	class:NullLogger
+getTreeMemory	utils.hh	/^    virtual inline std::pair<size_t, size_t> getTreeMemory() {}$/;"	f	class:NullLogger
+get_prefix_and_predictions	cache.hh	/^    Node::get_prefix_and_predictions() {$/;"	f	class:Node
+get_q	queue.hh	/^        virtual q_alloc* get_q() {$/;"	f	class:BaseQueue
+get_storage	cache.hh	/^    virtual inline double get_storage() {$/;"	f	class:Node
+get_storage	cache.hh	/^inline double CuriousNode::get_storage() {$/;"	f	class:CuriousNode
+id	cache.hh	/^inline unsigned short Node::id() const {$/;"	f	class:Node
+id_	cache.hh	/^    unsigned short id_;$/;"	m	class:Node
+incEvalChildrenNum	utils.hh	/^    virtual inline void incEvalChildrenNum() {}$/;"	f	class:NullLogger
+incLowerBoundNum	utils.hh	/^    virtual inline void incLowerBoundNum() {}$/;"	f	class:NullLogger
+incNodeSelectNum	utils.hh	/^    virtual inline void incNodeSelectNum() {}$/;"	f	class:NullLogger
+incObjNum	utils.hh	/^    virtual inline void incObjNum() {}$/;"	f	class:NullLogger
+incPermMapInsertionNum	utils.hh	/^    virtual inline void incPermMapInsertionNum() {}$/;"	f	class:NullLogger
+incPmapDiscardNum	utils.hh	/^    virtual inline void incPmapDiscardNum() {}$/;"	f	class:NullLogger
+incPmapNullNum	utils.hh	/^    virtual inline void incPmapNullNum() {}$/;"	f	class:NullLogger
+incPmapSize	utils.hh	/^    virtual inline void incPmapSize() {}$/;"	f	class:NullLogger
+incPrefixLen	utils.hh	/^    virtual inline void incPrefixLen(size_t n) {}$/;"	f	class:NullLogger
+incRuleEvalNum	utils.hh	/^    virtual inline void incRuleEvalNum() {}$/;"	f	class:NullLogger
+incTreeInsertionNum	utils.hh	/^    virtual inline void incTreeInsertionNum() {}$/;"	f	class:NullLogger
+increment_num_evaluated	cache.hh	/^inline void CacheTree::increment_num_evaluated() {$/;"	f	class:CacheTree
+initPrefixVec	utils.hh	/^    virtual inline void initPrefixVec() {}$/;"	f	class:NullLogger
+initRemainingSpaceSize	utils.hh	/^    virtual inline void initRemainingSpaceSize() {}$/;"	f	class:NullLogger
+initial_time	utils.hh	/^        double initial_time;                    \/\/ initial time stamp$/;"	m	struct:NullLogger::State
+initializeState	utils.hh	/^    inline void initializeState() {$/;"	f	class:NullLogger
+insert	cache.cc	/^void CacheTree::insert(Node* node) {$/;"	f	class:CacheTree
+insert	pmap.hh	/^        virtual Node* insert (unsigned short new_rule,$/;"	f	class:PermutationMap
+insert_root	cache.cc	/^void CacheTree::insert_root() {$/;"	f	class:CacheTree
+interval	rule.h	/^typedef struct interval {$/;"	s
+interval_t	rule.h	/^} interval_t;$/;"	t	typeref:struct:interval
+iters	rule.h	/^	int iters;$/;"	m	struct:params
+key	pmap.hh	/^    VECTOR key;$/;"	m	struct:captured_key
+key	pmap.hh	/^    unsigned short *key;$/;"	m	struct:prefix_key
+label	cache.hh	/^inline rule_t CacheTree::label(unsigned short idx) const{$/;"	f	class:CacheTree
+labels	rule.h	/^	rule_t * labels;	\/* labels in BitVector form in the data *\/$/;"	m	struct:data
+labels_	cache.hh	/^    std::vector<rule_t> labels_;$/;"	m	class:CacheTree
+lambda	rule.h	/^	double lambda;$/;"	m	struct:params
+lb	queue.hh	/^static std::function<bool(Node*, Node*)> lb = [](Node* left, Node* right) {$/;"	v
+len	pmap.hh	/^    short len;$/;"	m	struct:captured_key
+lk_	pmap.hh	/^        std::mutex lk_;$/;"	m	class:PermutationMap
+logger	main.cc	/^Logger logger;$/;"	v
+lower_bound	cache.hh	/^inline double Node::lower_bound() const {$/;"	f	class:Node
+lower_bound_	cache.hh	/^    double lower_bound_;$/;"	m	class:Node
+lower_bound_num	utils.hh	/^        size_t lower_bound_num;$/;"	m	struct:NullLogger::State
+lower_bound_time	utils.hh	/^        double lower_bound_time;$/;"	m	struct:NullLogger::State
+main	main.cc	/^int main(int argc, char *argv[]) {$/;"	f
+main	test.cc	/^int main(void) {$/;"	f
+make_default	rulelib.c	/^make_default(VECTOR *ttp, int len)$/;"	f
+max_load_factor	pmap.hh	/^        virtual float max_load_factor() { return 0.0;}$/;"	f	class:PermutationMap
+max_load_factor	pmap.hh	/^    float max_load_factor() { $/;"	f	class:PrefixPermutationMap
+meta	cache.hh	/^inline rule_t CacheTree::meta(unsigned short idx) const{$/;"	f	class:CacheTree
+meta_	cache.hh	/^    std::vector<rule_t> meta_;$/;"	m	class:CacheTree
+meta_size	cache.hh	/^inline size_t CacheTree::meta_size() const {$/;"	f	class:CacheTree
+min_objective	cache.hh	/^inline double CacheTree::min_objective() const {$/;"	f	class:CacheTree
+min_objective_	cache.hh	/^    double min_objective_;$/;"	m	class:CacheTree
+minority	cache.hh	/^inline double Node::minority() const {$/;"	f	class:Node
+minority_	cache.hh	/^    double minority_;$/;"	m	class:Node
+n_alloc	rule.h	/^	int n_alloc;			\/* Spaces allocated for rules. *\/$/;"	m	struct:ruleset
+n_rules	rule.h	/^	int n_rules;			\/* Number of actual rules. *\/$/;"	m	struct:ruleset
+n_samples	rule.h	/^	int n_samples;$/;"	m	struct:ruleset
+ncaptured	rule.h	/^	int ncaptured;			\/* Number of 1's in bit vector. *\/$/;"	m	struct:ruleset_entry
+nchain	rule.h	/^	int nchain;$/;"	m	struct:params
+node_select_num	utils.hh	/^        size_t node_select_num;$/;"	m	struct:NullLogger::State
+node_select_time	utils.hh	/^        double node_select_time;$/;"	m	struct:NullLogger::State
+nrules	cache.hh	/^inline size_t CacheTree::nrules() const {$/;"	f	class:CacheTree
+nrules	rule.h	/^	int nrules;		\/* number of rules *\/$/;"	m	struct:data
+nrules	utils.hh	/^        size_t nrules;$/;"	m	struct:NullLogger::State
+nrules_	cache.hh	/^    size_t nrules_;$/;"	m	class:CacheTree
+nsamples	cache.hh	/^inline size_t CacheTree::nsamples() const {$/;"	f	class:CacheTree
+nsamples	rule.h	/^	int nsamples;		\/* number of samples in the data. *\/$/;"	m	struct:data
+nsamples_	cache.hh	/^    size_t nsamples_;$/;"	m	class:CacheTree
+num_captured	cache.hh	/^inline size_t Node::num_captured() const {$/;"	f	class:Node
+num_captured_	cache.hh	/^    size_t num_captured_;$/;"	m	class:Node
+num_children	cache.hh	/^inline size_t Node::num_children() const {$/;"	f	class:Node
+num_evaluated	cache.hh	/^inline size_t CacheTree::num_evaluated() const {$/;"	f	class:CacheTree
+num_evaluated_	cache.hh	/^    size_t num_evaluated_;$/;"	m	class:CacheTree
+num_nodes	cache.hh	/^inline size_t CacheTree::num_nodes() const {$/;"	f	class:CacheTree
+num_nodes_	cache.hh	/^    size_t num_nodes_;$/;"	m	class:CacheTree
+objective	cache.hh	/^inline double Node::objective() const {$/;"	f	class:Node
+objective	queue.hh	/^static std::function<bool(Node*, Node*)> objective = [](Node* left, Node* right) {$/;"	v
+objective_	cache.hh	/^    double objective_;$/;"	m	class:Node
+objective_num	utils.hh	/^        size_t objective_num;$/;"	m	struct:NullLogger::State
+objective_time	utils.hh	/^        double objective_time;$/;"	m	struct:NullLogger::State
+open_print_file	cache.cc	/^void CacheTree::open_print_file(size_t t_num, size_t num_threads) {$/;"	f	class:CacheTree
+operator ()	pmap.hh	/^    bool operator()(const captured_key& k, const captured_key& other) const {$/;"	f	struct:cap_eq
+operator ()	pmap.hh	/^    std::size_t operator()(const captured_key& k) const{$/;"	f	struct:captured_hash
+operator ()	pmap.hh	/^    std::size_t operator()(const prefix_key& k) const {$/;"	f	struct:prefix_hash
+operator ()	pmap.hh	/^   bool operator()(const prefix_key& k, const prefix_key& other) const {$/;"	f	struct:prefix_eq
+operator ==	pmap.hh	/^    bool operator==(const captured_key& other) const {$/;"	f	struct:captured_key
+opt_predictions	cache.hh	/^inline std::vector<bool, cache_alloc<bool> > CacheTree::opt_predictions() const {$/;"	f	class:CacheTree
+opt_predictions_	cache.hh	/^    std::vector<bool, cache_alloc<bool> > opt_predictions_;$/;"	m	class:CacheTree
+opt_rulelist	cache.hh	/^inline std::vector<unsigned short, cache_alloc<unsigned short> > CacheTree::opt_rulelist() const {$/;"	f	class:CacheTree
+opt_rulelist_	cache.hh	/^    std::vector<unsigned short, cache_alloc<unsigned short> > opt_rulelist_;$/;"	m	class:CacheTree
+override	utils.hh	/^    std::string dumpPrefixLens() override;$/;"	m	class:Logger
+override	utils.hh	/^    std::string dumpRemainingSpaceSize() override;$/;"	m	class:Logger
+override	utils.hh	/^    void dumpState() override;$/;"	m	class:Logger
+override	utils.hh	/^    void setLogFileName(char *fname) override;$/;"	m	class:Logger
+params	rule.h	/^typedef struct params {$/;"	s
+params_t	rule.h	/^} params_t;$/;"	t	typeref:struct:params
+parent	cache.hh	/^inline Node* Node::parent() const {$/;"	f	class:Node
+parent_	cache.hh	/^    Node* parent_;$/;"	m	class:Node
+permutation_map_insertion_num	utils.hh	/^        size_t permutation_map_insertion_num;   \/\/ number of calls to `permutation_insert` function$/;"	m	struct:NullLogger::State
+permutation_map_insertion_time	utils.hh	/^        double permutation_map_insertion_time;$/;"	m	struct:NullLogger::State
+pick_random_rule	rulelib.c	/^pick_random_rule(int nrules, ruleset_t *rs)$/;"	f
+pmap	pmap.hh	/^		std::unordered_map<prefix_key, prefix_val, prefix_hash, prefix_eq, pmap_alloc<std::pair<const prefix_key, prefix_val> > >* pmap;$/;"	m	class:PrefixPermutationMap
+pmap_alloc	alloc.hh	/^struct pmap_alloc : track_alloc<T> {$/;"	s
+pmap_discard_num	utils.hh	/^        size_t pmap_discard_num;                \/\/ number of pmap lookups that trigger discard$/;"	m	struct:NullLogger::State
+pmap_max_memory	utils.hh	/^        size_t pmap_max_memory;$/;"	m	struct:NullLogger::State
+pmap_memory	utils.hh	/^        size_t pmap_memory;$/;"	m	struct:NullLogger::State
+pmap_null_num	utils.hh	/^        size_t pmap_null_num;                   \/\/ number of pmap lookups that return null$/;"	m	struct:NullLogger::State
+pmap_size	utils.hh	/^        size_t pmap_size;                       \/\/ size of pmap$/;"	m	struct:NullLogger::State
+pop	queue.hh	/^        inline void pop() {$/;"	f	class:BaseQueue
+pred_model	rule.h	/^typedef struct pred_model {$/;"	s
+pred_model_t	rule.h	/^} pred_model_t;$/;"	t	typeref:struct:pred_model
+prediction	cache.hh	/^inline bool Node::prediction() const {$/;"	f	class:Node
+prediction_	cache.hh	/^    bool prediction_;$/;"	m	class:Node
+prefix_eq	pmap.hh	/^struct prefix_eq {$/;"	s
+prefix_hash	pmap.hh	/^struct prefix_hash {$/;"	s
+prefix_key	pmap.hh	/^    prefix_key(unsigned short* k) {$/;"	f	struct:prefix_key
+prefix_key	pmap.hh	/^struct prefix_key {$/;"	s
+prefix_lens	utils.hh	/^        size_t* prefix_lens;$/;"	m	struct:NullLogger::State
+prefix_val	pmap.hh	/^typedef std::pair<double, unsigned char*> prefix_val;$/;"	t
+print_final_rulelist	utils.cc	/^void print_final_rulelist(const std::vector<unsigned short, cache_alloc<unsigned short> >& rulelist,$/;"	f
+print_machine_info	utils.cc	/^void print_machine_info() {$/;"	f
+print_tree	cache.cc	/^CacheTree::print_tree() {$/;"	f	class:CacheTree
+print_tree_helper	cache.cc	/^CacheTree::print_tree_helper(Node* node, std::vector<short>& rlist) {$/;"	f	class:CacheTree
+prune_up	cache.cc	/^void CacheTree::prune_up(Node* node) {$/;"	f	class:CacheTree
+push	queue.hh	/^        void push(Node* node) {$/;"	f	class:BaseQueue
+push	queue.hh	/^    void push(Node*) {};$/;"	f	class:NullQueue
+q_	queue.hh	/^        q_alloc* q_;$/;"	m	class:BaseQueue
+q_	queue.hh	/^        q_alloc* q_;$/;"	m	class:CuriousQueue
+q_	queue.hh	/^        q_alloc* q_;$/;"	m	class:DFSQueue
+q_	queue.hh	/^        q_alloc* q_;$/;"	m	class:LowerBoundQueue
+q_	queue.hh	/^        q_alloc* q_;$/;"	m	class:ObjectiveQueue
+q_alloc	queue.hh	/^typedef std::priority_queue<Node*, std::vector<Node*, queue_alloc<Node*> >, std::function<bool(Node*, Node*)> > q_alloc;$/;"	t
+queue_alloc	alloc.hh	/^struct queue_alloc : track_alloc<T> {$/;"	s
+queue_insertion_time	utils.hh	/^        double queue_insertion_time;$/;"	m	struct:NullLogger::State
+queue_max_memory	utils.hh	/^        size_t queue_max_memory;$/;"	m	struct:NullLogger::State
+queue_memory	utils.hh	/^        size_t queue_memory;$/;"	m	struct:NullLogger::State
+queue_min_length	utils.hh	/^        size_t queue_min_length;                \/\/ monotonically increases$/;"	m	struct:NullLogger::State
+queue_select	queue.cc	/^Node* queue_select(CacheTree* tree, BaseQueue* q, VECTOR captured) {$/;"	f
+queue_size	utils.hh	/^        size_t queue_size;$/;"	m	struct:NullLogger::State
+random_child	cache.hh	/^inline Node* Node::random_child() {$/;"	f	class:Node
+remaining_space_size	utils.hh	/^        mpz_t remaining_space_size;$/;"	m	struct:NullLogger::State
+removeFromPmapMemory	utils.hh	/^    inline void removeFromPmapMemory(size_t n) {$/;"	f	class:Logger
+removeFromPmapMemory	utils.hh	/^    virtual inline void removeFromPmapMemory(size_t n) {}$/;"	f	class:NullLogger
+removeFromQueueMemory	utils.hh	/^    virtual inline void removeFromQueueMemory(size_t n) {}$/;"	f	class:NullLogger
+removeFromTreeMemory	utils.hh	/^    virtual inline void removeFromTreeMemory(size_t n) {}$/;"	f	class:NullLogger
+removeQueueElement	utils.hh	/^    virtual inline void removeQueueElement(unsigned int len_prefix, double lower_bound, bool approx) {}$/;"	f	class:NullLogger
+root	cache.hh	/^inline Node* CacheTree::root() const {$/;"	f	class:CacheTree
+root_	cache.hh	/^    Node* root_;$/;"	m	class:CacheTree
+rs	rule.h	/^	ruleset_t *rs;		\/* best ruleset. *\/$/;"	m	struct:pred_model
+rule	cache.hh	/^inline rule_t CacheTree::rule(unsigned short idx) const{$/;"	f	class:CacheTree
+rule	rule.h	/^typedef struct rule {$/;"	s
+rule_copy	rulelib.c	/^rule_copy(VECTOR dest, VECTOR src, int len)$/;"	f
+rule_evaluation_num	utils.hh	/^        size_t rule_evaluation_num;$/;"	m	struct:NullLogger::State
+rule_evaluation_time	utils.hh	/^        double rule_evaluation_time;$/;"	m	struct:NullLogger::State
+rule_features	cache.hh	/^inline char* CacheTree::rule_features(unsigned short idx) const{$/;"	f	class:CacheTree
+rule_id	rule.h	/^	unsigned rule_id;$/;"	m	struct:ruleset_entry
+rule_isset	rulelib.c	/^rule_isset(VECTOR v, int e) {$/;"	f
+rule_print	rulelib.c	/^rule_print(rule_t *rules, int ndx, int n, int detail)$/;"	f
+rule_print_all	rulelib.c	/^rule_print_all(rule_t *rules, int nrules, int nsamples)$/;"	f
+rule_t	rule.h	/^} rule_t;$/;"	t	typeref:struct:rule
+rule_vand	rulelib.c	/^rule_vand(VECTOR dest, VECTOR src1, VECTOR src2, int nsamples, int *cnt)$/;"	f
+rule_vandnot	rulelib.c	/^rule_vandnot(VECTOR dest,$/;"	f
+rule_vclear	rulelib.c	/^rule_vclear(int len, VECTOR v) {$/;"	f
+rule_vector_print	rulelib.c	/^rule_vector_print(VECTOR v, int n)$/;"	f
+rule_vfree	rulelib.c	/^rule_vfree(VECTOR *v)$/;"	f
+rule_vinit	rulelib.c	/^rule_vinit(int len, VECTOR *ret)$/;"	f
+rule_vor	rulelib.c	/^rule_vor(VECTOR dest, VECTOR src1, VECTOR src2, int nsamples, int *cnt)$/;"	f
+rules	rule.h	/^	rule_t * rules;		\/* rules in BitVector form in the data *\/$/;"	m	struct:data
+rules	rule.h	/^	ruleset_entry_t rules[];	\/* Array of rules. *\/$/;"	m	struct:ruleset
+rules_	cache.hh	/^    std::vector<rule_t> rules_;$/;"	m	class:CacheTree
+rules_free	rulelib.c	/^rules_free(rule_t *rules, const int nrules, int add_default) {$/;"	f
+rules_init	rulelib.c	/^rules_init(const char *infile, int *nrules,$/;"	f
+ruleset	rule.h	/^typedef struct ruleset {$/;"	s
+ruleset_add	rulelib.c	/^ruleset_add(rule_t *rules, int nrules, ruleset_t **rsp, int newrule, int ndx)$/;"	f
+ruleset_backup	rulelib.c	/^ruleset_backup(ruleset_t *rs, int **rs_idarray)$/;"	f
+ruleset_copy	rulelib.c	/^ruleset_copy(ruleset_t **ret_dest, ruleset_t *src)$/;"	f
+ruleset_delete	rulelib.c	/^ruleset_delete(rule_t *rules, int nrules, ruleset_t *rs, int ndx)$/;"	f
+ruleset_destroy	rulelib.c	/^ruleset_destroy(ruleset_t *rs)$/;"	f
+ruleset_entry	rule.h	/^typedef struct ruleset_entry {$/;"	s
+ruleset_entry_print	rulelib.c	/^ruleset_entry_print(ruleset_entry_t *re, int n, int detail)$/;"	f
+ruleset_entry_t	rule.h	/^} ruleset_entry_t;$/;"	t	typeref:struct:ruleset_entry
+ruleset_init	rulelib.c	/^ruleset_init(int nrules,$/;"	f
+ruleset_print	rulelib.c	/^ruleset_print(ruleset_t *rs, rule_t *rules, int detail)$/;"	f
+ruleset_swap	rulelib.c	/^ruleset_swap(ruleset_t *rs, int i, int j, rule_t *rules)$/;"	f
+ruleset_swap_any	rulelib.c	/^ruleset_swap_any(ruleset_t * rs, int i, int j, rule_t * rules)$/;"	f
+ruleset_t	rule.h	/^} ruleset_t;$/;"	t	typeref:struct:ruleset
+setC	utils.hh	/^    virtual inline void setC(double c) {}$/;"	f	class:NullLogger
+setCurrentLowerBound	utils.hh	/^    virtual inline void setCurrentLowerBound(double lb) {}$/;"	f	class:NullLogger
+setFrequency	utils.hh	/^    virtual inline void setFrequency(int frequency) {}$/;"	f	class:NullLogger
+setInitialTime	utils.hh	/^    virtual inline void setInitialTime(double t) {}$/;"	f	class:NullLogger
+setLogFileName	utils.cc	/^void Logger::setLogFileName(char *fname) {$/;"	f	class:Logger
+setLogFileName	utils.hh	/^    virtual void setLogFileName(char *fname) {}$/;"	f	class:NullLogger
+setNRules	utils.hh	/^    virtual inline void setNRules(size_t nrules) {}$/;"	f	class:NullLogger
+setQueueSize	utils.hh	/^    virtual inline void setQueueSize(size_t n) {}$/;"	f	class:NullLogger
+setTotalTime	utils.hh	/^    virtual inline void setTotalTime(double t) {}$/;"	f	class:NullLogger
+setTreeMinObj	utils.hh	/^    virtual inline void setTreeMinObj(double o) {}$/;"	f	class:NullLogger
+setTreeNumEvaluated	utils.hh	/^    virtual inline void setTreeNumEvaluated(size_t n) {}$/;"	f	class:NullLogger
+setTreeNumNodes	utils.hh	/^    virtual inline void setTreeNumNodes(size_t n) {}$/;"	f	class:NullLogger
+setTreePrefixLen	utils.hh	/^    virtual inline void setTreePrefixLen(size_t n) {}$/;"	f	class:NullLogger
+setVerbosity	utils.hh	/^    virtual inline void setVerbosity(int verbosity) {}$/;"	f	class:NullLogger
+set_deleted	cache.hh	/^inline void Node::set_deleted() {$/;"	f	class:Node
+set_done	cache.hh	/^inline void Node::set_done() {$/;"	f	class:Node
+size	pmap.hh	/^        size_t size() {return 0;}$/;"	f	class:NullPermutationMap
+size	pmap.hh	/^        virtual size_t size() {$/;"	f	class:PermutationMap
+size	queue.hh	/^        size_t size() {$/;"	f	class:BaseQueue
+size	queue.hh	/^    size_t size() {return 0;};$/;"	f	class:NullQueue
+stochastic_select	queue.cc	/^Node* stochastic_select(CacheTree* tree, VECTOR not_captured) {$/;"	f
+storage_	cache.hh	/^        double storage_;$/;"	m	class:CuriousNode
+subtreeSize	utils.hh	/^    virtual inline void subtreeSize(mpz_t tot, unsigned int len_prefix, double lower_bound) {}$/;"	f	class:NullLogger
+sumPrefixLens	utils.hh	/^    virtual inline size_t sumPrefixLens() {}$/;"	f	class:NullLogger
+support	rule.h	/^	int support;			\/* Number of 1's in truth table. *\/$/;"	m	struct:rule
+t_	cache.hh	/^    std::ofstream t_;$/;"	m	class:CacheTree
+theta	rule.h	/^	double *theta;$/;"	m	struct:pred_model
+threshold	rule.h	/^	double threshold;$/;"	m	struct:params
+time_diff	utils.hh	/^inline double time_diff(double t0) {$/;"	f
+timestamp	utils.hh	/^inline double timestamp() {$/;"	f
+total_time	utils.hh	/^        double total_time;$/;"	m	struct:NullLogger::State
+track_alloc	alloc.hh	/^    struct track_alloc { $/;"	s
+tree_insertion_num	utils.hh	/^        size_t tree_insertion_num;$/;"	m	struct:NullLogger::State
+tree_insertion_time	utils.hh	/^        double tree_insertion_time;$/;"	m	struct:NullLogger::State
+tree_max_memory	utils.hh	/^        size_t tree_max_memory;$/;"	m	struct:NullLogger::State
+tree_memory	utils.hh	/^        size_t tree_memory;$/;"	m	struct:NullLogger::State
+tree_min_objective	utils.hh	/^        double tree_min_objective;$/;"	m	struct:NullLogger::State
+tree_num_evaluated	utils.hh	/^        size_t tree_num_evaluated;$/;"	m	struct:NullLogger::State
+tree_num_nodes	utils.hh	/^        size_t tree_num_nodes;$/;"	m	struct:NullLogger::State
+tree_prefix_length	utils.hh	/^        size_t tree_prefix_length;$/;"	m	struct:NullLogger::State
+truthtable	rule.h	/^	VECTOR truthtable;		\/* Truth table; one bit per sample. *\/$/;"	m	struct:rule
+updateQueueMinLen	utils.hh	/^    virtual inline void updateQueueMinLen() {}$/;"	f	class:NullLogger
+update_min_objective	cache.hh	/^inline void CacheTree::update_min_objective(double objective) {$/;"	f	class:CacheTree
+update_opt_predictions	cache.hh	/^CacheTree::update_opt_predictions(std::vector<bool, cache_alloc<bool> >& parent_predictions,$/;"	f	class:CacheTree
+update_opt_rulelist	cache.hh	/^CacheTree::update_opt_rulelist(std::vector<unsigned short, cache_alloc<unsigned short> >& parent_prefix,$/;"	f	class:CacheTree
+v_entry	rule.h	/^typedef unsigned long v_entry;$/;"	t
+value_type	alloc.hh	/^    typedef T value_type;$/;"	t	struct:cache_alloc
+value_type	alloc.hh	/^    typedef T value_type;$/;"	t	struct:pmap_alloc
+value_type	alloc.hh	/^    typedef T value_type;$/;"	t	struct:queue_alloc
+value_type	alloc.hh	/^    typedef T value_type;$/;"	t	struct:track_alloc
+~CacheTree	cache.cc	/^CacheTree::~CacheTree() {$/;"	f	class:CacheTree
+~Logger	utils.hh	/^    ~Logger() { $/;"	f	class:Logger
+~NullLogger	utils.hh	/^    ~NullLogger() {}$/;"	f	class:NullLogger

@@ -1,0 +1,19 @@
+This sample of code is taken from my work on interpretable rule lists.
+The full implementation can be found at www.github.com/nlarusstone/corels.
+
+The goal of the project was to find the optimal rule list for a dataset.
+Rule lists are one-sided decision trees where each rule is of the form "IF <boolean condition> THEN <prediction>".
+We start with a collection of pre-mined rules and then need to determine the best ordering of those rules to determine optimality.
+In addition, we don't want to create really long rule lists, because then we lose some of the interpretability that is the benefit of this method.
+So, we also need to determine the best length for our optimal rule list.
+
+Determining optimality is a combinatorially large search problem, so we use a technique called branch and bound to help manage this complexity.
+The key idea behind branch and bound is that we can calculate the current performance of any given rule list as well as the best possible future performance.
+If this best possible future performance is ever worse than the current performance of a rule list we have already seen, then we can "prune" this rule list and stop exploring it or any of its children.
+We encode this idea into a variety of bounds that allow us to aggressively prune the search space and make this problem manageable.
+One of the bounds that we use is called the permutation bound.
+The permutation bound looks at the set of rules for a rule list and allows us to prune the current rule list if any other rule list composed of the same set of rules has better performance than our current rule list.
+
+The code within is written by me in order to support the permutation bound.
+It consists of the header file (pmap.hh) and the code (pmap.cc) that encode our permutation map and allow us to identify rule lists for pruning and then efficiently prune them.
+This code is a part of the larger project that can be found at www.github.com/nlarusstone/corels.
