@@ -4342,7 +4342,162 @@ our algorithm runs more than $10^{13}$ times faster than a na\"ive implementatio
 %
 This helps explain why neither our algorithm, nor other branch-and-bound variants, had been developed before now.
 
-\input{sections/conclusion}
+\begin{arxiv}
+
+\section{Summary and Future Work on Bounds}
+\label{sec:practical}
+
+Here, we highlight our most significant bounds, as well as directions for future work
+based on bounds that we have yet to leverage in practice.
+
+In empirical studies, we found our equivalent support (\S\ref{sec:equivalent}, Theorem~\ref{thm:equivalent})
+and equivalent points (\S\ref{sec:identical}, Theorem~\ref{thm:identical}) bounds
+to yield the most significant improvements in algorithm performance.
+%
+In fact, they sometimes proved critical for finding solutions and proving optimality,
+even on small problems.
+
+Accordingly, we would hope that our similar support bound (\S\ref{sec:similar}, Theorem~\ref{thm:similar}) could be useful;
+%
+understanding how to efficiently exploit this result in practice
+represents an important direction for future work. In particular, this type of bound may lead to
+principled approximate variants of our~approach.
+
+We presented several sets of bounds in which at least one bound was strictly tighter than the other(s).
+%
+For example, the lower bound on accurate antecedent support (Theorem~\ref{thm:min-capture-correct})
+is strictly tighter than the lower bound on accurate support (Theorem~\ref{thm:min-capture}).
+%
+It might seem that we should only use this tighter bound, but in practice, we can use
+both---the looser bound can be checked before completing the calculation required to
+check the tighter bound.
+%
+Similarly, the equivalent support bound (Theorem~\ref{thm:equivalent})
+is more general than the special case of the permutation bound (Corollary~\ref{thm:permutation}).
+%
+We have implemented data structures, which we call symmetry-aware maps,
+to support both of these bounds, but have not yet identified an efficient approach
+for supporting the more general equivalent points bound.
+%
+A good solution may be related to the challenge of designing an efficient data structure
+to support the similar support bound.
+
+We also presented results on antecedent rejection
+that unify our understanding of our lower~(\S\ref{sec:lb-support})
+and upper bounds (\S\ref{sec:ub-support}) on antecedent support.
+%
+In a preliminary implementation (not described here), we experimented with special data structures
+to support the direct use of our observation that antecedent rejection propagates
+(\S\ref{sec:reject}, Theorem~\ref{thm:reject}).
+%
+We leave the design of efficient data structures for this task as future work.
+
+During execution, we find it useful to calculate an upper bound on the
+size of the remaining search space---\eg via Theorem~\ref{thm:remaining-eval-fine},
+or the looser Proposition~\ref{prop:remaining-eval-coarse}, which incurs less
+computational overhead---since these provide meaningful information about algorithm
+progress and allow us to estimate the remaining execution time.
+%
+As we illustrated in Section~\ref{sec:ablation},
+these calculations also help us qualify the impact of different algorithmic bounds,
+\eg by comparing executions that keep or remove~bounds.
+
+When our algorithm terminates, it outputs an optimal solution of the training optimization problem, with a certificate of optimality.
+%
+On a practical note, our approach can also provide useful results even for incomplete executions.
+%
+As shown earlier, we have empirically observed that our algorithm often identifies the optimal rule list
+very quickly, compared to the total time required to prove optimality, \eg in seconds,
+versus minutes, respectively.
+%
+Furthermore, our objective's lower bounds allow us to place an upper bound on the size of the remaining search space,
+%and other algorithm states, such information about explored versus unexplored prefixes,
+and provides guarantees on the quality of a solution output by an incomplete execution.
+
+The order in which we evaluate prefixes can impact the rate at which we
+prune the search space, and thus the total runtime. We think that it is possible to design search policies that significantly improve performance.
+
+\end{arxiv}
+
+\section{Conclusion and More Possible Directions for Future Work}
+
+\begin{kdd}
+CORELS is an efficient and accurate algorithm for constructing provably optimal rule lists.
+%
+Optimality is particularly important in domains where model interpretability
+has social consequences, \eg recidivism prediction.
+%
+While achieving optimality on such discrete optimization problems is
+computationally hard in general, we aggressively prune our problem's search space
+via a suite of bounds.
+%
+This makes realistically sized problems tractable.
+%
+CORELS is amenable to parallelization, which should allow it to scale to
+even larger problems than those we presented here.
+\end{kdd}
+
+\begin{arxiv}
+
+Finally, we would like to clarify some limitations of CORELS.
+%
+As far as we can tell, CORELS is the current best algorithm for solving a
+specialized optimal decision tree problem.
+%
+While our approach scales well to large numbers of observations,
+it could have difficulty proving optimality
+for problems with many possibly relevant features that are highly correlated,
+when large regions of the search space might be challenging to exclude.
+
+CORELS is not designed for raw image processing or other problems where the
+features themselves are not interpretable.
+%
+It could instead be used as a final classifier for image processing problems
+where the features were created beforehand; for instance, one could create classifiers
+for each part of an image, and use CORELS to create a final combined classifier. The notions of interpretability used in image classification tend to be completely different from those for structured data where each feature is separately meaningful \citep[e.g., see][]{LiEtAl18}. For structured data, decision trees, along with scoring systems, tend to be popular forms of transparent models. Scoring systems are sparse linear models with integer coefficients, and they can also be created from data \citep{UstunRu2017KDD,UstunRu2016SLIM}.
+
+In some of our experiments, CORELS produces a DNF formula by coincidence, but it might be possible to create a much simpler version of CORELS that only produces DNF formulae. This could build off previous algorithms for creating an optimal DNF formula \citep{Rijnbeek10,WangEtAl16,WangEtAl2017}.
+
+CORELS does not automatically rank the subgroups in order of the likelihood of a
+positive outcome; doing so would require an algorithm such as Falling Rule Lists \citep{WangRu15,ChenRu18}, which forces the estimated probabilities to decrease along the list.
+%
+Furthermore, while CORELS does not technically produce estimates of ${\P(Y=1 \given x)}$,
+one could form such an estimate by computing the empirical
+proportion ${\hat{\P}(Y=1 \given x \textrm{ obeys } p_k)}$ for each antecedent~$p_k$.
+%
+CORELS is also not designed to assist with causal inference applications, since
+it does not estimate the effect of a treatment via the conditional difference
+${\P(Y=1 \given \textrm{treatment} =}$ ${\textrm{True}, x)}$ $-$
+${\P(Y=1 \given \textrm{treatment} =}$ ${\textrm{False}, x)}$.
+%
+Alternative algorithms that estimate conditional differences with interpretable
+rule lists include Causal Falling Rule Lists \citep{WangRu15CFRL},
+Cost-Effective Interpretable Treatment Regimes (CITR) \citep{LakkarajuRu17},
+and an approach by \citet{ZhangEtAl15} for constructing
+interpretable and parsimonious treatment regimes. Alternatively, one could use a complex machine learning model to predict outcomes for the treatment group and a separate complex model for the control group that would allow counterfactuals to be estimated for each observation; from there, CORELS could be applied to produce a transparent model for personalized treatment effects. A similar approach to this was taken by \citet{GohRu18causal}, who use CORELS to understand a black box causal model.
+%
+
+CORELS could be adapted to handle cost-sensitive learning or weighted regularization.
+%
+This would require creating more general versions of our theorems,
+which would be an extension of this work.
+%\citep[Or, one could use the more general but computationally heavy mixed-integer programming algorithm of][which allows easy customization.]{ErtekinRu17}
+%
+
+While CORELS does not directly handle continuous variables, we have found that it is not difficult in practice to construct a rule set that is sufficient for creating a useful model. It may be possible to use techniques such as Fast Boxes \citep{GohRu14} to discover useful and interpretable rules for continuous data that can be used within CORELS.
+
+An interesting direction for future research would be to create a hybrid interpretable/ black box model in the style of \citet{Wang2018}, where the rule list would eliminate large parts of the space away from the decision boundary, and the observations that remain are evaluated by a black box model rather than a default rule.
+
+
+Lastly, CORELS does not create generic single-variable-split decision trees.
+%
+CORELS optimizes over rule lists, which are one-sided decision trees;
+in our setting, the leaves of these `trees' are conjunctions.
+%
+It may be possible to generalize ideas from our approach to handle generic
+decision trees, which could be an interesting project for future work. There are more symmetries to handle in that case, since there would be many equivalent decision trees, leading to challenges in developing symmetry-aware data structures.
+
+\end{arxiv}
 
 % Acknowledgements should go at the end, before appendices and references
 \acks{E.A. conducted most of this work while supported by the Miller Institute for Basic Research
