@@ -1,1 +1,0 @@
-prefix	length	first	prediction	default	objective	lower_bound	accuracy	upper_bound	num_captured	num_captured_correct	num_not_captured	curiosity
